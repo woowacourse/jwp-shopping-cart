@@ -1,6 +1,5 @@
-package shoppingcart.acceptance;
+package shoppingcart.config;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,11 +11,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static shoppingcart.Application.CorsConfiguration.ALLOWED_METHOD_NAMES;
+import static shoppingcart.config.WebConfig.ALLOWED_METHOD_NAMES;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CorsConfigTest {
+public class WebConfigTest {
     @Autowired
     private MockMvc mockMvc;
 
