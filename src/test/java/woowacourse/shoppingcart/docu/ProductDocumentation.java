@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.dto.ProductDto;
+import woowacourse.shoppingcart.domain.Product;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -20,7 +20,7 @@ public class ProductDocumentation extends Documentation {
 
     @Test
     void createProduct() throws Exception {
-        ProductDto productDto = new ProductDto(
+        Product productDto = new Product(
                 "상품이름",
                 10_000,
                 "http://example.com/chicken.jpg"
