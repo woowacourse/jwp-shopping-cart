@@ -55,6 +55,33 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        // given
+        ExtractableResponse<Response> createResponse = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CustomerRequest("test", "1234"))
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+
+        // when
+        ExtractableResponse<Response> editResponse = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CustomerRequest("updated", "1255"))
+                .when().put(createResponse.header("Location"))
+                .then().log().all()
+                .extract();
+
+        // then
+        ExtractableResponse<Response> getResponse = RestAssured
+                .given().log().all()
+                .when().get("/api/customers/updated")
+                .then().log().all()
+                .extract();
+
+        assertThat(editResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(getResponse.body().jsonPath().getString("name")).isEqualTo("updated");
     }
 
     @DisplayName("회원탈퇴")
