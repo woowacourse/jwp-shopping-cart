@@ -67,4 +67,9 @@ public class CustomerDao {
         final String query = "SELECT EXISTS (SELECT id FROM customer WHERE username = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, username);
     }
+
+    public int deleteByUsername(final String username) {
+        final String query = "DELETE FROM customer WHERE username = ?";
+        return jdbcTemplate.update(query, username);
+    }
 }

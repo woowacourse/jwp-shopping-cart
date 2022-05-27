@@ -109,4 +109,20 @@ public class CustomerDaoTest {
         // then
         assertThat(customerDao.existCustomerByUsername("username")).isTrue();
     }
+
+    @Test
+    @DisplayName("유저를 유저 이름으로 찾아 삭제한다.")
+    void deleteByUsername() {
+        // given
+        Customer customer = Customer.Builder()
+                .username("username")
+                .password("password123")
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+        customerDao.save(customer);
+
+        // when & then
+        assertThat(customerDao.deleteByUsername("username")).isEqualTo(1);
+    }
 }
