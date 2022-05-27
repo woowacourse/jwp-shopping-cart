@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Username {
@@ -29,4 +30,20 @@ public class Username {
         }
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Username username1 = (Username) o;
+        return Objects.equals(username, username1.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username);
+    }
 }
