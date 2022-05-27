@@ -13,10 +13,33 @@
     - address
 
 ### API
+### no required authorization
+- 회원 가입
+- request
+```json
+POST /api/customers/signup
+
+{
+    "username" : string,
+    "password" : string,
+    "phoneNumber" : string,
+    "address" : string
+}
+```
+
+- response
+```
+201 created
+body empty
+```
+
+
+
+### required authorization
 #### 로그인
 - request
 ```json
-POST /api/members/login
+POST /api/customers/login
 
 {
     "username" : string,
@@ -37,13 +60,13 @@ POST /api/members/login
 #### 회원 정보 조회
 - request
 ```json
-GET /api/members
+GET /api/customers
 ```
 - response
 ```json
 200 ok
 {
-  "member" : {
+  "customer" : {
     "username" : string,
     "phoneNumber" : string,
     "address" : string
@@ -54,7 +77,7 @@ GET /api/members
 #### 회원 정보 수정
 - request
 ```json
-PATCH /api/members
+PATCH /api/customers
 
 {
   "password" : string,
@@ -72,7 +95,7 @@ body empty
 #### 회원 탈퇴
 - request
 ```json
-DELETE /api/members
+DELETE /api/customers
 ```
 - response
 ```json
