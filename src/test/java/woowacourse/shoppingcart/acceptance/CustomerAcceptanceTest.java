@@ -70,6 +70,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        CustomerSignUpRequest request = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
+        회원_가입_요청(request);
+        TokenRequest tokenRequest = new TokenRequest("username", "password123");
+        String accessToken = 로그인_요청(tokenRequest).body()
+                .as(TokenResponse.class)
+                .getAccessToken();
+
+        ExtractableResponse<Response> response = 회원_탈퇴_요청(accessToken);
+        회원_탈퇴_성공(response);
     }
 
     public static ExtractableResponse<Response> 회원_가입_요청(final CustomerSignUpRequest request) {
@@ -90,6 +99,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 회원_탈퇴_요청(final String accessToken) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when().delete("/api/customers")
+                .then().log().all()
+                .extract();
+    }
+
     private void 회원_가입됨(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -103,5 +120,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.body().as(CustomerResponse.class))
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
+    }
+
+    private void 회원_탈퇴_성공(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

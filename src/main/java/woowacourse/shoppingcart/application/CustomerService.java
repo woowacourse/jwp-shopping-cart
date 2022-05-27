@@ -28,4 +28,9 @@ public class CustomerService {
     public CustomerResponse findByUsername(final String username) {
         return CustomerResponse.from(customerDao.findByUsername(username));
     }
+
+    @Transactional
+    public void deleteByUsername(final String username) {
+        customerDao.deleteByUsername(username);
+    }
 }
