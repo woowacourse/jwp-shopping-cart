@@ -1,6 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.내_정보_조회;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원_가입_요청;
 
 import io.restassured.RestAssured;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
 
@@ -27,7 +29,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         @BeforeEach
         void prepare() {
             customerSignUpRequest = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
-            CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
             회원_가입_요청(customerSignUpRequest);
         }
 
@@ -51,15 +52,15 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
+        회원_가입_요청(customerSignUpRequest);
+        TokenRequest request = new TokenRequest("username", "password123");
+        String token = 로그인_요청(request).body()
+                .as(TokenResponse.class)
+                .getAccessToken();
 
-        // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보가 조회된다
+        ExtractableResponse<Response> response = 내_정보_조회(token);
+        정보_조회_성공(response);
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
@@ -100,5 +101,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     private void 로그인안됨(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    private void 정보_조회_성공(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }
