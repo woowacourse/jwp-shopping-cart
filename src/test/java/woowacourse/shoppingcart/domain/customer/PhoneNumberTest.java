@@ -15,4 +15,12 @@ class PhoneNumberTest {
         assertThatThrownBy(() -> new PhoneNumber(phoneNumber))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"0101234567*", "010abcdefg"})
+    @DisplayName("핸드폰 번호가 숫자가 아닐 경우 예외 발생")
+    void invalidPhoneNumberPattern_throwException(String phoneNumber) {
+        assertThatThrownBy(() -> new PhoneNumber(phoneNumber))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }
