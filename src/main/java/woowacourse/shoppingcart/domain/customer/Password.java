@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
+import woowacourse.auth.exception.InvalidAuthException;
 
 public class Password {
 
@@ -18,6 +19,12 @@ public class Password {
         if (password.length() < MINIMUM_LENGTH || password.length() > MAXIMUM_LENGTH) {
             throw new IllegalArgumentException(
                     String.format("비밀번호는 %d자 이상 %d자 이하입니다.", MINIMUM_LENGTH, MAXIMUM_LENGTH));
+        }
+    }
+
+    public void matchPassword(final String password) {
+        if (!this.password.equals(password)) {
+            throw new InvalidAuthException("비밀번호가 일치하지 않습니다.");
         }
     }
 
