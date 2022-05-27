@@ -17,4 +17,11 @@ class UsernameTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"한글은안됨", "only_english"})
+    @DisplayName("이름은 영어와 숫자만 허용")
+    void invalidNamePattern_throwException(String username) {
+        assertThatThrownBy(() -> new Username(username))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }
