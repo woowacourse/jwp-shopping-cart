@@ -31,8 +31,8 @@ public class CustomerService {
         customerDao.updateByName(customerName, editRequest.getName(), editRequest.getPassword());
     }
 
-    public Long findIdByEmailAndPassword(String email, String password) {
-        return customerDao.findIdByNameAndPassword(email, password);
+    public Long findIdByNameAndPassword(String name, String password) {
+        return customerDao.findIdByNameAndPassword(name, password);
     }
 
     public Customer findCustomerById(Long customerId) {
