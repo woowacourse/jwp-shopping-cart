@@ -10,6 +10,16 @@
 - [ ] 회원 탈퇴
 - [ ] 로그인
 
+### 회원 기능 API 명세
+
+| Method | Url                           | Description |
+|--------|-------------------------------|-------------|
+| POST   | /api/customers                | 회원 가입       |
+| GET    | /api/customers/{customerName} | 내 정보 조회     |
+| PUT    | /api/customers/{customerName} | 내 정보 수정     |
+| DELETE | /api/customers/{customerName} | 회원 탈퇴       |
+| POST | /api/login/token | 로그인         |
+
 <br>
 
 ## 📝 License
