@@ -53,8 +53,31 @@ public class CustomerDaoTest {
     }
 
     @Test
+    @DisplayName("customer를 이름으로 검색할 수 있다.")
+    void findByUsername() {
+        // given
+        Customer customer = Customer.Builder()
+                .username("username")
+                .password("password123")
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+        customerDao.save(customer);
+
+        // when
+        Customer findCustomer = customerDao.findByUsername("username");
+
+        // then
+        assertThat(findCustomer)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(customer);
+    }
+
+    @Test
     @DisplayName("customner를 저장하면 아이디를 반환한다.")
     void save() {
+        // given
         Customer customer = Customer.Builder()
                 .username("username")
                 .password("password123")
@@ -62,14 +85,17 @@ public class CustomerDaoTest {
                 .address("성담빌딩")
                 .build();
 
+        // when
         Long customerId = customerDao.save(customer);
 
+        // then
         assertThat(customerId).isNotNull();
     }
 
     @Test
     @DisplayName("username이 이미 존재하는지 확인한다.")
     void existUsername() {
+        // given
         Customer customer = Customer.Builder()
                 .username("username")
                 .password("password123")
@@ -77,8 +103,10 @@ public class CustomerDaoTest {
                 .address("성담빌딩")
                 .build();
 
+        // when
         customerDao.save(customer);
 
+        // then
         assertThat(customerDao.existCustomerByUsername("username")).isTrue();
     }
 }

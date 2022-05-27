@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.util.Locale;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,16 @@ public class CustomerDao {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final RowMapper<Customer> customerRowMapper = ((rs, rowNum) ->
+            Customer.Builder()
+                    .id(rs.getLong("id"))
+                    .username(rs.getString("username"))
+                    .password(rs.getString("password"))
+                    .phoneNumber(rs.getString("phone_number"))
+                    .address(rs.getString("address"))
+                    .build()
+    );
+
     public CustomerDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -23,6 +34,15 @@ public class CustomerDao {
         try {
             final String query = "SELECT id FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public Customer findByUsername(final String username) {
+        try {
+            final String query = "SELECT id, username, password, phone_number, address FROM customer WHERE username = ?";
+            return jdbcTemplate.queryForObject(query, customerRowMapper, username);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
