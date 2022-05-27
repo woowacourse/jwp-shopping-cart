@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.auth.acceptance.AuthAcceptanceTest.로그인_요청;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -11,6 +12,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
 
 @DisplayName("회원 관련 기능")
@@ -23,8 +27,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         private CustomerSignUpRequest request;
 
         @BeforeEach
-            void prepare() {
-                request = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
+        void prepare() {
+            request = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
         }
 
         @Test
@@ -47,6 +51,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
+        CustomerSignUpRequest request = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
+        회원_가입_요청(request);
+        TokenRequest tokenRequest = new TokenRequest("username", "password123");
+        String accessToken = 로그인_요청(tokenRequest).body()
+                .as(TokenResponse.class)
+                .getAccessToken();
+
+        ExtractableResponse<Response> response = 내_정보_조회(accessToken);
+        정보_조회_성공(response, new CustomerResponse("username", "01012345678", "성담빌딩"));
     }
 
     @DisplayName("내 정보 수정")
@@ -83,5 +96,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     private void 회원_가입_실패(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    private void 정보_조회_성공(final ExtractableResponse<Response> response, final CustomerResponse expected) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().as(CustomerResponse.class))
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
     }
 }
