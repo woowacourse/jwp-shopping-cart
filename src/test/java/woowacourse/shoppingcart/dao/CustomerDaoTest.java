@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -9,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -49,5 +52,24 @@ public class CustomerDaoTest {
 
         // then
         assertThat(customerId).isEqualTo(16L);
+    }
+
+    @DisplayName("회원을 저장한다.")
+    @Test
+    void saveCustomer() {
+        // given
+        Customer customer = Customer.of("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+
+        // when
+        Customer savedCustomer = customerDao.save(customer);
+
+        // then
+        assertAll(
+            () -> assertThat(savedCustomer.getId()).isNotNull(),
+            () -> assertThat(savedCustomer.getUsername()).isEqualTo(customer.getUsername()),
+            () -> assertThat(savedCustomer.getPassword()).isEqualTo(customer.getPassword()),
+            () -> assertThat(savedCustomer.getPhoneNumber()).isEqualTo(customer.getPhoneNumber()),
+            () -> assertThat(savedCustomer.getAddress()).isEqualTo(customer.getAddress())
+        );
     }
 }
