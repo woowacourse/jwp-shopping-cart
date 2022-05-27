@@ -25,7 +25,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .body(customerRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .post("/api/members/signup")
+            .post("/api/customers/signup")
             .then().log().all()
             .extract();
 
@@ -33,24 +33,24 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
-    // @DisplayName("회원가입 시 username은 3자 이상 ~ 15자 이하로만 이루어져 있어야 된다.")
-    // @Test
-    // void validateUsernameLength() {
-    //     // given
-    //     CustomerRequest customerRequest = new CustomerRequest("do", "ehdgh1234", "01022728572", "인천 서구 검단로 851 동부아파트 108동 303호");
-    //
-    //     // when
-    //     ExtractableResponse<Response> response = RestAssured.given().log().all()
-    //         .body(customerRequest)
-    //         .contentType(MediaType.APPLICATION_JSON_VALUE)
-    //         .when()
-    //         .post("/api/members/signup")
-    //         .then().log().all()
-    //         .extract();
-    //
-    //     // then
-    //     assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-    // }
+    @DisplayName("회원가입 시 username은 3자 이상 ~ 15자 이하로만 이루어져 있어야 된다.")
+    @Test
+    void validateUsernameLength() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("do", "ehdgh1234", "01022728572", "인천 서구 검단로 851 동부아파트 108동 303호");
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .body(customerRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/signup")
+            .then().log().all()
+            .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 
     @DisplayName("내 정보 조회")
     @Test
