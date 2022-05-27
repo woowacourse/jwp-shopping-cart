@@ -30,6 +30,10 @@ public class Username {
         }
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

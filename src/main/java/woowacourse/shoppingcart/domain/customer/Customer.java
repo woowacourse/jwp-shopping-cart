@@ -19,6 +19,26 @@ public class Customer {
         this.address = address;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username.getUsername();
+    }
+
+    public String getPassword() {
+        return password.getPassword();
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber.getPhoneNumber();
+    }
+
+    public String getAddress() {
+        return address.getAddress();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

@@ -21,6 +21,10 @@ public class Password {
         }
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

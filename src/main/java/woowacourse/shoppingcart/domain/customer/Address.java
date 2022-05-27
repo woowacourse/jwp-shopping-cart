@@ -10,6 +10,10 @@ public class Address {
         this.address = address;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

@@ -28,6 +28,10 @@ public class PhoneNumber {
         }
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
