@@ -66,23 +66,8 @@ public class CustomerDao {
         jdbcTemplate.update(query, newName, newPassword, customerName);
     }
 
-    public Long findIdByNameAndPassword(String name, String password) {
-        final String query = "SELECT id FROM customer where username = ? and password = ?";
-        return jdbcTemplate.queryForObject(query, Long.class, name, password);
-    }
-
-    public Customer findCustomerById(Long customerId) {
-        try {
-            final String query = "SELECT username, password FROM customer WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Customer(
-                            customerId,
-                            resultSet.getString("username"),
-                            resultSet.getString("password")
-                    ), customerId
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
-        }
+    public boolean existsIdByNameAndPassword(String name, String password) {
+        final String query = "SELECT EXISTS (SELECT id FROM customer where username = ? and password = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name, password));
     }
 }

@@ -2,20 +2,24 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.auth.application.AuthService;
+import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerController {
     private final CustomerService customerService;
+    private final AuthService authService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, AuthService authService) {
         this.customerService = customerService;
+        this.authService = authService;
     }
 
     @PostMapping
@@ -43,8 +47,9 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<Customer> customerMe(@AuthenticationPrincipal Long customerId) {
-        return ResponseEntity.ok(customerService.findCustomerById(customerId));
+    public ResponseEntity<Customer> customerMe(HttpServletRequest request) {
+        String token = AuthorizationExtractor.extract(request);
+        String customerName = authService.getNameFromToken(token);
+        return ResponseEntity.ok(customerService.findCustomerByName(customerName));
     }
-
 }

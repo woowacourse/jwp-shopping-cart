@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.application.AuthorizationException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -31,11 +32,10 @@ public class CustomerService {
         customerDao.updateByName(customerName, editRequest.getName(), editRequest.getPassword());
     }
 
-    public Long findIdByNameAndPassword(String name, String password) {
-        return customerDao.findIdByNameAndPassword(name, password);
-    }
-
-    public Customer findCustomerById(Long customerId) {
-        return customerDao.findCustomerById(customerId);
+    public void validateNameAndPassword(String name, String password) {
+        if (customerDao.existsIdByNameAndPassword(name, password)) {
+            return;
+        }
+        throw new AuthorizationException("로그인에 실패했습니다.");
     }
 }

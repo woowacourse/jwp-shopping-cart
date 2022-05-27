@@ -7,6 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,9 +42,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
+        String accessToken = RestAssured
+                .given().log().all()
+                .body(new TokenRequest("test", "1234"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/login/token")
+                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+
         // when
         ExtractableResponse<Response> getResponse = RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get(createResponse.header("Location"))
                 .then().log().all()
                 .extract();
@@ -64,9 +76,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
+        String accessToken = RestAssured
+                .given().log().all()
+                .body(new TokenRequest("test", "1234"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/login/token")
+                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+
         // when
         ExtractableResponse<Response> editResponse = RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new CustomerRequest("updated", "1255"))
                 .when().put(createResponse.header("Location"))
@@ -76,6 +97,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         ExtractableResponse<Response> getResponse = RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/customers/updated")
                 .then().log().all()
                 .extract();
@@ -96,9 +119,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
+        String accessToken = RestAssured
+                .given().log().all()
+                .body(new TokenRequest("test", "1234"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/login/token")
+                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+
         // when
         ExtractableResponse<Response> deleteResponse = RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete(createResponse.header("Location"))
                 .then().log().all()
                 .extract();
@@ -106,6 +139,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         ExtractableResponse<Response> getResponse = RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/customers/test")
                 .then().log().all()
                 .extract();
