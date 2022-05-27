@@ -42,4 +42,9 @@ public class CustomerDao {
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
+
+    public boolean existCustomerByUsername(final String username) {
+        final String query = "SELECT EXISTS (SELECT id FROM customer WHERE username = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, username);
+    }
 }

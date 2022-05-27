@@ -66,4 +66,19 @@ public class CustomerDaoTest {
 
         assertThat(customerId).isNotNull();
     }
+
+    @Test
+    @DisplayName("username이 이미 존재하는지 확인한다.")
+    void existUsername() {
+        Customer customer = Customer.Builder()
+                .username("username")
+                .password("password123")
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+
+        customerDao.save(customer);
+
+        assertThat(customerDao.existCustomerByUsername("username")).isTrue();
+    }
 }
