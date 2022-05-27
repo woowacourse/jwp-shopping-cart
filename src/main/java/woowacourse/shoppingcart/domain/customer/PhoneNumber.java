@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class PhoneNumber {
@@ -25,5 +26,22 @@ public class PhoneNumber {
         if (!PHONE_NUMBER_PATTERN.matcher(phoneNumber).matches()) {
             throw new IllegalArgumentException("핸드폰 번호는 숫자만 가능합니다.");
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final PhoneNumber that = (PhoneNumber) o;
+        return Objects.equals(phoneNumber, that.phoneNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(phoneNumber);
     }
 }
