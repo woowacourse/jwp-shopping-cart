@@ -63,27 +63,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         정보_조회_성공(response);
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
-
-        // then
-        // 토큰 발급 요청이 거부된다
-    }
-
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보 조회 요청이 거부된다
+        ExtractableResponse<Response> response = 내_정보_조회("fake.token.value");
+        정보_조회_실패(response);
     }
 
     public static ExtractableResponse<Response> 로그인_요청(final TokenRequest request) {
@@ -105,5 +89,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     private void 정보_조회_성공(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    private void 정보_조회_실패(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }
