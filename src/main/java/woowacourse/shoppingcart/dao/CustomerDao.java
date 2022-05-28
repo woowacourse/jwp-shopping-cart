@@ -20,13 +20,14 @@ public class CustomerDao {
     }
 
     public Long save(Customer customer) {
-        final String query = "INSERT INTO customer (username, email) VALUES (?, ?)";
+        final String query = "INSERT INTO customer (username, email, password) VALUES (?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, customer.getUsername());
             preparedStatement.setString(2, customer.getEmail());
+            preparedStatement.setString(3, customer.getPassword());
             return preparedStatement;
         }, keyHolder);
 

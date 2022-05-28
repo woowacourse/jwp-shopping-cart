@@ -82,7 +82,7 @@ public class CustomerDaoTest {
     @Test
     void save() {
         // given
-        Customer customer = new Customer("kun", "kun@email.com");
+        Customer customer = new Customer("kun", "kun@email.com", "asdfqer123");
 
         // when
         Long actual = customerDao.save(customer);

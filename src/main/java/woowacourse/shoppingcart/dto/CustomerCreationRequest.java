@@ -14,7 +14,7 @@ public class CustomerCreationRequest {
     @Pattern(regexp = "[a-zA-Z0-9가-힣]{2,}", message = "닉네임 양식이 잘못 되었습니다.")
     private String nickname;
 
-    public CustomerCreationRequest() {
+    private CustomerCreationRequest() {
     }
 
     public CustomerCreationRequest(String email, String password, String nickname) {
