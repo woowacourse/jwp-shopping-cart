@@ -1,15 +1,15 @@
 package woowacourse.auth.dto;
 
-public class MemberRequest {
+public class MemberCreateRequest {
 
     private String email;
     private String password;
     private String nickname;
 
-    public MemberRequest() {
+    public MemberCreateRequest() {
     }
 
-    public MemberRequest(String email, String password, String nickname) {
+    public MemberCreateRequest(String email, String password, String nickname) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
