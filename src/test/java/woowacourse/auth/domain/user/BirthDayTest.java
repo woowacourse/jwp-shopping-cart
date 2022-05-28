@@ -26,7 +26,7 @@ class BirthDayTest {
     }
 
     @DisplayName("올바르지 않은 생년월일 포맷을 전달하면 예외가 발생한다.")
-    @ValueSource(strings = {"", "198-05-13", "1998-5-13", "1998-05-1", "1998--13", "1998-05-"})
+    @ValueSource(strings = {"198-05-13", "1998-5-13", "1998-05-1", "1998--13", "1998-05-", "--"})
     @ParameterizedTest
     void constructor_invalidFormat(String input) {
         // when & then
