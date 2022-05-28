@@ -20,15 +20,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void create_right_200() {
         // given
-        CustomerCreationRequest request = new CustomerCreationRequest();
+        CustomerCreationRequest request = new CustomerCreationRequest("kun@naver.com", "1q2w3e4r", "kun");
 
         // when
-        ValidatableResponse response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/users")
-                .then().log().all();
+        ValidatableResponse response = postUser(request);
 
         // then
         response.statusCode(HttpStatus.OK.value());
@@ -45,17 +40,29 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         CustomerCreationRequest request = new CustomerCreationRequest(email, password, nickname);
 
         //when
-        ValidatableResponse response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/users")
-                .then().log().all();
+        ValidatableResponse response = postUser(request);
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("errorCode", equalTo("1000"))
                 .body("message", equalTo(message));
+    }
+
+    @DisplayName("이메일이 중복 되었을 때, 상태코드 400을 반환한다.")
+    @Test
+    void create_duplicateEmail_400() {
+        //given
+        CustomerCreationRequest request = new CustomerCreationRequest("kun@naver.com", "1q2w3e4r", "kun");
+
+        postUser(request);
+
+        //when
+        ValidatableResponse response = postUser(request);
+
+        // then
+        response.statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("errorCode", equalTo("1001"))
+                .body("message", equalTo("이메일이 중복입니다."));
     }
 
     @DisplayName("내 정보 조회")
