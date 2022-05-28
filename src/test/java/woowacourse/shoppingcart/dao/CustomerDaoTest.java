@@ -27,6 +27,20 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(dataSource, jdbcTemplate);
     }
 
+    @DisplayName("Customer 를 저장한다.")
+    @Test
+    void save() {
+        // given
+        Customer customer = new Customer("roma@naver.com", "roma", "12345678");
+
+        // when
+        Long savedId = customerDao.save(customer);
+        Long expected = customerDao.findIdByUserName("roma");
+
+        // then
+        assertThat(savedId).isEqualTo(expected);
+    }
+
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
@@ -64,20 +78,6 @@ public class CustomerDaoTest {
 
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(expected);
-    }
-
-    @DisplayName("Customer 를 저장한다.")
-    @Test
-    void save() {
-        // given
-        Customer customer = new Customer("roma@naver.com", "roma", "12345678");
-
-        // when
-        Long savedId = customerDao.save(customer);
-        Long expected = customerDao.findIdByUserName("roma");
-
-        // then
-        assertThat(savedId).isEqualTo(expected);
     }
 
     @DisplayName("Customer 를 수정한다.")
