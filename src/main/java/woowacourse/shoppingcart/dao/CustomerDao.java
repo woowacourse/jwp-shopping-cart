@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -14,6 +15,13 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
+
+    private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) -> new Customer(
+            resultSet.getLong("id"),
+            resultSet.getString("loginid"),
+            resultSet.getString("username"),
+            resultSet.getString("password")
+    );
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleJdbc;
@@ -35,6 +43,15 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE username = :username";
             return namedParameterJdbcTemplate.queryForObject(query,
                     Map.of("username", userName.toLowerCase(Locale.ROOT)), Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public Customer findById(Long id) {
+        try {
+            final String query = "SELECT id, loginid, username, password FROM customer WHERE id = :id";
+            return namedParameterJdbcTemplate.queryForObject(query, Map.of("id", id) ,ROW_MAPPER);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
