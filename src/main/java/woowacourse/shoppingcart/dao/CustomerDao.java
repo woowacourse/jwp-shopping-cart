@@ -9,18 +9,18 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Member;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Member> memberRowMapper = (rs, rn) -> new Member(
+    private final RowMapper<Customer> memberRowMapper = (rs, rn) -> new Customer(
             rs.getLong("id"),
             rs.getString("email"),
             rs.getString("password"),
-            rs.getString("nickname")
+            rs.getString("username")
     );
 
 
@@ -29,23 +29,23 @@ public class CustomerDao {
     }
 
 
-    public Long save(final Member member) {
-        final String sql = "INSERT INTO CUSTOMER(email, password, nickname) values(?, ?, ?)";
+    public Long save(final Customer customer) {
+        final String sql = "INSERT INTO CUSTOMER(email, password, username) values(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, member.getEmail());
-            preparedStatement.setString(2, member.getPassword());
-            preparedStatement.setString(3, member.getNickname());
+            preparedStatement.setString(1, customer.getEmail());
+            preparedStatement.setString(2, customer.getPassword());
+            preparedStatement.setString(3, customer.getUsername());
             return preparedStatement;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
     }
 
-    public Optional<Member> findById(final Long createdMemberId) {
-        final String sql = "SELECT id, email, password, nickname FROM CUSTOMER WHERE id = ?";
+    public Optional<Customer> findById(final Long createdMemberId) {
+        final String sql = "SELECT id, email, password, username FROM CUSTOMER WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, createdMemberId));
         } catch (EmptyResultDataAccessException e) {
@@ -53,10 +53,10 @@ public class CustomerDao {
         }
     }
 
-    public Long findIdByNickName(final String nickname) {
+    public Long findByUsername(final String username) {
         try {
-            final String query = "SELECT id FROM customer WHERE nickname = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, nickname.toLowerCase(Locale.ROOT));
+            final String query = "SELECT id FROM customer WHERE username = ?";
+            return jdbcTemplate.queryForObject(query, Long.class, username.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
