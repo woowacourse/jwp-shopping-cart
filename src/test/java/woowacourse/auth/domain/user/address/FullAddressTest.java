@@ -1,4 +1,4 @@
-package woowacourse.auth.domain.user;
+package woowacourse.auth.domain.user.address;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import woowacourse.auth.domain.user.address.FullAddress;
 
 class FullAddressTest {
     @DisplayName("전체 주소 문자열을 전달받아 생성된다.")

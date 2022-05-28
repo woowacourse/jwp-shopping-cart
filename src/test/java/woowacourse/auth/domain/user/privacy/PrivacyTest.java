@@ -1,10 +1,9 @@
-package woowacourse.auth.domain.user;
+package woowacourse.auth.domain.user.privacy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.auth.domain.user.privacy.Privacy;
 
 class PrivacyTest {
     @DisplayName("이름, 성별, 생년월일, 전화번호, 주소지 정보를 전달받아 생성된다.")
