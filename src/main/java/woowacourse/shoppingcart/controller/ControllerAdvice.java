@@ -16,6 +16,11 @@ import java.util.List;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+    @ExceptionHandler(CartException.class)
+    public ResponseEntity handleCustomException(final CartException e) {
+        return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleUnhandledException() {
         return ResponseEntity.badRequest().body("Unhandled Exception");
