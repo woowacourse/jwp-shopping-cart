@@ -8,11 +8,11 @@ public class Contact {
     private final String value;
 
     public Contact(String value) {
-        validateContact(value);
+        validateFormat(value);
         this.value = value;
     }
 
-    private void validateContact(String value) {
+    private void validateFormat(String value) {
         if (!value.matches(CONTACT_REGEX)) {
             throw new InvalidContactFormatException();
         }

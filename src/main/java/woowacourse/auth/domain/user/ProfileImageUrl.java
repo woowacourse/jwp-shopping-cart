@@ -9,11 +9,11 @@ public class ProfileImageUrl {
     private final String value;
 
     public ProfileImageUrl(String value) {
-        validateProfileImageUrl(value);
+        validateFormat(value);
         this.value = value;
     }
 
-    private void validateProfileImageUrl(String value) {
+    private void validateFormat(String value) {
         if (!value.matches(URL_REGEX)) {
             throw new InvalidUrlFormatException();
         }
