@@ -63,6 +63,18 @@ public class CustomerDao {
         }
     }
 
+    public Optional<Customer> findByEmailAndPassword(String email, String password) {
+        try {
+            final String query = "SELECT id, email, username, password FROM customer WHERE email = :email and password = :password";
+            Map<String, String> params = Map.of("email", email, "password", password);
+            Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
+
+            return Optional.ofNullable(customer);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public Long save(final Customer customer) {
         return insertActor.executeAndReturnKey(new MapSqlParameterSource()
                 .addValue("email", customer.getEmail())

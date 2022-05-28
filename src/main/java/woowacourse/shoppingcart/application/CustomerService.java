@@ -30,6 +30,11 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerException::new);
     }
 
+    public Customer findByEmailAndPassword(String email, String password) {
+        return customerDao.findByEmailAndPassword(email, password)
+                .orElseThrow(InvalidCustomerException::new);
+    }
+
     public void update(Long id, CustomerUpdateRequest request) {
         validateCustomerExists(id);
         customerDao.update(id, request.getUsername());

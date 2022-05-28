@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -75,11 +77,46 @@ public class CustomerServiceTest {
                 .isEqualTo(expected);
     }
 
+    @DisplayName("email, password로 Customer를 조회한다.")
+    @Test
+    void findByEmailAndPassword() {
+        // when
+        Customer customer = customerService.findByEmailAndPassword("puterism@naver.com", "12349053145");
+
+        // then
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+
+        assertThat(customer).usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
     @DisplayName("존재하지 않는 id로 Customer를 조회하면 예외를 발생시킨다.")
     @Test
     void findById_throwNotExistId() {
         // when then
         assertThatThrownBy(() -> customerService.findById(100L))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("존재하지 않는 유저입니다.");
+    }
+
+    @DisplayName("존재하지 않는 email로 Customer를 조회하면 예외를 발생시킨다.")
+    @Test
+    void findByEmail_throwNotExistId() {
+        // when then
+        assertThatThrownBy(() -> customerService.findByEmail("rorororo@naver.com"))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("존재하지 않는 유저입니다.");
+    }
+
+    @DisplayName("존재하지 않는 email 혹은 password로 Customer를 조회하면 예외를 발생시킨다.")
+    @ParameterizedTest
+    @CsvSource(value = {
+            "failemail@naver.com:12349053145",
+            "puterism@naver.com:failpassword",
+            "failemail@naver.com:failpassword"}, delimiter = ':')
+    void findByEmailAndPassword_throwNotExistId(String email, String password) {
+        // when then
+        assertThatThrownBy(() -> customerService.findByEmailAndPassword(email, password))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
