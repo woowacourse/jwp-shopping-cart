@@ -13,12 +13,12 @@ create table customer
     id       bigint       not null auto_increment,
     email   varchar(100) not null,
     password    varchar(255) not null,
-    nickname    varchar(30) not null,
+    username    varchar(30) not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table customer
-    add unique key (nickname);
+    add unique key (username);
 
 create table product
 (

@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Member;
+import woowacourse.shoppingcart.domain.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -31,14 +30,14 @@ class CustomerDaoTest {
     }
 
     @Test
-    @DisplayName("이메일, 암호화 된 패스워드, 닉네임을 받아서 Member 테이블에 저장한다.")
+    @DisplayName("이메일, 암호화 된 패스워드, 닉네임을 받아서 Customer 테이블에 저장한다.")
     void save() {
-        final Member testMember = Member.createWithoutId("test@test.com", "testtest", "테스트");
-        final Long createdMemberId = customerDao.save(testMember);
+        final Customer testCustomer = Customer.createWithoutId("test@test.com", "testtest", "테스트");
+        final Long createdMemberId = customerDao.save(testCustomer);
 
-        final Member findMember = customerDao.findById(createdMemberId).get();
+        final Customer findCustomer = customerDao.findById(createdMemberId).get();
 
-        assertThat(findMember.getId()).isEqualTo(createdMemberId);
+        assertThat(findCustomer.getId()).isEqualTo(createdMemberId);
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -46,10 +45,10 @@ class CustomerDaoTest {
     void findIdByUserNameTest() {
 
         // given
-        final String userName = "puterism";
+        final String username = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByNickName(userName);
+        final Long customerId = customerDao.findByUsername(username);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -60,10 +59,10 @@ class CustomerDaoTest {
     void findIdByUserNameTestIgnoreUpperLowerCase() {
 
         // given
-        final String userName = "gwangyeol-iM";
+        final String username = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByNickName(userName);
+        final Long customerId = customerDao.findByUsername(username);
 
         // then
         assertThat(customerId).isEqualTo(16L);

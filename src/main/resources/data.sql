@@ -1,4 +1,4 @@
-insert into customer (email, password, nickname)
+insert into customer (email, password, username)
 values ('test1@test.com','testtest','puterism'),
        ('test2@test.com','testtest','tanney-102'),
        ('test3@test.com','testtest','jho2301'),
