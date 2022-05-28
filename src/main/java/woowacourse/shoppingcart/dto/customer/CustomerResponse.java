@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto.customer;
 
+import woowacourse.shoppingcart.domain.Customer;
+
 public class CustomerResponse {
 
     private Long id;
@@ -7,6 +9,10 @@ public class CustomerResponse {
     private String username;
 
     private CustomerResponse() {
+    }
+
+    public CustomerResponse(Customer customer) {
+        this(customer.getId(), customer.getEmail(), customer.getUsername());
     }
 
     public CustomerResponse(Long id, String email, String username) {

@@ -25,19 +25,21 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(response.header("Location")).isEqualTo("/api/customers/1")
+                () -> assertThat(response.header("Location")).startsWith("/api/customers/")
         );
     }
 
     @DisplayName("내 정보 조회")
     @Test
-    void getMe() {
-        회원가입_요청(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+    void findCustomer() {
+        ExtractableResponse<Response> createResponse = 회원가입_요청(
+                new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+        long savedId = ID_추출(createResponse);
 
-        ExtractableResponse<Response> response = 회원조회_요청(1L);
+        ExtractableResponse<Response> response = 회원조회_요청(savedId);
 
         CustomerResponse customerResponse = response.as(CustomerResponse.class);
-        CustomerResponse expected = new CustomerResponse(1L, "roma@naver.com", "roma");
+        CustomerResponse expected = new CustomerResponse(savedId, "roma@naver.com", "roma");
 
         assertAll(
                 () -> assertThat(customerResponse).usingRecursiveComparison()
@@ -47,13 +49,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("내 정보 수정")
     @Test
-    void updateMe() {
-        회원가입_요청(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+    void update() {
+        long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
 
-        ExtractableResponse<Response> response = 회원정보수정_요청(1L, new CustomerUpdateRequest("sojukang"));
+        ExtractableResponse<Response> response = 회원정보수정_요청(savedId, new CustomerUpdateRequest("sojukang"));
 
         CustomerResponse customerResponse = response.as(CustomerResponse.class);
-        CustomerResponse expected = new CustomerResponse(1L, "roma@naver.com", "sojukang");
+        CustomerResponse expected = new CustomerResponse(savedId, "roma@naver.com", "sojukang");
 
         assertAll(
                 () -> assertThat(customerResponse).usingRecursiveComparison()
@@ -63,13 +65,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("회원탈퇴")
     @Test
-    void deleteMe() {
+    void delete() {
         ExtractableResponse<Response> response = 회원탈퇴_요청(1L);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    public static ExtractableResponse<Response> 회원가입_요청(CustomerCreateRequest request) {
+    public ExtractableResponse<Response> 회원가입_요청(CustomerCreateRequest request) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -79,7 +81,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 회원조회_요청(long id) {
+    public long 회원가입_요청_및_ID_추출(CustomerCreateRequest request) {
+        return ID_추출(회원가입_요청(request));
+    }
+
+    public ExtractableResponse<Response> 회원조회_요청(long id) {
         return RestAssured
                 .given().log().all()
                 .when().get("/api/customers/" + id)
@@ -87,7 +93,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 회원정보수정_요청(long id, CustomerUpdateRequest request) {
+    public ExtractableResponse<Response> 회원정보수정_요청(long id, CustomerUpdateRequest request) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -97,12 +103,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 회원탈퇴_요청(long id) {
+    public ExtractableResponse<Response> 회원탈퇴_요청(long id) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/api/customers/" + id)
                 .then().log().all()
                 .extract();
+    }
+
+    private long ID_추출(ExtractableResponse<Response> response) {
+        String[] locations = response.header("Location").split("/");
+        return Long.parseLong(locations[locations.length - 1]);
     }
 }
