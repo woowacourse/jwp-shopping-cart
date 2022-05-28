@@ -1,11 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.Locale;
+import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-
-import java.util.Locale;
 
 @Repository
 public class CustomerDao {
@@ -14,6 +17,20 @@ public class CustomerDao {
 
     public CustomerDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Long save(Customer customer) {
+        final String query = "INSERT INTO customer (username, email) VALUES (?, ?)";
+        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            final PreparedStatement preparedStatement =
+                    connection.prepareStatement(query, new String[]{"id"});
+            preparedStatement.setString(1, customer.getUsername());
+            preparedStatement.setString(2, customer.getEmail());
+            return preparedStatement;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public Long findIdByUserName(final String userName) {
