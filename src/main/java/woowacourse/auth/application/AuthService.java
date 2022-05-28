@@ -1,7 +1,44 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.LoginCustomer;
 
 @Service
 public class AuthService {
+
+    private final CustomerDao customerDao;
+    private JwtTokenProvider jwtTokenProvider;
+
+    public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
+        this.customerDao = customerDao;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    public TokenResponse createToken(TokenRequest tokenRequest) {
+        if (!customerDao.checkInvalidLogin(tokenRequest.getLoginId(), tokenRequest.getPassword())) {
+            throw new IllegalArgumentException();
+        }
+
+        String token = jwtTokenProvider.createToken(tokenRequest.getLoginId());
+        Customer customer = customerDao.findIdByLoginId(tokenRequest.getLoginId());
+        return new TokenResponse(token, customer.getUsername());
+    }
+
+    public LoginCustomer findCustomerByToken(String token) {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+        String payload = jwtTokenProvider.getPayload(token);
+
+        if (!customerDao.existByLoginId(payload)) {
+            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
+        }
+
+        return new LoginCustomer(customerDao.findIdByLoginId(payload));
+    }
 }
