@@ -4,19 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.dto.MemberRequest;
 import woowacourse.shoppingcart.dto.MemberResponse;
 
 @DisplayName("회원 관련 기능")
 public class MemberAcceptanceTest extends AcceptanceTest {
-
-    private static final MemberRequest 파랑 = new MemberRequest("email@email.com", "파랑", "password123!");
-    private static final TokenRequest 파랑토큰 = new TokenRequest("email@email.com", "password123!");
 
     @DisplayName("회원가입")
     @Test
@@ -28,17 +25,13 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         회원가입(파랑);
-        String accessToken = 로그인_후_토큰생성(파랑토큰);
+        String accessToken = 로그인_후_토큰발급(파랑토큰);
 
-        MemberResponse memberResponse = RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .when().get("/api/members/me")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract().as(MemberResponse.class);
+        ExtractableResponse<Response> response = 회원정보_조회(accessToken);
+        MemberResponse memberResponse = response.as(MemberResponse.class);
 
         assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(memberResponse.getEmail()).isEqualTo("email@email.com"),
                 () -> assertThat(memberResponse.getNickname()).isEqualTo("파랑")
         );
@@ -48,7 +41,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void updateNickname() {
         회원가입(파랑);
-        String accessToken = 로그인_후_토큰생성(파랑토큰);
+        String accessToken = 로그인_후_토큰발급(파랑토큰);
 
         RestAssured
                 .given().log().all()
@@ -63,7 +56,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void updatePassword() {
         회원가입(파랑);
-        String accessToken = 로그인_후_토큰생성(파랑토큰);
+        String accessToken = 로그인_후_토큰발급(파랑토큰);
 
         RestAssured
                 .given().log().all()
@@ -78,7 +71,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         회원가입(파랑);
-        String accessToken = 로그인_후_토큰생성(파랑토큰);
+        String accessToken = 로그인_후_토큰발급(파랑토큰);
 
         RestAssured
                 .given().log().all()
