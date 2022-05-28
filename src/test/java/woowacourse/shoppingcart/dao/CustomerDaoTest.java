@@ -50,4 +50,30 @@ public class CustomerDaoTest {
         // then
         assertThat(customerId).isEqualTo(16L);
     }
+
+    @DisplayName("이메일이 존재하지 않으면 false를 반환한다.")
+    @Test
+    void existEmail_notExist_falseReturned() {
+        // given
+        String email = "kun@naver.com";
+
+        // when
+        boolean actual = customerDao.existEmail(email);
+
+        // then
+        assertThat(actual).isFalse();
+    }
+
+    @DisplayName("이메일이 존재하면 true를 반환한다.")
+    @Test
+    void existEmail_exist_trueReturned() {
+        // given
+        String email = "email1@email.com";
+
+        // when
+        boolean actual = customerDao.existEmail(email);
+
+        // then
+        assertThat(actual).isTrue();
+    }
 }

@@ -24,4 +24,9 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
     }
+
+    public boolean existEmail(String email) {
+        final String query = "SELECT EXISTS(SELECT * FROM customer WHERE email = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, email);
+    }
 }
