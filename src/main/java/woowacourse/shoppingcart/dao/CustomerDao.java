@@ -53,9 +53,18 @@ public class CustomerDao {
         }
     }
 
-    public Long findByUsername(final String username) {
+    public Optional<Customer> findByEmail(final String email) {
+        final String query = "SELECT id, email, password, username FROM customer WHERE email = ?";
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, memberRowMapper, email));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Long findByUsername(final String username) {
+        final String query = "SELECT id FROM customer WHERE username = ?";
+        try {
             return jdbcTemplate.queryForObject(query, Long.class, username.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();

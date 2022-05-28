@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,5 +67,16 @@ class CustomerDaoTest {
 
         // then
         assertThat(customerId).isEqualTo(16L);
+    }
+
+    @Test
+    @DisplayName("email을 통해 customer를 찾아서 반환한다.")
+    void findByEmail() {
+        final String email = "test1@test.com";
+
+        final Customer customer = customerDao.findByEmail(email).get();
+
+        assertThat(customer.getEmail()).isEqualTo(email);
+
     }
 }
