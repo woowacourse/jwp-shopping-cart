@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.auth.exception.InvalidAddressFormatException;
 
 class AddressTest {
@@ -22,10 +24,11 @@ class AddressTest {
     }
 
     @DisplayName("올바르지 않은 주소 포맷을 전달하면 예외가 발생한다.")
-    @Test
-    void constructor_invalidFormat() {
+    @ValueSource(strings = {"", " ", "   "})
+    @ParameterizedTest
+    void constructor_invalidFormat(String input) {
         // when & then
-        assertThatThrownBy(() -> new Address(""))
+        assertThatThrownBy(() -> new Address(input))
                 .isInstanceOf(InvalidAddressFormatException.class);
     }
 }
