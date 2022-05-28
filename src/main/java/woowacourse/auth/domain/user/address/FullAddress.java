@@ -1,4 +1,4 @@
-package woowacourse.auth.domain.user;
+package woowacourse.auth.domain.user.address;
 
 import java.util.Objects;
 

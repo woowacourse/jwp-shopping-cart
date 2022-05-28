@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import woowacourse.auth.domain.user.address.ZoneCode;
 import woowacourse.auth.exception.format.InvalidZoneCodeFormatException;
 
 class ZoneCodeTest {

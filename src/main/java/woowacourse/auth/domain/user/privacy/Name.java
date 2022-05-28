@@ -1,19 +1,20 @@
-package woowacourse.auth.domain.user;
+package woowacourse.auth.domain.user.privacy;
 
 import java.util.Objects;
-import woowacourse.auth.exception.format.InvalidAddressFormatException;
+import woowacourse.auth.exception.format.InvalidNameFormatException;
 
-public class Address {
+public class Name {
+    private static final String NAME_REGEX = "[가-힣]{2,5}";
     private final String value;
 
-    public Address(String value) {
+    public Name(String value) {
         validateFormat(value);
         this.value = value;
     }
 
     private void validateFormat(String value) {
-        if (Objects.isNull(value) || value.isBlank()) {
-            throw new InvalidAddressFormatException();
+        if (Objects.isNull(value) || !value.matches(NAME_REGEX)) {
+            throw new InvalidNameFormatException();
         }
     }
 
@@ -25,8 +26,8 @@ public class Address {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Address address = (Address) o;
-        return Objects.equals(value, address.value);
+        Name name = (Name) o;
+        return Objects.equals(value, name.value);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" +
+        return "Name{" +
                 "value='" + value + '\'' +
                 '}';
     }

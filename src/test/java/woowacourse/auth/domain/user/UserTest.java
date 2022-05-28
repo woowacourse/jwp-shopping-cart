@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import woowacourse.auth.domain.user.privacy.Privacy;
 import woowacourse.auth.exception.DisagreeToTermsException;
 
 class UserTest {

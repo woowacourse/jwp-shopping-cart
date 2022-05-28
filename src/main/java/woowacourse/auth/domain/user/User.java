@@ -1,6 +1,7 @@
 package woowacourse.auth.domain.user;
 
 import java.util.Objects;
+import woowacourse.auth.domain.user.privacy.Privacy;
 import woowacourse.auth.exception.DisagreeToTermsException;
 
 public class User {

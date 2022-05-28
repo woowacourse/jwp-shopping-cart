@@ -1,22 +1,20 @@
-package woowacourse.auth.domain.user;
+package woowacourse.auth.domain.user.address;
 
 import java.util.Objects;
+import woowacourse.auth.exception.format.InvalidAddressFormatException;
 
-public class DetailAddress {
-    private static final DetailAddress EMPTY = new DetailAddress("");
-
+public class Address {
     private final String value;
 
-    private DetailAddress(String value) {
+    public Address(String value) {
+        validateFormat(value);
         this.value = value;
     }
 
-    public static DetailAddress from(String value) {
+    private void validateFormat(String value) {
         if (Objects.isNull(value) || value.isBlank()) {
-            return EMPTY;
+            throw new InvalidAddressFormatException();
         }
-
-        return new DetailAddress(value);
     }
 
     @Override
@@ -27,8 +25,8 @@ public class DetailAddress {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        DetailAddress that = (DetailAddress) o;
-        return Objects.equals(value, that.value);
+        Address address = (Address) o;
+        return Objects.equals(value, address.value);
     }
 
     @Override
@@ -38,7 +36,7 @@ public class DetailAddress {
 
     @Override
     public String toString() {
-        return "DetailAddress{" +
+        return "Address{" +
                 "value='" + value + '\'' +
                 '}';
     }

@@ -1,4 +1,4 @@
-package woowacourse.auth.domain.user;
+package woowacourse.auth.domain.user.privacy;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

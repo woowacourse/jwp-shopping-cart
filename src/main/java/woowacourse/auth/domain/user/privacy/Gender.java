@@ -1,4 +1,4 @@
-package woowacourse.auth.domain.user;
+package woowacourse.auth.domain.user.privacy;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
