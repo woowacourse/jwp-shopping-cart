@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.auth.exception.InvalidContactFormatException;
+import woowacourse.auth.exception.format.InvalidContactFormatException;
 
 class ContactTest {
     @DisplayName("전화번호 문자열을 전달받아 생성된다.")

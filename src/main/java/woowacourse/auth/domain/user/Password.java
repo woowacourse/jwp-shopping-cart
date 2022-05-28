@@ -1,7 +1,7 @@
 package woowacourse.auth.domain.user;
 
 import java.util.Objects;
-import woowacourse.auth.exception.InvalidPasswordFormatException;
+import woowacourse.auth.exception.format.InvalidPasswordFormatException;
 
 public class Password {
 

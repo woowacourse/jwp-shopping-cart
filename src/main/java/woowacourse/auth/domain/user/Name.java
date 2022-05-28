@@ -1,7 +1,7 @@
 package woowacourse.auth.domain.user;
 
 import java.util.Objects;
-import woowacourse.auth.exception.InvalidNameFormatException;
+import woowacourse.auth.exception.format.InvalidNameFormatException;
 
 public class Name {
     private static final String NAME_REGEX = "[가-힣]{2,5}";

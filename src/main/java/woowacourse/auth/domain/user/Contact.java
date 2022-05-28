@@ -1,7 +1,7 @@
 package woowacourse.auth.domain.user;
 
 import java.util.Objects;
-import woowacourse.auth.exception.InvalidContactFormatException;
+import woowacourse.auth.exception.format.InvalidContactFormatException;
 
 public class Contact {
     private static final String CONTACT_REGEX = "\\d{8,11}";

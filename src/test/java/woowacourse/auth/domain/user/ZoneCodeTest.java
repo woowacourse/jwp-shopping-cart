@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.auth.exception.InvalidZoneCodeFormatException;
+import woowacourse.auth.exception.format.InvalidZoneCodeFormatException;
 
 class ZoneCodeTest {
     @DisplayName("우편번호 문자열을 전달받아 생성된다.")

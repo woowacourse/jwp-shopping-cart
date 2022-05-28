@@ -1,7 +1,7 @@
 package woowacourse.auth.domain.user;
 
 import java.util.Objects;
-import woowacourse.auth.exception.InvalidAddressFormatException;
+import woowacourse.auth.exception.format.InvalidAddressFormatException;
 
 public class Address {
     private final String value;

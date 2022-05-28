@@ -1,7 +1,7 @@
 package woowacourse.auth.domain.user;
 
 import java.util.Objects;
-import woowacourse.auth.exception.InvalidZoneCodeFormatException;
+import woowacourse.auth.exception.format.InvalidZoneCodeFormatException;
 
 public class ZoneCode {
     private static final String ZONE_CODE_REGEX = "\\d{5}";

@@ -1,7 +1,7 @@
 package woowacourse.auth.domain.user;
 
 import java.util.Objects;
-import woowacourse.auth.exception.InvalidEmailFormatException;
+import woowacourse.auth.exception.format.InvalidEmailFormatException;
 
 public class Email {
     private static final String EMAIL_REGEX = "[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\\.([a-zA-Z])+";

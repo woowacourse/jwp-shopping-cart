@@ -1,7 +1,7 @@
 package woowacourse.auth.domain.user;
 
 import java.util.Objects;
-import woowacourse.auth.exception.InvalidUrlFormatException;
+import woowacourse.auth.exception.format.InvalidUrlFormatException;
 
 public class ProfileImageUrl {
     private static final String URL_REGEX = "^(http(s)?:\\/\\/)[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\\.([a-zA-Z])+.*";
