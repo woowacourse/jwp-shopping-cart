@@ -12,7 +12,7 @@ public class DetailAddress {
     }
 
     public static DetailAddress from(String value) {
-        if (value.isBlank()) {
+        if (Objects.isNull(value) || value.isBlank()) {
             return EMPTY;
         }
 

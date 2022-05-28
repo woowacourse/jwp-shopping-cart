@@ -14,7 +14,7 @@ public class Password {
     }
 
     private void validateFormat(String value) {
-        if (!value.matches(PASSWORD_REGEX)) {
+        if (Objects.isNull(value) || !value.matches(PASSWORD_REGEX)) {
             throw new InvalidPasswordFormatException();
         }
     }

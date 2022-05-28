@@ -13,7 +13,7 @@ public class Name {
     }
 
     private void validateFormat(String value) {
-        if (!value.matches(NAME_REGEX)) {
+        if (Objects.isNull(value) || !value.matches(NAME_REGEX)) {
             throw new InvalidNameFormatException();
         }
     }

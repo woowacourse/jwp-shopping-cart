@@ -12,7 +12,7 @@ public class Address {
     }
 
     private void validateFormat(String value) {
-        if (value.isBlank()) {
+        if (Objects.isNull(value) || value.isBlank()) {
             throw new InvalidAddressFormatException();
         }
     }

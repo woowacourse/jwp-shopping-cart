@@ -12,7 +12,7 @@ public class BirthDay {
     }
 
     public static BirthDay from(String value) {
-        return new BirthDay(LocalDate.parse(value, DateTimeFormatter.ISO_DATE));
+        return new BirthDay(LocalDate.parse(Objects.requireNonNull(value), DateTimeFormatter.ISO_DATE));
     }
 
     @Override

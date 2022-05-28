@@ -14,7 +14,7 @@ public class Email {
     }
 
     private void validateFormat(String value) {
-        if (!value.matches(EMAIL_REGEX)) {
+        if (Objects.isNull(value) || !value.matches(EMAIL_REGEX)) {
             throw new InvalidEmailFormatException();
         }
     }

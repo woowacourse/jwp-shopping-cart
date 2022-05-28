@@ -13,7 +13,7 @@ public class Contact {
     }
 
     private void validateFormat(String value) {
-        if (!value.matches(CONTACT_REGEX)) {
+        if (Objects.isNull(value) || !value.matches(CONTACT_REGEX)) {
             throw new InvalidContactFormatException();
         }
     }

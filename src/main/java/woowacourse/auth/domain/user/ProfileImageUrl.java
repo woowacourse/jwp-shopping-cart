@@ -14,7 +14,7 @@ public class ProfileImageUrl {
     }
 
     private void validateFormat(String value) {
-        if (!value.matches(URL_REGEX)) {
+        if (Objects.isNull(value) || !value.matches(URL_REGEX)) {
             throw new InvalidUrlFormatException();
         }
     }

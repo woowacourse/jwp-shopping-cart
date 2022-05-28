@@ -13,7 +13,7 @@ public class ZoneCode {
     }
 
     private void validateFormat(String value) {
-        if (!value.matches(ZONE_CODE_REGEX)) {
+        if (Objects.isNull(value) || !value.matches(ZONE_CODE_REGEX)) {
             throw new InvalidZoneCodeFormatException();
         }
     }
