@@ -34,7 +34,7 @@ public class CustomerDao {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            final PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, member.getEmail());
             preparedStatement.setString(2, member.getPassword());
             preparedStatement.setString(3, member.getNickname());
