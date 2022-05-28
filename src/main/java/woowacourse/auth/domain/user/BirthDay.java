@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class BirthDay {
+    private static final BirthDay EMPTY = new BirthDay(LocalDate.MIN);
+
     private final LocalDate value;
 
     private BirthDay(LocalDate value) {
@@ -12,7 +14,10 @@ public class BirthDay {
     }
 
     public static BirthDay from(String value) {
-        return new BirthDay(LocalDate.parse(Objects.requireNonNull(value), DateTimeFormatter.ISO_DATE));
+        if (Objects.isNull(value) || value.isEmpty()) {
+            return EMPTY;
+        }
+        return new BirthDay(LocalDate.parse(value, DateTimeFormatter.ISO_DATE));
     }
 
     @Override
