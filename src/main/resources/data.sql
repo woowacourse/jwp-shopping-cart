@@ -1,27 +1,5 @@
-insert into customer (username)
-values ('puterism'),
-       ('tanney-102'),
-       ('jho2301'),
-       ('365kim'),
-       ('dudtjr913'),
-       ('jum0'),
-       ('hyuuunjukim'),
-       ('zereight'),
-       ('devhyun637'),
-       ('swon3210'),
-       ('bigsaigon333'),
-       ('yungo1846'),
-       ('zigsong'),
-       ('iborymagic'),
-       ('0307kwon'),
-       ('gwangyeol-im'),
-       ('shinsehantan'),
-       ('ddongule'),
-       ('seojihwan'),
-       ('0imbean0'),
-       ('sunyoungkwon'),
-       ('hchayan'),
-       ('2sooy'),
-       ('yujo11'),
-       ('sunhpark42')
+insert into customer (email, username, password)
+values ('puterism@naver.com', 'puterism', '12349053145'),
+       ('yujo@naver.com', 'yujo11', '123456789'),
+       ('sunhpark@naver.com', 'sunhpark42', 'sdakdasf1234')
 ;
