@@ -12,6 +12,10 @@ public class CustomerResponse {
         this.username = username;
     }
 
+    public static CustomerResponse of(LoginCustomer loginCustomer) {
+        return new CustomerResponse(loginCustomer.getLoginId(), loginCustomer.getUsername());
+    }
+
     public String getLoginId() {
         return loginId;
     }
