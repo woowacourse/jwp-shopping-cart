@@ -80,6 +80,19 @@ public class CustomerDaoTest {
                 .isEqualTo(expected);
     }
 
+    @DisplayName("email로 Customer를 조회한다.")
+    @Test
+    void findByEmail() {
+        // when
+        Customer customer = customerDao.findByEmail("puterism@naver.com").orElse(null);
+
+        // then
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+
+        assertThat(customer).usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
     @DisplayName("Customer 를 수정한다.")
     @Test
     void update() {

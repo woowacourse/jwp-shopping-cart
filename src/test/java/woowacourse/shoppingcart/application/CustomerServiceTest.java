@@ -62,6 +62,19 @@ public class CustomerServiceTest {
                 .isEqualTo(expected);
     }
 
+    @DisplayName("email로 Customer를 조회한다.")
+    @Test
+    void findByEmail() {
+        // when
+        Customer customer = customerService.findByEmail("puterism@naver.com");
+
+        // then
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+
+        assertThat(customer).usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
     @DisplayName("존재하지 않는 id로 Customer를 조회하면 예외를 발생시킨다.")
     @Test
     void findById_throwNotExistId() {

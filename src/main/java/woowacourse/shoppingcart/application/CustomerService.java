@@ -25,6 +25,11 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerException::new);
     }
 
+    public Customer findByEmail(String email) {
+        return customerDao.findByEmail(email)
+                .orElseThrow(InvalidCustomerException::new);
+    }
+
     public void update(Long id, CustomerUpdateRequest request) {
         validateCustomerExists(id);
         customerDao.update(id, request.getUsername());
