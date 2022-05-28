@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.domain.Cart;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
+
     private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;

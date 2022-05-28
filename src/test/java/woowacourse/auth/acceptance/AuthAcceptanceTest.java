@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {

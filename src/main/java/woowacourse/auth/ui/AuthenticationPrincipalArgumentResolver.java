@@ -9,6 +9,7 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
+
     private AuthService authService;
 
     public AuthenticationPrincipalArgumentResolver(AuthService authService) {
