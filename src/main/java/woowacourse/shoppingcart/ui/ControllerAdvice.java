@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
+import java.util.List;
+import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -9,10 +11,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.*;
-
-import javax.validation.ConstraintViolationException;
-import java.util.List;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.ShoppingCartException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -30,7 +34,6 @@ public class ControllerAdvice {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        fieldErrors.forEach(System.out::println);
         final FieldError mainError = fieldErrors.get(0);
 
         return ResponseEntity.badRequest().body(new ErrorResponse("1000", mainError.getDefaultMessage()));
@@ -53,5 +56,14 @@ public class ControllerAdvice {
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler({
+            ShoppingCartException.class
+    })
+    public ResponseEntity<ErrorResponse> handleInvalidAccess(final ShoppingCartException exception) {
+        return ResponseEntity
+                .status(exception.getHttpStatus())
+                .body(exception.toErrorResponse());
     }
 }
