@@ -1,6 +1,8 @@
 package woowacourse.auth.dao;
 
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,6 +13,12 @@ import woowacourse.auth.domain.Member;
 
 @Repository
 public class MemberDao {
+
+    private static final RowMapper<Member> MEMBER_MAPPER = ((rs, rowNum) -> new Member(
+            rs.getString("email"),
+            rs.getString("password"),
+            rs.getString("nickname")
+    ));
 
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -31,5 +39,13 @@ public class MemberDao {
         String sql = "SELECT EXISTS (SELECT 1 FROM MEMBER WHERE email = :email)";
         SqlParameterSource params = new MapSqlParameterSource("email", email);
         return namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class);
+    }
+
+    public Optional<Member> findByEmail(String email) {
+        String sql = "SELECT email, password, nickname FROM MEMBER WHERE email = :email";
+        SqlParameterSource params = new MapSqlParameterSource("email", email);
+        return namedParameterJdbcTemplate.query(sql, params, MEMBER_MAPPER)
+                .stream()
+                .findAny();
     }
 }

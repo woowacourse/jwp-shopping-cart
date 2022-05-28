@@ -1,5 +1,6 @@
 package woowacourse.auth.domain;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Nickname {
@@ -21,5 +22,22 @@ public class Nickname {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Nickname nickname = (Nickname) o;
+        return Objects.equals(value, nickname.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

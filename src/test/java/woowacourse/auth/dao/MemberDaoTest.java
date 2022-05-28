@@ -1,6 +1,7 @@
 package woowacourse.auth.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,4 +49,15 @@ class MemberDaoTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("이메일로 회원정보를 조회한다.")
+    @Test
+    void findByEmail() {
+        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        memberDao.save(member);
+
+        Member foundMember = memberDao.findByEmail("abc@woowahan.com")
+                .orElseGet(() -> fail("실패"));
+
+        assertThat(foundMember).isEqualTo(member);
+    }
 }

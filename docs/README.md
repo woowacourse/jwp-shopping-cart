@@ -12,10 +12,10 @@
 
 # 로그인(토큰 기반)
 
-- [ ]  email, password를 받아 로그인을 할 수 있다.
-    - [ ]  email, password가 db에 저장된 값과 일치하는지 검증
-    - [ ]  jwtToken을 생성
-    - [ ]  nickname과 token을 response로 반환
+- [x]  email, password를 받아 로그인을 할 수 있다.
+   - [x]  email, password가 db에 저장된 값과 일치하는지 검증
+   - [x]  jwtToken을 생성
+   - [x]  nickname과 token을 response로 반환
 
 # 회원 정보
 
