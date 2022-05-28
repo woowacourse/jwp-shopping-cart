@@ -3,11 +3,12 @@
 # 회원가입
 
 - [ ]  email, password, nickname을 받아 회원 정보를 등록한다.
-    - [ ]  email 중복 검증
-    - [ ]  email 규칙 검증
-    - [ ]  password 규칙 검증
-    - [ ]  nickname 규칙 검증
-    - [ ]  누락 정보 검증
+   - [x]  email 중복 검증
+   - [x]  email 규칙 검증
+   - [x]  password 규칙 검증
+   - [x]  nickname 규칙 검증
+   - [ ]  누락 정보 검증
+   - [x]  데이터베이스에 저장
 
 # 로그인(토큰 기반)
 

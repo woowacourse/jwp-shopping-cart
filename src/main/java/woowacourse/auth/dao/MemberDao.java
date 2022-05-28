@@ -1,0 +1,35 @@
+package woowacourse.auth.dao;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+import woowacourse.auth.domain.Member;
+
+@Repository
+public class MemberDao {
+
+    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public MemberDao(JdbcTemplate jdbcTemplate) {
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("member")
+                .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+    }
+
+    public void save(Member member) {
+        BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(member);
+        simpleJdbcInsert.execute(params);
+    }
+
+    public boolean existsEmail(String email) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM MEMBER WHERE email = :email)";
+        SqlParameterSource params = new MapSqlParameterSource("email", email);
+        return namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class);
+    }
+}
