@@ -34,4 +34,20 @@ public class Customer {
             throw new IllegalArgumentException("비밀번호 형식이 잘못되었습니다.");
         }
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }
