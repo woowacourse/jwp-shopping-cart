@@ -8,6 +8,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.exception.InvalidTokenException;
 
 @Service
 public class AuthService {
@@ -37,8 +38,15 @@ public class AuthService {
     }
 
     public CustomerResponse findCustomerByToken(String token) {
-        Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
-        Customer customer = customerDao.findById(id);
+        validateToken(token);
+        final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
+        final Customer customer = customerDao.findById(id);
         return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getName(), customer.getPhone(), customer.getAddress());
+    }
+
+    private void validateToken(String token) {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new InvalidTokenException();
+        }
     }
 }
