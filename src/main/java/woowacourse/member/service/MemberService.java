@@ -2,21 +2,27 @@ package woowacourse.member.service;
 
 import org.springframework.stereotype.Service;
 import woowacourse.member.dao.MemberDao;
+import woowacourse.member.domain.Member;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.exception.DuplicateMemberEmailException;
+import woowacourse.member.infrastructure.PasswordEncoder;
 
 @Service
 public class MemberService {
 
     private final MemberDao memberDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public MemberService(MemberDao memberDao) {
+    public MemberService(MemberDao memberDao, PasswordEncoder passwordEncoder) {
         this.memberDao = memberDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Long save(final MemberRegisterRequest memberRegisterRequest) {
         validateDuplicateEmail(memberRegisterRequest.getEmail());
-        return memberDao.save(memberRegisterRequest.toEntity());
+        Member member = memberRegisterRequest.toEntity();
+        member.encodePassword(passwordEncoder);
+        return memberDao.save(member);
     }
 
     private void validateDuplicateEmail(final String email) {

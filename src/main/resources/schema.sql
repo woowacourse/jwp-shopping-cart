@@ -12,7 +12,7 @@ create table member
 (
     id       bigint       not null auto_increment,
     email    varchar(255) not null,
-    password varchar(20)  not null,
+    password varchar(64)  not null,
     name     varchar(10)  not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;

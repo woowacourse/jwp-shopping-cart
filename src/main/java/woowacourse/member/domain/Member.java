@@ -1,5 +1,8 @@
 package woowacourse.member.domain;
 
+import woowacourse.member.infrastructure.PasswordEncoder;
+import woowacourse.member.infrastructure.SHA256PasswordEncoder;
+
 public class Member {
 
     private Long id;
@@ -32,5 +35,9 @@ public class Member {
 
     public String getName() {
         return name;
+    }
+
+    public void encodePassword(final PasswordEncoder passwordEncoder) {
+        password = passwordEncoder.encode(password);
     }
 }
