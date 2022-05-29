@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +27,7 @@ public class CustomerController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signUp(@RequestBody CustomerSignUpRequest request) {
+    public ResponseEntity<Void> signUp(@Valid @RequestBody CustomerSignUpRequest request) {
         customerService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -37,7 +38,7 @@ public class CustomerController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody CustomerUpdateRequest request,
+    public ResponseEntity<Void> update(@Valid @RequestBody CustomerUpdateRequest request,
                                        @AuthenticationPrincipal String username) {
         customerService.update(request, username);
         return ResponseEntity.noContent().build();

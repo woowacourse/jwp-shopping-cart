@@ -1,11 +1,17 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerUpdateRequest {
 
+    @NotBlank
     private String password;
+
+    @NotBlank
     private String phoneNumber;
+
+    @NotBlank
     private String address;
 
     private CustomerUpdateRequest() {
