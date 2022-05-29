@@ -111,6 +111,34 @@ public class CustomerDaoTest {
     }
 
     @Test
+    @DisplayName("유저 정보를 수정한다.")
+    void update() {
+        // given
+        Customer customer = Customer.Builder()
+                .username("username")
+                .password("password123")
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+        customerDao.save(customer);
+        Customer changedCustomer = Customer.Builder()
+                .id(customerDao.findIdByUserName("username"))
+                .username("username")
+                .password("changedPassword123")
+                .phoneNumber("01087654321")
+                .address("루터회관")
+                .build();
+
+        // when
+        customerDao.update(changedCustomer);
+
+        // then
+        assertThat(customerDao.findByUsername("username"))
+                .usingRecursiveComparison()
+                .isEqualTo(changedCustomer);
+    }
+
+    @Test
     @DisplayName("유저를 유저 이름으로 찾아 삭제한다.")
     void deleteByUsername() {
         // given
