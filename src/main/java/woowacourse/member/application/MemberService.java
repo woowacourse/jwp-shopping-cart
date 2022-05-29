@@ -1,6 +1,7 @@
 package woowacourse.member.application;
 
 import org.springframework.stereotype.Service;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.dto.MemberRegisterRequest;
@@ -29,5 +30,12 @@ public class MemberService {
         if(memberDao.isEmailExist(email)) {
             throw new DuplicateMemberEmailException();
         }
+    }
+
+    public boolean isLogin(final TokenRequest tokenRequest) {
+        Member member = memberDao.findByEmail(tokenRequest.getEmail());
+
+        String encode = passwordEncoder.encode(tokenRequest.getPassword());
+        return member.authenticate(encode);
     }
 }

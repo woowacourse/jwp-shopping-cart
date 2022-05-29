@@ -40,4 +40,8 @@ public class Member {
     public void encodePassword(final PasswordEncoder passwordEncoder) {
         password = passwordEncoder.encode(password);
     }
+
+    public boolean authenticate(final String password) {
+        return password.equals(this.password);
+    }
 }

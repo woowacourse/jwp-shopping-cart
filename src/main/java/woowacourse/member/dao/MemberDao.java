@@ -1,6 +1,7 @@
 package woowacourse.member.dao;
 
 import javax.sql.DataSource;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -33,5 +34,22 @@ public class MemberDao {
         SqlParameterSource parameters = new MapSqlParameterSource("email", email);
 
         return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(sql, parameters, Boolean.class));
+    }
+
+    public Member findByEmail(final String email) {
+        String sql= "SELECT id, email, password, name FROM member WHERE email = :email";
+        SqlParameterSource parameters = new MapSqlParameterSource("email", email);
+
+        return namedParameterJdbcTemplate.queryForObject(sql, parameters, rowMapper());
+    }
+
+    private RowMapper<Member> rowMapper() {
+        return (rs, rowNum) -> {
+            Long id = rs.getLong("id");
+            String email = rs.getString("email");
+            String password = rs.getString("password");
+            String name = rs.getString("name");
+            return new Member(id, email, password, name);
+        };
     }
 }

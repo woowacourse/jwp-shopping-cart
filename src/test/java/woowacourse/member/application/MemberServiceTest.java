@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.exception.DuplicateMemberEmailException;
@@ -45,5 +46,23 @@ public class MemberServiceTest {
         MemberRegisterRequest memberRegisterRequest = createMemberRegisterRequest(EMAIL, PASSWORD, NAME);
         assertThatThrownBy(() -> memberService.save(memberRegisterRequest))
                 .isInstanceOf(DuplicateMemberEmailException.class);
+    }
+
+    @DisplayName("로그인 성공 여부를 확인한다_성공")
+    @Test
+    void isLoginSuccess() {
+        memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
+        TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
+
+        assertThat(memberService.isLogin(tokenRequest)).isTrue();
+    }
+
+    @DisplayName("로그인 성공 여부를 확인한다_실패")
+    @Test
+    void isLoginFail() {
+        memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
+        TokenRequest tokenRequest = new TokenRequest(EMAIL, "Fail1234!");
+
+        assertThat(memberService.isLogin(tokenRequest)).isFalse();
     }
 }

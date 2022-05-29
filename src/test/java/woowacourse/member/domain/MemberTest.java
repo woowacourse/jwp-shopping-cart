@@ -21,4 +21,12 @@ public class MemberTest {
 
         assertThat(member.getPassword()).isEqualTo(ENCODE_PASSWORD);
     }
+
+    @DisplayName("비밀번호를 확인한다.")
+    @Test
+    void authenticate() {
+        Member member = createMember(EMAIL, PASSWORD, NAME);
+
+        assertThat(member.authenticate(PASSWORD)).isTrue();
+    }
 }
