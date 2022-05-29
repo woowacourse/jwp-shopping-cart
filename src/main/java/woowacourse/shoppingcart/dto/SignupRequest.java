@@ -5,6 +5,7 @@ import woowacourse.auth.dto.PhoneNumber;
 import woowacourse.shoppingcart.domain.Customer;
 
 import javax.validation.constraints.Size;
+import java.util.Locale;
 
 public class SignupRequest {
 
@@ -47,6 +48,9 @@ public class SignupRequest {
     }
 
     public Customer toEntity() {
-        return new Customer(this.account, this.nickname, this.password, this.address, this.phoneNumber.appendNumbers());
+        String match = "[^\\da-zA-Z]";
+        final String processedAccount = this.account.replaceAll(match, "").toLowerCase(Locale.ROOT).trim();
+
+        return new Customer(processedAccount, this.nickname, this.password, this.address, this.phoneNumber.appendNumbers());
     }
 }

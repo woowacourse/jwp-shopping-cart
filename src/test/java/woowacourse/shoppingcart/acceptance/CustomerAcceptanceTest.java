@@ -62,6 +62,25 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @ParameterizedTest
+    @CsvSource(value = {"YEONLOG,yeonlog", "aa_01,aa01"})
+    @DisplayName("아이디가 대문자이면 소문자로 변경하고 특수문자가 들어가면 제거한다.")
+    void changeAccountPattern(String account, String expectedAccount) {
+        // given
+        final SignupRequest signupRequest = new SignupRequest(account, "eden", "password", "address", new PhoneNumber("010", "1234", "5678"));
+        post("/signup", signupRequest);
+
+        // when
+        final SignupRequest duplicatedAccountSignupRequest = new SignupRequest(expectedAccount, "eden", "password", "address", new PhoneNumber("010", "1234", "5678"));
+        final ExtractableResponse<Response> response = post("/signup", duplicatedAccountSignupRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo("이미 존재하는 아이디입니다.")
+        );
+    }
+
+    @ParameterizedTest
     @CsvSource(value = {"1", "123456789012345678901"})
     @DisplayName("닉네임 길이가 2~20자를 벗어나면 400 상태코드를 반환한다.")
     void invalidNicknameLength(String nickName) {

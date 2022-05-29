@@ -19,6 +19,8 @@
         - [ ] start, middle, last 의 형식을 지닌다.
         - [ ] start 는 3글자, middle과 last는 4글자이다.
     - [x] account 가 중복되면 예외를 발생한다.
+    - [x] account 에 대문자가 포함되어 있으면 소문자로 변경한다.
+    - [x] account 에 특수문자가 포함되어 있으면 제거한다.
 
 - [ ] 로그인 아이디 중복 확인 API
     - [ ] account 가 중복되면 false를 반환한다.
