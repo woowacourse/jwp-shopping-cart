@@ -20,6 +20,12 @@ import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
+
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password123";
+    private static final String PHONE_NUMBER = "01012345678";
+    private static final String ADDRESS = "성담빌딩";
+
     @DisplayName("로그인 요청")
     @Nested
     class Login extends AcceptanceTest {
@@ -28,14 +34,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         @BeforeEach
         void prepare() {
-            customerSignUpRequest = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
+            customerSignUpRequest = new CustomerSignUpRequest(USERNAME, PASSWORD, PHONE_NUMBER, ADDRESS);
             회원_가입_요청(customerSignUpRequest);
         }
 
         @DisplayName("성공한다.")
         @Test
         void success() {
-            TokenRequest request = new TokenRequest("username", "password123");
+            TokenRequest request = new TokenRequest(USERNAME, PASSWORD);
             ExtractableResponse<Response> response = 로그인_요청(request);
             로그인됨(response);
         }
@@ -43,7 +49,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         @DisplayName("비밀번호가 불일치하여 실패")
         @Test
         void dismatchPassword_fail() {
-            TokenRequest request = new TokenRequest("username", "123password");
+            TokenRequest request = new TokenRequest(USERNAME, "123password");
             ExtractableResponse<Response> response = 로그인_요청(request);
             로그인안됨(response);
         }
@@ -52,13 +58,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
-        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("username", "password123",
-                "01012345678", "성담빌딩");
-        회원_가입_요청(customerSignUpRequest);
-        TokenRequest request = new TokenRequest("username", "password123");
-        String token = 로그인_요청(request).body()
-                .as(TokenResponse.class)
-                .getAccessToken();
+        String token = 회원_가입_후_로그인();
 
         ExtractableResponse<Response> response = 내_정보_조회(token);
         정보_조회_성공(response);
@@ -78,6 +78,15 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/customers/login")
                 .then().log().all()
                 .extract();
+    }
+
+    private String 회원_가입_후_로그인() {
+        CustomerSignUpRequest request = new CustomerSignUpRequest(USERNAME, PASSWORD, PHONE_NUMBER, ADDRESS);
+        회원_가입_요청(request);
+        TokenRequest tokenRequest = new TokenRequest(USERNAME, PASSWORD);
+        return 로그인_요청(tokenRequest).body()
+                .as(TokenResponse.class)
+                .getAccessToken();
     }
 
     private void 로그인됨(final ExtractableResponse<Response> response) {
