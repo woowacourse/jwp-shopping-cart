@@ -5,15 +5,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.ui.AuthenticationContext;
 import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationContext authenticationContext;
 
-    public AuthenticationPrincipalConfig(final JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthenticationPrincipalConfig(final AuthenticationContext authenticationContext) {
+        this.authenticationContext = authenticationContext;
     }
 
     @Override
@@ -23,6 +23,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
+        return new AuthenticationPrincipalArgumentResolver(authenticationContext);
     }
 }
