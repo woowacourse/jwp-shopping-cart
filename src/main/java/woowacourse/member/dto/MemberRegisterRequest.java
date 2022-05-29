@@ -4,6 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
+import woowacourse.member.domain.Member;
 
 public class MemberRegisterRequest {
 
@@ -28,6 +29,10 @@ public class MemberRegisterRequest {
         this.email = email;
         this.password = password;
         this.name = name;
+    }
+
+    public Member toEntity() {
+        return new Member(email, password, name);
     }
 
     public String getEmail() {

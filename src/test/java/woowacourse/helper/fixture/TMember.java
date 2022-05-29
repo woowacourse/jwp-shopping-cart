@@ -34,12 +34,4 @@ public enum TMember {
                 .then().log().all()
                 .extract();
     }
-
-    public MemberRegisterRequest toMemberRegisterRequest() {
-        return new MemberRegisterRequest(email, password, name);
-    }
-
-    public Member toEntity() {
-        return new Member(email, password, name);
-    }
 }

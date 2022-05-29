@@ -1,26 +1,38 @@
 package woowacourse.member.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.helper.fixture.TMember.MARU;
+import static woowacourse.helper.fixture.MemberFixture.EMAIL;
+import static woowacourse.helper.fixture.MemberFixture.NAME;
+import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
 
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import woowacourse.helper.fixture.MemberFixture;
 import woowacourse.member.domain.Member;
 
-@SpringBootTest
-@Transactional
+@JdbcTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class MemberDaoTest {
 
     @Autowired
+    private DataSource dataSource;
+
     private MemberDao memberDao;
+
+    @BeforeEach
+    void setUp() {
+        memberDao = new MemberDao(dataSource);
+    }
 
     @DisplayName("회원을 저장한다.")
     @Test
     void save() {
-        Member member = MARU.toEntity();
+        Member member = MemberFixture.createMember(EMAIL, PASSWORD, NAME);
 
         Long id = memberDao.save(member);
         assertThat(id).isNotNull();

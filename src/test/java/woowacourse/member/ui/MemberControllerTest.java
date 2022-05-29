@@ -7,7 +7,10 @@ import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static woowacourse.helper.fixture.TMember.MARU;
+import static woowacourse.helper.fixture.MemberFixture.EMAIL;
+import static woowacourse.helper.fixture.MemberFixture.NAME;
+import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
+import static woowacourse.helper.fixture.MemberFixture.createMemberRegisterRequest;
 import static woowacourse.helper.restdocs.RestDocsUtils.getRequestPreprocessor;
 import static woowacourse.helper.restdocs.RestDocsUtils.getResponsePreprocessor;
 
@@ -24,7 +27,7 @@ public class MemberControllerTest extends RestDocsTest {
     @DisplayName("멤버가 회원가입에 성공한다.")
     @Test
     void register() throws Exception {
-        MemberRegisterRequest request = MARU.toMemberRegisterRequest();
+        MemberRegisterRequest request = createMemberRegisterRequest(EMAIL, PASSWORD, NAME);
 
         ResultActions resultActions = mockMvc.perform(post("/api/members")
                         .contentType(MediaType.APPLICATION_JSON)
