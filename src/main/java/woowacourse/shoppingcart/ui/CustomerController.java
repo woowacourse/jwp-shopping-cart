@@ -1,4 +1,29 @@
 package woowacourse.shoppingcart.ui;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.SignupRequest;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
+@RestController
 public class CustomerController {
+
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest) throws URISyntaxException {
+        customerService.createCustomer(signupRequest);
+
+        return ResponseEntity.created(new URI("/signin"))
+                .build();
+    }
 }

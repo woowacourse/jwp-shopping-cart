@@ -23,4 +23,9 @@ public class PhoneNumber {
     public String getEnd() {
         return end;
     }
+
+    public String appendNumbers() {
+        return this.start + this.middle + this.end;
+    }
+
 }

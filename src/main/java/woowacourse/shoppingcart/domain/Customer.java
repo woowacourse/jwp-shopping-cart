@@ -1,25 +1,29 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import woowacourse.auth.dto.PhoneNumber;
-import woowacourse.shoppingcart.domain.Customer;
+public class Customer {
 
-public class SignupRequest {
-
+    private final long id;
     private final String account;
     private final String nickname;
     private final String password;
     private final String address;
-    private final PhoneNumber phoneNumber;
+    private final String phoneNumber;
 
+    public Customer(String account, String nickname, String password, String address, String phoneNumber) {
+        this(0, account, nickname, password, address, phoneNumber);
+    }
 
-    @JsonCreator
-    public SignupRequest(String account, String nickname, String password, String address, PhoneNumber phoneNumber) {
+    public Customer(long id, String account, String nickname, String password, String address, String phoneNumber) {
+        this.id = id;
         this.account = account;
         this.nickname = nickname;
         this.password = password;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getAccount() {
@@ -38,11 +42,7 @@ public class SignupRequest {
         return address;
     }
 
-    public PhoneNumber getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
-    }
-
-    public Customer toEntity() {
-        return new Customer(this.account, this.nickname, this.password, this.address, this.phoneNumber.appendNumbers());
     }
 }

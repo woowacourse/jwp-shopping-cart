@@ -9,7 +9,7 @@
 ## 1단계 요구사항
 
 - [ ] 회원가입
-    - [ ] account, nickname, password, address, phoneNumber 을 받아 회원을 생성한다.
+    - [x] account, nickname, password, address, phoneNumber 을 받아 회원을 생성한다.
     - [ ] account 의 글자수가 4~15를 벗어나면 예외를 발생한다.
     - [ ] nickname 의 글자수가 2~10을 벗어나면 예외를 발생한다.
     - [ ] password 의 글자수가 8~20을 벗어나면 예외를 발생한다.
@@ -18,7 +18,7 @@
     - [ ] phoneNumber 의 양식이 일치하지 않으면 예외를 발생한다.
         - [ ] start, middle, last 의 형식을 지닌다.
         - [ ] start 는 3글자, middle과 last는 4글자이다.
-    - [ ] account 가 중복되면 예외를 발생한다.
+    - [x] account 가 중복되면 예외를 발생한다.
 
 - [ ] 로그인 아이디 중복 확인 API
     - [ ] account 가 중복되면 false를 반환한다.
