@@ -1,27 +1,3 @@
-insert into customer (username)
-values ('puterism'),
-       ('tanney-102'),
-       ('jho2301'),
-       ('365kim'),
-       ('dudtjr913'),
-       ('jum0'),
-       ('hyuuunjukim'),
-       ('zereight'),
-       ('devhyun637'),
-       ('swon3210'),
-       ('bigsaigon333'),
-       ('yungo1846'),
-       ('zigsong'),
-       ('iborymagic'),
-       ('0307kwon'),
-       ('gwangyeol-im'),
-       ('shinsehantan'),
-       ('ddongule'),
-       ('seojihwan'),
-       ('0imbean0'),
-       ('sunyoungkwon'),
-       ('hchayan'),
-       ('2sooy'),
-       ('yujo11'),
-       ('sunhpark42')
+insert into customer (account, nickname, password, address, phone_number)
+values ('leo0842', 'eden', 'password', 'address', '01012345678')
 ;
