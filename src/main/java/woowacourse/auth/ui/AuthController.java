@@ -14,16 +14,4 @@ import woowacourse.auth.utils.EmailUtil;
 @RestController
 @RequestMapping("/users")
 public class AuthController {
-
-    private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
-
-    @PostMapping
-    public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
-        SignUpResponse signUpresponse = authService.signUp(signUpRequest);
-        return ResponseEntity.created(URI.create("/users/" + EmailUtil.getIdentifier(signUpresponse.getEmail()))).body(signUpresponse);
-    }
 }

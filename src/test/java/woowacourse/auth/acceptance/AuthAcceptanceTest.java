@@ -1,6 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,18 +12,6 @@ import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    @Test
-    @DisplayName("회원가입을 할 수 있다.")
-    void signUp() {
-        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "1234");
-
-        RestAssured
-                .given().log().all()
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
-    }
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {

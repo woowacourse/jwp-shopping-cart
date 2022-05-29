@@ -32,7 +32,7 @@ public class CustomerDaoTest {
     void save() {
         Customer customer = customerDao.save(new Customer("레넌", "rennon@woowa.com", "1234"));
 
-        assertThat(customer.getId()).isEqualTo(1L);
+        assertThat(customer.getId()).isNotNull();
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")

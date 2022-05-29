@@ -1,5 +1,7 @@
 package woowacourse.auth.dto;
 
+import woowacourse.auth.domain.Customer;
+
 public class SignUpRequest {
 
     private String username;
@@ -13,6 +15,10 @@ public class SignUpRequest {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public Customer toCustomer() {
+        return new Customer(username, email, password);
     }
 
     public String getUsername() {

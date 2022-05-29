@@ -25,7 +25,7 @@ public class CustomerDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    Customer save(Customer customer) {
+    public Customer save(Customer customer) {
         String username = customer.getUsername();
         String email = customer.getEmail();
         String password = customer.getPassword();
