@@ -23,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerResponse> registerCustomers(@RequestBody final CustomerRequest customerRequest){
+    public ResponseEntity<CustomerResponse> registerCustomers(@RequestBody final CustomerRequest customerRequest) {
         CustomerResponse customerResponse = authService.register(customerRequest);
         return ResponseEntity.created(URI.create("/customers/login")).body(customerResponse);
     }
@@ -35,9 +35,16 @@ public class AuthController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerResponse> findCustomer(HttpServletRequest request){
+    public ResponseEntity<CustomerResponse> findCustomer(HttpServletRequest request) {
         String token = AuthorizationExtractor.extract(request);
         CustomerResponse customerResponse = authService.findCustomerByToken(token);
         return ResponseEntity.ok().body(customerResponse);
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateCustomer(@RequestBody CustomerRequest customerRequest, HttpServletRequest request) {
+        String token = AuthorizationExtractor.extract(request);
+        authService.edit(token, customerRequest);
+        return ResponseEntity.ok().build();
     }
 }

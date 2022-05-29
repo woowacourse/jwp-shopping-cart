@@ -63,6 +63,11 @@ public class CustomerDao {
         }
     }
 
+    public void edit(Customer customer) {
+        final String sql = "update customer set name = :name, phone = :phone, address = :address where id = :id";
+        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer));
+    }
+
     private static class CustomerMapper implements RowMapper<Customer> {
         public Customer mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             return new Customer(

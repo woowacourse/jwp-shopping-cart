@@ -44,6 +44,13 @@ public class AuthService {
         return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getName(), customer.getPhone(), customer.getAddress());
     }
 
+    public void edit(String token, CustomerRequest customerRequest) {
+        validateToken(token);
+        final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
+        final Customer customer = new Customer(id, customerRequest.getEmail(), customerRequest.getName(), customerRequest.getPhone(), customerRequest.getAddress(), customerRequest.getPassword());
+        customerDao.edit(customer);
+    }
+
     private void validateToken(String token) {
         if (!jwtTokenProvider.validateToken(token)) {
             throw new InvalidTokenException();
