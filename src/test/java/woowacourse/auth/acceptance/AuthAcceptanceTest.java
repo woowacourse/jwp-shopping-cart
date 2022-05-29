@@ -94,21 +94,55 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBadBearerAuth() {
         // given
         // 회원이 등록되어 있고
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(signUpRequest)
+                .when().post("/users")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
 
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
-
         // then
         // 토큰 발급 요청이 거부된다
+        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1235");
+        RestAssured
+                .given().log().all()
+                .body(tokenRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/auth/login")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(signUpRequest)
+                .when().post("/users")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
         // then
         // 내 정보 조회 요청이 거부된다
+        String headOfEmail = EmailUtil.getIdentifier(signUpRequest.getEmail());
+        String token = "dummy";
+        RestAssured
+                .given().log().all()
+                .header("Authorization","Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/users/" + headOfEmail)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }
