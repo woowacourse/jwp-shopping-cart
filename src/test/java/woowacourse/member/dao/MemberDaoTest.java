@@ -37,4 +37,13 @@ public class MemberDaoTest {
         Long id = memberDao.save(member);
         assertThat(id).isNotNull();
     }
+
+    @DisplayName("이메일을 중복 확인한다.")
+    @Test
+    void isEmailExist() {
+        Member member = MemberFixture.createMember(EMAIL, PASSWORD, NAME);
+        memberDao.save(member);
+
+        assertThat(memberDao.isEmailExist(EMAIL)).isTrue();
+    }
 }
