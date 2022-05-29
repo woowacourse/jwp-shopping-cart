@@ -1,7 +1,11 @@
 package woowacourse.shoppingcart.dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
+@JsonTypeName("customer")
+@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class CustomerResponse {
 
     private String username;
