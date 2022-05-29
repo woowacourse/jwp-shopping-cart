@@ -5,7 +5,7 @@ import woowacourse.auth.exception.InvalidEmailException;
 
 public class Email {
 
-    private static final Pattern FORM_PATTERN = Pattern.compile("^[a-zA-Z0-9]+@[a-zA-Z0-9]+[.]com");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9]+@[a-zA-Z0-9]+[.]com");
 
     private final String value;
 
@@ -15,7 +15,7 @@ public class Email {
     }
 
     private void validate(String value) {
-        if (!FORM_PATTERN.matcher(value).matches()) {
+        if (!EMAIL_PATTERN.matcher(value).matches()) {
             throw new InvalidEmailException();
         }
     }

@@ -7,7 +7,7 @@ public class Password {
 
     private static final int MIN_THRESHOLD = 8;
     private static final int MAX_THRESHOLD = 20;
-    private static final Pattern FORM_PATTERN = Pattern.compile("([0-9]+[a-zA-Z]+[!@#$%^&*()]+)");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("([0-9]+[a-zA-Z]+[!@#$%^&*()]+)");
 
     private final String value;
 
@@ -34,7 +34,7 @@ public class Password {
     }
 
     private void validateForm(String value) {
-        if (!FORM_PATTERN.matcher(value).matches()) {
+        if (!PASSWORD_PATTERN.matcher(value).matches()) {
             throw new InvalidPasswordException("형식이 올바르지 않습니다.");
         }
     }
