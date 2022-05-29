@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dao;
+package woowacourse.shoppingcart.infrastructure.jdbc.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

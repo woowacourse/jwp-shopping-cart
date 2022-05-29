@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dao;
+package woowacourse.shoppingcart.infrastructure.jdbc.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
