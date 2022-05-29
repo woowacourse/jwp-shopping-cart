@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component
+//@Component
 public class JwtTokenProvider {
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;

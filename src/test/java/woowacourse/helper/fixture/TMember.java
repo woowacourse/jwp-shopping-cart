@@ -33,4 +33,8 @@ public enum TMember {
                 .then().log().all()
                 .extract();
     }
+
+    public MemberRegisterRequest toMemberRegisterRequest() {
+        return new MemberRegisterRequest(email, password, name);
+    }
 }

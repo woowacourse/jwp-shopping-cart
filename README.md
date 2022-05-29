@@ -5,7 +5,7 @@
 
 ## member
 - [ ] post /api/members
-    - [ ] email, password, name 요청
+    - [X] email, password, name 요청
     - [ ] 비밀번호 암호화
     - [ ] 저장
 

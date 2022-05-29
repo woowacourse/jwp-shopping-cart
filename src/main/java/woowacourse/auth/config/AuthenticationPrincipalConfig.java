@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
-@Configuration
+//@Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     private final AuthService authService;
 
