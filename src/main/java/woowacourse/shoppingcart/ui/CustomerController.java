@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import woowacourse.auth.dto.SignUpResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.utils.EmailUtil;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 
 @RestController
 @RequestMapping("/users")
@@ -35,5 +37,13 @@ public class CustomerController {
     @GetMapping("/{headOfEmail}")
     public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String email, @PathVariable String headOfEmail) {
         return ResponseEntity.ok().body(customerService.findMe(email));
+    }
+
+    @PatchMapping("/{headOfEmail}")
+    public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal String email,
+                                                     @PathVariable String headOfEmail,
+                                                     @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        customerService.updateMe(email, updatePasswordRequest);
+        return ResponseEntity.ok().build();
     }
 }

@@ -73,4 +73,9 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
     }
+
+    public void updatePassword(Long id, String password) {
+        final String query = "UPDATE CUSTOMER SET password = ? WHERE id = ?";
+        jdbcTemplate.update(query, password, id);
+    }
 }

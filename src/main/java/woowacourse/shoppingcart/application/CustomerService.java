@@ -6,6 +6,8 @@ import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.SignUpRequest;
 import woowacourse.auth.dto.SignUpResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @Service
 public class CustomerService {
@@ -24,5 +26,15 @@ public class CustomerService {
     public CustomerResponse findMe(String email) {
         Customer customer = customerDao.findByEmail(email);
         return new CustomerResponse(customer.getUsername(), customer.getEmail());
+    }
+
+    public void updateMe(String email, UpdatePasswordRequest updatePasswordRequest) {
+        Customer customer = customerDao.findByEmail(email);
+
+        if (!customerDao.existByEmailAndPassword(email, updatePasswordRequest.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        customerDao.updatePassword(customer.getId(), updatePasswordRequest.getNewPassword());
     }
 }

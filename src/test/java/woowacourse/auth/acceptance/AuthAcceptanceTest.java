@@ -12,10 +12,12 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.dto.SignUpRequest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.utils.EmailUtil;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
@@ -48,36 +50,43 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(token).isNotBlank();
     }
 
-    @Disabled
+//    @Disabled
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
-        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(signUpRequest)
+                .when().post("/users")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
 
+        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1234");
         String token = RestAssured
                 .given().log().all()
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/auth/login")
-                .then().log().all().extract().as(TokenResponse.class).getToken();
+                .then().log().all().extract().as(SignInResponse.class).getToken();
+
         // when
         // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
-        SignInResponse response = RestAssured
+        String headOfEmail = EmailUtil.getIdentifier(signUpRequest.getEmail());
+        CustomerResponse response = RestAssured
                 .given().log().all()
-                .auth().oauth2(token)
+                .header("Authorization","Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/rennon")
+                .when().get("/users/" + headOfEmail)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value()).extract().as(SignInResponse.class);
+                .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
         // then
         // 내 정보가 조회된다
 
         assertThat(response.getEmail()).isEqualTo("rennon@woowa.com");
-
     }
 
     @DisplayName("Bearer Auth 로그인 실패")

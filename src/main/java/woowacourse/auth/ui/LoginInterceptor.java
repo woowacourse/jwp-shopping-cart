@@ -9,6 +9,12 @@ import woowacourse.shoppingcart.exception.AuthorizationException;
 
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public LoginInterceptor(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
@@ -17,7 +23,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             throw new AuthorizationException("토큰이 존재하지 않습니다.");
         }
 
-        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
         if (!jwtTokenProvider.validateToken(token)) {
             throw new AuthorizationException("인증되지 않은 회원입니다.");
         }
