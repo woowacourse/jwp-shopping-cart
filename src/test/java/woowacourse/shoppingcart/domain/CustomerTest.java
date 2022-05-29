@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class CustomerTest {
 
+    private static final String USERNAME = "test";
     private static final String EMAIL = "test@email.com";
     private static final String PASSWORD = "1234567890";
     private static final String ADDRESS = "서울 강남구 테헤란로 411, 성담빌딩 13층 (선릉 캠퍼스)";
@@ -22,14 +23,14 @@ class CustomerTest {
     @DisplayName("고객을 생성한다.")
     @Test
     void createCustomer() {
-        assertDoesNotThrow(() -> new Customer(EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER));
+        assertDoesNotThrow(() -> new Customer(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER));
     }
 
     @DisplayName("고객 생성을 위해 필요한 데이터가 null인 경우 예외를 던진다.")
     @ParameterizedTest
     @MethodSource("generateInvalidCustomer")
     void createCustomer_error_null(String email, String password, String address, String phoneNumber) {
-        assertThatThrownBy(() -> new Customer(email, password, address, phoneNumber))
+        assertThatThrownBy(() -> new Customer(USERNAME, email, password, address, phoneNumber))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -46,7 +47,7 @@ class CustomerTest {
     @ParameterizedTest
     @ValueSource(strings = {"@email.com", "test@", "testemail.com", "test@email", "email"})
     void createCustomer_error_emailFormat(String email) {
-        assertThatThrownBy(() -> new Customer(email, PASSWORD, ADDRESS, PHONE_NUMBER))
+        assertThatThrownBy(() -> new Customer(USERNAME, email, PASSWORD, ADDRESS, PHONE_NUMBER))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -54,7 +55,7 @@ class CustomerTest {
     @ParameterizedTest
     @ValueSource(strings = {"123456789", "123456789012345678901"})
     void createCustomer_error_passwordFormat(String password) {
-        assertThatThrownBy(() -> new Customer(EMAIL, password, ADDRESS, PHONE_NUMBER))
+        assertThatThrownBy(() -> new Customer(USERNAME, EMAIL, password, ADDRESS, PHONE_NUMBER))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -62,7 +63,7 @@ class CustomerTest {
     @ParameterizedTest
     @ValueSource(strings = {"0000-0000-0000", "-0000-0000", "000-0000", "0000"})
     void createCustomer_error_phoneNumberFormat(String phoneNumber) {
-        assertThatThrownBy(() -> new Customer(EMAIL, PASSWORD, ADDRESS, phoneNumber))
+        assertThatThrownBy(() -> new Customer(USERNAME, EMAIL, PASSWORD, ADDRESS, phoneNumber))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

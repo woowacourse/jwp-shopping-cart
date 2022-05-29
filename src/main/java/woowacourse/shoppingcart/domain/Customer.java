@@ -10,17 +10,24 @@ public class Customer {
     private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("\\d{3}-\\d{4}-\\d{4}");
 
     private final Long id;
+    private final String username;
     private final String email;
     private final String password;
     private final String address;
     private final String phoneNumber;
 
-    public Customer(String email, String password, String address, String phoneNumber) {
-        this(null, email, password, address, phoneNumber);
+    public Customer(Long id, Customer customer) {
+        this(id, customer.getUsername(), customer.getEmail(), customer.getPassword(), customer.getAddress(),
+                customer.getPhoneNumber());
     }
 
-    public Customer(Long id, String email, String password, String address, String phoneNumber) {
+    public Customer(String username, String email, String password, String address, String phoneNumber) {
+        this(null, username, email, password, address, phoneNumber);
+    }
+
+    public Customer(Long id, String username, String email, String password, String address, String phoneNumber) {
         this.id = id;
+        this.username = username;
         this.email = Objects.requireNonNull(email, "email은 필수 입력 사항입니다.");
         this.password = Objects.requireNonNull(password, "password는 필수 입력 사항압니다.");
         this.address = Objects.requireNonNull(address, "address는 필수 입력 사항압니다.");
@@ -48,5 +55,29 @@ public class Customer {
         if (!matcher.matches()) {
             throw new IllegalArgumentException("전화번호 형식을 올바르지 않습니다. (형식: 000-0000-0000");
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 }
