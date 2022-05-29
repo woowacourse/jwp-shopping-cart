@@ -11,7 +11,7 @@
 - [ ] 회원가입
     - [x] account, nickname, password, address, phoneNumber 을 받아 회원을 생성한다.
     - [x] account 의 글자수가 4~15를 벗어나면 예외를 발생한다.
-    - [ ] nickname 의 글자수가 2~10을 벗어나면 예외를 발생한다.
+    - [x] nickname 의 글자수가 2~10을 벗어나면 예외를 발생한다.
     - [ ] password 의 글자수가 8~20을 벗어나면 예외를 발생한다.
     - [ ] password 가 영어 대문자, 소문자, 숫자 중 2종류 이상을 조합하지 않으면 예외를 발생한다.
     - [ ] address 의 글자수가 255자를 초과하면 예외를 발생한다.

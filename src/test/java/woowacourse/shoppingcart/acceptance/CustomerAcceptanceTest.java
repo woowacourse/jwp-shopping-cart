@@ -61,6 +61,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @ParameterizedTest
+    @CsvSource(value = {"1", "123456789012345678901"})
+    @DisplayName("닉네임 길이가 2~20자를 벗어나면 400 상태코드를 반환한다.")
+    void invalidNicknameLength(String nickName) {
+        // given
+        final SignupRequest signupRequest = new SignupRequest("account", nickName, "password", "address", new PhoneNumber("010", "1234", "5678"));
+
+        // when
+        final ExtractableResponse<Response> response = post("/signup", signupRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo("닉네임 길이는 2~20자를 만족해야 합니다.")
+        );
+    }
+
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
