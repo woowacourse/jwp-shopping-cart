@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,12 @@ import java.util.Objects;
 
 @Repository
 public class CustomerDao {
+    private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = (resultSet, rowNum) -> Customer.of(
+            resultSet.getString("username"),
+            resultSet.getString("password"),
+            resultSet.getString("nickname"),
+            resultSet.getInt("age")
+    );
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -50,5 +57,10 @@ public class CustomerDao {
     public List<String> findAllUserNames() {
         String sql = "SELECT username FROM customer";
         return jdbcTemplate.queryForList(sql, String.class);
+    }
+
+    public Customer findCustomerByUserName(String userName) {
+        String sql = "SELECT username, password, nickname, age FROM customer WHERE username = ?";
+        return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, userName);
     }
 }

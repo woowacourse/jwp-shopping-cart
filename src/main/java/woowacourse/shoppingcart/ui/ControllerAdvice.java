@@ -44,13 +44,15 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
+            IllegalArgumentException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 }
