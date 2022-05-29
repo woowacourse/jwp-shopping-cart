@@ -3,6 +3,7 @@ package woowacourse.helper.fixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Objects;
 import org.springframework.http.MediaType;
 import woowacourse.member.dto.MemberRegisterRequest;
 
@@ -14,6 +15,8 @@ public enum TMember {
     private final String email;
     private final String password;
     private final String name;
+
+    private String token;
 
     TMember(String email, String password, String name) {
         this.email = email;
@@ -37,6 +40,10 @@ public enum TMember {
                 .post(url)
                 .then().log().all()
                 .extract();
+    }
+
+    public void putToken(String token) {
+        this.token = token;
     }
 
     public String getEmail() {

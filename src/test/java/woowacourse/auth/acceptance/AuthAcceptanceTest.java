@@ -21,13 +21,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("올바른 email, password를 입력할 경우 토큰을 헤더로 반환하고 200 OK를 반환한다.")
     @Test
     void login() {
-        ExtractableResponse<Response> response = MARU.registerAnd()
-                .login();
+        TokenResponse response = MARU.registerAnd()
+                .login(HttpStatus.OK.value());
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.as(TokenResponse.class).getAccessToken()).isNotNull()
-        );
+        assertThat(response.getAccessToken()).isNotNull();
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
