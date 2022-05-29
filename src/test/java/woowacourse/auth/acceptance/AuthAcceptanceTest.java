@@ -1,24 +1,33 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.helper.fixture.MemberFixture.AUTHORIZATION_HEADER;
+import static woowacourse.helper.fixture.TMember.MARU;
+
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import java.net.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.http.HttpStatus;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
-    @DisplayName("Bearer Auth 로그인 성공")
+
+    @DisplayName("올바른 email, password를 입력할 경우 토큰을 헤더로 반환하고 200 OK를 반환한다.")
     @Test
-    void myInfoWithBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+    void login() {
+        ExtractableResponse<Response> response = MARU.registerAnd()
+                .login();
 
-        // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보가 조회된다
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.as(TokenResponse.class).getAccessToken()).isNotNull()
+        );
     }
 
     @DisplayName("Bearer Auth 로그인 실패")

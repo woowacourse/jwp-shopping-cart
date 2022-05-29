@@ -21,6 +21,10 @@ public enum TMember {
         this.name = name;
     }
 
+    public RegisterAnd registerAnd() {
+        return new RegisterAnd(this);
+    }
+
     public ExtractableResponse<Response> register() {
         return request("/api/members", new MemberRegisterRequest(email, password, name));
     }
@@ -33,5 +37,17 @@ public enum TMember {
                 .post(url)
                 .then().log().all()
                 .extract();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
     }
 }

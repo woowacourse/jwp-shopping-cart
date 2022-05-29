@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.member.dto.MemberRegisterRequest;
-import woowacourse.member.service.MemberService;
+import woowacourse.member.application.MemberService;
 
 @RequestMapping("/api/members")
 @RestController

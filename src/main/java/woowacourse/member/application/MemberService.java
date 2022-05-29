@@ -1,4 +1,4 @@
-package woowacourse.member.service;
+package woowacourse.member.application;
 
 import org.springframework.stereotype.Service;
 import woowacourse.member.dao.MemberDao;
