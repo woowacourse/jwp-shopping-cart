@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
+import woowacourse.member.domain.Member;
 import woowacourse.member.dto.MemberRegisterRequest;
 
 public enum TMember {
@@ -36,5 +37,9 @@ public enum TMember {
 
     public MemberRegisterRequest toMemberRegisterRequest() {
         return new MemberRegisterRequest(email, password, name);
+    }
+
+    public Member toEntity() {
+        return new Member(email, password, name);
     }
 }
