@@ -1,6 +1,8 @@
 package woowacourse.member.ui;
 
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
@@ -16,6 +18,7 @@ import static woowacourse.helper.restdocs.RestDocsUtils.getResponsePreprocessor;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.helper.restdocs.RestDocsTest;
@@ -28,6 +31,8 @@ public class MemberControllerTest extends RestDocsTest {
     @Test
     void register() throws Exception {
         MemberRegisterRequest request = createMemberRegisterRequest(EMAIL, PASSWORD, NAME);
+
+        given(memberService.save(any(MemberRegisterRequest.class))).willReturn(1L);
 
         ResultActions resultActions = mockMvc.perform(post("/api/members")
                         .contentType(MediaType.APPLICATION_JSON)

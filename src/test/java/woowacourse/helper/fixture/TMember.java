@@ -4,7 +4,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
-import woowacourse.member.domain.Member;
 import woowacourse.member.dto.MemberRegisterRequest;
 
 public enum TMember {
@@ -28,9 +27,10 @@ public enum TMember {
 
     private ExtractableResponse<Response> request(String url, Object params) {
         return RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .body(params)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post(url, params)
+                .post(url)
                 .then().log().all()
                 .extract();
     }
