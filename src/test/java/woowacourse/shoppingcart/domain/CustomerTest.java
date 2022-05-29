@@ -57,4 +57,12 @@ class CustomerTest {
         assertThatThrownBy(() -> new Customer(EMAIL, password, ADDRESS, PHONE_NUMBER))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @DisplayName("전화번호 형식이 맞지 않으면 예외를 던진다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"0000-0000-0000", "-0000-0000", "000-0000", "0000"})
+    void createCustomer_error_phoneNumberFormat(String phoneNumber) {
+        assertThatThrownBy(() -> new Customer(EMAIL, PASSWORD, ADDRESS, phoneNumber))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }
