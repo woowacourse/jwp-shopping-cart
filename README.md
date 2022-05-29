@@ -34,7 +34,7 @@
         - 이름 (name)
         - 전화번호 (phone)
         - 주소 (address)
-- [ ] 로그인
+- [x] 로그인
     - POST
     - 200
     - /customers/login
@@ -43,7 +43,7 @@
         - PW (password)
     - Response (TokenResponse)
         - accessToken
-- [ ] 회원 정보 조회
+- [x] 회원 정보 조회
     - GET
     - 200
     - /customers

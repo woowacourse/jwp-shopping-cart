@@ -30,6 +30,10 @@ public class Customer {
         this(id, customer.email, customer.name, customer.phone, customer.address, customer.password);
     }
 
+    public boolean checkPassword(String password) {
+        return password.equals(this.password);
+    }
+
     public Long getId() {
         return id;
     }

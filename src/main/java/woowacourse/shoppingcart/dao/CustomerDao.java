@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -39,5 +43,35 @@ public class CustomerDao {
         KeyHolder keyholder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, query, keyholder, new String[]{"id"});
         return new Customer(Objects.requireNonNull(keyholder.getKey()).longValue(), customer);
+    }
+
+    public Customer findByEmail(final String email) {
+        final String sql = "select * from customer where email = :email";
+        try {
+            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email), new CustomerMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public Customer findById(Long id) {
+        final String sql = "select * from customer where id = :id";
+        try {
+            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), new CustomerMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    private static class CustomerMapper implements RowMapper<Customer> {
+        public Customer mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+            return new Customer(
+                    rs.getLong("id"),
+                    rs.getString("email"),
+                    rs.getString("name"),
+                    rs.getString("phone"),
+                    rs.getString("address"),
+                    rs.getString("password"));
+        }
     }
 }
