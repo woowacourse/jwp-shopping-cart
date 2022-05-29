@@ -1,46 +1,84 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.ShoppingCartFixture.CUSTOMER_URI;
+import static woowacourse.ShoppingCartFixture.LOGIN_URI;
+import static woowacourse.ShoppingCartFixture.잉_회원생성요청;
+
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
+import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @DisplayName("인증 관련 기능")
+@Sql("/truncate.sql")
 public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+        final CustomerRequest 회원생성요청 = 잉_회원생성요청;
+        post(CUSTOMER_URI, 회원생성요청);
+
+        final TokenRequest 로그인요청 = new TokenRequest(잉_회원생성요청.getEmail(), 잉_회원생성요청.getPassword());
+        final TokenResponse 엑세스토큰 = post(LOGIN_URI, 로그인요청).as(TokenResponse.class);
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        final ExtractableResponse<Response> 회원조회응답 = get(CUSTOMER_URI, 엑세스토큰.getAccessToken());
+        final CustomerResponse 회원조회결과 = 회원조회응답.as(CustomerResponse.class);
 
         // then
-        // 내 정보가 조회된다
+        assertAll(
+                () -> assertThat(회원조회응답.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(회원조회결과.getEmail()).isEqualTo(회원생성요청.getEmail()),
+                () -> assertThat(회원조회결과.getName()).isEqualTo(회원생성요청.getName())
+        );
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
     @Test
     void myInfoWithBadBearerAuth() {
         // given
-        // 회원이 등록되어 있고
+        final CustomerRequest 회원생성요청 = 잉_회원생성요청;
+        post(CUSTOMER_URI, 회원생성요청);
 
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+        final TokenRequest 로그인요청 = new TokenRequest(잉_회원생성요청.getEmail(), 잉_회원생성요청.getPassword() + "wrong");
+        final ExtractableResponse<Response> 로그인실패응답 = post(LOGIN_URI, 로그인요청);
 
         // then
-        // 토큰 발급 요청이 거부된다
+        assertAll(
+                () -> assertThat(로그인실패응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThatCode(() -> 로그인실패응답.as(ExceptionResponse.class))
+                        .doesNotThrowAnyException()
+        );
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
+        // given
+        final CustomerRequest 회원생성요청 = 잉_회원생성요청;
+        post(CUSTOMER_URI, 회원생성요청);
+
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        final ExtractableResponse<Response> 회원조회응답 = get(CUSTOMER_URI, "NotValidToken");
 
         // then
-        // 내 정보 조회 요청이 거부된다
+        assertAll(
+                () -> assertThat(회원조회응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThatCode(() -> 회원조회응답.as(ExceptionResponse.class))
+                        .doesNotThrowAnyException()
+        );
     }
 }
