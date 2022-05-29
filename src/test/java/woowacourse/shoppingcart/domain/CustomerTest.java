@@ -1,14 +1,16 @@
 package woowacourse.shoppingcart.domain;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.stream.Stream;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class CustomerTest {
 
@@ -38,5 +40,13 @@ class CustomerTest {
                 Arguments.of(EMAIL, PASSWORD, null, PHONE_NUMBER),
                 Arguments.of(EMAIL, PASSWORD, ADDRESS, null)
         );
+    }
+
+    @DisplayName("이메일 형식이 맞지 않으면 예외를 던진다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"@email.com", "test@", "testemail.com", "test@email", "email"})
+    void createCustomer_error_emailFormat(String email) {
+        assertThatThrownBy(() -> new Customer(email, PASSWORD, ADDRESS, PHONE_NUMBER))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

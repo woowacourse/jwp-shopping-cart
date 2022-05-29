@@ -1,8 +1,12 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Customer {
+
+    private static final Pattern PATTERN = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
 
     private final Long id;
     private final String email;
@@ -20,5 +24,13 @@ public class Customer {
         this.password = Objects.requireNonNull(password, "password는 필수 입력 사항압니다.");
         this.address = Objects.requireNonNull(address, "address는 필수 입력 사항압니다.");
         this.phoneNumber = Objects.requireNonNull(phoneNumber, "phoneNumber는 필수 입력 사항압니다.");
+        validateEmail(email);
+    }
+
+    private void validateEmail(String email) {
+        Matcher matcher = PATTERN.matcher(email);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("email 형식을 올바르지 않습니다.");
+        }
     }
 }
