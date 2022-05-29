@@ -29,7 +29,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        customer = Customer.Builder()
+        customer = Customer.builder()
                 .username("username")
                 .password("password123")
                 .phoneNumber("01012345678")

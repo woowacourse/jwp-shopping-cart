@@ -3,8 +3,10 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -27,6 +29,11 @@ public class CustomerService {
 
     public CustomerResponse findByUsername(final String username) {
         return CustomerResponse.from(customerDao.findByUsername(username));
+    }
+
+    @Transactional
+    public void update(final CustomerUpdateRequest request, final String username) {
+        customerDao.update(request.toCustomerWithUsername(username));
     }
 
     @Transactional

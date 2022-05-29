@@ -56,7 +56,7 @@ public class CustomerDaoTest {
     @DisplayName("customer를 이름으로 검색할 수 있다.")
     void findByUsername() {
         // given
-        Customer customer = Customer.Builder()
+        Customer customer = Customer.builder()
                 .username("username")
                 .password("password123")
                 .phoneNumber("01012345678")
@@ -78,7 +78,7 @@ public class CustomerDaoTest {
     @DisplayName("customner를 저장하면 아이디를 반환한다.")
     void save() {
         // given
-        Customer customer = Customer.Builder()
+        Customer customer = Customer.builder()
                 .username("username")
                 .password("password123")
                 .phoneNumber("01012345678")
@@ -96,7 +96,7 @@ public class CustomerDaoTest {
     @DisplayName("username이 이미 존재하는지 확인한다.")
     void existUsername() {
         // given
-        Customer customer = Customer.Builder()
+        Customer customer = Customer.builder()
                 .username("username")
                 .password("password123")
                 .phoneNumber("01012345678")
@@ -114,14 +114,14 @@ public class CustomerDaoTest {
     @DisplayName("유저 정보를 수정한다.")
     void update() {
         // given
-        Customer customer = Customer.Builder()
+        Customer customer = Customer.builder()
                 .username("username")
                 .password("password123")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
         customerDao.save(customer);
-        Customer changedCustomer = Customer.Builder()
+        Customer changedCustomer = Customer.builder()
                 .id(customerDao.findIdByUserName("username"))
                 .username("username")
                 .password("changedPassword123")
@@ -142,7 +142,7 @@ public class CustomerDaoTest {
     @DisplayName("유저를 유저 이름으로 찾아 삭제한다.")
     void deleteByUsername() {
         // given
-        Customer customer = Customer.Builder()
+        Customer customer = Customer.builder()
                 .username("username")
                 .password("password123")
                 .phoneNumber("01012345678")

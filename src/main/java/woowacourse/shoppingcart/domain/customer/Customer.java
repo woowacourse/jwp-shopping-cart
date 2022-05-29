@@ -60,7 +60,7 @@ public class Customer {
         return Objects.hash(id);
     }
 
-    public static Builder Builder() {
+    public static Builder builder() {
         return new Builder();
     }
 

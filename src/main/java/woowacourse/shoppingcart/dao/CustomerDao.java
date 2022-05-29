@@ -17,7 +17,7 @@ public class CustomerDao {
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Customer> customerRowMapper = ((rs, rowNum) ->
-            Customer.Builder()
+            Customer.builder()
                     .id(rs.getLong("id"))
                     .username(rs.getString("username"))
                     .password(rs.getString("password"))

@@ -18,7 +18,7 @@ class CustomerTest {
         String address = "성담빌딩";
 
         // when
-        Customer customer = Customer.Builder()
+        Customer customer = Customer.builder()
                 .id(id)
                 .username(username)
                 .password(password)
