@@ -4,9 +4,12 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerResponse {
 
-    private final String username;
-    private final String phoneNumber;
-    private final String address;
+    private String username;
+    private String phoneNumber;
+    private String address;
+
+    private CustomerResponse() {
+    }
 
     public CustomerResponse(final String username, final String phoneNumber, final String address) {
         this.username = username;

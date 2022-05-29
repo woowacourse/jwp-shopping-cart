@@ -16,6 +16,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -33,7 +34,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         @BeforeEach
         void prepare() {
-            request = new CustomerSignUpRequest(USERNAME, "password123", PHONE_NUMBER, ADDRESS);
+            request = new CustomerSignUpRequest(USERNAME, PASSWORD, PHONE_NUMBER, ADDRESS);
         }
 
         @Test
@@ -66,12 +67,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         String accessToken = 회원_가입_후_로그인();
+        CustomerUpdateRequest request = new CustomerUpdateRequest("changedPassword123", "01087654321", "루터회관");
 
-
+        ExtractableResponse<Response> response = 회원_정보_수정_요청(accessToken, request);
+        회원_정보_수정_성공(response);
     }
 
-    @DisplayName("회원탈퇴")
     @Test
+    @DisplayName("회원탈퇴")
     void deleteMe() {
         String accessToken = 회원_가입_후_로그인();
 
@@ -93,6 +96,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + accessToken)
                 .when().get("/api/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 회원_정보_수정_요청(final String accessToken, final CustomerUpdateRequest request) {
+        return  RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/api/customers")
                 .then().log().all()
                 .extract();
     }
@@ -127,6 +140,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.body().as(CustomerResponse.class))
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
+    }
+
+    private void 회원_정보_수정_성공(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     private void 회원_탈퇴_성공(final ExtractableResponse<Response> response) {
