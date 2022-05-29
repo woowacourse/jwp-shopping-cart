@@ -60,7 +60,6 @@ public class MemberDaoTest {
     @DisplayName("이메일이 존재하지 않으면 empty를 반환한다.")
     @Test
     void findByEmailEmpty() {
-        memberDao.save(createMember(EMAIL, PASSWORD, NAME));
         Optional<Member> member = memberDao.findByEmail(EMAIL);
 
         assertThat(member.isEmpty()).isTrue();
