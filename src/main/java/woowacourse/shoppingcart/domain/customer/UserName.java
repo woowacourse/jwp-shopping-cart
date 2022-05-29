@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import java.util.Objects;
+
 public class UserName {
     private static final int MIN_USERNAME_LENGTH = 4;
     private static final int MAX_USERNAME_LENGTH = 20;
@@ -22,5 +24,18 @@ public class UserName {
 
     public String getUserName() {
         return userName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserName userName1 = (UserName) o;
+        return Objects.equals(userName, userName1.userName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName);
     }
 }

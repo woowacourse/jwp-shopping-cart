@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -44,5 +45,10 @@ public class CustomerDao {
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
+    }
+
+    public List<String> findAllUserNames() {
+        String sql = "SELECT username FROM customer";
+        return jdbcTemplate.queryForList(sql, String.class);
     }
 }
