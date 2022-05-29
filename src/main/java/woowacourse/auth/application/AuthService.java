@@ -6,7 +6,6 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.member.application.MemberService;
 import woowacourse.member.domain.Member;
-import woowacourse.member.exception.WrongPasswordException;
 
 @Service
 public class AuthService {

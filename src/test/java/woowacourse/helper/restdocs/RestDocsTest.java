@@ -10,13 +10,15 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.ui.AuthController;
 import woowacourse.member.application.MemberService;
 import woowacourse.member.ui.MemberController;
 
 @AutoConfigureRestDocs
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @WebMvcTest({
-        MemberController.class
+        MemberController.class,
+        AuthController.class
 })
 public abstract class RestDocsTest {
 
