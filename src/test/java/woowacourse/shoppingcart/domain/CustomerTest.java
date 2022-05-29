@@ -49,4 +49,12 @@ class CustomerTest {
         assertThatThrownBy(() -> new Customer(email, PASSWORD, ADDRESS, PHONE_NUMBER))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @DisplayName("비밀번호 형식이 맞지 않으면 예외를 던진다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"123456789", "123456789012345678901"})
+    void createCustomer_error_passwordFormat(String password) {
+        assertThatThrownBy(() -> new Customer(EMAIL, password, ADDRESS, PHONE_NUMBER))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }
