@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.customer.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,6 +22,19 @@ public class CustomerDaoTest {
 
     public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(jdbcTemplate);
+    }
+
+    @DisplayName("회원가입 시 입력한 정보를 저장한다.")
+    @Test
+    void saveCustomer() {
+        //given
+        final Customer customer = Customer.of("kth990303", "kth@@990303", "keikeikei", 23);
+
+        //when
+        final Long id = customerDao.save(customer);
+
+        //then
+        assertThat(id).isNotNull();
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")

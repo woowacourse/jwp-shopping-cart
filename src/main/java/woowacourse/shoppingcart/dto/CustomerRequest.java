@@ -10,13 +10,14 @@ public class CustomerRequest {
     @Length(min = 4, max = 20, message = "아이디는 4자 이상 20자 이하여야 합니다.")
     private String userName;
 
+    @NotBlank(message = "비밀번호를 입력해주세요.")
+    @Length(min = 8, max = 20, message = "비밀번호는 8자 이상 20자 이하여야 합니다.")
+    private String password;
+
     @NotBlank(message = "이름을 입력해주세요.")
     @Length(min = 1, max = 10, message = "이름은 1자 이상 10자 이하여야 합니다.")
     private String nickName;
 
-    @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Length(min = 8, max = 20, message = "비밀번호는 8자 이상 20자 이하여야 합니다.")
-    private String password;
 
     @Min(value = 0, message = "올바른 나이를 입력해주세요.")
     private int age;
@@ -24,10 +25,10 @@ public class CustomerRequest {
     private CustomerRequest() {
     }
 
-    public CustomerRequest(String userName, String nickName, String password, int age) {
+    public CustomerRequest(String userName, String password, String nickName, int age) {
         this.userName = userName;
-        this.nickName = nickName;
         this.password = password;
+        this.nickName = nickName;
         this.age = age;
     }
 
@@ -35,12 +36,12 @@ public class CustomerRequest {
         return userName;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
     public String getPassword() {
         return password;
+    }
+
+    public String getNickName() {
+        return nickName;
     }
 
     public int getAge() {

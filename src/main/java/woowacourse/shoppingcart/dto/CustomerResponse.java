@@ -3,18 +3,18 @@ package woowacourse.shoppingcart.dto;
 public class CustomerResponse {
     private Long id;
     private String userName;
-    private String nickName;
     private String password;
+    private String nickName;
     private int age;
 
     private CustomerResponse() {
     }
 
-    public CustomerResponse(Long id, String userName, String nickName, String password, int age) {
+    public CustomerResponse(Long id, String userName, String password, String nickName, int age) {
         this.id = id;
         this.userName = userName;
-        this.nickName = nickName;
         this.password = password;
+        this.nickName = nickName;
         this.age = age;
     }
 
@@ -26,12 +26,12 @@ public class CustomerResponse {
         return userName;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
     public String getPassword() {
         return password;
+    }
+
+    public String getNickName() {
+        return nickName;
     }
 
     public int getAge() {
