@@ -1,0 +1,24 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+= Auth api
+
+== auth
+=== request
+include::{snippets}/auth-login/http-request.adoc[]
+=== response
+include::{snippets}/auth-login/http-response.adoc[]
+
+= Member api
+
+== member register
+=== request
+include::{snippets}/member-register/http-request.adoc[]
+=== response
+include::{snippets}/member-register/http-response.adoc[]
