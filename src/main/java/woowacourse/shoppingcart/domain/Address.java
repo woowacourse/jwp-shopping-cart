@@ -7,4 +7,8 @@ public class Address {
     public Address(String value) {
         this.value = value;
     }
+
+    public String getValue() {
+        return value;
+    }
 }

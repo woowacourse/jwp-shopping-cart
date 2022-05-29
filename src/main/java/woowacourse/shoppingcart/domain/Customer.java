@@ -25,4 +25,24 @@ public class Customer {
         this.address = address;
         this.phoneNumber = phoneNumber;
     }
+
+    public String getName() {
+        return name.getValue();
+    }
+
+    public String getPassword() {
+        return password.getValue();
+    }
+
+    public String getEmail() {
+        return email.getValue();
+    }
+
+    public String getAddress() {
+        return address.getValue();
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber.getValue();
+    }
 }

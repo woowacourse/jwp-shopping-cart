@@ -1,11 +1,17 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-
-import java.util.Locale;
 
 @Repository
 public class CustomerDao {
@@ -22,6 +28,38 @@ public class CustomerDao {
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
+        }
+    }
+
+    public Long save(final Customer customer) {
+        final String query = "INSERT INTO customer (username, password, email, address, phone_number) "
+                + "VALUES (?, ?, ?, ?, ?)";
+        KeyHolder holder = new GeneratedKeyHolder();
+        jdbcTemplate.update((Connection con) -> {
+            PreparedStatement statement = con.prepareStatement(query, new String[]{"id"});
+            statement.setString(1, customer.getName());
+            statement.setString(2, customer.getPassword());
+            statement.setString(3, customer.getEmail());
+            statement.setString(4, customer.getAddress());
+            statement.setString(5, customer.getPhoneNumber());
+            return statement;
+        }, holder);
+        return Objects.requireNonNull(holder.getKey()).longValue();
+    }
+
+    public Optional<Customer> findById(final Long id) {
+        final String query = "SELECT * FROM customer WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, (resultSet, rowNum) ->
+                    new Customer(
+                            resultSet.getString("username"),
+                            resultSet.getString("password"),
+                            resultSet.getString("email"),
+                            resultSet.getString("address"),
+                            resultSet.getString("phone_number")
+                    ), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 }

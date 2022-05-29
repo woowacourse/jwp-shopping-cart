@@ -18,4 +18,8 @@ public class PhoneNumber {
             throw new InvalidPhoneNumberException();
         }
     }
+
+    public String getValue() {
+        return value;
+    }
 }

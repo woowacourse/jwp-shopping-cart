@@ -19,4 +19,8 @@ public class Email {
             throw new InvalidEmailException();
         }
     }
+
+    public String getValue() {
+        return value;
+    }
 }

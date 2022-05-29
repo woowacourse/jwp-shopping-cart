@@ -38,4 +38,8 @@ public class Password {
             throw new InvalidPasswordException("형식이 올바르지 않습니다.");
         }
     }
+
+    public String getValue() {
+        return value;
+    }
 }
