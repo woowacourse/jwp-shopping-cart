@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.SignupRequest;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -20,7 +21,7 @@ public class CustomerController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest) throws URISyntaxException {
+    public ResponseEntity<Void> signup(@RequestBody @Valid SignupRequest signupRequest) throws URISyntaxException {
         customerService.createCustomer(signupRequest);
 
         return ResponseEntity.created(new URI("/signin"))
