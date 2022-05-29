@@ -47,4 +47,11 @@ public class AuthController {
         authService.edit(token, customerRequest);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCustomer(HttpServletRequest request){
+        String token = AuthorizationExtractor.extract(request);
+        authService.delete(token);
+        return ResponseEntity.noContent().build();
+    }
 }

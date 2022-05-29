@@ -31,7 +31,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void registerCustomers() {
         // when
-        // 회원 정보를 담은 요청이 오면 회원가입에 성공하고 상태코드 201과 회원정보를 반환한다.
+        // 회원 정보를 담은 요청이 오면
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
         ExtractableResponse<Response> registerCustomerResponse = RestAssured
                 .given().log().all()
@@ -42,6 +42,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // then
+        // 회원가입에 성공하고 상태코드 201과 회원정보를 반환한다.
         CustomerResponse customerResponse = registerCustomerResponse.body().as(CustomerResponse.class);
         assertAll(
                 () -> assertThat(customerResponse.getId()).isEqualTo(1L),
@@ -146,7 +147,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
 
-        // given
+        // then
         // 수정된 내 정보가 조회된다.
         assertAll(
                 () -> assertThat(customerResponse.getId()).isEqualTo(1L),
@@ -155,6 +156,45 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(customerResponse.getPhone()).isEqualTo(PHONE),
                 () -> assertThat(customerResponse.getAddress()).isEqualTo(ADDRESS)
         );
+    }
+
+    @DisplayName("회원 정보 삭제")
+    @Test
+    void deleteCustomer() {
+        // given
+        // 회원이 등록되어 있고
+        CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(customerRequest)
+                .when().post("/customers")
+                .then().log().all()
+                .extract();
+
+        TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
+        String accessToken = RestAssured
+                .given().log().all()
+                .body(tokenRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/customers/login")
+                .then().log().all()
+                .extract().as(TokenResponse.class).getAccessToken();
+
+        // when
+        // 패스워드와 함께 회원 삭제를 요청하면
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().oauth2(accessToken)
+                .when().delete("/customers")
+                .then().log().all()
+                .extract();
+
+        // then
+        // 204 상태코드를 반환한다.
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("Bearer Auth 로그인 실패")

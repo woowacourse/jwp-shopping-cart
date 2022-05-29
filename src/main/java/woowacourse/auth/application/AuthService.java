@@ -51,6 +51,12 @@ public class AuthService {
         customerDao.edit(customer);
     }
 
+    public void delete(String token) {
+        validateToken(token);
+        final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
+        customerDao.delete(id);
+    }
+
     private void validateToken(String token) {
         if (!jwtTokenProvider.validateToken(token)) {
             throw new InvalidTokenException();

@@ -68,6 +68,11 @@ public class CustomerDao {
         jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer));
     }
 
+    public void delete(Long id) {
+        final String sql = "delete from customer where id = :id";
+        jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
+    }
+
     private static class CustomerMapper implements RowMapper<Customer> {
         public Customer mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             return new Customer(
