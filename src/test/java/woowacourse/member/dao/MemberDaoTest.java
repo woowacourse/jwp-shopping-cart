@@ -6,6 +6,7 @@ import static woowacourse.helper.fixture.MemberFixture.NAME;
 import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
 import static woowacourse.helper.fixture.MemberFixture.createMember;
 
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import woowacourse.helper.fixture.MemberFixture;
 import woowacourse.member.domain.Member;
 
 @JdbcTest
@@ -52,8 +52,17 @@ public class MemberDaoTest {
     @Test
     void findByEmail() {
         memberDao.save(createMember(EMAIL, PASSWORD, NAME));
-        Member member = memberDao.findByEmail(EMAIL);
+        Member member = memberDao.findByEmail(EMAIL).get();
 
         assertThat(member.getName()).isEqualTo(NAME);
+    }
+
+    @DisplayName("이메일이 존재하지 않으면 empty를 반환한다.")
+    @Test
+    void findByEmailEmpty() {
+        memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Optional<Member> member = memberDao.findByEmail(EMAIL);
+
+        assertThat(member.isEmpty()).isTrue();
     }
 }

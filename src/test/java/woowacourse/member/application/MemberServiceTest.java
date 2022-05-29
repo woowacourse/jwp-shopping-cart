@@ -17,6 +17,8 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.exception.DuplicateMemberEmailException;
+import woowacourse.member.exception.NoMemberException;
+import woowacourse.member.exception.WrongPasswordException;
 
 
 @SpringBootTest
@@ -50,19 +52,26 @@ public class MemberServiceTest {
 
     @DisplayName("로그인 성공 여부를 확인한다_성공")
     @Test
-    void isLoginSuccess() {
+    void loginSuccess() {
         memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
 
-        assertThat(memberService.isLogin(tokenRequest)).isTrue();
+        assertThat(memberService.login(tokenRequest).getEmail()).isEqualTo(EMAIL);
     }
 
-    @DisplayName("로그인 성공 여부를 확인한다_실패")
+    @DisplayName("이메일이 존재하지 않을 경우 예외가 발생한다.")
     @Test
-    void isLoginFail() {
-        memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
-        TokenRequest tokenRequest = new TokenRequest(EMAIL, "Fail1234!");
-
-        assertThat(memberService.isLogin(tokenRequest)).isFalse();
+    void loginNoMember() {
+        assertThatThrownBy(() -> memberService.login(new TokenRequest(EMAIL, PASSWORD)))
+                .isInstanceOf(NoMemberException.class);
     }
+
+    @DisplayName("비밀번호가 틀릴경우 예외가 발생한다.")
+    @Test
+    void loginWrongPassword() {
+        memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
+        assertThatThrownBy(() -> memberService.login(new TokenRequest(EMAIL, "Fail1234!")))
+                .isInstanceOf(WrongPasswordException.class);
+    }
+
 }
