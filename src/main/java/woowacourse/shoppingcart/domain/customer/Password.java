@@ -15,6 +15,10 @@ public class Password {
         this.password = password;
     }
 
+    public boolean hasSamePassword(String password) {
+        return this.password.equals(password);
+    }
+
     private void validatePassword(String password) {
         if (password.isBlank()) {
             throw new IllegalArgumentException("비밀번호는 공백일 수 없습니다.");

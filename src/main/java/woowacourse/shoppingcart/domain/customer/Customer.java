@@ -22,6 +22,12 @@ public class Customer {
         );
     }
 
+    public void validatePassword(String password) {
+        if (!this.password.hasSamePassword(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
     public String getUserName() {
         return userName.getUserName();
     }

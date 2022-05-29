@@ -3,10 +3,10 @@ package woowacourse.shoppingcart.domain.customer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.*;
 
 class PasswordTest {
 
@@ -48,5 +48,13 @@ class PasswordTest {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> new Password(password))
                 .withMessageContaining("알파벳, 숫자, 일부 특수문자");
+    }
+
+    @DisplayName("비밀번호 일치 여부를 확인한다.")
+    @ParameterizedTest(name = "{0}")
+    @CsvSource({"kth990303, true", "forky123, false"})
+    void has_same_password(String password, boolean expected) {
+        Password given = new Password("kth990303");
+        assertThat(given.hasSamePassword(password)).isEqualTo(expected);
     }
 }
