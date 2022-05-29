@@ -1,4 +1,4 @@
-package woowacourse.auth.domain;
+package woowacourse.shoppingcart.domain;
 
 public class Address {
 

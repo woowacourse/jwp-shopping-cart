@@ -1,7 +1,7 @@
-package woowacourse.auth.domain;
+package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.auth.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 public class Password {
 

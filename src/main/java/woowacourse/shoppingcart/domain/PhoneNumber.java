@@ -1,7 +1,7 @@
-package woowacourse.auth.domain;
+package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.auth.exception.InvalidPhoneNumberException;
+import woowacourse.shoppingcart.exception.InvalidPhoneNumberException;
 
 public class PhoneNumber {
 

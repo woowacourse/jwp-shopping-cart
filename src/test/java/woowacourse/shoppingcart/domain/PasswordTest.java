@@ -1,4 +1,4 @@
-package woowacourse.auth.domain;
+package woowacourse.shoppingcart.domain;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -10,7 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.auth.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 class PasswordTest {
 

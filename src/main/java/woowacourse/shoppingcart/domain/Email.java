@@ -1,7 +1,7 @@
-package woowacourse.auth.domain;
+package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.auth.exception.InvalidEmailException;
+import woowacourse.shoppingcart.exception.InvalidEmailException;
 
 public class Email {
 

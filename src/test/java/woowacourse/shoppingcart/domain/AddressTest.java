@@ -1,4 +1,4 @@
-package woowacourse.auth.domain;
+package woowacourse.shoppingcart.domain;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
