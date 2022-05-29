@@ -13,6 +13,15 @@ public class Customer {
         this.age = age;
     }
 
+    public static Customer of(String userName, String password, String nickName, int age) {
+        return new Customer(
+                new UserName(userName),
+                new Password(password),
+                new NickName(nickName),
+                new Age(age)
+        );
+    }
+
     public String getUserName() {
         return userName.getUserName();
     }

@@ -15,7 +15,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         CustomerRequest customerRequest =
-                new CustomerRequest("forky", "복희", "forky123#", 26);
+                new CustomerRequest("forky", "forky123#","복희",  26);
         RestAssured.given().log().all()
                 .body(customerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
