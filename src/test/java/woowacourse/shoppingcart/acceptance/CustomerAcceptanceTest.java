@@ -4,8 +4,14 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.dto.SignUpRequest;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.utils.EmailUtil;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -27,6 +33,33 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(signUpRequest)
+                .when().post("/users")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1234");
+        String token = RestAssured
+                .given().log().all()
+                .body(tokenRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/auth/login")
+                .then().log().all().extract().as(SignInResponse.class).getToken();
+
+        //when
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/users/" + EmailUtil.getIdentifier(signUpRequest.getEmail()))
+                .then().log().all().statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("내 정보 수정")
