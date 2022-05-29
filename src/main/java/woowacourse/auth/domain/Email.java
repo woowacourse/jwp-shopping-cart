@@ -1,33 +1,22 @@
 package woowacourse.auth.domain;
 
+import java.util.regex.Pattern;
 import woowacourse.auth.exception.InvalidEmailException;
 
 public class Email {
 
-    private static final String DOT_COM = ".com";
-    private static final String AT_SYMBOL = "@";
+    private static final Pattern FORM_PATTERN = Pattern.compile("^[a-zA-Z0-9]+@[a-zA-Z0-9]+[.]com");
 
     private final String value;
 
     public Email(String value) {
-        validateEmailForm(value);
+        validate(value);
         this.value = value;
     }
 
-    private void validateEmailForm(String value) {
-        validateAtSymbol(value);
-        validateDotComSuffix(value);
-    }
-
-    private void validateAtSymbol(String value) {
-        if (!value.contains(AT_SYMBOL)) {
-            throw new InvalidEmailException("@ 기호가 없습니다.");
-        }
-    }
-
-    private void validateDotComSuffix(String value) {
-        if (!value.endsWith(DOT_COM)) {
-            throw new InvalidEmailException(".com 로 끝나지 않습니다.");
+    private void validate(String value) {
+        if (!FORM_PATTERN.matcher(value).matches()) {
+            throw new InvalidEmailException();
         }
     }
 }
