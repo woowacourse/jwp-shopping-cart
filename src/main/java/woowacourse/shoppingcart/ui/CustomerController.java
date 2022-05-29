@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -32,6 +34,13 @@ public class CustomerController {
     @GetMapping
     public ResponseEntity<CustomerResponse> myInfo(@AuthenticationPrincipal String username) {
         return ResponseEntity.ok(customerService.findByUsername(username));
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> update(@RequestBody CustomerUpdateRequest request,
+                                       @AuthenticationPrincipal String username) {
+        customerService.update(request, username);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
