@@ -8,7 +8,7 @@ public class TokenRequest {
     @NotBlank
     private String password;
 
-    public TokenRequest() {
+    private TokenRequest() {
     }
 
     public TokenRequest(String username, String password) {
