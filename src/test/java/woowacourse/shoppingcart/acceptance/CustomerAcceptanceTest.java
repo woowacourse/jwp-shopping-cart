@@ -20,6 +20,11 @@ import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password123";
+    private static final String PHONE_NUMBER = "01012345678";
+    private static final String ADDRESS = "성담빌딩";
+
     @DisplayName("회원가입")
     @Nested
     class AddCustomer extends AcceptanceTest {
@@ -28,7 +33,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         @BeforeEach
         void prepare() {
-            request = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
+            request = new CustomerSignUpRequest(USERNAME, "password123", PHONE_NUMBER, ADDRESS);
         }
 
         @Test
@@ -51,31 +56,24 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
-        CustomerSignUpRequest request = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
-        회원_가입_요청(request);
-        TokenRequest tokenRequest = new TokenRequest("username", "password123");
-        String accessToken = 로그인_요청(tokenRequest).body()
-                .as(TokenResponse.class)
-                .getAccessToken();
+        String accessToken = 회원_가입_후_로그인();
 
         ExtractableResponse<Response> response = 내_정보_조회(accessToken);
-        정보_조회_성공(response, new CustomerResponse("username", "01012345678", "성담빌딩"));
+        정보_조회_성공(response, new CustomerResponse(USERNAME, PHONE_NUMBER, ADDRESS));
     }
 
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        String accessToken = 회원_가입_후_로그인();
+
+
     }
 
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
-        CustomerSignUpRequest request = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
-        회원_가입_요청(request);
-        TokenRequest tokenRequest = new TokenRequest("username", "password123");
-        String accessToken = 로그인_요청(tokenRequest).body()
-                .as(TokenResponse.class)
-                .getAccessToken();
+        String accessToken = 회원_가입_후_로그인();
 
         ExtractableResponse<Response> response = 회원_탈퇴_요청(accessToken);
         회원_탈퇴_성공(response);
@@ -105,6 +103,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().delete("/api/customers")
                 .then().log().all()
                 .extract();
+    }
+
+    private String 회원_가입_후_로그인() {
+        CustomerSignUpRequest request = new CustomerSignUpRequest(USERNAME, PASSWORD, PHONE_NUMBER, ADDRESS);
+        회원_가입_요청(request);
+        TokenRequest tokenRequest = new TokenRequest(USERNAME, PASSWORD);
+        return 로그인_요청(tokenRequest).body()
+                .as(TokenResponse.class)
+                .getAccessToken();
     }
 
     private void 회원_가입됨(final ExtractableResponse<Response> response) {
