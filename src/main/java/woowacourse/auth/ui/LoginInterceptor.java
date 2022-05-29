@@ -14,7 +14,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationContext authenticationContext;
 
-    public LoginInterceptor(final JwtTokenProvider jwtTokenProvider, final AuthenticationContext authenticationContext) {
+    public LoginInterceptor(final JwtTokenProvider jwtTokenProvider,
+                            final AuthenticationContext authenticationContext) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationContext = authenticationContext;
     }

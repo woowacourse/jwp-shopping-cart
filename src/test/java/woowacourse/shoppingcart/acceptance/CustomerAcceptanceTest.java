@@ -100,8 +100,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 회원_정보_수정_요청(final String accessToken, final CustomerUpdateRequest request) {
-        return  RestAssured.given().log().all()
+    public static ExtractableResponse<Response> 회원_정보_수정_요청(final String accessToken,
+                                                            final CustomerUpdateRequest request) {
+        return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)

@@ -22,17 +22,17 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException() {
+    public ResponseEntity<String> handleUnhandledException() {
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity handle() {
+    public ResponseEntity<String> handle() {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity handleInvalidRequest(final BindingResult bindingResult) {
+    public ResponseEntity<String> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
@@ -43,7 +43,7 @@ public class ControllerAdvice {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    public ResponseEntity handleInvalidRequest(final RuntimeException e) {
+    public ResponseEntity<String> handleInvalidRequest(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
@@ -54,12 +54,12 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
+    public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler({InvalidAuthException.class})
-    public ResponseEntity handleInvalidAuthAccess(final RuntimeException e) {
+    public ResponseEntity<String> handleInvalidAuthAccess(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 }

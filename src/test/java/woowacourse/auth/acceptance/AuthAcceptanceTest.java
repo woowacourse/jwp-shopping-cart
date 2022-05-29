@@ -52,7 +52,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
-        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("username", "password123", "01012345678", "성담빌딩");
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("username", "password123",
+                "01012345678", "성담빌딩");
         회원_가입_요청(customerSignUpRequest);
         TokenRequest request = new TokenRequest("username", "password123");
         String token = 로그인_요청(request).body()
