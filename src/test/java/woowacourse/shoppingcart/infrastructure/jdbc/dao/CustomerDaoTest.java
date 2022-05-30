@@ -53,6 +53,15 @@ class CustomerDaoTest {
                 .isEqualTo(expected);
     }
 
+    @DisplayName("이메일에 해당하는 회원의 존재 유무를 확인한다.")
+    @Test
+    void existsByEmail() {
+        final Customer expected = new Customer(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD);
+        customerDao.save(expected);
+
+        assertThat(customerDao.existsByEmail(CUSTOMER_EMAIL)).isTrue();
+    }
+
     @DisplayName("회원을 삭제한다.")
     @Test
     void deleteById() {

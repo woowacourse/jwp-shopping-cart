@@ -64,6 +64,13 @@ public class CustomerDao {
         }
     }
 
+    public boolean existsByEmail(final String email) {
+        String query = "SELECT EXISTS(SELECT id FROM customer WHERE email=(:email)) as existable";
+        SqlParameterSource parameters = new MapSqlParameterSource("email", email);
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, parameters,
+                (resultSet, rowNum) -> resultSet.getBoolean("existable")));
+    }
+
     public void deleteById(final long id) {
         final String query = "DELETE FROM customer WHERE id=(:id)";
         final SqlParameterSource parameters = new MapSqlParameterSource("id", id);
