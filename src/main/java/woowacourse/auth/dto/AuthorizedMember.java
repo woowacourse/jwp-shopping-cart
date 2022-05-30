@@ -2,16 +2,16 @@ package woowacourse.auth.dto;
 
 import woowacourse.auth.domain.Member;
 
-public class MemberResponse {
+public class AuthorizedMember {
 
     private final String email;
     private final String nickname;
 
-    public MemberResponse(Member member) {
+    public AuthorizedMember(Member member) {
         this(member.getEmail(), member.getNickname());
     }
 
-    public MemberResponse(String email, String nickname) {
+    public AuthorizedMember(String email, String nickname) {
         this.email = email;
         this.nickname = nickname;
     }

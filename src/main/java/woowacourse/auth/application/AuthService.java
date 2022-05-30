@@ -5,10 +5,10 @@ import woowacourse.auth.dao.MemberDao;
 import woowacourse.auth.domain.Member;
 import woowacourse.auth.domain.Nickname;
 import woowacourse.auth.domain.Password;
+import woowacourse.auth.dto.AuthorizedMember;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
-import woowacourse.auth.dto.MemberResponse;
 import woowacourse.auth.dto.NicknameUpdateRequest;
 import woowacourse.auth.dto.PasswordCheckRequest;
 import woowacourse.auth.dto.PasswordUpdateRequest;
@@ -17,8 +17,8 @@ import woowacourse.auth.support.JwtTokenProvider;
 @Service
 public class AuthService {
 
-    private MemberDao memberDao;
-    private JwtTokenProvider jwtTokenProvider;
+    private final MemberDao memberDao;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public AuthService(MemberDao memberDao, JwtTokenProvider jwtTokenProvider) {
         this.memberDao = memberDao;
@@ -61,9 +61,11 @@ public class AuthService {
         }
     }
 
-    public boolean checkPassword(String token, PasswordCheckRequest passwordCheckRequest) {
-        Member member = findMemberByToken(token);
-        return member.getPassword().equals(passwordCheckRequest.getPassword());
+    public boolean checkPassword(String email, PasswordCheckRequest passwordCheckRequest) {
+        Member member = memberDao.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
+        return member.getPassword()
+                .equals(passwordCheckRequest.getPassword());
     }
 
     private Member findMemberByToken(String token) {
@@ -72,9 +74,9 @@ public class AuthService {
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
     }
 
-    public MemberResponse findAuthorizedMemberByToken(String token) {
+    public AuthorizedMember findAuthorizedMemberByToken(String token) {
         Member member = findMemberByToken(token);
-        return new MemberResponse(member);
+        return new AuthorizedMember(member);
     }
 
     public void updateNickname(String email, NicknameUpdateRequest nicknameUpdateRequest) {

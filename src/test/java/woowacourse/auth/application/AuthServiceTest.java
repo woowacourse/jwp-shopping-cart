@@ -11,10 +11,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.dto.AuthorizedMember;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
-import woowacourse.auth.dto.MemberResponse;
 import woowacourse.auth.dto.NicknameUpdateRequest;
 import woowacourse.auth.dto.PasswordCheckRequest;
 import woowacourse.auth.dto.PasswordUpdateRequest;
@@ -78,12 +78,9 @@ class AuthServiceTest {
     void checkPassword(String password, boolean expected) {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         authService.save(memberCreateRequest);
-        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-        String token = authService.login(loginRequest)
-                .getToken();
         PasswordCheckRequest passwordCheckRequest = new PasswordCheckRequest(password);
 
-        boolean actual = authService.checkPassword(token, passwordCheckRequest);
+        boolean actual = authService.checkPassword("abc@woowahan.com", passwordCheckRequest);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -97,10 +94,10 @@ class AuthServiceTest {
         String token = authService.login(loginRequest)
                 .getToken();
 
-        MemberResponse memberResponse = authService.findAuthorizedMemberByToken(token);
+        AuthorizedMember authorizedMember = authService.findAuthorizedMemberByToken(token);
 
-        assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com");
-        assertThat(memberResponse.getNickname()).isEqualTo("닉네임");
+        assertThat(authorizedMember.getEmail()).isEqualTo("abc@woowahan.com");
+        assertThat(authorizedMember.getNickname()).isEqualTo("닉네임");
     }
 
     @DisplayName("이메일과 닉네임을 받아 닉네임을 수정한다.")
