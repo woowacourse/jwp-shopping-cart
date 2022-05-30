@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dao.MemberDao;
+import woowacourse.auth.domain.Email;
 import woowacourse.auth.domain.Member;
 import woowacourse.auth.domain.Nickname;
 import woowacourse.auth.domain.Password;
@@ -40,7 +41,8 @@ public class AuthService {
     }
 
     public boolean existsEmail(String email) {
-        return memberDao.existsEmail(email);
+        String validatedEmail = new Email(email).getValue();
+        return memberDao.existsEmail(validatedEmail);
     }
 
     public LoginResponse login(LoginRequest loginRequest) {

@@ -178,6 +178,27 @@ class AuthServiceTest {
         assertThat(actual).isFalse();
     }
 
+    @DisplayName("존재하는 이메일인지 반환한다.")
+    @ParameterizedTest
+    @CsvSource({"abc@woowahan.com, true", "abc@naver.com, false"})
+    void existsEmail(String email, boolean expected) {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        authService.save(memberCreateRequest);
+
+        boolean actual = authService.existsEmail(email);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("올바르지 않은 이메일 형식으로 이메일이 존재하는지 확인하려하면 예외를 반환한다.")
+    @Test
+    void existsEmail_InvalidFormat() {
+        String invalid = "abc";
+        assertThatThrownBy(() -> authService.existsEmail(invalid))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이메일 형식이 올바르지 않습니다.");
+    }
+
     @DisplayName("존재하지 않는 회원을 삭제하려 하면 예외를 반환한다.")
     @Test
     void deleteMember_NotFoundMember() {
