@@ -1,6 +1,5 @@
 package woowacourse.auth.dao;
 
-import woowacourse.auth.domain.customer.Id;
 import woowacourse.auth.entity.CustomerEntity;
 
 public interface CustomerDao {
@@ -12,5 +11,5 @@ public interface CustomerDao {
 
     void update(CustomerEntity customerEntity);
 
-    void delete(Id id);
+    void delete(int id);
 }

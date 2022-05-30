@@ -1,6 +1,7 @@
 package woowacourse.auth.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.auth.Fixtures.CUSTOMER_ENTITY_1;
 
 import javax.sql.DataSource;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
@@ -84,4 +86,17 @@ class JdbcCustomerDaoTest {
                         newCustomerEntity.getProfileImageUrl(), newCustomerEntity.isTerms());
     }
 
+    @DisplayName("id를 전달받아 해당하는 Customer를 삭제한다.")
+    @Test
+    void delete() {
+        // given
+        int userId = customerDao.save(CUSTOMER_ENTITY_1);
+
+        // when
+        customerDao.delete(userId);
+
+        // then
+        assertThatThrownBy(() -> customerDao.findById(userId))
+                .isInstanceOf(EmptyResultDataAccessException.class);
+    }
 }

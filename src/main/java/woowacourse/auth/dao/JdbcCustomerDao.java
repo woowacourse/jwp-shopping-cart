@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.auth.domain.customer.Id;
 import woowacourse.auth.entity.CustomerEntity;
 
 @Repository
@@ -64,7 +63,8 @@ public class JdbcCustomerDao implements CustomerDao {
     }
 
     @Override
-    public void delete(Id id) {
-
+    public void delete(int id) {
+        String sql = "DELETE FROM CUSTOMER WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
