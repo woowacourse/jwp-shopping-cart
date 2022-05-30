@@ -2,8 +2,7 @@ package woowacourse.auth.acceptance;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
