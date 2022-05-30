@@ -1,4 +1,4 @@
-package woowacourse.auth.domain.customer.vo;
+package woowacourse.shoppingcart.domain.customer.vo;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

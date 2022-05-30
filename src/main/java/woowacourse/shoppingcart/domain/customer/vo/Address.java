@@ -1,4 +1,4 @@
-package woowacourse.auth.domain.customer.vo;
+package woowacourse.shoppingcart.domain.customer.vo;
 
 import java.util.Objects;
 
@@ -30,6 +30,10 @@ public class Address {
             throw new IllegalArgumentException(
                     String.format("주소는 최대 %d자까지 가능합니다. 입력값 : %s", MAX_LENGTH, value));
         }
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override

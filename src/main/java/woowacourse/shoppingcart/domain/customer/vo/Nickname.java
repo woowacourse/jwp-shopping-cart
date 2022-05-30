@@ -1,4 +1,4 @@
-package woowacourse.auth.domain.customer.vo;
+package woowacourse.shoppingcart.domain.customer.vo;
 
 import java.util.Objects;
 
@@ -20,6 +20,10 @@ public class Nickname {
                     String.format("닉네임은 %d ~ %d자로 생성 가능합니다. 입력값: %s",
                             MIN_LENGTH, MAX_LENGTH, value));
         }
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override

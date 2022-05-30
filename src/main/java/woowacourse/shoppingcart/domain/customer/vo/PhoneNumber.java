@@ -1,4 +1,4 @@
-package woowacourse.auth.domain.customer.vo;
+package woowacourse.shoppingcart.domain.customer.vo;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -39,6 +39,18 @@ public class PhoneNumber {
             throw new IllegalArgumentException(
                     String.format("휴대폰 번호는 숫자만 가능합니다. %s-%s-%s", start, middle, last));
         }
+    }
+
+    public String getStart() {
+        return start;
+    }
+
+    public String getMiddle() {
+        return middle;
+    }
+
+    public String getLast() {
+        return last;
     }
 
     @Override

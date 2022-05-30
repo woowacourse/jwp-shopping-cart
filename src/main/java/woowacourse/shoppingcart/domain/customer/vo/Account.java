@@ -1,4 +1,4 @@
-package woowacourse.auth.domain.customer.vo;
+package woowacourse.shoppingcart.domain.customer.vo;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -35,6 +35,10 @@ public class Account {
                     String.format("계정은 %d ~ %d자로 생성 가능합니다. 입력값: %s",
                             MIN_LENGTH, MAX_LENGTH, value));
         }
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override
