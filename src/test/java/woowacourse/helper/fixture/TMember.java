@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.member.acceptance.MemberAcceptanceTest;
 import woowacourse.member.dto.MemberRegisterRequest;
 
 public enum TMember {
@@ -83,5 +84,9 @@ public enum TMember {
 
     public String getToken() {
         return token;
+    }
+
+    public NoLoginAnd NoLoginAnd() {
+        return new NoLoginAnd();
     }
 }

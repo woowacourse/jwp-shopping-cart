@@ -9,6 +9,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.member.dto.MemberResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
@@ -32,5 +33,12 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.getEmail()).isEqualTo(MARU.getEmail()),
                 () -> assertThat(response.getName()).isEqualTo(MARU.getName())
         );
+    }
+
+    @DisplayName("토큰이 존재하지 않을 때 정보 조회를 요청하면 401 unauthorized와 에러 메시지를 반환한다.")
+    @Test
+    void getMyInformationNoLogin() {
+        ErrorResponse response = MARU.NoLoginAnd().getMyInformation();
+        assertThat(response.getMessage()).isEqualTo("[ERROR] 인증이 되지 않은 유저입니다.");
     }
 }
