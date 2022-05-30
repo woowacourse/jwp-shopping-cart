@@ -73,4 +73,10 @@ public class CustomerDao {
                         resultSet.getString("phone_number")
                 );
     }
+
+    public void update(Customer customer) {
+        String sql = "UPDATE customer SET address = :address, phone_number = :phoneNumber WHERE username = :username";
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
+        namedParameterJdbcTemplate.update(sql, parameterSource);
+    }
 }
