@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @RestController
@@ -41,6 +43,13 @@ public class CustomerController {
     public ResponseEntity<Void> update(@Valid @RequestBody CustomerUpdateRequest request,
                                        @AuthenticationPrincipal String username) {
         customerService.update(request, username);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody CustomerUpdatePasswordRequest request,
+                                               @AuthenticationPrincipal String username) {
+        customerService.updatePassword(username, request);
         return ResponseEntity.noContent().build();
     }
 

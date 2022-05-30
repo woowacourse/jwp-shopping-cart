@@ -3,8 +3,10 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -33,6 +35,11 @@ public class CustomerService {
     @Transactional
     public void update(final CustomerUpdateRequest request, final String username) {
         customerDao.update(request.toCustomerWithUsername(username));
+    }
+
+    @Transactional
+    public void updatePassword(final String username, final CustomerUpdatePasswordRequest request) {
+        customerDao.updatePassword(username, new Password(request.getPassword()));
     }
 
     @Transactional

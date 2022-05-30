@@ -16,6 +16,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @DisplayName("회원 관련 기능")
@@ -74,6 +75,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    @DisplayName("내 비밀번호 수정")
+    void updatePassword() {
+        String accessToken = 회원_가입_후_로그인();
+        CustomerUpdatePasswordRequest request = new CustomerUpdatePasswordRequest("changedPassword123");
+
+        ExtractableResponse<Response> response = 회원_비밀번호_수정_요청(accessToken, request);
+        회원_비밀번호_수정_성공(response);
+    }
+
+    @Test
     @DisplayName("회원탈퇴")
     void deleteMe() {
         String accessToken = 회원_가입_후_로그인();
@@ -111,6 +122,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 회원_비밀번호_수정_요청(final String accessToken,
+                                                            final CustomerUpdatePasswordRequest request) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().patch("/api/customers/password")
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> 회원_탈퇴_요청(final String accessToken) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
@@ -144,6 +166,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     private void 회원_정보_수정_성공(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void 회원_비밀번호_수정_성공(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
