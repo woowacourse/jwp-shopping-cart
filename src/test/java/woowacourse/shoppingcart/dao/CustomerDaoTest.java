@@ -124,4 +124,17 @@ class CustomerDaoTest {
         assertThatThrownBy(() -> customerDao.update(changeForm))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
+
+    @Test
+    @DisplayName("Customer의 id를 받아서 일치하는 Customer를 삭제한다.")
+    void deleteById() {
+        final Customer testCustomer = Customer.createWithoutId("test@test.com", "testtest", "테스트");
+        final Long createdCustomerId = customerDao.save(testCustomer);
+        final Customer findCustomer = customerDao.findById(createdCustomerId).get();
+
+        customerDao.deleteById(findCustomer.getId());
+        final Optional<Customer> empty = customerDao.findById(findCustomer.getId());
+
+        assertThat(empty).isEmpty();
+    }
 }
