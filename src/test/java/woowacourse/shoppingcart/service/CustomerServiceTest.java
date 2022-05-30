@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.TokenResponseDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -78,5 +80,16 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.updateCustomer(createdCustomerId, changeForm))
                 .isInstanceOf(DuplicateNameException.class)
                 .hasMessageContaining("수정하려는 이름이 이미 존재합니다.");
+    }
+
+    @Test
+    @DisplayName("회원 id를 입력받아 회원을 삭제시킨다.")
+    void deleteCustomer() {
+        final SignUpDto signUpDto = new SignUpDto("test@test.com", "testtest","테스트");
+        final Long createdCustomerId = customerService.signUp(signUpDto);
+
+        customerService.deleteCustomer(createdCustomerId);
+        assertThatThrownBy(() -> customerService.findCustomerById(createdCustomerId))
+                .isInstanceOf(InvalidCustomerException.class);
     }
 }
