@@ -26,7 +26,7 @@ public class CustomerDao {
 	public Customer save(Customer customer) {
 		long id = jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(customer))
 			.longValue();
-		return new Customer(id, customer.getEmail(), customer.getPassword());
+		return new Customer(id, customer.getEmail(), customer.getPassword(), customer.getNickname());
 	}
 
 	public Boolean existByEmail(String email) {

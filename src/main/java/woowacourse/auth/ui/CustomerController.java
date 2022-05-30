@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import lombok.RequiredArgsConstructor;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.CustomerRequest;
+import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.service.CustomerService;
 
 @RestController
@@ -24,10 +25,10 @@ public class CustomerController {
 	private final CustomerService customerService;
 
 	@PostMapping
-	public ResponseEntity<Void> signUp(@RequestBody @Valid CustomerRequest customerRequest) {
+	public ResponseEntity<CustomerResponse> signUp(@RequestBody @Valid CustomerRequest customerRequest) {
 		Customer customer = customerService.signUp(customerRequest);
 		URI uri = createUri(customer.getId());
-		return ResponseEntity.created(uri).build();
+		return ResponseEntity.created(uri).body(new CustomerResponse(customer));
 	}
 
 	private URI createUri(Long id) {

@@ -13,7 +13,7 @@ create table customer
     id bigint auto_increment not null,
     email varchar(255) not null unique,
     password varchar(255) not null,
-    nickname varchar(255),
+    nickname varchar(255) not null,
     primary key(id)
 );
 

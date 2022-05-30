@@ -28,7 +28,7 @@ class CustomerDaoTest {
 	@Test
 	void save() {
 		// given
-		Customer customer = new Customer("123@gmail.com", "!234");
+		Customer customer = new Customer("123@gmail.com", "!234", "does");
 
 		// when
 		Customer saved = customerDao.save(customer);
@@ -41,7 +41,7 @@ class CustomerDaoTest {
 	@Test
 	void existByName() {
 		// given
-		Customer customer = new Customer("123@gmail.com", "!234");
+		Customer customer = new Customer("123@gmail.com", "!234", "does");
 		customerDao.save(customer);
 
 		// when
@@ -55,7 +55,7 @@ class CustomerDaoTest {
 	@Test
 	void existByNameFalse() {
 		// given
-		Customer customer = new Customer("123@gmail.com", "!234");
+		Customer customer = new Customer("123@gmail.com", "!234", "does");
 
 		// when
 		boolean result = customerDao.existByEmail(customer.getEmail());

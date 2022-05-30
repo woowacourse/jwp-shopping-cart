@@ -1,6 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class CustomerAcceptanceTest {
 	@Test
 	void signUp() {
 		// given
-		CustomerRequest request = new CustomerRequest("123@gmail.com", "1234");
+		CustomerRequest request = new CustomerRequest("123@gmail.com", "a1234!", "does");
 
 		// when
 		ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -31,7 +32,15 @@ public class CustomerAcceptanceTest {
 			.then().log().all()
 			.extract();
 
+		String email = response.jsonPath().getString("email");
+		String nickname = response.jsonPath().getString("nickname");
+
 		// then
-		assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+		assertAll(
+			() -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+			() -> assertThat(email).isEqualTo("123@gmail.com"),
+			() -> assertThat(nickname).isEqualTo("does")
+		);
+
 	}
 }

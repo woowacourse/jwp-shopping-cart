@@ -28,8 +28,8 @@ class CustomerServiceTest {
 	@Test
 	void sighUp() {
 		// given
-		CustomerRequest request = new CustomerRequest("123@gmail.com", "!234");
-		Customer customer = new Customer(1L, "123@gmail.com", "!234");
+		CustomerRequest request = new CustomerRequest("123@gmail.com", "!234", "does");
+		Customer customer = new Customer(1L, "123@gmail.com", "!234", "does");
 		given(customerDao.save(any(Customer.class)))
 			.willReturn(customer);
 
@@ -44,7 +44,7 @@ class CustomerServiceTest {
 	@Test
 	void emailDuplicate() {
 		// given
-		CustomerRequest request = new CustomerRequest("123@gmail.com", "!234");
+		CustomerRequest request = new CustomerRequest("123@gmail.com", "!234", "does");
 		given(customerDao.existByEmail("123@gmail.com"))
 			.willReturn(true);
 
