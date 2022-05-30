@@ -45,11 +45,19 @@ public class ControllerAdvice {
     @ExceptionHandler
     public ResponseEntity handleBindingException(final BindException exception) {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
-        List<ExceptionResponse> responses = fieldErrors.stream()
+
+        List<String> messages = fieldErrors.stream()
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
-            .map(ExceptionResponse::new)
             .collect(Collectors.toList());
-        return ResponseEntity.badRequest().body(responses);
+
+        ExceptionResponse response = new ExceptionResponse(messages);
+
+        // List<ExceptionResponse> responses = fieldErrors.stream()
+        //     .map(DefaultMessageSourceResolvable::getDefaultMessage)
+        //     .map(ExceptionResponse::new)
+        //     .collect(Collectors.toList());
+        // return ResponseEntity.badRequest().body(responses);
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler({

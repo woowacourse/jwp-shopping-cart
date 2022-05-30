@@ -1,16 +1,25 @@
 package woowacourse.shoppingcart.dto;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
+import java.util.List;
 
-@JsonRootName(value = "error")
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+@JsonTypeName(value = "error")
+@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class ExceptionResponse {
-    private final String message;
+    @JsonProperty("message")
+    private List<String> messages;
 
-    public ExceptionResponse(String message) {
-        this.message = message;
+    public ExceptionResponse() {
     }
 
-    public String getMessage() {
-        return message;
+    public ExceptionResponse(List<String> messages) {
+        this.messages = messages;
+    }
+
+    public List<String> getMessages() {
+        return messages;
     }
 }
