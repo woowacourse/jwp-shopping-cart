@@ -37,4 +37,18 @@ class CustomerTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("패스워드 형식이 맞지 않습니다.");
     }
+
+    @DisplayName("닉네임 형식이 맞지 않는 경우 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "NICKNAME!", "nickname123"})
+    void throwsExceptionWhenInvalidNicknameFormat(String nickname) {
+        // given
+        String email = "beomWhale@gmail.com";
+        String password = "Password12345!";
+
+        // when && then
+        assertThatThrownBy(() -> new Customer(email, nickname, password))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("닉네임 형식이 맞지 않습니다.");
+    }
 }
