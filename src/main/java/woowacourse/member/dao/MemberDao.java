@@ -1,5 +1,6 @@
 package woowacourse.member.dao;
 
+import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -47,7 +48,17 @@ public class MemberDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
 
+    public Optional<Member> findById(final Long id) {
+        String sql= "SELECT id, email, password, name FROM member WHERE id = :id";
+        SqlParameterSource parameters = new MapSqlParameterSource("id", id);
+
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameters, rowMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private RowMapper<Member> rowMapper() {

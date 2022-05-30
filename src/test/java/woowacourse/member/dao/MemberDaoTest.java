@@ -64,4 +64,21 @@ public class MemberDaoTest {
 
         assertThat(member.isEmpty()).isTrue();
     }
+
+    @DisplayName("id로 멤버를 조회한다.")
+    @Test
+    void findById() {
+        Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Member member = memberDao.findById(id).get();
+
+        assertThat(member.getName()).isEqualTo(NAME);
+    }
+
+    @DisplayName("id가 존재하지 않으면 empty를 반환한다.")
+    @Test
+    void findByIdEmpty() {
+        Optional<Member> member = memberDao.findById(0L);
+
+        assertThat(member.isEmpty()).isTrue();
+    }
 }

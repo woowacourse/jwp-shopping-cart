@@ -1,10 +1,12 @@
 package woowacourse.member.application;
 
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.dto.MemberRegisterRequest;
+import woowacourse.member.dto.MemberResponse;
 import woowacourse.member.exception.DuplicateMemberEmailException;
 import woowacourse.member.exception.NoMemberException;
 import woowacourse.member.exception.WrongPasswordException;
@@ -43,5 +45,11 @@ public class MemberService {
             throw new WrongPasswordException();
         }
         return member;
+    }
+
+    public MemberResponse getMemberInformation(final Long id) {
+        Member member = memberDao.findById(id)
+                .orElseThrow(NoMemberException::new);
+        return MemberResponse.from(member);
     }
 }

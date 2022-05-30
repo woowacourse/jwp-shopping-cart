@@ -2,6 +2,7 @@ package woowacourse.member.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.helper.fixture.MemberFixture.EMAIL;
 import static woowacourse.helper.fixture.MemberFixture.NAME;
 import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.dto.MemberRegisterRequest;
+import woowacourse.member.dto.MemberResponse;
 import woowacourse.member.exception.DuplicateMemberEmailException;
 import woowacourse.member.exception.NoMemberException;
 import woowacourse.member.exception.WrongPasswordException;
@@ -74,4 +76,24 @@ public class MemberServiceTest {
                 .isInstanceOf(WrongPasswordException.class);
     }
 
+    @DisplayName("id로 회원정보를 조회한다.")
+    @Test
+    void getMemberInformation() {
+        Long id = memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
+        MemberResponse memberResponse = memberService.getMemberInformation(id);
+
+        assertAll(
+                () -> assertThat(memberResponse.getId()).isNotNull(),
+                () -> assertThat(memberResponse.getEmail()).isEqualTo(EMAIL),
+                () -> assertThat(memberResponse.getName()).isEqualTo(NAME)
+        );
+    }
+
+
+    @DisplayName("회원이 없을 경우 예외를 발생한다.")
+    @Test
+    void getMemberInformationNoMember() {
+        assertThatThrownBy(() -> memberService.getMemberInformation(0L))
+                .isInstanceOf(NoMemberException.class);
+    }
 }
