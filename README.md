@@ -1,13 +1,13 @@
 ## auth
-- [ ] post /api/auth
-    - [ ] id, 비밀번호 확인
-    - [ ] token 생성
+- [x] post /api/auth
+    - [x] id, 비밀번호 확인
+    - [x] token 생성
 
 ## member
-- [ ] post /api/members
+- [x] post /api/members
     - [X] email, password, name 요청
-    - [ ] 비밀번호 암호화
-    - [ ] 저장
+    - [x] 비밀번호 암호화
+    - [x] 저장
 
 - [ ] get /api/members/me
     - [ ] header token
@@ -33,4 +33,4 @@
 - [ ] 유효한 토큰인지 확인
 
 ## argumentResolver
-- [ ] 토큰을 기반으로 멤버 정보를 가져온다.
+- [x] 토큰을 기반으로 멤버 정보를 가져온다.
