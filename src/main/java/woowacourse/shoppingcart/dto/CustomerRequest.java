@@ -6,6 +6,7 @@ public class CustomerRequest {
 
     @NotNull
     private final String name;
+    @NotNull
     private final String password;
 
     public CustomerRequest(String name, String password) {

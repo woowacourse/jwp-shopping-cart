@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -23,14 +24,14 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> signUp(@RequestBody CustomerRequest customerRequest) {
+    public ResponseEntity<Void> signUp(@RequestBody @Valid CustomerRequest customerRequest) {
         customerService.addCustomer(customerRequest);
         return ResponseEntity.created(
                 URI.create("/api/customers/" + customerRequest.getName())).build();
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> edit(HttpServletRequest request, @RequestBody CustomerRequest editRequest) {
+    public ResponseEntity<Void> edit(HttpServletRequest request, @RequestBody @Valid CustomerRequest editRequest) {
         String customerName = getNameFromToken(request);
         customerService.editCustomerByName(customerName, editRequest);
         return ResponseEntity.ok().build();
