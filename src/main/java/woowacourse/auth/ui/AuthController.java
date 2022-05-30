@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.EmailDuplicationCheckResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
 
 @RestController
@@ -36,4 +38,8 @@ public class AuthController {
         return ResponseEntity.ok(emailDuplicationCheckResponse);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(authService.login(loginRequest));
+    }
 }

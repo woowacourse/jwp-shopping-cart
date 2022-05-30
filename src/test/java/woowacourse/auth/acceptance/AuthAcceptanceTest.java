@@ -13,6 +13,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.EmailDuplicationCheckResponse;
 import woowacourse.auth.dto.ErrorResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
@@ -79,40 +81,42 @@ class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(message).isEqualTo("이메일 형식이 올바르지 않습니다.");
     }
 
-    @DisplayName("Bearer Auth 로그인 성공")
+    @DisplayName("올바른 이메일과 비밀번호로 로그인 요청을 하면 토큰과 닉네임을 반환하고 200을 응답한다.")
     @Test
-    void myInfoWithBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+    void login_Ok() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+                "abc@woowahan.com",
+                "1q2w3e4r!",
+                "닉네임"
+        );
+        post("/api/members", memberCreateRequest);
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
 
-        // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        ExtractableResponse<Response> response = post("/api/login", loginRequest);
+        LoginResponse loginResponse = response.as(LoginResponse.class);
 
-        // then
-        // 내 정보가 조회된다
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(loginResponse.getToken()).isNotNull();
+        assertThat(loginResponse.getNickname()).isEqualTo("닉네임");
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
+    @DisplayName("올바르지 않은 이메일과 비밀번호로 로그인 요청을 하면 400을 응답한다.")
+    @ParameterizedTest
+    @CsvSource({"abc@naver.com, 1q2w3e4r!", "abc@woowahan.com, 1q2w3e4r@"})
+    void login_BadRequest(String email, String password) {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+                "abc@woowahan.com",
+                "1q2w3e4r!",
+                "닉네임"
+        );
+        post("/api/members", memberCreateRequest);
+        LoginRequest loginRequest = new LoginRequest(email, password);
 
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+        ExtractableResponse<Response> response = post("/api/login", loginRequest);
+        String message = response.as(ErrorResponse.class)
+                .getMessage();
 
-        // then
-        // 토큰 발급 요청이 거부된다
-    }
-
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보 조회 요청이 거부된다
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(message).isEqualTo("이메일과 비밀번호를 확인해주세요.");
     }
 }

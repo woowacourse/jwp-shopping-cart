@@ -2,8 +2,11 @@ package woowacourse.auth.dto;
 
 public class LoginResponse {
 
-    private final String token;
-    private final String nickname;
+    private String token;
+    private String nickname;
+
+    public LoginResponse() {
+    }
 
     public LoginResponse(String token, String nickname) {
         this.token = token;
