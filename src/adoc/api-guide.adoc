@@ -22,3 +22,9 @@ include::{snippets}/auth-login/http-response.adoc[]
 include::{snippets}/member-register/http-request.adoc[]
 === response
 include::{snippets}/member-register/http-response.adoc[]
+
+== member me
+=== request
+include::{snippets}/member-me/http-request.adoc[]
+=== response
+include::{snippets}/member-me/http-response.adoc[]
