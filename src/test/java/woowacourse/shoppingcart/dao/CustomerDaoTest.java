@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.customer.*;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,5 +63,19 @@ public class CustomerDaoTest {
 
         // then
         assertThat(customerId).isEqualTo(16L);
+    }
+
+    @DisplayName("비밀번호를 업데이트한다.")
+    @Test
+    void updatePassword() {
+        final String userName = "kth990303";
+        final Customer given = Customer.of(userName, "kth@990202", "김태현", 21);
+        final Customer expected = Customer.of(userName, "kth@990303", "김태현", 21);
+
+        customerDao.save(given);
+        customerDao.updatePassword(expected);
+
+        Customer actual = customerDao.findCustomerByUserName(userName);
+        assertThat(actual.getPassword()).isEqualTo(expected.getPassword());
     }
 }

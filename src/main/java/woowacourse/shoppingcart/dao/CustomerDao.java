@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -60,7 +61,19 @@ public class CustomerDao {
     }
 
     public Customer findCustomerByUserName(String userName) {
-        String sql = "SELECT username, password, nickname, age FROM customer WHERE username = ?";
-        return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, userName);
+        try {
+            final String sql = "SELECT username, password, nickname, age FROM customer WHERE username = ?";
+            return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, userName);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public void updatePassword(Customer customer) {
+        final String sql = "UPDATE customer SET password = ? WHERE username = ?";
+        int updated = jdbcTemplate.update(sql, customer.getPassword(), customer.getUserName());
+        if (updated == 0) {
+            throw new InvalidCustomerException();
+        }
     }
 }
