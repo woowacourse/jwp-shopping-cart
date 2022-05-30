@@ -58,6 +58,7 @@ public class Customer {
         private Password password;
         private PhoneNumber phoneNumber;
         private Address address;
+
         private Builder() {
         }
 
