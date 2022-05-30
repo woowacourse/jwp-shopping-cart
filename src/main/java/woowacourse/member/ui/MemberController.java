@@ -2,6 +2,7 @@ package woowacourse.member.ui;
 
 import java.net.URI;
 import javax.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<Void> register(@Valid @RequestBody MemberRegisterRequest memberRegisterRequest) {
         memberService.save(memberRegisterRequest);
-        return ResponseEntity.created(URI.create("/api/members")).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }

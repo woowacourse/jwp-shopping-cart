@@ -21,6 +21,14 @@ public class Member {
         this(null, email, password, name);
     }
 
+    public void encodePassword(final PasswordEncoder passwordEncoder) {
+        password = passwordEncoder.encode(password);
+    }
+
+    public boolean authenticate(final String password) {
+        return password.equals(this.password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -35,13 +43,5 @@ public class Member {
 
     public String getName() {
         return name;
-    }
-
-    public void encodePassword(final PasswordEncoder passwordEncoder) {
-        password = passwordEncoder.encode(password);
-    }
-
-    public boolean authenticate(final String password) {
-        return password.equals(this.password);
     }
 }
