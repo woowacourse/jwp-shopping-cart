@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class Account {
 
-    private static final Pattern FORMAT = Pattern.compile("^[0-9a-z]*");
+    private static final Pattern FORMAT = Pattern.compile("^[0-9a-z]*$");
 
     private final String value;
 

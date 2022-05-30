@@ -12,11 +12,21 @@ import org.junit.jupiter.params.provider.ValueSource;
 class PasswordTest {
 
     @ParameterizedTest(name = "비밀번호 : {0}")
-    @ValueSource(strings = {"gusghgusgh", "GUSGHGUSGH", "12345678", "현호현호현호현호", "!!!!!!!!"})
-    void 대문자_소문자_숫자_중_2종류_미만_생성_예외(String value) {
+    @ValueSource(strings = {"gusghgusgh", "GUSGHGUSGH", "12345678", "현호현호현호현호", "!!!!!!!!",
+            "aaaa1111", "AAAA1111", "aaaa!!!!", "1111!!!!", "AAAA!!!!",
+            "abcABC123", "ABC123!@#", "abc123!@#", "abcABC!@#"})
+    void 대소문자_숫자_특수문자_미포함_생성_예외(String value) {
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> new Password(value))
-                .withMessage(
-                        String.format("비밀번호는 대문자, 소문자, 숫자 중 2종류 이상으로 생성 가능합니다. 입력값: %s", value));
+                .withMessage("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.");
     }
+
+    @ParameterizedTest(name = "비밀번호 : {0}")
+    @ValueSource(strings = {"aA!4567", "aA!456789012345678901"})
+    void 올바르지_않은_글자수_비밀번호_생성_예외(String value) {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> new Password(value))
+                .withMessage("비밀번호는 8 ~ 20자로 생성 가능합니다.");
+    }
+
 }
