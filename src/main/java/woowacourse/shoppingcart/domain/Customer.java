@@ -18,6 +18,10 @@ public class Customer {
         return new Customer(null, email, password, username);
     }
 
+    public static Customer createWithoutPassword(final Long id, final String email, final String username) {
+        return new Customer(id, email, null, username);
+    }
+
     public Long getId() {
         return id;
     }
