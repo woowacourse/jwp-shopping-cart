@@ -11,7 +11,7 @@ public class Customer {
     private static final Pattern NUMBERS_PATTERN = Pattern.compile(".*[0-9].*");
     private static final Pattern SIZE_PATTERN = Pattern.compile("^(?=.{8,20}$).*");
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^(.+)@(.+)$");
-    private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[A-Za-z0-9]{1,10}$");
+    private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[A-Za-z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{1,10}$");
 
     private final String email;
     private final String nickname;
