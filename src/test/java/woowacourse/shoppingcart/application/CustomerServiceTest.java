@@ -12,7 +12,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.SignupRequest;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -26,18 +26,18 @@ class CustomerServiceTest {
     @Test
     void saveCustomer() {
         // given
-        CustomerRequest customerRequest = new CustomerRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
 
         // when
-        Customer customer = customerService.save(customerRequest);
+        Customer customer = customerService.save(signupRequest);
 
         // then
         assertAll(
             () -> assertThat(customer.getId()).isNotNull(),
-            () -> assertThat(customer.getUsername().getValue()).isEqualTo(customerRequest.getUsername()),
-            () -> assertThat(customer.getPassword().getValue()).isEqualTo(customerRequest.getPassword()),
-            () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(customerRequest.getPhoneNumber()),
-            () -> assertThat(customer.getAddress()).isEqualTo(customerRequest.getAddress())
+            () -> assertThat(customer.getUsername().getValue()).isEqualTo(signupRequest.getUsername()),
+            () -> assertThat(customer.getPassword().getValue()).isEqualTo(signupRequest.getPassword()),
+            () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(signupRequest.getPhoneNumber()),
+            () -> assertThat(customer.getAddress()).isEqualTo(signupRequest.getAddress())
         );
     }
 }

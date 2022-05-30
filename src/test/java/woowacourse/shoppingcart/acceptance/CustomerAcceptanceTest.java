@@ -5,26 +5,34 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.ExceptionResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.shoppingcart.dto.SignupRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
         // given
-        CustomerRequest customerRequest = new CustomerRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(customerRequest)
+            .body(signupRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/api/customers/signup")
@@ -39,11 +47,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void validateUsernameLength() {
         // given
-        CustomerRequest customerRequest = new CustomerRequest("do", "ehdgh1234", "01022728572", "인천 서구 검단로 851 동부아파트 108동 303호");
+        SignupRequest signupRequest = new SignupRequest("do", "ehdgh1234", "01022728572", "인천 서구 검단로 851 동부아파트 108동 303호");
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(customerRequest)
+            .body(signupRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/api/customers/signup")
@@ -64,11 +72,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void validateFields() {
         // given
-        CustomerRequest customerRequest = new CustomerRequest("do", "a", "1", "인천 서구 검단로 851 동부아파트 108동 303호");
+        SignupRequest signupRequest = new SignupRequest("do", "a", "1", "인천 서구 검단로 851 동부아파트 108동 303호");
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(customerRequest)
+            .body(signupRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/api/customers/signup")
@@ -83,6 +91,34 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             () -> assertThat(exceptionResponse.getMessages())
                 .hasSize(3)
         );
+    }
+
+    @DisplayName("로그인")
+    @Test
+    void login() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+
+        RestAssured.given().log().all()
+            .body(signupRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/signup")
+            .then().log().all()
+            .extract();
+
+        // when
+        LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        String accessToken = RestAssured.given().log().all()
+            .body(loginRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/login")
+            .then().log().all()
+            .extract().as(TokenResponse.class).getAccessToken();
+
+        // then
+        assertThat(jwtTokenProvider.validateToken(accessToken)).isTrue();
     }
 
     @DisplayName("내 정보 조회")

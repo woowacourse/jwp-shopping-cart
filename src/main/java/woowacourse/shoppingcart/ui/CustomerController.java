@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.SignupRequest;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -25,8 +25,8 @@ public class CustomerController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@Valid @RequestBody CustomerRequest customerRequest) {
-        Customer customer = customerService.save(customerRequest);
+    public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest signupRequest) {
+        Customer customer = customerService.save(signupRequest);
         return ResponseEntity.created(URI.create("/api/customers/" + customer.getId())).build();
     }
 }

@@ -13,8 +13,8 @@
   - [x] phoneNumber
     - [x] ('-'가 없이) 11자리 숫자이어야 한다.
   - [x] address
-- [ ] 로그인
-  - [ ] JWT 기반 토큰인증
+- [x] 로그인
+  - [x] JWT 기반 토큰인증
 - [ ] 회원 정보 조회
 - [ ] 회원 정보 수정
   - [ ] password, phoneNumber, address 를 수정할 수 있어야 한다.

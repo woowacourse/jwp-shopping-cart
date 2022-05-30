@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class CustomerRequest {
+public class SignupRequest {
 
     @NotNull
     @Size(min = 3, max = 15, message = "username의 길이는 3자 이상 15자 이하여야 합니다.")
@@ -23,10 +23,10 @@ public class CustomerRequest {
     @NotNull
     private String address;
 
-    public CustomerRequest() {
+    public SignupRequest() {
     }
 
-    public CustomerRequest(String username, String password, String phoneNumber, String address) {
+    public SignupRequest(String username, String password, String phoneNumber, String address) {
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;

@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.SignupRequest;
 
 @Service
 @Transactional
@@ -17,12 +17,12 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public Customer save(CustomerRequest customerRequest) {
+    public Customer save(SignupRequest signupRequest) {
         Customer customer = Customer.of(
-            customerRequest.getUsername(),
-            customerRequest.getPassword(),
-            customerRequest.getPhoneNumber(),
-            customerRequest.getAddress()
+            signupRequest.getUsername(),
+            signupRequest.getPassword(),
+            signupRequest.getPhoneNumber(),
+            signupRequest.getAddress()
         );
 
         return customerDao.save(customer);
