@@ -3,7 +3,9 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 import java.util.Optional;
@@ -169,6 +171,25 @@ class CustomerServiceTest {
                         .isExactlyInstanceOf(CannotUpdateUserNameException.class)
                         .hasMessageContaining("유저 이름을 변경할 수 없습니다."),
                 () -> verify(customerDao).findById(id)
+        );
+    }
+
+    @DisplayName("유저의 id를 통해서 유저를 삭제한다.")
+    @Test
+    void deleteById() {
+        // given
+        final Long id = 1L;
+        final String userName = "기론";
+        final String password = "1234";
+        Customer customer = new Customer(id, userName, password);
+        given(customerDao.findById(id)).willReturn(Optional.of(customer));
+        doNothing().when(customerDao).deleteById(id);
+
+        // then
+        assertAll(
+                () -> assertDoesNotThrow(() -> customerService.deleteById(id)),
+                () -> verify(customerDao).findById(id),
+                () -> verify(customerDao).deleteById(id)
         );
     }
 }

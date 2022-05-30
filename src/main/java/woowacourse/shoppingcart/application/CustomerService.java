@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.exception.DuplicatedNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@Transactional
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -18,7 +19,6 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    @Transactional
     public Long signUp(CustomerRequest customerRequest) {
         validateDuplicateName(customerRequest.getUserName());
         return customerDao.save(customerRequest.getUserName(), customerRequest.getPassword());
@@ -37,7 +37,6 @@ public class CustomerService {
         return new CustomerResponse(customer);
     }
 
-    @Transactional
     public CustomerResponse updateById(final Long id, final CustomerRequest customerRequest) {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
@@ -47,5 +46,12 @@ public class CustomerService {
         final Customer updatedCustomer = customerDao.update(
                 customer.getId(), customerRequest.getUserName(), customerRequest.getPassword());
         return new CustomerResponse(updatedCustomer);
+    }
+
+    public void deleteById(final Long id) {
+        final Customer customer = customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
+
+        customerDao.deleteById(customer.getId());
     }
 }

@@ -40,7 +40,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("내 정보 조회하면 200 OK를 반환한다.")
     @Test
     void getMe() {
         // given
@@ -49,7 +49,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/customers/" + id)
                 .then().log().all()
                 .extract();
@@ -63,7 +62,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("내 정보 수정하면 200 OK를 반환한다.")
     @Test
     void updateMe() {
         // given
@@ -88,8 +87,29 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("회원탈퇴")
+    @DisplayName("회원탈퇴를 하면 204 NO_CONTENT를 반환한다.")
     @Test
     void deleteMe() {
+        // given
+        final long id = 1L;
+
+        // when
+        ExtractableResponse<Response> extractableResponse = RestAssured
+                .given().log().all()
+                .when().delete("/api/customers/" + id)
+                .then().log().all()
+                .extract();
+
+        ExtractableResponse<Response> findResponse = RestAssured
+                .given().log().all()
+                .when().get("/api/customers/" + id)
+                .then().log().all()
+                .extract();
+
+        // then
+        assertAll(
+                () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(findResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        );
     }
 }

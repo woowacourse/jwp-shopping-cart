@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.exception.CannotDeleteException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -74,5 +75,13 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
         return new Customer(id, userName, password);
+    }
+
+    public void deleteById(final Long id) {
+        final String query = "DELETE FROM customer WHERE id = ?";
+        final int update = jdbcTemplate.update(query, id);
+        if (update == 0) {
+            throw new CannotDeleteException();
+        }
     }
 }
