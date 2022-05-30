@@ -1,12 +1,14 @@
 package woowacourse.auth.acceptance;
 
-import io.restassured.RestAssured;
+import static org.hamcrest.Matchers.equalTo;
+
 import io.restassured.response.ValidatableResponse;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
@@ -22,26 +24,51 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String password = "1q2w3e4r";
 
         CustomerCreationRequest signUpRequest = new CustomerCreationRequest(email, password, "kun");
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all();
+        postUser(signUpRequest);
 
         TokenRequest request = new TokenRequest(email, password);
 
         // when
-        ValidatableResponse response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/login")
-                .then().log().all();
+        ValidatableResponse response = postLogin(request);
 
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("accessToken", Matchers.notNullValue(String.class));
+    }
+
+    @DisplayName("로그인 양식이 잘못 되었을 때, 상태코드 400을 반환한다.")
+    @ParameterizedTest
+    @CsvSource(value = {
+            "kun#naver.com:12345667a:이메일 양식이 잘못 되었습니다.",
+            "kun@naver.com:1234:비밀번호 양식이 잘못 되었습니다."}, delimiter = ':')
+    void login_wrongForm_400(String email, String password, String message) {
+
+        // when
+        final TokenRequest request = new TokenRequest(email, password);
+        ValidatableResponse response = postLogin(request);
+
+        // then
+        response.statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("errorCode", equalTo("1000"))
+                .body("message", equalTo(message));
+    }
+
+    @DisplayName("비밀번호가 일치하지 않을 경우, 상태코드 400을 반환한다.")
+    @Test
+    void login_wrongPassword_400() {
+        // given
+        String email = "kun@email.com";
+        CustomerCreationRequest request = new CustomerCreationRequest(email, "123456qwer", "kun");
+        postUser(request);
+
+        // when
+        TokenRequest tokenRequest = new TokenRequest(email, "qwer123456");
+        ValidatableResponse response = postLogin(tokenRequest);
+
+        // then
+        response.statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("errorCode", equalTo("1002"))
+                .body("message", equalTo("로그인에 실패했습니다."));
     }
 
     @DisplayName("Bearer Auth 로그인 성공")

@@ -8,6 +8,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -29,5 +30,15 @@ public class AcceptanceTest {
                 .body(request)
                 .when().post("/users")
                 .then().log().all();
+    }
+
+    protected ValidatableResponse postLogin(TokenRequest request) {
+        ValidatableResponse response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/login")
+                .then().log().all();
+        return response;
     }
 }
