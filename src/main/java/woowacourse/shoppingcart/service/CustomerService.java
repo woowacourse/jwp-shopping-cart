@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignInDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.TokenResponseDto;
+import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.exception.AuthorizationFailException;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -60,14 +61,13 @@ public class CustomerService {
         }
     }
 
-    public CustomerDto updateCustomer(final CustomerDto customerDto){
-        final Customer updateCustomer = Customer.createWithoutPassword(
-                customerDto.getId(),
-                customerDto.getEmail(),
-                customerDto.getUsername());
+    public CustomerDto updateCustomer(final Long id, final UpdateCustomerDto updateCustomerDto){
+        final Customer updateCustomer = Customer.createWithoutEmailAndPassword(
+                id,
+                updateCustomerDto.getUsername());
         try{
             customerDao.update(updateCustomer);
-            return findCustomerById(customerDto.getId());
+            return findCustomerById(updateCustomer.getId());
         }catch (DataIntegrityViolationException e){
             throw new DuplicateNameException("수정하려는 이름이 이미 존재합니다.");
         }

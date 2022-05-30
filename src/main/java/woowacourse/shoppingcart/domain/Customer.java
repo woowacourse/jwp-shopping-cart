@@ -22,6 +22,10 @@ public class Customer {
         return new Customer(id, email, null, username);
     }
 
+    public static Customer createWithoutEmailAndPassword(final Long id, final String username) {
+        return new Customer(id, null, null, username);
+    }
+
     public Long getId() {
         return id;
     }

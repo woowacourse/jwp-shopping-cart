@@ -4,25 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignInDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.TokenResponseDto;
+import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -66,10 +58,9 @@ class CustomerServiceTest {
         final String changedName = "바뀐이름";
         final SignUpDto signUpDto = new SignUpDto("test@test.com", "testtest","테스트");
         final Long createdCustomerId = customerService.signUp(signUpDto);
-        final CustomerDto savedCustomer = customerService.findCustomerById(createdCustomerId);
-        final CustomerDto changeForm = new CustomerDto(savedCustomer.getId(), savedCustomer.getEmail(), changedName);
+        final UpdateCustomerDto changeForm = new UpdateCustomerDto(changedName);
 
-        final CustomerDto changedCustomer = customerService.updateCustomer(changeForm);
+        final CustomerDto changedCustomer = customerService.updateCustomer(createdCustomerId, changeForm);
 
         assertThat(changedCustomer.getUsername()).isEqualTo(changedName);
     }
@@ -82,11 +73,9 @@ class CustomerServiceTest {
         final SignUpDto signUpDto2 = new SignUpDto("test2@test.com", "testtest",duplicateName);
         final Long createdCustomerId = customerService.signUp(signUpDto1);
         customerService.signUp(signUpDto2);
-        final CustomerDto savedCustomer = customerService.findCustomerById(createdCustomerId);
-        final CustomerDto changeForm = new CustomerDto(savedCustomer.getId(), savedCustomer.getEmail(), duplicateName);
+        final UpdateCustomerDto changeForm = new UpdateCustomerDto(duplicateName);
 
-
-        assertThatThrownBy(() -> customerService.updateCustomer(changeForm))
+        assertThatThrownBy(() -> customerService.updateCustomer(createdCustomerId, changeForm))
                 .isInstanceOf(DuplicateNameException.class)
                 .hasMessageContaining("수정하려는 이름이 이미 존재합니다.");
     }
