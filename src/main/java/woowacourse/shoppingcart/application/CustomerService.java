@@ -42,6 +42,8 @@ public class CustomerService {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
 
+        customer.validateUserNameChange(customerRequest.getUserName());
+
         final Customer updatedCustomer = customerDao.update(
                 customer.getId(), customerRequest.getUserName(), customerRequest.getPassword());
         return new CustomerResponse(updatedCustomer);

@@ -126,7 +126,7 @@ public class CustomerDaoTest {
 
         // then
         assertThatThrownBy(() -> customerDao.update(id, userName, password))
-                .isInstanceOf(InvalidCustomerException.class)
+                .isExactlyInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("존재하지 않는 유저입니다.");
     }
 }

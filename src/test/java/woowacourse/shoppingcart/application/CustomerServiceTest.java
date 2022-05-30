@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
 import woowacourse.shoppingcart.exception.DuplicatedNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -64,7 +65,7 @@ class CustomerServiceTest {
         // then
         assertAll(
                 () -> assertThatThrownBy(() -> customerService.signUp(request))
-                        .isInstanceOf(DuplicatedNameException.class)
+                        .isExactlyInstanceOf(DuplicatedNameException.class)
                         .hasMessageContaining("이미 가입된 이름이 있습니다."),
                 () -> verify(customerDao).existsByUserName(userName)
         );
@@ -100,7 +101,7 @@ class CustomerServiceTest {
         // then
         assertAll(
                 () -> assertThatThrownBy(() -> customerService.getMeById(id))
-                        .isInstanceOf(InvalidCustomerException.class)
+                        .isExactlyInstanceOf(InvalidCustomerException.class)
                         .hasMessageContaining("존재하지 않는 유저입니다."),
                 () -> verify(customerDao).findById(id)
         );
@@ -143,8 +144,30 @@ class CustomerServiceTest {
         // then
         assertAll(
                 () -> assertThatThrownBy(() -> customerService.updateById(id, request))
-                        .isInstanceOf(InvalidCustomerException.class)
+                        .isExactlyInstanceOf(InvalidCustomerException.class)
                         .hasMessageContaining("존재하지 않는 유저입니다."),
+                () -> verify(customerDao).findById(id)
+        );
+    }
+
+    @DisplayName("유저의 이름을 바꾸면은 예외가 발생한다.")
+    @Test
+    void updateUserName() {
+        // given
+        final Long id = 1L;
+        final String userName = "기론";
+        final String password = "1234";
+        Customer customer = new Customer(id, userName, password);
+        given(customerDao.findById(id)).willReturn(Optional.of(customer));
+
+        // when
+        CustomerRequest request = new CustomerRequest("티키", "321");
+
+        // then
+        assertAll(
+                () -> assertThatThrownBy(() -> customerService.updateById(id, request))
+                        .isExactlyInstanceOf(CannotUpdateUserNameException.class)
+                        .hasMessageContaining("유저 이름을 변경할 수 없습니다."),
                 () -> verify(customerDao).findById(id)
         );
     }

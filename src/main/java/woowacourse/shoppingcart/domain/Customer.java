@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
+
 public class Customer {
 
     private Long id;
@@ -10,6 +12,12 @@ public class Customer {
         this.id = id;
         this.userName = userName;
         this.password = password;
+    }
+
+    public void validateUserNameChange(final String userName) {
+        if (!this.userName.equals(userName)) {
+            throw new CannotUpdateUserNameException();
+        }
     }
 
     public Long getId() {
