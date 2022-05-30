@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import java.util.Locale;
 import java.util.Map;
 import javax.sql.DataSource;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -34,8 +35,12 @@ public class CustomerDao {
     }
 
     public Long save(final Customer customer) {
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(customer);
-        return simpleJdbc.executeAndReturnKey(parameters).longValue();
+        try {
+            SqlParameterSource parameters = new BeanPropertySqlParameterSource(customer);
+            return simpleJdbc.executeAndReturnKey(parameters).longValue();
+        } catch (DuplicateKeyException e) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
     }
 
     public Long findIdByUserName(final String userName) {
@@ -51,7 +56,7 @@ public class CustomerDao {
     public Customer findById(Long id) {
         try {
             final String query = "SELECT id, loginid, username, password FROM customer WHERE id = :id";
-            return namedParameterJdbcTemplate.queryForObject(query, Map.of("id", id) ,ROW_MAPPER);
+            return namedParameterJdbcTemplate.queryForObject(query, Map.of("id", id), ROW_MAPPER);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }

@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.application;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.Fixture.페퍼_비밀번호;
 import static woowacourse.Fixture.페퍼_아이디;
@@ -33,5 +34,21 @@ class CustomerServiceTest {
                 () -> assertThat(customerResponse.getLoginId()).isEqualTo(페퍼_아이디),
                 () -> assertThat(customerResponse.getUserName()).isEqualTo(페퍼_이름)
         );
+    }
+
+    @Test
+    @DisplayName("로그인 아이디가 이미 존재하는 고객을 저장할 수 없다.")
+    void saveCustomer_duplicateLoginId() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호);
+
+        // when
+        customerService.save(customerRequest);
+
+        // then
+        assertThatThrownBy(
+                () -> customerService.save(customerRequest)
+        ).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 아이디입니다.");
     }
 }
