@@ -1,27 +1,54 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.dao.entity.CustomerEntity;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-
-import java.util.Locale;
 
 @Repository
 public class CustomerDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private static final RowMapper<CustomerEntity> CUSTOMER_ENTITY_ROW_MAPPER = (rs, rowNum) -> new CustomerEntity(
+            rs.getLong("id"),
+            rs.getString("email"),
+            rs.getString("nickname"),
+            rs.getString("password"));
 
-    public CustomerDao(final JdbcTemplate jdbcTemplate) {
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public CustomerDao(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByEmail(final String email) {
+        final String query = "SELECT id FROM customer WHERE email = :email";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            return jdbcTemplate.queryForObject(query, params, Long.class);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
+        }
+    }
+
+    public CustomerEntity findByEmailAndPassword(final String email, final String password) {
+        final String sql = "SELECT id, email, nickname, password FROM customer "
+                + "WHERE email = :email and password = :password";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+
+        try {
+            return jdbcTemplate.queryForObject(sql, params, CUSTOMER_ENTITY_ROW_MAPPER);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다.");
         }
     }
 }
