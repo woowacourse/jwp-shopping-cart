@@ -10,28 +10,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
-import woowacourse.auth.domain.Member;
+import woowacourse.auth.domain.Customer;
 
 @JdbcTest
-class MemberDaoTest {
+class CustomerDaoTest {
 
 	@Autowired
 	private DataSource dataSource;
-	private MemberDao memberDao;
+	private CustomerDao customerDao;
 
 	@BeforeEach
 	void setUp() {
-		memberDao = new MemberDao(dataSource);
+		customerDao = new CustomerDao(dataSource);
 	}
 
 	@DisplayName("Member를 저장한다.")
 	@Test
 	void save() {
 		// given
-		Member member = new Member("123@gmail.com", "!234");
+		Customer customer = new Customer("123@gmail.com", "!234");
 
 		// when
-		Member saved = memberDao.save(member);
+		Customer saved = customerDao.save(customer);
 
 		// then
 		assertThat(saved.getId()).isNotNull();
@@ -41,11 +41,11 @@ class MemberDaoTest {
 	@Test
 	void existByName() {
 		// given
-		Member member = new Member("123@gmail.com", "!234");
-		memberDao.save(member);
+		Customer customer = new Customer("123@gmail.com", "!234");
+		customerDao.save(customer);
 
 		// when
-		boolean result = memberDao.existByEmail(member.getEmail());
+		boolean result = customerDao.existByEmail(customer.getEmail());
 
 		// then
 		assertThat(result).isTrue();
@@ -55,10 +55,10 @@ class MemberDaoTest {
 	@Test
 	void existByNameFalse() {
 		// given
-		Member member = new Member("123@gmail.com", "!234");
+		Customer customer = new Customer("123@gmail.com", "!234");
 
 		// when
-		boolean result = memberDao.existByEmail(member.getEmail());
+		boolean result = customerDao.existByEmail(customer.getEmail());
 
 		// then
 		assertThat(result).isFalse();

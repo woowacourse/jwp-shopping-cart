@@ -9,28 +9,32 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import woowacourse.auth.domain.Member;
+import woowacourse.auth.domain.Customer;
 
 @Repository
-public class MemberDao {
+public class CustomerDao {
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 	private final SimpleJdbcInsert jdbcInsert;
 
-	public MemberDao(DataSource dataSource) {
+	public CustomerDao(DataSource dataSource) {
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		this.jdbcInsert = new SimpleJdbcInsert(dataSource)
-			.withTableName("member")
+			.withTableName("customer")
 			.usingGeneratedKeyColumns("id");
 	}
 
-	public Member save(Member member) {
-		long id = jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(member))
+	public Customer save(Customer customer) {
+		long id = jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(customer))
 			.longValue();
-		return new Member(id, member.getEmail(), member.getPassword());
+		return new Customer(id, customer.getEmail(), customer.getPassword());
 	}
 
 	public Boolean existByEmail(String email) {
-		String sql = "select exists (select * from member where email = :email)";
+		String sql = "select exists (select * from customer where email = :email)";
 		return jdbcTemplate.queryForObject(sql, Map.of("email", email), Boolean.class);
+	}
+
+	public Long findIdByUserName(String nickname) {
+		return null;
 	}
 }

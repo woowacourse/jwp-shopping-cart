@@ -9,14 +9,14 @@ import lombok.Getter;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
-public class Member {
+public class Customer {
 
 	@Include
 	private Long id;
 	private final String email;
 	private final String password;
 
-	public Member(String email, String password) {
+	public Customer(String email, String password) {
 		this.email = email;
 		this.password = password;
 	}

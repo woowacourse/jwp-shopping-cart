@@ -12,22 +12,22 @@ import com.ori.acceptancetest.SpringBootAcceptanceTest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.auth.dto.MemberRequest;
+import woowacourse.auth.dto.CustomerRequest;
 
 @SpringBootAcceptanceTest
-public class MemberAcceptanceTest {
+public class CustomerAcceptanceTest {
 
 	@DisplayName("회원가입을 한다.")
 	@Test
 	void signUp() {
 		// given
-		MemberRequest request = new MemberRequest("123@gmail.com", "1234");
+		CustomerRequest request = new CustomerRequest("123@gmail.com", "1234");
 
 		// when
 		ExtractableResponse<Response> response = RestAssured.given().log().all()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.body(request)
-			.when().post("/members")
+			.when().post("/customers")
 			.then().log().all()
 			.extract();
 

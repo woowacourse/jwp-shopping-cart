@@ -6,13 +6,14 @@ drop table if exists cart_item;
 
 drop table if exists product;
 
-drop table if exists member;
+drop table if exists customer;
 
-create table member
+create table customer
 (
     id bigint auto_increment not null,
     email varchar(255) not null unique,
     password varchar(255) not null,
+    nickname varchar(255),
     primary key(id)
 );
 
@@ -28,14 +29,14 @@ create table product
 create table cart_item
 (
     id          bigint not null auto_increment,
-    member_id bigint not null,
+    customer_id bigint not null,
     product_id  bigint not null,
     primary key (id)
 );
 
 alter table cart_item
-    add constraint fk_cart_item_to_member
-        foreign key (member_id) references member (id);
+    add constraint fk_cart_item_to_customer
+        foreign key (customer_id) references customer (id);
 
 alter table cart_item
     add constraint fk_cart_item_to_product
@@ -44,13 +45,13 @@ alter table cart_item
 create table orders
 (
     id          bigint not null auto_increment,
-    member_id bigint not null,
+    customer_id bigint not null,
     primary key (id)
 );
 
 alter table orders
-    add constraint fk_orders_to_member
-        foreign key (member_id) references member (id);
+    add constraint fk_orders_to_customer
+        foreign key (customer_id) references customer (id);
 
 create table orders_detail
 (

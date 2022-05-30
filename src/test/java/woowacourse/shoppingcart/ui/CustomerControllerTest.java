@@ -15,13 +15,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.domain.Member;
-import woowacourse.auth.service.MemberService;
-import woowacourse.auth.dto.MemberRequest;
-import woowacourse.auth.ui.MemberController;
+import woowacourse.auth.domain.Customer;
+import woowacourse.auth.service.CustomerService;
+import woowacourse.auth.dto.CustomerRequest;
+import woowacourse.auth.ui.CustomerController;
 
-@WebMvcTest(MemberController.class)
-class MemberControllerTest {
+@WebMvcTest(CustomerController.class)
+class CustomerControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -30,7 +30,7 @@ class MemberControllerTest {
 	private ObjectMapper objectMapper;
 
 	@MockBean
-	private MemberService memberService;
+	private CustomerService customerService;
 	@MockBean
 	private AuthService authService;
 
@@ -38,13 +38,13 @@ class MemberControllerTest {
 	@Test
 	void signUp() throws Exception {
 		// given
-		MemberRequest request = new MemberRequest("123@gmail.com", "1234");
+		CustomerRequest request = new CustomerRequest("123@gmail.com", "1234");
 		String requestJson = objectMapper.writeValueAsString(request);
-		given(memberService.signUp(any(MemberRequest.class)))
-				.willReturn(new Member(1L, "123@gmail.com", "1234"));
+		given(customerService.signUp(any(CustomerRequest.class)))
+				.willReturn(new Customer(1L, "123@gmail.com", "1234"));
 
 		// when
-		mockMvc.perform(post("/members")
+		mockMvc.perform(post("/customers")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(requestJson))
 			.andExpect(status().isCreated());
@@ -54,13 +54,13 @@ class MemberControllerTest {
 	@Test
 	void signUpDuplicatedEmail() throws Exception {
 		// given
-		MemberRequest request = new MemberRequest("123@gmail.com", "1234");
+		CustomerRequest request = new CustomerRequest("123@gmail.com", "1234");
 		String requestJson = objectMapper.writeValueAsString(request);
-		given(memberService.signUp(any(MemberRequest.class)))
+		given(customerService.signUp(any(CustomerRequest.class)))
 			.willThrow(IllegalArgumentException.class);
 
 		// when
-		mockMvc.perform(post("/members")
+		mockMvc.perform(post("/customers")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(requestJson))
 			.andExpect(status().isBadRequest());

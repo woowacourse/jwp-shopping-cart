@@ -12,21 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
-import woowacourse.auth.domain.Member;
-import woowacourse.auth.dto.MemberRequest;
-import woowacourse.auth.service.MemberService;
+import woowacourse.auth.domain.Customer;
+import woowacourse.auth.dto.CustomerRequest;
+import woowacourse.auth.service.CustomerService;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/customers")
 @RequiredArgsConstructor
-public class MemberController {
+public class CustomerController {
 
-	private final MemberService memberService;
+	private final CustomerService customerService;
 
 	@PostMapping
-	public ResponseEntity<Void> signUp(@RequestBody @Valid MemberRequest memberRequest) {
-		Member member = memberService.signUp(memberRequest);
-		URI uri = createUri(member.getId());
+	public ResponseEntity<Void> signUp(@RequestBody @Valid CustomerRequest customerRequest) {
+		Customer customer = customerService.signUp(customerRequest);
+		URI uri = createUri(customer.getId());
 		return ResponseEntity.created(uri).build();
 	}
 
