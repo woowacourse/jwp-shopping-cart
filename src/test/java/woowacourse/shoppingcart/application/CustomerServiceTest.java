@@ -9,12 +9,14 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.DuplicatedAccountException;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -60,5 +62,44 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.createCustomer(signupRequest))
                 .isInstanceOf(DuplicatedAccountException.class)
                 .hasMessage("이미 존재하는 아이디입니다.");
+    }
+
+    @Test
+    @DisplayName("사용자를 id로 조회한다.")
+    void findById() {
+        // given
+        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "password123", "코린네", "01012345678");
+        given(customerDao.findById(any(Long.class))).willReturn(Optional.of(expected));
+
+        // when
+        final CustomerDto customerDto = customerService.getById(1L);
+
+        // then
+        assertAll(
+                () -> assertThat(customerDto.getId()).isEqualTo(1L),
+                () -> assertThat(customerDto.getAccount()).isEqualTo("hamcheeseburger"),
+                () -> assertThat(customerDto.getNickname()).isEqualTo("corinne"),
+                () -> assertThat(customerDto.getAddress()).isEqualTo("코린네"),
+                () -> assertThat(customerDto.getPhoneNumber().appendNumbers()).isEqualTo("01012345678")
+        );
+
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 id로 사용자를 조회하면 예외를 발생한다.")
+    void throwNotExistId() {
+        // given
+        given(customerDao.findById(any(Long.class))).willReturn(Optional.empty());
+
+        // when
+
+        // then
+        assertThatThrownBy(
+                () -> customerService.getById(1L)
+        )
+                .isInstanceOf(CustomerNotFoundException.class)
+                .hasMessage("회원을 찾을 수 없습니다.");
+
+
     }
 }
