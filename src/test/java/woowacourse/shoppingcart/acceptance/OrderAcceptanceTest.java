@@ -82,7 +82,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(orderRequests)
-                .when().post("/api/customers/{customerName}/orders", userName)
+                .when().post("/api/members/{memberName}/orders", userName)
                 .then().log().all()
                 .extract();
     }
@@ -91,7 +91,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders", userName)
+                .when().get("/api/members/{memberName}/orders", userName)
                 .then().log().all()
                 .extract();
     }
@@ -100,7 +100,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
+                .when().get("/api/members/{memberName}/orders/{orderId}", userName, orderId)
                 .then().log().all()
                 .extract();
     }

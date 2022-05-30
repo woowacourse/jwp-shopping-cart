@@ -4,10 +4,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("회원 관련 기능")
-public class CustomerAcceptanceTest extends AcceptanceTest {
+public class MemberAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입")
     @Test
-    void addCustomer() {
+    void addMember() {
     }
 
     @DisplayName("내 정보 조회")

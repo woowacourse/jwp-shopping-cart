@@ -47,16 +47,16 @@ public class OrderControllerTest {
         final int quantity = 5;
         final Long cartId2 = 1L;
         final int quantity2 = 5;
-        final String customerName = "pobi";
+        final String memberName = "pobi";
         final List<OrderRequest> requestDtos =
                 Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(customerName)))
+        when(orderService.addOrder(any(), eq(memberName)))
                 .thenReturn(expectedOrderId);
 
         // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
+        mockMvc.perform(post("/api/members/" + memberName + "/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(requestDtos))
@@ -64,7 +64,7 @@ public class OrderControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
-                        "/api/" + customerName + "/orders/" + expectedOrderId));
+                        "/api/" + memberName + "/orders/" + expectedOrderId));
     }
 
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
@@ -72,16 +72,16 @@ public class OrderControllerTest {
     void findOrder() throws Exception {
 
         // given
-        final String customerName = "pobi";
+        final String memberName = "pobi";
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
 
-        when(orderService.findOrderById(customerName, orderId))
+        when(orderService.findOrderById(memberName, orderId))
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
+        mockMvc.perform(get("/api/members/" + memberName + "/orders/" + orderId)
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
@@ -96,7 +96,7 @@ public class OrderControllerTest {
     @Test
     void findOrders() throws Exception {
         // given
-        final String customerName = "pobi";
+        final String memberName = "pobi";
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
                         new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
@@ -104,11 +104,11 @@ public class OrderControllerTest {
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
-        when(orderService.findOrdersByCustomerName(customerName))
+        when(orderService.findOrdersByMemberName(memberName))
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
+        mockMvc.perform(get("/api/members/" + memberName + "/orders/")
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))

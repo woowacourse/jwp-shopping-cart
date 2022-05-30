@@ -43,11 +43,11 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidCustomerException.class,
+            InvalidMemberException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
+            NotInMemberCartItemException.class,
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());

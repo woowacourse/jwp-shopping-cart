@@ -13,7 +13,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/api/customers/{customerName}/orders")
+@RequestMapping("/api/members/{memberName}/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -22,23 +22,23 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@PathVariable final String customerName,
+    public ResponseEntity<Void> addOrder(@PathVariable final String memberName,
                                    @RequestBody @Valid final List<OrderRequest> orderDetails) {
-        final Long orderId = orderService.addOrder(orderDetails, customerName);
+        final Long orderId = orderService.addOrder(orderDetails, memberName);
         return ResponseEntity.created(
-                URI.create("/api/" + customerName + "/orders/" + orderId)).build();
+                URI.create("/api/" + memberName + "/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
+    public ResponseEntity<Orders> findOrder(@PathVariable final String memberName,
                                             @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customerName, orderId);
+        final Orders order = orderService.findOrderById(memberName, orderId);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
+    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String memberName) {
+        final List<Orders> orders = orderService.findOrdersByMemberName(memberName);
         return ResponseEntity.ok(orders);
     }
 }

@@ -15,12 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CustomerDaoTest {
+public class MemberDaoTest {
 
-    private final CustomerDao customerDao;
+    private final MemberDao memberDao;
 
-    public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
-        customerDao = new CustomerDao(jdbcTemplate);
+    public MemberDaoTest(JdbcTemplate jdbcTemplate) {
+        memberDao = new MemberDao(jdbcTemplate);
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -31,10 +31,10 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long memberId = memberDao.findIdByUserName(userName);
 
         // then
-        assertThat(customerId).isEqualTo(1L);
+        assertThat(memberId).isEqualTo(1L);
     }
 
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -45,9 +45,9 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long memberId = memberDao.findIdByUserName(userName);
 
         // then
-        assertThat(customerId).isEqualTo(16L);
+        assertThat(memberId).isEqualTo(16L);
     }
 }

@@ -71,7 +71,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
+                .when().post("/api/members/{memberName}/carts", userName)
                 .then().log().all()
                 .extract();
     }
@@ -80,7 +80,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
+                .when().get("/api/members/{memberName}/carts", userName)
                 .then().log().all()
                 .extract();
     }
@@ -89,7 +89,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
+                .when().delete("/api/members/{memberName}/carts/{cartId}", userName, cartId)
                 .then().log().all()
                 .extract();
     }
