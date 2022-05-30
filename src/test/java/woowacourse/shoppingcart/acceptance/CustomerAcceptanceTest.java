@@ -131,6 +131,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @Test
+    @DisplayName("주소의 길이가 255자를 초과하면 상태코드 400을 반환한다.")
+    void invalidAddressLength() {
+        // given
+        String address = "a".repeat(256);
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", "password123", address, new PhoneNumber("010", "1234", "5678"));
+
+        // when
+        final ExtractableResponse<Response> response = post("/signup", signupRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo("주소 길이는 255자를 초과할 수 없습니다.")
+        );
+    }
+
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {

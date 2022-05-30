@@ -17,6 +17,7 @@ public class SignupRequest {
     @Size(min = 8, max = 20, message = "비밀번호 길이는 8~20자를 만족해야 합니다.")
     @Pattern(regexp = "(([a-z]+)(\\d+))\\w*|((\\d+)([a-z]+))\\w*|(([A-Z]+)(a\\d+))\\w*|((\\d+)([A-Z]+))\\w*|(([a-z]+)([A-Z]+))\\w*|(([A-Z]+)([a-z]+))\\w*", message = "비밀번호는 영어 대문자, 소문자, 숫자 중 2종류 이상을 조합해야 합니다.")
     private final String password;
+    @Size(max = 255, message = "주소 길이는 255자를 초과할 수 없습니다.")
     private final String address;
     private final PhoneNumber phoneNumber;
 
