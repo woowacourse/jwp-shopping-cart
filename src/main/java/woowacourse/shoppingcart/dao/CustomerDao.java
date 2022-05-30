@@ -1,13 +1,18 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.Locale;
+import java.util.Optional;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -43,5 +48,29 @@ public class CustomerDao {
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
+    }
+
+    public Optional<Customer> findByUsername(String username) {
+        try {
+            String sql = "SELECT id, username, email, password, address, phone_number "
+                    + "FROM customer WHERE username = :username";
+            SqlParameterSource parameterSource = new MapSqlParameterSource("username", username);
+            return Optional.ofNullable(
+                    namedParameterJdbcTemplate.queryForObject(sql, parameterSource, generateCustomerMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    private RowMapper<Customer> generateCustomerMapper() {
+        return (resultSet, rowNum) ->
+                new Customer(
+                        resultSet.getLong("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("email"),
+                        resultSet.getString("password"),
+                        resultSet.getString("address"),
+                        resultSet.getString("phone_number")
+                );
     }
 }

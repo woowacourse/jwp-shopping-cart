@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -48,6 +50,17 @@ public class CustomerDaoTest {
         });
     }
 
+    @DisplayName("username을 이용해 customer 를 조회한다.")
+    @Test
+    void findCustomerByUsername() {
+        Customer customer = new Customer(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        customerDao.save(customer);
+
+        Optional<Customer> foundCustomer = customerDao.findByUsername(USERNAME);
+
+        assertThat(foundCustomer.isPresent()).isTrue();
+    }
+
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
@@ -56,7 +69,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByUsername(userName);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -70,7 +83,7 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByUsername(userName);
 
         // then
         assertThat(customerId).isEqualTo(16L);
