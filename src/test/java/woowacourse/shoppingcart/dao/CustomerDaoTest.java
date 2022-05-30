@@ -124,7 +124,6 @@ public class CustomerDaoTest {
         Customer changedCustomer = Customer.builder()
                 .id(customerDao.findIdByUserName("username"))
                 .username("username")
-                .password("changedPassword123")
                 .phoneNumber("01087654321")
                 .address("루터회관")
                 .build();
@@ -135,6 +134,7 @@ public class CustomerDaoTest {
         // then
         assertThat(customerDao.findByUsername("username"))
                 .usingRecursiveComparison()
+                .ignoringFields("password")
                 .isEqualTo(changedCustomer);
     }
 

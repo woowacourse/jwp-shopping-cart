@@ -69,10 +69,8 @@ public class CustomerDao {
     }
 
     public int update(final Customer customer) {
-        final String query = "UPDATE customer SET password = ?, phone_number = ?, address = ? "
-                + "WHERE id = ?";
-        return jdbcTemplate.update(query, customer.getPassword(), customer.getPhoneNumber(), customer.getAddress(),
-                customer.getId());
+        final String query = "UPDATE customer SET phone_number = ?, address = ? WHERE id = ?";
+        return jdbcTemplate.update(query, customer.getPhoneNumber(), customer.getAddress(), customer.getId());
     }
 
     public int deleteByUsername(final String username) {
