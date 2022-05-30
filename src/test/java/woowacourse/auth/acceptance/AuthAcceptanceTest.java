@@ -3,6 +3,7 @@ package woowacourse.auth.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.util.HttpRequestUtil.get;
 import static woowacourse.util.HttpRequestUtil.post;
+import static woowacourse.util.HttpRequestUtil.postWithAuthorization;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -11,11 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.EmailDuplicationCheckResponse;
+import woowacourse.auth.dto.CheckResponse;
 import woowacourse.auth.dto.ErrorResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
+import woowacourse.auth.dto.PasswordCheckRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
@@ -61,7 +63,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         post("/api/members", memberCreateRequest);
 
         ExtractableResponse<Response> response = get("/api/members?email=" + email);
-        boolean success = response.as(EmailDuplicationCheckResponse.class)
+        boolean success = response.as(CheckResponse.class)
                 .isSuccess();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -118,5 +120,32 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(message).isEqualTo("이메일과 비밀번호를 확인해주세요.");
+    }
+
+    @DisplayName("토큰에 해당하는 사용자의 비밀번호가 일치하는지를 반환하고 200을 응답한다.")
+    @ParameterizedTest
+    @CsvSource({"1q2w3e4r!, true", "1q2w3e4r@, false"})
+    void confirmPassword_Ok(String password, boolean expected) {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+                "abc@woowahan.com",
+                "1q2w3e4r!",
+                "닉네임"
+        );
+        post("/api/members", memberCreateRequest);
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+
+        LoginResponse loginResponse = post("/api/login", loginRequest).as(LoginResponse.class);
+
+        ExtractableResponse<Response> response = postWithAuthorization(
+                "/api/passwordConfirm",
+                loginResponse.getToken(),
+                new PasswordCheckRequest(password)
+        );
+
+        boolean success = response.as(CheckResponse.class)
+                .isSuccess();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(success).isEqualTo(expected);
     }
 }

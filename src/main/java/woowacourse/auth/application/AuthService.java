@@ -7,6 +7,7 @@ import woowacourse.auth.domain.Member;
 import woowacourse.auth.domain.Nickname;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.AuthorizedMember;
+import woowacourse.auth.dto.CheckResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
@@ -63,11 +64,12 @@ public class AuthService {
         }
     }
 
-    public boolean checkPassword(String email, PasswordCheckRequest passwordCheckRequest) {
+    public CheckResponse checkPassword(String email, PasswordCheckRequest passwordCheckRequest) {
         Member member = memberDao.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
-        return member.getPassword()
+        boolean result = member.getPassword()
                 .equals(passwordCheckRequest.getPassword());
+        return new CheckResponse(result);
     }
 
     private Member findMemberByToken(String token) {
@@ -77,8 +79,15 @@ public class AuthService {
     }
 
     public AuthorizedMember findAuthorizedMemberByToken(String token) {
+        validateToken(token);
         Member member = findMemberByToken(token);
         return new AuthorizedMember(member);
+    }
+
+    private void validateToken(String token) {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
     }
 
     public void updateNickname(String email, NicknameUpdateRequest nicknameUpdateRequest) {

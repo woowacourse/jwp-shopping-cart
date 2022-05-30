@@ -25,6 +25,17 @@ public class HttpRequestUtil {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> postWithAuthorization(String uri, String token, Object requestBody) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .body(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post(uri)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> put(String uri, Object requestBody) {
         return RestAssured.given().log().all()
                 .body(requestBody)

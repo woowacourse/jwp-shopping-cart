@@ -80,12 +80,13 @@ class AuthServiceTest {
         authService.save(memberCreateRequest);
         PasswordCheckRequest passwordCheckRequest = new PasswordCheckRequest(password);
 
-        boolean actual = authService.checkPassword("abc@woowahan.com", passwordCheckRequest);
+        boolean actual = authService.checkPassword("abc@woowahan.com", passwordCheckRequest)
+                .isSuccess();
 
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("토근을 받아, 이메일과 닉네임을 반환한다.")
+    @DisplayName("토큰을 받아, 이메일과 닉네임을 반환한다.")
     @Test
     void findAuthorizedMemberByToken() {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
@@ -98,6 +99,14 @@ class AuthServiceTest {
 
         assertThat(authorizedMember.getEmail()).isEqualTo("abc@woowahan.com");
         assertThat(authorizedMember.getNickname()).isEqualTo("닉네임");
+    }
+
+    @DisplayName("유효하지 않은 토큰으로 인증하려고 하면 예외를 반환한다.")
+    @Test
+    void findAuthorizedMemberByToken_InvalidToken() {
+        assertThatThrownBy(() -> authService.findAuthorizedMemberByToken("abc"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("유효하지 않은 토큰입니다.");
     }
 
     @DisplayName("이메일과 닉네임을 받아 닉네임을 수정한다.")

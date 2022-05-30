@@ -1,13 +1,13 @@
 package woowacourse.auth.dto;
 
-public class EmailDuplicationCheckResponse {
+public class CheckResponse {
 
     private boolean success;
 
-    public EmailDuplicationCheckResponse() {
+    public CheckResponse() {
     }
 
-    public EmailDuplicationCheckResponse(boolean success) {
+    public CheckResponse(boolean success) {
         this.success = success;
     }
 
