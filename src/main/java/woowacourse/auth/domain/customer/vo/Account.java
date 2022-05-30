@@ -1,4 +1,4 @@
-package woowacourse.auth.domain;
+package woowacourse.auth.domain.customer.vo;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
