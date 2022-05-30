@@ -92,7 +92,7 @@ public class MemberTest {
 
     @DisplayName("비밀번호 변경시 이전 비밀번호와 다르면 예외가 발생한다.")
     @Test
-    void updatePasswordNotSamePassword() {
+    void updatePasswordNotSameOriginPassword() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
         member.encodePassword(new SHA256PasswordEncoder());
 
@@ -110,5 +110,16 @@ public class MemberTest {
         assertThatThrownBy(() ->
                 member.updatePassword(PASSWORD, "1!", new SHA256PasswordEncoder()))
                 .isInstanceOf(PasswordNotValidException.class);
+    }
+
+    @DisplayName("비밀번호 변경시 변경할 비밀번호와 과거 비밀번호가 같으면 예외가 발생한다.")
+    @Test
+    void updatePasswordSameWithOld() {
+        Member member = createMember(EMAIL, PASSWORD, NAME);
+        member.encodePassword(new SHA256PasswordEncoder());
+
+        assertThatThrownBy(() ->
+                member.updatePassword(PASSWORD, PASSWORD, new SHA256PasswordEncoder()))
+                .isInstanceOf(PasswordChangeException.class);
     }
 }

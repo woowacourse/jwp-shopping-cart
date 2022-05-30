@@ -17,11 +17,11 @@
     - [x] header token, body name
     - [x] name 수정
 
-- [ ] put /api/members/me/password
-    - [ ] header token, body oldPassword, newPassword
-    - [ ] newPassword가 oldPassword와 같은 경우 예외
-    - [ ] newPassword 암호화
-    - [ ] password 수정
+- [x] put /api/members/me/password
+    - [x] header token, body oldPassword, newPassword
+    - [x] newPassword가 oldPassword와 같은 경우 예외
+    - [x] newPassword 암호화
+    - [x] password 수정
 
 - [ ] delete /api/members/me
     - [ ] header token, body password

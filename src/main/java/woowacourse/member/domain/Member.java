@@ -67,7 +67,15 @@ public class Member {
                                final PasswordEncoder passwordEncoder) {
         validatePassword(oldPassword, passwordEncoder);
         validateRightPassword(newPassword);
-        password = passwordEncoder.encode(newPassword);
+        String encodeNewPassword = passwordEncoder.encode(newPassword);
+        validateSamePassword(password, encodeNewPassword);
+        password = encodeNewPassword;
+    }
+
+    private void validateSamePassword(final String oldPassword, final String newPassword) {
+        if (oldPassword.equals(newPassword)) {
+            throw new PasswordChangeException();
+        }
     }
 
     private void validatePassword(final String oldPassword, final PasswordEncoder passwordEncoder) {
