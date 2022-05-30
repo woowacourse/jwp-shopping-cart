@@ -72,4 +72,8 @@ public class CustomerService {
             throw new DuplicateNameException("수정하려는 이름이 이미 존재합니다.");
         }
     }
+
+    public void deleteCustomer(final Long id) {
+        customerDao.deleteById(id);
+    }
 }
