@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
+import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberResponse;
 
 public class LoginAnd extends Request {
@@ -21,5 +22,10 @@ public class LoginAnd extends Request {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         return response.as(MemberResponse.class);
+    }
+
+    public ExtractableResponse<Response> updateMyName(final String name) {
+        MemberNameUpdateRequest memberNameUpdateRequest = new MemberNameUpdateRequest(name);
+        return put(memberNameUpdateRequest, "/api/members/me/name");
     }
 }

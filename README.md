@@ -9,9 +9,9 @@
     - [x] 비밀번호 암호화
     - [x] 저장
 
-- [ ] get /api/members/me
-    - [ ] header token
-    - [ ] id, email, name 반환
+- [x] get /api/members/me
+    - [x] header token
+    - [x] id, email, name 반환
 
 - [ ] put /api/members/me/name
     - [ ] header token, body name
