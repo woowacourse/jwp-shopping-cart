@@ -5,22 +5,26 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.auth.domain.user.privacy.Privacy;
 import woowacourse.auth.exception.DisagreeToTermsException;
 
 class UserTest {
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @DisplayName("유저 정보를 전달하여 유저를 생성한다.")
     @Test
-    void of() {
+    void constructor() {
         // given
-        String email = "devhudi@gmail.com";
-        String password = "a!123456";
-        String profileImageUrl = "http://gravatar.com/avatar/1?d=identicon";
+        Email email = new Email("devhudi@gmail.com");
+        Password password = Password.fromPlainText("a!123456", passwordEncoder);
+        ProfileImageUrl profileImageUrl = new ProfileImageUrl("http://gravatar.com/avatar/1?d=identicon");
         Privacy privacy = Privacy.of("조동현", "male", "1998-12-21", "01011111111", "서울특별시 강남구 선릉역", "이디야 1층", "12345");
         boolean terms = true;
 
         // when
-        User actual = User.of(email, password, profileImageUrl, privacy, terms);
+        User actual = new User(email, password, profileImageUrl, privacy, terms);
 
         // then
         assertThat(actual).isNotNull();
@@ -30,14 +34,14 @@ class UserTest {
     @Test
     void of_termsIsFalse() {
         // given
-        String email = "devhudi@gmail.com";
-        String password = "a!123456";
-        String profileImageUrl = "http://gravatar.com/avatar/1?d=identicon";
+        Email email = new Email("devhudi@gmail.com");
+        Password password = Password.fromPlainText("a!123456", passwordEncoder);
+        ProfileImageUrl profileImageUrl = new ProfileImageUrl("http://gravatar.com/avatar/1?d=identicon");
         Privacy privacy = Privacy.of("조동현", "male", "1998-12-21", "01011111111", "서울특별시 강남구 선릉역", "이디야 1층", "12345");
         boolean terms = false;
 
         // when & then
-        assertThatThrownBy(() -> User.of(email, password, profileImageUrl, privacy, terms))
+        assertThatThrownBy(() -> new User(email, password, profileImageUrl, privacy, terms))
                 .isInstanceOf(DisagreeToTermsException.class);
     }
 }

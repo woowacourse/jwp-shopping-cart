@@ -1,22 +1,33 @@
 package woowacourse.auth.domain.user;
 
 import java.util.Objects;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.auth.exception.format.InvalidPasswordFormatException;
 
 public class Password {
-
     private static final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,}$";
-    private final String value;
 
-    public Password(String value) {
-        validateFormat(value);
+    private final String value;
+    private final PasswordEncoder passwordEncoder;
+
+    public Password(String value, PasswordEncoder passwordEncoder) {
         this.value = value;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    private void validateFormat(String value) {
+    public static Password fromPlainText(String value, PasswordEncoder passwordEncoder) {
+        validateFormat(value);
+        return new Password(passwordEncoder.encode(value), passwordEncoder);
+    }
+
+    private static void validateFormat(String value) {
         if (Objects.isNull(value) || !value.matches(PASSWORD_REGEX)) {
             throw new InvalidPasswordFormatException();
         }
+    }
+
+    public boolean matches(String plainText) {
+        return passwordEncoder.matches(plainText, value);
     }
 
     @Override

@@ -11,17 +11,13 @@ public class User {
     private final Privacy privacy;
     private final boolean terms;
 
-    private User(Email email, Password password, ProfileImageUrl profileImageUrl, Privacy privacy, boolean terms) {
+    public User(Email email, Password password, ProfileImageUrl profileImageUrl, Privacy privacy, boolean terms) {
+        validateTerms(terms);
         this.email = email;
         this.password = password;
         this.profileImageUrl = profileImageUrl;
         this.privacy = privacy;
         this.terms = terms;
-    }
-
-    public static User of(String email, String password, String profileImageUrl, Privacy privacy, boolean terms) {
-        validateTerms(terms);
-        return new User(new Email(email), new Password(password), new ProfileImageUrl(profileImageUrl), privacy, terms);
     }
 
     private static void validateTerms(boolean terms) {
