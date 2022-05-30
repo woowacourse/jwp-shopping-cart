@@ -103,4 +103,23 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.update(new LoginCustomer(USERNAME), customerUpdateRequest))
                 .isInstanceOf(InvalidCustomerException.class);
     }
+
+    @DisplayName("customer를 삭제한다.")
+    @Test
+    void delete() {
+        CustomerSaveRequest request = new CustomerSaveRequest(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        customerService.save(request);
+
+        customerService.delete(new LoginCustomer(USERNAME));
+
+        assertThatThrownBy(() -> customerService.find(new LoginCustomer(USERNAME)))
+                .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @DisplayName("존재하지 않는 username을 삭제하는 경우 예외를 던진다.")
+    @Test
+    void delete_error_notExist_username() {
+        assertThatThrownBy(() -> customerService.delete(new LoginCustomer(USERNAME)))
+                .isInstanceOf(InvalidCustomerException.class);
+    }
 }

@@ -38,6 +38,11 @@ public class CustomerService {
         customerDao.update(customer);
     }
 
+    public void delete(LoginCustomer loginCustomer) {
+        Customer customer = getCustomer(loginCustomer.getUsername());
+        customerDao.delete(customer);
+    }
+
     private Customer getCustomer(String username) {
         return customerDao.findByUsername(username)
                 .orElseThrow(InvalidCustomerException::new);
