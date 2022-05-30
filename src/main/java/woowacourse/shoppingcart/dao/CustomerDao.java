@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -77,9 +78,13 @@ public class CustomerDao {
         return rowCount;
     }
 
-    public int updatePassword(final String username, final String password) {
+    public int updatePassword(final String username, final Password password) {
         final String query = "UPDATE customer SET password = ? WHERE username = ?";
-        return jdbcTemplate.update(query, password, username);
+        int rowCount = jdbcTemplate.update(query, password.getPassword(), username);
+        if (rowCount == 0) {
+            throw new InvalidCustomerException();
+        }
+        return rowCount;
     }
 
     public int deleteByUsername(final String username) {

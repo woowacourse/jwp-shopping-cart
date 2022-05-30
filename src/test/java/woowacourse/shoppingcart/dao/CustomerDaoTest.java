@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -135,6 +136,26 @@ public class CustomerDaoTest {
                 .usingRecursiveComparison()
                 .ignoringFields("id", "password")
                 .isEqualTo(changedCustomer);
+    }
+
+    @Test
+    @DisplayName("유저 비밀번호를 수정한다.")
+    void updatePassword() {
+        // given
+        Customer customer = Customer.builder()
+                .username("username")
+                .password("password123")
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+        customerDao.save(customer);
+
+        // when
+        customerDao.updatePassword("username", new Password("changedpassword123"));
+
+        // then
+        assertThat(customerDao.findByUsername("username").getPassword())
+                .isEqualTo("changedpassword123");
     }
 
     @Test
