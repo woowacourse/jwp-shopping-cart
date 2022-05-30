@@ -69,8 +69,17 @@ public class CustomerDao {
     }
 
     public int update(final Customer customer) {
-        final String query = "UPDATE customer SET phone_number = ?, address = ? WHERE id = ?";
-        return jdbcTemplate.update(query, customer.getPhoneNumber(), customer.getAddress(), customer.getId());
+        final String query = "UPDATE customer SET phone_number = ?, address = ? WHERE username = ?";
+        int rowCount = jdbcTemplate.update(query, customer.getPhoneNumber(), customer.getAddress(), customer.getUsername());
+        if (rowCount == 0) {
+            throw new InvalidCustomerException();
+        }
+        return rowCount;
+    }
+
+    public int updatePassword(final String username, final String password) {
+        final String query = "UPDATE customer SET password = ? WHERE username = ?";
+        return jdbcTemplate.update(query, password, username);
     }
 
     public int deleteByUsername(final String username) {
