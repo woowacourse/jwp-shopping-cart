@@ -28,6 +28,10 @@ public class Customer {
         }
     }
 
+    public Customer updatePassword(String newPassword) {
+        return new Customer(userName, new Password(newPassword), nickName, age);
+    }
+
     public String getUserName() {
         return userName.getUserName();
     }
