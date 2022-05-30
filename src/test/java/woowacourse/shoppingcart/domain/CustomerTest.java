@@ -22,14 +22,14 @@ class CustomerTest {
 
     @DisplayName("고객을 생성한다.")
     @Test
-    void createCustomer() {
+    void create() {
         assertDoesNotThrow(() -> new Customer(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER));
     }
 
     @DisplayName("고객 생성을 위해 필요한 데이터가 null인 경우 예외를 던진다.")
     @ParameterizedTest
     @MethodSource("generateInvalidCustomer")
-    void createCustomer_error_null(String email, String password, String address, String phoneNumber) {
+    void create_error_null(String email, String password, String address, String phoneNumber) {
         assertThatThrownBy(() -> new Customer(USERNAME, email, password, address, phoneNumber))
                 .isInstanceOf(NullPointerException.class);
     }
@@ -46,7 +46,7 @@ class CustomerTest {
     @DisplayName("이메일 형식이 맞지 않으면 예외를 던진다.")
     @ParameterizedTest
     @ValueSource(strings = {"@email.com", "test@", "testemail.com", "test@email", "email"})
-    void createCustomer_error_emailFormat(String email) {
+    void create_error_emailFormat(String email) {
         assertThatThrownBy(() -> new Customer(USERNAME, email, PASSWORD, ADDRESS, PHONE_NUMBER))
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -54,7 +54,7 @@ class CustomerTest {
     @DisplayName("비밀번호 형식이 맞지 않으면 예외를 던진다.")
     @ParameterizedTest
     @ValueSource(strings = {"123456789", "123456789012345678901"})
-    void createCustomer_error_passwordFormat(String password) {
+    void create_error_passwordFormat(String password) {
         assertThatThrownBy(() -> new Customer(USERNAME, EMAIL, password, ADDRESS, PHONE_NUMBER))
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -62,8 +62,26 @@ class CustomerTest {
     @DisplayName("전화번호 형식이 맞지 않으면 예외를 던진다.")
     @ParameterizedTest
     @ValueSource(strings = {"0000-0000-0000", "-0000-0000", "000-0000", "0000"})
-    void createCustomer_error_phoneNumberFormat(String phoneNumber) {
+    void create_error_phoneNumberFormat(String phoneNumber) {
         assertThatThrownBy(() -> new Customer(USERNAME, EMAIL, PASSWORD, ADDRESS, phoneNumber))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("customer의 내부 정보를 수정한다.")
+    @Test
+    void modify() {
+        Customer customer = new Customer(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        String address = "선릉역";
+        String phoneNumber = "010-1111-1111";
+
+        customer.modify(address, phoneNumber);
+
+        assertAll(() -> {
+            assertThat(customer.getUsername()).isEqualTo(USERNAME);
+            assertThat(customer.getEmail()).isEqualTo(EMAIL);
+            assertThat(customer.getPassword()).isEqualTo(PASSWORD);
+            assertThat(customer.getAddress()).isEqualTo(address);
+            assertThat(customer.getPhoneNumber()).isEqualTo(phoneNumber);
+        });
     }
 }

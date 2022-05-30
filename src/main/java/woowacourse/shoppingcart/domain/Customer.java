@@ -13,8 +13,8 @@ public class Customer {
     private final String username;
     private final String email;
     private final String password;
-    private final String address;
-    private final String phoneNumber;
+    private String address;
+    private String phoneNumber;
 
     public Customer(Long id, Customer customer) {
         this(id, customer.getUsername(), customer.getEmail(), customer.getPassword(), customer.getAddress(),
@@ -55,6 +55,11 @@ public class Customer {
         if (!matcher.matches()) {
             throw new IllegalArgumentException("전화번호 형식을 올바르지 않습니다. (형식: 000-0000-0000");
         }
+    }
+
+    public void modify(String address, String phoneNumber) {
+        this.address = address;
+        this.phoneNumber = phoneNumber;
     }
 
     public Long getId() {
