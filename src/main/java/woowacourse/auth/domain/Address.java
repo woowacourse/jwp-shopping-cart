@@ -7,7 +7,16 @@ public class Address {
     private final String value;
 
     public Address(String value) {
-        this.value = value.trim();
+        value = value.trim();
+        validate(value);
+        this.value = value;
+    }
+
+    private void validate(String value) {
+        if (value.length() > 255) {
+            throw new IllegalArgumentException(
+                    String.format("주소는 최대 255자까지 가능합니다. 입력값 : %s", value));
+        }
     }
 
     @Override
