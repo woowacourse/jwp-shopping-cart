@@ -18,6 +18,10 @@ public class Account {
             throw new IllegalArgumentException(
                     String.format("계정은 소문자와 숫자로 생성 가능합니다. 입력값: %s", value));
         }
+        if (value.length() < 4 || value.length() > 15) {
+            throw new IllegalArgumentException(
+                    String.format("계정은 4 ~ 15자로 생성 가능합니다. 입력값: %s", value));
+        }
     }
 
 }
