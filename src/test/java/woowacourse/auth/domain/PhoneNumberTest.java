@@ -21,4 +21,11 @@ class PhoneNumberTest {
                 .withMessage(String.format("휴대폰 번호양식이 불일치 합니다. %s-%s-%s", start, middle, last));
     }
 
+    @ParameterizedTest(name = "휴대폰 번호 : {0}-{1}-{2}")
+    @CsvSource({"공일공, 1234, 1234", "010, 일이삼사, 1234", "010, 1234, 일이삼사"})
+    void 숫자가_아닌_휴대폰_번호_생성_예외(String start, String middle, String last) {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> new PhoneNumber(start, middle, last))
+                .withMessage(String.format("휴대폰 번호는 숫자만 가능합니다. %s-%s-%s", start, middle, last));
+    }
 }
