@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.domain;
 public class Customer {
     private final Long id;
     private final String email;
-    private final Password password;
+    private final String password;
     private final String username;
 
     public Customer(String email, String password, String username) {
@@ -13,7 +13,7 @@ public class Customer {
     public Customer(Long id, String email, String password, String username) {
         this.id = id;
         this.email = email;
-        this.password = Password.from(password);
+        this.password = password;
         this.username = username;
     }
 
@@ -30,6 +30,11 @@ public class Customer {
     }
 
     public String getPassword() {
-        return password.getPassword();
+        return password;
+    }
+
+    public boolean isDifferentPassword(String password) {
+        final Password otherPassword = Password.from(password);
+        return !this.password.equals(otherPassword.getPassword());
     }
 }

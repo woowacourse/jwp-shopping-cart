@@ -14,7 +14,6 @@ public class Password {
 
     public static Password from(String password) {
         validatePassword(password);
-
         String encryptedPassword = encrypt(password);
         return new Password(encryptedPassword);
     }

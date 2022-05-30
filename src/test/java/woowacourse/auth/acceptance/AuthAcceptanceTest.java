@@ -1,9 +1,18 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.AcceptanceTestFixture.getMethodRequestWithBearerAuth;
+import static woowacourse.AcceptanceTestFixture.postMethodRequest;
+
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -11,14 +20,27 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+        final String email = "test@a.com";
+        final String password = "password0!";
+        final String username = "테스트";
+        final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
+
+        postMethodRequest(customerRequest, "/api/customers");
+
+        final LoginRequest loginRequest = new LoginRequest(email, password);
+        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest, "/api/auth/login");
+
+        final String token = tokenResponse.jsonPath().getString("accessToken");
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        final ExtractableResponse<Response> response = getMethodRequestWithBearerAuth(token, "/api/customers/me");
 
         // then
-        // 내 정보가 조회된다
+        final CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
+        assertAll(
+                () -> assertThat(customerResponse.getEmail()).isEqualTo(email),
+                () -> assertThat(customerResponse.getUsername()).isEqualTo(username)
+        );
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
