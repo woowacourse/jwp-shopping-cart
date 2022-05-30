@@ -20,8 +20,8 @@ import java.util.List;
 public class ControllerAdvice {
 
     public enum ErrorCode {
-        INVALID_FORMAT_ERROR(1000, "잘못된 형식입니다.");
-
+        INVALID_FORMAT_ERROR(1000, "잘못된 형식입니다."),
+        DUPLICATE_CUSTOMER_ERROR(1001, "이미 존재하는 회원입니다.");
         private int errorCode;
         private String message;
 
@@ -41,13 +41,17 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleUnhandledException(RuntimeException e) {
-        e.printStackTrace();
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity handle() {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    }
+
+    @ExceptionHandler(DuplicateCustomerException.class)
+    public ResponseEntity handleDuplicateCustomerException() {
+        return ResponseEntity.badRequest().body(new ErrorResponse(ErrorCode.DUPLICATE_CUSTOMER_ERROR));
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

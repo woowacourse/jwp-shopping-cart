@@ -63,4 +63,9 @@ public class CustomerDao {
             return Optional.empty();
         }
     }
+
+    public boolean existByEmail(String email) {
+        final String query = "SELECT EXISTS(SELECT id FROM customer WHERE email = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, email);
+    }
 }
