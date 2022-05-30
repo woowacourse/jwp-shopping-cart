@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import org.assertj.core.api.Assertions;
@@ -14,6 +15,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -58,6 +60,36 @@ class CustomerServiceTest {
 
         // when
         Long actual = customerService.create(request);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("이메일이 존재하지 않으면 예외를 발생시킨다.")
+    void getByEmail_notExistEmail_exceptionThrown() {
+        // given
+        String email = "asdf@email.com";
+
+        given(customerDao.findByEmail(email))
+                .willThrow(NotFoundCustomerException.class);
+
+        // when, then
+        assertThatThrownBy(() -> customerService.getByEmail(email))
+                .isInstanceOf(NotFoundCustomerException.class);
+    }
+
+    @Test
+    @DisplayName("이메일이 존재하는 경우에, Customer를 반환한다.")
+    void getByEmail_existEmail_customerReturned() {
+        // given
+        String email = "email@email.com";
+        Customer expected = new Customer("kun", email, "qwerasdf123");
+        given(customerDao.findByEmail(email))
+                .willReturn(expected);
+
+        // when
+        Customer actual = customerService.getByEmail(email);
 
         // then
         assertThat(actual).isEqualTo(expected);

@@ -23,4 +23,8 @@ public class CustomerService {
         Customer customer = new Customer(request.getNickname(), request.getEmail(), request.getPassword());
         return customerDao.save(customer);
     }
+
+    public Customer getByEmail(String email) {
+        return customerDao.findByEmail(email);
+    }
 }
