@@ -28,14 +28,14 @@ public class CustomerDao {
         }
     }
 
-    public void save(Customer customer, String password) {
+    public void save(Customer customer) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
         Map<String, Object> params = new HashMap<>();
         params.put("email", customer.getEmail());
         params.put("username", customer.getUsername());
-        params.put("password", password);
+        params.put("password", customer.getPassword());
 
         simpleJdbcInsert.execute(params);
     }

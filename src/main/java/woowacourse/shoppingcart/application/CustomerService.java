@@ -14,6 +14,6 @@ public class CustomerService {
     }
 
     public void register(String email, String password, String username) {
-        customerDao.save(new Customer(email, username), password);
+        customerDao.save(new Customer(email, password,  username));
     }
 }
