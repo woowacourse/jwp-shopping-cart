@@ -12,105 +12,135 @@
         - 열한자의 숫자가 아니면 예외 발생
     - address
 
-### API
-### no required authorization
-- 회원 가입
-- request
-```json
-POST /api/customers/signup
+## End Point
 
+### 회원 가입
+
+- `POST /api/customers/signup`
+- not required authorization
+- http request
+
+```json
 {
-    "username" : string,
-    "password" : string,
-    "phoneNumber" : string,
-    "address" : string
+	"username" : "myUsername123",
+	"password" : "myPassword1234",
+	"phoneNumber" : "01012345678",
+	"address" : "성담빌딩"
 }
 ```
 
-- response
-```
+- http response
+
+```json
 201 created
-body empty
+empty body
 ```
 
+### 로그인
 
+- `POST /api/customers/login`
+- required authorization
+- http request
 
-### required authorization
-#### 로그인
-- request
 ```json
-POST /api/customers/login
-
 {
-    "username" : string,
-    "password" : string
+	"username" : "myUsername123",
+	"password" : "myPassword1234"
 }
 ```
 
-- response
+- http response
 
 ```json
 200 ok
 {
-    "access-token" : jwt.token.here
+	"accessToken" : "jwt.token.here"
 }
 ```
 
+### 회원 정보 조회
 
-#### 회원 정보 조회
-- request
-```json
-GET /api/customers
-```
-- response
+- `GET /api/customers`
+- required authorization
+- http response
+
 ```json
 200 ok
 {
-  "customer" : {
-    "username" : string,
-    "phoneNumber" : string,
-    "address" : string
-  }
+	"customer" : {
+		"username" : "myUsername123",
+		"phoneNumber" : "01012345678",
+		"address" : "성담빌딩"
+	}
 }
 ```
 
-#### 회원 정보 수정
-- request
+### 회원 정보 수정
+
+- `PUT /api/customers`
+- required authorization
+- http request
+
 ```json
-PATCH /api/customers
-
 {
-  "password" : string,
-  "phoneNumber" : string,
-  "address" : string
+	"phoneNumber" : "01087654321",
+	"address" : "루터회관"
 }
 ```
 
-- response
-```
+- http response
+
+```json
 204 no-content
-body empty
+empty body
 ```
 
-#### 회원 탈퇴
-- request
+### 패스워드 변경
+
+- `PATCH /api/customers/password`
+- required authorization
+- http request
+
 ```json
-DELETE /api/customers
+{
+	"password" : "changePassword123"
+}
 ```
-- response
+
+- http response
+
 ```json
-204 no content
+204 no-content
+empty body
 ```
 
+### 회원 탈퇴
 
-### Error point
-- 에러 메시지 전달
-- 에러 코드 전달
+- `DELETE /api/customers`
+- requried authorization
+- http response
+
+```json
+204 no-content
+empty body
+```
+
+## Error Response
 
 ```json
 {
 	"error" : {
-		"message" : string
-	}
+		"messages" : [
+			"error1", "error2"
+		]
 }
-// 리스트 전달
+```
+
+1. 아이디 패스워드 불일치 : 401 unauthorized
+2. 회원가입 시 유저 패턴 : 400 bad request
+    1. 영어, 숫자만 가능
+    2. 3자 이상 15자 이하
+3. 회원가입 시 패스워드 패턴 : 400 bad request
+    1. 영어, 숫자 항상 포함
+    2. 8자 이상 20자 이하
+4. 만료 토큰, 잘못된 코튼 : 401 unauthorized
