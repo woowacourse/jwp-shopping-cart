@@ -38,15 +38,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             request = new CustomerSignUpRequest(USERNAME, PASSWORD, PHONE_NUMBER, ADDRESS);
         }
 
-        @Test
         @DisplayName("성공한다.")
+        @Test
         void success() {
             ExtractableResponse<Response> response = 회원_가입_요청(request);
             회원_가입됨(response);
         }
 
-        @Test
         @DisplayName("중복된 유저 이름으로 가입하여 실패")
+        @Test
         void uplicatedUsername_fail() {
             회원_가입_요청(request);
 
@@ -74,8 +74,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         회원_정보_수정_성공(response);
     }
 
-    @Test
     @DisplayName("내 비밀번호 수정")
+    @Test
     void updatePassword() {
         String accessToken = 회원_가입_후_로그인();
         CustomerUpdatePasswordRequest request = new CustomerUpdatePasswordRequest("changedPassword123");
@@ -84,8 +84,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         회원_비밀번호_수정_성공(response);
     }
 
-    @Test
     @DisplayName("회원탈퇴")
+    @Test
     void deleteMe() {
         String accessToken = 회원_가입_후_로그인();
 
