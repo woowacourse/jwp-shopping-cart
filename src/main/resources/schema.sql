@@ -10,9 +10,9 @@ drop table if exists full_address;
 
 drop table if exists privacy;
 
-drop table if exists user;
+drop table if exists customer;
 
-create table user
+create table customer
 (
     id                bigint       not null auto_increment,
     email             varchar(255) not null unique,
@@ -21,31 +21,33 @@ create table user
     created_at        timestamp default current_timestamp,
     terms             tinyint(1) not null,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+);
 
 create table privacy
 (
-    user_id   bigint       not null,
-    name      varchar(255) not null,
-    gender    varchar(9)   not null,
-    birth_day timestamp,
-    primary key (user_id)
-) engine=InnoDB default charset=utf8mb4;
+    customer_id bigint       not null,
+    name        varchar(255) not null,
+    gender      varchar(9)   not null,
+    birth_day   timestamp,
+    primary key (customer_id)
+);
 
 alter table privacy
-    foreign key (user_id) references user (id);
+    add constraint fk_privacy_to_customer
+        foreign key (customer_id) references customer (id);
 
 create table full_address
 (
-    user_id        bigint       not null,
+    customer_id    bigint       not null,
     address        varchar(255) not null,
     detail_address varchar(255),
     zone_code      char(5)      not null,
-    primary key (user_id)
-) engine=InnoDB default charset=utf8mb4;
+    primary key (customer_id)
+);
 
 alter table full_address
-    foreign key (user_id) references user (id);
+    add constraint fk_full_address_to_customer
+        foreign key (customer_id) references customer (id);
 
 create table product
 (
@@ -54,19 +56,19 @@ create table product
     price     integer      not null,
     image_url varchar(255),
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+);
 
 create table cart_item
 (
-    id         bigint not null auto_increment,
-    user_id    bigint not null,
-    product_id bigint not null,
+    id          bigint not null auto_increment,
+    customer_id bigint not null,
+    product_id  bigint not null,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+);
 
 alter table cart_item
-    add constraint fk_cart_item_to_user
-        foreign key (user_id) references user (id);
+    add constraint fk_cart_item_to_customer
+        foreign key (customer_id) references customer (id);
 
 alter table cart_item
     add constraint fk_cart_item_to_product
@@ -74,14 +76,14 @@ alter table cart_item
 
 create table orders
 (
-    id      bigint not null auto_increment,
-    user_id bigint not null,
+    id          bigint not null auto_increment,
+    customer_id bigint not null,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+);
 
 alter table orders
-    add constraint fk_orders_to_user
-        foreign key (user_id) references user (id);
+    add constraint fk_orders_to_customer
+        foreign key (customer_id) references customer (id);
 
 create table orders_detail
 (
@@ -90,7 +92,7 @@ create table orders_detail
     product_id bigint  not null,
     quantity   integer not null,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+);
 
 alter table orders_detail
     add constraint fk_orders_detail_to_orders
