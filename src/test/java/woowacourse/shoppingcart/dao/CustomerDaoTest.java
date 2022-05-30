@@ -1,15 +1,16 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.domain.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -19,8 +20,8 @@ public class CustomerDaoTest {
 
     private final CustomerDao customerDao;
 
-    public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
-        customerDao = new CustomerDao(jdbcTemplate);
+    public CustomerDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        customerDao = new CustomerDao(namedParameterJdbcTemplate);
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -31,7 +32,8 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByUserName(userName)
+                .orElseThrow();
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -45,9 +47,25 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByUserName(userName)
+                .orElseThrow();
 
         // then
         assertThat(customerId).isEqualTo(16L);
+    }
+
+    @Test
+    @DisplayName("회원 정보를 저장한다.")
+    void save() {
+        // given
+        final Customer customer = new Customer("썬", "sunyong@gmail.com", "12345678");
+
+        // when
+        final Customer actual = customerDao.save(customer);
+
+        // then
+        assertThat(actual).usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(customer);
     }
 }

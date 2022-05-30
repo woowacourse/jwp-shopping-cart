@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public class OrderService {
     }
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = customerDao.findIdByUserName(customerName)
+                .orElseThrow(InvalidCustomerException::new);
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
@@ -54,7 +56,8 @@ public class OrderService {
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = customerDao.findIdByUserName(customerName)
+                .orElseThrow(InvalidCustomerException::new);
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
@@ -62,11 +65,12 @@ public class OrderService {
     }
 
     public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = customerDao.findIdByUserName(customerName)
+                .orElseThrow(InvalidCustomerException::new);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+                .map(this::findOrderResponseDtoByOrderId)
                 .collect(Collectors.toList());
     }
 
