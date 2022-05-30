@@ -81,7 +81,23 @@ public class CustomerDao {
             return preparedStatement;
         });
 
-        if(changedRowCount != 1){
+        checkAffectedRowCount(changedRowCount);
+    }
+
+    public void deleteById(final Long id){
+        final String query = "DELETE FROM CUSTOMER WHERE id = ?";
+
+        final int deletedRowCount = jdbcTemplate.update(connection -> {
+            final PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, id);
+            return preparedStatement;
+        });
+
+        checkAffectedRowCount(deletedRowCount);
+    }
+
+    private void checkAffectedRowCount(final int affectedRowCount) {
+        if(affectedRowCount != 1){
             throw new InvalidCustomerException();
         }
     }
