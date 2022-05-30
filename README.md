@@ -22,9 +22,6 @@
     - [x] account 에 대문자가 포함되어 있으면 소문자로 변경한다.
     - [x] account 에 특수문자가 포함되어 있으면 제거한다.
 
-- [ ] 로그인 아이디 중복 확인 API
-    - [ ] account 가 중복되면 false를 반환한다.
-
 - [ ] Token기반의 로그인
     - [ ] account 와 password 를 받아 토큰을 생성한다.
 
