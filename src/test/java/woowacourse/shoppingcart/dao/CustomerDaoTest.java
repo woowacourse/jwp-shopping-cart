@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
@@ -34,11 +36,11 @@ class CustomerDaoTest {
     @DisplayName("이메일, 암호화 된 패스워드, 닉네임을 받아서 Customer 테이블에 저장한다.")
     void save() {
         final Customer testCustomer = Customer.createWithoutId("test@test.com", "testtest", "테스트");
-        final Long createdMemberId = customerDao.save(testCustomer);
+        final Long createdCustomerId = customerDao.save(testCustomer);
 
-        final Customer findCustomer = customerDao.findById(createdMemberId).get();
+        final Customer findCustomer = customerDao.findById(createdCustomerId).get();
 
-        assertThat(findCustomer.getId()).isEqualTo(createdMemberId);
+        assertThat(findCustomer.getId()).isEqualTo(createdCustomerId);
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -78,5 +80,48 @@ class CustomerDaoTest {
 
         assertThat(customer.getEmail()).isEqualTo(email);
 
+    }
+
+    @Test
+    @DisplayName("Customer 정보를 입력받아 기존의 Customer 정보를 수정한다.")
+    void update() {
+        final Customer testCustomer = Customer.createWithoutId("test@test.com", "testtest", "테스트");
+        final Long createdCustomerId = customerDao.save(testCustomer);
+
+        final Customer findCustomer = customerDao.findById(createdCustomerId).get();
+
+        final String changedName = "바뀐이름";
+        final Customer changeForm = Customer.createWithoutPassword(
+                findCustomer.getId(),
+                findCustomer.getEmail(),
+                changedName
+        );
+
+        customerDao.update(changeForm);
+
+        final Customer changedCustomer = customerDao.findById(createdCustomerId).get();
+
+        assertThat(changedCustomer.getUsername()).isEqualTo(changedName);
+    }
+
+    @Test
+    @DisplayName("Customer 정보를 입력받아 기존의 Customer 정보를 수정할 때, 중복된 이름이 있으면 예외가 발생한다.")
+    void update_duplicateNameException() {
+        final String duplicateName = "테스트2";
+        final Customer testCustomer1 = Customer.createWithoutId("test1@test.com", "testtest", "테스트1");
+        final Customer testCustomer2 = Customer.createWithoutId("test2@test.com", "testtest", duplicateName);
+        final Long createdCustomerId = customerDao.save(testCustomer1);
+        customerDao.save(testCustomer2);
+
+        final Customer findCustomer = customerDao.findById(createdCustomerId).get();
+
+        final Customer changeForm = Customer.createWithoutPassword(
+                findCustomer.getId(),
+                findCustomer.getEmail(),
+                duplicateName
+        );
+
+        assertThatThrownBy(() -> customerDao.update(changeForm))
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 }

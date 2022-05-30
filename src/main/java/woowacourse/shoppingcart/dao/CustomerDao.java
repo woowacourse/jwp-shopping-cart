@@ -30,11 +30,11 @@ public class CustomerDao {
 
 
     public Long save(final Customer customer) {
-        final String sql = "INSERT INTO CUSTOMER(email, password, username) values(?, ?, ?)";
+        final String query = "INSERT INTO CUSTOMER(email, password, username) values(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
+            final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, customer.getEmail());
             preparedStatement.setString(2, customer.getPassword());
             preparedStatement.setString(3, customer.getUsername());
@@ -45,9 +45,9 @@ public class CustomerDao {
     }
 
     public Optional<Customer> findById(final Long createdMemberId) {
-        final String sql = "SELECT id, email, password, username FROM CUSTOMER WHERE id = ?";
+        final String query = "SELECT id, email, password, username FROM CUSTOMER WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, createdMemberId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, memberRowMapper, createdMemberId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -67,6 +67,21 @@ public class CustomerDao {
         try {
             return jdbcTemplate.queryForObject(query, Long.class, username.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public void update(final Customer customer) {
+        final String query = "UPDATE CUSTOMER SET username = ? WHERE id = ?";
+
+        final int changedRowCount = jdbcTemplate.update(connection -> {
+            final PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, customer.getUsername());
+            preparedStatement.setLong(2, customer.getId());
+            return preparedStatement;
+        });
+
+        if(changedRowCount != 1){
             throw new InvalidCustomerException();
         }
     }
