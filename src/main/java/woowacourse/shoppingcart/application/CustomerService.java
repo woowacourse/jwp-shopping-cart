@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.exception.DuplicatedAccountException;
 
@@ -15,11 +16,12 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public void createCustomer(SignupRequest signupRequest) {
+    public CustomerDto createCustomer(SignupRequest signupRequest) {
         final Customer customer = signupRequest.toEntity();
         if (customerDao.findByAccount(customer.getAccount()).isPresent()) {
             throw new DuplicatedAccountException();
         }
-        customerDao.save(customer);
+        final Customer save = customerDao.save(customer);
+        return new CustomerDto(save.getId());
     }
 }
