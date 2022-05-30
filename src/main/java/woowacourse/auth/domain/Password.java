@@ -9,6 +9,8 @@ public class Password {
 
     private static final Pattern FORMAT = Pattern
             .compile("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W])).*");
+    private static final int MIN_LENGTH = 8;
+    private static final int MAX_LENGTH = 20;
 
     private final String value;
 
@@ -18,11 +20,20 @@ public class Password {
     }
 
     private void validate(String value) {
+        validateFormat(value);
+        validateLength(value);
+    }
+
+    private void validateFormat(String value) {
         if (!FORMAT.matcher(value).matches()) {
             throw new IllegalArgumentException("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.");
         }
-        if (value.length() < 8 || value.length() > 20) {
-            throw new IllegalArgumentException("비밀번호는 8 ~ 20자로 생성 가능합니다.");
+    }
+
+    private void validateLength(String value) {
+        if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH) {
+            throw new IllegalArgumentException(
+                    String.format("비밀번호는 %d ~ %d자로 생성 가능합니다.", MIN_LENGTH, MAX_LENGTH));
         }
     }
 

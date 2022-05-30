@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 public class Account {
 
     private static final Pattern FORMAT = Pattern.compile("^[0-9a-z]*$");
+    private static final int MIN_LENGTH = 4;
+    private static final int MAX_LENGTH = 15;
 
     private final String value;
 
@@ -16,13 +18,22 @@ public class Account {
     }
 
     private void validate(String value) {
+        validateFormat(value);
+        validateLength(value);
+    }
+
+    private void validateFormat(String value) {
         if (!FORMAT.matcher(value).matches()) {
             throw new IllegalArgumentException(
                     String.format("계정은 소문자와 숫자로 생성 가능합니다. 입력값: %s", value));
         }
-        if (value.length() < 4 || value.length() > 15) {
+    }
+
+    private void validateLength(String value) {
+        if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH) {
             throw new IllegalArgumentException(
-                    String.format("계정은 4 ~ 15자로 생성 가능합니다. 입력값: %s", value));
+                    String.format("계정은 %d ~ %d자로 생성 가능합니다. 입력값: %s",
+                            MIN_LENGTH, MAX_LENGTH, value));
         }
     }
 
