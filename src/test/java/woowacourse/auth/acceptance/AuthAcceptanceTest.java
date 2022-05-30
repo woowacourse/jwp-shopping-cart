@@ -1,46 +1,70 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import com.ori.acceptancetest.SpringBootAcceptanceTest;
+
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import woowacourse.auth.dto.CustomerRequest;
+import woowacourse.auth.dto.TokenRequest;
 
 @DisplayName("인증 관련 기능")
-public class AuthAcceptanceTest extends AcceptanceTest {
-    @DisplayName("Bearer Auth 로그인 성공")
-    @Test
-    void myInfoWithBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+@SpringBootAcceptanceTest
+public class AuthAcceptanceTest {
 
-        // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+	@DisplayName("로그인 성공")
+	@Test
+	void myInfoWithBearerAuth() {
+		// given
+		signUp(new CustomerRequest("123@gmail.com", "a1234!", "does"));
 
-        // then
-        // 내 정보가 조회된다
-    }
+		// when
+		ExtractableResponse<Response> loginResponse = RestAssured.given().log().all()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.body(new TokenRequest("123@gmail.com", "a1234!"))
+			.when().post("/auth/login")
+			.then().log().all()
+			.extract();
 
-    @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
+		// then
+		assertAll(
+			() -> assertThat(loginResponse.jsonPath().getString("nickname")).isEqualTo("does"),
+			() -> assertThat(loginResponse.jsonPath().getString("accessToken")).isNotNull()
+		);
+	}
 
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+	@DisplayName("로그인 실패")
+	@Test
+	void myInfoWithBadBearerAuth() {
+		// given
+		signUp(new CustomerRequest("123@gmail.com", "a1234!", "does"));
 
-        // then
-        // 토큰 발급 요청이 거부된다
-    }
+		// when
+		ExtractableResponse<Response> loginResponse = RestAssured.given().log().all()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.body(new TokenRequest("123@gmail.com", "a1234!!!23"))
+			.when().post("/auth/login")
+			.then().log().all()
+			.extract();
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+		// then
+		assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+	}
 
-        // then
-        // 내 정보 조회 요청이 거부된다
-    }
+	private void signUp(CustomerRequest request) {
+		RestAssured.given().log().all()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.body(request)
+			.when().post("/customers")
+			.then().log().all()
+			.extract();
+	}
 }

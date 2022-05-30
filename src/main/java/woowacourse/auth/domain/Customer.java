@@ -22,4 +22,8 @@ public class Customer {
 		this.password = password;
 		this.nickname = nickname;
 	}
+
+	public boolean isSamePassword(String password) {
+		return this.password.equals(password);
+	}
 }

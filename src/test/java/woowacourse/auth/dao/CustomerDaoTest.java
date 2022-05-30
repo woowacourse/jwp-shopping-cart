@@ -2,6 +2,8 @@ package woowacourse.auth.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Optional;
+
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -62,5 +64,32 @@ class CustomerDaoTest {
 
 		// then
 		assertThat(result).isFalse();
+	}
+
+	@DisplayName("이메일로 회원을 조회한다.")
+	@Test
+	void findByEmail() {
+		// given
+		Customer customer = new Customer("123@gmail.com", "!234", "does");
+		customerDao.save(customer);
+
+		// when
+		Optional<Customer> byEmail = customerDao.findByEmail(customer.getEmail());
+
+		// then
+		assertThat(byEmail)
+			.map(Customer::getEmail)
+			.get()
+			.isEqualTo("123@gmail.com");
+	}
+
+	@DisplayName("이메일에 맞는 회원이 없으면 empty 반환")
+	@Test
+	void findByEmailException() {
+		// when
+		Optional<Customer> byEmail = customerDao.findByEmail("123@gmail.com");
+
+		// then
+		assertThat(byEmail).isEmpty();
 	}
 }

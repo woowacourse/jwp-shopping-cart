@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.exception.InvalidMemberException;
+import woowacourse.auth.exception.InvalidCustomerException;
 
 @RequiredArgsConstructor
 @Transactional
@@ -24,8 +24,13 @@ public class CustomerService {
 
 	private void validateEmailDuplicated(Customer customer) {
 		if (customerDao.existByEmail(customer.getEmail())) {
-			throw new InvalidMemberException("중복된 이메일 입니다.");
+			throw new InvalidCustomerException("중복된 이메일 입니다.");
 		}
+	}
+
+	public Customer findByEmail(String email) {
+		return customerDao.findByEmail(email)
+			.orElseThrow(() -> new InvalidCustomerException("이메일에 해당하는 회원이 존재하지 않습니다"));
 	}
 }
 

@@ -1,9 +1,12 @@
 package woowacourse.auth.dao;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -36,5 +39,24 @@ public class CustomerDao {
 
 	public Long findIdByUserName(String nickname) {
 		return null;
+	}
+
+	public Optional<Customer> findByEmail(String email) {
+		String sql = "select * from customer where email = :email";
+		try {
+			return Optional.ofNullable(
+				jdbcTemplate.queryForObject(sql, Map.of("email", email), getCustomerMapper())
+			);
+		} catch (EmptyResultDataAccessException exception) {
+			return Optional.empty();
+		}
+	}
+
+	private RowMapper<Customer> getCustomerMapper() {
+		return (rs, rowNum) -> new Customer(
+			rs.getLong("id"),
+			rs.getString("email"),
+			rs.getString("password"),
+			rs.getString("nickname"));
 	}
 }
