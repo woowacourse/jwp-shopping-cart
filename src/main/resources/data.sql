@@ -1,27 +1,5 @@
-insert into customer (username)
-values ('puterism'),
-       ('tanney-102'),
-       ('jho2301'),
-       ('365kim'),
-       ('dudtjr913'),
-       ('jum0'),
-       ('hyuuunjukim'),
-       ('zereight'),
-       ('devhyun637'),
-       ('swon3210'),
-       ('bigsaigon333'),
-       ('yungo1846'),
-       ('zigsong'),
-       ('iborymagic'),
-       ('0307kwon'),
-       ('gwangyeol-im'),
-       ('shinsehantan'),
-       ('ddongule'),
-       ('seojihwan'),
-       ('0imbean0'),
-       ('sunyoungkwon'),
-       ('hchayan'),
-       ('2sooy'),
-       ('yujo11'),
-       ('sunhpark42')
+insert into customer (email, password, nickname)
+values ('wishoon@gmail.com', "qwer1234@Q", "rookie"),
+       ('asebn1@gmail.com', "qwer5678@Q", "zero"),
+       ('woowacourse@gmail.com', "qwer4321@Q", "woowa")
 ;
