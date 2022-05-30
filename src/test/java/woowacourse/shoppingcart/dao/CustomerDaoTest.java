@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+
 import woowacourse.shoppingcart.domain.Customer;
 
 @JdbcTest
@@ -69,6 +69,15 @@ public class CustomerDaoTest {
         Customer savedCustomer = customerDao.save(customer);
 
         assertDoesNotThrow(() -> customerDao.update(savedCustomer));
+    }
+
+    @DisplayName("customer 정보를 삭제한다.")
+    @Test
+    void delete() {
+        Customer customer = new Customer(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        Customer savedCustomer = customerDao.save(customer);
+
+        assertDoesNotThrow(() -> customerDao.delete(savedCustomer));
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")

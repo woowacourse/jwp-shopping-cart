@@ -79,4 +79,10 @@ public class CustomerDao {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
         namedParameterJdbcTemplate.update(sql, parameterSource);
     }
+
+    public void delete(Customer customer) {
+        String sql = "DELETE FROM customer WHERE username = :username";
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
+        namedParameterJdbcTemplate.update(sql, parameterSource);
+    }
 }
