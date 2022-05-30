@@ -8,6 +8,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
+
     }
 
     @DisplayName("내 정보 조회")
