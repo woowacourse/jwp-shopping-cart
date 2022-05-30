@@ -2,13 +2,13 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import woowacourse.auth.application.AuthService;
-import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -16,11 +16,9 @@ import java.net.URI;
 @RequestMapping("/customers")
 public class CustomerController {
     private final CustomerService customerService;
-    private final AuthService authService;
 
-    public CustomerController(CustomerService customerService, AuthService authService) {
+    public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
-        this.authService = authService;
     }
 
     @PostMapping("/signup")
@@ -30,9 +28,13 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> findMyInfo(HttpServletRequest httpServletRequest) {
-        String accessToken = AuthorizationExtractor.extract(httpServletRequest);
-        CustomerResponse customerResponse = authService.findCustomerByToken(accessToken);
-        return ResponseEntity.ok(customerResponse);
+    public ResponseEntity<CustomerResponse> findMyInfo(@AuthenticationPrincipal Customer customer) {
+        return ResponseEntity.ok(CustomerResponse.from(customer));
+    }
+
+    @PatchMapping("/me/password")
+    public ResponseEntity<Void> updateMyPassword(@AuthenticationPrincipal Customer customer, @RequestBody PasswordRequest passwordRequest) {
+        customerService.updatePassword(customer, passwordRequest);
+        return ResponseEntity.ok().build();
     }
 }

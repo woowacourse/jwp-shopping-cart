@@ -9,6 +9,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -66,9 +67,26 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(exception).hasMessageContaining("로그인");
     }
 
+    @DisplayName("내 비밀번호를 수정한다.")
+    @Test
+    void updateMyPassword() {
+        signUpCustomer();
+        String accessToken = getTokenByLogin();
+
+        PasswordRequest passwordRequest = new PasswordRequest("forky@1234", "forky@4321");
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .body(passwordRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("/customers/me/password")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
     @DisplayName("내 정보 수정")
     @Test
-    void updateMe() {
+    void updateMyInfo() {
         signUpCustomer();
         String accessToken = getTokenByLogin();
     }

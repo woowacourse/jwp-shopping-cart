@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.UserNames;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @Transactional
 @Service
@@ -30,5 +31,11 @@ public class CustomerService {
                 id, customerRequest.getUserName(), customerRequest.getPassword(),
                 customerRequest.getNickName(), customerRequest.getAge()
         );
+    }
+
+    public void updatePassword(Customer customer, PasswordRequest passwordRequest) {
+        customer.validatePassword(passwordRequest.getOldPassword());
+        Customer updateCustomer = customer.updatePassword(passwordRequest.getNewPassword());
+        customerDao.updatePassword(updateCustomer);
     }
 }
