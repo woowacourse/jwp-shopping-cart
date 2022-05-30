@@ -12,6 +12,8 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
@@ -68,6 +70,37 @@ class CustomerServiceTest {
     @Test
     void find_error_notExist_username() {
         assertThatThrownBy(() -> customerService.find(USERNAME))
+                .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @DisplayName("customer를 수정한다.")
+    @Test
+    void update() {
+        CustomerSaveRequest request = new CustomerSaveRequest(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        customerService.save(request);
+        String address = "선릉역";
+        String phoneNumber = "010-1111-1111";
+
+        customerService.update(new LoginCustomer(USERNAME), new CustomerUpdateRequest(address, phoneNumber));
+
+        CustomerResponse response = customerService.find(USERNAME);
+        assertAll(() -> {
+            assertThat(response.getId()).isNotNull();
+            assertThat(response.getUsername()).isEqualTo(USERNAME);
+            assertThat(response.getEmail()).isEqualTo(EMAIL);
+            assertThat(response.getAddress()).isEqualTo(address);
+            assertThat(response.getPhoneNumber()).isEqualTo(phoneNumber);
+        });
+    }
+
+    @DisplayName("존재하지 않는 username을 수정하는 경우 예외를 던진다.")
+    @Test
+    void update_error_notExist_username() {
+        String address = "선릉역";
+        String phoneNumber = "010-1111-1111";
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(address, phoneNumber);
+
+        assertThatThrownBy(() -> customerService.update(new LoginCustomer(USERNAME), customerUpdateRequest))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 }

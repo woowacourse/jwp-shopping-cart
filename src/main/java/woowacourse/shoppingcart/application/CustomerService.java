@@ -5,6 +5,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -23,9 +25,22 @@ public class CustomerService {
     }
 
     public CustomerResponse find(String username) {
-        Customer customer = customerDao.findByUsername(username)
-                .orElseThrow(InvalidCustomerException::new);
+        Customer customer = getCustomer(username);
 
         return new CustomerResponse(customer);
+    }
+
+    public void update(LoginCustomer loginCustomer, CustomerUpdateRequest customerUpdateRequest) {
+        String username = loginCustomer.getUsername();
+        Customer customer = getCustomer(username);
+
+        customer.modify(customerUpdateRequest.getAddress(), customerUpdateRequest.getPhoneNumber());
+
+        customerDao.update(customer);
+    }
+
+    private Customer getCustomer(String username) {
+        return customerDao.findByUsername(username)
+                .orElseThrow(InvalidCustomerException::new);
     }
 }
