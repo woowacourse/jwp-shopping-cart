@@ -1,7 +1,6 @@
 package woowacourse.auth.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,9 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.SignInDto;
-import woowacourse.shoppingcart.dto.TokenResponseDto;
+import woowacourse.auth.dto.SignInDto;
+import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.service.CustomerService;
 
 @SpringBootTest
