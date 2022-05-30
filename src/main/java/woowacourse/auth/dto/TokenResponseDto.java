@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.auth.dto;
 
 public class TokenResponseDto {
 

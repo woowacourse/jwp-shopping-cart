@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.shoppingcart.dto.SignInDto;
-import woowacourse.shoppingcart.dto.TokenResponseDto;
+import woowacourse.auth.dto.SignInDto;
+import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.service.CustomerService;
 
 @RestController
