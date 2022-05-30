@@ -30,6 +30,10 @@ public class Password {
         return passwordEncoder.matches(plainText, value);
     }
 
+    public String getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

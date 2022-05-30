@@ -33,6 +33,26 @@ public class User {
         }
     }
 
+    public Email getEmail() {
+        return email;
+    }
+
+    public Password getPassword() {
+        return password;
+    }
+
+    public ProfileImageUrl getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public Privacy getPrivacy() {
+        return privacy;
+    }
+
+    public boolean isTerms() {
+        return terms;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
