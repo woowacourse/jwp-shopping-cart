@@ -5,7 +5,7 @@ public class Customer {
     private final String username;
     private final String password;
     private final String nickname;
-    private final int age ;
+    private final int age;
 
     public Customer(String username, String password, String nickname, int age) {
         validate(username, nickname, age);
@@ -13,10 +13,6 @@ public class Customer {
         this.password = password;
         this.nickname = nickname;
         this.age = age;
-    }
-
-    public Customer(String username, String nickname, int age) {
-        this(username, null, nickname, age);
     }
 
     private void validate(String username, String nickname, int age) {
@@ -41,5 +37,25 @@ public class Customer {
         if (age < 1) {
             throw new IllegalArgumentException("나이는 최소 1살이어야 합니다.");
         }
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public boolean hasSamePassword(String password) {
+        return this.password.equals(password);
     }
 }

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.entity;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.domain.Customer;
 
 public class CustomerEntity {
 
@@ -44,6 +45,10 @@ public class CustomerEntity {
 
     public int getAge() {
         return age;
+    }
+
+    public Customer toDomain() {
+        return new Customer(username, password, nickname, age);
     }
 
     @Override
