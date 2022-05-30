@@ -3,6 +3,7 @@ package woowacourse.auth.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dao.MemberDao;
 import woowacourse.auth.domain.Member;
+import woowacourse.auth.domain.Nickname;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
@@ -78,7 +79,9 @@ public class AuthService {
 
     public void updateNickname(String email, NicknameUpdateRequest nicknameUpdateRequest) {
         validateExists(email);
-        memberDao.updateNicknameByEmail(email, nicknameUpdateRequest.getNickname());
+        String nickname = new Nickname(nicknameUpdateRequest.getNickname())
+                .getValue();
+        memberDao.updateNicknameByEmail(email, nickname);
     }
 
     private void validateExists(String email) {
@@ -87,10 +90,10 @@ public class AuthService {
         }
     }
 
-
     public void updatePassword(String email, PasswordUpdateRequest passwordUpdateRequest) {
         validateExists(email);
-        String password = new Password(passwordUpdateRequest.getPassword()).getValue();
+        String password = new Password(passwordUpdateRequest.getPassword())
+                .getValue();
         memberDao.updatePasswordByEmail(email, password);
     }
 }

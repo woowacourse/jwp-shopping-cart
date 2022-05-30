@@ -30,8 +30,8 @@
 
 ## 회원 정보 수정
 
-- [ ]  nickname을 수정할 수 있다.
-- [ ]  password를 수정할 수 있다.
+- [x]  nickname을 수정할 수 있다.
+- [x]  password를 수정할 수 있다.
 
 nickname와 password는 회원 가입 시와 같은 조건으로 검증한다.
 

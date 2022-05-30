@@ -125,6 +125,17 @@ class AuthServiceTest {
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
+    @DisplayName("올바르지 않은 형식의 닉네임으로 변경하려고 하면 예외를 반환한다.")
+    @Test
+    void updatePassword_InvalidNicknameFormat() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        authService.save(memberCreateRequest);
+
+        assertThatThrownBy(() -> authService.updateNickname("abc@woowahan.com", new NicknameUpdateRequest("1234")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("닉네임 형식이 올바르지 않습니다.");
+    }
+
     @DisplayName("이메일과 비밀번호를 받아 비밀번호를 수정한다.")
     @Test
     void updatePassword() {
