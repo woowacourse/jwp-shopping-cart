@@ -10,6 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
@@ -36,7 +38,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
         long savedId = ID_추출(createResponse);
 
-        ExtractableResponse<Response> response = 회원조회_요청(savedId);
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        ExtractableResponse<Response> response = 회원조회_요청(token, savedId);
 
         CustomerResponse customerResponse = response.as(CustomerResponse.class);
         CustomerResponse expected = new CustomerResponse(savedId, "roma@naver.com", "roma");
@@ -52,7 +55,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void update() {
         long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
 
-        ExtractableResponse<Response> response = 회원정보수정_요청(savedId, new CustomerUpdateRequest("sojukang"));
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("sojukang"));
 
         CustomerResponse customerResponse = response.as(CustomerResponse.class);
         CustomerResponse expected = new CustomerResponse(savedId, "roma@naver.com", "sojukang");
@@ -66,9 +70,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void delete() {
-        ExtractableResponse<Response> response = 회원탈퇴_요청(1L);
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("puterism@naver.com", "12349053145"));
+        ExtractableResponse<Response> response = 회원탈퇴_요청(token, 1L);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    public String 로그인_요청_및_토큰발급(TokenRequest request) {
+        ExtractableResponse<Response> loginResponse = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/auth/login")
+                .then().log().all()
+                .extract();
+
+        TokenResponse tokenResponse = loginResponse.body().as(TokenResponse.class);
+        return tokenResponse.getAccessToken();
     }
 
     public ExtractableResponse<Response> 회원가입_요청(CustomerCreateRequest request) {
@@ -85,17 +103,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         return ID_추출(회원가입_요청(request));
     }
 
-    public ExtractableResponse<Response> 회원조회_요청(long id) {
+    public ExtractableResponse<Response> 회원조회_요청(String token, Long id) {
         return RestAssured
                 .given().log().all()
+                .header("Authorization", "Bearer " + token)
                 .when().get("/api/customers/" + id)
                 .then().log().all()
                 .extract();
     }
 
-    public ExtractableResponse<Response> 회원정보수정_요청(long id, CustomerUpdateRequest request) {
+    public ExtractableResponse<Response> 회원정보수정_요청(String token, long id, CustomerUpdateRequest request) {
         return RestAssured
                 .given().log().all()
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().put("/api/customers/" + id)
@@ -103,9 +123,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public ExtractableResponse<Response> 회원탈퇴_요청(long id) {
+    public ExtractableResponse<Response> 회원탈퇴_요청(String token, long id) {
         return RestAssured
                 .given().log().all()
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/api/customers/" + id)
                 .then().log().all()
