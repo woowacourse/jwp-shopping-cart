@@ -11,6 +11,9 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
 
 @DisplayName("회원 관련 기능")
@@ -22,7 +25,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     private static final String ADDRESS = "서울 강남구 테헤란로 411, 성담빌딩 13층 (선릉 캠퍼스)";
     private static final String PHONE_NUMBER = "010-0000-0000";
 
-    @DisplayName("회원가입")
+    @DisplayName("회원가입을 한다.")
     @Test
     void addCustomer() {
         CustomerSaveRequest request = new CustomerSaveRequest(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
@@ -39,17 +42,51 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         });
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("내 정보를 조회한다.")
     @Test
     void getMe() {
+        CustomerSaveRequest request = new CustomerSaveRequest(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+
+        String accessToken = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new TokenRequest(USERNAME, PASSWORD))
+                .when().post("/api/auth/token")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(TokenResponse.class)
+                .getAccessToken();
+
+        CustomerResponse customerResponse = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(CustomerResponse.class);
+
+        assertAll(() -> {
+            assertThat(customerResponse.getId()).isNotNull();
+            assertThat(customerResponse.getUsername()).isEqualTo(USERNAME);
+            assertThat(customerResponse.getEmail()).isEqualTo(EMAIL);
+            assertThat(customerResponse.getAddress()).isEqualTo(ADDRESS);
+            assertThat(customerResponse.getPhoneNumber()).isEqualTo(PHONE_NUMBER);
+        });
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("내 정보를 수정한다.")
     @Test
     void updateMe() {
     }
 
-    @DisplayName("회원탈퇴")
+    @DisplayName("회원을 탈퇴한다.")
     @Test
     void deleteMe() {
     }
