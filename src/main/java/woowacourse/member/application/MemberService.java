@@ -2,7 +2,7 @@ package woowacourse.member.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.LonginRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.Password;
@@ -32,7 +32,7 @@ public class MemberService {
         memberDao.save(member);
     }
 
-    public void verifyValidMember(LonginRequest request) {
+    public void verifyValidMember(LoginRequest request) {
         Optional<String> savedPassword = memberDao.findPasswordByEmail(request.getEmail());
 
         if (savedPassword.isEmpty()) {

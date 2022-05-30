@@ -1,7 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.dto.LonginRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 
@@ -14,7 +14,7 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public TokenResponse createToken(LonginRequest request) {
+    public TokenResponse createToken(LoginRequest request) {
         return new TokenResponse(jwtTokenProvider.createToken(request.getEmail()));
     }
 }

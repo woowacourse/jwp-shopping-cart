@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.dto.LonginRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.exception.InvalidMemberEmailException;
 import woowacourse.member.exception.LonginWrongEmailException;
@@ -46,7 +46,7 @@ class MemberServiceTest {
     @Test
     void verifyValidMember() {
         assertDoesNotThrow(
-                () -> memberService.verifyValidMember(new LonginRequest("ari@wooteco.com","Wooteco1!"))
+                () -> memberService.verifyValidMember(new LoginRequest("ari@wooteco.com","Wooteco1!"))
         );
     }
 
@@ -54,7 +54,7 @@ class MemberServiceTest {
     @Test
     void verifyValidMemberWithNotExistEmail(){
         assertThatThrownBy(
-                () -> memberService.verifyValidMember(new LonginRequest("pobi@wooteco.com","Wooteco!"))
+                () -> memberService.verifyValidMember(new LoginRequest("pobi@wooteco.com","Wooteco!"))
         ).isInstanceOf(LonginWrongEmailException.class)
                 .hasMessageContaining("존재하지 않는 이메일입니다.");
     }
@@ -63,7 +63,7 @@ class MemberServiceTest {
     @Test
     void verifyValidMemberWithWrongPassword() {
         assertThatThrownBy(
-                () -> memberService.verifyValidMember(new LonginRequest("ari@wooteco.com","Javajigi!!"))
+                () -> memberService.verifyValidMember(new LoginRequest("ari@wooteco.com","Javajigi!!"))
         ).isInstanceOf(LonginWrongPasswordException.class)
                 .hasMessageContaining("잘못된 비밀번호입니다.");
     }
