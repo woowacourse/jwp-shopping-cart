@@ -1,10 +1,16 @@
 package woowacourse.helper.fixture;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Objects;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.member.dto.MemberRegisterRequest;
 
 public enum TMember {
@@ -24,13 +30,30 @@ public enum TMember {
         this.name = name;
     }
 
-    public RegisterAnd registerAnd() {
-        return new RegisterAnd(this);
-    }
-
     public ExtractableResponse<Response> register() {
         return request("/api/members", new MemberRegisterRequest(email, password, name));
     }
+
+    public TokenResponse login() {
+        if (Objects.nonNull(token)) {
+            return new TokenResponse(token);
+        }
+        ExtractableResponse<Response> response = request("/api/auth", new TokenRequest(email, password));
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+
+        TokenResponse tokenResponse = response
+                .as(TokenResponse.class);
+        token = tokenResponse.getAccessToken();
+        return tokenResponse;
+    }
+
+    public ErrorResponse failedLogin(String wrongPassword) {
+        ExtractableResponse<Response> response = request("/api/auth", new TokenRequest(email, wrongPassword));
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+
+        return response.as(ErrorResponse.class);
+    }
+
 
     private ExtractableResponse<Response> request(String url, Object params) {
         return RestAssured.given().log().all()
@@ -40,10 +63,6 @@ public enum TMember {
                 .post(url)
                 .then().log().all()
                 .extract();
-    }
-
-    public void putToken(String token) {
-        this.token = token;
     }
 
     public String getEmail() {

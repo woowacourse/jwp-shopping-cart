@@ -17,14 +17,16 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("올바른 email, password를 입력할 경우 토큰을 헤더로 반환하고 200 OK를 반환한다.")
     @Test
     void login() {
-        TokenResponse response = MARU.registerAnd().login();
+        MARU.register();
+        TokenResponse response = MARU.login();
         assertThat(response.getAccessToken()).isNotNull();
     }
 
     @DisplayName("틀린 비밀번호를 입력할 경우 400 badRequest와 에러메시지를 반환한다.")
     @Test
     void loginFailed() {
-        ErrorResponse errorResponse = MARU.registerAnd().failedLogin("Wrongpw1234!");
+        MARU.register();
+        ErrorResponse errorResponse = MARU.failedLogin("Wrongpw1234!");
         assertThat(errorResponse.getMessage()).isEqualTo("[ERROR] 비밀번호가 틀렸습니다.");
     }
 
