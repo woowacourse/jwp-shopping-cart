@@ -48,4 +48,11 @@ public class MemberDao {
                 .stream()
                 .findAny();
     }
+
+    public void updateNicknameByEmail(String email, String nickname) {
+        String sql = "UPDATE MEMBER SET nickname = :nickname WHERE email = :email";
+        SqlParameterSource parameters = new MapSqlParameterSource("email", email)
+                .addValue("nickname", nickname);
+        namedParameterJdbcTemplate.update(sql, parameters);
+    }
 }

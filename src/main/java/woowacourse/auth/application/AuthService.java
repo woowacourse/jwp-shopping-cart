@@ -7,6 +7,7 @@ import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
 import woowacourse.auth.dto.MemberResponse;
+import woowacourse.auth.dto.NicknameUpdateRequest;
 import woowacourse.auth.dto.PasswordCheckRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 
@@ -71,5 +72,16 @@ public class AuthService {
     public MemberResponse findAuthorizedMemberByToken(String token) {
         Member member = findMemberByToken(token);
         return new MemberResponse(member);
+    }
+
+    public void updateNickname(String email, NicknameUpdateRequest nicknameUpdateRequest) {
+        validateExists(email);
+        memberDao.updateNicknameByEmail(email, nicknameUpdateRequest.getNickname());
+    }
+
+    private void validateExists(String email) {
+        if (!existsEmail(email)) {
+            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+        }
     }
 }

@@ -14,6 +14,7 @@ import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
 import woowacourse.auth.dto.MemberResponse;
+import woowacourse.auth.dto.NicknameUpdateRequest;
 import woowacourse.auth.dto.PasswordCheckRequest;
 
 @SpringBootTest
@@ -98,5 +99,27 @@ class AuthServiceTest {
 
         assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com");
         assertThat(memberResponse.getNickname()).isEqualTo("닉네임");
+    }
+
+    @DisplayName("이메일과 닉네임을 받아 회원 정보를 수정한다.")
+    @Test
+    void updateNickname() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        authService.save(memberCreateRequest);
+
+        authService.updateNickname("abc@woowahan.com", new NicknameUpdateRequest("바뀐닉네임"));
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+        String nickname = authService.login(loginRequest)
+                .getNickname();
+
+        assertThat(nickname).isEqualTo("바뀐닉네임");
+    }
+
+    @DisplayName("존재하지 않는 회원의 닉네임을 수정하려고 하면 예외를 반환한다.")
+    @Test
+    void updateNickName_NotFoundMember() {
+        assertThatThrownBy(() -> authService.updateNickname("abc@woowahan.com", new NicknameUpdateRequest("바뀐닉네임")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
     }
 }
