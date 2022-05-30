@@ -5,19 +5,19 @@ import java.util.regex.Pattern;
 public class Customer {
     private final Long id;
     private final String loginId;
-    private final String userName;
+    private final String name;
     private final String password;
 
-    public Customer(String loginId, String userName, String password) {
-        this(null, loginId, userName, password);
+    public Customer(String loginId, String name, String password) {
+        this(null, loginId, name, password);
     }
 
-    public Customer(Long id, String loginId, String userName, String password) {
+    public Customer(Long id, String loginId, String name, String password) {
         validateLoginId(loginId);
         validatePassword(password);
         this.id = id;
         this.loginId = loginId;
-        this.userName = userName;
+        this.name = name;
         this.password = password;
     }
 
@@ -43,8 +43,8 @@ public class Customer {
         return loginId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
     public String getPassword() {

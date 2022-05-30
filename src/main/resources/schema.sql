@@ -12,7 +12,7 @@ create table customer
 (
     id       bigint       not null auto_increment,
     loginid  varchar(255) not null unique,
-    username varchar(255) not null,
+    name     varchar(255) not null,
     password varchar(255) not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;

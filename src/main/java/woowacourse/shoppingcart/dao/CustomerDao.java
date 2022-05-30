@@ -20,7 +20,7 @@ public class CustomerDao {
     private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) -> new Customer(
             resultSet.getLong("id"),
             resultSet.getString("loginid"),
-            resultSet.getString("username"),
+            resultSet.getString("name"),
             resultSet.getString("password")
     );
 
@@ -45,7 +45,7 @@ public class CustomerDao {
 
     public Long findIdByUserName(final String userName) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = :username";
+            final String query = "SELECT id FROM customer WHERE name = :username";
             return namedParameterJdbcTemplate.queryForObject(query,
                     Map.of("username", userName.toLowerCase(Locale.ROOT)), Long.class);
         } catch (final EmptyResultDataAccessException e) {
@@ -55,7 +55,7 @@ public class CustomerDao {
 
     public Customer findById(Long id) {
         try {
-            final String query = "SELECT id, loginid, username, password FROM customer WHERE id = :id";
+            final String query = "SELECT id, loginid, name, password FROM customer WHERE id = :id";
             return namedParameterJdbcTemplate.queryForObject(query, Map.of("id", id), ROW_MAPPER);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();

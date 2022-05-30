@@ -32,7 +32,7 @@ class CustomerServiceTest {
         // then
         Assertions.assertAll(
                 () -> assertThat(customerResponse.getLoginId()).isEqualTo(페퍼_아이디),
-                () -> assertThat(customerResponse.getUserName()).isEqualTo(페퍼_이름)
+                () -> assertThat(customerResponse.getName()).isEqualTo(페퍼_이름)
         );
     }
 
