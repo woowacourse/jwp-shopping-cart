@@ -1,9 +1,7 @@
 package woowacourse.member.dao;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
@@ -11,9 +9,9 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.domain.Member;
 
 import javax.sql.DataSource;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -36,4 +34,17 @@ class MemberDaoTest {
         assertThat(memberDao.existMemberByEmail(email)).isTrue();
     }
 
+    @DisplayName("이메일로 비밀번호를 찾아 반환한다.")
+    @Test
+    void findPasswordByEmail() {
+        Optional<String> result = memberDao.findPasswordByEmail("ari@wooteco.com");
+        assertThat(result.get()).isEqualTo("1ebe88ec1665d6f66f0925713af52a92cc340bbd95d168680e26037097baa00f");
+    }
+
+    @DisplayName("이메일로 비밀번호를 찾아 반환한다.")
+    @Test
+    void findPasswordByNotExistEmail() {
+        Optional<String> result = memberDao.findPasswordByEmail("pobi@wooteco.com");
+        assertThat(result).isEmpty();
+    }
 }

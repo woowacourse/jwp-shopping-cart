@@ -5,8 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.dto.LonginRequest;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.exception.InvalidMemberEmailException;
+import woowacourse.member.exception.LonginWrongEmailException;
+import woowacourse.member.exception.LonginWrongPasswordException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -37,5 +40,31 @@ class MemberServiceTest {
                 () -> memberService.signUp(new SignUpRequest("ari@wooteco.com", "가짜아리", "Wooteco!"))
         ).isInstanceOf(InvalidMemberEmailException.class)
                 .hasMessageContaining("중복되는 이메일이 존재합니다.");
+    }
+
+    @DisplayName("올바른 데이터로 로그인에 성공한다.")
+    @Test
+    void verifyValidMember() {
+        assertDoesNotThrow(
+                () -> memberService.verifyValidMember(new LonginRequest("ari@wooteco.com","Wooteco1!"))
+        );
+    }
+
+    @DisplayName("존재하지 않는 이메일인 경우 예외가 발생한다.")
+    @Test
+    void verifyValidMemberWithNotExistEmail(){
+        assertThatThrownBy(
+                () -> memberService.verifyValidMember(new LonginRequest("pobi@wooteco.com","Wooteco!"))
+        ).isInstanceOf(LonginWrongEmailException.class)
+                .hasMessageContaining("존재하지 않는 이메일입니다.");
+    }
+
+    @DisplayName("잘못된 비밀번호인 경우 예외가 발생한다.")
+    @Test
+    void verifyValidMemberWithWrongPassword() {
+        assertThatThrownBy(
+                () -> memberService.verifyValidMember(new LonginRequest("ari@wooteco.com","Javajigi!!"))
+        ).isInstanceOf(LonginWrongPasswordException.class)
+                .hasMessageContaining("잘못된 비밀번호입니다.");
     }
 }

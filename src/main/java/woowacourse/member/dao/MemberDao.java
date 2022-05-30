@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.exception.InvalidMemberException;
 
 import javax.sql.DataSource;
 import java.util.Locale;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -33,6 +34,16 @@ public class MemberDao {
     public boolean existMemberByEmail(String email) {
         String SQL = "SELECT EXISTS (SELECT * FROM MEMBER WHERE email = ?)";
         return jdbcTemplate.queryForObject(SQL, Boolean.class, email);
+    }
+
+    public Optional<String> findPasswordByEmail(String email) {
+        try {
+            String SQL = "SELECT password FROM member WHERE email = ?";
+            String password = jdbcTemplate.queryForObject(SQL, String.class, email);
+            return Optional.ofNullable(password);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Long findIdByUserName(final String userName) {

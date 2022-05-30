@@ -43,4 +43,8 @@ public class Password {
             throw new InvalidPasswordException("비밀번호는 특수문자(!,@,?,-)를 포함해야 합니다");
         }
     }
+
+    public boolean isSameAs(String comparison) {
+        return value.equals(comparison);
+    }
 }
