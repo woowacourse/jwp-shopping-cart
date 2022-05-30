@@ -18,6 +18,9 @@ public class AuthenticationContext {
     }
 
     public void setPrincipal(final String principal) {
+        if (Objects.nonNull(this.principal)) {
+            throw new IllegalStateException("이미 principal 정보가 있어 수정할 수 없습니다.");
+        }
         this.principal = principal;
     }
 }
