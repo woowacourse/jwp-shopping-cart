@@ -3,7 +3,6 @@ package woowacourse.auth.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,4 +36,12 @@ class AccountTest {
                 .withMessage(String.format("계정은 4 ~ 15자로 생성 가능합니다. 입력값: %s", value));
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {" yeon06 ", "yeon06 ", " yeon06"})
+    void 앞뒤_공백_제거_후_생성(String value) {
+        Account account = new Account(value);
+        Account expectedAccount = new Account("yeon06");
+
+        assertThat(account).isEqualTo(expectedAccount);
+    }
 }

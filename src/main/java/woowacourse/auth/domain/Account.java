@@ -1,5 +1,6 @@
 package woowacourse.auth.domain;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Account {
@@ -9,6 +10,7 @@ public class Account {
     private final String value;
 
     public Account(String value) {
+        value = value.trim();
         validate(value);
         this.value = value;
     }
@@ -24,4 +26,20 @@ public class Account {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Account)) {
+            return false;
+        }
+        Account account = (Account) o;
+        return Objects.equals(value, account.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
 }
