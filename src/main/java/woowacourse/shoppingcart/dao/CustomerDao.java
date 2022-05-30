@@ -54,4 +54,13 @@ public class CustomerDao {
         final long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return new Customer(id, customer.getName(), customer.getEmail(), customer.getPassword());
     }
+
+    public boolean existsByEmail(final Customer customer) {
+        final String sql = "SELECT EXISTS (SELECT * FROM customer WHERE email = :email)";
+
+        final Map<String, Object> params = new HashMap<>();
+        params.put("email", customer.getEmail());
+
+        return Boolean.TRUE.equals(namedJdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
 }

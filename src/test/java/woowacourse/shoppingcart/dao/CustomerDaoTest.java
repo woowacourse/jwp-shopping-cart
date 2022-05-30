@@ -68,4 +68,18 @@ public class CustomerDaoTest {
                 .ignoringFields("id")
                 .isEqualTo(customer);
     }
+
+    @Test
+    @DisplayName("중복된 이메일이 있는지 확인한다.")
+    void existsByEmail() {
+        // given
+        final Customer customer = new Customer("썬", "sunyong@gmail.com", "12345678");
+        customerDao.save(customer);
+
+        // when
+        final Customer duplicatedEmailCustomer = new Customer("라라", "sunyong@gmail.com", "12345678");
+
+        // then
+        assertThat(customerDao.existsByEmail(duplicatedEmailCustomer)).isTrue();
+    }
 }
