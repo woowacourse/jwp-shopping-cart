@@ -18,36 +18,34 @@ create table user
     email             varchar(255) not null unique,
     password          varchar(255) not null,
     profile_image_url varchar(255) not null,
-    privacy_id        bigint       not null,
     created_at        timestamp default current_timestamp,
     terms             tinyint(1) not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-alter table user
-    foreign key (privacy_id) references privacy (id);
-
 create table privacy
 (
-    id              bigint       not null auto_increment,
-    name            varchar(255) not null,
-    gender          varchar(9)   not null,
-    birth_day       timestamp,
-    full_address_id bigint       not null,
-    primary key (id)
+    user_id   bigint       not null,
+    name      varchar(255) not null,
+    gender    varchar(9)   not null,
+    birth_day timestamp,
+    primary key (user_id)
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table privacy
-    foreign key (full_address_id) references full_address (id);
+    foreign key (user_id) references user (id);
 
 create table full_address
 (
-    id             bigint       not null auto_increment,
+    user_id        bigint       not null,
     address        varchar(255) not null,
     detail_address varchar(255),
     zone_code      char(5)      not null,
-    primary key (id)
+    primary key (user_id)
 ) engine=InnoDB default charset=utf8mb4;
+
+alter table full_address
+    foreign key (user_id) references user (id);
 
 create table product
 (
