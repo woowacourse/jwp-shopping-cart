@@ -51,16 +51,21 @@ public class MemberDao {
 
     public void updateNicknameByEmail(String email, String nickname) {
         String sql = "UPDATE MEMBER SET nickname = :nickname WHERE email = :email";
-        SqlParameterSource parameters = new MapSqlParameterSource("email", email)
+        SqlParameterSource params = new MapSqlParameterSource("email", email)
                 .addValue("nickname", nickname);
-        namedParameterJdbcTemplate.update(sql, parameters);
+        namedParameterJdbcTemplate.update(sql, params);
     }
-
 
     public void updatePasswordByEmail(String email, String password) {
         String sql = "UPDATE MEMBER SET password = :password WHERE email = :email";
-        SqlParameterSource parameters = new MapSqlParameterSource("email", email)
+        SqlParameterSource params = new MapSqlParameterSource("email", email)
                 .addValue("password", password);
-        namedParameterJdbcTemplate.update(sql, parameters);
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    public void deleteByEmail(String email) {
+        String sql = "DELETE FROM MEMBER WHERE email = :email";
+        SqlParameterSource params = new MapSqlParameterSource("email", email);
+        namedParameterJdbcTemplate.update(sql, params);
     }
 }

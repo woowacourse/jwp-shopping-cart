@@ -86,4 +86,16 @@ class MemberDaoTest {
                 .orElseGet(() -> fail("실패"));
         assertThat(foundMember.getPassword()).isEqualTo("1q2w3e4r@");
     }
+
+    @DisplayName("회원을 삭제한다.")
+    @Test
+    void deleteByEmail() {
+        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        memberDao.save(member);
+
+        memberDao.deleteByEmail(member.getEmail());
+        boolean actual = memberDao.existsEmail(member.getEmail());
+
+        assertThat(actual).isFalse();
+    }
 }

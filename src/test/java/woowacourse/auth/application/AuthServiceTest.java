@@ -168,4 +168,24 @@ class AuthServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호 형식이 올바르지 않습니다.");
     }
+
+    @DisplayName("이메일이 일치하는 회원 정보를 삭제한다.")
+    @Test
+    void deleteMember() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        authService.save(memberCreateRequest);
+
+        authService.delete("abc@woowahan.com");
+        boolean actual = authService.existsEmail("abc@woowahan.com");
+
+        assertThat(actual).isFalse();
+    }
+
+    @DisplayName("존재하지 않는 회원을 삭제하려 하면 예외를 반환한다.")
+    @Test
+    void deleteMember_NotFoundMember() {
+        assertThatThrownBy(() -> authService.delete("abc@woowahan.com"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
 }

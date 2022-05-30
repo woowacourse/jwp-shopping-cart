@@ -96,4 +96,9 @@ public class AuthService {
                 .getValue();
         memberDao.updatePasswordByEmail(email, password);
     }
+
+    public void delete(String email) {
+        validateExists(email);
+        memberDao.deleteByEmail(email);
+    }
 }
