@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +24,19 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
+    @DisplayName("email, nickname, password를 통해 customer를 생성한다.")
+    @Test
+    void saveCustomer() {
+        // given
+        Customer customer = new Customer("awesomeo@gmail.com", "awesomeo", "Password123!");
+
+        // when
+        Long savedId = customerDao.save(customer);
+
+        // then
+        assertThat(savedId).isNotNull();
+    }
+
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
@@ -31,7 +45,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByNickname(userName);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -42,10 +56,10 @@ public class CustomerDaoTest {
     void findIdByUserNameTestIgnoreUpperLowerCase() {
 
         // given
-        final String userName = "gwangyeol-iM";
+        final String userName = "gwangyeol";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByNickname(userName);
 
         // then
         assertThat(customerId).isEqualTo(16L);

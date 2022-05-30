@@ -54,4 +54,16 @@ public class Customer {
             throw new IllegalArgumentException("닉네임 형식이 맞지 않습니다.");
         }
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }
