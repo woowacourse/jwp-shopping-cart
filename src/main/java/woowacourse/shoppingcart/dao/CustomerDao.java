@@ -3,7 +3,9 @@ package woowacourse.shoppingcart.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -57,5 +59,11 @@ public class CustomerDao {
             String password = rs.getString("password");
             return new Customer(id, userName, password);
         };
+    }
+
+    public Optional<Customer> findById(final Long id) {
+        final String query = "SELECT id, username, password FROM customer WHERE id = ?";
+        final List<Customer> customers = jdbcTemplate.query(query, rowMapper(), id);
+        return Optional.ofNullable(DataAccessUtils.singleResult(customers));
     }
 }

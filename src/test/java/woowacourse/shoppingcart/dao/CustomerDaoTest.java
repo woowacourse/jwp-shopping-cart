@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -78,5 +80,23 @@ public class CustomerDaoTest {
 
         // then
         assertThat(result).isTrue();
+    }
+
+    @DisplayName("id를 통해서 customer정보를 가져온다.")
+    @Test
+    void findById() {
+
+        // given
+        final Long id = 1L;
+
+        // when
+        final Customer customer = customerDao.findById(id).get();
+
+        // then
+        assertAll(
+                () -> assertThat(customer.getId()).isEqualTo(id),
+                () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
+                () -> assertThat(customer.getPassword()).isEqualTo("123")
+        );
     }
 }

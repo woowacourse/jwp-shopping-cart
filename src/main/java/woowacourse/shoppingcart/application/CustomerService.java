@@ -3,8 +3,11 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.DuplicatedNameException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 public class CustomerService {
@@ -25,5 +28,11 @@ public class CustomerService {
         if (customerDao.existsByUserName(name)) {
             throw new DuplicatedNameException();
         }
+    }
+
+    public CustomerResponse getMeById(final Long id) {
+        final Customer customer = customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
+        return new CustomerResponse(customer);
     }
 }

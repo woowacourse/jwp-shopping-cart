@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -42,6 +43,25 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
+        // given
+        final long id = 1L;
+
+        // when
+        ExtractableResponse<Response> extractableResponse = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/" + id)
+                .then().log().all()
+                .extract();
+
+        final CustomerResponse response = extractableResponse.as(CustomerResponse.class);
+
+        // then
+        assertAll(
+                () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.getUserName()).isEqualTo("puterism")
+        );
+
     }
 
     @DisplayName("내 정보 수정")
