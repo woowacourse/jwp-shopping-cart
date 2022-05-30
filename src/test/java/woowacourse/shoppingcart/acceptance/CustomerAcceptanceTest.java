@@ -15,6 +15,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -84,6 +85,51 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보를 수정한다.")
     @Test
     void updateMe() {
+        CustomerSaveRequest request = new CustomerSaveRequest(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+
+        String accessToken = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new TokenRequest(USERNAME, PASSWORD))
+                .when().post("/api/auth/token")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(TokenResponse.class)
+                .getAccessToken();
+
+        String address = "선릉역";
+        String phoneNumber = "010-1111-1111";
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CustomerUpdateRequest(address, phoneNumber))
+                .when().put("/api/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .extract();
+
+        CustomerResponse customerResponse = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(CustomerResponse.class);
+
+        assertAll(() -> {
+            assertThat(customerResponse.getId()).isNotNull();
+            assertThat(customerResponse.getUsername()).isEqualTo(USERNAME);
+            assertThat(customerResponse.getEmail()).isEqualTo(EMAIL);
+            assertThat(customerResponse.getAddress()).isEqualTo(address);
+            assertThat(customerResponse.getPhoneNumber()).isEqualTo(phoneNumber);
+        });
     }
 
     @DisplayName("회원을 탈퇴한다.")
