@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.domain.Customer;
 
 public class GetMeResponse {
 
@@ -15,6 +16,10 @@ public class GetMeResponse {
         this.username = username;
         this.nickname = nickname;
         this.age = age;
+    }
+
+    public GetMeResponse(Customer customer) {
+        this(customer.getUsername(), customer.getNickname(), customer.getAge());
     }
 
     public String getUsername() {
