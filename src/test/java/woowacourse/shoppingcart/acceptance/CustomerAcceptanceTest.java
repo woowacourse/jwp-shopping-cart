@@ -68,7 +68,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         String accessToken = 회원_가입_후_로그인();
-        CustomerUpdateRequest request = new CustomerUpdateRequest("changedPassword123", "01087654321", "루터회관");
+        CustomerUpdateRequest request = new CustomerUpdateRequest("01087654321", "루터회관");
 
         ExtractableResponse<Response> response = 회원_정보_수정_요청(accessToken, request);
         회원_정보_수정_성공(response);

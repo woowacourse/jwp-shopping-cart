@@ -6,9 +6,6 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 public class CustomerUpdateRequest {
 
     @NotBlank
-    private String password;
-
-    @NotBlank
     private String phoneNumber;
 
     @NotBlank
@@ -17,8 +14,7 @@ public class CustomerUpdateRequest {
     private CustomerUpdateRequest() {
     }
 
-    public CustomerUpdateRequest(final String password, final String phoneNumber, final String address) {
-        this.password = password;
+    public CustomerUpdateRequest(final String phoneNumber, final String address) {
         this.phoneNumber = phoneNumber;
         this.address = address;
     }
@@ -26,14 +22,9 @@ public class CustomerUpdateRequest {
     public Customer toCustomerWithUsername(final String username) {
         return Customer.builder()
                 .username(username)
-                .password(password)
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .build();
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getPhoneNumber() {
