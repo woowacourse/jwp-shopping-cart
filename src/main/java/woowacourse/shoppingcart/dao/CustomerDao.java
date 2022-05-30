@@ -36,11 +36,11 @@ public class CustomerDao {
         return new Customer(id, customer);
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByUsername(String username) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
+            String sql = "SELECT id FROM customer WHERE username = ?";
+            return jdbcTemplate.queryForObject(sql, Long.class, username.toLowerCase(Locale.ROOT));
+        } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }
