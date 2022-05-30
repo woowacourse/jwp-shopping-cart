@@ -10,7 +10,6 @@ import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.dto.SignUpRequest;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.utils.EmailUtil;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 
 @DisplayName("회원 관련 기능")
@@ -49,7 +48,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/auth/login")
+                .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
         //when
@@ -58,7 +57,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/" + EmailUtil.getIdentifier(signUpRequest.getEmail()))
+                .when().get("/users/" + signUpRequest.getUsername())
                 .then().log().all().statusCode(HttpStatus.OK.value());
     }
 
@@ -81,7 +80,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/auth/login")
+                .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
         //when
@@ -92,7 +91,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(updatePasswordRequest)
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/users/" + EmailUtil.getIdentifier(signUpRequest.getEmail()))
+                .when().patch("/users/" + signUpRequest.getUsername())
                 .then().log().all().statusCode(HttpStatus.OK.value());
     }
 
@@ -115,7 +114,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/auth/login")
+                .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1234");

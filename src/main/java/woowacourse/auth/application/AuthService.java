@@ -20,7 +20,7 @@ public class AuthService {
     }
 
     public SignInResponse signIn(SignInRequest signInRequest) {
-        if (!customerDao.existByEmailAndPassword(signInRequest.getEmail(), signInRequest.getPassword())) {
+        if (!customerDao.isValidPasswordByEmail(signInRequest.getEmail(), signInRequest.getPassword())) {
             throw new InvalidCustomerException("로그인 실패");
         }
 
@@ -29,7 +29,7 @@ public class AuthService {
         return new SignInResponse(
                 customer.getUsername(),
                 customer.getEmail(),
-                jwtTokenProvider.createToken(customer.getEmail())
+                jwtTokenProvider.createToken(customer.getUsername())
         );
     }
 }

@@ -10,7 +10,6 @@ import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 
 @RestController
-@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;

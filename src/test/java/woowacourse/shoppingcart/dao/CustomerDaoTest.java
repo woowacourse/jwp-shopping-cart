@@ -33,10 +33,10 @@ public class CustomerDaoTest {
     }
 
     @Test
-    @DisplayName("이메일로 회원 정보를 찾는다.")
-    void findByEmail() {
+    @DisplayName("유저이름으로 회원 정보를 찾는다.")
+    void findByUsername() {
         Customer customer = customerDao.save(new Customer("레넌", "rennon@woowa.com", "1234"));
-        Customer foundCustomer = customerDao.findByEmail(customer.getEmail());
+        Customer foundCustomer = customerDao.findByUsername(customer.getUsername());
 
         assertThat(foundCustomer.getEmail()).isEqualTo("rennon@woowa.com");
     }
@@ -46,7 +46,7 @@ public class CustomerDaoTest {
     void existEmail() {
         Customer customer = customerDao.save(new Customer("레넌", "rennon@woowa.com", "1234"));
 
-        assertThat(customerDao.existByEmailAndPassword(customer.getEmail(), customer.getPassword())).isTrue();
+        assertThat(customerDao.isValidPasswordByEmail(customer.getEmail(), customer.getPassword())).isTrue();
     }
 
     @Test
@@ -62,7 +62,7 @@ public class CustomerDaoTest {
     void isValidPassword() {
         customerDao.save(new Customer("레넌", "rennon@woowa.com", "1234"));
 
-        assertThat(customerDao.isValidPassword("레넌", "1234")).isTrue();
+        assertThat(customerDao.isValidPasswordByUsername("레넌", "1234")).isTrue();
     }
 
     @Test
@@ -70,7 +70,7 @@ public class CustomerDaoTest {
     void isInvalidPassword() {
         customerDao.save(new Customer("레넌", "rennon@woowa.com", "1234"));
 
-        assertThat(customerDao.isValidPassword("레넌", "1235")).isFalse();
+        assertThat(customerDao.isValidPasswordByUsername("레넌", "1235")).isFalse();
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -81,7 +81,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Customer customer = customerDao.findByUserName(userName);
+        final Customer customer = customerDao.findByUsername(userName);
 
         // then
         assertThat(customer.getId()).isEqualTo(1L);
@@ -95,7 +95,7 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Customer customer = customerDao.findByUserName(userName);
+        final Customer customer = customerDao.findByUsername(userName);
 
         // then
         assertThat(customer.getId()).isEqualTo(16L);

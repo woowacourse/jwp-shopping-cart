@@ -15,7 +15,6 @@ import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.SignUpRequest;
 import woowacourse.auth.dto.SignUpResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.utils.EmailUtil;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 
@@ -32,26 +31,26 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         SignUpResponse signUpresponse = customerService.addCustomer(signUpRequest);
-        return ResponseEntity.created(URI.create("/users/" + EmailUtil.getIdentifier(signUpresponse.getEmail())))
+        return ResponseEntity.created(URI.create("/users/" + signUpRequest.getUsername()))
                 .body(signUpresponse);
     }
 
-    @GetMapping("/{headOfEmail}")
-    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String email,
-                                                  @PathVariable String headOfEmail) {
-        return ResponseEntity.ok().body(customerService.findMe(email));
+    @GetMapping("/{username}")
+    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String userNameByToken,
+                                                  @PathVariable String username) {
+        return ResponseEntity.ok().body(customerService.findMe(username));
     }
 
-    @PatchMapping("/{headOfEmail}")
-    public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal String email,
-                                                     @PathVariable String headOfEmail,
+    @PatchMapping("/{username}")
+    public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal String userNameByToken,
+                                                     @PathVariable String username,
                                                      @RequestBody UpdatePasswordRequest updatePasswordRequest) {
-        customerService.updateMe(email, updatePasswordRequest);
+        customerService.updateMe(username, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{username}")
-    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal String email,
+    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal String userNameByToken,
                                          @PathVariable String username,
                                          @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
         customerService.deleteMe(username, deleteCustomerRequest);

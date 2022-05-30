@@ -38,7 +38,7 @@ public class CustomerDao {
         String password = customer.getPassword();
 
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("username", username)
+                .addValue("username", username.toLowerCase(Locale.ROOT))
                 .addValue("email", email)
                 .addValue("password", password);
 
@@ -46,19 +46,10 @@ public class CustomerDao {
         return new Customer(id, username, email, password);
     }
 
-    public Customer findByUserName(final String userName) {
+    public Customer findByUsername(String username) {
         try {
             final String query = "SELECT id, username, email, password FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, customerRowMapper, userName.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
-    }
-
-    public Customer findByEmail(String email) {
-        try {
-            final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
-            return jdbcTemplate.queryForObject(query, customerRowMapper, email.toLowerCase(Locale.ROOT));
+            return jdbcTemplate.queryForObject(query, customerRowMapper, username.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
@@ -73,7 +64,16 @@ public class CustomerDao {
         }
     }
 
-    public boolean existByEmailAndPassword(String email, String password) {
+    public boolean isValidPasswordByUsername(String username, String password) {
+        try {
+            final String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ? AND password = ?)";
+            return jdbcTemplate.queryForObject(query, Boolean.class, username, password);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public boolean isValidPasswordByEmail(String email, String password) {
         try {
             final String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ? AND password = ?)";
             return jdbcTemplate.queryForObject(query, Boolean.class, email, password);
@@ -87,17 +87,17 @@ public class CustomerDao {
         jdbcTemplate.update(query, password, id);
     }
 
-    public boolean isValidPassword(String username, String password) {
-        try {
-            final String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ? AND password = ?)";
-            return jdbcTemplate.queryForObject(query, Boolean.class, username, password);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
-    }
-
     public void deleteByUserName(String username) {
         final String query = "DELETE FROM customer WHERE username = ?";
         jdbcTemplate.update(query, username);
+    }
+
+    public Customer findByEmail(String email) {
+        try {
+            final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
+            return jdbcTemplate.queryForObject(query, customerRowMapper, email);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
     }
 }

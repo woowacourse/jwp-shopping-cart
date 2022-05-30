@@ -12,7 +12,6 @@ import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.dto.SignUpRequest;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.utils.EmailUtil;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
@@ -38,7 +37,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/auth/login")
+                .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
         // then
@@ -65,17 +64,16 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/auth/login")
+                .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
         // when
         // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
-        String headOfEmail = EmailUtil.getIdentifier(signUpRequest.getEmail());
         CustomerResponse response = RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/" + headOfEmail)
+                .when().get("/users/" + signUpRequest.getUsername())
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
         // then
@@ -108,7 +106,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/auth/login")
+                .when().post("/login")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -130,13 +128,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         // then
         // 내 정보 조회 요청이 거부된다
-        String headOfEmail = EmailUtil.getIdentifier(signUpRequest.getEmail());
         String token = "dummy";
         RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/" + headOfEmail)
+                .when().get("/users/" + signUpRequest.getUsername())
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }

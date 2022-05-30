@@ -25,15 +25,15 @@ public class CustomerService {
         return SignUpResponse.fromCustomer(customer);
     }
 
-    public CustomerResponse findMe(String email) {
-        Customer customer = customerDao.findByEmail(email);
+    public CustomerResponse findMe(String username) {
+        Customer customer = customerDao.findByUsername(username);
         return new CustomerResponse(customer.getUsername(), customer.getEmail());
     }
 
-    public void updateMe(String email, UpdatePasswordRequest updatePasswordRequest) {
-        Customer customer = customerDao.findByEmail(email);
+    public void updateMe(String username, UpdatePasswordRequest updatePasswordRequest) {
+        Customer customer = customerDao.findByUsername(username);
 
-        if (!customerDao.existByEmailAndPassword(email, updatePasswordRequest.getPassword())) {
+        if (!customerDao.isValidPasswordByUsername(username, updatePasswordRequest.getPassword())) {
             throw new InvalidPasswordException();
         }
 
@@ -44,7 +44,7 @@ public class CustomerService {
         if (!customerDao.existByUserName(username)) {
             throw new InvalidCustomerException();
         }
-        if (!customerDao.isValidPassword(username, deleteCustomerRequest.getPassword())) {
+        if (!customerDao.isValidPasswordByUsername(username, deleteCustomerRequest.getPassword())) {
             throw new InvalidPasswordException();
         }
         customerDao.deleteByUserName(username);

@@ -55,7 +55,7 @@ public class CustomerServiceTest {
         customerService.addCustomer(signUpRequest);
 
         // when
-        CustomerResponse response = customerService.findMe("green@woowa.com");
+        CustomerResponse response = customerService.findMe(name);
 
         // then
         assertThat(response.getUsername()).isEqualTo("greenlawn");
@@ -71,10 +71,10 @@ public class CustomerServiceTest {
         customerService.addCustomer(signUpRequest);
 
         // when
-        customerService.updateMe("green@woowa.com", new UpdatePasswordRequest("1234", "5678"));
+        customerService.updateMe(name, new UpdatePasswordRequest("1234", "5678"));
 
         // then
-        assertThat(customerDao.isValidPassword(name, "5678")).isTrue();
+        assertThat(customerDao.isValidPasswordByUsername(name, "5678")).isTrue();
     }
 
     @Test
@@ -88,7 +88,7 @@ public class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() ->
-                customerService.updateMe("green@woowa.com", new UpdatePasswordRequest("1235", "5678")))
+                customerService.updateMe(name, new UpdatePasswordRequest("1235", "5678")))
                 .isInstanceOf(InvalidPasswordException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
     }
@@ -106,7 +106,7 @@ public class CustomerServiceTest {
         customerService.deleteMe(name, new DeleteCustomerRequest("1234"));
 
         // given
-        assertThatThrownBy(() -> customerDao.findByUserName(name))
+        assertThatThrownBy(() -> customerDao.findByUsername(name))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 }
