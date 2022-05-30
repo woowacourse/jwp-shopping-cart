@@ -35,6 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.helper.restdocs.RestDocsTest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
+import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.dto.MemberResponse;
 
@@ -118,5 +119,34 @@ public class MemberControllerTest extends RestDocsTest {
                         fieldWithPath("name").description("수정할 이름")
                 )));
 
+    }
+
+    @DisplayName("비밀번호를 수정한다.")
+    @Test
+    void updatePassword() throws Exception {
+        MemberPasswordUpdateRequest memberPasswordUpdateRequest =
+                new MemberPasswordUpdateRequest(PASSWORD, "NewPassword1!");
+        doNothing().when(memberService).updatePassword(anyLong(), any(MemberPasswordUpdateRequest.class));
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        ResultActions resultActions = mockMvc.perform(put("/api/members/me/password")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memberPasswordUpdateRequest)))
+                .andExpect(status().isNoContent());
+
+        // docs
+        resultActions.andDo(document("member-password-update",
+                getRequestPreprocessor(),
+                getResponsePreprocessor(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                requestFields(
+                        fieldWithPath("oldPassword").description("이전 비밀번호"),
+                        fieldWithPath("newPassword").description("현재 비밀번호")
+                )));
     }
 }

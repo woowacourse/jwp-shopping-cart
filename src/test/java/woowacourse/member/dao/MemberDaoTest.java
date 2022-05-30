@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import woowacourse.member.domain.Member;
+import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -90,5 +91,15 @@ public class MemberDaoTest {
         Member member = memberDao.findById(id).get();
 
         assertThat(member.getName()).isEqualTo("MARU");
+    }
+
+    @DisplayName("비밀번호를 업데를트 한다.")
+    @Test
+    void updatePassword() {
+        Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        memberDao.updatePassword(new Member(id, EMAIL, "Maru1234!", NAME));
+        Member member = memberDao.findById(id).get();
+
+        assertThat(member.getPassword()).isEqualTo("Maru1234!");
     }
 }

@@ -16,12 +16,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
+import woowacourse.member.domain.Member;
 import woowacourse.member.dto.MemberNameUpdateRequest;
+import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.dto.MemberResponse;
 import woowacourse.member.exception.DuplicateMemberEmailException;
 import woowacourse.member.exception.NoMemberException;
 import woowacourse.member.exception.WrongPasswordException;
+import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 
 
 @SpringBootTest
@@ -104,5 +107,15 @@ public class MemberServiceTest {
         memberService.updateName(id, new MemberNameUpdateRequest("MARU"));
 
         assertThat(memberService.getMemberInformation(id).getName()).isEqualTo("MARU");
+    }
+
+    @DisplayName("회원 비밀번호를 수정한다.")
+    @Test
+    void updatePassword() {
+        Long id = memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
+        memberService.updatePassword(id, new MemberPasswordUpdateRequest(PASSWORD,"Maru1234!"));
+
+        Member member = memberDao.findById(id).get();
+        assertThat(member.authenticate(new SHA256PasswordEncoder().encode("Maru1234!"))).isTrue();
     }
 }

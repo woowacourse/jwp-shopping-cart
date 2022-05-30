@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.dto.MemberNameUpdateRequest;
+import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.application.MemberService;
 import woowacourse.member.dto.MemberResponse;
@@ -42,6 +43,13 @@ public class MemberController {
     public ResponseEntity<Void> updateName(@AuthenticationPrincipal Long memberId,
                                            @Valid @RequestBody MemberNameUpdateRequest memberNameUpdateRequest) {
         memberService.updateName(memberId, memberNameUpdateRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/me/password")
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal Long memberId,
+                                               @Valid @RequestBody MemberPasswordUpdateRequest memberPasswordUpdateRequest) {
+        memberService.updatePassword(memberId, memberPasswordUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 }

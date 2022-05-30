@@ -78,4 +78,11 @@ public class MemberDao {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(member);
         namedParameterJdbcTemplate.update(sql, parameters);
     }
+
+    public void updatePassword(final Member member) {
+        String sql = "UPDATE member SET password = :password WHERE id = :id";
+
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(member);
+        namedParameterJdbcTemplate.update(sql, parameters);
+    }
 }
