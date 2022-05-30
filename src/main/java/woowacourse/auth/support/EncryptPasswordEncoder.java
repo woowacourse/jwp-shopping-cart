@@ -28,4 +28,9 @@ public class EncryptPasswordEncoder implements PasswordEncoder {
         }
         return builder.toString();
     }
+
+    @Override
+    public boolean isMatchPassword(final String encodedPassword, final String password) {
+        return encodedPassword.equals(encode(password));
+    }
 }
