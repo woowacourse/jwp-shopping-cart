@@ -96,10 +96,53 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         given(customerDao.findById(id)).willReturn(Optional.empty());
-        
+
         // then
         assertAll(
                 () -> assertThatThrownBy(() -> customerService.getMeById(id))
+                        .isInstanceOf(InvalidCustomerException.class)
+                        .hasMessageContaining("존재하지 않는 유저입니다."),
+                () -> verify(customerDao).findById(id)
+        );
+    }
+
+    @DisplayName("유저의 id과 정보를 받아서, 유저를 수정한다.")
+    @Test
+    void updateById() {
+        // given
+        final Long id = 1L;
+        final String userName = "기론";
+        final String password = "1234";
+        Customer customer = new Customer(id, userName, password);
+        Customer updatedCustomer = new Customer(id, userName, "321");
+        given(customerDao.findById(id)).willReturn(Optional.of(customer));
+        given(customerDao.update(id, userName, "321")).willReturn(updatedCustomer);
+
+        // when
+        CustomerRequest request = new CustomerRequest("기론", "321");
+        CustomerResponse response = customerService.updateById(id, request);
+
+        // then
+        assertAll(
+                () -> assertThat(response.getUserName()).isEqualTo("기론"),
+                () -> verify(customerDao).findById(id),
+                () -> verify(customerDao).update(id, userName, "321")
+        );
+    }
+
+    @DisplayName("존재하지 않는 유저의 id과 정보를 받아서 유저를 수정하면, 예외가 발생한다.")
+    @Test
+    void updateByWrongId() {
+        // given
+        final Long id = 0L;
+        given(customerDao.findById(id)).willReturn(Optional.empty());
+
+        // when
+        CustomerRequest request = new CustomerRequest("기론", "321");
+
+        // then
+        assertAll(
+                () -> assertThatThrownBy(() -> customerService.updateById(id, request))
                         .isInstanceOf(InvalidCustomerException.class)
                         .hasMessageContaining("존재하지 않는 유저입니다."),
                 () -> verify(customerDao).findById(id)

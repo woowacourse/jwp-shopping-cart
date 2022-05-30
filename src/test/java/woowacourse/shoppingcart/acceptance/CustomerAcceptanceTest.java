@@ -61,12 +61,31 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.getUserName()).isEqualTo("puterism")
         );
-
     }
 
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        // given
+        final long id = 1L;
+        CustomerRequest request = new CustomerRequest("puterism", "321");
+
+        // when
+        ExtractableResponse<Response> extractableResponse = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/api/customers/" + id)
+                .then().log().all()
+                .extract();
+
+        final CustomerResponse response = extractableResponse.as(CustomerResponse.class);
+
+        // then
+        assertAll(
+                () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.getUserName()).isEqualTo("puterism")
+        );
     }
 
     @DisplayName("회원탈퇴")

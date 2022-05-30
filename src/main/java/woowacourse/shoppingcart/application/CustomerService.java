@@ -20,8 +20,8 @@ public class CustomerService {
 
     @Transactional
     public Long signUp(CustomerRequest customerRequest) {
-        validateDuplicateName(customerRequest.getName());
-        return customerDao.save(customerRequest.getName(), customerRequest.getPassword());
+        validateDuplicateName(customerRequest.getUserName());
+        return customerDao.save(customerRequest.getUserName(), customerRequest.getPassword());
     }
 
     private void validateDuplicateName(String name) {
@@ -30,9 +30,20 @@ public class CustomerService {
         }
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse getMeById(final Long id) {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
         return new CustomerResponse(customer);
+    }
+
+    @Transactional
+    public CustomerResponse updateById(final Long id, final CustomerRequest customerRequest) {
+        final Customer customer = customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
+
+        final Customer updatedCustomer = customerDao.update(
+                customer.getId(), customerRequest.getUserName(), customerRequest.getPassword());
+        return new CustomerResponse(updatedCustomer);
     }
 }

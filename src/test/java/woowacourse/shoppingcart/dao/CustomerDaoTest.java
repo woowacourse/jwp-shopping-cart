@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -28,7 +30,6 @@ public class CustomerDaoTest {
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
-
         // given
         final String userName = "puterism";
 
@@ -42,7 +43,6 @@ public class CustomerDaoTest {
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
-
         // given
         final String userName = "gwangyeol-iM";
 
@@ -56,7 +56,6 @@ public class CustomerDaoTest {
     @DisplayName("유저를 저장한다.")
     @Test
     void save() {
-
         // given
         final String userName = "tiki";
         final String password = "password";
@@ -71,7 +70,6 @@ public class CustomerDaoTest {
     @DisplayName("주어진 이름으로 대소문자 관계없이 존재하는 유저가 있으면 참을 반환한다.")
     @Test
     void existsByUserName() {
-
         // given
         final String alreadyExistsName = "puterisM";
 
@@ -85,7 +83,6 @@ public class CustomerDaoTest {
     @DisplayName("id를 통해서 customer정보를 가져온다.")
     @Test
     void findById() {
-
         // given
         final Long id = 1L;
 
@@ -98,5 +95,38 @@ public class CustomerDaoTest {
                 () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
                 () -> assertThat(customer.getPassword()).isEqualTo("123")
         );
+    }
+
+    @DisplayName("유저의 정보를 수정한다.")
+    @Test
+    void update() {
+        // given
+        final Long id = 1L;
+        final String userName = "puterism";
+        final String password = "321";
+
+        // when
+        final Customer customer = customerDao.update(id, userName, password);
+
+        // then
+        assertAll(
+                () -> assertThat(customer.getId()).isEqualTo(id),
+                () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
+                () -> assertThat(customer.getPassword()).isEqualTo("321")
+        );
+    }
+
+    @DisplayName("유저의 정보를 수정할 때 해당 id로 유저가 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void updateWithNotExistId() {
+        // given
+        final Long id = 0L;
+        final String userName = "puterism";
+        final String password = "321";
+
+        // then
+        assertThatThrownBy(() -> customerDao.update(id, userName, password))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessageContaining("존재하지 않는 유저입니다.");
     }
 }

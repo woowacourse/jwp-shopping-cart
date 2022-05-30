@@ -66,4 +66,13 @@ public class CustomerDao {
         final List<Customer> customers = jdbcTemplate.query(query, rowMapper(), id);
         return Optional.ofNullable(DataAccessUtils.singleResult(customers));
     }
+
+    public Customer update(final Long id, final String userName, final String password) {
+        final String query = "UPDATE customer SET userName = ?, password = ? WHERE id = ?";
+        final int update = jdbcTemplate.update(query, userName, password, id);
+        if (update == 0) {
+            throw new InvalidCustomerException();
+        }
+        return new Customer(id, userName, password);
+    }
 }
