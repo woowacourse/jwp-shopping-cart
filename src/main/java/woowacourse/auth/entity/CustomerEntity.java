@@ -39,14 +39,5 @@ public class CustomerEntity {
         return terms;
     }
 
-    @Override
-    public String toString() {
-        return "CustomerEntity{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", profileImageUrl='" + profileImageUrl + '\'' +
-                ", terms=" + terms +
-                '}';
-    }
+
 }

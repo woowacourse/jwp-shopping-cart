@@ -28,6 +28,7 @@ create table privacy
     customer_id bigint       not null,
     name        varchar(255) not null,
     gender      varchar(9)   not null,
+    contact     varchar(11)  not null,
     birth_day   timestamp,
     primary key (customer_id)
 );

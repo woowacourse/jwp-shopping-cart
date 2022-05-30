@@ -12,10 +12,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.entity.CustomerEntity;
 
-@Sql(scripts = {"classpath:schema.sql"})
 @JdbcTest
 class JdbcCustomerDaoTest {
     private final CustomerDao customerDao;
@@ -39,14 +37,14 @@ class JdbcCustomerDaoTest {
     @Test
     void findById() {
         //given
-        int userId = customerDao.save(CUSTOMER_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
 
         // when
-        CustomerEntity actual = customerDao.findById(userId);
+        CustomerEntity actual = customerDao.findById(customerId);
 
         // then
         assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
-                .containsExactly(userId, CUSTOMER_ENTITY_1.getEmail(), CUSTOMER_ENTITY_1.getPassword(),
+                .containsExactly(customerId, CUSTOMER_ENTITY_1.getEmail(), CUSTOMER_ENTITY_1.getPassword(),
                         CUSTOMER_ENTITY_1.getProfileImageUrl(), CUSTOMER_ENTITY_1.isTerms());
     }
 
@@ -54,14 +52,14 @@ class JdbcCustomerDaoTest {
     @Test
     void findByEmail() {
         //given
-        int userId = customerDao.save(CUSTOMER_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
 
         // when
         CustomerEntity actual = customerDao.findByEmail(CUSTOMER_ENTITY_1.getEmail());
 
         // then
         assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
-                .containsExactly(userId, CUSTOMER_ENTITY_1.getEmail(), CUSTOMER_ENTITY_1.getPassword(),
+                .containsExactly(customerId, CUSTOMER_ENTITY_1.getEmail(), CUSTOMER_ENTITY_1.getPassword(),
                         CUSTOMER_ENTITY_1.getProfileImageUrl(), CUSTOMER_ENTITY_1.isTerms());
     }
 
@@ -69,20 +67,20 @@ class JdbcCustomerDaoTest {
     @Test
     void update() {
         // given
-        int userId = customerDao.save(CUSTOMER_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encryptedNewPassword = passwordEncoder.encode("newpassword1!");
-        CustomerEntity newCustomerEntity = new CustomerEntity(userId, CUSTOMER_ENTITY_1.getEmail(),
+        CustomerEntity newCustomerEntity = new CustomerEntity(customerId, CUSTOMER_ENTITY_1.getEmail(),
                 encryptedNewPassword,
                 "http://gravatar.com/avatar/2?d=identicon", true);
 
         // when
         customerDao.update(newCustomerEntity);
-        CustomerEntity actual = customerDao.findById(userId);
+        CustomerEntity actual = customerDao.findById(customerId);
 
         // then
         assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
-                .containsExactly(userId, newCustomerEntity.getEmail(), newCustomerEntity.getPassword(),
+                .containsExactly(customerId, newCustomerEntity.getEmail(), newCustomerEntity.getPassword(),
                         newCustomerEntity.getProfileImageUrl(), newCustomerEntity.isTerms());
     }
 
@@ -90,13 +88,13 @@ class JdbcCustomerDaoTest {
     @Test
     void delete() {
         // given
-        int userId = customerDao.save(CUSTOMER_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
 
         // when
-        customerDao.delete(userId);
+        customerDao.delete(customerId);
 
         // then
-        assertThatThrownBy(() -> customerDao.findById(userId))
+        assertThatThrownBy(() -> customerDao.findById(customerId))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }
