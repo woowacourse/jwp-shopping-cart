@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.GetMeResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.UpdateMeRequest;
@@ -19,32 +20,40 @@ import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 @RequestMapping("/customers")
 public class CustomerController {
 
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
     @PostMapping
     public ResponseEntity<Void> signUp(@RequestBody SignUpRequest request) {
-        // TODO: should create new customer on valid input
-        URI location = URI.create("/customers/" + 1L);
+        Long customerId = customerService.signUp(request);
+        URI location = URI.create("/customers/" + customerId);
         return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/me")
     public ResponseEntity<GetMeResponse> getMe() {
-        GetMeResponse currentCustomer = new GetMeResponse("아이디", "닉네임", 15);
+        GetMeResponse currentCustomer = customerService.getMe(1L);
         return ResponseEntity.ok(currentCustomer);
     }
 
     @PutMapping("/me")
     public ResponseEntity<Void> updateMe(@RequestBody UpdateMeRequest request) {
+        customerService.updateMe(1L, request);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/me/password")
     public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordRequest request) {
+        customerService.updatePassword(1L, request);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe() {
-        // TODO: 삭제할 때 받을 비밀번호 받아야 하는가 논의 필요
+        customerService.deleteMe(1L);
         return ResponseEntity.noContent().build();
     }
 }
