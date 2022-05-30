@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,8 +10,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -49,5 +49,34 @@ public class CustomerDaoTest {
 
         // then
         assertThat(customerId).isEqualTo(16L);
+    }
+
+    @DisplayName("유저를 저장한다.")
+    @Test
+    void save() {
+
+        // given
+        final String userName = "tiki";
+        final String password = "password";
+
+        // when
+        Long id = customerDao.save(userName, password);
+
+        // then
+        assertThat(id).isNotNull();
+    }
+
+    @DisplayName("주어진 이름으로 대소문자 관계없이 존재하는 유저가 있으면 참을 반환한다.")
+    @Test
+    void existsByUserName() {
+
+        // given
+        final String alreadyExistsName = "puterisM";
+
+        // when
+        final boolean result = customerDao.existsByUserName(alreadyExistsName);
+
+        // then
+        assertThat(result).isTrue();
     }
 }
