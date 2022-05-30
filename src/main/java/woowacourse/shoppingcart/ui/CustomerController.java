@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.SignUpRequest;
@@ -23,9 +24,11 @@ import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final AuthService authService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, AuthService authService) {
         this.customerService = customerService;
+        this.authService = authService;
     }
 
     @PostMapping
@@ -38,6 +41,7 @@ public class CustomerController {
     @GetMapping("/{username}")
     public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String userNameByToken,
                                                   @PathVariable String username) {
+        authService.validateUser(username, userNameByToken);
         return ResponseEntity.ok().body(customerService.findMe(username));
     }
 
@@ -45,6 +49,7 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal String userNameByToken,
                                                      @PathVariable String username,
                                                      @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        authService.validateUser(username, userNameByToken);
         customerService.updateMe(username, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }
@@ -53,6 +58,7 @@ public class CustomerController {
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal String userNameByToken,
                                          @PathVariable String username,
                                          @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
+        authService.validateUser(username, userNameByToken);
         customerService.deleteMe(username, deleteCustomerRequest);
         return ResponseEntity.noContent().build();
     }

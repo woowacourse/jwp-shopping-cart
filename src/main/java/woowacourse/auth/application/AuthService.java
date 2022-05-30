@@ -6,6 +6,7 @@ import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -31,5 +32,11 @@ public class AuthService {
                 customer.getEmail(),
                 jwtTokenProvider.createToken(customer.getUsername())
         );
+    }
+
+    public void validateUser(String username, String userNameByToken) {
+        if (!username.equals(userNameByToken)) {
+            throw new AuthorizationException("잘못된 요청입니다.");
+        }
     }
 }
