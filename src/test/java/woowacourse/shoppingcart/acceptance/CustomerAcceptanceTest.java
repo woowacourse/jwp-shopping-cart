@@ -34,28 +34,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         // given
-        ExtractableResponse<Response> createResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1234"))
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-
-        String accessToken = RestAssured
-                .given().log().all()
-                .body(new TokenRequest("test", "1234"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login/token")
-                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+        회원_가입("test", "1234");
+        String accessToken = 로그인_후_토큰_획득("test", "1234");
 
         // when
         ExtractableResponse<Response> getResponse = RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get(createResponse.header("Location"))
+                .when().get("/api/customers/me")
                 .then().log().all()
                 .extract();
 
@@ -68,71 +55,45 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        ExtractableResponse<Response> createResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1234"))
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-
-        String accessToken = RestAssured
-                .given().log().all()
-                .body(new TokenRequest("test", "1234"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login/token")
-                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+        회원_가입("test", "1234");
+        String accessToken = 로그인_후_토큰_획득("test", "1234");
 
         // when
         ExtractableResponse<Response> editResponse = RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("updated", "1255"))
-                .when().put(createResponse.header("Location"))
+                .body(new CustomerRequest("test", "1255"))
+                .when().put("/api/customers/me")
                 .then().log().all()
                 .extract();
 
         // then
-        ExtractableResponse<Response> getResponse = RestAssured
+        ExtractableResponse<Response> loginResponse = RestAssured
                 .given().log().all()
-                .auth().oauth2(accessToken)
+                .body(new TokenRequest("test", "1255"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/updated")
-                .then().log().all()
-                .extract();
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/login/token")
+                .then().log().all().extract();
 
         assertThat(editResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(getResponse.body().jsonPath().getString("name")).isEqualTo("updated");
+        assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
         // given
-        ExtractableResponse<Response> createResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1234"))
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-
-        String accessToken = RestAssured
-                .given().log().all()
-                .body(new TokenRequest("test", "1234"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login/token")
-                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+        회원_가입("test", "1234");
+        String accessToken = 로그인_후_토큰_획득("test", "1234");
 
         // when
         ExtractableResponse<Response> deleteResponse = RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete(createResponse.header("Location"))
+                .when().delete("/api/customers/me")
                 .then().log().all()
                 .extract();
 
@@ -141,11 +102,31 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/test")
+                .when().get("/api/customers/me")
                 .then().log().all()
                 .extract();
 
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    private String 로그인_후_토큰_획득(String name, String password) {
+        return RestAssured
+                .given().log().all()
+                .body(new TokenRequest(name, password))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/login/token")
+                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+    }
+
+    private void 회원_가입(String name, String password) {
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CustomerRequest(name, password))
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
     }
 }

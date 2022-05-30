@@ -29,27 +29,30 @@ public class CustomerController {
                 URI.create("/api/customers/" + customerRequest.getName())).build();
     }
 
-    @GetMapping("/{customerName}")
-    public ResponseEntity<Customer> customer(@PathVariable String customerName) {
-        return ResponseEntity.ok(customerService.findCustomerByName(customerName));
-    }
-
-    @DeleteMapping("/{customerName}")
-    public ResponseEntity<Void> withDraw(@PathVariable String customerName) {
-        customerService.deleteCustomerByName(customerName);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{customerName}")
-    public ResponseEntity<Void> edit(@PathVariable String customerName, @RequestBody CustomerRequest editRequest) {
+    @PutMapping("/me")
+    public ResponseEntity<Void> edit(HttpServletRequest request, @RequestBody CustomerRequest editRequest) {
+        String customerName = getNameFromToken(request);
         customerService.editCustomerByName(customerName, editRequest);
         return ResponseEntity.ok().build();
     }
 
+
     @GetMapping("/me")
-    public ResponseEntity<Customer> customerMe(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        String customerName = authService.getNameFromToken(token);
+    public ResponseEntity<Customer> customer(HttpServletRequest request) {
+        String customerName = getNameFromToken(request);
         return ResponseEntity.ok(customerService.findCustomerByName(customerName));
+    }
+
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> withDraw(HttpServletRequest request) {
+        String customerName = getNameFromToken(request);
+        customerService.deleteCustomerByName(customerName);
+        return ResponseEntity.noContent().build();
+    }
+
+    private String getNameFromToken(HttpServletRequest request) {
+        String token = AuthorizationExtractor.extract(request);
+        return authService.getNameFromToken(token);
     }
 }

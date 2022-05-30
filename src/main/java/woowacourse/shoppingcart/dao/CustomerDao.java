@@ -61,9 +61,9 @@ public class CustomerDao {
         }
     }
 
-    public void updateByName(String customerName, String newName, String newPassword) {
-        final String query = "UPDATE customer SET username = ?, password = ? WHERE username = ?";
-        jdbcTemplate.update(query, newName, newPassword, customerName);
+    public void updateByName(String customerName, String newPassword) {
+        final String query = "UPDATE customer SET password = ? WHERE username = ?";
+        jdbcTemplate.update(query, newPassword, customerName);
     }
 
     public boolean existsIdByNameAndPassword(String name, String password) {

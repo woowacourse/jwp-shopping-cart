@@ -29,7 +29,7 @@ public class CustomerService {
     }
 
     public void editCustomerByName(final String customerName, final CustomerRequest editRequest) {
-        customerDao.updateByName(customerName, editRequest.getName(), editRequest.getPassword());
+        customerDao.updateByName(customerName, editRequest.getPassword());
     }
 
     public void validateNameAndPassword(String name, String password) {
