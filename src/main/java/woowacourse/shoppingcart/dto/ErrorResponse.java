@@ -12,7 +12,7 @@ import org.springframework.validation.BindingResult;
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class ErrorResponse {
 
-    @JsonProperty("message")
+    @JsonProperty("messages")
     private List<String> messages;
 
     private ErrorResponse() {
