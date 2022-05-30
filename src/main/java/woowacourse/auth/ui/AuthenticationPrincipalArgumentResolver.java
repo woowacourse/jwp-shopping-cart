@@ -7,12 +7,19 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.support.JwtTokenProvider;
+
+import java.util.Objects;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
-    private AuthService authService;
 
-    public AuthenticationPrincipalArgumentResolver(AuthService authService) {
+    private static final String BEARER = "BEARER";
+    private AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public AuthenticationPrincipalArgumentResolver(AuthService authService, JwtTokenProvider jwtTokenProvider) {
         this.authService = authService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -20,10 +27,16 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
     }
 
-    // parameter에 @AuthenticationPrincipal이 붙어있는 경우 동작
+    // parameter 에 @AuthenticationPrincipal 이 붙어있는 경우 동작
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        // TODO: 유효한 로그인인 경우 로그인한 사용자 객체를 만들어서 응답하기
-        return null;
+    public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        final String auth = webRequest.getHeader("Authorization");
+        final String token = Objects.requireNonNull(auth).substring(BEARER.length() + 1);
+        final String payload = jwtTokenProvider.getPayload(token);
+        if (payload == null) {
+            throw new IllegalArgumentException();
+        }
+
+        return Long.parseLong(payload);
     }
 }

@@ -5,6 +5,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.DuplicatedAccountException;
 
 @Service
@@ -21,7 +22,15 @@ public class CustomerService {
         if (customerDao.findByAccount(customer.getAccount()).isPresent()) {
             throw new DuplicatedAccountException();
         }
-        final Customer save = customerDao.save(customer);
-        return new CustomerDto(save.getId());
+        final Customer savedCustomer = customerDao.save(customer);
+        return CustomerDto.of(savedCustomer);
+    }
+
+    public CustomerDto getById(long customerId) {
+        Customer customer = customerDao.findById(customerId)
+                .orElseThrow(CustomerNotFoundException::new);
+
+        return CustomerDto.of(customer);
+
     }
 }

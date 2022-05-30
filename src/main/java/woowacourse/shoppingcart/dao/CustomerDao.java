@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -56,11 +55,22 @@ public class CustomerDao {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("account", account);
 
-        final List<Customer> query = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters),customerRowMapper);
+        final List<Customer> query = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), customerRowMapper);
         return Optional.ofNullable(DataAccessUtils.singleResult(query));
     }
 
     public Long findIdByUserName(String customerName) {
         return null;
+    }
+
+    public Optional<Customer> findById(long customerId) {
+        final String sql = "SELECT id, account, nickname, password, address, phone_number " +
+                "FROM customer WHERE id=:customerId";
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("customerId", customerId);
+
+        final List<Customer> result = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), customerRowMapper);
+        return Optional.ofNullable(DataAccessUtils.singleResult(result));
     }
 }

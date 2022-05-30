@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import io.restassured.RestAssured;
+import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,15 @@ public class AcceptanceTest {
     protected ExtractableResponse<Response> get(String uri) {
         return RestAssured.given().log().all()
                 .when()
+                .get(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> get(String uri, String header) {
+        return RestAssured.given().log().all()
+                .when()
+                .header(new Header("Authorization", "BEARER " + header))
                 .get(uri)
                 .then().log().all()
                 .extract();

@@ -45,4 +45,8 @@ public class Customer {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
+    }
 }

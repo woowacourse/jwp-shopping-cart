@@ -19,6 +19,10 @@ public class PhoneNumber {
         this.end = end;
     }
 
+    public static PhoneNumber of(String phoneNumber) {
+        return new PhoneNumber(phoneNumber.substring(0, 3), phoneNumber.substring(3, 7), phoneNumber.substring(7, 11));
+    }
+
     public String getStart() {
         return start;
     }
@@ -34,5 +38,4 @@ public class PhoneNumber {
     public String appendNumbers() {
         return this.start + this.middle + this.end;
     }
-
 }

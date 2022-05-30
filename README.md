@@ -22,8 +22,8 @@
     - [x] account 에 대문자가 포함되어 있으면 소문자로 변경한다.
     - [x] account 에 특수문자가 포함되어 있으면 제거한다.
 
-- [ ] Token기반의 로그인
-    - [ ] account 와 password 를 받아 토큰을 생성한다.
+- [x] Token 기반의 로그인
+    - [x] account 와 password 를 받아 토큰을 생성한다.
 
 - [ ] 회원 정보 수정
     - [ ] nickname, address, phoneNumber 을 받아 회원 정보를 수정한다.
