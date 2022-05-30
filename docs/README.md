@@ -57,6 +57,8 @@
 - 동작하는 코드를 우선적으로 개발하기
 - customer 생성 및 수정에 관한 validation 추가
 - test fixture 만들기
+- id 기반으로 payload 저장
+- token validate 추가
 
 ### 일정
 
