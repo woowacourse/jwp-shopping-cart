@@ -52,6 +52,20 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("로그인하지 않은 상태로 자신의 정보를 조회한다.")
+    @Test
+    void getMe_unauthorized() {
+        Exception exception = RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract()
+                .as(Exception.class);
+
+        assertThat(exception).hasMessageContaining("로그인");
+    }
+
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {

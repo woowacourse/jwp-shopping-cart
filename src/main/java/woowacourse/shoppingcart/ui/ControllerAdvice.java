@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -18,12 +19,12 @@ import java.util.List;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException() {
+    public ResponseEntity<String> handleUnhandledException() {
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity handle() {
+    public ResponseEntity<String> handle() {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
     }
 
@@ -54,5 +55,11 @@ public class ControllerAdvice {
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleUnauthorizedRequest(final AuthorizationException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 }
