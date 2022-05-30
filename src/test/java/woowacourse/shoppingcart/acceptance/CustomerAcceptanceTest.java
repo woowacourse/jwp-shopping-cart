@@ -1,16 +1,17 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 
 @DisplayName("회원 관련 기능")
@@ -65,9 +66,34 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body("message", equalTo("이메일이 중복입니다."));
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("유효한 토큰으로 로그인한 자신의 정보를 요청한다.")
     @Test
-    void getMe() {
+    void getMe_validToken_200() {
+        // given
+        String email = "kun@gmail.com";
+        String nickname = "kun";
+        String password = "1q2w3e4r";
+
+        CustomerCreationRequest signUpRequest = new CustomerCreationRequest(email, password, nickname);
+        postUser(signUpRequest);
+
+        TokenRequest tokenRequest = new TokenRequest(email, password);
+        String accessToken = postLogin(tokenRequest)
+                .extract()
+                .as(TokenResponse.class)
+                .getAccessToken();
+
+        // when
+        ValidatableResponse response = RestAssured
+                .given().log().all()
+                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                .when().get("/users/me")
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("email", equalTo(email))
+                .body("nickname", equalTo(nickname));
     }
 
     @DisplayName("내 정보 수정")
