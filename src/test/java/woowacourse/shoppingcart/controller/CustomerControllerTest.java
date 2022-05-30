@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -73,6 +74,18 @@ class CustomerControllerTest {
                         .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("URI path에 id를 받아 일치하는 회원을 삭제한다.")
+    void deleteCustomer() throws Exception {
+        final long customerId = 1L;
+        final MockHttpServletResponse response = mockMvc.perform(delete("/api/customers/" + customerId))
+                .andDo(print())
+                .andReturn()
+                .getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
 }
