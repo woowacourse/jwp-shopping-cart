@@ -39,4 +39,14 @@ public class CustomerDao {
 
         simpleJdbcInsert.execute(params);
     }
+
+    public Customer findByEmail(String email) {
+        final String sql = "SELECT id, email, password, username FROM customer WHERE email = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> new Customer(rs.getLong("id"
+            ), rs.getString("email"), rs.getString("password"), rs.getString("username"))), email);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
 }
