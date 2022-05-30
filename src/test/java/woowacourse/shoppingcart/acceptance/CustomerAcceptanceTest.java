@@ -20,6 +20,24 @@ import org.springframework.http.MediaType;
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
 
+    @DisplayName("정상적인 회원가입")
+    @Test
+    void successSignUp() {
+        Map<String, String> params = Map.of(
+                "email", "tonic@email.com",
+                "password", "12345678a",
+                "nickname", "토닉"
+        );
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .body(params)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/users")
+                .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
     @DisplayName("회원정보 양식이 잘못됐을 때 400에러를 응답한다.")
     @ParameterizedTest
     @MethodSource("provideInvalidSignUpForm")

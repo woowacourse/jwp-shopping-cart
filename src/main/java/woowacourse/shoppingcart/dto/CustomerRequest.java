@@ -16,6 +16,12 @@ public class CustomerRequest {
     public CustomerRequest() {
     }
 
+    public CustomerRequest(String email, String password, String nickname) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+    }
+
     public String getEmail() {
         return email;
     }
