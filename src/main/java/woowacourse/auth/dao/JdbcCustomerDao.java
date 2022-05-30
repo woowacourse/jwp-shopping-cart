@@ -56,10 +56,11 @@ public class JdbcCustomerDao implements CustomerDao {
         return jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, email);
     }
 
-
     @Override
     public void update(CustomerEntity customerEntity) {
-
+        String sql = "UPDATE CUSTOMER SET password = ?, profile_image_url = ?, terms = ? WHERE id = ?";
+        jdbcTemplate.update(sql, customerEntity.getPassword(), customerEntity.getProfileImageUrl(),
+                customerEntity.isTerms(), customerEntity.getId());
     }
 
     @Override
