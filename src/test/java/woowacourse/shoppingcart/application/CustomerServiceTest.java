@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
@@ -18,7 +17,6 @@ import woowacourse.shoppingcart.infrastructure.jdbc.dao.CustomerDao;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class CustomerServiceTest {
 
