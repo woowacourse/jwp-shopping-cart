@@ -64,4 +64,16 @@ public class CustomerDaoTest {
         // then
         assertThat(customerId).isEqualTo(16L);
     }
+
+    @DisplayName("닉네임이 중복될 경우, 참을 반환한다.")
+    @Test
+    void existsByNickname() {
+
+        // given
+        String nickname = "beom1234";
+        customerDao.save(new Customer("beomWhale@naver.com", nickname, "Password123!"));
+
+        // when && then
+        assertThat(customerDao.existsByNickname(nickname)).isTrue();
+    }
 }

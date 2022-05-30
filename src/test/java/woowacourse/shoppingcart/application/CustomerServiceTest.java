@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 
 @JdbcTest
@@ -21,10 +23,11 @@ public class CustomerServiceTest {
     private JdbcTemplate jdbcTemplate;
 
     private CustomerService customerService;
+    private CustomerDao customerDao;
 
     @BeforeEach
     void setUp() {
-        CustomerDao customerDao = new CustomerDao(jdbcTemplate);
+        customerDao = new CustomerDao(jdbcTemplate);
         customerService = new CustomerService(customerDao);
     }
 
@@ -32,12 +35,28 @@ public class CustomerServiceTest {
     @Test
     void createCustomer() {
         // given
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest ("beomWhale@naver.com", "범고래", "Password12345!");
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+            "beomWhale@naver.com", "범고래", "Password12345!");
 
         // when
         Long savedId = customerService.createCustomer(customerCreateRequest);
 
         // then
         assertThat(savedId).isNotNull();
+    }
+
+    @DisplayName("닉네임이 중복될 경우, 예외가 발생한다.")
+    @Test
+    void validateDuplicationNickname() {
+        // given
+        customerDao.save(new Customer("awesomeo@naver.com", "범고래", "Password12345!"));
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+            "beomWhale@naver.com", "범고래", "Password12345!");
+
+        // when && then
+        assertThatThrownBy(
+            () -> customerService.createCustomer(customerCreateRequest)).isInstanceOf(
+                IllegalArgumentException.class)
+            .hasMessage("이미 존재하는 닉네임입니다.");
     }
 }

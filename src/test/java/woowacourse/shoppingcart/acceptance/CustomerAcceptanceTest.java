@@ -35,6 +35,31 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("닉네임이 중복될 경우, 예외 응답을 반환한다.")
+    @Test
+    void duplicateCustomerNickname() {
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+            "beomWhale@naver.com", "범고래", "Password12345!");
+
+        createCustomer(customerCreateRequest);
+        ExtractableResponse<Response> response = createCustomer(customerCreateRequest);
+
+        assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+            () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("이미 존재하는 닉네임입니다.")
+        );
+    }
+
+    private ExtractableResponse<Response> createCustomer(CustomerCreateRequest customerCreateRequest) {
+        return RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(customerCreateRequest)
+            .when()
+            .post("/api/customers")
+            .then().log().all()
+            .extract();
+    }
+
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {

@@ -44,4 +44,9 @@ public class CustomerDao {
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
+
+    public boolean existsByNickname(String nickname) {
+        String query = "SELECT EXISTS (SELECT * FROM customer WHERE nickname = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, nickname));
+    }
 }
