@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import woowacourse.auth.dto.MemberCreateRequest;
 import woowacourse.auth.dto.MemberResponse;
 import woowacourse.auth.dto.NicknameUpdateRequest;
 import woowacourse.auth.dto.PasswordCheckRequest;
+import woowacourse.auth.dto.PasswordUpdateRequest;
 
 @SpringBootTest
 @Transactional
@@ -101,7 +103,7 @@ class AuthServiceTest {
         assertThat(memberResponse.getNickname()).isEqualTo("닉네임");
     }
 
-    @DisplayName("이메일과 닉네임을 받아 회원 정보를 수정한다.")
+    @DisplayName("이메일과 닉네임을 받아 닉네임을 수정한다.")
     @Test
     void updateNickname() {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
@@ -121,5 +123,38 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.updateNickname("abc@woowahan.com", new NicknameUpdateRequest("바뀐닉네임")))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("이메일과 비밀번호를 받아 비밀번호를 수정한다.")
+    @Test
+    void updatePassword() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        authService.save(memberCreateRequest);
+
+        authService.updatePassword("abc@woowahan.com", new PasswordUpdateRequest("1q2w3e4r@"));
+
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r@");
+
+        assertThatCode(() -> authService.login(loginRequest))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("존재하지 않는 회원의 비밀번호를 수정하려고 하면 예외를 반환한다.")
+    @Test
+    void updatePassword_NotFoundMember() {
+        assertThatThrownBy(() -> authService.updatePassword("abc@woowahan.com", new PasswordUpdateRequest("1q2w3e4r@")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("올바르지 않은 형식의 비밀번호로 변경하려고 하면 예외를 반환한다.")
+    @Test
+    void updatePassword_InvalidPasswordFormat() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        authService.save(memberCreateRequest);
+
+        assertThatThrownBy(() -> authService.updatePassword("abc@woowahan.com", new PasswordUpdateRequest("1234")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("비밀번호 형식이 올바르지 않습니다.");
     }
 }

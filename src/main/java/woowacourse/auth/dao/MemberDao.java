@@ -55,4 +55,12 @@ public class MemberDao {
                 .addValue("nickname", nickname);
         namedParameterJdbcTemplate.update(sql, parameters);
     }
+
+
+    public void updatePasswordByEmail(String email, String password) {
+        String sql = "UPDATE MEMBER SET password = :password WHERE email = :email";
+        SqlParameterSource parameters = new MapSqlParameterSource("email", email)
+                .addValue("password", password);
+        namedParameterJdbcTemplate.update(sql, parameters);
+    }
 }

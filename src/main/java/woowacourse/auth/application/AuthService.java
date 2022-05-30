@@ -3,12 +3,14 @@ package woowacourse.auth.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dao.MemberDao;
 import woowacourse.auth.domain.Member;
+import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
 import woowacourse.auth.dto.MemberResponse;
 import woowacourse.auth.dto.NicknameUpdateRequest;
 import woowacourse.auth.dto.PasswordCheckRequest;
+import woowacourse.auth.dto.PasswordUpdateRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Service
@@ -83,5 +85,12 @@ public class AuthService {
         if (!existsEmail(email)) {
             throw new IllegalArgumentException("존재하지 않는 회원입니다.");
         }
+    }
+
+
+    public void updatePassword(String email, PasswordUpdateRequest passwordUpdateRequest) {
+        validateExists(email);
+        String password = new Password(passwordUpdateRequest.getPassword()).getValue();
+        memberDao.updatePasswordByEmail(email, password);
     }
 }

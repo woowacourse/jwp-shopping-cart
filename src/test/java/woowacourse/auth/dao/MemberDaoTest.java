@@ -73,4 +73,17 @@ class MemberDaoTest {
                 .orElseGet(() -> fail("실패"));
         assertThat(foundMember.getNickname()).isEqualTo("바꾼닉네임");
     }
+
+    @DisplayName("회원의 비밀번호를 변경한다.")
+    @Test
+    void updatePasswordByEmail() {
+        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        memberDao.save(member);
+
+        memberDao.updatePasswordByEmail(member.getEmail(), "1q2w3e4r@");
+
+        Member foundMember = memberDao.findByEmail("abc@woowahan.com")
+                .orElseGet(() -> fail("실패"));
+        assertThat(foundMember.getPassword()).isEqualTo("1q2w3e4r@");
+    }
 }
