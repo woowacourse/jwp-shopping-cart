@@ -53,7 +53,7 @@
     - [x] `성공`
         - 204 No Content를 반환한다.
 
-- [ ] ErrorDto 적용
+- [x] ErrorDto 적용
 - [ ] 예외 사항 적용
 - [ ] Raw 타입 찾아서 수정
 
