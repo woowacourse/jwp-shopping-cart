@@ -5,16 +5,30 @@ import woowacourse.member.exception.InvalidMemberNameException;
 
 public class Member {
 
+    private final Long id;
     private final String email;
     private final String name;
     private final Password password;
 
-    public Member(String email, String name, String password) {
+    private Member(Long id, String email, String name, Password password) {
         validateEmailForm(email);
         validateName(name);
+        this.id = id;
         this.email = email;
         this.name = name;
-        this.password = new Password(password);
+        this.password = password;
+    }
+
+    public static Member withEncrypt(String email, String name, String password) {
+        return new Member(0L, email, name, Password.withEncrypt(password));
+    }
+
+    public static Member withoutEncrypt(Long id, String email, String name, String password) {
+        return new Member(id, email, name, Password.withoutEncrypt(password));
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {

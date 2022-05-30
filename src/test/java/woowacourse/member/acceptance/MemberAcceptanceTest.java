@@ -7,8 +7,6 @@ import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
 import woowacourse.member.dto.SignUpRequest;
 
-import static org.hamcrest.Matchers.containsString;
-
 @DisplayName("회원 관련 기능")
 public class MemberAcceptanceTest extends AcceptanceTest {
 

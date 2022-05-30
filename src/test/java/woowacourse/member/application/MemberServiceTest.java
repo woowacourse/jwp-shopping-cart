@@ -46,7 +46,7 @@ class MemberServiceTest {
     @Test
     void verifyValidMember() {
         assertDoesNotThrow(
-                () -> memberService.verifyValidMember(new LoginRequest("ari@wooteco.com","Wooteco1!"))
+                () -> memberService.findIdByEmail(new LoginRequest("ari@wooteco.com","Wooteco1!"))
         );
     }
 
@@ -54,7 +54,7 @@ class MemberServiceTest {
     @Test
     void verifyValidMemberWithNotExistEmail(){
         assertThatThrownBy(
-                () -> memberService.verifyValidMember(new LoginRequest("pobi@wooteco.com","Wooteco!"))
+                () -> memberService.findIdByEmail(new LoginRequest("pobi@wooteco.com","Wooteco!"))
         ).isInstanceOf(LonginWrongEmailException.class)
                 .hasMessageContaining("존재하지 않는 이메일입니다.");
     }
@@ -63,7 +63,7 @@ class MemberServiceTest {
     @Test
     void verifyValidMemberWithWrongPassword() {
         assertThatThrownBy(
-                () -> memberService.verifyValidMember(new LoginRequest("ari@wooteco.com","Javajigi!!"))
+                () -> memberService.findIdByEmail(new LoginRequest("ari@wooteco.com","Javajigi!!"))
         ).isInstanceOf(LonginWrongPasswordException.class)
                 .hasMessageContaining("잘못된 비밀번호입니다.");
     }

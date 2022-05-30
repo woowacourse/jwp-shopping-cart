@@ -2,6 +2,7 @@ package woowacourse.member.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -36,15 +37,23 @@ public class MemberDao {
         return jdbcTemplate.queryForObject(SQL, Boolean.class, email);
     }
 
-    public Optional<String> findPasswordByEmail(String email) {
+    public Optional<Member> findMemberByEmail(String email) {
         try {
-            String SQL = "SELECT password FROM member WHERE email = ?";
-            String password = jdbcTemplate.queryForObject(SQL, String.class, email);
-            return Optional.ofNullable(password);
+            String SQL = "SELECT id, email, name, password FROM member WHERE email = ?";
+            Member member = jdbcTemplate.queryForObject(SQL, rowMapper, email);
+            return Optional.ofNullable(member);
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
+
+    private RowMapper<Member> rowMapper= (resultSet, rowNum) ->
+            Member.withoutEncrypt(
+                    resultSet.getLong("id"),
+                    resultSet.getString("email"),
+                    resultSet.getString("name"),
+                    resultSet.getString("password")
+            );
 
     public Long findIdByUserName(final String userName) {
         try {

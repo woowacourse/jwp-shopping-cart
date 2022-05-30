@@ -28,19 +28,23 @@ public class MemberService {
             throw new InvalidMemberEmailException("중복되는 이메일이 존재합니다.");
         }
 
-        Member member = new Member(request.getEmail(), request.getName(), request.getPassword());
+        Member member = Member.withEncrypt(request.getEmail(), request.getName(), request.getPassword());
         memberDao.save(member);
     }
 
-    public void verifyValidMember(LoginRequest request) {
-        Optional<String> savedPassword = memberDao.findPasswordByEmail(request.getEmail());
+    public Long findIdByEmail(LoginRequest request) {
+        Optional<Member> member = memberDao.findMemberByEmail(request.getEmail());
+        authenticate(member, request);
+        return member.get().getId();
+    }
 
-        if (savedPassword.isEmpty()) {
+    private void authenticate(Optional<Member> member, LoginRequest request) {
+        if (member.isEmpty()) {
             throw new LonginWrongEmailException("존재하지 않는 이메일입니다.");
         }
 
-        Password password = new Password(request.getPassword());
-        if (!password.isSameAs(savedPassword.get())) {
+        Password password = Password.withEncrypt(request.getPassword());
+        if (!password.isSameAs(member.get().getPassword())) {
             throw new LonginWrongPasswordException("잘못된 비밀번호입니다.");
         }
     }

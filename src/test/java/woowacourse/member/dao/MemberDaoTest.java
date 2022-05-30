@@ -29,22 +29,22 @@ class MemberDaoTest {
     @Test
     void save() {
         String email = "wooteco@naver.com";
-        Member member = new Member(email, "wooteco", "Wooteco1!");
+        Member member = Member.withEncrypt(email, "wooteco", "Wooteco1!");
         memberDao.save(member);
         assertThat(memberDao.existMemberByEmail(email)).isTrue();
     }
 
-    @DisplayName("이메일로 비밀번호를 찾아 반환한다.")
+    @DisplayName("이메일로 회원을 찾아 반환한다.")
     @Test
-    void findPasswordByEmail() {
-        Optional<String> result = memberDao.findPasswordByEmail("ari@wooteco.com");
-        assertThat(result.get()).isEqualTo("1ebe88ec1665d6f66f0925713af52a92cc340bbd95d168680e26037097baa00f");
+    void findMemberByEmail() {
+        Optional<Member> result = memberDao.findMemberByEmail("ari@wooteco.com");
+        assertThat(result.get().getName()).isEqualTo("아리");
     }
 
-    @DisplayName("이메일로 비밀번호를 찾아 반환한다.")
+    @DisplayName("존재하지 않는 이메일인 경우 빈 Optional을 반환한다.")
     @Test
-    void findPasswordByNotExistEmail() {
-        Optional<String> result = memberDao.findPasswordByEmail("pobi@wooteco.com");
+    void findMemberByNotExistEmail() {
+        Optional<Member> result = memberDao.findMemberByEmail("pobi@wooteco.com");
         assertThat(result).isEmpty();
     }
 }

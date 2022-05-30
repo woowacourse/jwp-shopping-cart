@@ -11,34 +11,42 @@ public class Password {
 
     private final String value;
 
-    public Password(String value) {
+    private Password(String value) {
+        this.value = value;
+    }
+
+    public static Password withEncrypt(String value) {
         validate(value);
-        this.value = PasswordEncoder.encrypt(value);
+        return new Password(PasswordEncoder.encrypt(value));
+    }
+
+    public static Password withoutEncrypt(String value) {
+        return new Password(value);
     }
 
     public String getValue() {
         return value;
     }
 
-    private void validate(String value) {
+    private static void validate(String value) {
         validateLength(value);
         validateCase(value);
         validateContainsSpecialCharacters(value);
     }
 
-    private void validateLength(String value) {
+    private static void validateLength(String value) {
         if (value.length() < 6) {
             throw new InvalidPasswordException("비밀번호는 6글자 이상이어야 합니다.");
         }
     }
 
-    private void validateCase(String value) {
+    private static void validateCase(String value) {
         if (!casePattern.matcher(value).find()) {
             throw new InvalidPasswordException("비밀번호는 대소문자를 포함해야 합니다.");
         }
     }
 
-    private void validateContainsSpecialCharacters(String value) {
+    private static void validateContainsSpecialCharacters(String value) {
         if (!specialCharacterPattern.matcher(value).find()) {
             throw new InvalidPasswordException("비밀번호는 특수문자(!,@,?,-)를 포함해야 합니다");
         }

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 
@@ -27,7 +26,7 @@ class AuthServiceTest {
     @DisplayName("토큰을 생성한다.")
     @Test
     void createToken() {
-        TokenResponse token = authService.createToken(new LoginRequest("ari@wooteco.com","Wooteco!"));
+        TokenResponse token = authService.createToken(123L);
         boolean result = jwtTokenProvider.validateToken(token.getAccessToken());
         assertThat(result).isTrue();
     }
