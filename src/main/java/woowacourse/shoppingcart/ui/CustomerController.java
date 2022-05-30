@@ -29,8 +29,8 @@ public class CustomerController {
 
     @GetMapping("/api/customers/me")
     public ResponseEntity<CustomerResponse> findCustomer(@AuthenticationPrincipal LoginCustomer loginCustomer) {
-        CustomerResponse customerResponse = new CustomerResponse(1L, "puterism", "puterism@email.com", "test",
-                "000-0000-0000");
+        String username = loginCustomer.getUsername();
+        CustomerResponse customerResponse = customerService.find(username);
         return ResponseEntity.ok(customerResponse);
     }
 }
