@@ -8,7 +8,15 @@ public class Nickname {
 
     public Nickname(String value) {
         value = value.trim();
+        validate(value);
         this.value = value;
+    }
+
+    private void validate(String value) {
+        if (value.length() < 2 || value.length() > 10) {
+            throw new IllegalArgumentException(
+                    String.format("닉네임은 2 ~ 10자로 생성 가능합니다. 입력값: %s", value));
+        }
     }
 
     @Override
