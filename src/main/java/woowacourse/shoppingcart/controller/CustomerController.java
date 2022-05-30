@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.controller;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,9 +35,15 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(@PathVariable final Long id, @RequestBody UpdateCustomerDto updateCustomerDto) {
-
         final CustomerDto customerDto = customerService.updateCustomer(id, updateCustomerDto);
 
         return ResponseEntity.ok(customerDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable final Long id) {
+        customerService.deleteCustomer(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
