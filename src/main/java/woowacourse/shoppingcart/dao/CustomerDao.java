@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -48,6 +50,26 @@ public class CustomerDao {
             customer.getPassword(),
             customer.getPhoneNumber(),
             customer.getAddress()
+        );
+    }
+
+    public Optional<Customer> findByUsername(String username) {
+        final String query = "SELECT id, username, password, phoneNumber, address FROM customer WHERE username = ?";
+
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(query, customerMapper(), username));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    private RowMapper<Customer> customerMapper(){
+        return (resultSet, rowNum) -> Customer.of(
+            resultSet.getLong("id"),
+            resultSet.getString("username"),
+            resultSet.getString("password"),
+            resultSet.getString("phoneNumber"),
+            resultSet.getString("address")
         );
     }
 }

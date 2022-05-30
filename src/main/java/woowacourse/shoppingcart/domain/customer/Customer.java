@@ -25,6 +25,15 @@ public class Customer {
             address);
     }
 
+    public static Customer of(Long id, String username, String password, String phoneNumber, String address) {
+        return new Customer(
+            id,
+            new Username(username),
+            new Password(password),
+            new PhoneNumber(phoneNumber),
+            address);
+    }
+
     public Long getId() {
         return id;
     }

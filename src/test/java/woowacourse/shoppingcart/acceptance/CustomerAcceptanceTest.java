@@ -12,10 +12,11 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.ExceptionResponse;
-import woowacourse.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.SignupRequest;
 
 @DisplayName("회원 관련 기능")
@@ -124,6 +125,40 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+
+        RestAssured.given().log().all()
+            .body(signupRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/signup")
+            .then().log().all()
+            .extract();
+
+        String accessToken = RestAssured
+            .given().log().all()
+            .body(new LoginRequest("dongho108", "ehdgh1234"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/api/customers/login")
+            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+
+        // when
+        CustomerResponse customerResponse = RestAssured
+            .given().log().all()
+            .auth().oauth2(accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/customers")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+
+        // then
+        assertAll(
+            () -> assertThat(customerResponse.getUsername()).isEqualTo(signupRequest.getUsername()),
+            () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
+            () -> assertThat(customerResponse.getAddress()).isEqualTo(signupRequest.getAddress())
+        );
     }
 
     @DisplayName("내 정보 수정")
