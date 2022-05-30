@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.auth.domain.customer.Email;
 import woowacourse.auth.domain.customer.Id;
 import woowacourse.auth.entity.CustomerEntity;
 
@@ -14,6 +14,14 @@ import woowacourse.auth.entity.CustomerEntity;
 public class JdbcCustomerDao implements CustomerDao {
     private static final String TABLE_NAME = "CUSTOMER";
     private static final String ID_COLUMN = "id";
+
+    private static final RowMapper<CustomerEntity> CUSTOMER_ENTITY_ROW_MAPPER = (rs, rowNum) -> new CustomerEntity(
+            rs.getInt("id"),
+            rs.getString("email"),
+            rs.getString("password"),
+            rs.getString("profile_image_url"),
+            rs.getBoolean("terms")
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -39,21 +47,13 @@ public class JdbcCustomerDao implements CustomerDao {
     @Override
     public CustomerEntity findById(int id) {
         String sql = "SELECT id, email, password, profile_image_url, terms FROM CUSTOMER WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                        new CustomerEntity(
-                                rs.getInt("id"),
-                                rs.getString("email"),
-                                rs.getString("password"),
-                                rs.getString("profile_image_url"),
-                                rs.getBoolean("terms")
-                        ),
-                id
-        );
+        return jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, id);
     }
 
     @Override
-    public CustomerEntity findByEmail(Email email) {
-        return null;
+    public CustomerEntity findByEmail(String email) {
+        String sql = "SELECT id, email, password, profile_image_url, terms FROM CUSTOMER WHERE email = ?";
+        return jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, email);
     }
 
 

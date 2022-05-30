@@ -1,6 +1,5 @@
 package woowacourse.auth.dao;
 
-import woowacourse.auth.domain.customer.Email;
 import woowacourse.auth.domain.customer.Id;
 import woowacourse.auth.entity.CustomerEntity;
 
@@ -9,7 +8,7 @@ public interface CustomerDao {
 
     CustomerEntity findById(int id);
 
-    CustomerEntity findByEmail(Email email);
+    CustomerEntity findByEmail(String email);
 
     void update(CustomerEntity customerEntity);
 

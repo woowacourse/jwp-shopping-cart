@@ -46,4 +46,19 @@ class JdbcCustomerDaoTest {
                 .containsExactly(userId, CUSTOMER_ENTITY_1.getEmail(), CUSTOMER_ENTITY_1.getPassword(),
                         CUSTOMER_ENTITY_1.getProfileImageUrl(), CUSTOMER_ENTITY_1.isTerms());
     }
+
+    @DisplayName("User email을 전달받아 해당하는 User 객체를 조회한다.")
+    @Test
+    void findByEmail() {
+        //given
+        int userId = customerDao.save(CUSTOMER_ENTITY_1);
+
+        // when
+        CustomerEntity actual = customerDao.findByEmail(CUSTOMER_ENTITY_1.getEmail());
+
+        // then
+        assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
+                .containsExactly(userId, CUSTOMER_ENTITY_1.getEmail(), CUSTOMER_ENTITY_1.getPassword(),
+                        CUSTOMER_ENTITY_1.getProfileImageUrl(), CUSTOMER_ENTITY_1.isTerms());
+    }
 }
