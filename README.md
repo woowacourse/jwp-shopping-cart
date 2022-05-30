@@ -8,16 +8,16 @@
 
 ## 1단계 요구사항
 
-- [ ] 회원가입
+- [x] 회원가입
     - [x] account, nickname, password, address, phoneNumber 을 받아 회원을 생성한다.
     - [x] account 의 글자수가 4~15를 벗어나면 예외를 발생한다.
     - [x] nickname 의 글자수가 2~10을 벗어나면 예외를 발생한다.
     - [x] password 의 글자수가 8~20을 벗어나면 예외를 발생한다.
     - [x] password 가 영어 대문자, 소문자, 숫자 중 2종류 이상을 조합하지 않으면 예외를 발생한다.
     - [x] address 의 글자수가 255자를 초과하면 예외를 발생한다.
-    - [ ] phoneNumber 의 양식이 일치하지 않으면 예외를 발생한다.
-        - [ ] start, middle, last 의 형식을 지닌다.
-        - [ ] start 는 3글자, middle과 last는 4글자이다.
+    - [x] phoneNumber 의 양식이 일치하지 않으면 예외를 발생한다.
+        - [x] start, middle, last 의 형식을 지닌다.
+        - [x] start 는 3글자, middle과 last는 4글자이다.
     - [x] account 가 중복되면 예외를 발생한다.
     - [x] account 에 대문자가 포함되어 있으면 소문자로 변경한다.
     - [x] account 에 특수문자가 포함되어 있으면 제거한다.

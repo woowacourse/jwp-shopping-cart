@@ -148,6 +148,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @ParameterizedTest
+    @CsvSource(value = {"01,1234,1234", "0101,1234,1234", "010,123,1234", "010,12345,1234", "010,1234,123", "010,1234,12345"})
+    @DisplayName("휴대폰 번호의 각각 길이가 3, 4, 4자가 아니면 상태코드 400을 반환한다.")
+    void invalidPhoneNumberLength(String start, String middle, String end) {
+        // given
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", "password123", "address", new PhoneNumber(start, middle, end));
+
+        // when
+        final ExtractableResponse<Response> response = post("/signup", signupRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo("휴대폰번호 형식이 일치하지 않습니다.")
+        );
+    }
+
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {

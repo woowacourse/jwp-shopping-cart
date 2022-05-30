@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import woowacourse.auth.dto.PhoneNumber;
 import woowacourse.shoppingcart.domain.Customer;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Locale;
@@ -19,6 +20,7 @@ public class SignupRequest {
     private final String password;
     @Size(max = 255, message = "주소 길이는 255자를 초과할 수 없습니다.")
     private final String address;
+    @Valid
     private final PhoneNumber phoneNumber;
 
 
