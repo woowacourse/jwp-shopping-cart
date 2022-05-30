@@ -6,7 +6,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 
 import java.util.Objects;
@@ -14,11 +13,9 @@ import java.util.Objects;
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String BEARER = "BEARER";
-    private AuthService authService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalArgumentResolver(AuthService authService, JwtTokenProvider jwtTokenProvider) {
-        this.authService = authService;
+    public AuthenticationPrincipalArgumentResolver(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 

@@ -12,7 +12,6 @@ import woowacourse.shoppingcart.dto.CustomerDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.auth.acceptance.AcceptanceTestFixture.에덴;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {

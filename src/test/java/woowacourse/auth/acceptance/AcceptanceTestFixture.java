@@ -1,9 +1,5 @@
 package woowacourse.auth.acceptance;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.PhoneNumber;
 import woowacourse.shoppingcart.dto.SignupRequest;
 
