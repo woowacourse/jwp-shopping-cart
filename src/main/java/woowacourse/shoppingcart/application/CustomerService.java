@@ -45,7 +45,8 @@ public class CustomerService {
 
     @Transactional
     public void updatePassword(final String username, final CustomerUpdatePasswordRequest request) {
-        Password encodedPassword = Password.purePassword(request.getPassword()).encodePassword(passwordEncoder);
+        Password encodedPassword = Password.purePassword(request.getPassword())
+                .encodePassword(passwordEncoder);
         customerDao.updatePassword(username, encodedPassword);
     }
 
