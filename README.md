@@ -7,8 +7,9 @@
 ## 1단계 기능 목록
 - [ ] 회원 가입
     - [ ] [ERROR] email 중복 예외 처리
-    - [ ] [ERROR] 전화번호 형식 확인
-    - [ ] [ERROR] password 형식 확인
+    - [x] [ERROR] 전화번호 형식 확인
+    - [x] [ERROR] password 형식 확인
+    - [x] [ERROR] 이름 형식 확인
 - [ ] 로그인 (토큰 발급)
   - [ ] [ERROR] 존재하지 않는 email 일 경우 예외 처리 (custom exception)
   - [ ] [ERROR] 비밀번호가 일치하지 않을 경우 예외 처리 (custom exception)
