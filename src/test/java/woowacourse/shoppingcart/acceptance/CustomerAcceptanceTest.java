@@ -49,7 +49,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("아이디 길이가 4~15자를 벗어나면 400 상태코드를 반환한다.")
     void invalidAccountLength(String account) {
         // given
-        final SignupRequest signupRequest = new SignupRequest(account, "eden", "password", "address", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest(account, "eden", "password123", "address", new PhoneNumber("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -66,11 +66,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("아이디가 대문자이면 소문자로 변경하고 특수문자가 들어가면 제거한다.")
     void changeAccountPattern(String account, String expectedAccount) {
         // given
-        final SignupRequest signupRequest = new SignupRequest(account, "eden", "password", "address", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest(account, "eden", "password123", "address", new PhoneNumber("010", "1234", "5678"));
         post("/signup", signupRequest);
 
         // when
-        final SignupRequest duplicatedAccountSignupRequest = new SignupRequest(expectedAccount, "eden", "password", "address", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest duplicatedAccountSignupRequest = new SignupRequest(expectedAccount, "eden", "password123", "address", new PhoneNumber("010", "1234", "5678"));
         final ExtractableResponse<Response> response = post("/signup", duplicatedAccountSignupRequest);
 
         // then
@@ -85,7 +85,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("닉네임 길이가 2~20자를 벗어나면 400 상태코드를 반환한다.")
     void invalidNicknameLength(String nickName) {
         // given
-        final SignupRequest signupRequest = new SignupRequest("account", nickName, "password", "address", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("account", nickName, "password123", "address", new PhoneNumber("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -94,6 +94,40 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(response.asString()).isEqualTo("닉네임 길이는 2~20자를 만족해야 합니다.")
+        );
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"abc123", "abc123abc123abc123abc123"})
+    @DisplayName("비밀번호 길이가 8~20자를 벗어나면 400 상태코드를 반환한다.")
+    void invalidPasswordLength(String password) {
+        // given
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address", new PhoneNumber("010", "1234", "5678"));
+
+        // when
+        final ExtractableResponse<Response> response = post("/signup", signupRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                    () -> assertThat(response.asString()).isEqualTo("비밀번호 길이는 8~20자를 만족해야 합니다.")
+        );
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"12345678", "abcdefghi", "ABCDEFGHI", "abcd!!!!!", "1234567!!", "ABCDEFG!!"})
+    @DisplayName("비밀번호가 영어 대문자, 소문자, 숫자 중 2종류 이상을 조합하지 않았다면 상태코드 400을 반환한다.")
+    void invalidPasswordPattern(String password) {
+        // given
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address", new PhoneNumber("010", "1234", "5678"));
+
+        // when
+        final ExtractableResponse<Response> response = post("/signup", signupRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo("비밀번호는 영어 대문자, 소문자, 숫자 중 2종류 이상을 조합해야 합니다.")
         );
     }
 
