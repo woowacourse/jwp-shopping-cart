@@ -8,8 +8,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -23,31 +25,21 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
-    void findIdByUserNameTest() {
-
+    @DisplayName("회원을 저장한다.")
+    void save() {
         // given
-        final String userName = "puterism";
-
+        final Customer customer = new Customer("hamcheeseburger", "corinne", "password123", "address", "01012345678");
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
+        final Customer savedCustomer = customerDao.save(customer);
         // then
-        assertThat(customerId).isEqualTo(1L);
-    }
-
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
-        // given
-        final String userName = "gwangyeol-iM";
-
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(16L);
+        assertAll(
+                () -> assertThat(savedCustomer.getId()).isEqualTo(2L),
+                () -> assertThat(savedCustomer.getAccount()).isEqualTo("hamcheeseburger"),
+                () -> assertThat(savedCustomer.getNickname()).isEqualTo("corinne"),
+                () -> assertThat(savedCustomer.getPassword()).isEqualTo("password123"),
+                () -> assertThat(savedCustomer.getAddress()).isEqualTo("address"),
+                () -> assertThat(savedCustomer.getPhoneNumber()).isEqualTo("01012345678")
+        );
     }
 }
