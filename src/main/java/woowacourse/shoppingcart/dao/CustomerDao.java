@@ -5,15 +5,23 @@ import java.util.Locale;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @Repository
 public class CustomerDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Customer> rowMapper = (rs, rowNum) ->
+            new Customer(
+                    rs.getLong("id"),
+                    rs.getString("username"),
+                    rs.getString("email"),
+                    rs.getString("password"));
 
     public CustomerDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -46,5 +54,14 @@ public class CustomerDao {
     public boolean existEmail(String email) {
         final String query = "SELECT EXISTS(SELECT * FROM customer WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);
+    }
+
+    public Customer findByEmail(String email) {
+        try {
+            final String query = "SELECT * FROM customer WHERE email = ?";
+            return jdbcTemplate.queryForObject(query, rowMapper, email);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new NotFoundCustomerException();
+        }
     }
 }
