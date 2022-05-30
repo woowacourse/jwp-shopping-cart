@@ -35,6 +35,15 @@ public class Request {
                 .extract();
     }
 
+    protected ExtractableResponse<Response> getWithToken(String url, String token) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .when()
+                .get(url)
+                .then().log().all()
+                .extract();
+    }
+
     protected ExtractableResponse<Response> delete(String url) {
         return RestAssured.given().log().all()
                 .when()

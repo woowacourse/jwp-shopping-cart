@@ -47,6 +47,10 @@ public enum TMember {
         return tokenResponse;
     }
 
+    public LoginAnd loginAnd() {
+        return new LoginAnd(this);
+    }
+
     public ErrorResponse failedLogin(String wrongPassword) {
         ExtractableResponse<Response> response = request("/api/auth", new TokenRequest(email, wrongPassword));
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -75,5 +79,9 @@ public enum TMember {
 
     public String getName() {
         return name;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

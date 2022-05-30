@@ -30,7 +30,7 @@
 
 
 ## interceptor
-- [ ] 유효한 토큰인지 확인
+- [x] 유효한 토큰인지 확인
 
 ## argumentResolver
 - [x] 토큰을 기반으로 멤버 정보를 가져온다.
