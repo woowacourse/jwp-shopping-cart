@@ -13,6 +13,10 @@ public class Address {
     }
 
     private void validate(String value) {
+        if (value.isBlank()) {
+            throw new IllegalArgumentException(
+                    String.format("주소는 빈 값 생성이 불가능합니다. 입력값 : %s", value));
+        }
         if (value.length() > 255) {
             throw new IllegalArgumentException(
                     String.format("주소는 최대 255자까지 가능합니다. 입력값 : %s", value));
