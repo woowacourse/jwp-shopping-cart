@@ -6,6 +6,7 @@ import woowacourse.auth.domain.Member;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
+import woowacourse.auth.dto.MemberResponse;
 import woowacourse.auth.dto.PasswordCheckRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 
@@ -65,5 +66,10 @@ public class AuthService {
         String email = jwtTokenProvider.getPayload(token);
         return memberDao.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
+    }
+
+    public MemberResponse findAuthorizedMemberByToken(String token) {
+        Member member = findMemberByToken(token);
+        return new MemberResponse(member);
     }
 }
