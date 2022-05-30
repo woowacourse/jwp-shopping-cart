@@ -1,19 +1,16 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.domain.Customer;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -52,6 +49,30 @@ public class CustomerDaoTest {
         assertThat(customerDao.existByEmailAndPassword(customer.getEmail(), customer.getPassword())).isTrue();
     }
 
+    @Test
+    @DisplayName("유저이름이 존재하는지 확인한다.")
+    void existByUserName() {
+        customerDao.save(new Customer("레넌", "rennon@woowa.com", "1234"));
+
+        assertThat(customerDao.existByUserName("레넌")).isTrue();
+    }
+
+    @Test
+    @DisplayName("비밀번호가 일치한다.")
+    void isValidPassword() {
+        customerDao.save(new Customer("레넌", "rennon@woowa.com", "1234"));
+
+        assertThat(customerDao.isValidPassword("레넌", "1234")).isTrue();
+    }
+
+    @Test
+    @DisplayName("비밀번호가 일치하지 않는다.")
+    void isInvalidPassword() {
+        customerDao.save(new Customer("레넌", "rennon@woowa.com", "1234"));
+
+        assertThat(customerDao.isValidPassword("레넌", "1235")).isFalse();
+    }
+
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
@@ -60,10 +81,10 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Customer customer = customerDao.findByUserName(userName);
 
         // then
-        assertThat(customerId).isEqualTo(1L);
+        assertThat(customer.getId()).isEqualTo(1L);
     }
 
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -74,9 +95,9 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Customer customer = customerDao.findByUserName(userName);
 
         // then
-        assertThat(customerId).isEqualTo(16L);
+        assertThat(customer.getId()).isEqualTo(16L);
     }
 }

@@ -4,19 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.dto.SignUpRequest;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.utils.EmailUtil;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
@@ -50,7 +45,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(token).isNotBlank();
     }
 
-//    @Disabled
+    //    @Disabled
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
@@ -78,7 +73,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String headOfEmail = EmailUtil.getIdentifier(signUpRequest.getEmail());
         CustomerResponse response = RestAssured
                 .given().log().all()
-                .header("Authorization","Bearer " + token)
+                .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/" + headOfEmail)
                 .then().log().all()
@@ -139,7 +134,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String token = "dummy";
         RestAssured
                 .given().log().all()
-                .header("Authorization","Bearer " + token)
+                .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/" + headOfEmail)
                 .then().log().all()

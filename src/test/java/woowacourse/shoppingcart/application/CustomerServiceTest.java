@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
@@ -9,9 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.SignUpRequest;
 import woowacourse.auth.dto.SignUpResponse;
-import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @SpringBootTest
 @Transactional
@@ -19,9 +24,12 @@ public class CustomerServiceTest {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private CustomerDao customerDao;
+
     @Test
     @DisplayName("회원을 저장하고 회원 정보를 반환한다.")
-    void signUp() {
+    void addCustomer() {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
@@ -51,5 +59,54 @@ public class CustomerServiceTest {
 
         // then
         assertThat(response.getUsername()).isEqualTo("greenlawn");
+    }
+
+    @Test
+    @DisplayName("나의 정보를 수정한다.")
+    void updateMe() {
+        // given
+        String name = "greenlawn";
+        String email = "green@woowa.com";
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        customerService.addCustomer(signUpRequest);
+
+        // when
+        customerService.updateMe("green@woowa.com", new UpdatePasswordRequest("1234", "5678"));
+
+        // then
+        assertThat(customerDao.isValidPassword(name, "5678")).isTrue();
+    }
+
+    @Test
+    @DisplayName("비밀번호가 틀리면 나의 정보를 수정할 수 없다.")
+    void updateMeThrowException() {
+        // given
+        String name = "greenlawn";
+        String email = "green@woowa.com";
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        customerService.addCustomer(signUpRequest);
+
+        // when & then
+        assertThatThrownBy(() ->
+                customerService.updateMe("green@woowa.com", new UpdatePasswordRequest("1235", "5678")))
+                .isInstanceOf(InvalidPasswordException.class)
+                .hasMessage("비밀번호가 틀렸습니다.");
+    }
+
+    @Test
+    @DisplayName("회원을 탈퇴한다.")
+    void deleteMe() {
+        // given
+        String name = "greenlawn";
+        String email = "green@woowa.com";
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        customerService.addCustomer(signUpRequest);
+
+        // when
+        customerService.deleteMe(name, new DeleteCustomerRequest("1234"));
+
+        // given
+        assertThatThrownBy(() -> customerDao.findByUserName(name))
+                .isInstanceOf(InvalidCustomerException.class);
     }
 }

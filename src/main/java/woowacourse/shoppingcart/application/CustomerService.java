@@ -3,10 +3,12 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.SignUpRequest;
 import woowacourse.auth.dto.SignUpResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @Service
@@ -36,5 +38,15 @@ public class CustomerService {
         }
 
         customerDao.updatePassword(customer.getId(), updatePasswordRequest.getNewPassword());
+    }
+
+    public void deleteMe(String username, DeleteCustomerRequest deleteCustomerRequest) {
+        if (!customerDao.existByUserName(username)) {
+            throw new InvalidCustomerException();
+        }
+        if (!customerDao.isValidPassword(username, deleteCustomerRequest.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+        customerDao.deleteByUserName(username);
     }
 }

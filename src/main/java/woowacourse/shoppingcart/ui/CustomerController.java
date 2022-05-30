@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.SignUpRequest;
 import woowacourse.auth.dto.SignUpResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
@@ -35,7 +37,8 @@ public class CustomerController {
     }
 
     @GetMapping("/{headOfEmail}")
-    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String email, @PathVariable String headOfEmail) {
+    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String email,
+                                                  @PathVariable String headOfEmail) {
         return ResponseEntity.ok().body(customerService.findMe(email));
     }
 
@@ -45,5 +48,13 @@ public class CustomerController {
                                                      @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         customerService.updateMe(email, updatePasswordRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{username}")
+    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal String email,
+                                         @PathVariable String username,
+                                         @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
+        customerService.deleteMe(username, deleteCustomerRequest);
+        return ResponseEntity.noContent().build();
     }
 }

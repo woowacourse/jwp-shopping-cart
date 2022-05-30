@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Locale;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,8 +11,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.auth.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-
-import java.util.Locale;
 
 @Repository
 public class CustomerDao {
@@ -47,10 +46,10 @@ public class CustomerDao {
         return new Customer(id, username, email, password);
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Customer findByUserName(final String userName) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            final String query = "SELECT id, username, email, password FROM customer WHERE username = ?";
+            return jdbcTemplate.queryForObject(query, customerRowMapper, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
@@ -60,6 +59,15 @@ public class CustomerDao {
         try {
             final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
             return jdbcTemplate.queryForObject(query, customerRowMapper, email.toLowerCase(Locale.ROOT));
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public boolean existByUserName(String username) {
+        try {
+            String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
+            return jdbcTemplate.queryForObject(query, Boolean.class, username);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
@@ -77,5 +85,19 @@ public class CustomerDao {
     public void updatePassword(Long id, String password) {
         final String query = "UPDATE CUSTOMER SET password = ? WHERE id = ?";
         jdbcTemplate.update(query, password, id);
+    }
+
+    public boolean isValidPassword(String username, String password) {
+        try {
+            final String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ? AND password = ?)";
+            return jdbcTemplate.queryForObject(query, Boolean.class, username, password);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public void deleteByUserName(String username) {
+        final String query = "DELETE FROM customer WHERE username = ?";
+        jdbcTemplate.update(query, username);
     }
 }
