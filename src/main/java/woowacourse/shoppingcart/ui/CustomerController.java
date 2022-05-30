@@ -29,8 +29,7 @@ public class CustomerController {
 
     @GetMapping("/api/customers/me")
     public ResponseEntity<CustomerResponse> findCustomer(@AuthenticationPrincipal LoginCustomer loginCustomer) {
-        String username = loginCustomer.getUsername();
-        CustomerResponse customerResponse = customerService.find(username);
+        CustomerResponse customerResponse = customerService.find(loginCustomer);
         return ResponseEntity.ok(customerResponse);
     }
 }

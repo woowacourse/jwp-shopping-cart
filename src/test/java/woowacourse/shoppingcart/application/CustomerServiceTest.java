@@ -55,7 +55,7 @@ class CustomerServiceTest {
         CustomerSaveRequest request = new CustomerSaveRequest(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
         customerService.save(request);
 
-        CustomerResponse response = customerService.find(request.getUsername());
+        CustomerResponse response = customerService.find(new LoginCustomer(request.getUsername()));
 
         assertAll(() -> {
             assertThat(response.getId()).isNotNull();
@@ -69,7 +69,7 @@ class CustomerServiceTest {
     @DisplayName("존재하지 않는 username인 경우 예외를 던진다.")
     @Test
     void find_error_notExist_username() {
-        assertThatThrownBy(() -> customerService.find(USERNAME))
+        assertThatThrownBy(() -> customerService.find(new LoginCustomer(USERNAME)))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
@@ -83,7 +83,7 @@ class CustomerServiceTest {
 
         customerService.update(new LoginCustomer(USERNAME), new CustomerUpdateRequest(address, phoneNumber));
 
-        CustomerResponse response = customerService.find(USERNAME);
+        CustomerResponse response = customerService.find(new LoginCustomer(USERNAME));
         assertAll(() -> {
             assertThat(response.getId()).isNotNull();
             assertThat(response.getUsername()).isEqualTo(USERNAME);

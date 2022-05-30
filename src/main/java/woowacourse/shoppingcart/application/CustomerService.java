@@ -24,15 +24,14 @@ public class CustomerService {
         return new CustomerResponse(customer);
     }
 
-    public CustomerResponse find(String username) {
-        Customer customer = getCustomer(username);
+    public CustomerResponse find(LoginCustomer loginCustomer) {
+        Customer customer = getCustomer(loginCustomer.getUsername());
 
         return new CustomerResponse(customer);
     }
 
     public void update(LoginCustomer loginCustomer, CustomerUpdateRequest customerUpdateRequest) {
-        String username = loginCustomer.getUsername();
-        Customer customer = getCustomer(username);
+        Customer customer = getCustomer(loginCustomer.getUsername());
 
         customer.modify(customerUpdateRequest.getAddress(), customerUpdateRequest.getPhoneNumber());
 
