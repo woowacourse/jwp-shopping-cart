@@ -5,9 +5,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -26,19 +31,61 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .header("Location", equalTo("/customers/me"));
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("로그인한 회원이 자신의 정보를 조회한다.")
     @Test
     void getMe() {
+        signUpCustomer();
+        String accessToken = getTokenByLogin();
+        CustomerResponse customerResponse = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(CustomerResponse.class);
 
+        assertAll(
+                () -> assertThat(customerResponse.getUserName()).isEqualTo("forky"),
+                () -> assertThat(customerResponse.getNickName()).isEqualTo("복희"),
+                () -> assertThat(customerResponse.getAge()).isEqualTo(26)
+        );
     }
 
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        signUpCustomer();
+        String accessToken = getTokenByLogin();
     }
 
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        signUpCustomer();
+        String accessToken = getTokenByLogin();
+    }
+
+    private String getTokenByLogin() {
+        return RestAssured.given().log().all()
+                .body(new TokenRequest("forky", "forky@1234"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all()
+                .extract()
+                .as(TokenResponse.class)
+                .getAccessToken();
+    }
+
+    private void signUpCustomer() {
+        CustomerRequest customerRequest =
+                new CustomerRequest("forky", "forky@1234", "복희", 26);
+        RestAssured.given().log().all()
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/customers/signup")
+                .then().log().all();
     }
 }

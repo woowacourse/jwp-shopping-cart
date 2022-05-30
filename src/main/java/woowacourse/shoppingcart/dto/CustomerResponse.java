@@ -18,6 +18,10 @@ public class CustomerResponse {
         this.age = age;
     }
 
+    public CustomerResponse(String userName, String nickName, int age) {
+        this(null, userName, null, nickName, age);
+    }
+
     public Long getId() {
         return id;
     }
