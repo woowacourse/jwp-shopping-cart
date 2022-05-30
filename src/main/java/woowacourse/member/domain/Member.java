@@ -1,9 +1,11 @@
 package woowacourse.member.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.member.exception.MemberCreateException;
+import woowacourse.member.exception.EmailNotValidException;
+import woowacourse.member.exception.NameNotValidException;
+import woowacourse.member.exception.PasswordChangeException;
+import woowacourse.member.exception.PasswordNotValidException;
 import woowacourse.member.infrastructure.PasswordEncoder;
-import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 
 public class Member {
 
@@ -31,19 +33,19 @@ public class Member {
 
     private void validateRightEmail(final String email) {
         if (!Pattern.matches(EMAIL_REGEX, email)) {
-            throw new MemberCreateException("email, " + email);
+            throw new EmailNotValidException();
         }
     }
 
     private void validateRightPassword(final String password) {
         if (!Pattern.matches(PASSWORD_REGEX, password)) {
-            throw new MemberCreateException("password, " + password);
+            throw new PasswordNotValidException();
         }
     }
 
     private void validateRightName(final String name) {
         if (name.length() < 1 || name.length() > 10) {
-            throw new MemberCreateException("name, " + name);
+            throw new NameNotValidException();
         }
     }
 
@@ -58,6 +60,20 @@ public class Member {
     public void updateName(final String name) {
         validateRightName(name);
         this.name = name;
+    }
+
+    public void updatePassword(final String oldPassword,
+                               final String newPassword,
+                               final PasswordEncoder passwordEncoder) {
+        validatePassword(oldPassword, passwordEncoder);
+        validateRightPassword(newPassword);
+        password = passwordEncoder.encode(newPassword);
+    }
+
+    private void validatePassword(final String oldPassword, final PasswordEncoder passwordEncoder) {
+        if(!authenticate(passwordEncoder.encode(oldPassword))) {
+            throw new PasswordChangeException();
+        }
     }
 
     public Long getId() {

@@ -12,7 +12,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.member.exception.MemberCreateException;
+import woowacourse.member.exception.EmailNotValidException;
+import woowacourse.member.exception.NameNotValidException;
+import woowacourse.member.exception.PasswordChangeException;
+import woowacourse.member.exception.PasswordNotValidException;
 import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 
 public class MemberTest {
@@ -49,21 +52,21 @@ public class MemberTest {
     void updateNameException(String value) {
         Member member = createMember(EMAIL, PASSWORD, NAME);
         assertThatThrownBy(() -> member.updateName(value))
-                .isInstanceOf(MemberCreateException.class);
+                .isInstanceOf(NameNotValidException.class);
     }
 
     @DisplayName("이메일 형식이 아니면 에러가 발생한다.")
     @Test
     void validateRightEmail() {
         assertThatThrownBy(() -> createMember("abcde", PASSWORD, NAME))
-                .isInstanceOf(MemberCreateException.class);
+                .isInstanceOf(EmailNotValidException.class);
     }
 
     @DisplayName("비밀번호 형식이 아니면 에러가 발생한다.")
     @Test
     void validateRightPassword() {
         assertThatThrownBy(() -> createMember(EMAIL, "1234", NAME))
-                .isInstanceOf(MemberCreateException.class);
+                .isInstanceOf(PasswordNotValidException.class);
     }
 
     @DisplayName("올바른 이름 형식이 아니면 에러가 발생한다.")
@@ -71,6 +74,41 @@ public class MemberTest {
     @ValueSource(strings = {"", "aaaaaaaaaaa"})
     void validateRightName(String value) {
         assertThatThrownBy(() -> createMember(EMAIL, PASSWORD, value))
-                .isInstanceOf(MemberCreateException.class);
+                .isInstanceOf(NameNotValidException.class);
+    }
+
+    @DisplayName("비밀번호를 변경한다.")
+    @Test
+    void updatePassword() {
+        Member member = createMember(EMAIL, PASSWORD, NAME);
+        member.encodePassword(new SHA256PasswordEncoder());
+        String originPassword = member.getPassword();
+
+        member.updatePassword(PASSWORD, "Maru1234!", new SHA256PasswordEncoder());
+        String updatedPassword = member.getPassword();
+
+        assertThat(originPassword).isNotEqualTo(updatedPassword);
+    }
+
+    @DisplayName("비밀번호 변경시 이전 비밀번호와 다르면 예외가 발생한다.")
+    @Test
+    void updatePasswordNotSamePassword() {
+        Member member = createMember(EMAIL, PASSWORD, NAME);
+        member.encodePassword(new SHA256PasswordEncoder());
+
+        assertThatThrownBy(() ->
+                member.updatePassword("Wrong1!", "Maru1234!", new SHA256PasswordEncoder()))
+                .isInstanceOf(PasswordChangeException.class);
+    }
+
+    @DisplayName("비밀번호 변경시 변경할 비밀번호가 조건에 맞지 않으면 예외가 발생한다.")
+    @Test
+    void updatePasswordNotRight() {
+        Member member = createMember(EMAIL, PASSWORD, NAME);
+        member.encodePassword(new SHA256PasswordEncoder());
+
+        assertThatThrownBy(() ->
+                member.updatePassword(PASSWORD, "1!", new SHA256PasswordEncoder()))
+                .isInstanceOf(PasswordNotValidException.class);
     }
 }

@@ -6,6 +6,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import woowacourse.member.dto.MemberNameUpdateRequest;
+import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberResponse;
 
 public class LoginAnd extends Request {
@@ -27,5 +28,11 @@ public class LoginAnd extends Request {
     public ExtractableResponse<Response> updateMyName(final String name) {
         MemberNameUpdateRequest memberNameUpdateRequest = new MemberNameUpdateRequest(name);
         return putWithToken(memberNameUpdateRequest, "/api/members/me/name", tMember.getToken());
+    }
+
+    public ExtractableResponse<Response> updateMyPassword(final String password) {
+        MemberPasswordUpdateRequest memberPasswordUpdateRequest =
+                new MemberPasswordUpdateRequest(tMember.getPassword(), password);
+        return putWithToken(memberPasswordUpdateRequest, "/api/members/me/password", tMember.getToken());
     }
 }

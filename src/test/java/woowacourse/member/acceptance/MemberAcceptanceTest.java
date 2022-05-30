@@ -3,6 +3,7 @@ package woowacourse.member.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.helper.fixture.MemberFixture.NAME;
+import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
 import static woowacourse.helper.fixture.TMember.MARU;
 
 import io.restassured.response.ExtractableResponse;
@@ -48,6 +49,14 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     void updateMyName() {
         MARU.register();
         ExtractableResponse<Response> response = MARU.loginAnd().updateMyName(NAME);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("토큰을 헤더에 담아 비밀번호 수정을 요청하면 204 no content를 반환한다.")
+    @Test
+    void updateMyPassword() {
+        MARU.register();
+        ExtractableResponse<Response> response = MARU.loginAnd().updateMyPassword(PASSWORD);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

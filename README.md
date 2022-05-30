@@ -13,9 +13,9 @@
     - [x] header token
     - [x] id, email, name 반환
 
-- [ ] put /api/members/me/name
-    - [ ] header token, body name
-    - [ ] name 수정
+- [x] put /api/members/me/name
+    - [x] header token, body name
+    - [x] name 수정
 
 - [ ] put /api/members/me/password
     - [ ] header token, body oldPassword, newPassword

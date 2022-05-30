@@ -28,3 +28,9 @@ include::{snippets}/member-register/http-response.adoc[]
 include::{snippets}/member-me/http-request.adoc[]
 === response
 include::{snippets}/member-me/http-response.adoc[]
+
+== member name update
+=== request
+include::{snippets}/member-name-update/http-request.adoc[]
+=== response
+include::{snippets}/member-name-update/http-response.adoc[]
