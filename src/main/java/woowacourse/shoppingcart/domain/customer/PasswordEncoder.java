@@ -1,4 +1,4 @@
-package woowacourse.auth.support;
+package woowacourse.shoppingcart.domain.customer;
 
 public interface PasswordEncoder {
 

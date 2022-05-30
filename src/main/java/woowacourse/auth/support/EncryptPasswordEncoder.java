@@ -3,6 +3,7 @@ package woowacourse.auth.support;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.springframework.stereotype.Component;
+import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
 
 @Component
 public class EncryptPasswordEncoder implements PasswordEncoder {

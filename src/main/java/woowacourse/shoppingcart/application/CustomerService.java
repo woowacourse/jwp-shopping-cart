@@ -3,7 +3,9 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
@@ -15,9 +17,11 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(final CustomerDao customerDao) {
+    public CustomerService(final CustomerDao customerDao, final PasswordEncoder passwordEncoder) {
         this.customerDao = customerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -25,7 +29,9 @@ public class CustomerService {
         if (customerDao.existCustomerByUsername(request.getUsername())) {
             throw new InvalidCustomerException("이미 존재하는 유저 이름입니다.");
         }
-        customerDao.save(request.toCustomer());
+        Customer customer = request.toCustomer()
+                .encodePassword(passwordEncoder);
+        customerDao.save(customer);
     }
 
     public CustomerResponse findByUsername(final String username) {
@@ -39,7 +45,8 @@ public class CustomerService {
 
     @Transactional
     public void updatePassword(final String username, final CustomerUpdatePasswordRequest request) {
-        customerDao.updatePassword(username, new Password(request.getPassword()));
+        Password encodedPassword = Password.purePassword(request.getPassword()).encodePassword(passwordEncoder);
+        customerDao.updatePassword(username, encodedPassword);
     }
 
     @Transactional

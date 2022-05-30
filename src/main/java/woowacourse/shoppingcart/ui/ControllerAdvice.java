@@ -21,8 +21,8 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
-        return ResponseEntity.badRequest().body(ErrorResponse.from("Unhandled Exception"));
+    public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException exception) {
+        return ResponseEntity.badRequest().body(ErrorResponse.from(exception.getMessage()));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)

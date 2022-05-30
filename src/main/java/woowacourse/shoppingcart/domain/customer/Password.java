@@ -12,27 +12,39 @@ public class Password {
 
     private final String password;
 
-    public Password(final String password) {
-        validateLength(password);
-        validatePattern(password);
+    private Password(final String password) {
         this.password = password;
     }
 
-    private void validateLength(final String password) {
+    public static Password purePassword(final String password) {
+        validateLength(password);
+        validatePattern(password);
+        return new Password(password);
+    }
+
+    private static void validateLength(final String password) {
         if (password.length() < MINIMUM_LENGTH || password.length() > MAXIMUM_LENGTH) {
             throw new IllegalArgumentException(
                     String.format("비밀번호는 %d자 이상 %d자 이하입니다.", MINIMUM_LENGTH, MAXIMUM_LENGTH));
         }
     }
 
-    private void validatePattern(final String password) {
+    private static void validatePattern(final String password) {
         if (!PASSWORD_PATTERN.matcher(password).matches()) {
             throw new IllegalArgumentException("패스워드는 숫자와 영어를 포함해야합니다.");
         }
     }
 
-    public void matchPassword(final String password) {
-        if (!this.password.equals(password)) {
+    public static Password encodedPassword(final String password) {
+        return new Password(password);
+    }
+
+    public Password encodePassword(final PasswordEncoder passwordEncoder) {
+        return new Password(passwordEncoder.encode(password));
+    }
+
+    public void matchPassword(final PasswordEncoder passwordEncoder, final String password) {
+        if (!passwordEncoder.isMatchPassword(this.password, password)) {
             throw new InvalidAuthException("비밀번호가 일치하지 않습니다.");
         }
     }

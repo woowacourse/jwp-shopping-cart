@@ -21,7 +21,7 @@ class CustomerTest {
         Customer customer = Customer.builder()
                 .id(id)
                 .username(username)
-                .password(password)
+                .purePassword(password)
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .build();
@@ -29,6 +29,6 @@ class CustomerTest {
         // then
         assertThat(customer)
                 .usingRecursiveComparison()
-                .isEqualTo(new Customer(id, new Username(username), new Password(password), new PhoneNumber(phoneNumber), new Address(address)));
+                .isEqualTo(new Customer(id, new Username(username), Password.purePassword(password), new PhoneNumber(phoneNumber), new Address(address)));
     }
 }

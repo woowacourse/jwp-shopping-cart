@@ -59,7 +59,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .purePassword("password123")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -81,7 +81,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .purePassword("password123")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -99,7 +99,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .purePassword("password123")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -117,7 +117,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .purePassword("password123")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -144,14 +144,14 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .purePassword("password123")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
         customerDao.save(customer);
 
         // when
-        customerDao.updatePassword("username", new Password("changedpassword123"));
+        customerDao.updatePassword("username", Password.purePassword("changedpassword123"));
 
         // then
         assertThat(customerDao.findByUsername("username").getPassword())
@@ -164,7 +164,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .purePassword("password123")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();

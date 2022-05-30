@@ -31,7 +31,7 @@ public class CustomerSignUpRequest {
     public Customer toCustomer() {
         return Customer.builder()
                 .username(username)
-                .password(password)
+                .purePassword(password)
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .build();

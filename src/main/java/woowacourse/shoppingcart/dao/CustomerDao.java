@@ -21,7 +21,7 @@ public class CustomerDao {
             Customer.builder()
                     .id(rs.getLong("id"))
                     .username(rs.getString("username"))
-                    .password(rs.getString("password"))
+                    .encodedPassword(rs.getString("password"))
                     .phoneNumber(rs.getString("phone_number"))
                     .address(rs.getString("address"))
                     .build()
