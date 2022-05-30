@@ -81,4 +81,14 @@ public class MemberDaoTest {
 
         assertThat(member.isEmpty()).isTrue();
     }
+
+    @DisplayName("이름을 업데이트 한다.")
+    @Test
+    void updateName() {
+        Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        memberDao.updateName(new Member(id, EMAIL, PASSWORD, "MARU"));
+        Member member = memberDao.findById(id).get();
+
+        assertThat(member.getName()).isEqualTo("MARU");
+    }
 }

@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -69,5 +70,12 @@ public class MemberDao {
             String name = rs.getString("name");
             return new Member(id, email, password, name);
         };
+    }
+
+    public void updateName(final Member member) {
+        String sql = "UPDATE member SET name = :name WHERE id = :id";
+
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(member);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 }

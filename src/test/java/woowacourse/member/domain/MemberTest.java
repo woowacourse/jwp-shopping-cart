@@ -43,6 +43,15 @@ public class MemberTest {
         assertThat(member.getName()).isEqualTo("MARU");
     }
 
+    @DisplayName("이름 변경시 올바른 형식이 아니면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "aaaaaaaaaaa"})
+    void updateNameException(String value) {
+        Member member = createMember(EMAIL, PASSWORD, NAME);
+        assertThatThrownBy(() -> member.updateName(value))
+                .isInstanceOf(MemberCreateException.class);
+    }
+
     @DisplayName("이메일 형식이 아니면 에러가 발생한다.")
     @Test
     void validateRightEmail() {

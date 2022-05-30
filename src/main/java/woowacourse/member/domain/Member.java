@@ -17,7 +17,6 @@ public class Member {
 
     public Member(Long id, String email, String password, String name) {
         validateRightEmail(email);
-        validateRightPassword(password);
         validateRightName(name);
         this.id = id;
         this.email = email;
@@ -27,6 +26,7 @@ public class Member {
 
     public Member(String email, String password, String name) {
         this(null, email, password, name);
+        validateRightPassword(password);
     }
 
     private void validateRightEmail(final String email) {
@@ -56,6 +56,7 @@ public class Member {
     }
 
     public void updateName(final String name) {
+        validateRightName(name);
         this.name = name;
     }
 

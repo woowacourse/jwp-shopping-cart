@@ -26,6 +26,6 @@ public class LoginAnd extends Request {
 
     public ExtractableResponse<Response> updateMyName(final String name) {
         MemberNameUpdateRequest memberNameUpdateRequest = new MemberNameUpdateRequest(name);
-        return put(memberNameUpdateRequest, "/api/members/me/name");
+        return putWithToken(memberNameUpdateRequest, "/api/members/me/name", tMember.getToken());
     }
 }

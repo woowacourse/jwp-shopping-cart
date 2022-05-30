@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
+import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.dto.MemberResponse;
 import woowacourse.member.exception.DuplicateMemberEmailException;
@@ -89,11 +90,19 @@ public class MemberServiceTest {
         );
     }
 
-
     @DisplayName("회원이 없을 경우 예외를 발생한다.")
     @Test
     void getMemberInformationNoMember() {
         assertThatThrownBy(() -> memberService.getMemberInformation(0L))
                 .isInstanceOf(NoMemberException.class);
+    }
+
+    @DisplayName("회원 이름을 수정한다.")
+    @Test
+    void updateName() {
+        Long id = memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
+        memberService.updateName(id, new MemberNameUpdateRequest("MARU"));
+
+        assertThat(memberService.getMemberInformation(id).getName()).isEqualTo("MARU");
     }
 }

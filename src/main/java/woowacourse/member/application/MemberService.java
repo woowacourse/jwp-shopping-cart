@@ -1,10 +1,10 @@
 package woowacourse.member.application;
 
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
+import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.dto.MemberResponse;
 import woowacourse.member.exception.DuplicateMemberEmailException;
@@ -51,5 +51,12 @@ public class MemberService {
         Member member = memberDao.findById(id)
                 .orElseThrow(NoMemberException::new);
         return MemberResponse.from(member);
+    }
+
+    public void updateName(final Long id, final MemberNameUpdateRequest memberNameUpdateRequest) {
+        Member member = memberDao.findById(id)
+                .orElseThrow(NoMemberException::new);
+        member.updateName(memberNameUpdateRequest.getName());
+        memberDao.updateName(member);
     }
 }

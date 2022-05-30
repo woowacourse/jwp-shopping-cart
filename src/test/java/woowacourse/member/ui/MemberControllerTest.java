@@ -5,11 +5,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -31,8 +33,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.helper.restdocs.RestDocsTest;
+import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.dto.MemberResponse;
 
@@ -88,5 +90,33 @@ public class MemberControllerTest extends RestDocsTest {
                         fieldWithPath("email").type(STRING).description("이메일"),
                         fieldWithPath("name").type(STRING).description("이름")
                 )));
+    }
+
+    @DisplayName("이름을 수정한다.")
+    @Test
+    void updateName() throws Exception {
+        MemberNameUpdateRequest memberNameUpdateRequest = new MemberNameUpdateRequest(NAME);
+        doNothing().when(memberService).updateName(anyLong(), any(MemberNameUpdateRequest.class));
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        ResultActions resultActions = mockMvc.perform(put("/api/members/me/name")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memberNameUpdateRequest)))
+                .andExpect(status().isNoContent());
+
+        // docs
+        resultActions.andDo(document("member-name-update",
+                getRequestPreprocessor(),
+                getResponsePreprocessor(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                requestFields(
+                        fieldWithPath("name").description("수정할 이름")
+                )));
+
     }
 }
