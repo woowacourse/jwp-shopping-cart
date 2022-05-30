@@ -38,7 +38,20 @@ class CustomerDaoTest {
         assertThat(customerId).isGreaterThan(0);
     }
 
-    @DisplayName("회원을 조회한다.")
+    @DisplayName("회원을 아이디로 조회한다.")
+    @Test
+    void findById() {
+        final Customer expected = new Customer(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD);
+        final Long customerId = customerDao.save(expected);
+        final Optional<Customer> actual = customerDao.findById(customerId);
+
+        assertThat(actual).isPresent();
+        assertThat(actual.get()).usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(expected);
+    }
+
+    @DisplayName("회원을 이메일로 조회한다.")
     @Test
     void findByEmail() {
         final Customer expected = new Customer(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD);

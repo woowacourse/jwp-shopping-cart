@@ -43,6 +43,16 @@ public class CustomerDao {
                 .longValue();
     }
 
+    public Optional<Customer> findById(final long id) {
+        try {
+            final String query = "SELECT id, email, userName, password FROM customer WHERE id = (:id)";
+            final SqlParameterSource parameters = new MapSqlParameterSource("id", id);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, parameters, ROW_MAPPER));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<Customer> findByEmail(final String customerEmail) {
         try {
             final String query = "SELECT id, email, userName, password FROM customer WHERE email = (:email)";
