@@ -23,8 +23,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/customers/signup")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("userName", equalTo("forky"))
-                .body("nickName", equalTo("복희"));
+                .header("Location", equalTo("/customers/me"));
     }
 
     @DisplayName("내 정보 조회")
