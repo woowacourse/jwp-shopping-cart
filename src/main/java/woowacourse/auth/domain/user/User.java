@@ -33,6 +33,10 @@ public class User {
         }
     }
 
+    public Id getId() {
+        return id;
+    }
+
     public Email getEmail() {
         return email;
     }

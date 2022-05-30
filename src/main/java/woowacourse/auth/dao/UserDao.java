@@ -2,16 +2,16 @@ package woowacourse.auth.dao;
 
 import woowacourse.auth.domain.user.Email;
 import woowacourse.auth.domain.user.Id;
-import woowacourse.auth.domain.user.User;
+import woowacourse.auth.entity.UserEntity;
 
 public interface UserDao {
-    Id save(User user);
+    int save(UserEntity userEntity);
 
-    User findById(Id id);
+    UserEntity findById(int id);
 
-    User findByEmail(Email email);
+    UserEntity findByEmail(Email email);
 
-    void update(User user);
+    void update(UserEntity userEntity);
 
     void delete(Id id);
 }

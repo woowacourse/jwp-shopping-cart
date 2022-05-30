@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.auth.domain.user.Email;
 import woowacourse.auth.domain.user.Id;
-import woowacourse.auth.domain.user.User;
+import woowacourse.auth.entity.UserEntity;
 
 @Repository
 public class JdbcUserDao implements UserDao {
@@ -26,29 +26,39 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public Id save(User user) {
+    public int save(UserEntity userEntity) {
         Map<String, Object> params = new HashMap<>();
-        params.put("email", user.getEmail().getValue());
-        params.put("password", user.getPassword().getValue());
-        params.put("profile_image_url", user.getProfileImageUrl().getValue());
-        params.put("terms", user.isTerms());
+        params.put("email", userEntity.getEmail());
+        params.put("password", userEntity.getPassword());
+        params.put("profile_image_url", userEntity.getProfileImageUrl());
+        params.put("terms", userEntity.isTerms());
 
-        int id = jdbcInsert.executeAndReturnKey(params).intValue();
-        return new Id(id);
+        return jdbcInsert.executeAndReturnKey(params).intValue();
     }
 
     @Override
-    public User findById(Id id) {
+    public UserEntity findById(int id) {
+        String sql = "SELECT id, email, password, profile_image_url, terms FROM CUSTOMER WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                        new UserEntity(
+                                rs.getInt("id"),
+                                rs.getString("email"),
+                                rs.getString("password"),
+                                rs.getString("profile_image_url"),
+                                rs.getBoolean("terms")
+                        ),
+                id
+        );
+    }
+
+    @Override
+    public UserEntity findByEmail(Email email) {
         return null;
     }
 
-    @Override
-    public User findByEmail(Email email) {
-        return null;
-    }
 
     @Override
-    public void update(User user) {
+    public void update(UserEntity userEntity) {
 
     }
 
