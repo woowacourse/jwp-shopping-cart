@@ -22,6 +22,7 @@ import woowacourse.shoppingcart.dto.SignupRequest;
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
+    private static final String INVALID_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naG8xMDgiLCJpYXQiOjE2NTM5MDg0OTgsImV4cCI6MTY1MzkxMjA5OH0.6XAQq1jsqxnn8zMbW9nNcZ4R-BiIyQvLkraocC1aaaa";
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
@@ -159,6 +160,39 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
             () -> assertThat(customerResponse.getAddress()).isEqualTo(signupRequest.getAddress())
         );
+    }
+
+    @DisplayName("잘못된 토큰으로 내 정보 조회를 하면 401 에러를 반환해야 한다.")
+    @Test
+    void getMeByInvalidToken() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+
+        RestAssured.given().log().all()
+            .body(signupRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/signup")
+            .then().log().all()
+            .extract();
+
+        // when
+        RestAssured
+            .given().log().all()
+            .body(new LoginRequest("dongho108", "ehdgh1234"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/api/customers/login")
+            .then().log().all().extract();
+
+        // then
+        RestAssured
+            .given().log().all()
+            .auth().oauth2(INVALID_ACCESS_TOKEN)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/customers")
+            .then().log().all()
+            .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("내 정보 수정")

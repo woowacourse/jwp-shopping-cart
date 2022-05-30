@@ -7,6 +7,7 @@ import javax.validation.ConstraintViolationException;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import woowacourse.shoppingcart.dto.ExceptionResponse;
+import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -34,14 +36,6 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
     }
 
-    // @ExceptionHandler({MethodArgumentNotValidException.class})
-    // public ResponseEntity handleInvalidRequest(final BindingResult bindingResult) {
-    //     final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-    //     final FieldError mainError = fieldErrors.get(0);
-    //
-    //     return ResponseEntity.badRequest().body(mainError.getDefaultMessage());
-    // }
-
     @ExceptionHandler
     public ResponseEntity handleBindingException(final BindException exception) {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
@@ -51,12 +45,6 @@ public class ControllerAdvice {
             .collect(Collectors.toList());
 
         ExceptionResponse response = new ExceptionResponse(messages);
-
-        // List<ExceptionResponse> responses = fieldErrors.stream()
-        //     .map(DefaultMessageSourceResolvable::getDefaultMessage)
-        //     .map(ExceptionResponse::new)
-        //     .collect(Collectors.toList());
-        // return ResponseEntity.badRequest().body(responses);
         return ResponseEntity.badRequest().body(response);
     }
 
@@ -77,5 +65,10 @@ public class ControllerAdvice {
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity handleAuthException(final AuthorizationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
