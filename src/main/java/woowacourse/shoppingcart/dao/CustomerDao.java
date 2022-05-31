@@ -77,4 +77,9 @@ public class CustomerDao {
         String query = "UPDATE customer SET password = ? WHERE id = ?";
         jdbcTemplate.update(query, customer.getPassword(), customer.getId());
     }
+
+    public void updateNickname(Customer customer) {
+        String query = "UPDATE customer SET nickname = ? WHERE id = ?";
+        jdbcTemplate.update(query, customer.getNickname(), customer.getId());
+    }
 }

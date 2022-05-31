@@ -128,4 +128,22 @@ public class CustomerDaoTest {
         // then
         assertThat(customer.isPasswordMatched(newPassword)).isTrue();
     }
+
+    @DisplayName("새로운 닉네임으로 변경한다.")
+    @Test
+    void changeNickname() {
+        // given
+        String email = "beomWhale@naver.com";
+        String password = "Password123!";
+        String prevNickname = "beom1234";
+        Long savedId = customerDao.save(new Customer(email, prevNickname, password));
+        String changedNickname = "changed";
+        customerDao.updateNickname(new Customer(savedId, email, changedNickname, password));
+
+        // when
+        Customer customer = customerDao.findIdByEmail(email).get();
+
+        // then
+        assertThat(customer.getNickname()).isEqualTo(changedNickname);
+    }
 }
