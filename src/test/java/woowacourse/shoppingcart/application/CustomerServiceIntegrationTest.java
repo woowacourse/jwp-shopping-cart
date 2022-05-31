@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +20,7 @@ import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @SpringBootTest
 @Transactional
-public class CustomerServiceIntegrationTest {
+class CustomerServiceIntegrationTest {
 
     @Autowired
     private CustomerService customerService;
@@ -90,7 +89,8 @@ public class CustomerServiceIntegrationTest {
     @DisplayName("Customer를 수정한다.")
     void update_customer_void() {
         // given
-        final Customer loginCustomer = new Customer(id, customer.getNickname(), customer.getEmail(), customer.getPassword());
+        final Customer loginCustomer = new Customer(id, customer.getNickname(), customer.getEmail(),
+                customer.getPassword());
 
         final CustomerUpdationRequest request = new CustomerUpdationRequest("rick", "qwerasdf123");
 
@@ -103,14 +103,11 @@ public class CustomerServiceIntegrationTest {
     @DisplayName("Customer를 삭제한다.")
     void delete_customer_void() {
         // given
-        final Customer loginCustomer = new Customer(id, customer.getNickname(), customer.getEmail(), customer.getPassword());
+        final Customer loginCustomer = new Customer(id, customer.getNickname(), customer.getEmail(),
+                customer.getPassword());
 
         // when, then
-        assertAll(
-                () -> assertThatCode(() -> customerService.delete(loginCustomer))
-                        .doesNotThrowAnyException(),
-                () -> assertThatThrownBy(() -> customerService.getByEmail(loginCustomer.getEmail()))
-                        .isInstanceOf(NotFoundCustomerException.class)
-        );
+        assertThatCode(() -> customerService.delete(loginCustomer))
+                .doesNotThrowAnyException();
     }
 }

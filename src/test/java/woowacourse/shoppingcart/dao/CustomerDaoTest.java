@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CustomerDaoTest {
+class CustomerDaoTest {
 
     private final CustomerDao customerDao;
 
@@ -26,10 +26,9 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
-    @DisplayName("nickname을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
+    @DisplayName("nickname을 통해 아이디를 찾으면, id를 반환한다.")
     void findIdByNickNameTest() {
-
         // given
         final String nickname = "puterism";
 
@@ -40,10 +39,9 @@ public class CustomerDaoTest {
         assertThat(customerId).isEqualTo(1L);
     }
 
-    @DisplayName("대소문자를 구별하지 않고 nickname을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
+    @DisplayName("대소문자를 구별하지 않고 nickname을 통해 아이디를 찾으면, id를 반환한다.")
     void findIdByUserNameTestIgnoreUpperLowerCase() {
-
         // given
         final String userName = "gwangyeol-iM";
 
@@ -54,8 +52,8 @@ public class CustomerDaoTest {
         assertThat(customerId).isEqualTo(16L);
     }
 
-    @DisplayName("이메일이 존재하지 않으면 false를 반환한다.")
     @Test
+    @DisplayName("이메일이 존재하지 않으면 false를 반환한다.")
     void existEmail_notExist_falseReturned() {
         // given
         final String email = "kun@naver.com";
@@ -67,8 +65,8 @@ public class CustomerDaoTest {
         assertThat(actual).isFalse();
     }
 
-    @DisplayName("이메일이 존재하면 true를 반환한다.")
     @Test
+    @DisplayName("이메일이 존재하면 true를 반환한다.")
     void existEmail_exist_trueReturned() {
         // given
         final String email = "email1@email.com";
@@ -80,8 +78,8 @@ public class CustomerDaoTest {
         assertThat(actual).isTrue();
     }
 
-    @DisplayName("Customer를 저장하면, id를 반환한다.")
     @Test
+    @DisplayName("Customer를 저장하면, id를 반환한다.")
     void save() {
         // given
         final Customer customer = new Customer("kun", "kun@email.com", "asdfqer123");

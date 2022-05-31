@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 
 import org.assertj.core.api.Assertions;
@@ -119,15 +118,8 @@ class CustomerServiceTest {
         // given
         final Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
 
-        given(customerDao.findByEmail(customer.getEmail()))
-                .willThrow(NotFoundCustomerException.class);
-
         // when, then
-        assertAll(
-                () -> assertThatCode(() -> customerService.delete(customer))
-                        .doesNotThrowAnyException(),
-                () -> assertThatThrownBy(() -> customerService.getByEmail(customer.getEmail()))
-                        .isInstanceOf(NotFoundCustomerException.class)
-        );
+        assertThatCode(() -> customerService.delete(customer))
+                .doesNotThrowAnyException();
     }
 }

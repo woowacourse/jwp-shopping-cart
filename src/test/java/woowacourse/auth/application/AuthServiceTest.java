@@ -27,10 +27,13 @@ import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 class AuthServiceTest {
 
     private static MockedStatic<BCrypt> bcrypt;
+
     @InjectMocks
     private AuthService authService;
+
     @Mock
     private CustomerService customerService;
+
     @Mock
     private JwtTokenProvider jwtTokenProvider;
 
@@ -44,8 +47,8 @@ class AuthServiceTest {
         bcrypt.close();
     }
 
-    @DisplayName("로그인하려는 이메일이 존재하지 않으면 예외를 던진다.")
     @Test
+    @DisplayName("로그인하려는 이메일이 존재하지 않으면 예외를 던진다.")
     void login_notExistEmail_exceptionThrown() {
         // given
         final TokenRequest request = new TokenRequest("email@email.com", "1q2w3e4r");
@@ -58,8 +61,8 @@ class AuthServiceTest {
                 .isInstanceOf(InvalidLoginException.class);
     }
 
-    @DisplayName("로그인하려는 비밀번호가 일치하지 않으면 예외를 던진다.")
     @Test
+    @DisplayName("로그인하려는 비밀번호가 일치하지 않으면 예외를 던진다.")
     void login_differentSamePassword_exceptionThrown() {
         // given
         final String email = "email@email.com";

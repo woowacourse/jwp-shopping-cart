@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.exception.InvalidLoginException;
 
 @SpringBootTest
 @Transactional
-public class AuthServiceIntegrationTest {
+class AuthServiceIntegrationTest {
 
     private static final String PASSWORD = "qwerasdf123";
 
@@ -27,17 +27,15 @@ public class AuthServiceIntegrationTest {
     private CustomerDao customerDao;
 
     private Customer customer;
-    private Long id;
-
 
     @BeforeEach
     void setUp() {
         customer = new Customer("kun", "kun@email.com", PASSWORD);
-        id = customerDao.save(customer);
+        customerDao.save(customer);
     }
 
-    @DisplayName("로그인하려는 이메일이 존재하지 않으면 예외를 던진다.")
     @Test
+    @DisplayName("로그인하려는 이메일이 존재하지 않으면 예외를 던진다.")
     void login_notExistEmail_exceptionThrown() {
         // given
         final TokenRequest request = new TokenRequest("rick@email.com", PASSWORD);
@@ -47,8 +45,8 @@ public class AuthServiceIntegrationTest {
                 .isInstanceOf(InvalidLoginException.class);
     }
 
-    @DisplayName("로그인하려는 비밀번호가 일치하지 않으면 예외를 던진다.")
     @Test
+    @DisplayName("로그인하려는 비밀번호가 일치하지 않으면 예외를 던진다.")
     void login_differentSamePassword_exceptionThrown() {
         // given
         final TokenRequest request = new TokenRequest(customer.getEmail(), "1q2w3e4r");

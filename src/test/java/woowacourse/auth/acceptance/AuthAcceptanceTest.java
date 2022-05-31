@@ -14,10 +14,10 @@ import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 
 @DisplayName("인증 관련 기능")
-public class AuthAcceptanceTest extends AcceptanceTest {
+class AuthAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("로그인 성공")
     @Test
+    @DisplayName("로그인 성공")
     void login() {
         // given
         final String email = "email@email.com";
@@ -36,8 +36,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body("accessToken", Matchers.notNullValue(String.class));
     }
 
-    @DisplayName("로그인 양식이 잘못 되었을 때, 상태코드 400을 반환한다.")
     @ParameterizedTest
+    @DisplayName("로그인 양식이 잘못 되었을 때, 상태코드 400을 반환한다.")
     @CsvSource(value = {
             "kun#naver.com:12345667a:이메일 양식이 잘못 되었습니다.",
             "kun@naver.com:1234:비밀번호 양식이 잘못 되었습니다."}, delimiter = ':')
@@ -53,8 +53,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body("message", equalTo(message));
     }
 
-    @DisplayName("비밀번호가 일치하지 않을 경우, 상태코드 400을 반환한다.")
     @Test
+    @DisplayName("비밀번호가 일치하지 않을 경우, 상태코드 400을 반환한다.")
     void login_wrongPassword_400() {
         // given
         final String email = "kun@email.com";
@@ -69,42 +69,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("errorCode", equalTo("1002"))
                 .body("message", equalTo("로그인에 실패했습니다."));
-    }
-
-    @DisplayName("Bearer Auth 로그인 성공")
-    @Test
-    void myInfoWithBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
-
-        // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보가 조회된다
-    }
-
-    @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
-
-        // then
-        // 토큰 발급 요청이 거부된다
-    }
-
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보 조회 요청이 거부된다
     }
 }
