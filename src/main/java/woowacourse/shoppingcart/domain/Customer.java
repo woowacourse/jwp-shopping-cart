@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,17 +14,23 @@ public class Customer {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^(.+)@(.+)$");
     private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[A-Za-z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{1,10}$");
 
+    private final Long id;
     private final String email;
     private final String nickname;
     private final String password;
 
-    public Customer(String email, String nickname, String password) {
+    public Customer(Long id, String email, String nickname, String password) {
         validateEmailFormat(email);
         validatePasswordFormat(password);
         validateNicknameFormat(nickname);
+        this.id = id;
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+    }
+
+    public Customer(String email, String nickname, String password) {
+        this(null, email, nickname, password);
     }
 
     public boolean isPasswordMatched(String password) {
@@ -59,6 +66,10 @@ public class Customer {
         }
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -69,5 +80,22 @@ public class Customer {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Customer customer = (Customer) o;
+        return Objects.equals(id, customer.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
