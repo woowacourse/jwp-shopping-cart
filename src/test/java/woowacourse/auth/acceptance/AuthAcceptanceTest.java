@@ -10,6 +10,11 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.exception.AuthorizationException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -19,12 +24,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         signUpCustomer();
     }
 
-    @DisplayName("Bearer Auth 로그인 성공")
+    @DisplayName("로그인에 성공할 때 토큰을 발급한다.")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
         String accessToken = RestAssured.given().log().all()
                 .body(new TokenRequest("forky", "forky@1234"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -35,49 +38,48 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .as(TokenResponse.class)
                 .getAccessToken();
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
-//        CustomerResponse actual = RestAssured.given().log().all()
-//                .auth().oauth2(accessToken)
-//                .accept(MediaType.APPLICATION_JSON_VALUE)
-//                .when().get("/customers/me")
-//                .then().log().all()
-//                .extract()
-//                .as(CustomerResponse.class);
-//        // then
-//        // 내 정보가 조회된다
-//        assertAll(
-//                () -> assertThat(actual.getUserName()).isEqualTo("forky"),
-//                () -> assertThat(actual.getPassword()).isEqualTo("forky@1234")
-//        );
+        CustomerResponse actual = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/me")
+                .then().log().all()
+                .extract()
+                .as(CustomerResponse.class);
+        // then
+        assertAll(
+                () -> assertThat(actual.getUserName()).isEqualTo("forky"),
+                () -> assertThat(actual.getPassword()).isEqualTo("forky@1234")
+        );
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
+    @DisplayName("로그인에 실패하는 경우는 토큰 발급 요청이 거부된다.")
     @Test
     void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
-        IllegalArgumentException exception = RestAssured.given().log().all()
+        RestAssured.given().log().all()
                 .body(new TokenRequest("forky", "kth@990303"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")
                 .then().log().all()
+                // then
                 // 토큰 발급 요청이 거부된다
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract()
                 .as(IllegalArgumentException.class);
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @DisplayName("유효하지 않은 토큰으로 회원 관련 기능에 접근할 경우 요청이 거부된다.")
     @Test
     void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보 조회 요청이 거부된다
+        // when then
+        RestAssured.given().log().all()
+                .auth().oauth2("invalidToken")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/me")
+                .then().log().all()
+                .extract()
+                .as(AuthorizationException.class);
     }
 
     private void signUpCustomer() {
@@ -87,7 +89,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(customerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers/signup")
+                .when().post("/customers")
                 .then().log().all();
     }
 }
