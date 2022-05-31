@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.ErrorResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -78,7 +79,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
         // then 토큰 발급 요청이 거부된다
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().asString()).isEqualTo("존재하지 않는 이메일입니다.")
+                () -> assertThat(response.body().as(ErrorResponse.class).getMessage())
+                        .isEqualTo("존재하지 않는 이메일입니다.")
         );
     }
 
@@ -107,7 +109,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
         // then 토큰 발급 요청이 거부된다
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().asString()).isEqualTo("비밀번호가 일치하지 않습니다.")
+                () -> assertThat(response.body().as(ErrorResponse.class).getMessage())
+                        .isEqualTo("비밀번호가 일치하지 않습니다.")
         );
     }
 
