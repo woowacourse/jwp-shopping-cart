@@ -30,4 +30,10 @@ public class CustomerController {
         CustomerResponse customerResponse = customerService.findCustomerByEmail(email);
         return ResponseEntity.ok(customerResponse);
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal String email) {
+        customerService.deleteCustomer(email);
+        return ResponseEntity.noContent().build();
+    }
 }

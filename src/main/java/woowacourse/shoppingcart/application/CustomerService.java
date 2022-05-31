@@ -20,15 +20,19 @@ public class CustomerService {
         return customerDao.save(customerCreateRequest.toCustomer());
     }
 
-    private void validateDuplicateNickname(String nickname) {
-        if (customerDao.existsByNickname(nickname)) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
-        }
-    }
-
     public CustomerResponse findCustomerByEmail(String email) {
         Customer customer = customerDao.findIdByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         return CustomerResponse.from(customer);
+    }
+
+    public void deleteCustomer(String email) {
+        customerDao.deleteByEmail(email);
+    }
+
+    private void validateDuplicateNickname(String nickname) {
+        if (customerDao.existsByNickname(nickname)) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+        }
     }
 }

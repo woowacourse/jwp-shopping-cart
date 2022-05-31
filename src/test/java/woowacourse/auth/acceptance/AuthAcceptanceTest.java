@@ -69,7 +69,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String accessToken = loginResponse.body().jsonPath().getString("accessToken");
 
         CustomerResponse customerResponse = RestAssured.given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .auth().oauth2(accessToken)
                 .when().log().all()
                 .get("/api/customers/me")
                 .then().log().all()
