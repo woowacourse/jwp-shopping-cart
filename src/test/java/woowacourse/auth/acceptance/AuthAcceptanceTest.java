@@ -76,13 +76,39 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(exceptionResponse.getMessage()).isEqualTo("이메일에 해당하는 회원이 존재하지 않거나 비밀번호가 일치하지 않습니다.");
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @DisplayName("인증 실패 - 토큰의 기간이 만료된 경우")
     @Test
-    void myInfoWithWrongBearerAuth() {
+    void authFailWhenTokenExpired() {
+        // given
+        final String expiredToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjUzOTkzMzM3LCJleHAiOjE2NTM5OTMzMzd9."
+                + "rlmlgHw_zjq7eY4FAgBU3Fx2Pq9rUgSdE9le9kpwd4w";
+
+        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+                CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
+
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        RequestHandler.postRequest("/auth/login", new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
+        final ExtractableResponse<Response> wrongResponse = RequestHandler.postRequest("/auth/logout", expiredToken);
 
         // then
-        // 내 정보 조회 요청이 거부된다
+        assertThat(wrongResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("인증 실패 - 토큰의 무결성이 깨진 경우")
+    @Test
+    void authFailWhenTokenTampered() {
+        // given
+        final String tamperedToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiaWF0IjoxNjUzOTkzMzM3LCJleHAiOjE2NTM5OTMzMzd9."
+                + "rlmlgHw_zjq7eY4FAgBU3Fx2Pq9rUgSdE9le9kpwd4w";
+
+        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+                CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
+
+        // when
+        RequestHandler.postRequest("/auth/login", new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
+        final ExtractableResponse<Response> wrongResponse = RequestHandler.postRequest("/auth/logout", tamperedToken);
+
+        // then
+        assertThat(wrongResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.AuthenticationPrincipal;
 
 @RestController
 @RequestMapping("/auth")
@@ -24,6 +25,12 @@ public class AuthController {
     public ResponseEntity<TokenResponse> login(@RequestBody final TokenRequest tokenRequest) {
         final TokenResponse tokenResponse = authService.login(tokenRequest);
         return ResponseEntity.ok().body(tokenResponse);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal final Long id) {
+        // 로그아웃 기능 - 협의 중
+        return ResponseEntity.noContent().build();
     }
 }
 

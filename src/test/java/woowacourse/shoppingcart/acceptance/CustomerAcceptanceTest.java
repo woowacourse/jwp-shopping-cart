@@ -142,6 +142,5 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-
     }
 }
