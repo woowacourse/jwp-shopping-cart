@@ -46,7 +46,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
-    @PostMapping("/passwordConfirm")
+    @PostMapping("/members/auth/password-check")
     public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal AuthorizedMember authorizedMember,
                                                          @RequestBody PasswordCheckRequest passwordCheckRequest) {
         String email = authorizedMember.getEmail();

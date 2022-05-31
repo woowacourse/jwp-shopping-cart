@@ -101,14 +101,6 @@ class AuthServiceTest {
         assertThat(authorizedMember.getNickname()).isEqualTo("닉네임");
     }
 
-    @DisplayName("유효하지 않은 토큰으로 인증하려고 하면 예외를 반환한다.")
-    @Test
-    void findAuthorizedMemberByToken_InvalidToken() {
-        assertThatThrownBy(() -> authService.findAuthorizedMemberByToken("abc"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("유효하지 않은 토큰입니다.");
-    }
-
     @DisplayName("이메일과 닉네임을 받아 닉네임을 수정한다.")
     @Test
     void updateNickname() {

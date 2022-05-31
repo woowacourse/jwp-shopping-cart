@@ -10,6 +10,7 @@ import java.security.Key;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import woowacourse.auth.exception.AuthorizationException;
 
 @Component
 public class JwtTokenProvider {
@@ -38,6 +39,9 @@ public class JwtTokenProvider {
     }
 
     public String getPayload(String token) {
+        if (!validateToken(token)) {
+            throw new AuthorizationException("유효하지 않은 토큰입니다.");
+        }
         return Jwts.parserBuilder()
                 .setSigningKey(signingKey)
                 .build()

@@ -137,7 +137,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         LoginResponse loginResponse = post("/api/login", loginRequest).as(LoginResponse.class);
 
         ExtractableResponse<Response> response = postWithAuthorization(
-                "/api/passwordConfirm",
+                "/api/members/auth/password-check",
                 loginResponse.getToken(),
                 new PasswordCheckRequest(password)
         );
@@ -147,5 +147,34 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(success).isEqualTo(expected);
+    }
+
+    @DisplayName("로그인을 하지 않고(토큰이 없는 경우) 인증이 필요한 URI에 접근하면 401을 응답한다.")
+    @Test
+    void requestWithUnauthorized() {
+        ExtractableResponse<Response> response = post(
+                "/api/members/auth/password-check",
+                new PasswordCheckRequest("1q2w3e4r!")
+        );
+        String message = response.as(ErrorResponse.class)
+                .getMessage();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(message).isEqualTo("로그인이 필요합니다.");
+    }
+
+    @DisplayName("유효하지 않은 토큰으로 인증이 필요한 URI에 접근하면 401을 응답한다.")
+    @Test
+    void requestWithInvalidToken() {
+        ExtractableResponse<Response> response = postWithAuthorization(
+                "/api/members/auth/password-check",
+                "abc",
+                new PasswordCheckRequest("1q2w3e4r!")
+        );
+        String message = response.as(ErrorResponse.class)
+                .getMessage();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(message).isEqualTo("유효하지 않은 토큰입니다.");
     }
 }
