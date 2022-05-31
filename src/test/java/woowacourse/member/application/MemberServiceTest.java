@@ -8,8 +8,8 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.exception.InvalidMemberEmailException;
-import woowacourse.member.exception.LonginWrongEmailException;
-import woowacourse.member.exception.LonginWrongPasswordException;
+import woowacourse.member.exception.EmailNotFoundException;
+import woowacourse.member.exception.WrongPasswordException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -55,7 +55,7 @@ class MemberServiceTest {
     void verifyValidMemberWithNotExistEmail(){
         assertThatThrownBy(
                 () -> memberService.findIdByEmail(new LoginRequest("pobi@wooteco.com","Wooteco!"))
-        ).isInstanceOf(LonginWrongEmailException.class)
+        ).isInstanceOf(EmailNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 이메일입니다.");
     }
 
@@ -64,7 +64,7 @@ class MemberServiceTest {
     void verifyValidMemberWithWrongPassword() {
         assertThatThrownBy(
                 () -> memberService.findIdByEmail(new LoginRequest("ari@wooteco.com","Javajigi!!"))
-        ).isInstanceOf(LonginWrongPasswordException.class)
+        ).isInstanceOf(WrongPasswordException.class)
                 .hasMessageContaining("잘못된 비밀번호입니다.");
     }
 }

@@ -8,8 +8,8 @@ import woowacourse.member.domain.Member;
 import woowacourse.member.domain.Password;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.exception.InvalidMemberEmailException;
-import woowacourse.member.exception.LonginWrongEmailException;
-import woowacourse.member.exception.LonginWrongPasswordException;
+import woowacourse.member.exception.EmailNotFoundException;
+import woowacourse.member.exception.WrongPasswordException;
 
 import java.util.Optional;
 
@@ -40,12 +40,12 @@ public class MemberService {
 
     private void authenticate(Optional<Member> member, LoginRequest request) {
         if (member.isEmpty()) {
-            throw new LonginWrongEmailException("존재하지 않는 이메일입니다.");
+            throw new EmailNotFoundException("존재하지 않는 이메일입니다.");
         }
 
         Password password = Password.withEncrypt(request.getPassword());
         if (!password.isSameAs(member.get().getPassword())) {
-            throw new LonginWrongPasswordException("잘못된 비밀번호입니다.");
+            throw new WrongPasswordException("잘못된 비밀번호입니다.");
         }
     }
 }
