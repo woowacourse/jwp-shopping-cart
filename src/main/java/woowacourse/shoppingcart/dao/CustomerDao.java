@@ -71,6 +71,16 @@ public class CustomerDao {
     public void updatePassword(Customer customer) {
         final String sql = "UPDATE customer SET password = ? WHERE username = ?";
         int updated = jdbcTemplate.update(sql, customer.getPassword(), customer.getUserName());
+        validateUpdated(updated);
+    }
+
+    public void updateInfo(Customer customer) {
+        final String sql = "UPDATE customer SET nickname = ?, age = ? WHERE username = ?";
+        int updated = jdbcTemplate.update(sql, customer.getNickName(), customer.getAge(), customer.getUserName());
+        validateUpdated(updated);
+    }
+
+    private void validateUpdated(int updated) {
         if (updated == 0) {
             throw new InvalidCustomerException();
         }
