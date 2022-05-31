@@ -1,24 +1,20 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.auth.dto;
 
 import javax.validation.constraints.Pattern;
 
-public class CustomerRequest {
+public class LoginRequest {
     @Pattern(regexp = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$")
     private String email;
 
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$")
     private String password;
 
-    @Pattern(regexp = "^[가-힣A-Za-z0-9]{2,}$")
-    private String nickname;
-
-    public CustomerRequest() {
+    public LoginRequest() {
     }
 
-    public CustomerRequest(String email, String password, String nickname) {
+    public LoginRequest(String email, String password) {
         this.email = email;
         this.password = password;
-        this.nickname = nickname;
     }
 
     public String getEmail() {
@@ -27,9 +23,5 @@ public class CustomerRequest {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getNickname() {
-        return nickname;
     }
 }
