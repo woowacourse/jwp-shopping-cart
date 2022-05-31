@@ -6,21 +6,17 @@ public class Customer {
 
     private final Long id;
     private final Username username;
-    private final Password password;
+    private final EncryptedPassword password;
     private final PhoneNumber phoneNumber;
     private final Address address;
 
-    public Customer(final Long id, final Username username, final Password password, final PhoneNumber phoneNumber,
+    public Customer(final Long id, final Username username, final EncryptedPassword password, final PhoneNumber phoneNumber,
                     final Address address) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
-    }
-
-    public void matchPassword(final String password) {
-        this.password.matchPassword(password);
     }
 
     public Long getId() {
@@ -51,7 +47,7 @@ public class Customer {
 
         private Long id;
         private Username username;
-        private Password password;
+        private EncryptedPassword plainPassword;
         private PhoneNumber phoneNumber;
         private Address address;
         private Builder() {
@@ -68,7 +64,7 @@ public class Customer {
         }
 
         public Builder password(String password) {
-            this.password = new Password(password);
+            this.plainPassword = new EncryptedPassword(password);
             return this;
         }
 
@@ -83,7 +79,7 @@ public class Customer {
         }
 
         public Customer build() {
-            return new Customer(id, username, password, phoneNumber, address);
+            return new Customer(id, username, plainPassword, phoneNumber, address);
         }
     }
 

@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import woowacourse.auth.exception.InvalidAuthException;
 
-public class Password {
+public class PlainPassword {
 
     private static final int MINIMUM_LENGTH = 8;
     private static final int MAXIMUM_LENGTH = 20;
@@ -12,7 +12,7 @@ public class Password {
 
     private final String password;
 
-    public Password(final String password) {
+    public PlainPassword(final String password) {
         validateLength(password);
         validatePattern(password);
         this.password = password;
@@ -31,12 +31,6 @@ public class Password {
         }
     }
 
-    public void matchPassword(final String password) {
-        if (!this.password.equals(password)) {
-            throw new InvalidAuthException("비밀번호가 일치하지 않습니다.");
-        }
-    }
-
     public String getPassword() {
         return password;
     }
@@ -49,8 +43,8 @@ public class Password {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Password password1 = (Password) o;
-        return Objects.equals(password, password1.password);
+        final PlainPassword plainPassword1 = (PlainPassword) o;
+        return Objects.equals(password, plainPassword1.password);
     }
 
     @Override
