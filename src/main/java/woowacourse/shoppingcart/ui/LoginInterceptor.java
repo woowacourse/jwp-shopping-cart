@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
-import woowacourse.auth.exception.ExpiredTokenException;
+import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 
@@ -30,8 +30,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                 HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
         String customerId = pathVariables.get("customerId");
         if (!payload.equals(customerId)) {
-            //todo 바꾸기
-            throw new ExpiredTokenException();
+            throw new InvalidTokenException();
         }
         return true;
     }
