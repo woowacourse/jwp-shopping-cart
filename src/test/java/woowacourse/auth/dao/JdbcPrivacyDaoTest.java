@@ -1,6 +1,7 @@
 package woowacourse.auth.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.auth.Fixtures.CUSTOMER_ENTITY_1;
 import static woowacourse.auth.Fixtures.PRIVACY_ENTITY_1;
 
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.auth.entity.PrivacyEntity;
 
@@ -72,5 +74,20 @@ class JdbcPrivacyDaoTest {
         assertThat(updatedPrivacyEntity).extracting("customerId", "name", "gender", "birthDay", "contact")
                 .containsExactly(customerId, updatedPrivacyEntity.getName(), updatedPrivacyEntity.getGender(),
                         updatedPrivacyEntity.getBirthDay(), updatedPrivacyEntity.getContact());
+    }
+
+    @DisplayName("id를 전달받아 해당하는 Privacy를 삭제한다.")
+    @Test
+    void delete() {
+        // given
+        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        privacyDao.save(customerId, PRIVACY_ENTITY_1);
+
+        // when
+        privacyDao.delete(customerId);
+
+        // then
+        assertThatThrownBy(() -> privacyDao.findById(customerId))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

@@ -43,7 +43,8 @@ public class JdbcPrivacyDao implements PrivacyDao {
     }
 
     @Override
-    public void delete(int id) {
-
+    public void delete(int customerId) {
+        String sql = "DELETE FROM PRIVACY WHERE customer_id = ?";
+        jdbcTemplate.update(sql, customerId);
     }
 }
