@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
