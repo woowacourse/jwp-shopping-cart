@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.dto.ErrorResponseWithField;
 import woowacourse.shoppingcart.exception.DuplicateDomainException;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
+import woowacourse.shoppingcart.exception.ForbiddenAccessException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -56,6 +57,12 @@ public class ControllerAdvice {
     @ExceptionHandler(LoginFailException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleLoginFailException(Exception exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbiddenAccessException(Exception exception) {
         return new ErrorResponse(exception.getMessage());
     }
 

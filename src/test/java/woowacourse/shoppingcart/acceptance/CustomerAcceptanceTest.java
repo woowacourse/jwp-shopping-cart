@@ -127,6 +127,24 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("다른 사람의 정보 조회를 하면 403을 반환한다")
+    @Test
+    void findCustomer_otherId() {
+        // given
+        ExtractableResponse<Response> createResponse = 회원가입_요청(
+                new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+        long savedId = ID_추출(createResponse);
+        long 다른사람의_ID = savedId + 1L;
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+
+        // when
+        ExtractableResponse<Response> response = 회원조회_요청(token, 다른사람의_ID);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
+
     @DisplayName("내 정보 수정")
     @Test
     void update() {
@@ -188,6 +206,24 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
+    @DisplayName("다른 사람의 정보를 수정하면 403을 반환한다")
+    @Test
+    void update_otherId() {
+        // given
+        ExtractableResponse<Response> createResponse = 회원가입_요청(
+                new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+        long savedId = ID_추출(createResponse);
+        long 다른사람의_ID = savedId + 1L;
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+
+        // when
+        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest("philz");
+        ExtractableResponse<Response> response = 회원정보수정_요청(token, 다른사람의_ID, updateRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
     @DisplayName("회원탈퇴")
     @Test
     void delete() {
@@ -195,6 +231,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원탈퇴_요청(token, 1L);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("다른 사람의 정보를 수정하면 403을 반환한다")
+    @Test
+    void delete_otherId() {
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("puterism@naver.com", "12349053145"));
+        long 다른사람의_ID = 2L;
+        ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     public String 로그인_요청_및_토큰발급(TokenRequest request) {
