@@ -1,19 +1,22 @@
 package woowacourse.shoppingcart.service;
 
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dto.CustomerDto;
-import woowacourse.auth.dto.SignInDto;
+import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
-import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -25,6 +28,8 @@ class CustomerServiceTest {
     private CustomerService customerService;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
 
     @Test
@@ -69,10 +74,13 @@ class CustomerServiceTest {
     @Test
     @DisplayName("회원 id를 입력받아 회원을 삭제시킨다.")
     void deleteCustomer() {
+        when(passwordEncoder.matches(any(), any())).thenReturn(true);
+        when(passwordEncoder.encrypt(any())).thenReturn("encryptedPassword");
         final SignUpDto signUpDto = new SignUpDto("test@test.com", "testtest","테스트");
         final Long createdCustomerId = customerService.signUp(signUpDto);
+        DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto("testtest");
 
-        customerService.deleteCustomer(createdCustomerId);
+        customerService.deleteCustomer(createdCustomerId, deleteCustomerDto);
         assertThatThrownBy(() -> customerService.findCustomerById(createdCustomerId))
                 .isInstanceOf(InvalidCustomerException.class);
     }

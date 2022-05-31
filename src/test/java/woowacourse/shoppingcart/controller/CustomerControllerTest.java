@@ -22,8 +22,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import woowacourse.auth.application.AuthService;
+import woowacourse.auth.dto.SignInDto;
+import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.service.CustomerService;
@@ -39,6 +43,8 @@ class CustomerControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private CustomerService customerService;
+    @MockBean
+    private AuthService authService;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
@@ -97,8 +103,13 @@ class CustomerControllerTest {
     void deleteCustomer() throws Exception {
         when(customerService.findCustomerByEmail(any(String.class)))
                 .thenReturn(new CustomerDto(customerId, testEmail, testUsername));
+        when(authService.login(any(SignInDto.class))).thenReturn(new TokenResponseDto(accessToken, 1000000L));
+        DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto("testtest");
         final MockHttpServletResponse response = mockMvc.perform(delete("/api/customers/" + customerId)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(deleteCustomerDto)))
                 .andDo(print())
                 .andReturn()
                 .getResponse();
