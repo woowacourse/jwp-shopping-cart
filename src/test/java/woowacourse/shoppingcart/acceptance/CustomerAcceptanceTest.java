@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 
 @DisplayName("회원 관련 기능")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@SuppressWarnings("NonAsciiCharacters")
+@SuppressWarnings({"NonAsciiCharacters", "InnerClassMayBeStatic"})
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
@@ -31,6 +31,22 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(201);
         assertThat(response.header("Location")).isEqualTo("/signin");
+    }
+
+    @Test
+    void 중복된_아이디로_회원가입() {
+        Map<String, Object> request = 회원_정보("loe0842",
+                "에덴",
+                "dpepsWkd12!",
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678");
+
+        회원_가입(request);
+
+        ExtractableResponse<Response> response = 회원_가입(request);
+        assertThat(response.statusCode()).isEqualTo(400);
     }
 
     @DisplayName("내 정보 조회")

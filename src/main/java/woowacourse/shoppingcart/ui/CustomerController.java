@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,11 +22,5 @@ public class CustomerController {
         customerService.create(customerRequest);
         URI uri = URI.create("/signin");
         return ResponseEntity.created(uri).build();
-    }
-
-    @ExceptionHandler
-    public void exception(Exception e) {
-        e.printStackTrace();
-
     }
 }
