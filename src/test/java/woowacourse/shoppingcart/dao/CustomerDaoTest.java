@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,15 +21,15 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 public class CustomerDaoTest {
 
     private final CustomerDao customerDao;
+    private final Customer customer = Customer.of("dongho108", "ehdgh1234", "01012123232", "인천 서구 검단로");
 
-    public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
+    public CustomerDaoTest(final JdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
-
         // given
         final String userName = "puterism";
 
@@ -43,7 +43,6 @@ public class CustomerDaoTest {
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
-
         // given
         final String userName = "gwangyeol-iM";
 
@@ -58,10 +57,10 @@ public class CustomerDaoTest {
     @Test
     void saveCustomer() {
         // given
-        Customer customer = Customer.of("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final Customer customer = Customer.of("dongho108", "ehdgh1234", "01012123232", "인천 서구 검단로");
 
         // when
-        Customer savedCustomer = customerDao.save(customer);
+        final Customer savedCustomer = customerDao.save(customer);
 
         // then
         assertAll(
@@ -77,11 +76,10 @@ public class CustomerDaoTest {
     @Test
     void findByUsername() {
         // given
-        Customer customer = Customer.of("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
-        Customer savedCustomer = customerDao.save(customer);
+        final Customer savedCustomer = customerDao.save(customer);
 
         // when
-        Customer findCustomer = customerDao.findByUsername(customer.getUsername().getValue()).get();
+        final Customer findCustomer = customerDao.findByUsername(customer.getUsername().getValue()).get();
 
         // then
         assertAll(
@@ -97,14 +95,15 @@ public class CustomerDaoTest {
     @Test
     void update() {
         // given
-        Customer customer = Customer.of("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
-        Customer savedCustomer = customerDao.save(customer);
+        final Customer savedCustomer = customerDao.save(customer);
+        final Customer newCustomer = Customer.of(savedCustomer.getId(), "dongho108", "ehdgh1234", "01000001111",
+            "서울시 선릉역");
 
-        Customer newCustomer = Customer.of(savedCustomer.getId(), "dongho108", "ehdgh1234", "01000001111", "서울시 선릉역");
+        // when
         customerDao.update(newCustomer);
+        final Customer findCustomer = customerDao.findByUsername(newCustomer.getUsername().getValue()).get();
 
-        Customer findCustomer = customerDao.findByUsername(newCustomer.getUsername().getValue()).get();
-
+        // then
         assertAll(
             () -> assertThat(findCustomer.getPhoneNumber()).isEqualTo(newCustomer.getPhoneNumber()),
             () -> assertThat(findCustomer.getAddress()).isEqualTo(newCustomer.getAddress())
@@ -115,14 +114,15 @@ public class CustomerDaoTest {
     @Test
     void updatePassword() {
         // given
-        Customer customer = Customer.of("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
-        Customer savedCustomer = customerDao.save(customer);
+        final Customer savedCustomer = customerDao.save(customer);
+        final Customer newCustomer = Customer.of(savedCustomer.getId(), "dongho108", "ehdgh1111", "01012123232",
+            "인천 서구 검단로");
 
-        Customer newCustomer = Customer.of(savedCustomer.getId(), "dongho108", "ehdgh1111", "01000001111", "서울시 선릉역");
+        // when
         customerDao.update(newCustomer);
+        final Customer findCustomer = customerDao.findByUsername(newCustomer.getUsername().getValue()).get();
 
-        Customer findCustomer = customerDao.findByUsername(newCustomer.getUsername().getValue()).get();
-
+        // then
         assertThat(findCustomer.getPassword()).isEqualTo(newCustomer.getPassword());
     }
 
@@ -130,8 +130,7 @@ public class CustomerDaoTest {
     @Test
     void deleteCustomer() {
         // given
-        Customer customer = Customer.of("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
-        Customer savedCustomer = customerDao.save(customer);
+        final Customer savedCustomer = customerDao.save(customer);
 
         // when
         customerDao.deleteByUsername(savedCustomer.getUsername().getValue());

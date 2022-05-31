@@ -37,12 +37,12 @@ public class CustomerDao {
     }
 
     public Customer save(Customer customer) {
-        SqlParameterSource params = new MapSqlParameterSource()
+        final SqlParameterSource params = new MapSqlParameterSource()
             .addValue("username", customer.getUsername().getValue())
             .addValue("password", customer.getPassword().getValue())
             .addValue("phoneNumber", customer.getPhoneNumber().getValue())
             .addValue("address", customer.getAddress());
-        Number newId = jdbcInsert.executeAndReturnKey(params);
+        final Number newId = jdbcInsert.executeAndReturnKey(params);
 
         return new Customer(
             newId.longValue(),
@@ -63,7 +63,7 @@ public class CustomerDao {
         }
     }
 
-    private RowMapper<Customer> customerMapper(){
+    private RowMapper<Customer> customerMapper() {
         return (resultSet, rowNum) -> Customer.of(
             resultSet.getLong("id"),
             resultSet.getString("username"),

@@ -8,7 +8,7 @@ public class Customer {
     private PhoneNumber phoneNumber;
     private String address;
 
-    public Customer(Long id, Username username, Password password, PhoneNumber phoneNumber, String address) {
+    public Customer(final Long id, final Username username, final Password password, final PhoneNumber phoneNumber, final String address) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -16,7 +16,7 @@ public class Customer {
         this.address = address;
     }
 
-    public static Customer of(String username, String password, String phoneNumber, String address) {
+    public static Customer of(final String username, final String password, final String phoneNumber, final String address) {
         return new Customer(
             null,
             new Username(username),
@@ -25,28 +25,29 @@ public class Customer {
             address);
     }
 
-    public static Customer of(Long id, String username, String password, String phoneNumber, String address) {
+    public static Customer of(final Long id, final String username, final String password, final String phoneNumber, final String address) {
         return new Customer(
             id,
             new Username(username),
             new Password(password),
             new PhoneNumber(phoneNumber),
-            address);
+            address
+        );
     }
 
-    public void matchPassword(String password) {
+    public void matchPassword(final String password) {
         this.password.match(password);
     }
 
-    public void updatePhoneNumber(String phoneNumber) {
+    public void updatePhoneNumber(final String phoneNumber) {
         this.phoneNumber = this.phoneNumber.update(phoneNumber);
     }
 
-    public void updateAddress(String address) {
+    public void updateAddress(final String address) {
         this.address = address;
     }
 
-    public void updatePassword(String password) {
+    public void updatePassword(final String password) {
         this.password = this.password.update(password);
     }
 

@@ -1,11 +1,10 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -16,7 +15,6 @@ import io.restassured.response.ValidatableResponse;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.ExceptionResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
@@ -24,15 +22,11 @@ import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
-    private static final String INVALID_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naG8xMDgiLCJpYXQiOjE2NTM5MDg0OTgsImV4cCI6MTY1MzkxMjA5OH0.6XAQq1jsqxnn8zMbW9nNcZ4R-BiIyQvLkraocC1aaaa";
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
         // given
-        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01001012323", "인천 서구 검단로");
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -51,7 +45,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void validateUsernameLength() {
         // given
-        SignupRequest signupRequest = new SignupRequest("do", "ehdgh1234", "01022728572", "인천 서구 검단로 851 동부아파트 108동 303호");
+        final SignupRequest signupRequest = new SignupRequest("do", "ehdgh1234", "01012123434", "인천 서구 검단로");
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -69,6 +63,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
             () -> assertThat(exceptionResponse.getMessages())
                 .hasSize(1)
+                .containsExactly("username의 길이는 3자 이상 15자 이하여야 합니다.")
         );
     }
 
@@ -76,7 +71,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void validateFields() {
         // given
-        SignupRequest signupRequest = new SignupRequest("do", "a", "1", "인천 서구 검단로 851 동부아파트 108동 303호");
+        final SignupRequest signupRequest = new SignupRequest("do", "a", "1", "인천 서구");
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -101,32 +96,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         // given
-        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        signup(signupRequest);
 
-        RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
-
-        String accessToken = RestAssured
-            .given().log().all()
-            .body(new LoginRequest("dongho108", "ehdgh1234"))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/customers/login")
-            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+        final LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        final String accessToken = login(loginRequest);
 
         // when
-        CustomerResponse customerResponse = RestAssured
-            .given().log().all()
-            .auth().oauth2(accessToken)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/api/customers")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+        final CustomerResponse customerResponse = findCustomerInfo(accessToken);
 
         // then
         assertAll(
@@ -140,23 +117,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        signup(signupRequest);
 
-        RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
-
-        String accessToken = RestAssured
-            .given().log().all()
-            .body(new LoginRequest("dongho108", "ehdgh1234"))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/customers/login")
-            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+        final LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        final String accessToken = login(loginRequest);
 
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01011112222", "서울시 강남구");
         ValidatableResponse validatableResponse = RestAssured
@@ -168,13 +133,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .when().put("/api/customers")
             .then().log().all();
 
-        CustomerResponse customerResponse = RestAssured
-            .given().log().all()
-            .auth().oauth2(accessToken)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/api/customers")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+        final CustomerResponse customerResponse = findCustomerInfo(accessToken);
 
         assertAll(
             () -> validatableResponse.statusCode(HttpStatus.NO_CONTENT.value()),
@@ -187,23 +146,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updatePassword() {
         // given
-        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        signup(signupRequest);
 
-        RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
-
-        String accessToken = RestAssured
-            .given().log().all()
-            .body(new LoginRequest("dongho108", "ehdgh1234"))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/customers/login")
-            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+        final LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        final String accessToken = login(loginRequest);
 
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("password1234");
         RestAssured
@@ -220,23 +167,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        signup(signupRequest);
 
-        RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
-
-        String accessToken = RestAssured
-            .given().log().all()
-            .body(new LoginRequest("dongho108", "ehdgh1234"))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/customers/login")
-            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+        final LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        final String accessToken = login(loginRequest);
 
         RestAssured.given().log().all()
             .auth().oauth2(accessToken)
@@ -253,5 +188,35 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when().post("/api/customers/login")
             .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    private void signup(final SignupRequest signupRequest) {
+        RestAssured.given().log().all()
+            .body(signupRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/signup")
+            .then().log().all()
+            .extract();
+    }
+
+    private String login(final LoginRequest loginRequest) {
+        return RestAssured
+            .given().log().all()
+            .body(loginRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/api/customers/login")
+            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+    }
+
+    private CustomerResponse findCustomerInfo(final String accessToken) {
+        return RestAssured
+            .given().log().all()
+            .auth().oauth2(accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/customers")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
     }
 }

@@ -1,7 +1,8 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,14 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.EmptyResultException;
 
-@SpringBootTest
 @Transactional
+@SpringBootTest
 class CustomerServiceTest {
+
     @Autowired
     private CustomerService customerService;
 
@@ -24,10 +26,10 @@ class CustomerServiceTest {
     @Test
     void saveCustomer() {
         // given
-        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022223333", "인천 서구 검단로");
 
         // when
-        Customer customer = customerService.save(signupRequest);
+        final Customer customer = customerService.save(signupRequest);
 
         // then
         assertAll(

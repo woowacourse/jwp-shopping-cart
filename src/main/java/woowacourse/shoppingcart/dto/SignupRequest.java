@@ -23,10 +23,10 @@ public class SignupRequest {
     @NotNull
     private String address;
 
-    public SignupRequest() {
+    private SignupRequest() {
     }
 
-    public SignupRequest(String username, String password, String phoneNumber, String address) {
+    public SignupRequest(final String username, final String password, final String phoneNumber, final String address) {
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;

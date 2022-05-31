@@ -1,7 +1,8 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,15 +16,16 @@ class PasswordTest {
     @DisplayName("password를 생성한다.")
     @ParameterizedTest
     @ValueSource(strings = {"abcd1234", "abcdabcd123412341234"})
-    void createPassword(String value) {
-        Password password = new Password(value);
+    void createPassword(final String value) {
+        final Password password = new Password(value);
+
         assertThat(password.getValue()).isEqualTo(value);
     }
 
     @DisplayName("길이가 맞지 않는 password를 생성한다.")
     @ParameterizedTest
     @ValueSource(strings = {"abcd123", "abcdefghijklmnop12345"})
-    void createInvalidLengthUsername(String value) {
+    void createInvalidLengthUsername(final String value) {
         assertThatThrownBy(() -> new Password(value))
             .isInstanceOf(IllegalArgumentException.class);
     }
@@ -31,7 +33,7 @@ class PasswordTest {
     @DisplayName("패턴이 맞지 않는 password을 생성한다.")
     @ParameterizedTest
     @ValueSource(strings = {"한글비밀번호에요", "@!&@#&!@"})
-    void createInvalidPatternUsername(String value) {
+    void createInvalidPatternUsername(final String value) {
         assertThatThrownBy(() -> new Password(value))
             .isInstanceOf(IllegalArgumentException.class);
     }
@@ -53,9 +55,9 @@ class PasswordTest {
     @DisplayName("비밀번호를 수정한다.")
     @Test
     void update() {
-        Password password = new Password("password1234");
-        String newPassword = "password1111";
-        Password updatePassword = password.update(newPassword);
+        final Password password = new Password("password1234");
+        final String newPassword = "password1111";
+        final Password updatePassword = password.update(newPassword);
 
         assertThat(updatePassword.getValue()).isEqualTo(newPassword);
     }
