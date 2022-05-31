@@ -48,7 +48,7 @@ public class AuthService {
         return new TokenResponse(accessToken);
     }
 
-    public CustomerResponse findById(Long customerId) {
+    public CustomerResponse find(Long customerId) {
         checkExistById(customerId);
         Customer customer = customerDao.findById(customerId);
         return CustomerResponse.from(customer);
@@ -66,7 +66,7 @@ public class AuthService {
         customerDao.update(customer);
     }
 
-    public void deleteById(Long customerId) {
+    public void delete(Long customerId) {
         checkExistById(customerId);
         customerDao.deleteById(customerId);
     }

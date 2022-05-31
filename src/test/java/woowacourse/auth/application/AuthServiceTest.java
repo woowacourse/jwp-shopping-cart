@@ -89,7 +89,7 @@ class AuthServiceTest {
                 new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
         CustomerResponse savedResponse = authService.save(customer);
 
-        CustomerResponse customerResponse = authService.findById(1L);
+        CustomerResponse customerResponse = authService.find(1L);
 
         assertThat(customerResponse).extracting("email", "name", "phone", "address")
                 .containsExactly(savedResponse.getEmail(), savedResponse.getName(),
@@ -101,7 +101,7 @@ class AuthServiceTest {
     @DisplayName("존재하지 않는 id를 이용하여 회원 정보를 조회하면 예외가 발생한다.")
     @Test
     void checkExistByIdExceptionWhenFind() {
-        assertThatThrownBy(() -> authService.findById(1L))
+        assertThatThrownBy(() -> authService.find(1L))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("존재하지 않는 유저입니다.");
     }
@@ -117,7 +117,7 @@ class AuthServiceTest {
                 new CustomerRequest("email", "Pw123456~~", "eve", "010-1111-2222", "address2");
         authService.update(1L, customerRequest);
 
-        CustomerResponse customerResponse = authService.findById(1L);
+        CustomerResponse customerResponse = authService.find(1L);
         assertThat(customerResponse).extracting("email", "name", "phone", "address")
                 .containsExactly("email", "eve", "010-1111-2222", "address2");
     }
@@ -139,9 +139,9 @@ class AuthServiceTest {
                 new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
         authService.save(customer);
 
-        authService.deleteById(1L);
+        authService.delete(1L);
 
-        assertThatThrownBy(() -> authService.findById(1L))
+        assertThatThrownBy(() -> authService.find(1L))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("존재하지 않는 유저입니다.");
     }
@@ -149,7 +149,7 @@ class AuthServiceTest {
     @DisplayName("존재하지 않는 id를 이용하여 회원을 삭제하면 예외가 발생한다.")
     @Test
     void checkExistByIdExceptionWhenDelete() {
-        assertThatThrownBy(() -> authService.deleteById(1L))
+        assertThatThrownBy(() -> authService.delete(1L))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("존재하지 않는 유저입니다.");
     }

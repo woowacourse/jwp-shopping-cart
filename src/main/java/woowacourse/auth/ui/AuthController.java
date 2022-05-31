@@ -1,6 +1,7 @@
 package woowacourse.auth.ui;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,7 +42,7 @@ public class AuthController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public CustomerResponse showCustomer(@AuthenticationPrincipal Long customerId) {
-        return authService.findById(customerId);
+        return authService.find(customerId);
     }
 
     @PutMapping
@@ -49,5 +50,11 @@ public class AuthController {
     public void updateCustomer(@AuthenticationPrincipal Long customerId,
                                @RequestBody CustomerRequest customerRequest) {
         authService.update(customerId, customerRequest);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCustomer(@AuthenticationPrincipal Long customerId) {
+        authService.delete(customerId);
     }
 }
