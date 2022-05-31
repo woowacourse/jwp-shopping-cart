@@ -1,4 +1,4 @@
-insert into customer (username)
+insert into customer (name)
 values ('puterism'),
        ('tanney-102'),
        ('jho2301'),
@@ -25,3 +25,5 @@ values ('puterism'),
        ('yujo11'),
        ('sunhpark42')
 ;
+insert into customer(email, name, password)
+values ('hi@hi.com', 'hi', '$2a$10$5P/ihXLR1ZVwaPYHriuE9OHLTrGUNlmr/VHtGYkOEa0ozSj2OI4ki');
