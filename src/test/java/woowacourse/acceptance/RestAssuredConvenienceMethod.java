@@ -1,8 +1,6 @@
 package woowacourse.acceptance;
 
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import org.springframework.http.MediaType;
 
