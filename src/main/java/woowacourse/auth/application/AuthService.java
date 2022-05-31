@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.CustomerDao;
 
@@ -22,18 +22,19 @@ public class AuthService {
     }
 
     public TokenResponse login(final TokenRequest tokenRequest) {
-        Customer customer = getCustomer(tokenRequest.getEmail());
+        final Customer customer = getCustomer(tokenRequest.getEmail());
 
         if (!customer.equalsPassword(tokenRequest.getPassword())) {
             throw new WrongPasswordException();
         }
 
-        return new TokenResponse(jwtTokenProvider.createToken(String.valueOf(customer.getId())));
+        final String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
+        return new TokenResponse(customer.getUserName(), token);
     }
 
     private Customer getCustomer(final String email) {
         return customerDao.findByEmail(email)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(NoSuchEmailException::new);
     }
 
 }
