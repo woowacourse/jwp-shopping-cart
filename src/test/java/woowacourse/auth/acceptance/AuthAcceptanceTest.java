@@ -41,7 +41,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/customers")
+                .when().get("/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
 

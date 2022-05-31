@@ -1,6 +1,9 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.AcceptanceFixture.createCustomer;
+import static woowacourse.AcceptanceFixture.login;
+import static woowacourse.Fixture.페퍼;
 import static woowacourse.Fixture.페퍼_비밀번호;
 import static woowacourse.Fixture.페퍼_아이디;
 import static woowacourse.Fixture.페퍼_이름;
@@ -10,10 +13,13 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -47,9 +53,34 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.body().jsonPath().getString("name")).isEqualTo(페퍼_이름);
     }
 
+    /*
+     *  Scenario: 내 정보 조회
+     *   given: 회원 가입된 회원이 존재하고, 로그인이 되어있다.
+     *   when: 내 회원 정보를 요청한다.
+     *   then: 200 OK 상태 코드와 회원 정보를 응답받는다.
+     */
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
+        //given
+        createCustomer(페퍼);
+        ExtractableResponse<Response> login = login(페퍼_아이디, 페퍼_비밀번호);
+        String accessToken = login.as(TokenResponse.class).getAccessToken();
+
+        //when
+        CustomerResponse customer = RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+
+        //then
+        Assertions.assertAll(
+                () -> assertThat(customer.getLoginId()).isEqualTo(페퍼_아이디),
+                () -> assertThat(customer.getName()).isEqualTo(페퍼_이름)
+        );
     }
 
     @DisplayName("내 정보 수정")

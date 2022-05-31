@@ -1,15 +1,12 @@
 package woowacourse;
 
-import static woowacourse.Fixture.페퍼_비밀번호;
-import static woowacourse.Fixture.페퍼_아이디;
-import static woowacourse.Fixture.페퍼_이름;
-
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Customer;
 
 public class AcceptanceFixture {
@@ -25,6 +22,17 @@ public class AcceptanceFixture {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> login(String loginId, String password) {
+        return RestAssured
+                .given().log().all()
+                .body(new TokenRequest(loginId, password))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/login")
                 .then().log().all()
                 .extract();
     }
