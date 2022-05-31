@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dao.MemberDao;
 import woowacourse.auth.domain.Email;
 import woowacourse.auth.domain.Member;
@@ -28,6 +29,7 @@ public class AuthService {
         this.tokenManager = tokenManager;
     }
 
+    @Transactional(readOnly = true)
     public void save(MemberCreateRequest memberCreateRequest) {
         validateUniqueEmail(memberCreateRequest);
         Member member = new Member(memberCreateRequest.getEmail(), memberCreateRequest.getPassword(),
@@ -42,11 +44,13 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public boolean existsEmail(String email) {
         String validatedEmail = new Email(email).getValue();
         return memberDao.existsEmail(validatedEmail);
     }
 
+    @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
         Member member = findByEmail(loginRequest.getEmail(), new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
         validatePassword(member.getPassword(), loginRequest.getPassword());
@@ -65,6 +69,7 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public CheckResponse checkPassword(String email, PasswordCheckRequest passwordCheckRequest) {
         Member member = memberDao.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
@@ -73,11 +78,13 @@ public class AuthService {
         return new CheckResponse(result);
     }
 
+    @Transactional
     public MemberResponse findMember(String email) {
         Member member = findByEmail(email, new AuthorizationException("유효하지 않은 토큰입니다."));
         return new MemberResponse(member);
     }
 
+    @Transactional(readOnly = true)
     public void updateMember(String email, MemberUpdateRequest memberUpdateRequest) {
         validateExists(email);
         String nickname = new Nickname(memberUpdateRequest.getNickname())
@@ -91,6 +98,7 @@ public class AuthService {
         }
     }
 
+    @Transactional(readOnly = true)
     public void updatePassword(String email, PasswordUpdateRequest passwordUpdateRequest) {
         validateExists(email);
         String password = new Password(passwordUpdateRequest.getPassword())
@@ -98,6 +106,7 @@ public class AuthService {
         memberDao.updatePasswordByEmail(email, password);
     }
 
+    @Transactional(readOnly = true)
     public void delete(String email) {
         validateExists(email);
         memberDao.deleteByEmail(email);
