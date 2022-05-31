@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
@@ -9,9 +11,6 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -39,15 +38,15 @@ public class CartService {
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+    private List<Long> findCartIdsByCustomerName(final String email) {
+        final int customerId = customerDao.findByEmail(email).getId();
+        return cartItemDao.findIdsByCustomerId((long) customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long addCart(final Long productId, final String email) {
+        final int customerId = customerDao.findByEmail(email).getId();
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.addCartItem((long) customerId, productId);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
