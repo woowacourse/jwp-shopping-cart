@@ -90,7 +90,7 @@ public enum TMember {
         return token;
     }
 
-    public NoLoginAnd NoLoginAnd() {
-        return new NoLoginAnd();
+    public NoLoginAnd noLoginAnd() {
+        return new NoLoginAnd(this);
     }
 }
