@@ -26,10 +26,10 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<CustomerResponse> addCustomer(@RequestBody CustomerRequest customerRequest) {
         CustomerResponse customerResponse = customerService.addCustomer(customerRequest);
-        return ResponseEntity.created(URI.create("/customers")).body(customerResponse);
+        return ResponseEntity.created(URI.create("/customers/me")).body(customerResponse);
     }
 
-    @GetMapping
+    @GetMapping("/me")
     public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal LoginCustomer loginCustomer) {
         CustomerResponse customerResponse = CustomerResponse.of(loginCustomer);
         return ResponseEntity.ok().body(customerResponse);
