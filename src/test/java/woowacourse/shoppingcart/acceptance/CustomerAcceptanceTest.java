@@ -75,7 +75,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(extract.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(extract.body().jsonPath().getString("message")).isEqualTo(
-                        "[ERROR] 이메일은 공백 또는 빈 값일 수 없습니다.")
+                        "[ERROR] 올바른 이메일이 아닙니다.")
         );
     }
 
@@ -140,7 +140,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"@naver.com", "bcc0830naver.com", "bcc0830@", "bcc0830", "bcc0830#naver.com", "bcc0830@navercom"})
+    @ValueSource(strings = {"@naver.com", "bcc0830naver.com", "bcc0830@", "bcc0830", "bcc0830#naver.com",
+            "bcc0830@navercom"})
     void 회원가입시_이메일_형식이_아닌_경우(String invalidEmail) {
 
         SignUpRequest signUpRequest = new SignUpRequest("alpha", invalidEmail, "1234");
@@ -156,9 +157,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(extract.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(extract.body().jsonPath().getString("message")).isEqualTo(
-                        "[ERROR] 이메일 형식이 아닙니다.")
+                        "[ERROR] 올바른 이메일이 아닙니다.")
         );
     }
+
 
     @DisplayName("내 정보 조회")
     @Test

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -86,5 +88,11 @@ public class CustomerDaoTest {
         customerDao.saveCustomer(name, email, password);
 
         assertThat(customerDao.isValidName("alpha")).isTrue();
+    }
+
+    @Test
+    void 존재하지_않는_이메일을_조회할_경우() {
+        assertThatThrownBy(() -> customerDao.findCustomerByEmail("bcc0830@naver.com")).isInstanceOf(
+                InvalidCustomerException.class);
     }
 }

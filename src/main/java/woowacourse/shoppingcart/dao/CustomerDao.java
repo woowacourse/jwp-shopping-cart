@@ -65,4 +65,13 @@ public class CustomerDao {
         final String sql = "INSERT INTO customer (username, email, password) VALUES(?, ?, ?)";
         jdbcTemplate.update(sql, name, email, password);
     }
+
+    public Customer findCustomerByEmail(String email) {
+        try {
+            final String query = "SELECT * FROM customer WHERE email = ?";
+            return jdbcTemplate.queryForObject(query, CUSTOMER_MAPPER, email);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 이메일 입니다.");
+        }
+    }
 }

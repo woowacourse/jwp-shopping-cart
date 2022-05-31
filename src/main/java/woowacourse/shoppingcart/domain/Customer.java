@@ -34,4 +34,8 @@ public class Customer {
     public int hashCode() {
         return Objects.hash(name, email, password);
     }
+
+    public String getUsername() {
+        return name;
+    }
 }
