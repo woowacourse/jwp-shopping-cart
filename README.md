@@ -20,7 +20,7 @@
   - [x] password 
   - [x] phoneNumber
   - [x] address
-- [ ] 회원 탈퇴
+- [x] 회원 탈퇴
 - API 스펙은 [API 문서](https://www.notion.so/a00bc92443f04c52a852ce16501e981a) 참고
 
 ## ✏️ Code Review Process

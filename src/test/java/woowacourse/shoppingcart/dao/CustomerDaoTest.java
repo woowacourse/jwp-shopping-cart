@@ -125,4 +125,18 @@ public class CustomerDaoTest {
 
         assertThat(findCustomer.getPassword()).isEqualTo(newCustomer.getPassword());
     }
+
+    @DisplayName("회원을 탈퇴한다.")
+    @Test
+    void deleteCustomer() {
+        // given
+        Customer customer = Customer.of("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        Customer savedCustomer = customerDao.save(customer);
+
+        // when
+        customerDao.deleteByUsername(savedCustomer.getUsername().getValue());
+
+        // then
+        assertThat(customerDao.findByUsername(customer.getUsername().getValue()).isEmpty()).isTrue();
+    }
 }

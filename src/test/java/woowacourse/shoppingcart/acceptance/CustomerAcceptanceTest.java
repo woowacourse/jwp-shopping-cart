@@ -219,5 +219,39 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+
+        RestAssured.given().log().all()
+            .body(signupRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/signup")
+            .then().log().all()
+            .extract();
+
+        String accessToken = RestAssured
+            .given().log().all()
+            .body(new LoginRequest("dongho108", "ehdgh1234"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/api/customers/login")
+            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+
+        RestAssured.given().log().all()
+            .auth().oauth2(accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .delete("/api/customers")
+            .then().log().all()
+            .extract();
+
+        RestAssured
+            .given().log().all()
+            .body(new LoginRequest("dongho108", "ehdgh1234"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/api/customers/login")
+            .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 }

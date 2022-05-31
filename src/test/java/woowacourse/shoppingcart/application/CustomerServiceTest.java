@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.exception.EmptyResultException;
 
 @SpringBootTest
 @Transactional
@@ -89,5 +90,21 @@ class CustomerServiceTest {
         Customer customer = customerService.findByUsername("dongho108");
 
         assertThat(customer.getPassword().getValue()).isEqualTo(updateCustomerRequest.getPassword());
+    }
+
+    @DisplayName("회원을 삭제한다.")
+    @Test
+    void delete() {
+        // given
+        String username = "dongho108";
+        SignupRequest signupRequest = new SignupRequest(username, "ehdgh1234", "01022728572", "인천 서구 검단로");
+        customerService.save(signupRequest);
+
+        // when
+        customerService.deleteByUsername(username);
+
+        // then
+        assertThatThrownBy(() -> customerService.findByUsername(username))
+            .isInstanceOf(EmptyResultException.class);
     }
 }

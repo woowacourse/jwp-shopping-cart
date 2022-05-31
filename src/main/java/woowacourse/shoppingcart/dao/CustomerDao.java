@@ -74,12 +74,17 @@ public class CustomerDao {
     }
 
     public void update(Customer customer) {
-        String query = "UPDATE customer SET password = ?, phoneNumber = ?, address = ? WHERE id = ?";
+        final String query = "UPDATE customer SET password = ?, phoneNumber = ?, address = ? WHERE id = ?";
         jdbcTemplate.update(query,
             customer.getPassword().getValue(),
             customer.getPhoneNumber().getValue(),
             customer.getAddress(),
             customer.getId()
         );
+    }
+
+    public void deleteByUsername(String username) {
+        final String query = "DELETE FROM customer WHERE username = ?";
+        jdbcTemplate.update(query, username);
     }
 }

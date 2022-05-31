@@ -53,4 +53,8 @@ public class CustomerService {
         customer.updatePassword(updateCustomerRequest.getPassword());
         customerDao.update(customer);
     }
+
+    public void deleteByUsername(String username) {
+        customerDao.deleteByUsername(username);
+    }
 }
