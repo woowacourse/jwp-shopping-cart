@@ -84,4 +84,11 @@ public class CustomerDaoTest {
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("아이디나 비밀번호를 잘못 입력했습니다.");
     }
+
+    @DisplayName("중복된 이메일이 있는지 확인한다.")
+    @ParameterizedTest
+    @CsvSource(value = {"email@email.com, true", "notexistingemail@email.com, false"})
+    void existEmail(final String email, final Boolean expected) {
+        assertThat(customerDao.existEmail(email)).isEqualTo(expected);
+    }
 }

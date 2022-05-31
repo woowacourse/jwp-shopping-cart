@@ -51,4 +51,13 @@ public class CustomerDao {
             throw new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다.");
         }
     }
+
+    public boolean existEmail(String email) {
+        final String sql = "select exists (select * from customer where email = :email)";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
 }
