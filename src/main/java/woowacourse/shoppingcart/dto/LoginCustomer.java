@@ -5,27 +5,25 @@ import woowacourse.shoppingcart.domain.Customer;
 public class LoginCustomer {
 
     private String loginId;
-    private String username;
-
+    private String name;
 
     public LoginCustomer() {
-
     }
 
     public LoginCustomer(Customer customer) {
-        this(customer.getLoginId(), customer.getUsername());
+        this(customer.getLoginId(), customer.getName());
     }
 
-    public LoginCustomer(String loginId, String username) {
+    public LoginCustomer(String loginId, String name) {
         this.loginId = loginId;
-        this.username = username;
+        this.name = name;
     }
 
     public String getLoginId() {
         return loginId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 }

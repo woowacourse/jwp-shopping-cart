@@ -62,10 +62,10 @@ public class CustomerDao {
     public Customer save(Customer customer) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
         Long id = insertActor.executeAndReturnKey(parameterSource).longValue();
-        return new Customer(id, customer.getLoginId(), customer.getUsername(), customer.getPassword());
+        return new Customer(id, customer.getLoginId(), customer.getName(), customer.getPassword());
     }
 
-    public boolean checkInvalidLogin(String loginId, String password) {
+    public boolean checkValidLogin(String loginId, String password) {
         final String query = "SELECT EXISTS (SELECT 1 FROM customer WHERE loginId = :loginId and password = :password)";
         MapSqlParameterSource parameters = new MapSqlParameterSource("loginId", loginId);
         parameters.addValue("password", password);
