@@ -67,10 +67,23 @@ public class CustomerDao {
         final String sql = "SELECT id, account, nickname, password, address, phone_number " +
                 "FROM customer WHERE id=:customerId";
 
-        Map<String, Object> parameters = new HashMap<>();
+        final Map<String, Object> parameters = new HashMap<>();
         parameters.put("customerId", customerId);
 
         final List<Customer> result = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), customerRowMapper);
         return Optional.ofNullable(DataAccessUtils.singleResult(result));
+    }
+
+    public int updateById(long id, String nickname, String address, String phoneNumber) {
+        final String sql = "UPDATE customer SET nickname=:nickname, address=:address, phone_number=:phone_number " +
+                "WHERE id=:id";
+
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", id);
+        parameters.put("nickname", nickname);
+        parameters.put("address", address);
+        parameters.put("phone_number", phoneNumber);
+
+        return namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(parameters));
     }
 }

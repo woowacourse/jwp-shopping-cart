@@ -84,4 +84,28 @@ public class CustomerDaoTest {
                 () -> assertThat(foundCustomer.getPhoneNumber()).isEqualTo("01012345678")
         );
     }
+
+    @Test
+    @DisplayName("회원의 정보를 수정한다.")
+    void updateById() {
+        // given
+        String nickname = "eden22";
+        String address = "new address";
+        String phoneNumber = "01012341234";
+
+        // when
+        final int affectedRows = customerDao.updateById(1L, nickname, address, phoneNumber);
+        final Optional<Customer> customer = customerDao.findById(1L);
+
+        assert (customer.isPresent());
+
+        final Customer actual = customer.get();
+        // then
+        assertAll(
+                () -> assertThat(affectedRows).isEqualTo(1),
+                () -> assertThat(actual.getNickname()).isEqualTo("eden22"),
+                () -> assertThat(actual.getAddress()).isEqualTo("new address"),
+                () -> assertThat(actual.getPhoneNumber()).isEqualTo("01012341234")
+        );
+    }
 }
