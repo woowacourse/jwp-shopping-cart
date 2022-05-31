@@ -10,13 +10,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dto.CustomerDetailResponse;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 
 @SpringBootTest
-@Sql("classpath:data.sql")
+@Sql("classpath:customerData.sql")
 class CustomerControllerTest {
 
+    private static final String NAME = "클레이";
+    private static final String EMAIL = "djwhy5510@naver.com";
+    private static final String PASSWORD = "12345678";
     @Autowired
     private CustomerController customerController;
 
@@ -24,10 +28,10 @@ class CustomerControllerTest {
     @Test
     void register() {
         // given 이름, 이메일, 비밀번호를 입력하고
-        CustomerRegisterRequest request = new CustomerRegisterRequest("클레이", "djwhy5510@naver.com", "12345678");
+        final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
 
         // when 회원 등록을 요청하면
-        ResponseEntity<Void> response = customerController.register(request);
+        final ResponseEntity<Void> response = customerController.register(request);
 
         // then 회원이 성공적으로 등록된다.
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -37,11 +41,27 @@ class CustomerControllerTest {
     @Test
     void register_withDuplicatedEmail_throwsException() {
         // given
-        CustomerRegisterRequest request = new CustomerRegisterRequest("클레이", "djwhy5510@naver.com", "12345678");
+        final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
         customerController.register(request);
 
         // when, then
         assertThatThrownBy(() -> customerController.register(request))
                 .isInstanceOf(DuplicatedEmailException.class);
+    }
+
+    @Test
+    @DisplayName("id를 통해 회원을 조회한다.")
+    void showMyDetail() {
+        // given
+        final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
+        customerController.register(request);
+
+        // when
+        final ResponseEntity<CustomerDetailResponse> customerDetailResponse = customerController.showMyDetail(1L);
+        final CustomerDetailResponse actual = customerDetailResponse.getBody();
+
+        // then
+        assertThat(actual).usingRecursiveComparison()
+                .isEqualTo(new CustomerDetailResponse(NAME, EMAIL));
     }
 }
