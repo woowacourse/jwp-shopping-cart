@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.exception.AuthException;
+import woowacourse.exception.JoinException;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -22,6 +23,9 @@ public class CustomerService {
 
     public void register(String email, String password, String username) {
         final Password encryptedPassword = Password.from(password);
+        if(customerDao.existsByEmail(email)){
+            throw new JoinException("이미 존재하는 이메일입니다.", ErrorResponse.DUPLICATED_EMAIL);
+        }
         customerDao.save(new Customer(email, encryptedPassword.getPassword(), username));
     }
 

@@ -3,7 +3,7 @@ package woowacourse.auth.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.exception.AuthException;
+import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -21,7 +21,7 @@ public class AuthService {
     public TokenResponse login(String email, String password) {
         final Customer customer = customerDao.findByEmail(email);
         if (customer.isDifferentPassword(password)) {
-            throw new AuthException("패스워드가 일치하지 않습니다.", ErrorResponse.LOGIN_FAIL);
+            throw new LoginException("패스워드가 일치하지 않습니다.", ErrorResponse.LOGIN_FAIL);
         }
 
         final String token = jwtTokenProvider.createToken(customer.getEmail());

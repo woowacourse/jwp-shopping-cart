@@ -7,6 +7,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.exception.LoginException;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -46,7 +48,7 @@ public class CustomerDao {
             return jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> new Customer(rs.getLong("id"
             ), rs.getString("email"), rs.getString("password"), rs.getString("username"))), email);
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new LoginException("존재하지 않는 이메일입니다.", ErrorResponse.LOGIN_FAIL);
         }
     }
 
@@ -63,5 +65,10 @@ public class CustomerDao {
     public void delete(Long id) {
         final String sql = "DELETE FROM customer WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public boolean existsByEmail(String email) {
+        final String sql = "SELECT exists(SELECT * FROM customer WHERE email = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, email);
     }
 }

@@ -63,7 +63,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 ()-> assertThat(errorCode).isEqualTo(2001),
-                ()-> assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+                ()-> assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         );
     }
 
