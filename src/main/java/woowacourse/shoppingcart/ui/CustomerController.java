@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.auth.support.Login;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
@@ -34,7 +34,7 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal final Customer customer) {
+    public ResponseEntity<CustomerResponse> getMe(@Login final Customer customer) {
         final CustomerResponse response = new CustomerResponse(
                 customer.getEmail(),
                 customer.getNickname()
@@ -43,13 +43,13 @@ public class CustomerController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal final Customer customer) {
+    public ResponseEntity<Void> deleteMe(@Login final Customer customer) {
         customerService.delete(customer);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> updateMe(@AuthenticationPrincipal final Customer customer,
+    public ResponseEntity<Void> updateMe(@Login final Customer customer,
                                          @Valid @RequestBody final CustomerUpdationRequest request) {
         customerService.update(customer, request);
         return ResponseEntity.noContent().build();
