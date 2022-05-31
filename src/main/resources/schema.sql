@@ -1,74 +1,74 @@
-drop table if exists orders_detail;
+DROP TABLE IF EXISTS orders_detail;
 
-drop table if exists orders;
+DROP TABLE IF EXISTS orders;
 
-drop table if exists cart_item;
+DROP TABLE IF EXISTS cart_item;
 
-drop table if exists product;
+DROP TABLE IF EXISTS product;
 
-drop table if exists customer;
+DROP TABLE IF EXISTS customer;
 
-create table customer
+CREATE TABLE customer
 (
-    id       bigint       not null auto_increment,
-    nickname varchar(255) not null,
-    email    varchar(255) not null,
-    password varchar(255) not null,
-    primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+    id       BIGINT       NOT NULL AUTO_INCREMENT,
+    nickname VARCHAR(255) NOT NULL,
+    email    VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-alter table customer
-    add unique key (nickname);
+ALTER TABLE customer
+    ADD UNIQUE KEY (nickname);
 
-create table product
+CREATE TABLE product
 (
-    id        bigint       not null auto_increment,
-    name      varchar(255) not null,
-    price     integer      not null,
-    image_url varchar(255),
-    primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+    id        BIGINT       NOT NULL AUTO_INCREMENT,
+    name      VARCHAR(255) NOT NULL,
+    price     INTEGER      NOT NULL,
+    image_url VARCHAR(255),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-create table cart_item
+CREATE TABLE cart_item
 (
-    id          bigint not null auto_increment,
-    customer_id bigint not null,
-    product_id  bigint not null,
-    primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+    id          BIGINT NOT NULL AUTO_INCREMENT,
+    customer_id BIGINT NOT NULL,
+    product_id  BIGINT NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-alter table cart_item
-    add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references customer (id);
+ALTER TABLE cart_item
+    ADD CONSTRAINT fk_cart_item_to_customer
+        FOREIGN KEY (customer_id) REFERENCES customer (id);
 
-alter table cart_item
-    add constraint fk_cart_item_to_product
-        foreign key (product_id) references product (id);
+ALTER TABLE cart_item
+    ADD CONSTRAINT fk_cart_item_to_product
+        FOREIGN KEY (product_id) REFERENCES product (id);
 
-create table orders
+CREATE TABLE orders
 (
-    id          bigint not null auto_increment,
-    customer_id bigint not null,
-    primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+    id          BIGINT NOT NULL AUTO_INCREMENT,
+    customer_id BIGINT NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-alter table orders
-    add constraint fk_orders_to_customer
-        foreign key (customer_id) references customer (id);
+ALTER TABLE orders
+    ADD CONSTRAINT fk_orders_to_customer
+        FOREIGN KEY (customer_id) REFERENCES customer (id);
 
-create table orders_detail
+CREATE TABLE orders_detail
 (
-    id         bigint  not null auto_increment,
-    orders_id  bigint  not null,
-    product_id bigint  not null,
-    quantity   integer not null,
-    primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+    id         BIGINT  NOT NULL AUTO_INCREMENT,
+    orders_id  BIGINT  NOT NULL,
+    product_id BIGINT  NOT NULL,
+    quantity   INTEGER NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-alter table orders_detail
-    add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id);
+ALTER TABLE orders_detail
+    ADD CONSTRAINT fk_orders_detail_to_orders
+        FOREIGN KEY (orders_id) REFERENCES orders (id);
 
-alter table orders_detail
-    add constraint fk_orders_detail_to_product
-        foreign key (product_id) references product (id);
+ALTER TABLE orders_detail
+    ADD CONSTRAINT fk_orders_detail_to_product
+        FOREIGN KEY (product_id) REFERENCES product (id);

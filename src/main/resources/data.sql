@@ -1,5 +1,5 @@
-insert into customer (nickname, email, password)
-values ('puterism', 'email1@email.com', 'qwerasdf123'),
+INSERT INTO customer (nickname, email, password)
+VALUES ('puterism', 'email1@email.com', 'qwerasdf123'),
        ('tanney-102', 'email2@email.com', 'qwerasdf123'),
        ('jho2301', 'email3@email.com', 'qwerasdf123'),
        ('365kim', 'email4@email.com', 'qwerasdf123'),
