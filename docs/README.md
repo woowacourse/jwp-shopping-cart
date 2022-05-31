@@ -59,6 +59,7 @@
 - [ ] test fixture 만들기
 - [ ] id 기반으로 payload 저장
 - [x] token validate 추가
+- [ ] BindingResult에 Error가 복수 개인 경우 어떻게 보여지게 할지 고민
 
 ### 일정
 
