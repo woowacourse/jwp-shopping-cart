@@ -4,6 +4,8 @@ import java.util.regex.Pattern;
 
 public class Customer {
 
+    private static final int MINIMUM_NAME_LENGTH = 1;
+    private static final int MAXIMUM_NAME_LENGTH = 30;
     private static final String PHONE_REGEX = "^010-\\d{4}-\\d{4}$";
     private static final String PASSWORD_REGEX =
             "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$";
@@ -16,10 +18,7 @@ public class Customer {
     private final String address;
 
     public Customer(Long id, String email, String password, String name, String phone, String address) {
-        validateNameLength(name);
-        validatePhoneFormat(phone);
-        validatePasswordFormat(password);
-
+        validate(password, name, phone);
         this.id = id;
         this.email = email;
         this.password = password;
@@ -28,12 +27,18 @@ public class Customer {
         this.address = address;
     }
 
+    private void validate(String password, String name, String phone) {
+        validateNameLength(name);
+        validatePhoneFormat(phone);
+        validatePasswordFormat(password);
+    }
+
     public Customer(String email, String password, String name, String phone, String address) {
         this(null, email, password, name, phone, address);
     }
 
     private void validateNameLength(String name) {
-        if (name.length() < 1 || name.length() > 30) {
+        if (name.length() < MINIMUM_NAME_LENGTH || name.length() > MAXIMUM_NAME_LENGTH) {
             throw new IllegalArgumentException("이름은 1자 이상, 30자 이하여야 합니다.");
         }
     }
