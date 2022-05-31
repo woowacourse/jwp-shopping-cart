@@ -118,7 +118,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(updateRequest)
-                .when().put("/users")
+                .when().put("/users/me")
                 .then().log().all();
 
         ValidatableResponse updatedResponse = getMe(accessToken);
@@ -148,7 +148,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ValidatableResponse response = RestAssured
                 .given().log().all()
                 .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
-                .when().delete("/users")
+                .when().delete("/users/me")
                 .then().log().all();
 
         ValidatableResponse loginResponse = postLogin(tokenRequest);

@@ -42,13 +42,13 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal Customer customer) {
         customerService.delete(customer);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping
+    @PutMapping("/me")
     public ResponseEntity<Void> updateMe(@AuthenticationPrincipal Customer customer,
                                          @Valid @RequestBody CustomerUpdationRequest request) {
         customerService.update(customer, request);
