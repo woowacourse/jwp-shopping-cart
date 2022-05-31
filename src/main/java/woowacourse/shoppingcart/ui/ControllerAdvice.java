@@ -22,6 +22,7 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.UserNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -34,6 +35,12 @@ public class ControllerAdvice {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity handle() {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity handleLoginException(UserNotFoundException exception) {
+        ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(response);
     }
 
     @ExceptionHandler

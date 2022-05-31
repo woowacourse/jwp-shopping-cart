@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
@@ -193,6 +194,37 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .when().get("/api/customers")
             .then().log().all()
             .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("해당 아이디가 존재하지 않으면 (401)unauthorized 를 반환해야 한다.")
+    @Test
+    void loginByInvalidUsername() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+
+        RestAssured.given().log().all()
+            .body(signupRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/signup")
+            .then().log().all()
+            .extract();
+
+        // when
+        ValidatableResponse validatableResponse = RestAssured
+            .given().log().all()
+            .body(new LoginRequest("dongho109", "ehdgh1234"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/api/customers/login")
+            .then().log().all();
+        ExceptionResponse exceptionResponse = validatableResponse.extract().as(ExceptionResponse.class);
+
+        // then
+        validatableResponse.statusCode(HttpStatus.UNAUTHORIZED.value());
+        assertThat(exceptionResponse.getMessages())
+            .hasSize(1)
+            .containsExactly("해당하는 username이 없습니다.");
     }
 
     @DisplayName("내 정보 수정")
