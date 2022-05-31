@@ -1,14 +1,14 @@
-# 장바구니
+# 장바구니 🛒
+
 장바구니 미션 저장소
 
-## ✏️ Code Review Process
-[텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
-
 ## 기능 요구 사항
-JWT 라이브러리를 활용하여 액세스 토큰 발급 기능을 구현하기
-발급한 토큰을 이용하여 로그인이 필요한 기능(회원 정보 조회/수정, 회원탈퇴) 요청 시 포함하여 보내고 이를 이용하여 기능이 동작하도록 구현하기
+
+- JWT 라이브러리를 활용하여 액세스 토큰 발급 기능
+- 발급한 토큰을 이용하여 로그인이 필요한 기능(회원 정보 조회/수정, 회원탈퇴) 요청 시 포함하여 보내고 이를 이용하여 기능이 동작하도록 구현
 
 ## API 명세
+
 ### 회원가입
 
 - 요청
@@ -27,7 +27,7 @@ POST /users
     - 정상 케이스
 
         ```json
-        200 OK
+        204 NO_CONTENT
         ```
 
     - 회원정보 양식이 잘못됐을 때
@@ -51,7 +51,6 @@ POST /users
         	message: "error message"
         }
         ```
-
 
 ### 로그인
 
@@ -99,13 +98,12 @@ POST /login
         }
         ```
 
-
 ### 회원 정보 수정
 
 - 요청
 
 ```json
-PUT /users
+PUT /users/me
 Authorization : accessToken
 
 {
@@ -118,7 +116,7 @@ Authorization : accessToken
     - 정상 케이스
 
     ```java
-    200 OK
+    204 NO_CONTENT
     ```
 
     - 회원정보 양식 문제
@@ -138,12 +136,11 @@ Authorization : accessToken
     401 UNAUTHORIZED
     ```
 
-
 ### 회원 정보 요청
 
 - 요청
 
-```java
+```json
 GET /users/me
 Authorization : accessToken
 ```
@@ -166,13 +163,12 @@ Authorization : accessToken
     401 UNAUTHORIZED
     ```
 
-
 ### 회원 정보 삭제
 
 - 요청
 
 ```json
-DELETE /users
+DELETE /users/me
 Authorization : accessToken
 ```
 
@@ -180,7 +176,7 @@ Authorization : accessToken
     - 정상 케이스
 
     ```json
-    200 OK
+    204 NO_CONTENT
     ```
 
     - 잘못된 토큰의 경우
@@ -188,7 +184,6 @@ Authorization : accessToken
     ```json
     401 UNAUTHORIZED
     ```
-
 
 ### 에러 코드
 
