@@ -39,7 +39,6 @@ public class JdbcPrivacyDao implements PrivacyDao {
         String sql = "UPDATE PRIVACY SET name = ?, gender = ?, birth_day = ?, contact = ? WHERE customer_id = ?";
         jdbcTemplate.update(sql, privacyEntity.getName(), privacyEntity.getGender(), privacyEntity.getBirthDay(),
                 privacyEntity.getContact(), customerId);
-
     }
 
     @Override

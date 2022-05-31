@@ -64,10 +64,10 @@ class JdbcAddressDaoTest {
         AddressEntity newAddressEntity = new AddressEntity("경기도 양주시", "옥정동 배카라하우스", "12312");
         addressDao.update(customerId, newAddressEntity);
 
-        AddressEntity updatedAddressEntity = addressDao.findById(customerId);
+        AddressEntity actual = addressDao.findById(customerId);
 
         // then
-        assertThat(updatedAddressEntity).extracting("customerId", "address", "detailAddress", "zoneCode")
+        assertThat(actual).extracting("customerId", "address", "detailAddress", "zoneCode")
                 .containsExactly(customerId, newAddressEntity.getAddress(), newAddressEntity.getDetailAddress(),
                         newAddressEntity.getZoneCode());
     }

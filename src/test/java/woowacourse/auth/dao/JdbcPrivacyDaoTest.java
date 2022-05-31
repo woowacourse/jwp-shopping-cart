@@ -68,12 +68,12 @@ class JdbcPrivacyDaoTest {
                 "01033334444");
         privacyDao.update(customerId, newPrivacyEntity);
 
-        PrivacyEntity updatedPrivacyEntity = privacyDao.findById(customerId);
+        PrivacyEntity actual = privacyDao.findById(customerId);
 
         // then
-        assertThat(updatedPrivacyEntity).extracting("customerId", "name", "gender", "birthDay", "contact")
-                .containsExactly(customerId, updatedPrivacyEntity.getName(), updatedPrivacyEntity.getGender(),
-                        updatedPrivacyEntity.getBirthDay(), updatedPrivacyEntity.getContact());
+        assertThat(actual).extracting("customerId", "name", "gender", "birthDay", "contact")
+                .containsExactly(customerId, newPrivacyEntity.getName(), newPrivacyEntity.getGender(),
+                        newPrivacyEntity.getBirthDay(), newPrivacyEntity.getContact());
     }
 
     @DisplayName("id를 전달받아 해당하는 Privacy를 삭제한다.")
