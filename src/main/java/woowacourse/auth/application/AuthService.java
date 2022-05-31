@@ -33,10 +33,4 @@ public class AuthService {
                 jwtTokenProvider.createToken(customer.getUsername())
         );
     }
-
-    public void validateUser(String username, String userNameByToken) {
-        if (!username.equals(userNameByToken)) {
-            throw new AuthorizationException("잘못된 요청입니다.");
-        }
-    }
 }

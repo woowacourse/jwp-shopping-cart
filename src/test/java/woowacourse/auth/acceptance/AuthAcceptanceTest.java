@@ -73,7 +73,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/" + signUpRequest.getUsername())
+                .when().get("/users/me")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
         // then
@@ -133,7 +133,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/" + signUpRequest.getUsername())
+                .when().get("/users/me")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }

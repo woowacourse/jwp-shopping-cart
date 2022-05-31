@@ -24,42 +24,34 @@ import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 public class CustomerController {
 
     private final CustomerService customerService;
-    private final AuthService authService;
 
-    public CustomerController(CustomerService customerService, AuthService authService) {
+    public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
-        this.authService = authService;
     }
 
     @PostMapping
     public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         SignUpResponse signUpresponse = customerService.addCustomer(signUpRequest);
-        return ResponseEntity.created(URI.create("/users/" + signUpRequest.getUsername()))
+        return ResponseEntity.created(URI.create("/users"))
                 .body(signUpresponse);
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String userNameByToken,
-                                                  @PathVariable String username) {
-        authService.validateUser(username, userNameByToken);
-        return ResponseEntity.ok().body(customerService.findMe(username));
+    @GetMapping("/me")
+    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String userNameByToken) {
+        return ResponseEntity.ok().body(customerService.findMe(userNameByToken));
     }
 
-    @PatchMapping("/{username}")
+    @PatchMapping
     public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal String userNameByToken,
-                                                     @PathVariable String username,
                                                      @RequestBody UpdatePasswordRequest updatePasswordRequest) {
-        authService.validateUser(username, userNameByToken);
-        customerService.updateMe(username, updatePasswordRequest);
+        customerService.updateMe(userNameByToken, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{username}")
+    @DeleteMapping
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal String userNameByToken,
-                                         @PathVariable String username,
                                          @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
-        authService.validateUser(username, userNameByToken);
-        customerService.deleteMe(username, deleteCustomerRequest);
+        customerService.deleteMe(userNameByToken, deleteCustomerRequest);
         return ResponseEntity.noContent().build();
     }
 }
