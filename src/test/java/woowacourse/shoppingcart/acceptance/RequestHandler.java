@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.acceptance;
 
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
