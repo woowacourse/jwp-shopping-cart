@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.dto;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerResponse {
-    private Long id;
     private String userName;
     private String password;
     private String nickName;
@@ -12,8 +11,7 @@ public class CustomerResponse {
     private CustomerResponse() {
     }
 
-    public CustomerResponse(Long id, String userName, String password, String nickName, int age) {
-        this.id = id;
+    private CustomerResponse(String userName, String password, String nickName, int age) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
@@ -22,12 +20,8 @@ public class CustomerResponse {
 
     public static CustomerResponse from(Customer customer) {
         return new CustomerResponse(
-                null, customer.getUserName(), customer.getPassword(), customer.getNickName(), customer.getAge()
+                customer.getUserName(), customer.getPassword(), customer.getNickName(), customer.getAge()
         );
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getUserName() {
