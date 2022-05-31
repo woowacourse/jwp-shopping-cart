@@ -49,4 +49,14 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
     }
+
+    public void updatePassword(Long id, String password) {
+        final String sql = "UPDATE customer SET password = ? WHERE id = ?";
+        jdbcTemplate.update(sql, password, id);
+    }
+
+    public void updateGeneralInfo(Long id, String username) {
+        final String sql = "UPDATE customer SET username = ? WHERE id = ?";
+        jdbcTemplate.update(sql, username, id);
+    }
 }

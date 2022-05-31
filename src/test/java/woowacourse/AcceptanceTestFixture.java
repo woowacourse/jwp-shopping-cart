@@ -3,7 +3,6 @@ package woowacourse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Map;
 import org.springframework.http.MediaType;
 
 public class AcceptanceTestFixture {
@@ -35,12 +34,13 @@ public class AcceptanceTestFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> putMethodRequest(Map<String, String> parameter, String path) {
+    public static ExtractableResponse<Response> patchMethodRequestWithBearerAuth(Object request, String token, String path) {
         return RestAssured.given().log().all()
-                .body(parameter)
+                .header("Authorization", "Bearer " + token)
+                .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put(path)
+                .patch(path)
                 .then().log().all()
                 .extract();
     }

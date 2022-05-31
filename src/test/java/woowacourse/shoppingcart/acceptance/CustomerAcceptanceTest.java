@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.AcceptanceTestFixture.getMethodRequestWithBearerAuth;
+import static woowacourse.AcceptanceTestFixture.patchMethodRequestWithBearerAuth;
 import static woowacourse.AcceptanceTestFixture.postMethodRequest;
 
 import io.restassured.response.ExtractableResponse;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.LoginRequest;
+import woowacourse.shoppingcart.dto.ChangeGeneralInfoRequest;
+import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -55,9 +58,53 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("비밀번호 수정")
     @Test
-    void updateMe() {
+    void updatePassword() {
+        final String email = "test@gmail.com";
+        final String password = "password0!";
+        final String username = "루나";
+        final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
+        postMethodRequest(customerRequest, "/api/customers");
+
+        final LoginRequest loginRequest = new LoginRequest(email, password);
+        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest,
+                "/api/auth/login");
+
+        final String token = tokenResponse.jsonPath().getString("accessToken");
+        final ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(password, "newPwd0!");
+        final ExtractableResponse<Response> response = patchMethodRequestWithBearerAuth(changePasswordRequest, token,
+                "/api/customers/me?target=password");
+
+        assertAll(
+                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                ()-> assertThat(response.header("Location")).isEqualTo("/login")
+        );
+    }
+
+    @DisplayName("회원 일반 정보 수정")
+    @Test
+    void updateGeneralInformation() {
+        final String email = "test@gmail.com";
+        final String password = "password0!";
+        final String username = "루나";
+        final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
+        postMethodRequest(customerRequest, "/api/customers");
+
+        final LoginRequest loginRequest = new LoginRequest(email, password);
+        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest,
+                "/api/auth/login");
+
+        final String token = tokenResponse.jsonPath().getString("accessToken");
+        final ChangeGeneralInfoRequest changeGeneralInfoRequest = new ChangeGeneralInfoRequest("루나2");
+        final ExtractableResponse<Response> response = patchMethodRequestWithBearerAuth(changeGeneralInfoRequest, token,
+                "/api/customers/me?target=generalInfo");
+        final CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
+        assertAll(
+                ()-> assertThat(customerResponse.getEmail()).isEqualTo(email),
+                ()-> assertThat(customerResponse.getUsername()).isEqualTo("루나2"),
+                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
     }
 
     @DisplayName("회원탈퇴")

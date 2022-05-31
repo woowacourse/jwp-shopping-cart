@@ -4,12 +4,15 @@ import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.ChangeGeneralInfoRequest;
+import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -35,5 +38,20 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> showCustomer(@AuthenticationPrincipal String email) {
         CustomerResponse customerResponse = customerService.showCustomer(email);
         return ResponseEntity.ok(customerResponse);
+    }
+
+    @PatchMapping(value = "/me",params = "target=password")
+    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal String email, @RequestBody
+                                                           ChangePasswordRequest changePasswordRequest) {
+        customerService.changePassword(email, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+        return ResponseEntity.ok().location(URI.create("/login")).build();
+    }
+
+    @PatchMapping(value = "/me",params = "target=generalInfo")
+    public ResponseEntity<CustomerResponse> changeGeneral(@AuthenticationPrincipal String email, @RequestBody
+            ChangeGeneralInfoRequest changeGeneralInfoRequest) {
+        final CustomerResponse customerResponse = customerService
+                .changeGeneralInfo(email, changeGeneralInfoRequest.getUsername());
+        return ResponseEntity.ok().body(customerResponse);
     }
 }
