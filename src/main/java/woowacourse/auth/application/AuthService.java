@@ -1,10 +1,12 @@
 package woowacourse.auth.application;
 
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
 public class AuthService {
@@ -28,5 +30,11 @@ public class AuthService {
         if (!customer.isPasswordMatched(tokenRequest.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    public CustomerResponse findCustomerByEmail(String email) {
+        Customer customer = customerDao.findIdByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        return CustomerResponse.from(customer);
     }
 }
