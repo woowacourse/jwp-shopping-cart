@@ -1,19 +1,28 @@
 package woowacourse.auth.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
+@Sql("classpath:data.sql")
 class AuthControllerTest {
+
+    private static final String NAME = "klay";
+    private static final String EMAIL = "klay@gmail.com";
+    private static final String PASSWORD = "12345678";
 
     @Autowired
     private AuthController authController;
@@ -28,10 +37,8 @@ class AuthControllerTest {
     @DisplayName("이메일과 비밀번호를 받아 로그인한다.")
     void login() {
         // given
-        final String email = "klay@gmail.com";
-        final String password = "12345678";
-        final TokenRequest tokenRequest = new TokenRequest(email, password);
-        customerService.save(new CustomerSaveRequest("klay", email, password));
+        final TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
+        customerService.save(new CustomerSaveRequest(NAME, EMAIL, PASSWORD));
 
         // when
         final TokenResponse tokenResponse = authController.login(tokenRequest);
@@ -39,5 +46,28 @@ class AuthControllerTest {
 
         // then
         assertThat(actual).isTrue();
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 이메일로 로그인 요청 시 예외가 발생한다.")
+    void login_invalidEmail_throwsEmail() {
+        // given
+        final TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
+
+        // when, then
+        assertThatThrownBy(() -> authController.login(tokenRequest))
+                .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @Test
+    @DisplayName("로그인시 비밀번호가 일치하지 않는 경우 예외가 발생한다.")
+    void login_passwordNotMatch_throwsException() {
+        // given
+        customerService.save(new CustomerSaveRequest(NAME, EMAIL, PASSWORD));
+
+        // when, then
+        final TokenRequest tokenRequest = new TokenRequest(EMAIL, "1213123213123212");
+        assertThatThrownBy(() -> authController.login(tokenRequest))
+                .isInstanceOf(PasswordNotMatchException.class);
     }
 }
