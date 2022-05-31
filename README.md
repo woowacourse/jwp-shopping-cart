@@ -59,7 +59,7 @@
         - 이름 (name)
         - 전화번호 (phone)
         - 주소 (address)
-- [ ] 회원 정보 수정
+- [x] 회원 정보 수정
     - PUT
     - 200
     - /customers
@@ -70,7 +70,7 @@
         - Password (password)
     - Response
         - X
-- [ ] 회원 탈퇴
+- [x] 회원 탈퇴
     - DELETE
     - /customers
     - 204

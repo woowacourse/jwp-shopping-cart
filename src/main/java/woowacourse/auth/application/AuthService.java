@@ -6,10 +6,12 @@ import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.utils.Encryptor;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
+import woowacourse.shoppingcart.utils.CustomerInformationValidator;
 
 @Service
 public class AuthService {
@@ -24,14 +26,15 @@ public class AuthService {
     }
 
     public CustomerResponse register(CustomerRequest customerRequest) {
-        final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getName(), customerRequest.getPhone(), customerRequest.getAddress(), customerRequest.getPassword());
+        CustomerInformationValidator.validatePassword(customerRequest.getPassword());
+        final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getName(), customerRequest.getPhone(), customerRequest.getAddress(), Encryptor.encrypt(customerRequest.getPassword()));
         final Customer savedCustomer = customerDao.save(customer);
         return new CustomerResponse(savedCustomer.getId(), savedCustomer.getEmail(), savedCustomer.getName(), savedCustomer.getPhone(), savedCustomer.getAddress());
     }
 
     public TokenResponse login(TokenRequest tokenRequest) {
         Customer customer = customerDao.findByEmail(tokenRequest.getEmail());
-        if (!customer.checkPassword(tokenRequest.getPassword())) {
+        if (!customer.checkPassword(Encryptor.encrypt(tokenRequest.getPassword()))) {
             throw new InvalidCustomerException("비밀번호가 일치하지 않습니다.");
         }
         final String accessToken = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
@@ -48,7 +51,8 @@ public class AuthService {
     public void edit(String token, CustomerRequest customerRequest) {
         validateToken(token);
         final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
-        final Customer customer = new Customer(id, customerRequest.getEmail(), customerRequest.getName(), customerRequest.getPhone(), customerRequest.getAddress(), customerRequest.getPassword());
+        CustomerInformationValidator.validatePassword(customerRequest.getPassword());
+        final Customer customer = new Customer(id, customerRequest.getEmail(), customerRequest.getName(), customerRequest.getPhone(), customerRequest.getAddress(), Encryptor.encrypt(customerRequest.getPassword()));
         customerDao.edit(customer);
     }
 

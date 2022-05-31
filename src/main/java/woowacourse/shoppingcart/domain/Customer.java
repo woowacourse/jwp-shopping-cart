@@ -16,7 +16,6 @@ public class Customer {
         CustomerInformationValidator.validateEmail(email);
         CustomerInformationValidator.validateName(name);
         CustomerInformationValidator.validatePhoneNumber(phone);
-        CustomerInformationValidator.validatePassword(password);
         CustomerInformationValidator.validateAddress(address);
         this.id = id;
         this.email = email;

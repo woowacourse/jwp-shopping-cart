@@ -28,14 +28,6 @@ public class CustomerTest {
                 .hasMessage("올바르지 않은 이메일 형식입니다.");
     }
 
-    @ValueSource(strings = {"", "Bani12!", "Banileobanileo12!", "Banileobanileo!", "B12345678!", "Banileo1234"})
-    @ParameterizedTest
-    void invalidPassword(String password) {
-        assertThatThrownBy(() -> new Customer(EMAIL, NAME, PHONE, ADDRESS, password))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("올바르지 않은 비밀번호 형식입니다.");
-    }
-
     @ValueSource(strings = {"", "abcdefghijklmnopqrustvwxyzabcde"})
     @ParameterizedTest
     void invalidName(String name) {
