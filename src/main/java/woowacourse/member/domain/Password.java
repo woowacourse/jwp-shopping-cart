@@ -2,6 +2,7 @@ package woowacourse.member.domain;
 
 import woowacourse.member.exception.InvalidPasswordException;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Password {
@@ -55,5 +56,18 @@ public class Password {
     public boolean isSameAs(String input) {
         String comparison = PasswordEncoder.encrypt(input);
         return value.equals(comparison);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Password password = (Password) o;
+        return Objects.equals(getValue(), password.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getValue());
     }
 }

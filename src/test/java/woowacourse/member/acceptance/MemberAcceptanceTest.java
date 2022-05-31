@@ -7,10 +7,7 @@ import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.member.dto.DuplicateEmailRequest;
-import woowacourse.member.dto.SignUpRequest;
-import woowacourse.member.dto.UpdateNameRequest;
-import woowacourse.member.dto.UpdatePasswordRequest;
+import woowacourse.member.dto.*;
 
 @DisplayName("회원 관련 기능")
 public class MemberAcceptanceTest extends AcceptanceTest {
@@ -52,7 +49,8 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
                 .extract().as(TokenResponse.class).getAccessToken();
 
-        RestAssuredConvenienceMethod.deleteRequestWithToken(accessToken, "/api/members/me")
+        DeleteRequest deleteRequest = new DeleteRequest("Wooteco1!");
+        RestAssuredConvenienceMethod.deleteRequestWithToken(accessToken, deleteRequest, "/api/members/me")
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 

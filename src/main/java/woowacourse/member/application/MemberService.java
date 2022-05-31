@@ -32,7 +32,8 @@ public class MemberService {
 
     public Long authenticate(LoginRequest request) {
         Member member = validateExistMember(memberDao.findMemberByEmail(request.getEmail()));
-        if (!member.isSamePassword(request.getPassword())) {
+        Password requestPassword = Password.withEncrypt(request.getPassword());
+        if (!member.isSamePassword(requestPassword)) {
             throw new WrongPasswordException("잘못된 비밀번호입니다.");
         }
         return member.getId();
@@ -43,7 +44,13 @@ public class MemberService {
         return new MemberInfoResponse(member);
     }
 
-    public void deleteMemberById(long id) {
+    public void deleteMemberById(long id, DeleteRequest request) {
+        Member member = validateExistMember(memberDao.findMemberById(id));
+        Password requestPassword = Password.withEncrypt(request.getPassword());
+        if (!member.isSamePassword(requestPassword)) {
+            throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
+        }
+
         int deletedRowCount = memberDao.deleteById(id);
         if (deletedRowCount == 0) {
             throw new MemberNotFoundException("존재하지 않는 회원입니다.");
@@ -74,7 +81,8 @@ public class MemberService {
     }
 
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {
-        if (!member.isSamePassword(request.getOldPassword())) {
+        Password requestPassword = Password.withEncrypt(request.getOldPassword());
+        if (!member.isSamePassword(requestPassword)) {
             throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
         }
 

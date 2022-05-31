@@ -132,7 +132,7 @@ class MemberServiceTest {
     @Test
     void updatePasswordWithIncorrectPassword() {
         assertThatThrownBy(
-                () -> memberService.updatePassword(1L, new UpdatePasswordRequest("wrongPassword", "NewPassword1"))
+                () -> memberService.updatePassword(1L, new UpdatePasswordRequest("wrongPassword!", "NewPassword1"))
         ).isInstanceOf(InvalidPasswordException.class)
                 .hasMessageContaining("현재 비밀번호와 일치하지 않습니다.");
     }
@@ -149,7 +149,7 @@ class MemberServiceTest {
     @DisplayName("올바른 id로 회원 정보를 삭제한다.")
     @Test
     void deleteById() {
-        memberService.deleteMemberById(1L);
+        memberService.deleteMemberById(1L, new DeleteRequest("Wooteco1!"));
 
         assertThatThrownBy(
                 () -> memberService.findMemberById(100L)
@@ -161,8 +161,17 @@ class MemberServiceTest {
     @Test
     void deleteWithNotExistId() {
         assertThatThrownBy(
-                () -> memberService.deleteMemberById(100L)
+                () -> memberService.deleteMemberById(100L, new DeleteRequest("Wooteco1!"))
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("잘못된 비밀번호로 삭제하려는 경우 예외가 발생한다.")
+    @Test
+    void deleteWithWrongPassword() {
+        assertThatThrownBy(
+                () -> memberService.deleteMemberById(1L, new DeleteRequest("WrongPassword1!"))
+        ).isInstanceOf(InvalidPasswordException.class)
+                .hasMessageContaining("현재 비밀번호와 일치하지 않습니다.");
     }
 }
