@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.domain.Customer;
 @Repository
 public class CustomerDao {
 
-    static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) ->
+    private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) ->
             new Customer(resultSet.getLong("id"),
                     resultSet.getString("username"),
                     resultSet.getString("password"),
