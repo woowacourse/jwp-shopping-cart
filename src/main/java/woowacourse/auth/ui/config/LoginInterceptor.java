@@ -1,4 +1,4 @@
-package woowacourse.auth.config;
+package woowacourse.auth.ui.config;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

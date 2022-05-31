@@ -25,10 +25,10 @@ public class CustomerAcceptanceTest {
 
 	@DisplayName("회원가입을 한다.")
 	@Test
-	void signUp() {
+	void signUpSuccess() {
 		// given
 		// when
-		ExtractableResponse<Response> response = sighUp();
+		ExtractableResponse<Response> response = signUp();
 
 		String email = response.jsonPath().getString("email");
 		String nickname = response.jsonPath().getString("nickname");
@@ -45,7 +45,7 @@ public class CustomerAcceptanceTest {
 	@Test
 	void signOutNotLogin() {
 		// given
-		sighUp();
+		signUp();
 
 		// when
 		ExtractableResponse<Response> response = signOut("");
@@ -58,7 +58,7 @@ public class CustomerAcceptanceTest {
 	@Test
 	void signOutSuccess() {
 		// given
-		sighUp();
+		signUp();
 		ExtractableResponse<Response> loginResponse = login();
 		String token = loginResponse.jsonPath().getString("accessToken");
 
@@ -73,7 +73,7 @@ public class CustomerAcceptanceTest {
 	@Test
 	void updateCustomer() {
 		// given
-		sighUp();
+		signUp();
 		ExtractableResponse<Response> loginResponse = login();
 		String token = loginResponse.jsonPath().getString("accessToken");
 
@@ -94,7 +94,29 @@ public class CustomerAcceptanceTest {
 		);
 	}
 
-	private ExtractableResponse<Response> sighUp() {
+	@DisplayName("회원 정보을 조회한다.")
+	@Test
+	void findCustomer() {
+		// given
+		signUp();
+		ExtractableResponse<Response> loginResponse = login();
+		String token = loginResponse.jsonPath().getString("accessToken");
+
+		// when
+		ExtractableResponse<Response> response = RestAssured.given().log().all()
+			.auth().oauth2(token)
+			.when().get("/customers")
+			.then().log().all().extract();
+
+		// then
+		assertAll(
+			() -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+			() -> assertThat(response.jsonPath().getString("nickname")).isEqualTo("does"),
+			() -> assertThat(response.jsonPath().getString("email")).isEqualTo(email)
+		);
+	}
+
+	private ExtractableResponse<Response> signUp() {
 		String nickname = "does";
 		return RestAssured.given().log().all()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -49,12 +49,12 @@ class CustomerControllerTest {
 		CustomerRequest request = new CustomerRequest(email, password, nickname);
 		String requestJson = objectMapper.writeValueAsString(request);
 		given(customerService.signUp(any(CustomerRequest.class)))
-				.willReturn(new Customer(1L, email, password, nickname));
+			.willReturn(new Customer(1L, email, password, nickname));
 
 		// when
 		mockMvc.perform(post("/customers")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(requestJson))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(requestJson))
 			.andExpect(status().isCreated())
 			.andExpect(content().json(objectMapper.writeValueAsString(
 				new CustomerResponse(email, nickname)))
@@ -76,7 +76,6 @@ class CustomerControllerTest {
 				.content(requestJson))
 			.andExpect(status().isBadRequest());
 	}
-
 
 	@DisplayName("이메일의 형식이 올바르지 못하면 400 반환")
 	@ParameterizedTest
@@ -201,7 +200,7 @@ class CustomerControllerTest {
 
 	@DisplayName("기존 비밀번호가 다르면 정보를 수정할 수 없다.")
 	@Test
-	void updateCustomerNotSamePassword() throws Exception{
+	void updateCustomerNotSamePassword() throws Exception {
 		// given
 		String token = "access-token";
 		Customer loginCustomer = loginCheck(token);
@@ -219,4 +218,20 @@ class CustomerControllerTest {
 				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isUnauthorized());
 	}
+
+	@DisplayName("회원정보를 조회할 수 있다.")
+	@Test
+	void findCustomer() throws Exception {
+		// given
+		String token = "access-token";
+		Customer loginCustomer = loginCheck(token);
+
+		// when
+		mockMvc.perform(get("/customers")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(new CustomerResponse(loginCustomer))))
+			.andExpect(status().isOk());
+	}
+
 }
