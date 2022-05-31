@@ -30,6 +30,10 @@ public class Customer {
         return new Customer(name, password, email, new Address(address), new PhoneNumber(phoneNumber));
     }
 
+    public boolean isPasswordMatch(String password) {
+        return this.password.isMatch(password);
+    }
+
     public String getName() {
         return name.getValue();
     }

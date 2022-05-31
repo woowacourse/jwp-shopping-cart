@@ -14,4 +14,4 @@
     - [ ] 회원 정보를 수정한다. `PUT /customers/me -> 204(No Content)`
     - [ ] 회원을 탈퇴한다. `DELETE /customers/me -> 204(No Content)`
 - 로그인
-    - [ ] 로그인을 진행한다.(JWT 발급) `POST /auth/token -> 200(OK)`
+    - [x] 로그인을 진행한다.(JWT 발급) `POST /auth/token -> 200(OK)`

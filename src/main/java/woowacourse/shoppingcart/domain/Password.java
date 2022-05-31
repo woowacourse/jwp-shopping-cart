@@ -38,6 +38,10 @@ public class Password {
         }
     }
 
+    public boolean isMatch(String password) {
+        return this.value.equals(password);
+    }
+
     public String getValue() {
         return value;
     }

@@ -47,6 +47,22 @@ public class CustomerDao {
         return Objects.requireNonNull(holder.getKey()).longValue();
     }
 
+    public Optional<Customer> findByUserName(final String username) {
+        final String query = "SELECT * FROM customer WHERE username = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, (resultSet, rowNum) ->
+                    new Customer(
+                            resultSet.getString("username"),
+                            resultSet.getString("password"),
+                            resultSet.getString("email"),
+                            resultSet.getString("address"),
+                            resultSet.getString("phone_number")
+                    ), username));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<Customer> findById(final Long id) {
         final String query = "SELECT * FROM customer WHERE id = ?";
         try {
