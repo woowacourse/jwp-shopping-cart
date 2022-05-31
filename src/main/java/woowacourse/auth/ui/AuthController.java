@@ -14,6 +14,7 @@ import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
+import woowacourse.auth.dto.request.PasswordUpdateRequest;
 import woowacourse.auth.dto.response.CheckResponse;
 import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.dto.response.MemberResponse;
@@ -63,6 +64,14 @@ public class AuthController {
     public ResponseEntity<Void> updateMember(@AuthenticationPrincipal String payload,
                                              @RequestBody MemberUpdateRequest memberUpdateRequest) {
         authService.updateMember(payload, memberUpdateRequest);
+        return ResponseEntity.noContent()
+                .build();
+    }
+
+    @PatchMapping("/members/auth/password")
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal String payload,
+                                               @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+        authService.updatePassword(payload, passwordUpdateRequest);
         return ResponseEntity.noContent()
                 .build();
     }

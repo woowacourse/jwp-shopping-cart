@@ -18,6 +18,7 @@ import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
+import woowacourse.auth.dto.request.PasswordUpdateRequest;
 import woowacourse.auth.dto.response.CheckResponse;
 import woowacourse.auth.dto.response.ErrorResponse;
 import woowacourse.auth.dto.response.LoginResponse;
@@ -251,5 +252,53 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(message).isEqualTo("닉네임 형식이 올바르지 않습니다.");
+    }
+
+    @DisplayName("토큰에 해당하는 사용자의 비밀번호를 수정하고 성공하면 204를 응답한다.")
+    @Test
+    void updatePassword_NoContent() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+                "abc@woowahan.com",
+                "1q2w3e4r!",
+                "닉네임"
+        );
+        post("/api/members", memberCreateRequest);
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+
+        String token = post("/api/login", loginRequest).as(LoginResponse.class)
+                .getToken();
+
+        PasswordUpdateRequest passwordUpdateRequest = new PasswordUpdateRequest("1q2w3e4r@");
+        ExtractableResponse<Response> response =
+                patchWithAuthorization("/api/members/auth/password", token, passwordUpdateRequest);
+        LoginRequest updatedLoginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r@");
+        ExtractableResponse<Response> updatedLoginResponse = post("/api/login", updatedLoginRequest);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(updatedLoginResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("형식에 맞지 않는 비밀번호로 수정하려고 하면 400을 응답한다.")
+    @Test
+    void updatePassword_BadRequest() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+                "abc@woowahan.com",
+                "1q2w3e4r!",
+                "닉네임"
+        );
+        post("/api/members", memberCreateRequest);
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+
+        String token = post("/api/login", loginRequest).as(LoginResponse.class)
+                .getToken();
+
+        PasswordUpdateRequest passwordUpdateRequest = new PasswordUpdateRequest("1q2w3e4r");
+        ExtractableResponse<Response> response =
+                patchWithAuthorization("/api/members/auth/password", token, passwordUpdateRequest);
+        String message = response.as(ErrorResponse.class)
+                .getMessage();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(message).isEqualTo("비밀번호 형식이 올바르지 않습니다.");
     }
 }
