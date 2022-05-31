@@ -81,7 +81,7 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
         }
     }
 
-    @DisplayName("PATCH /me/password - 고객 본인의 비밀번호 수정")
+    @DisplayName("PUT /me/password - 고객 본인의 비밀번호 수정")
     @Nested
     class UpdatePasswordTest {
 
@@ -115,7 +115,7 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
                     .auth().oauth2(accessToken)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(json)
-                    .when().patch("/customers/me/password")
+                    .when().put("/customers/me/password")
                     .then().log().all()
                     .extract();
         }
