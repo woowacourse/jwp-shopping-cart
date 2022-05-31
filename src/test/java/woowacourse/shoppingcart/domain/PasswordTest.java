@@ -10,7 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.InvalidFormException;
+import woowacourse.shoppingcart.exception.InvalidLengthException;
 
 class PasswordTest {
 
@@ -27,14 +28,15 @@ class PasswordTest {
     @ValueSource(strings = {"12345a!", "1234567891234567!"})
     @DisplayName("패스워드의 길이가 올바르지 않은 경우, 예외를 발생한다.")
     void invalidLengthException(String value) {
-        assertThatExceptionOfType(InvalidPasswordException.class)
+        assertThatExceptionOfType(InvalidLengthException.class)
                 .isThrownBy(() -> new Password(value));
     }
 
     @ParameterizedTest
     @MethodSource("provideInvalidPasswords")
+    @DisplayName("패스워드의 형식이 올바르지 않은 경우, 예외를 발생한다.")
     void invalidFormException(String value) {
-        assertThatExceptionOfType(InvalidPasswordException.class)
+        assertThatExceptionOfType(InvalidFormException.class)
                 .isThrownBy(() -> new Password(value));
     }
 

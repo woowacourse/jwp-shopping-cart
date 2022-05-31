@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.InvalidPhoneNumberException;
+import woowacourse.shoppingcart.exception.InvalidFormException;
 
 public class PhoneNumber {
 
@@ -15,7 +15,7 @@ public class PhoneNumber {
 
     private void validate(String value) {
         if (!PHONE_NUMBER_PATTERN.matcher(value).matches()) {
-            throw new InvalidPhoneNumberException();
+            throw InvalidFormException.fromName("휴대폰 번호");
         }
     }
 

@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.InvalidEmailException;
+import woowacourse.shoppingcart.exception.InvalidFormException;
 
 public class Email {
 
@@ -16,7 +16,7 @@ public class Email {
 
     private void validate(String value) {
         if (!EMAIL_PATTERN.matcher(value).matches()) {
-            throw new InvalidEmailException();
+            throw InvalidFormException.fromName("이메일");
         }
     }
 

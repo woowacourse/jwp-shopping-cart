@@ -1,7 +1,8 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.InvalidFormException;
+import woowacourse.shoppingcart.exception.InvalidLengthException;
 
 public class Password {
 
@@ -23,9 +24,7 @@ public class Password {
 
     private void validateLength(String value) {
         if (!isValidLength(value)) {
-            throw new InvalidPasswordException(
-                    String.format("길이가 부적합합니다(%d)", value.length())
-            );
+            throw InvalidLengthException.fromName("패스워드");
         }
     }
 
@@ -35,7 +34,7 @@ public class Password {
 
     private void validateForm(String value) {
         if (!PASSWORD_PATTERN.matcher(value).matches()) {
-            throw new InvalidPasswordException("형식이 올바르지 않습니다.");
+            throw InvalidFormException.fromName("패스워드");
         }
     }
 

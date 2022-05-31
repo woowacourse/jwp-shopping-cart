@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
-import woowacourse.shoppingcart.exception.InvalidAddressException;
+import woowacourse.shoppingcart.exception.InvalidLengthException;
 
 public class Address {
 
@@ -15,7 +15,7 @@ public class Address {
 
     private void validateLength(String value) {
         if (value.length() >= MAX_ADDRESS_LENGTH) {
-            throw new InvalidAddressException();
+            throw InvalidLengthException.fromName("주소");
         }
     }
 

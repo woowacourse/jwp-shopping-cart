@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import woowacourse.shoppingcart.exception.InvalidPhoneNumberException;
+import woowacourse.shoppingcart.exception.InvalidFormException;
 
 class PhoneNumberTest {
 
@@ -26,7 +26,7 @@ class PhoneNumberTest {
     @MethodSource("provideInvalidPhoneNumber")
     @DisplayName("핸드폰 번호의 형식이 올바르지 않을 경우, 예외를 발생한다.")
     void invalidPhoneNumberException(String value) {
-        assertThatExceptionOfType(InvalidPhoneNumberException.class)
+        assertThatExceptionOfType(InvalidFormException.class)
                 .isThrownBy(() -> new PhoneNumber(value));
     }
 
@@ -38,9 +38,4 @@ class PhoneNumberTest {
                 Arguments.of("010-123-45678")
         );
     }
-
-    // - 없는 경우
-    // 010 으로 시작하지 않는 경우
-    // 숫자가 아닌 문자를 입력한 경우
-    // 3, 4, 4 길이가 아닌 경우
 }

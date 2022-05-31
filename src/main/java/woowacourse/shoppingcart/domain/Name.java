@@ -1,7 +1,8 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.InvalidNameException;
+import woowacourse.shoppingcart.exception.InvalidFormException;
+import woowacourse.shoppingcart.exception.InvalidLengthException;
 
 public class Name {
 
@@ -19,7 +20,7 @@ public class Name {
 
     private void validateLength(final String value) {
         if (!isLengthInRange(value)) {
-            throw new InvalidNameException();
+            throw InvalidLengthException.fromName("이름");
         }
     }
 
@@ -29,7 +30,7 @@ public class Name {
 
     private void validateForm(String value) {
         if (NAME_FORM_PATTERN.matcher(value).find()) {
-            throw new InvalidNameException();
+            throw InvalidFormException.fromName("이름");
         }
     }
 

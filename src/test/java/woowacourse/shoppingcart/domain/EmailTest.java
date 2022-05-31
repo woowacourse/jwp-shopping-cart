@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import woowacourse.shoppingcart.exception.InvalidEmailException;
+import woowacourse.shoppingcart.exception.InvalidFormException;
 
 class EmailTest {
 
@@ -26,7 +26,7 @@ class EmailTest {
     @MethodSource("provideInvalidEmail")
     @DisplayName("이메일 형식이 잘못된 경우, 예외를 발생한다.")
     void invalidFormException(String value) {
-        assertThatExceptionOfType(InvalidEmailException.class)
+        assertThatExceptionOfType(InvalidFormException.class)
                 .isThrownBy(() -> new Email(value));
     }
 

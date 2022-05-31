@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,5 +50,16 @@ public class CustomerDaoTest {
 
         // then
         assertThat(customerId).isEqualTo(16L);
+    }
+
+    @DisplayName("회원을 저장한다.")
+    @Test
+    void saveCustomer() {
+        Customer customer = new Customer("chleeslow", "1234abc!@", "woote@email.com", "선릉역", "010-9999-1111");
+
+        Long savedId = customerDao.save(customer);
+
+        Customer foundCustomer = customerDao.findById(savedId).orElseThrow();
+        assertThat(customer.getName()).isEqualTo(foundCustomer.getName());
     }
 }

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.shoppingcart.exception.InvalidAddressException;
+import woowacourse.shoppingcart.exception.InvalidLengthException;
 
 class AddressTest {
 
@@ -27,7 +27,7 @@ class AddressTest {
                 .mapToObj(i -> "x")
                 .collect(Collectors.joining());
 
-        assertThatExceptionOfType(InvalidAddressException.class)
+        assertThatExceptionOfType(InvalidLengthException.class)
                 .isThrownBy(() -> new Address(value));
     }
 }
