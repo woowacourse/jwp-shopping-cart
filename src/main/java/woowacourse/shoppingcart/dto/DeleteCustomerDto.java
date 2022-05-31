@@ -1,8 +1,11 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class DeleteCustomerDto {
 
     private final Character tempForJsonParse;
+    @NotBlank(message = "비밀번호에는 공백이 들어가면 안됩니다.")
     private final String password;
 
     private DeleteCustomerDto(final Character tempForJsonParse, final String password) {

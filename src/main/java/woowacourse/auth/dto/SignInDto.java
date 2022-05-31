@@ -5,13 +5,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class SignInDto {
-    @Email
-    @NotBlank
-    @Size(min = 8, max = 50)
+    @Email(message = "이메일 형식을 지켜야합니다.")
+    @NotBlank(message = "이메일에는 공백이 들어가면 안됩니다.")
+    @Size(min = 8, max = 50, message = "이메일은 8자 이상 50자 이하여야합니다.")
     private final String email;
 
-    @NotBlank
-    @Size(min = 8, max = 20)
+    @NotBlank(message = "비밀번호에는 공백이 들어가면 안됩니다.")
+    @Size(min = 8, max = 20, message = "비밀번호는 8자 이상 20자 이하여야합니다.")
     private final String password;
 
     public SignInDto(final String email, final String password) {
