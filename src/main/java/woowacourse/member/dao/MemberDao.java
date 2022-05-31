@@ -85,4 +85,11 @@ public class MemberDao {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(member);
         namedParameterJdbcTemplate.update(sql, parameters);
     }
+
+    public void deleteById(final Long id) {
+        String sql = "DELETE FROM member WHERE id = :id";
+
+        SqlParameterSource parameters = new MapSqlParameterSource("id", id);
+        namedParameterJdbcTemplate.update(sql, parameters);
+    }
 }

@@ -59,4 +59,12 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = MARU.loginAnd().updateMyPassword(PASSWORD);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
+
+    @DisplayName("토큰을 헤더에 담고 비밀번호를 보내고 삭제를 요청하면 204 no content를 반환한다.")
+    @Test
+    void deleteMember() {
+        MARU.register();
+        ExtractableResponse<Response> response = MARU.loginAnd().deleteMember();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
 }

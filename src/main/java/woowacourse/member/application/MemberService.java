@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
+import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
@@ -72,5 +73,18 @@ public class MemberService {
                 memberPasswordUpdateRequest.getNewPassword(),
                 passwordEncoder);
         memberDao.updatePassword(member);
+    }
+
+    public void deleteById(final Long id, final MemberDeleteRequest memberDeleteRequest) {
+        Member member = memberDao.findById(id)
+                .orElseThrow(NoMemberException::new);
+        validateWrongPassword(memberDeleteRequest, member);
+        memberDao.deleteById(id);
+    }
+
+    private void validateWrongPassword(final MemberDeleteRequest memberDeleteRequest, final Member member) {
+        if (!member.authenticate(passwordEncoder.encode(memberDeleteRequest.getPassword()))) {
+            throw new WrongPasswordException();
+        }
     }
 }
