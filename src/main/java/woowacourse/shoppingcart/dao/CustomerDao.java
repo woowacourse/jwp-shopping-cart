@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import java.util.Locale;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,6 +14,15 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
+
+    private static final RowMapper<CustomerEntity> ROW_MAPPER = (rs, rowNum) -> new CustomerEntity(
+            rs.getLong("id"),
+            rs.getString("account"),
+            rs.getString("nickname"),
+            rs.getString("password"),
+            rs.getString("address"),
+            rs.getString("phone_number")
+    );
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -42,5 +52,11 @@ public class CustomerDao {
         String sql = "SELECT EXISTS (SELECT 1 FROM customer WHERE account = :account)";
         SqlParameterSource source = new MapSqlParameterSource("account", account);
         return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, source, Boolean.class));
+    }
+
+    public CustomerEntity findByAccount(String account) {
+        String sql = "SELECT * FROM customer WHERE account = :account";
+        SqlParameterSource source = new MapSqlParameterSource("account", account);
+        return jdbcTemplate.queryForObject(sql, source, ROW_MAPPER);
     }
 }

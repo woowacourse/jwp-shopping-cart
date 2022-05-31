@@ -5,8 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.SigninRequest;
 
 @RestController
 public class CustomerController {
@@ -22,5 +24,10 @@ public class CustomerController {
         customerService.create(customerRequest);
         URI uri = URI.create("/signin");
         return ResponseEntity.created(uri).build();
+    }
+
+    @PostMapping("/signin")
+    public TokenResponse signin(@RequestBody SigninRequest signinRequest) {
+        return customerService.signin(signinRequest);
     }
 }

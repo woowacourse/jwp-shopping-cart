@@ -344,6 +344,71 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(errorMessage.contains("휴대폰 번호는 숫자만 가능합니다.")).isTrue();
     }
 
+    @Test
+    void 로그인() {
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+
+        회원_가입(
+                회원_정보(account,
+                        "에덴",
+                        password,
+                        "에덴 동산",
+                        "010",
+                        "1234",
+                        "5678"));
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("account", account);
+        request.put("password", password);
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/signin")
+                .then()
+                .log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body().jsonPath().getString("accessToken")).isNotNull();
+    }
+
+    @Test
+    void 비밀번호_불일치_로그인_실패() {
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+
+        회원_가입(
+                회원_정보(account,
+                        "에덴",
+                        password,
+                        "에덴 동산",
+                        "010",
+                        "1234",
+                        "5678"));
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("account", account);
+        request.put("password", "dpepsWkd");
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/signin")
+                .then()
+                .log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(401);
+        assertThat(response.body().jsonPath().getString("message"))
+                .contains("로그인이 불가능합니다.");
+    }
+
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {

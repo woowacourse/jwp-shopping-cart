@@ -5,19 +5,26 @@ import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
 
 public class CustomerEntity {
 
+    private final Long id;
     private final String account;
     private final String nickname;
     private final String password;
     private final String address;
     private final String phoneNumber;
 
-    public CustomerEntity(String account, String nickname, String password, String address,
-            String phoneNumber) {
+    public CustomerEntity(Long id, String account, String nickname, String password,
+            String address, String phoneNumber) {
+        this.id = id;
         this.account = account;
         this.nickname = nickname;
         this.password = password;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    public CustomerEntity(String account, String nickname, String password,
+            String address, String phoneNumber) {
+        this(null, account, nickname, password, address, phoneNumber);
     }
 
     public static CustomerEntity from(Customer customer) {
@@ -27,6 +34,10 @@ public class CustomerEntity {
                 customer.getPassword().getValue(),
                 customer.getAddress().getValue(),
                 phoneNumber.getStart() + phoneNumber.getMiddle() + phoneNumber.getLast());
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getAccount() {
