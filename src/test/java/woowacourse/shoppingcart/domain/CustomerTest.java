@@ -17,4 +17,13 @@ class CustomerTest {
                 .isInstanceOf(InvalidInputException.class)
                 .hasMessage("올바르지 않은 포맷의 아이디 입니다.");
     }
+
+    @DisplayName("올바르지 않은 포맷의 password 이다.")
+    @ParameterizedTest(name = "올바르지 않은 password - {0}")
+    @ValueSource(strings = {"1q@4567", "12345678", "abcdefgh", "!@#$%^&*", "1234567a", "abcd!@#$", "1234%^&*", "12345678abcdefgh!"})
+    void invalidUserPassword(String input) {
+        assertThatThrownBy(() -> new Customer(1L, "jo@naver.com", input, "jojo", false))
+                .isInstanceOf(InvalidInputException.class)
+                .hasMessage("올바르지 않은 포맷의 패스워드 입니다.");
+    }
 }
