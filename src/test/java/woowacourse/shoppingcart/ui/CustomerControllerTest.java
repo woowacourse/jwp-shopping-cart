@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -137,5 +138,18 @@ class CustomerControllerTest {
                         .content(objectMapper.writeValueAsString(passwordRequest))
                 ).andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴한다.")
+    void withdraw() throws Exception {
+        // given
+        TokenRequest tokenRequest = new TokenRequest(1L);
+
+        // then
+        mockMvc.perform(delete("/auth/customers/profile")
+                        .header("Authorization", tokenRequest)
+                ).andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

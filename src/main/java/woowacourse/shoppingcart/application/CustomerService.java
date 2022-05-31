@@ -29,4 +29,7 @@ public class CustomerService {
 
     public void updatePassword(final TokenRequest tokenRequest, final PasswordRequest passwordRequest) {
     }
+
+    public void withdraw(final TokenRequest request) {
+    }
 }

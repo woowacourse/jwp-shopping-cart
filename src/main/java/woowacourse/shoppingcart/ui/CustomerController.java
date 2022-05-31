@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,8 +54,14 @@ public class CustomerController {
 
     @PatchMapping("/auth/customers/profile/password")
     public ResponseEntity<Void> updatePassword(final @AuthenticationPrincipal TokenRequest tokenRequest,
-                                              final @RequestBody PasswordRequest passwordRequest) {
+                                               final @RequestBody PasswordRequest passwordRequest) {
         customerService.updatePassword(tokenRequest, passwordRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/auth/customers/profile")
+    public ResponseEntity<Void> withdraw(final @AuthenticationPrincipal TokenRequest request) {
+        customerService.withdraw(request);
+        return ResponseEntity.noContent().build();
     }
 }
