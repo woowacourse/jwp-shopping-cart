@@ -3,6 +3,8 @@ package woowacourse.auth.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -55,23 +57,31 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 로그인 실패")
     @Test
     void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
-
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .body(new TokenRequest("email", "Pw123456!"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/customers/login")
+                .then().log().all()
+                .extract();
         // then
-        // 토큰 발급 요청이 거부된다
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
+        String accessToken = "aaaaaaaaa";
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/customers")
+                .then().log().all()
+                .extract();
         // then
-        // 내 정보 조회 요청이 거부된다
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }
