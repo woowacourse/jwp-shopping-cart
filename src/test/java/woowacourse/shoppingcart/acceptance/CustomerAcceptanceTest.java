@@ -185,6 +185,43 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("닉네임 변경시 기존에 존재하는 닉네임과 중복되면 예외를 응답한다.")
+    @Test
+    void throwExceptionWhenDuplicateNickname() {
+        // given
+        String nickname = "범고래1";
+        createCustomer(new CustomerCreateRequest("beomWhale1@naver.com", nickname, "Password12345!"));
+
+        String email = "beomWhale2@naver.com";
+        String password = "Password12345!";
+        createCustomer(new CustomerCreateRequest(email, "범고래2", password));
+
+        TokenResponse tokenResponse = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new TokenRequest(email, password))
+                .post("/api/login")
+                .then().extract().as(TokenResponse.class);
+
+
+        // when
+        ChangeCustomerRequest changeCustomerRequest = new ChangeCustomerRequest(nickname);
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .auth().oauth2(tokenResponse.getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(changeCustomerRequest)
+                .when().log().all()
+                .patch("/api/customers")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("이미 존재하는 닉네임입니다.")
+        );
+    }
+
     private ExtractableResponse<Response> createCustomer(
             CustomerCreateRequest customerCreateRequest) {
         return RestAssured.given()

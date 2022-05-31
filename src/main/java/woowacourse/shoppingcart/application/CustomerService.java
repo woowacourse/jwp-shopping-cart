@@ -36,12 +36,6 @@ public class CustomerService {
         customerDao.deleteByEmail(email);
     }
 
-    private void validateDuplicateNickname(String nickname) {
-        if (customerDao.existsByNickname(nickname)) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
-        }
-    }
-
     @Transactional
     public void changePassword(String email, ChangePasswordRequest changePasswordRequest) {
         Customer customer = customerDao.findIdByEmail(email)
@@ -54,7 +48,15 @@ public class CustomerService {
     public void changeNickname(String email, ChangeCustomerRequest changeCustomerRequest) {
         Customer customer = customerDao.findIdByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        customer.changeNickname(changeCustomerRequest.getNickname());
+        String changeNickname = changeCustomerRequest.getNickname();
+        validateDuplicateNickname(changeNickname);
+        customer.changeNickname(changeNickname);
         customerDao.updateNickname(customer);
+    }
+
+    private void validateDuplicateNickname(String nickname) {
+        if (customerDao.existsByNickname(nickname)) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+        }
     }
 }

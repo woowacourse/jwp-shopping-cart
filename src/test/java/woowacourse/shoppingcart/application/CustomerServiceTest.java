@@ -39,7 +39,7 @@ public class CustomerServiceTest {
     void createCustomer() {
         // given
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-            "beomWhale@naver.com", "범고래", "Password12345!");
+                "beomWhale@naver.com", "범고래", "Password12345!");
 
         // when
         Long savedId = customerService.createCustomer(customerCreateRequest);
@@ -54,13 +54,13 @@ public class CustomerServiceTest {
         // given
         customerDao.save(new Customer("awesomeo@naver.com", "범고래", "Password12345!"));
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-            "beomWhale@naver.com", "범고래", "Password12345!");
+                "beomWhale@naver.com", "범고래", "Password12345!");
 
         // when && then
         assertThatThrownBy(
-            () -> customerService.createCustomer(customerCreateRequest)).isInstanceOf(
-                IllegalArgumentException.class)
-            .hasMessage("이미 존재하는 닉네임입니다.");
+                () -> customerService.createCustomer(customerCreateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 닉네임입니다.");
     }
 
     @DisplayName("이메일을 입력 받아 정보를 조회한다.")
@@ -100,7 +100,7 @@ public class CustomerServiceTest {
         assertThat(findCustomer.isPasswordMatched(newPassword)).isTrue();
     }
 
-    @DisplayName("새로운 패스워드를 입력받아 새로운 패스워드로 변경한다.")
+    @DisplayName("새로운 닉네임 입력받아 새로운 닉네임으로 변경한다.")
     @Test
     void changeNickname() {
         // given
@@ -119,4 +119,21 @@ public class CustomerServiceTest {
         // then
         assertThat(findCustomer.getNickname()).isEqualTo(changedNickname);
     }
+
+    @DisplayName("새로운 닉네임으로 변경시 기존에 존재하는 닉네임과 중복될 경우 예외가 발생한다.")
+    @Test
+    void throwExceptionWhenDuplicateNickname() {
+        // given
+        String nickname = "beomWhale";
+        customerDao.save(new Customer("beomWhale@naver.com", nickname, "Password123!"));
+
+        String email = "awesome@gmail.com";
+        Customer customer = new Customer(email, "awesome", "Password123!");
+        customerDao.save(customer);
+
+        assertThatThrownBy(() -> customerService.changeNickname(email, new ChangeCustomerRequest(nickname)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 닉네임입니다.");
+    }
+
 }
