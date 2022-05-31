@@ -20,14 +20,14 @@ class CustomerTest {
 
         // when && then
         assertThatThrownBy(() -> new Customer(email, nickname, password))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이메일 형식이 맞지 않습니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("이메일 형식이 맞지 않습니다.");
     }
 
     @DisplayName("패스워드 형식이 맞지 않는 경우 예외가 발생한다.")
     @ParameterizedTest
     @ValueSource(strings = {"password123!", "PASSWORD123!", "Password123", "Password!@#", "Aa1!123",
-            "Password123412341234!"})
+        "Password123412341234!"})
     void throwsExceptionWhenInvalidPasswordFormat(String password) {
         // given
         String email = "beomWhale@gmail.com";
@@ -35,8 +35,8 @@ class CustomerTest {
 
         // when && then
         assertThatThrownBy(() -> new Customer(email, nickname, password))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("패스워드 형식이 맞지 않습니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("패스워드 형식이 맞지 않습니다.");
     }
 
     @DisplayName("닉네임 형식이 맞지 않는 경우 예외가 발생한다.")
@@ -62,5 +62,29 @@ class CustomerTest {
         boolean isMatch = customer.isPasswordMatched(password);
 
         assertThat(isMatch).isTrue();
+    }
+
+    @DisplayName("새로운 패스워드를 입력받아 패스워드를 변경한다.")
+    @Test
+    void changePassword() {
+        String password = "Password123!";
+        Customer customer = new Customer("awesome@gmail.com", "awesome", password);
+        String newPassword = "Password1234!";
+
+        customer.changePassword(password, newPassword);
+
+        assertThat(customer.isPasswordMatched(newPassword)).isTrue();
+    }
+
+    @DisplayName("패스워드 변경 시, 이전 비밀번호와 다르면 예외가 발생한다.")
+    @Test
+    void throwExceptionWhenNotMatchPassword() {
+        String password = "Password123!";
+        Customer customer = new Customer("awesome@gmail.com", "awesome", password);
+        String newPassword = "Password1234!";
+
+        assertThatThrownBy(() -> customer.changePassword(password + "1", newPassword))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("이전 비밀번호가 틀렸습니다.");
     }
 }

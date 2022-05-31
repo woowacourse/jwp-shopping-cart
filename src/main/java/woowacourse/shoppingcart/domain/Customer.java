@@ -17,7 +17,7 @@ public class Customer {
     private final Long id;
     private final String email;
     private final String nickname;
-    private final String password;
+    private String password;
 
     public Customer(Long id, String email, String nickname, String password) {
         validateEmailFormat(email);
@@ -97,5 +97,12 @@ public class Customer {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void changePassword(String prevPassword, String newPassword) {
+        if (!password.equals(prevPassword)) {
+            throw new IllegalArgumentException("이전 비밀번호가 틀렸습니다.");
+        }
+        password = newPassword;
     }
 }
