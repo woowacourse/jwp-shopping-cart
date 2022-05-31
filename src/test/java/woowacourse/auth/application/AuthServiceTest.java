@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.AuthorizedMember;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.dto.MemberCreateRequest;
@@ -84,21 +83,6 @@ class AuthServiceTest {
                 .isSuccess();
 
         assertThat(actual).isEqualTo(expected);
-    }
-
-    @DisplayName("토큰을 받아, 이메일과 닉네임을 반환한다.")
-    @Test
-    void findAuthorizedMemberByToken() {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        authService.save(memberCreateRequest);
-        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-        String token = authService.login(loginRequest)
-                .getToken();
-
-        AuthorizedMember authorizedMember = authService.findAuthorizedMemberByToken(token);
-
-        assertThat(authorizedMember.getEmail()).isEqualTo("abc@woowahan.com");
-        assertThat(authorizedMember.getNickname()).isEqualTo("닉네임");
     }
 
     @DisplayName("이메일과 닉네임을 받아 닉네임을 수정한다.")

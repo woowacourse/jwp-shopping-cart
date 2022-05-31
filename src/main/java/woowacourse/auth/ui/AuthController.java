@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.dto.AuthorizedMember;
 import woowacourse.auth.dto.CheckResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
@@ -47,9 +46,8 @@ public class AuthController {
     }
 
     @PostMapping("/members/auth/password-check")
-    public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal AuthorizedMember authorizedMember,
+    public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal String payload,
                                                          @RequestBody PasswordCheckRequest passwordCheckRequest) {
-        String email = authorizedMember.getEmail();
-        return ResponseEntity.ok(authService.checkPassword(email, passwordCheckRequest));
+        return ResponseEntity.ok(authService.checkPassword(payload, passwordCheckRequest));
     }
 }

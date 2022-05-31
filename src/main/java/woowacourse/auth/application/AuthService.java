@@ -6,7 +6,6 @@ import woowacourse.auth.domain.Email;
 import woowacourse.auth.domain.Member;
 import woowacourse.auth.domain.Nickname;
 import woowacourse.auth.domain.Password;
-import woowacourse.auth.dto.AuthorizedMember;
 import woowacourse.auth.dto.CheckResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
@@ -14,7 +13,6 @@ import woowacourse.auth.dto.MemberCreateRequest;
 import woowacourse.auth.dto.NicknameUpdateRequest;
 import woowacourse.auth.dto.PasswordCheckRequest;
 import woowacourse.auth.dto.PasswordUpdateRequest;
-import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Service
@@ -71,17 +69,6 @@ public class AuthService {
         boolean result = member.getPassword()
                 .equals(passwordCheckRequest.getPassword());
         return new CheckResponse(result);
-    }
-
-    private Member findMemberByToken(String token) {
-        String email = jwtTokenProvider.getPayload(token);
-        return memberDao.findByEmail(email)
-                .orElseThrow(() -> new AuthorizationException("유효하지 않은 토큰입니다."));
-    }
-
-    public AuthorizedMember findAuthorizedMemberByToken(String token) {
-        Member member = findMemberByToken(token);
-        return new AuthorizedMember(member);
     }
 
     public void updateNickname(String email, NicknameUpdateRequest nicknameUpdateRequest) {
