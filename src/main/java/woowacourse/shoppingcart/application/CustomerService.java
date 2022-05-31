@@ -3,8 +3,10 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 public class CustomerService {
@@ -21,5 +23,12 @@ public class CustomerService {
             throw new DuplicatedEmailException();
         }
         customerDao.save(customer);
+    }
+
+    public CustomerDetailServiceResponse findById(final Long id) {
+        final Customer customer = customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
+
+        return CustomerDetailServiceResponse.from(customer);
     }
 }
