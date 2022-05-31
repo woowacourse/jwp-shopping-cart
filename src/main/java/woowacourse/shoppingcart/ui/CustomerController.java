@@ -47,12 +47,12 @@ public class CustomerController {
     public ResponseEntity<Void> updateInfo(@AuthenticationPrincipal Customer customer,
                                                        @RequestBody CustomerRequest customerRequest) {
         customerService.updateInfo(customer, customerRequest);
-        return null;
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal Customer customer) {
-
+        customerService.deleteCustomer(customer);
         return ResponseEntity.noContent().build();
     }
 }

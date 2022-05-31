@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -92,5 +93,20 @@ class CustomerServiceTest {
                 () -> assertThat(actual.getNickName()).isEqualTo(newNickName),
                 () -> assertThat(actual.getAge()).isEqualTo(newAge)
         );
+    }
+
+
+    @DisplayName("회원 정보를 삭제한다")
+    @Test
+    void delete() {
+        customerService.addCustomer(customerRequest1);
+
+        Customer customer = Customer.of(customerRequest1.getUserName(), customerRequest1.getPassword(),
+                customerRequest1.getNickName(), customerRequest1.getAge());
+        customerService.deleteCustomer(customer);
+
+        assertThatExceptionOfType(InvalidCustomerException.class)
+                .isThrownBy(() -> customerDao.findCustomerByUserName(customer.getUserName()))
+                .withMessageContaining("존재");
     }
 }

@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -155,11 +156,31 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("회원탈퇴")
+    @DisplayName("회원탈퇴를 성공적으로 진행한다.")
     @Test
     void deleteMe() {
         signUpCustomer();
         String accessToken = getTokenByLogin();
+
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        assertInvalidCustomer(accessToken);
+    }
+
+    private void assertInvalidCustomer(String accessToken) {
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract()
+                .as(InvalidCustomerException.class);
     }
 
     private String getTokenByLogin() {
