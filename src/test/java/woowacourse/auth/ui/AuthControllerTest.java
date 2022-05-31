@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -45,20 +47,12 @@ class AuthControllerTest {
         );
     }
 
-    @DisplayName("존재하지 않는 이메일을 입력한 경우 로그인에 실패한다.")
-    @Test
-    void notExistingEmailLogin() {
-        TokenRequest tokenRequest = new TokenRequest("invalidemail@email.com", "password123!");
-
-        assertThatThrownBy(() -> authController.login(tokenRequest))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("아이디나 비밀번호를 잘못 입력했습니다.");
-    }
-
-    @DisplayName("잘못된 비밀번호를 입력한 경우 로그인에 실패한다.")
-    @Test
-    void invalidPasswordLogin() {
-        TokenRequest tokenRequest = new TokenRequest("email@email.com", "invalidpassword123!");
+    @DisplayName("잘못된 이메일과 비밀번호를 입력한 경우 예외가 발생한다.")
+    @ParameterizedTest
+    @CsvSource(value = {"email@email.com, invalid123!", "notexistingemail@email.com, password123!",
+            "notexistingemail@email.com, invalid123!"})
+    void loginFail(final String email, final String password) {
+        TokenRequest tokenRequest = new TokenRequest(email, password);
 
         assertThatThrownBy(() -> authController.login(tokenRequest))
                 .isInstanceOf(InvalidCustomerException.class)

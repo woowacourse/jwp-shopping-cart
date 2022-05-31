@@ -74,9 +74,10 @@ public class CustomerDaoTest {
         );
     }
 
-    @DisplayName("이메일과 비밀번호를 통해 회원엔티티를 찾는다.")
+    @DisplayName("잘못된 이메일과 비밀번호를 통해 회원엔티티를 찾을 경우 예외가 발생한다.")
     @ParameterizedTest
-    @CsvSource(value = {"email@email.com, invalid123!", "notexistingemail@email.com, password123!", "notexistingemail@email.com, invalid123!"})
+    @CsvSource(value = {"email@email.com, invalid123!", "notexistingemail@email.com, password123!",
+            "notexistingemail@email.com, invalid123!"})
     void findByEmailAndPassword(final String email, final String password) {
         // when
         assertThatThrownBy(() -> customerDao.findByEmailAndPassword(email, password))
