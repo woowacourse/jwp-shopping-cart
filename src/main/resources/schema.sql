@@ -8,6 +8,18 @@ drop table if exists product;
 
 drop table if exists member;
 
+drop table if exists customer;
+
+create table customer
+(
+    id       bigint       not null auto_increment,
+    username varchar(255) not null,
+    primary key (id)
+) engine=InnoDB default charset=utf8mb4;
+
+alter table customer
+    add unique key (username);
+
 create table member
 (
     id       bigint       not null auto_increment,
@@ -32,14 +44,14 @@ create table product
 create table cart_item
 (
     id         bigint not null auto_increment,
-    member_id  bigint not null,
+    customer_id  bigint not null,
     product_id bigint not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table cart_item
     add constraint fk_cart_item_to_member
-        foreign key (member_id) references member (id);
+        foreign key (customer_id) references customer (id);
 
 alter table cart_item
     add constraint fk_cart_item_to_product
@@ -48,13 +60,13 @@ alter table cart_item
 create table orders
 (
     id        bigint not null auto_increment,
-    member_id bigint not null,
+    customer_id bigint not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table orders
     add constraint fk_orders_to_member
-        foreign key (member_id) references member (id);
+        foreign key (customer_id) references customer (id);
 
 create table orders_detail
 (
