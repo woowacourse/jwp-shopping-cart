@@ -2,7 +2,10 @@ package woowacourse.shoppingcart.dto;
 
 public class ChangeCustomerRequest {
 
-    private final String nickname;
+    private String nickname;
+
+    public ChangeCustomerRequest() {
+    }
 
     public ChangeCustomerRequest(String nickname) {
         this.nickname = nickname;

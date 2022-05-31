@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -136,6 +138,50 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
+    }
+
+    @DisplayName("새로운 닉네임으로 회원정보를 수정한다.")
+    @Test
+    void changeNickname() {
+        // given: 회원 가입이 되어있다.
+        String email = "beomWhale1@naver.com";
+        String password = "Password12345!";
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+                email, "범고래1", password);
+        createCustomer(customerCreateRequest);
+
+        TokenResponse tokenResponse = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new TokenRequest(email, password))
+                .post("/api/login")
+                .then().extract().as(TokenResponse.class);
+
+        // when
+        String newNickname = "changed";
+        ChangeCustomerRequest changeCustomerRequest = new ChangeCustomerRequest(newNickname);
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .auth().oauth2(tokenResponse.getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(changeCustomerRequest)
+                .when().log().all()
+                .patch("/api/customers")
+                .then().log().all()
+                .extract();
+
+        // then
+        CustomerResponse customerResponse = RestAssured.given()
+                .auth().oauth2(tokenResponse.getAccessToken())
+                .when()
+                .get("/api/customers/me")
+                .then()
+                .extract().as(CustomerResponse.class);
+
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo(newNickname)
         );
     }
 
