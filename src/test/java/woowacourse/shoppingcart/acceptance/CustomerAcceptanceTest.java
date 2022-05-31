@@ -51,6 +51,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
+        LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
+        ExtractableResponse<Response> response = 로그인_요청(loginRequest);
+        TokenResponse tokenResponse = response.as(TokenResponse.class);
+
+        ExtractableResponse<Response> updateResponse = 내정보_수정_요청(tokenResponse.getAccessToken(),
+            "loginId", "angie", "12345678aA!");
+
+        assertAll(() -> {
+            assertThat(updateResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            assertThat(updateResponse.as(CustomerResponse.class)).extracting("loginId", "username")
+                .containsExactly("loginId", "angie");
+        });
     }
 
     @DisplayName("회원탈퇴")
@@ -73,8 +86,26 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    private ExtractableResponse<Response> 내정보_수정_요청(String accessToken, String loginId, String username, String password) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("loginId", loginId);
+        requestBody.put("username", username);
+        requestBody.put("password", password);
+
+        return RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().oauth2(accessToken)
+            .body(requestBody)
+            .when().put("/customers/me")
+            .then().log().all()
+            .extract();
+    }
+
+
     public static void 사용자_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
+
 }

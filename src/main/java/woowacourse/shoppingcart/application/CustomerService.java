@@ -26,4 +26,21 @@ public class CustomerService {
     private CustomerResponse toCustomerResponse(Customer customer) {
         return new CustomerResponse(customer.getLoginId(), customer.getUsername());
     }
+
+    public CustomerResponse updateCustomer(CustomerRequest customerRequest) {
+        if (!customerDao.existByLoginId(customerRequest.getLoginId())) {
+            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+        }
+
+        if (!customerDao.checkValidLogin(customerRequest.getLoginId(),
+            customerRequest.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        if (customerDao.existByUsername(customerRequest.getUsername())) {
+            throw new IllegalArgumentException("이미 존재하는 유저네임입니다.");
+        }
+        Customer customer = customerDao.update(CustomerRequest.toCustomer(customerRequest));
+        return toCustomerResponse(customer);
+    }
 }

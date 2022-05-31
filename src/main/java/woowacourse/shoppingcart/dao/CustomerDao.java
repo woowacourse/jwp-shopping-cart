@@ -71,4 +71,18 @@ public class CustomerDao {
         parameters.addValue("password", password);
         return namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class) != 0;
     }
+
+    public Customer update(Customer customer) {
+        final String query = "UPDATE customer SET username = :username WHERE loginId = :loginId and password = :password";
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
+        namedParameterJdbcTemplate.update(query, parameterSource);
+        return customer;
+    }
+
+    public boolean existByUsername(String username) {
+        final String query = "SELECT EXISTS (SELECT 1 FROM customer WHERE username = :username)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("username", username);
+
+        return namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class) != 0;
+    }
 }

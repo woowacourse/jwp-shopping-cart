@@ -66,7 +66,7 @@ class AuthServiceTest {
             LoginCustomer loginCustomer = authService.findCustomerByToken(token.getAccessToken());
 
             assertThat(loginCustomer)
-                .extracting("loginId", "name")
+                .extracting("loginId", "username")
                 .containsExactly("sunhpark42@gmail.com", "sunhpark42");
         }
 
