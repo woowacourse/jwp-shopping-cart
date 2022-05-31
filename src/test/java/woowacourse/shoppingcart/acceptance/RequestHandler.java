@@ -68,4 +68,14 @@ public class RequestHandler {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse<Response> deleteRequest(String url, String accessToken) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete(url)
+                .then().log().all()
+                .extract();
+    }
 }

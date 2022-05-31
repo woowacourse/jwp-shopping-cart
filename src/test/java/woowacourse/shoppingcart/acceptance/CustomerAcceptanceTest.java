@@ -69,12 +69,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // when
         final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
                 new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
-
-        // then
         final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
+
         final ExtractableResponse<Response> getResponse = RequestHandler.getRequest(
                 "/customers", tokenResponse.getAccessToken());
 
+        // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(getResponse.jsonPath().getObject(".", CustomerResponse.class))
                 .extracting("email", "userName")
@@ -91,14 +91,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // when
         final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
                 new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
-
-        // then
         final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
+
         final CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
                 "newGuest", CUSTOMER_PASSWORD, "qwer1234!@#$");
         final ExtractableResponse<Response> patchResponse = RequestHandler.patchRequest(
                 "/customers", customerUpdateRequest, tokenResponse.getAccessToken());
 
+        // then
         assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(patchResponse.jsonPath().getObject(".", CustomerUpdateResponse.class)
                 .getUserName()).isEqualTo("newGuest");
@@ -125,8 +125,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("회원탈퇴")
+    @DisplayName("회원을 탈퇴한다.")
     @Test
-    void deleteMe() {
+    void removeCustomer() {
+        // given
+        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+                CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
+
+        // when
+        final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
+                new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
+        final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
+
+        final ExtractableResponse<Response> deleteResponse = RequestHandler.deleteRequest(
+                "/customers", tokenResponse.getAccessToken());
+
+        // then
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
     }
 }
