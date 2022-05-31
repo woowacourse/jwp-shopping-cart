@@ -19,7 +19,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-            "beomWhale@naver.com", "범고래", "Password12345!");
+            "beomWhale1@naver.com", "범고래1", "Password12345!");
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -39,7 +39,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void duplicateCustomerNickname() {
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-            "beomWhale@naver.com", "범고래", "Password12345!");
+            "beomWhale2@naver.com", "범고래2", "Password12345!");
 
         createCustomer(customerCreateRequest);
         ExtractableResponse<Response> response = createCustomer(customerCreateRequest);
