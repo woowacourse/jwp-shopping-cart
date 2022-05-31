@@ -43,10 +43,10 @@
   - [ ] 성공시 204 No Content를 반환한다.
   - [ ] 실패시 400 Bad Request를 반환한다.
   - [ ] 인증되지 않은 사용자일경우 401 UnAuthorized를 반환한다.
-- [ ] 회원정보 조회
-  - [ ] 성공시 200 OK와 회원정보를 반환한다.
-  - [ ] 실패시 400 Bad Request를 반환한다.
-  - [ ] 인증되지 않은 사용자일경우 401 UnAuthorized를 반환한다.
+- [x] 회원정보 조회
+  - [x] 성공시 200 OK와 회원정보를 반환한다.
+  - [x] 실패시 400 Bad Request를 반환한다.
+  - [x] 인증되지 않은 사용자일경우 401 UnAuthorized를 반환한다.
 
 ## ✏️ Code Review Process
 [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
