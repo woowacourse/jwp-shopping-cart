@@ -9,8 +9,8 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import woowacourse.auth.application.AuthorizationException;
-import woowacourse.auth.application.ForbiddenException;
+import woowacourse.auth.exception.AuthorizationException;
+import woowacourse.auth.exception.ForbiddenException;
 
 @Component
 public class JwtTokenProvider {

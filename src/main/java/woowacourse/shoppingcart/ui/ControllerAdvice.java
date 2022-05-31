@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.auth.application.AuthorizationException;
-import woowacourse.auth.application.ForbiddenException;
+import woowacourse.auth.exception.AuthorizationException;
+import woowacourse.auth.exception.ForbiddenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
