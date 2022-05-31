@@ -11,6 +11,8 @@ import woowacourse.auth.dto.PhoneNumber;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.dto.UpdateCustomerRequest;
+import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignupRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -169,6 +171,53 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    @DisplayName("회원 정보 조회에 성공한다.")
+    void getCustomer() {
+        // given
+        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
+
+        // when
+        final ExtractableResponse<Response> response = get("/customers", token.getAccessToken());
+        final CustomerDto customerDto = response.jsonPath().getObject(".", CustomerDto.class);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(customerDto.getId()).isEqualTo(1L)
+        );
+    }
+
+    @Test
+    @DisplayName("회원 정보를 조회할 때 헤더에 토큰이 존재하지 않으면 상태코드 401을 반환한다.")
+    void tokenNotExistWhenGetCustomer() {
+        // given
+
+        // when
+        final ExtractableResponse<Response> response = get("/customers");
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(response.asString()).isEqualTo("로그인 후 사용이 가능합니다.")
+        );
+    }
+
+    @Test
+    @DisplayName("회원 정보를 조회할 때 잘못된 형식의 토큰이 전달되면 상태코드 401을 반환한다.")
+    void invalidTokenFormatWhenGetCustomer() {
+        // given
+        JwtTokenProvider jwtTokenProvider = new FakeJwtTokenProvider();
+        final String invalidToken = jwtTokenProvider.createToken("fake");
+        // when
+        final ExtractableResponse<Response> response = get("/customers", invalidToken);
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(response.asString()).isEqualTo("잘못된 형식의 토큰입니다.")
+        );
+    }
+
+    @Test
     @DisplayName("회원 정보 수정에 성공한다.")
     void updateCustomer() {
         // given
@@ -199,6 +248,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @Test
+    @DisplayName("회원 정보를 수정할 때 잘못된 형식의 토큰이 전달되면 상태코드 401을 반환한다.")
+    void invalidTokenFormatWhenUpdateCustomer() {
+        // given
+        JwtTokenProvider jwtTokenProvider = new FakeJwtTokenProvider();
+        final String invalidToken = jwtTokenProvider.createToken("fake");
+
+        // when
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
+        final ExtractableResponse<Response> response = put("/customers", invalidToken, updateCustomerRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(response.asString()).isEqualTo("잘못된 형식의 토큰입니다.")
+        );
+    }
 
     @DisplayName("회원탈퇴")
     @Test

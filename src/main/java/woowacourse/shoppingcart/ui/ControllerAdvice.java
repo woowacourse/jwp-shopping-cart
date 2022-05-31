@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,8 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e) {
+    @ExceptionHandler({UnauthorizedException.class, MalformedJwtException.class})
+    public ResponseEntity<String> handleUnauthorizedException(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
