@@ -83,4 +83,25 @@ class CustomerDaoTest {
 
         assertThat(customerDao.findByEmail(customer.getEmail())).isEmpty();
     }
+
+    @DisplayName("회원을 수정한다.")
+    @Test
+    void updateById() {
+        final Customer oldCustomer = new Customer(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD);
+        final Long customerId = customerDao.save(oldCustomer);
+        final Customer customer = new Customer(customerId, oldCustomer.getEmail(),
+                oldCustomer.getUserName(), oldCustomer.getPassword());
+
+        final String newUserName = "Guest1234";
+        final String newPassword = "qwer1234!@#$";
+        customer.update(newUserName, newPassword);
+
+        customerDao.update(customer);
+
+        Optional<Customer> actual = customerDao.findById(customer.getId());
+
+        assertThat(actual).isPresent();
+        assertThat(actual.get()).extracting("userName", "password")
+                .containsExactly(newUserName, newPassword);
+    }
 }

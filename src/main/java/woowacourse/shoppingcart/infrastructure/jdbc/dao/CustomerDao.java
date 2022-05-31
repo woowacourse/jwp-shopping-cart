@@ -66,7 +66,8 @@ public class CustomerDao {
     public Long findIdByUserName(final String userName) {
         try {
             final String query = "SELECT id FROM customer WHERE username = (:userName)";
-            final SqlParameterSource parameters = new MapSqlParameterSource("userName", userName.toLowerCase(Locale.ROOT));
+            final SqlParameterSource parameters = new MapSqlParameterSource("userName",
+                    userName.toLowerCase(Locale.ROOT));
             return jdbcTemplate.queryForObject(query, parameters,
                     (resultSet, rowNum) -> resultSet.getLong("id"));
         } catch (final EmptyResultDataAccessException e) {
@@ -75,8 +76,8 @@ public class CustomerDao {
     }
 
     public boolean existsByEmail(final String email) {
-        String query = "SELECT EXISTS(SELECT id FROM customer WHERE email=(:email)) as existable";
-        SqlParameterSource parameters = new MapSqlParameterSource("email", email);
+        final String query = "SELECT EXISTS(SELECT id FROM customer WHERE email=(:email)) as existable";
+        final SqlParameterSource parameters = new MapSqlParameterSource("email", email);
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, parameters,
                 (resultSet, rowNum) -> resultSet.getBoolean("existable")));
     }
@@ -84,6 +85,14 @@ public class CustomerDao {
     public void deleteById(final long id) {
         final String query = "DELETE FROM customer WHERE id=(:id)";
         final SqlParameterSource parameters = new MapSqlParameterSource("id", id);
+        jdbcTemplate.update(query, parameters);
+    }
+
+    public void update(final Customer customer) {
+        final String query = "UPDATE customer SET username=(:username), password=(:password) WHERE id=(:id)";
+        final SqlParameterSource parameters = new MapSqlParameterSource("id", customer.getId())
+                .addValue("username", customer.getUserName())
+                .addValue("password", customer.getPassword());
         jdbcTemplate.update(query, parameters);
     }
 }
