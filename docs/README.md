@@ -9,7 +9,7 @@
 ## 요구 사항
 
 - 회원
-    - [ ] 회원가입을 진행한다. `POST /customers -> 201(Created)`
+    - [x] 회원가입을 진행한다. `POST /customers -> 201(Created)`
     - [ ] 회원 정보를 조회한다. `GET /customers/me -> 200(OK)`
     - [ ] 회원 정보를 수정한다. `PUT /customers/me -> 204(No Content)`
     - [ ] 회원을 탈퇴한다. `DELETE /customers/me -> 204(No Content)`
