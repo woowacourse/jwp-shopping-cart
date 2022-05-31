@@ -71,7 +71,7 @@ public class CustomerControllerTest {
 
     private void performAndExpectedErrorMessage(CustomerRequest customerRequest,
                                                 String message) throws Exception {
-        mockMvc.perform(post("/customers/signup")
+        mockMvc.perform(post("/customers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(customerRequest))
@@ -79,6 +79,4 @@ public class CustomerControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message").value(message));
     }
-
-
 }

@@ -26,7 +26,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(customerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers/signup")
+                .when().post("/customers")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .header("Location", equalTo("/customers/me"));
@@ -79,7 +79,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(passwordRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/customers/me/password")
+                .when().put("/customers/me/password")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -117,7 +117,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(customerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers/signup")
+                .when().post("/customers")
                 .then().log().all();
     }
 }

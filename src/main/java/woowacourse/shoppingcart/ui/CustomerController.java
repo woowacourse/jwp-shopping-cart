@@ -21,7 +21,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @PostMapping("/signup")
+    @PostMapping
     public ResponseEntity<Void> addCustomer(@Valid @RequestBody CustomerRequest customerRequest) {
         customerService.addCustomer(customerRequest);
         return ResponseEntity.created(URI.create("/customers/me")).build();
@@ -32,8 +32,9 @@ public class CustomerController {
         return ResponseEntity.ok(CustomerResponse.from(customer));
     }
 
-    @PatchMapping("/me/password")
-    public ResponseEntity<Void> updateMyPassword(@AuthenticationPrincipal Customer customer, @RequestBody PasswordRequest passwordRequest) {
+    @PutMapping("/me/password")
+    public ResponseEntity<Void> updateMyPassword(@AuthenticationPrincipal Customer customer,
+                                                 @RequestBody PasswordRequest passwordRequest) {
         customerService.updatePassword(customer, passwordRequest);
         return ResponseEntity.ok().build();
     }
