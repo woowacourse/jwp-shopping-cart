@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.exception.ShoppingCartException;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    private static final ErrorResponse INTERNAL_SERVER_RESPONSE = new ErrorResponse("997", "서버가 요청을 처리할 수 없습니다.");
+    private static final ErrorResponse INTERNAL_SERVER_RESPONSE = new ErrorResponse("500", "서버가 요청을 처리할 수 없습니다.");
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
