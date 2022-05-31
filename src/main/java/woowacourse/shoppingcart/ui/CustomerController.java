@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
 
 @RestController
@@ -26,9 +29,16 @@ public class CustomerController {
         return ResponseEntity.created(URI.create("/api/customers/" + id)).build();
     }
 
+    @GetMapping("/customers/{customerId}")
+    public ResponseEntity<CustomerResponse> getCustomer(@PathVariable int customerId) {
+        CustomerResponse customerResponse = customerService.getCustomerById(customerId);
+        return ResponseEntity.ok(customerResponse);
+    }
+
     @PostMapping("/validation")
     public ResponseEntity<EmailDuplicationResponse> checkEmailDuplication(@RequestParam String email) {
         EmailDuplicationResponse response = customerService.isDuplicatedEmail(email);
         return ResponseEntity.ok(response);
     }
+
 }

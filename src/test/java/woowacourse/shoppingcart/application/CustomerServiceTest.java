@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
 
 import javax.sql.DataSource;
@@ -15,7 +16,9 @@ import woowacourse.shoppingcart.dao.JdbcAddressDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.dao.JdbcPrivacyDao;
 import woowacourse.shoppingcart.dao.PrivacyDao;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
+import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @JdbcTest
 class CustomerServiceTest {
@@ -51,5 +54,31 @@ class CustomerServiceTest {
 
         //then
         assertThat(response.getIsDuplicated()).isTrue();
+    }
+
+    @DisplayName("Customer Id를 통해 해당 유저의 정보를 조회할 수 있다.")
+    @Test
+    void getCustomer() {
+        // given
+        int id = customerService.create(CUSTOMER_REQUEST_1);
+
+        // when
+        CustomerResponse customerResponse = customerService.getCustomerById(id);
+
+        // then
+        assertThat(customerResponse).extracting("email", "profileImageUrl", "terms")
+                .containsExactly(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getProfileImageUrl(),
+                        CUSTOMER_REQUEST_1.isTerms());
+    }
+
+    @DisplayName("해당 유저의 정보를 조회할 때 Customer Id가 없으면 예외가 발생한다.")
+    @Test
+    void getCustomer_throwsException() {
+        // given
+        int id = customerService.create(CUSTOMER_REQUEST_1);
+
+        // when & then
+        assertThatThrownBy(() -> customerService.getCustomerById(id + 1))
+                .isInstanceOf(CustomerNotFoundException.class);
     }
 }
