@@ -49,6 +49,301 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(400);
     }
 
+    @Test
+    void 아이디_글자수_초과해_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("1234567890123456",
+                "에덴",
+                "dpepsWkd12!",
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678");
+        회원_가입(request);
+
+        // when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("계정은 4 ~ 15자로 생성 가능합니다")).isTrue();
+    }
+
+    @Test
+    void 아이디_글자수_부족으로_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("123",
+                "에덴",
+                "dpepsWkd12!",
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678");
+        회원_가입(request);
+
+        //when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("계정은 4 ~ 15자로 생성 가능합니다")).isTrue();
+    }
+
+    @Test
+    void 닉네임_글자수_초과해_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("leo123",
+                "에덴에덴에덴에덴에덴에",
+                "dpepsWkd12!",
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678");
+        회원_가입(request);
+
+        // when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("닉네임은 2 ~ 10자로 생성 가능합니다")).isTrue();
+    }
+
+    @Test
+    void 닉네임_글자수_부족으로_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("leo123",
+                "에",
+                "dpepsWkd12!",
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678");
+        회원_가입(request);
+
+        //when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("닉네임은 2 ~ 10자로 생성 가능합니다")).isTrue();
+    }
+
+    @Test
+    void 닉네임_빈값으로_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("leo123",
+                "     ",
+                "dpepsWkd12!",
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678");
+        회원_가입(request);
+
+        //when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("닉네임은 2 ~ 10자로 생성 가능합니다")).isTrue();
+    }
+
+    @Test
+    void 비밀번호_규정_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("leo123",
+                "에덴",
+                "dpeps123",
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678");
+        회원_가입(request);
+
+        // when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.")).isTrue();
+    }
+
+    @Test
+    void 비밀번호_글자수_초과해_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("leo123",
+                "에덴",
+                "aA345678901234567890!",
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678");
+        회원_가입(request);
+
+        // when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("비밀번호는 8 ~ 20자로 생성 가능합니다.")).isTrue();
+    }
+
+    @Test
+    void 비밀번호_글자수_부족으로_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("leo123",
+                "에덴",
+                "aaAA11!",
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678");
+        회원_가입(request);
+
+        // when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("비밀번호는 8 ~ 20자로 생성 가능합니다.")).isTrue();
+    }
+
+    @Test
+    void 비밀번호_빈값으로_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("leo123",
+                "에덴",
+                "        ",
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678");
+        회원_가입(request);
+
+        // when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.")).isTrue();
+    }
+
+    @Test
+    void 주소_글자수_초과_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("loe0842",
+                "에덴",
+                "dpepsWkd12!",
+                "에".repeat(256),
+                "010",
+                "1234",
+                "5678");
+
+        // when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("주소는 최대 255자까지 가능합니다.")).isTrue();
+    }
+
+    @Test
+    void 주소_글자수_빈값_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("loe0842",
+                "에덴",
+                "dpepsWkd12!",
+                "  ",
+                "010",
+                "1234",
+                "5678");
+
+        // when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("주소는 빈 값 생성이 불가능합니다.")).isTrue();
+    }
+
+    @Test
+    void 핸드폰_번호_길이_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("loe0842",
+                "에덴",
+                "dpepsWkd12!",
+                "에덴 동산",
+                "0101",
+                "1234",
+                "5678");
+
+        // when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("휴대폰 번호양식이 불일치 합니다.")).isTrue();
+    }
+
+    @Test
+    void 핸드폰_번호_양식_실패() {
+        // given
+        Map<String, Object> request = 회원_정보("loe0842",
+                "에덴",
+                "dpepsWkd12!",
+                "에덴 동산",
+                "공일공",
+                "1234",
+                "5678");
+
+        // when
+        ExtractableResponse<Response> response = 회원_가입(request);
+
+        // then
+        int status = response.statusCode();
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(status).isEqualTo(400);
+        assertThat(errorMessage.contains("휴대폰 번호는 숫자만 가능합니다.")).isTrue();
+    }
+
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
