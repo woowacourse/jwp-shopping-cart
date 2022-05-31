@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidLoginException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidLoginException;
 
 @SpringBootTest
 @Transactional

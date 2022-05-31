@@ -12,8 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.application.ServiceMockTest;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidLoginException;
-import woowacourse.shoppingcart.exception.NotFoundCustomerException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidLoginException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
 
 class AuthServiceTest extends ServiceMockTest {
 

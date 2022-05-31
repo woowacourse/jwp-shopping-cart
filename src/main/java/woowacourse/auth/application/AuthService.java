@@ -7,8 +7,8 @@ import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidLoginException;
-import woowacourse.shoppingcart.exception.NotFoundCustomerException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidLoginException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)

@@ -12,8 +12,8 @@ import org.mockito.InjectMocks;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
-import woowacourse.shoppingcart.exception.DuplicateEmailException;
-import woowacourse.shoppingcart.exception.NotFoundCustomerException;
+import woowacourse.shoppingcart.exception.badrequest.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
 
 class CustomerServiceTest extends ServiceMockTest {
 

@@ -11,7 +11,7 @@ import woowacourse.auth.support.Login;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.exception.UnauthorizedTokenException;
+import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedTokenException;
 
 @Component
 public class LoginCustomerResolver implements HandlerMethodArgumentResolver {
