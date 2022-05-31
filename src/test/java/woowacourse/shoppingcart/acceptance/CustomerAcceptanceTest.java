@@ -62,7 +62,7 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
         @Test
         void 로그인된_경우_200() {
             SignUpRequest 고객 = new SignUpRequest("유효한_아이디", "비밀번호", "닉네임", 15);
-            UpdateMeRequest 수정된_고객 = new UpdateMeRequest("새로운_아이디", "비밀번호", "새로운_닉네임", 20);
+            UpdateMeRequest 수정된_고객 = new UpdateMeRequest("새로운_아이디", "새로운_닉네임", 20);
             String 유효한_토큰 = 회원가입_요청_후_토큰_반환(고객);
 
             ExtractableResponse<Response> response = 내_정보_수정_요청(수정된_고객, 유효한_토큰);
