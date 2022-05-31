@@ -39,6 +39,7 @@
         - [x] start, middle, last 의 형식을 지닌다.
         - [x] start 는 3글자, middle과 last는 4글자이다.
 
-- [ ] 회원탈퇴
-    - [ ] request header 에 token 이 포함되지 않으면 예외를 발생한다.
-    - [ ] 비밀번호를 받아 회원을 탈퇴한다.
+- [x] 회원탈퇴
+    - [x] request header 에 token 이 포함되지 않으면 예외를 발생한다.
+    - [x] 비밀번호를 받아 회원을 탈퇴한다.
+    - [x] 비밀번호가 일치하지 않으면 예외를 발생한다.

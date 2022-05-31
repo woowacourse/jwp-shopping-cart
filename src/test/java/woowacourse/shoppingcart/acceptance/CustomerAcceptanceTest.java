@@ -7,10 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.PhoneNumber;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.dto.UpdateCustomerRequest;
+import woowacourse.auth.dto.*;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignupRequest;
@@ -324,8 +321,70 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("회원탈퇴")
     @Test
-    void deleteMe() {
+    @DisplayName("회원 탈퇴에 성공한다.")
+    void deleteCustomer() {
+        // given
+        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
+
+        // when
+        final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("Password123!");
+        final ExtractableResponse<Response> response = delete("/customers", token.getAccessToken(), deleteCustomerRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 시 비밀번호가 올바르지 않으면 상태코드 400을 반환한다.")
+    void wrongPasswordWhenDeleteCustomer() {
+        // given
+        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
+
+        // when
+        final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("password123!");
+        final ExtractableResponse<Response> response = delete("/customers", token.getAccessToken(), deleteCustomerRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo("비밀번호가 올바르지 않습니다.")
+        );
+    }
+
+    @Test
+    @DisplayName("회원을 탈퇴할 때 헤더에 토큰이 존재하지 않으면 상태코드 401을 반환한다.")
+    void tokenNotExistWhenDeleteCustomer() {
+        // given
+
+        // when
+        final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("password123!");
+        final ExtractableResponse<Response> response = delete("/customers", deleteCustomerRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(response.asString()).isEqualTo("로그인 후 사용이 가능합니다.")
+        );
+    }
+
+    @Test
+    @DisplayName("회원을 탈퇴할 때 잘못된 형식의 토큰이 전달되면 상태코드 401을 반환한다.")
+    void invalidTokenFormatWhenDeleteCustomer() {
+        // given
+        JwtTokenProvider jwtTokenProvider = new FakeJwtTokenProvider();
+        final String invalidToken = jwtTokenProvider.createToken("fake");
+
+        // when
+        final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("password123!");
+        final ExtractableResponse<Response> response = delete("/customers", invalidToken, deleteCustomerRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(response.asString()).isEqualTo("잘못된 형식의 토큰입니다.")
+        );
     }
 }

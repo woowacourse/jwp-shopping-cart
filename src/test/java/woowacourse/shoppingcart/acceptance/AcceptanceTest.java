@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -75,6 +76,27 @@ public class AcceptanceTest {
 
     protected ExtractableResponse<Response> delete(String uri) {
         return RestAssured.given().log().all()
+                .when()
+                .delete(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> delete(String uri, Object param) {
+        return RestAssured.given().log().all()
+                .body(param)
+                .contentType(ContentType.JSON)
+                .when()
+                .delete(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> delete(String uri, String token, Object param) {
+        return RestAssured.given().log().all()
+                .header(new Header("Authorization", "BEARER " + token))
+                .body(param)
+                .contentType(ContentType.JSON)
                 .when()
                 .delete(uri)
                 .then().log().all()
