@@ -9,6 +9,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -60,9 +61,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        final ExtractableResponse<Response> response = getMethodRequestWithBearerAuth("Bearer 123", "/api/customers/me");
+        final int errorCode = response.jsonPath().getInt("errorCode");
 
         // then
-        // 내 정보 조회 요청이 거부된다
+        assertAll(
+                ()-> assertThat(errorCode).isEqualTo(3004),
+                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        );
     }
 }
