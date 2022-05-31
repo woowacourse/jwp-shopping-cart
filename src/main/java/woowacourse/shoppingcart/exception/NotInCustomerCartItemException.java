@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.exception;
 
 public class NotInCustomerCartItemException extends RuntimeException {
+
     public NotInCustomerCartItemException() {
         this("장바구니 아이템이 없습니다.");
     }

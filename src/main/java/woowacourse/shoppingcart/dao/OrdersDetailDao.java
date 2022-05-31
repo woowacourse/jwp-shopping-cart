@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 
 @Repository
 public class OrdersDetailDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {

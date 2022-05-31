@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
     public static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH";
 
     private final CustomerService customerService;

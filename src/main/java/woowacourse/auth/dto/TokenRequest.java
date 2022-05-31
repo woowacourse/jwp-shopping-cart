@@ -11,7 +11,7 @@ public class TokenRequest {
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,20}", message = "비밀번호 양식이 잘못 되었습니다.")
     private String password;
 
-    public TokenRequest() {
+    private TokenRequest() {
     }
 
     public TokenRequest(final String email, final String password) {
