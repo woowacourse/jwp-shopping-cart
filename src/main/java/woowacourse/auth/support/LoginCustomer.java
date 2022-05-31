@@ -2,13 +2,13 @@ package woowacourse.auth.support;
 
 public class LoginCustomer {
 
-    private final Long id;
+    private final String email;
 
-    public LoginCustomer(final Long id) {
-        this.id = id;
+    public LoginCustomer(final String email) {
+        this.email = email;
     }
 
-    public Long getId() {
-        return id;
+    public String getEmail() {
+        return email;
     }
 }

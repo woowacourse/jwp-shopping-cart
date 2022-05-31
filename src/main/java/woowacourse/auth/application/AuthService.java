@@ -25,8 +25,8 @@ public class AuthService {
     }
 
 
-    public String extractPayload(final String token) {
-        return jwtTokenProvider.extractEmail(token);
+    public String extractEmail(final String token) {
+        return jwtTokenProvider.extractClaim(token);
     }
 
     public TokenResponseDto login(final SignInDto signInDto) {

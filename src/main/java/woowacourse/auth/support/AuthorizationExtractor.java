@@ -23,6 +23,6 @@ public class AuthorizationExtractor {
                 return authHeaderValue;
             }
         }
-        throw new AuthorizationFailException("토큰 값이 비어있습니다.");
+        throw new AuthorizationFailException("유효하지 않은 토큰입니다.");
     }
 }

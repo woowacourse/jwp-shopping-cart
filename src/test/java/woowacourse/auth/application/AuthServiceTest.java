@@ -1,10 +1,7 @@
 package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
-import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.service.CustomerService;
 
@@ -35,7 +31,7 @@ class AuthServiceTest {
         final SignInDto signInDto = new SignInDto(customerEmail, "testtest");
 
         final TokenResponseDto token = authService.login(signInDto);
-        final String subject = authService.extractPayload(token.getAccessToken());
+        final String subject = authService.extractEmail(token.getAccessToken());
 
         assertThat(subject).isEqualTo(customerEmail);
     }
