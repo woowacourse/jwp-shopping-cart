@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
@@ -9,6 +10,7 @@ import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
+@Transactional(readOnly = true)
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -17,6 +19,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
+    @Transactional
     public Long createCustomer(CustomerCreateRequest customerCreateRequest) {
         validateDuplicateNickname(customerCreateRequest.getNickname());
         return customerDao.save(customerCreateRequest.toCustomer());
@@ -28,6 +31,7 @@ public class CustomerService {
         return CustomerResponse.from(customer);
     }
 
+    @Transactional
     public void deleteCustomer(String email) {
         customerDao.deleteByEmail(email);
     }
@@ -38,6 +42,7 @@ public class CustomerService {
         }
     }
 
+    @Transactional
     public void changePassword(String email, ChangePasswordRequest changePasswordRequest) {
         Customer customer = customerDao.findIdByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -45,6 +50,7 @@ public class CustomerService {
         customerDao.updatePassword(customer);
     }
 
+    @Transactional
     public void changeNickname(String email, ChangeCustomerRequest changeCustomerRequest) {
         Customer customer = customerDao.findIdByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
