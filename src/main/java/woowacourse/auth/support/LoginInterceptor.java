@@ -3,7 +3,7 @@ package woowacourse.auth.support;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.auth.exception.LoginFailException;
+import woowacourse.auth.exception.InvalidTokenException;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
@@ -21,7 +21,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String token = AuthorizationExtractor.extract(request);
 
         if (!jwtTokenProvider.validateToken(token)) {
-            throw new LoginFailException();
+            throw new InvalidTokenException();
         }
         return true;
     }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.dto.ErrorResponseWithField;
@@ -54,7 +55,7 @@ public class ControllerAdvice {
         return new ErrorResponseWithField(exception.getField(), exception.getMessage());
     }
 
-    @ExceptionHandler(LoginFailException.class)
+    @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleLoginFailException(Exception exception) {
         return new ErrorResponse(exception.getMessage());
