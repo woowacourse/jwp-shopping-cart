@@ -92,4 +92,14 @@ class CustomerDaoTest {
 		// then
 		assertThat(byEmail).isEmpty();
 	}
+
+	@DisplayName("회원을 삭제한다")
+	@Test
+	void delete() {
+		Customer save = customerDao.save(new Customer("123@gmail.com", "a1234!", "does"));
+		customerDao.delete(save.getId());
+
+		assertThat(customerDao.findByEmail(save.getEmail()))
+			.isEmpty();
+	}
 }

@@ -20,10 +20,10 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.service.CustomerService;
+import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.support.JwtTokenProvider;
 
-@WebMvcTest({CustomerController.class, JwtTokenProvider.class, AuthService.class})
+@WebMvcTest({CustomerController.class, AuthService.class})
 class CustomerControllerTest {
 
 	@Autowired
@@ -34,6 +34,9 @@ class CustomerControllerTest {
 
 	@MockBean
 	private CustomerService customerService;
+
+	@MockBean
+	private JwtTokenProvider tokenProvider;
 
 	@DisplayName("회원가입을 한다.")
 	@Test
@@ -120,5 +123,32 @@ class CustomerControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(requestJson))
 			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("토큰이 없을 때 탈퇴를 하려고 하면 401 반환")
+	@Test
+	void signOutNotLogin() throws Exception {
+		// when
+		mockMvc.perform(delete("/customers"))
+			.andExpect(status().isUnauthorized());
+	}
+
+	@DisplayName("토큰이 있을 때 탈퇴를 한다.")
+	@Test
+	void signOutwithToken() throws Exception {
+		// given
+		String email = "123@gmail.com";
+		String token = "access-token";
+		given(tokenProvider.getPayload(token))
+			.willReturn(email);
+		given(tokenProvider.validateToken(token))
+			.willReturn(true);
+		given(customerService.findByEmail(email))
+			.willReturn(new Customer(1L, email, "a1234!", "does"));
+
+		// when
+		mockMvc.perform(delete("/customers")
+				.header("Authorization", "Bearer " + token))
+			.andExpect(status().isNoContent());
 	}
 }

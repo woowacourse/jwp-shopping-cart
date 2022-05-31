@@ -1,4 +1,4 @@
-package woowacourse.auth.service;
+package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +28,14 @@ public class CustomerService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public Customer findByEmail(String email) {
 		return customerDao.findByEmail(email)
 			.orElseThrow(() -> new InvalidCustomerException("이메일에 해당하는 회원이 존재하지 않습니다"));
+	}
+
+	public void delete(Customer customer) {
+		customerDao.delete(customer.getId());
 	}
 }
 

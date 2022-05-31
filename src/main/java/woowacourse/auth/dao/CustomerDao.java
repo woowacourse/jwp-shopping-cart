@@ -59,4 +59,9 @@ public class CustomerDao {
 			rs.getString("password"),
 			rs.getString("nickname"));
 	}
+
+	public void delete(Long id) {
+		String sql = "DELETE FROM customer WHERE id = :id";
+		jdbcTemplate.update(sql, Map.of("id", id));
+	}
 }

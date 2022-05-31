@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,8 @@ import lombok.RequiredArgsConstructor;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.service.CustomerService;
+import woowacourse.auth.application.CustomerService;
+import woowacourse.auth.support.Login;
 
 @RestController
 @RequestMapping("/customers")
@@ -36,5 +38,11 @@ public class CustomerController {
 			.fromCurrentRequest()
 			.path("/" + id)
 			.build().toUri();
+	}
+
+	@DeleteMapping
+	public ResponseEntity<Void> signOut(@Login Customer customer) {
+		customerService.delete(customer);
+		return ResponseEntity.noContent().build();
 	}
 }

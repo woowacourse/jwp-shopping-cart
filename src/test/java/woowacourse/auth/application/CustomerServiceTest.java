@@ -1,4 +1,4 @@
-package woowacourse.auth.service;
+package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.CustomerRequest;

@@ -7,18 +7,14 @@ import static org.mockito.BDDMockito.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidCustomerException;
-import woowacourse.auth.exception.InvalidLoginException;
-import woowacourse.auth.service.CustomerService;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +33,7 @@ class AuthServiceTest {
 		// given
 		given(customerService.findByEmail("123@gmail.com"))
 			.willReturn(new Customer(1L, "123@gmail.com", "a1234!", "does"));
-		given(tokenProvider.createToken("does"))
+		given(tokenProvider.createToken("123@gmail.com"))
 			.willReturn("access-token");
 
 		// when

@@ -16,7 +16,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.service.CustomerService;
+import woowacourse.auth.application.CustomerService;
 
 @SpringBootAcceptanceTest
 public class AuthControllerTest {

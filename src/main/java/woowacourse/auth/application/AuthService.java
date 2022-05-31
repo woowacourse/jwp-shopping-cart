@@ -7,12 +7,11 @@ import lombok.RequiredArgsConstructor;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.service.CustomerService;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class AuthService {
 
 	private final CustomerService customerService;
@@ -23,7 +22,6 @@ public class AuthService {
 		if (!customer.isSamePassword(tokenRequest.getPassword())) {
 			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 		}
-		String nickname = customer.getNickname();
-		return new TokenResponse(nickname, tokenProvider.createToken(nickname));
+		return new TokenResponse(customer.getNickname(), tokenProvider.createToken(customer.getEmail()));
 	}
 }

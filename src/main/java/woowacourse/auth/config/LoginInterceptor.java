@@ -23,8 +23,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 			return true;
 		}
 
-		String nickname = AuthorizationExtractor.extract(request);
-		if (isUnauthorizedRequest(nickname)) {
+		String token = AuthorizationExtractor.extract(request);
+		if (isUnauthorizedRequest(token)) {
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
 			return false;
 		}

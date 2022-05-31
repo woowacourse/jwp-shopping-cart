@@ -1,9 +1,10 @@
 package woowacourse.auth.config;
 
 import lombok.RequiredArgsConstructor;
+import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
-import woowacourse.auth.application.AuthService;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -16,8 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
-    private final AuthService authService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomerService customerService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -37,6 +38,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService);
+        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider, customerService);
     }
 }
