@@ -18,6 +18,10 @@ import woowacourse.shoppingcart.domain.Customer;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 
+    private static final String NAME = "썬";
+    private static final String EMAIL = "sunyong@gmail.com";
+    private static final String PASSWORD = "12345678";
+
     private final CustomerDao customerDao;
 
     public CustomerDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -58,7 +62,7 @@ public class CustomerDaoTest {
     @DisplayName("회원 정보를 저장한다.")
     void save() {
         // given
-        final Customer customer = new Customer("썬", "sunyong@gmail.com", "12345678");
+        final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
 
         // when
         final Customer actual = customerDao.save(customer);
@@ -73,21 +77,21 @@ public class CustomerDaoTest {
     @DisplayName("중복된 이메일이 있는지 확인한다.")
     void existsByEmail() {
         // given
-        final Customer customer = new Customer("썬", "sunyong@gmail.com", "12345678");
+        final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
         customerDao.save(customer);
 
         // when
-        final Customer duplicatedEmailCustomer = new Customer("라라", "sunyong@gmail.com", "12345678");
+        final Customer duplicatedEmailCustomer = new Customer("라라", EMAIL, PASSWORD);
 
         // then
         assertThat(customerDao.existsByEmail(duplicatedEmailCustomer)).isTrue();
     }
 
     @Test
-    @DisplayName("이메일에 해당하는 고객 객체를 반환한다.")
+    @DisplayName("이메일에 해당하는 회원 객체를 검색한다.")
     void findByEmail() {
         // given
-        final Customer customer = new Customer("썬", "sunyong@gmail.com", "12345678");
+        final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
         customerDao.save(customer);
 
         // when
@@ -97,5 +101,20 @@ public class CustomerDaoTest {
         assertThat(actual).usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(customer);
+    }
+
+    @Test
+    @DisplayName("id로 회원 객체를 검색한다.")
+    void findById() {
+        // given
+        final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
+        final Customer savedCustomer = customerDao.save(customer);
+
+        // when
+        Customer actual = customerDao.findById(savedCustomer.getId()).get();
+
+        // then
+        assertThat(actual).usingRecursiveComparison()
+                .isEqualTo(savedCustomer);
     }
 }
