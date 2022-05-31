@@ -21,8 +21,9 @@ import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.service.CustomerService;
+import woowacourse.auth.support.JwtTokenProvider;
 
-@WebMvcTest(CustomerController.class)
+@WebMvcTest({CustomerController.class, JwtTokenProvider.class, AuthService.class})
 class CustomerControllerTest {
 
 	@Autowired
@@ -33,8 +34,6 @@ class CustomerControllerTest {
 
 	@MockBean
 	private CustomerService customerService;
-	@MockBean
-	private AuthService authService;
 
 	@DisplayName("회원가입을 한다.")
 	@Test
