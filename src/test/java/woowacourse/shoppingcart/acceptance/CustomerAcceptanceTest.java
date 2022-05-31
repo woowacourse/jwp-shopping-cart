@@ -94,7 +94,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(new TokenRequest("test", "1255"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login/token")
+                .when().post("/api/login")
                 .then().log().all().extract();
 
         assertThat(editResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -164,7 +164,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(new TokenRequest(name, password))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login/token")
+                .when().post("/api/login")
                 .then().log().all().extract().as(TokenResponse.class).getAccessToken();
     }
 

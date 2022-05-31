@@ -36,7 +36,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(new TokenRequest("test", "1234"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login/token")
+                .when().post("/api/login")
                 .then().log().all().extract().as(TokenResponse.class).getAccessToken();
 
         // then
@@ -69,7 +69,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(new TokenRequest("test", "5522"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login/token")
+                .when().post("/api/login")
                 .then().log().all().extract();
 
         // then
