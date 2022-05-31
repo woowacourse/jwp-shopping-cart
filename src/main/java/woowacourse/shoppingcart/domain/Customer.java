@@ -1,9 +1,8 @@
 package woowacourse.shoppingcart.domain;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import woowacourse.auth.dto.CustomerRequest;
+import woowacourse.shoppingcart.utils.CustomerInformationValidator;
+
+import javax.xml.validation.Validator;
 
 public class Customer {
     private final Long id;
@@ -14,6 +13,11 @@ public class Customer {
     private final String password;
 
     public Customer(Long id, String email, String name, String phone, String address, String password) {
+        CustomerInformationValidator.validateEmail(email);
+        CustomerInformationValidator.validateName(name);
+        CustomerInformationValidator.validatePhoneNumber(phone);
+        CustomerInformationValidator.validatePassword(password);
+        CustomerInformationValidator.validateAddress(address);
         this.id = id;
         this.email = email;
         this.name = name;
