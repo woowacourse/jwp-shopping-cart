@@ -21,6 +21,10 @@ import woowacourse.auth.support.JwtTokenProvider;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
+	private final String email = "123@gmail.com";
+	private final String password = "a1234!";
+	private final String nickname = "does";
+
 	@Mock
 	private CustomerService customerService;
 	@Mock
@@ -33,12 +37,12 @@ class AuthServiceTest {
 	void login() {
 		// given
 		given(customerService.findByEmail("123@gmail.com"))
-			.willReturn(new Customer(1L, "123@gmail.com", "a1234!", "does"));
+			.willReturn(new Customer(1L, email, password, nickname));
 		given(tokenProvider.createToken("123@gmail.com"))
 			.willReturn("access-token");
 
 		// when
-		TokenResponse response = authService.login(new TokenRequest("123@gmail.com", "a1234!"));
+		TokenResponse response = authService.login(new TokenRequest(email, password));
 
 		// then
 		assertAll(
@@ -51,11 +55,11 @@ class AuthServiceTest {
 	@Test
 	void loginFailByEmail() {
 		// given
-		given(customerService.findByEmail("123@gmail.com"))
+		given(customerService.findByEmail(email))
 			.willThrow(InvalidCustomerException.class);
 
 		// when
-		assertThatThrownBy(() -> authService.login(new TokenRequest("123@gmail.com", "a1234!")))
+		assertThatThrownBy(() -> authService.login(new TokenRequest(email, password)))
 			.isInstanceOf(InvalidCustomerException.class);
 	}
 
@@ -63,11 +67,11 @@ class AuthServiceTest {
 	@Test
 	void loginFailByPassword() {
 		// given
-		given(customerService.findByEmail("123@gmail.com"))
-			.willReturn(new Customer(1L, "123@gmail.com", "a1234!", "does"));
+		given(customerService.findByEmail(email))
+			.willReturn(new Customer(1L, email, password, nickname));
 
 		// when
-		assertThatThrownBy(() -> authService.login(new TokenRequest("123@gmail.com", "a1234!!!")))
+		assertThatThrownBy(() -> authService.login(new TokenRequest(email, "a1234!!!")))
 			.isInstanceOf(InvalidAuthException.class);
 	}
 }

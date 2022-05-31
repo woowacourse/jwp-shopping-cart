@@ -19,6 +19,10 @@ import woowacourse.auth.domain.Customer;
 @JdbcTest
 class CustomerDaoTest {
 
+	private final String email = "123@gmail.com";
+	private final String password = "a1234!";
+	private final String nickname = "does";
+
 	@Autowired
 	private DataSource dataSource;
 	private CustomerDao customerDao;
@@ -32,7 +36,7 @@ class CustomerDaoTest {
 	@Test
 	void save() {
 		// given
-		Customer customer = new Customer("123@gmail.com", "!234", "does");
+		Customer customer = new Customer(email, password, nickname);
 
 		// when
 		Customer saved = customerDao.save(customer);
@@ -45,7 +49,7 @@ class CustomerDaoTest {
 	@Test
 	void existByName() {
 		// given
-		Customer customer = new Customer("123@gmail.com", "!234", "does");
+		Customer customer = new Customer(email, password, nickname);
 		customerDao.save(customer);
 
 		// when
@@ -59,7 +63,7 @@ class CustomerDaoTest {
 	@Test
 	void existByNameFalse() {
 		// given
-		Customer customer = new Customer("123@gmail.com", "!234", "does");
+		Customer customer = new Customer(email, password, nickname);
 
 		// when
 		boolean result = customerDao.existByEmail(customer.getEmail());
@@ -72,7 +76,7 @@ class CustomerDaoTest {
 	@Test
 	void findByEmail() {
 		// given
-		Customer customer = new Customer("123@gmail.com", "!234", "does");
+		Customer customer = new Customer(email, password, nickname);
 		customerDao.save(customer);
 
 		// when
@@ -98,7 +102,7 @@ class CustomerDaoTest {
 	@DisplayName("회원을 삭제한다")
 	@Test
 	void delete() {
-		Customer save = customerDao.save(new Customer("123@gmail.com", "a1234!", "does"));
+		Customer save = customerDao.save(new Customer(email, password, nickname));
 		customerDao.delete(save.getId());
 
 		assertThat(customerDao.findByEmail(save.getEmail()))
@@ -109,7 +113,7 @@ class CustomerDaoTest {
 	@Test
 	void update() {
 		// given
-		Customer save = customerDao.save(new Customer("123@gmail.com", "a1234!", "does"));
+		Customer save = customerDao.save(new Customer(email, password, nickname));
 
 		// when
 		customerDao.update(new Customer(save.getId(), save.getEmail(), "b1234!", "thor"));

@@ -23,6 +23,10 @@ import woowacourse.auth.exception.InvalidCustomerException;
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
 
+	private final String email = "123@gmail.com";
+	private final String password = "a1234!";
+	private final String nickname = "does";
+
 	@Mock
 	private CustomerDao customerDao;
 	@InjectMocks
@@ -32,8 +36,8 @@ class CustomerServiceTest {
 	@Test
 	void sighUp() {
 		// given
-		CustomerRequest request = new CustomerRequest("123@gmail.com", "!234", "does");
-		Customer customer = new Customer(1L, "123@gmail.com", "!234", "does");
+		CustomerRequest request = new CustomerRequest(email, password, nickname);
+		Customer customer = new Customer(1L, email, password, nickname);
 		given(customerDao.save(any(Customer.class)))
 			.willReturn(customer);
 
@@ -48,8 +52,8 @@ class CustomerServiceTest {
 	@Test
 	void emailDuplicate() {
 		// given
-		CustomerRequest request = new CustomerRequest("123@gmail.com", "!234", "does");
-		given(customerDao.existByEmail("123@gmail.com"))
+		CustomerRequest request = new CustomerRequest(email, password, nickname);
+		given(customerDao.existByEmail(email))
 			.willReturn(true);
 
 		// then
@@ -61,8 +65,8 @@ class CustomerServiceTest {
 	@Test
 	void findByEmail() {
 		// given
-		Customer customer = new Customer(1L, "123@gmail.com", "!234", "does");
-		given(customerDao.findByEmail("123@gmail.com"))
+		Customer customer = new Customer(1L, email, password, nickname);
+		given(customerDao.findByEmail(email))
 			.willReturn(Optional.of(customer));
 
 		// then
@@ -73,7 +77,7 @@ class CustomerServiceTest {
 	@Test
 	void findByEmail_failByCustomer() {
 		// given
-		given(customerDao.findByEmail("123@gmail.com"))
+		given(customerDao.findByEmail(email))
 			.willReturn(Optional.empty());
 
 		// then
@@ -85,7 +89,8 @@ class CustomerServiceTest {
 	@Test
 	void updateCustomer() {
 		// given
-		CustomerUpdateRequest request = new CustomerUpdateRequest("thor", "a1234!", "b1234!");
+		CustomerUpdateRequest request = new CustomerUpdateRequest(
+			"thor", "a1234!", "b1234!");
 		Customer customer = new Customer(1L, "does", "a1234!", "b1234!");
 
 		// when
@@ -99,7 +104,8 @@ class CustomerServiceTest {
 	@Test
 	void updateCustomerPasswordFail() {
 		// given
-		CustomerUpdateRequest request = new CustomerUpdateRequest("thor", "a1234!", "b1234!");
+		CustomerUpdateRequest request = new CustomerUpdateRequest(
+			"thor", "a1234!", "b1234!");
 		Customer customer = new Customer(1L, "does", "a123456!", "b1234!");
 
 		// when

@@ -20,16 +20,20 @@ import woowacourse.auth.dto.TokenRequest;
 @SpringBootAcceptanceTest
 public class AuthAcceptanceTest {
 
+	private final String email = "123@gmail.com";
+	private final String password = "a1234!";
+	private final String nickname = "does";
+
 	@DisplayName("로그인 성공")
 	@Test
 	void myInfoWithBearerAuth() {
 		// given
-		signUp(new CustomerRequest("123@gmail.com", "a1234!", "does"));
+		signUp(new CustomerRequest(email, password, nickname));
 
 		// when
 		ExtractableResponse<Response> loginResponse = RestAssured.given().log().all()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.body(new TokenRequest("123@gmail.com", "a1234!"))
+			.body(new TokenRequest(email, password))
 			.when().post("/auth/login")
 			.then().log().all()
 			.extract();
@@ -45,12 +49,12 @@ public class AuthAcceptanceTest {
 	@Test
 	void myInfoWithBadBearerAuth() {
 		// given
-		signUp(new CustomerRequest("123@gmail.com", "a1234!", "does"));
+		signUp(new CustomerRequest(email, password, nickname));
 
 		// when
 		ExtractableResponse<Response> loginResponse = RestAssured.given().log().all()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.body(new TokenRequest("123@gmail.com", "a1234!!!23"))
+			.body(new TokenRequest(email, "a1234!!!23"))
 			.when().post("/auth/login")
 			.then().log().all()
 			.extract();

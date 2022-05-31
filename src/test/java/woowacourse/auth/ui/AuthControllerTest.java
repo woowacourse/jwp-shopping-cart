@@ -21,6 +21,10 @@ import woowacourse.auth.application.CustomerService;
 @SpringBootAcceptanceTest
 public class AuthControllerTest {
 
+	private final String email = "123@gmail.com";
+	private final String password = "a1234!";
+	private final String nickname = "does";
+
 	@Autowired
 	private CustomerService customerService;
 
@@ -28,7 +32,7 @@ public class AuthControllerTest {
 	@Test
 	void login() {
 		// given
-		customerService.signUp(new CustomerRequest("123@gmail.com", "a1234!", "does"));
+		customerService.signUp(new CustomerRequest(email, password, nickname));
 
 		// when
 		ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -50,12 +54,12 @@ public class AuthControllerTest {
 	@Test
 	void loginFail() {
 		// given
-		customerService.signUp(new CustomerRequest("123@gmail.com", "a1234!", "does"));
+		customerService.signUp(new CustomerRequest(email, password, nickname));
 
 		// when
 		ExtractableResponse<Response> response = RestAssured.given().log().all()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.body(new TokenRequest("123@gmail.com", "a12232134!"))
+			.body(new TokenRequest(email, "a12232134!"))
 			.when().post("/auth/login")
 			.then().log().all()
 			.extract();
