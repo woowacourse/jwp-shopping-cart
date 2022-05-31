@@ -30,7 +30,7 @@ public class CustomerService {
         }
 
         final Customer customer = new Customer(customerRegisterRequest.getEmail(),
-                customerRegisterRequest.getUserName(),
+                customerRegisterRequest.getNickname(),
                 customerRegisterRequest.getPassword());
         return customerDao.save(customer);
     }
@@ -52,7 +52,7 @@ public class CustomerService {
         if (!customer.equalsPassword(customerUpdateRequest.getPassword())) {
             throw new WrongPasswordException();
         }
-        customer.update(customerUpdateRequest.getUserName(), customerUpdateRequest.getNewPassword());
+        customer.update(customerUpdateRequest.getNickname(), customerUpdateRequest.getNewPassword());
         return new CustomerUpdateResponse(customer.getUserName());
     }
 

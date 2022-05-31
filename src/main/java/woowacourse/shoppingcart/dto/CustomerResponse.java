@@ -3,11 +3,11 @@ package woowacourse.shoppingcart.dto;
 public class CustomerResponse {
 
     private String email;
-    private String userName;
+    private String nickname;
 
-    public CustomerResponse(final String email, final String userName) {
+    public CustomerResponse(final String email, final String nickname) {
         this.email = email;
-        this.userName = userName;
+        this.nickname = nickname;
     }
 
     public CustomerResponse() {
@@ -17,7 +17,7 @@ public class CustomerResponse {
         return email;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getNickname() {
+        return nickname;
     }
 }

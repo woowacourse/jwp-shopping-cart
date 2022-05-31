@@ -21,7 +21,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     private static final String CUSTOMER_EMAIL = "guest@woowa.com";
     private static final String CUSTOMER_NAME = "guest";
-    private static final String CUSTOMER_PASSWORD = "qwe123!@#";
+    private static final String CUSTOMER_PASSWORD = "qwer1234!@#$";
 
     @DisplayName("회원 가입에 성공하면 상태코드 201을 반환한다.")
     @Test
@@ -39,7 +39,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(() -> {
             assertThat(response.header("Location")).isEqualTo("/customers/1");
             assertThat(response.jsonPath().getObject(".", CustomerResponse.class))
-                    .extracting("email", "userName")
+                    .extracting("email", "nickname")
                     .containsExactly(CUSTOMER_EMAIL, CUSTOMER_NAME);
         });
     }
@@ -77,7 +77,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(getResponse.jsonPath().getObject(".", CustomerResponse.class))
-                .extracting("email", "userName")
+                .extracting("email", "nickname")
                 .containsExactly(CUSTOMER_EMAIL, CUSTOMER_NAME);
     }
 
@@ -101,7 +101,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(patchResponse.jsonPath().getObject(".", CustomerUpdateResponse.class)
-                .getUserName()).isEqualTo("newGuest");
+                .getNickname()).isEqualTo("newGuest");
     }
 
     @DisplayName("비밀번호가 틀리면 정보를 수정할 수 없다.")
@@ -118,7 +118,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
         final CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
-                "newGuest", "wrongPassword", "qwer1234!@#$");
+                "newGuest", "wrongqwe123!@#", "qwer1234!@#$");
         final ExtractableResponse<Response> patchResponse = RequestHandler.patchRequest(
                 "/customers", customerUpdateRequest, tokenResponse.getAccessToken());
 

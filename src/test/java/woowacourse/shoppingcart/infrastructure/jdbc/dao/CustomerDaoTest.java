@@ -21,7 +21,7 @@ class CustomerDaoTest {
 
     private static final String CUSTOMER_EMAIL = "guest@woowa.com";
     private static final String CUSTOMER_NAME = "guest";
-    private static final String CUSTOMER_PASSWORD = "qwe123!@#";
+    private static final String CUSTOMER_PASSWORD = "qwer1234!@#$";
 
     private final CustomerDao customerDao;
 

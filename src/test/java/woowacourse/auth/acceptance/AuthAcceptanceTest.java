@@ -20,7 +20,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     private static final String CUSTOMER_EMAIL = "guest@woowa.com";
     private static final String CUSTOMER_NAME = "guest";
-    private static final String CUSTOMER_PASSWORD = "qwe123!@#";
+    private static final String CUSTOMER_PASSWORD = "qwer1234!@#$";
 
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
@@ -37,7 +37,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
-        assertThat(tokenResponse.getUserName()).isEqualTo(CUSTOMER_NAME);
+        assertThat(tokenResponse.getNickname()).isEqualTo(CUSTOMER_NAME);
     }
 
     @DisplayName("로그인 실패 - 이메일이 존재하지 않는 경우")
@@ -67,7 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // when
         final ExtractableResponse<Response> response = RequestHandler.postRequest(
-                "/auth/login", new TokenRequest(CUSTOMER_EMAIL, "wrongPassword"));
+                "/auth/login", new TokenRequest(CUSTOMER_EMAIL, "wrongqwe123!@#"));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());

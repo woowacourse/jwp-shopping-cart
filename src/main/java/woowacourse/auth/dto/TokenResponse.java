@@ -2,19 +2,19 @@ package woowacourse.auth.dto;
 
 public class TokenResponse {
 
-    private String userName;
+    private String nickname;
     private String accessToken;
 
     public TokenResponse() {
     }
 
-    public TokenResponse(final String userName, final String accessToken) {
-        this.userName = userName;
+    public TokenResponse(final String nickname, final String accessToken) {
+        this.nickname = nickname;
         this.accessToken = accessToken;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getNickname() {
+        return nickname;
     }
 
     public String getAccessToken() {

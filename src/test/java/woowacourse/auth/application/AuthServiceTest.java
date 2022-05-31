@@ -37,13 +37,13 @@ class AuthServiceTest {
     @BeforeEach
     void setUp() {
         customerService.registerCustomer(new CustomerRegisterRequest(
-                "guest@woowa.com", "guest", "qwe123!@#"));
+                "guest@woowa.com", "guest", "qwer1234!@#$"));
     }
 
     @DisplayName("로그인에 성공하면 토큰을 발급한다.")
     @Test
     void login() {
-        final TokenRequest tokenRequest = new TokenRequest("guest@woowa.com", "qwe123!@#");
+        final TokenRequest tokenRequest = new TokenRequest("guest@woowa.com", "qwer1234!@#$");
         final TokenResponse tokenResponse = authService.login(tokenRequest);
 
         assertThat(tokenResponse.getAccessToken()).isNotNull();
@@ -56,14 +56,14 @@ class AuthServiceTest {
         @DisplayName("이메일에 해당하는 회원이 존재하지 않을 경우")
         @Test
         void loginWithWrongEmail() {
-            assertThatThrownBy(() -> authService.login(new TokenRequest("admin@woowa.com", "qwe123!@#")))
+            assertThatThrownBy(() -> authService.login(new TokenRequest("admin@woowa.com", "qwer1234!@#$")))
                     .isInstanceOf(NoSuchEmailException.class);
         }
 
         @DisplayName("비밀번호가 일치하지 않을 경우, 로그인에 실패한다.")
         @Test
         void loginWithWrongPassword() {
-            assertThatThrownBy(() -> authService.login(new TokenRequest("guest@woowa.com", "wrongPassword")))
+            assertThatThrownBy(() -> authService.login(new TokenRequest("guest@woowa.com", "wrongqwe123!@#")))
                     .isInstanceOf(WrongPasswordException.class);
         }
     }

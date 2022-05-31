@@ -28,7 +28,7 @@ class CustomerServiceTest {
 
     private static final String CUSTOMER_EMAIL = "guest@woowa.com";
     private static final String CUSTOMER_NAME = "guest";
-    private static final String CUSTOMER_PASSWORD = "qwe123!@#";
+    private static final String CUSTOMER_PASSWORD = "qwer1234!@#$";
 
     private final CustomerService customerService;
 
@@ -67,7 +67,7 @@ class CustomerServiceTest {
         final CustomerResponse customerResponse = customerService.findById(customerId);
 
         assertThat(customerResponse)
-                .extracting("email", "userName")
+                .extracting("email", "nickname")
                 .containsExactly(CUSTOMER_EMAIL, CUSTOMER_NAME);
     }
 
@@ -82,7 +82,7 @@ class CustomerServiceTest {
         final CustomerUpdateResponse actual = customerService.updateCustomer(customerId,
                 new CustomerUpdateRequest(newUserName, CUSTOMER_PASSWORD, newPassword));
 
-        assertThat(actual.getUserName()).isEqualTo(newUserName);
+        assertThat(actual.getNickname()).isEqualTo(newUserName);
     }
 
     @DisplayName("기존 비밀번호가 일치하지 않으면 회원 정보를 수정할 수 없다.")
@@ -92,7 +92,7 @@ class CustomerServiceTest {
                 new CustomerRegisterRequest(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
         final String newUserName = "Guest123123";
-        final String newPassword = "qwer1234!@#$";
+        final String newPassword = "anotherqwer1234!@#$";
 
         assertThatThrownBy(() ->customerService.updateCustomer(customerId,
                 new CustomerUpdateRequest(newUserName, newPassword, newPassword)))
