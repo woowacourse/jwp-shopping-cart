@@ -2,7 +2,9 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -58,5 +60,11 @@ public class CustomerDao {
         String sql = "SELECT * FROM customer WHERE account = :account";
         SqlParameterSource source = new MapSqlParameterSource("account", account);
         return jdbcTemplate.queryForObject(sql, source, ROW_MAPPER);
+    }
+
+    public Optional<CustomerEntity> findById(Long customerId) {
+        String sql = "SELECT * FROM customer WHERE id = :customerId";
+        SqlParameterSource source = new MapSqlParameterSource("customerId", customerId);
+        return Optional.ofNullable(DataAccessUtils.singleResult(jdbcTemplate.query(sql, source, ROW_MAPPER)));
     }
 }

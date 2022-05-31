@@ -1,14 +1,18 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.common.exception.BadRequestException;
+import woowacourse.common.exception.NotFoundException;
 import woowacourse.common.exception.UnauthorizedException;
 import woowacourse.common.utils.EncryptAlgorithm;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.PhoneNumberResponse;
 import woowacourse.shoppingcart.dto.SigninRequest;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 
@@ -39,6 +43,18 @@ public class CustomerService {
             throw new UnauthorizedException("로그인이 불가능합니다.");
         }
 
-        return new TokenResponse(jwtTokenProvider.createToken(String.valueOf(customerEntity.getId())));
+        return new TokenResponse(
+                jwtTokenProvider.createToken(String.valueOf(customerEntity.getId())));
+    }
+
+    public CustomerResponse findById(Long customerId) {
+        Optional<CustomerEntity> customerEntity = customerDao.findById(customerId);
+        return customerEntity
+                .map(it -> new CustomerResponse(
+                        it.getAccount(),
+                        it.getNickname(),
+                        it.getAddress(),
+                        PhoneNumberResponse.from(it.getPhoneNumber())))
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용지입니다"));
     }
 }

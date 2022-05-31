@@ -358,19 +358,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                         "1234",
                         "5678"));
 
-        Map<String, Object> request = new HashMap<>();
-        request.put("account", account);
-        request.put("password", password);
-
-        ExtractableResponse<Response> response = RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/signin")
-                .then()
-                .log().all()
-                .extract();
+        ExtractableResponse<Response> response = 토큰_발급(account, password);
 
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(response.body().jsonPath().getString("accessToken")).isNotNull();
@@ -390,28 +378,42 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                         "1234",
                         "5678"));
 
-        Map<String, Object> request = new HashMap<>();
-        request.put("account", account);
-        request.put("password", "dpepsWkd");
-
-        ExtractableResponse<Response> response = RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/signin")
-                .then()
-                .log().all()
-                .extract();
+        ExtractableResponse<Response> response = 토큰_발급(account, "dpepsWkd");
 
         assertThat(response.statusCode()).isEqualTo(401);
         assertThat(response.body().jsonPath().getString("message"))
                 .contains("로그인이 불가능합니다.");
     }
 
-    @DisplayName("내 정보 조회")
     @Test
-    void getMe() {
+    void 내_정보_조회() {
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+
+        회원_가입(회원_정보(account,
+                        "에덴",
+                        password,
+                        "에덴 동산",
+                        "010",
+                        "1234",
+                        "5678"));
+
+        String accessToken = 토큰_발급(account, password)
+                .body()
+                .jsonPath()
+                .getString("accessToken");
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/customers")
+                .then()
+                .log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body().jsonPath().getString("account")).isEqualTo(account);
     }
 
     @DisplayName("내 정보 수정")
@@ -450,6 +452,22 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(request)
                 .when()
                 .post("/signup")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 토큰_발급(String account, String password) {
+        Map<String, Object> request = new HashMap<>();
+        request.put("account", account);
+        request.put("password", password);
+
+        return RestAssured.given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/signin")
                 .then()
                 .log().all()
                 .extract();
