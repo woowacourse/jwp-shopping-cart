@@ -82,4 +82,20 @@ public class CustomerDaoTest {
         // then
         assertThat(customerDao.existsByEmail(duplicatedEmailCustomer)).isTrue();
     }
+
+    @Test
+    @DisplayName("이메일에 해당하는 고객 객체를 반환한다.")
+    void findByEmail() {
+        // given
+        final Customer customer = new Customer("썬", "sunyong@gmail.com", "12345678");
+        customerDao.save(customer);
+
+        // when
+        Customer actual = customerDao.findByEmail(customer.getEmail()).get();
+
+        // then
+        assertThat(actual).usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(customer);
+    }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -62,5 +63,17 @@ public class CustomerDao {
         params.put("email", customer.getEmail());
 
         return Boolean.TRUE.equals(namedJdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
+
+    public Optional<Customer> findByEmail(final String email) {
+        final String sql = "SELECT id, name, email, password FROM customer WHERE email = :email";
+        final HashMap<String, Object> params = new HashMap<>();
+        params.put("email", email);
+
+        try {
+            return Optional.ofNullable(namedJdbcTemplate.queryForObject(sql, params, CustomerDao::rowMapper));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
