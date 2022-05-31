@@ -1,11 +1,12 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.exception.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 @JsonFormat(shape = Shape.OBJECT)
 public enum ErrorResponse {
-    UNAUTHORIZED(3004, "Invalid token")
+    UNAUTHORIZED(3004, "Invalid token"),
+    INVALID_PASSWORD(1002, "Invalid Password")
     ;
 
     private final int errorCode;
