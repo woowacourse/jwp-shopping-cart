@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -27,8 +29,9 @@ public class CustomerDaoTest {
 
     private final CustomerDao customerDao;
 
-    public CustomerDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
-        customerDao = new CustomerDao(jdbcTemplate);
+    @Autowired
+    public CustomerDaoTest(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+        this.customerDao = new CustomerDao(jdbcTemplate, dataSource);
     }
 
     @DisplayName("이메일을 통해 회원 id 를 찾는다.")
@@ -90,5 +93,27 @@ public class CustomerDaoTest {
     @CsvSource(value = {"email@email.com, true", "notexistingemail@email.com, false"})
     void existEmail(final String email, final Boolean expected) {
         assertThat(customerDao.existEmail(email)).isEqualTo(expected);
+    }
+
+    @DisplayName("회원 정보를 저장한다.")
+    @Test
+    void save() {
+        String email = "newemail@email.com";
+        String nickname = "쿼리치";
+        String password = "password123!";
+
+        assertThat(customerDao.save(email, nickname, password)).isNotNull();
+    }
+
+    @DisplayName("중복되는 이메일로 회원 정보를 저장할 시 예외가 발생한다.")
+    @Test
+    void saveFail() {
+        String email = "email@email.com";
+        String nickname = "쿼리치";
+        String password = "password123!";
+
+        assertThatThrownBy(() -> customerDao.save(email, nickname, password))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("이미 존재하는 이메일입니다.");
     }
 }
