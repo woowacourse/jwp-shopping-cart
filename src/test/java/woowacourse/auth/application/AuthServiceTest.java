@@ -43,22 +43,4 @@ public class AuthServiceTest {
         String token = authService.login(new TokenRequest(email, password));
         assertThat(token).isNotEmpty();
     }
-
-    @DisplayName("이메일을 입력 받아 정보를 조회한다.")
-    @Test
-    void findCustomerByEmail() {
-        // given
-        String email = "beomWhale@naver.com";
-        String password = "Password1234!";
-        String nickname = "beomWhale";
-        Customer customer = new Customer(email, nickname, password);
-        Long saveId = customerDao.save(customer);
-
-        // when
-        CustomerResponse expected = new CustomerResponse(saveId, email, nickname);
-        CustomerResponse customerResponse = authService.findCustomerByEmail(email);
-
-        // then
-        assertThat(customerResponse).usingRecursiveComparison().isEqualTo(expected);
-    }
 }

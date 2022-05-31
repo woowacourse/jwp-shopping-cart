@@ -31,10 +31,4 @@ public class AuthService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
-
-    public CustomerResponse findCustomerByEmail(String email) {
-        Customer customer = customerDao.findIdByEmail(email)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        return CustomerResponse.from(customer);
-    }
 }

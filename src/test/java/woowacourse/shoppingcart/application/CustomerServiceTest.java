@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -58,5 +59,23 @@ public class CustomerServiceTest {
             () -> customerService.createCustomer(customerCreateRequest)).isInstanceOf(
                 IllegalArgumentException.class)
             .hasMessage("이미 존재하는 닉네임입니다.");
+    }
+
+    @DisplayName("이메일을 입력 받아 정보를 조회한다.")
+    @Test
+    void findCustomerByEmail() {
+        // given
+        String email = "beomWhale@naver.com";
+        String password = "Password1234!";
+        String nickname = "beomWhale";
+        Customer customer = new Customer(email, nickname, password);
+        Long saveId = customerDao.save(customer);
+
+        // when
+        CustomerResponse expected = new CustomerResponse(saveId, email, nickname);
+        CustomerResponse customerResponse = customerService.findCustomerByEmail(email);
+
+        // then
+        assertThat(customerResponse).usingRecursiveComparison().isEqualTo(expected);
     }
 }

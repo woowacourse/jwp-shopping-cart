@@ -1,18 +1,26 @@
 package woowacourse.auth.ui;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.support.JwtTokenProvider;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
-    private AuthService authService;
+    private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalArgumentResolver(AuthService authService) {
+    public AuthenticationPrincipalArgumentResolver(AuthService authService, JwtTokenProvider jwtTokenProvider) {
         this.authService = authService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -24,6 +32,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         // TODO: 유효한 로그인인 경우 로그인한 사용자 객체를 만들어서 응답하기
-        return null;
+        String token = AuthorizationExtractor.extract(Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class)));
+        return jwtTokenProvider.getPayload(token);
     }
 }

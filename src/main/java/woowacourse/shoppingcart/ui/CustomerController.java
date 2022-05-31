@@ -1,12 +1,11 @@
 package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import java.net.URI;
 
@@ -24,5 +23,11 @@ public class CustomerController {
     public ResponseEntity<Void> createCustomer(@RequestBody CustomerCreateRequest request) {
         Long customerId = customerService.createCustomer(request);
         return ResponseEntity.created(URI.create("/api/customers/" + customerId)).build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<CustomerResponse> showCustomer(@AuthenticationPrincipal String email) {
+        CustomerResponse customerResponse = customerService.findCustomerByEmail(email);
+        return ResponseEntity.ok(customerResponse);
     }
 }
