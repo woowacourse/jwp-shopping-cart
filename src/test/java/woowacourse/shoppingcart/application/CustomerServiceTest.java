@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.PhoneNumber;
 import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -12,6 +13,7 @@ import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.DuplicatedAccountException;
+import woowacourse.shoppingcart.exception.WrongPasswordException;
 
 import java.util.Optional;
 
@@ -117,5 +119,47 @@ class CustomerServiceTest {
 
         // then
         assertThat(affectedRows).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("회원을 탈퇴한다.")
+    void delete() {
+        // given
+        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "Password123!", "코린네", "01012345678");
+        given(customerDao.findById(1L)).willReturn(Optional.of(expected));
+        given(customerDao.deleteById(1L)).willReturn(1);
+
+        // when
+        final int affectedRows = customerService.delete(1L, new DeleteCustomerRequest("Password123!"));
+        // then
+        assertThat(affectedRows).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("회원을 탈퇴할 때 비밀번호가 일치하지 않으면 예외를 발생한다.")
+    void throwWhenPasswordNotMatch() {
+        // given
+        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "Password123!", "코린네", "01012345678");
+        given(customerDao.findById(1L)).willReturn(Optional.of(expected));
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> customerService.delete(1L, new DeleteCustomerRequest("Paassword123!")))
+                .isInstanceOf(WrongPasswordException.class)
+                .hasMessage("비밀번호가 올바르지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("회원을 탈퇴할 때 회원이 존재하지 않으면 예외를 발생한다.")
+    void throwWhenCustomerNotExist() {
+        // given
+        given(customerDao.findById(1L)).willReturn(Optional.empty());
+        // when
+
+        // then
+        assertThatThrownBy(() -> customerService.delete(1L, new DeleteCustomerRequest("Password123!")))
+                .isInstanceOf(CustomerNotFoundException.class)
+                .hasMessage("회원을 찾을 수 없습니다.");
     }
 }
