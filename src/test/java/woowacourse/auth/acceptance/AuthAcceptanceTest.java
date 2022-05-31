@@ -139,7 +139,6 @@ class AuthAcceptanceTest extends AcceptanceTest {
         );
         post("/api/members", memberCreateRequest);
         LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-
         LoginResponse loginResponse = post("/api/login", loginRequest).as(LoginResponse.class);
 
         ExtractableResponse<Response> response = postWithAuthorization(
@@ -147,7 +146,6 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 loginResponse.getToken(),
                 new PasswordCheckRequest(password)
         );
-
         boolean success = response.as(CheckResponse.class)
                 .isSuccess();
 
@@ -194,7 +192,6 @@ class AuthAcceptanceTest extends AcceptanceTest {
         );
         post("/api/members", memberCreateRequest);
         LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-
         String token = post("/api/login", loginRequest).as(LoginResponse.class)
                 .getToken();
 
@@ -216,11 +213,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         );
         post("/api/members", memberCreateRequest);
         LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-
         String token = post("/api/login", loginRequest).as(LoginResponse.class)
                 .getToken();
-
         MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("바뀐닉네임");
+
         ExtractableResponse<Response> response =
                 patchWithAuthorization("/api/members/auth/me", token, memberUpdateRequest);
         MemberResponse memberResponse = getWithAuthorization("/api/members/auth/me", token)
@@ -241,11 +237,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         );
         post("/api/members", memberCreateRequest);
         LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-
         String token = post("/api/login", loginRequest).as(LoginResponse.class)
                 .getToken();
-
         MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("잘못된닉네임");
+
         ExtractableResponse<Response> response =
                 patchWithAuthorization("/api/members/auth/me", token, memberUpdateRequest);
         String message = response.as(ErrorResponse.class)
@@ -265,11 +260,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         );
         post("/api/members", memberCreateRequest);
         LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-
         String token = post("/api/login", loginRequest).as(LoginResponse.class)
                 .getToken();
-
         PasswordUpdateRequest passwordUpdateRequest = new PasswordUpdateRequest("1q2w3e4r@");
+
         ExtractableResponse<Response> response =
                 patchWithAuthorization("/api/members/auth/password", token, passwordUpdateRequest);
         LoginRequest updatedLoginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r@");
@@ -289,11 +283,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         );
         post("/api/members", memberCreateRequest);
         LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-
         String token = post("/api/login", loginRequest).as(LoginResponse.class)
                 .getToken();
-
         PasswordUpdateRequest passwordUpdateRequest = new PasswordUpdateRequest("1q2w3e4r");
+
         ExtractableResponse<Response> response =
                 patchWithAuthorization("/api/members/auth/password", token, passwordUpdateRequest);
         String message = response.as(ErrorResponse.class)
@@ -313,7 +306,6 @@ class AuthAcceptanceTest extends AcceptanceTest {
         );
         post("/api/members", memberCreateRequest);
         LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-
         String token = post("/api/login", loginRequest).as(LoginResponse.class)
                 .getToken();
 
