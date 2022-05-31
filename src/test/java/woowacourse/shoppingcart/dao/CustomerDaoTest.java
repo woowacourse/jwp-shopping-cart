@@ -36,6 +36,18 @@ public class CustomerDaoTest {
         assertThat(customerId).isEqualTo(1L);
     }
 
+    @Test
+    @DisplayName("email과 password가 일치하는 customer의 id를 반환한다.")
+    void findIdByEmailAndPassword() {
+        Customer customer =
+                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Long customerId = customerDao.save(customer);
+
+        Long responseId = customerDao.findIdByEmailAndPassword("email", "Pw123456!").get();
+
+        assertThat(responseId).isEqualTo(customerId);
+    }
+
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {

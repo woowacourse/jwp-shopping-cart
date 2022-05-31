@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.Locale;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,5 +43,10 @@ public class CustomerDao {
     public boolean existEmail(final String email) {
         final String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);
+    }
+
+    public Optional<Long> findIdByEmailAndPassword(String email, String password) {
+        String query = "SELECT id FROM CUSTOMER WHERE email = ? AND password = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, Long.class, email, password));
     }
 }
