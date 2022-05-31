@@ -8,6 +8,8 @@ public class Customer {
             Pattern.compile("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
     private static final Pattern passwordPattern =
             Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,16}$");
+    private static final Pattern nicknamePattern =
+            Pattern.compile("^(?=.*[a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ])[a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{2,10}$");
 
     private final Long id;
     private final String username;
@@ -22,6 +24,7 @@ public class Customer {
                     final boolean withdrawal) {
         validateUsername(username);
         validatePassword(password);
+        validateNickname(nickname);
         this.id = id;
         this.username = username;
         this.password = password;
@@ -38,6 +41,12 @@ public class Customer {
     private void validatePassword(final String password) {
         if (!passwordPattern.matcher(password).matches()) {
             throw new InvalidInputException("올바르지 않은 포맷의 패스워드 입니다.");
+        }
+    }
+
+    private void validateNickname(final String nickname) {
+        if (!nicknamePattern.matcher(nickname).matches()) {
+            throw new InvalidInputException("올바르지 않은 포맷의 닉네임 입니다.");
         }
     }
 }

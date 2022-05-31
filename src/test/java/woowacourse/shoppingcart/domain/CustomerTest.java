@@ -26,4 +26,13 @@ class CustomerTest {
                 .isInstanceOf(InvalidInputException.class)
                 .hasMessage("올바르지 않은 포맷의 패스워드 입니다.");
     }
+
+    @DisplayName("올바르지 않은 포맷의 nickname 이다.")
+    @ParameterizedTest(name = "올바르지 않은 nickname - {0}")
+    @ValueSource(strings = {"1", "1234567890a", "abc_", "ab c", "가나다 라마"})
+    void invalidUserNickname(String input) {
+        assertThatThrownBy(() -> new Customer(1L, "jo@naver.com", "abcde123@", input, false))
+                .isInstanceOf(InvalidInputException.class)
+                .hasMessage("올바르지 않은 포맷의 닉네임 입니다.");
+    }
 }
