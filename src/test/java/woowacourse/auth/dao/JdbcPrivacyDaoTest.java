@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.auth.Fixtures.CUSTOMER_ENTITY_1;
 import static woowacourse.auth.Fixtures.PRIVACY_ENTITY_1;
 
+import java.time.LocalDate;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,6 @@ class JdbcPrivacyDaoTest {
 
         // then
         assertThat(privacyEntity).isNotNull();
-
     }
 
     @DisplayName("Customer id를 전달받아 해당하는 객체를 조회하여 PrivacyEntity를 반환한다.")
@@ -53,54 +53,24 @@ class JdbcPrivacyDaoTest {
                 .containsExactly(customerId, PRIVACY_ENTITY_1.getName(), PRIVACY_ENTITY_1.getGender(),
                         PRIVACY_ENTITY_1.getBirthDay(), PRIVACY_ENTITY_1.getContact());
     }
-//
-//    @DisplayName("Customer email을 전달받아 해당하는 Customer 객체를 조회한다.")
-//    @Test
-//    void findByEmail() {
-//        //given
-//        int userId = customerDao.save(CUSTOMER_ENTITY_1);
-//
-//        // when
-//        CustomerEntity actual = customerDao.findByEmail(CUSTOMER_ENTITY_1.getEmail());
-//
-//        // then
-//        assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
-//                .containsExactly(userId, CUSTOMER_ENTITY_1.getEmail(), CUSTOMER_ENTITY_1.getPassword(),
-//                        CUSTOMER_ENTITY_1.getProfileImageUrl(), CUSTOMER_ENTITY_1.isTerms());
-//    }
-//
-//    @DisplayName("CustomerEntity와 id를 전달받아 해당하는 Customer를 수정한다.")
-//    @Test
-//    void update() {
-//        // given
-//        int userId = customerDao.save(CUSTOMER_ENTITY_1);
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        String encryptedNewPassword = passwordEncoder.encode("newpassword1!");
-//        CustomerEntity newCustomerEntity = new CustomerEntity(userId, CUSTOMER_ENTITY_1.getEmail(),
-//                encryptedNewPassword,
-//                "http://gravatar.com/avatar/2?d=identicon", true);
-//
-//        // when
-//        customerDao.update(newCustomerEntity);
-//        CustomerEntity actual = customerDao.findById(userId);
-//
-//        // then
-//        assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
-//                .containsExactly(userId, newCustomerEntity.getEmail(), newCustomerEntity.getPassword(),
-//                        newCustomerEntity.getProfileImageUrl(), newCustomerEntity.isTerms());
-//    }
-//
-//    @DisplayName("id를 전달받아 해당하는 Customer를 삭제한다.")
-//    @Test
-//    void delete() {
-//        // given
-//        int userId = customerDao.save(CUSTOMER_ENTITY_1);
-//
-//        // when
-//        customerDao.delete(userId);
-//
-//        // then
-//        assertThatThrownBy(() -> customerDao.findById(userId))
-//                .isInstanceOf(EmptyResultDataAccessException.class);
-//    }
+
+    @DisplayName("PrivacyEntity와 Customer id를 전달받아 해당하는 Privacy를 수정한다.")
+    @Test
+    void update() {
+        // given
+        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        privacyDao.save(customerId, PRIVACY_ENTITY_1);
+
+        // when
+        PrivacyEntity newPrivacyEntity = new PrivacyEntity("새로운 이름", "female", LocalDate.of(1999, 12, 21),
+                "01033334444");
+        privacyDao.update(customerId, newPrivacyEntity);
+
+        PrivacyEntity updatedPrivacyEntity = privacyDao.findById(customerId);
+
+        // then
+        assertThat(updatedPrivacyEntity).extracting("customerId", "name", "gender", "birthDay", "contact")
+                .containsExactly(customerId, updatedPrivacyEntity.getName(), updatedPrivacyEntity.getGender(),
+                        updatedPrivacyEntity.getBirthDay(), updatedPrivacyEntity.getContact());
+    }
 }

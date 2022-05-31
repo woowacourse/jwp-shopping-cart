@@ -7,7 +7,7 @@ public interface PrivacyDao {
 
     PrivacyEntity findById(int id);
 
-    void update(PrivacyEntity privacyEntity);
+    void update(int customerId, PrivacyEntity privacyEntity);
 
     void delete(int id);
 }

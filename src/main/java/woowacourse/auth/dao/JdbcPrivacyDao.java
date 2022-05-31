@@ -35,7 +35,10 @@ public class JdbcPrivacyDao implements PrivacyDao {
     }
 
     @Override
-    public void update(PrivacyEntity privacyEntity) {
+    public void update(int customerId, PrivacyEntity privacyEntity) {
+        String sql = "UPDATE PRIVACY SET name = ?, gender = ?, birth_day = ?, contact = ? WHERE customer_id = ?";
+        jdbcTemplate.update(sql, privacyEntity.getName(), privacyEntity.getGender(), privacyEntity.getBirthDay(),
+                privacyEntity.getContact(), customerId);
 
     }
 
