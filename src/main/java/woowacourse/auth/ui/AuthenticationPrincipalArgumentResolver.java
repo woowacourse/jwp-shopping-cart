@@ -1,5 +1,6 @@
 package woowacourse.auth.ui;
 
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -7,6 +8,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.exception.UnauthorizedException;
 
 import java.util.Objects;
 
@@ -28,10 +30,13 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     @Override
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         final String auth = webRequest.getHeader("Authorization");
+        if (auth == null) {
+            throw new UnauthorizedException();
+        }
         final String token = Objects.requireNonNull(auth).substring(BEARER.length() + 1);
         final String payload = jwtTokenProvider.getPayload(token);
         if (payload == null) {
-            throw new IllegalArgumentException();
+            throw new MalformedJwtException("잘못된 형식의 토큰입니다.");
         }
 
         return Long.parseLong(payload);

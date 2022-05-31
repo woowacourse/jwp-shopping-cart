@@ -172,16 +172,33 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 정보 수정에 성공한다.")
     void updateCustomer() {
         // given
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
-
         final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
+
         // when
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
+
+    @Test
+    @DisplayName("회원 정보를 수정할 때 헤더에 토큰이 존재하지 않으면 상태코드 401을 반환한다.")
+    void tokenNotExistWhenUpdateCustomer() {
+        // given
+
+        // when
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
+        final ExtractableResponse<Response> response = put("/customers", updateCustomerRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(response.asString()).isEqualTo("로그인 후 사용이 가능합니다.")
+        );
+    }
+
 
     @DisplayName("회원탈퇴")
     @Test

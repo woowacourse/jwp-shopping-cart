@@ -27,7 +27,7 @@
 
 - [ ] 회원 정보 수정
     - [x] nickname, address, phoneNumber 을 받아 회원 정보를 수정한다.
-    - [ ] request header 에 token 이 포함되지 않으면 예외를 발생한다.
+    - [x] request header 에 token 이 포함되지 않으면 예외를 발생한다.
     - [ ] nickname 의 글자수가 2~10을 벗어나면 예외를 발생한다.
     - [ ] address 의 글자수가 255자를 초과하면 예외를 발생한다.
     - [ ] phoneNumber 의 양식이 일치하지 않으면 예외를 발생한다.
