@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("회원가입이 정상적으로 된 경우 상태코드 200을 반환한다.")
+    @DisplayName("회원가입이 정상적으로 된 경우 상태코드 204를 반환한다.")
     @Test
     void create_right_200() {
         // given
@@ -29,7 +29,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ValidatableResponse response = postUser(request);
 
         // then
-        response.statusCode(HttpStatus.OK.value());
+        response.statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("회원 정보 양식이 잘못 되었을 때, 상태코드 400을 반환한다.")
@@ -124,7 +124,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ValidatableResponse updatedResponse = getMe(accessToken);
 
         // then
-        response.statusCode(HttpStatus.OK.value());
+        response.statusCode(HttpStatus.NO_CONTENT.value());
 
         updatedResponse.body("nickname", equalTo(updatedNickname));
     }
@@ -154,7 +154,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ValidatableResponse loginResponse = postLogin(tokenRequest);
 
         // then
-        response.statusCode(HttpStatus.OK.value());
+        response.statusCode(HttpStatus.NO_CONTENT.value());
         loginResponse.statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("errorCode", equalTo("1002"))
                 .body("message", equalTo("로그인에 실패했습니다."));

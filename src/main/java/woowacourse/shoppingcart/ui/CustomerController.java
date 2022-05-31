@@ -30,7 +30,7 @@ public class CustomerController {
     public ResponseEntity<Void> create(@RequestBody @Valid CustomerCreationRequest customerCreationRequest) {
         customerService.create(customerCreationRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/me")
@@ -45,13 +45,13 @@ public class CustomerController {
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal Customer customer) {
         customerService.delete(customer);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me")
     public ResponseEntity<Void> updateMe(@AuthenticationPrincipal Customer customer,
                                          @Valid @RequestBody CustomerUpdationRequest request) {
         customerService.update(customer, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
