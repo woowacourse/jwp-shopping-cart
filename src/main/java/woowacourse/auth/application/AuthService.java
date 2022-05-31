@@ -59,4 +59,10 @@ public class AuthService {
             throw new InvalidCustomerException();
         }
     }
+
+    public void update(Long customerId, CustomerRequest customerRequest) {
+        checkExistId(customerId);
+        Customer customer = customerRequest.createCustomer(customerId);
+        customerDao.update(customer);
+    }
 }

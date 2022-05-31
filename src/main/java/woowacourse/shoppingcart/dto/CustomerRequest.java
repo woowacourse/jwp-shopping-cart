@@ -39,6 +39,10 @@ public class CustomerRequest {
     }
 
     public Customer createCustomer() {
-        return new Customer(email, password, name, phone, address);
+        return createCustomer(null);
+    }
+
+    public Customer createCustomer(Long id) {
+        return new Customer(id, email, password, name, phone, address);
     }
 }

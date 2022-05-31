@@ -100,8 +100,34 @@ class AuthServiceTest {
 
     @DisplayName("존재하지 않는 id를 이용하여 회원 정보를 조회하면 예외가 발생한다.")
     @Test
-    void checkExistIdException() {
+    void checkExistIdExceptionWhenFind() {
         assertThatThrownBy(() -> authService.findById(1L))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessageContaining("존재하지 않는 유저입니다.");
+    }
+
+    @DisplayName("회원 정보를 수정한다.")
+    @Test
+    void update() {
+        CustomerRequest customer =
+                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
+        authService.save(customer);
+
+        CustomerRequest customerRequest =
+                new CustomerRequest("email", "Pw123456~~", "eve", "010-1111-2222", "address2");
+        authService.update(1L, customerRequest);
+
+        CustomerResponse customerResponse = authService.findById(1L);
+        assertThat(customerResponse).extracting("email", "name", "phone", "address")
+                .containsExactly("email", "eve", "010-1111-2222", "address2");
+    }
+
+    @DisplayName("존재하지 않는 id를 이용하여 회원 정보를 수정하면 예외가 발생한다.")
+    @Test
+    void checkExistIdExceptionWhenUpdate() {
+        CustomerRequest customerRequest =
+                new CustomerRequest("email", "Pw123456~~", "eve", "010-1111-2222", "address2");
+        assertThatThrownBy(() -> authService.update(1L, customerRequest))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("존재하지 않는 유저입니다.");
     }
