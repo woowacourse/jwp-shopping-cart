@@ -98,4 +98,40 @@ class CustomerServiceTest {
                 .containsExactly(CUSTOMER_REQUEST_2.getProfileImageUrl(), CUSTOMER_REQUEST_2.getName(),
                         CUSTOMER_REQUEST_2.getGender(), CUSTOMER_REQUEST_2.getContact());
     }
+
+    @DisplayName("존재하지 않는 유저를 수정하면 예외가 발생한다.")
+    @Test
+    void updateCustomer_throwsException() {
+        // given
+        int id = customerService.create(CUSTOMER_REQUEST_1);
+
+        // then
+        assertThatThrownBy(() -> customerService.updateCustomerById(id + 1, CUSTOMER_REQUEST_2))
+                .isInstanceOf(CustomerNotFoundException.class);
+    }
+
+    @DisplayName("Customer Id를 통해 해당 유저를 삭제할 수 있다.")
+    @Test
+    void deleteCustomer() {
+        // given
+        int id = customerService.create(CUSTOMER_REQUEST_1);
+
+        // when
+        customerService.deleteCustomer(id);
+
+        // then
+        assertThatThrownBy(() -> customerService.getCustomerById(id))
+                .isInstanceOf(CustomerNotFoundException.class);
+    }
+
+    @DisplayName("존재하지 않는 유저를 삭제하면 예외가 발생한다.")
+    @Test
+    void deleteCustomer_throwsException() {
+        // given
+        int id = customerService.create(CUSTOMER_REQUEST_1);
+
+        // then
+        assertThatThrownBy(() -> customerService.deleteCustomer(id + 1))
+                .isInstanceOf(CustomerNotFoundException.class);
+    }
 }

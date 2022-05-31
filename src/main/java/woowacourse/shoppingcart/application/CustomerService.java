@@ -56,8 +56,39 @@ public class CustomerService {
         }
     }
 
+    public void updateCustomerById(int customerId, CustomerRequest customerRequest) {
+        validateExists(customerId);
+
+        Customer customer = convertRequestToCustomer(customerRequest);
+        CustomerEntity customerEntity = convertCustomerToEntity(customer);
+        PrivacyEntity privacyEntity = convertPrivacyToEntity(customer.getPrivacy());
+        AddressEntity addressEntity = convertAddressToEntity(customer.getFullAddress());
+
+        customerDao.update(customerId, customerEntity);
+        privacyDao.update(customerId, privacyEntity);
+        addressDao.update(customerId, addressEntity);
+    }
+
+    public void deleteCustomer(int customerId) {
+        validateExists(customerId);
+
+        addressDao.delete(customerId);
+        privacyDao.delete(customerId);
+        customerDao.delete(customerId);
+    }
+
     public EmailDuplicationResponse isDuplicatedEmail(String email) {
         return new EmailDuplicationResponse(customerDao.hasEmail(email));
+    }
+
+    private void validateExists(int customerId) {
+        try {
+            customerDao.findById(customerId);
+            privacyDao.findById(customerId);
+            addressDao.findById(customerId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CustomerNotFoundException();
+        }
     }
 
     private Customer convertRequestToCustomer(CustomerRequest customerRequest) {
@@ -94,16 +125,5 @@ public class CustomerService {
                 privacyEntity.getName(), privacyEntity.getGender(),
                 privacyEntity.getBirthDay().format(DateTimeFormatter.ISO_DATE), privacyEntity.getContact(),
                 addressResponse, customerEntity.isTerms());
-    }
-
-    public void updateCustomerById(int customerId, CustomerRequest customerRequest) {
-        Customer customer = convertRequestToCustomer(customerRequest);
-        CustomerEntity customerEntity = convertCustomerToEntity(customer);
-        PrivacyEntity privacyEntity = convertPrivacyToEntity(customer.getPrivacy());
-        AddressEntity addressEntity = convertAddressToEntity(customer.getFullAddress());
-
-        customerDao.update(customerId, customerEntity);
-        privacyDao.update(customerId, privacyEntity);
-        addressDao.update(customerId, addressEntity);
     }
 }
