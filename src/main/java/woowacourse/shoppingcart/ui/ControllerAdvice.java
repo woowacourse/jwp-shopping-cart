@@ -4,17 +4,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import woowacourse.auth.application.AuthorizationException;
+import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException(Exception e) {
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException e) {
         e.printStackTrace();
-        return ResponseEntity.badRequest().body("Unhandled Exception");
+        return ResponseEntity.badRequest().body(new ErrorResponse("예상치 못한 문제가 발생했습니다."));
     }
-//
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(toErrorResponse(e));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(AuthorizationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(toErrorResponse(e));
+    }
+
 //    @ExceptionHandler(EmptyResultDataAccessException.class)
 //    public ResponseEntity handle() {
 //        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
@@ -46,9 +58,7 @@ public class ControllerAdvice {
 //    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
 //        return ResponseEntity.badRequest().body(e.getMessage());
 //    }
-
-    @ExceptionHandler
-    public ResponseEntity<String> handle(NotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    private ErrorResponse toErrorResponse(Exception e) {
+        return new ErrorResponse(e.getMessage());
     }
 }
