@@ -65,4 +65,8 @@ public class Member {
             throw new InvalidMemberNameException("이름에 공백이 포함될 수 없습니다.");
         }
     }
+
+    public boolean isSamePassword(String comparison) {
+        return password.isSameAs(comparison);
+    }
 }

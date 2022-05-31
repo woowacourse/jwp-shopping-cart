@@ -44,8 +44,7 @@ public class PasswordTest {
     @Test
     void isSameAs(){
         Password password  = Password.withEncrypt("Wooteco123!");
-        String expected = PasswordEncoder.encrypt("Wooteco123!");
-        boolean result = password.isSameAs(expected);
+        boolean result = password.isSameAs("Wooteco123!");
         assertThat(result).isTrue();
     }
 

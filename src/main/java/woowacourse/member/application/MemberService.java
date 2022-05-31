@@ -5,10 +5,9 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
-import woowacourse.member.domain.Password;
 import woowacourse.member.dto.SignUpRequest;
-import woowacourse.member.exception.InvalidMemberEmailException;
 import woowacourse.member.exception.EmailNotFoundException;
+import woowacourse.member.exception.InvalidMemberEmailException;
 import woowacourse.member.exception.WrongPasswordException;
 
 import java.util.Optional;
@@ -43,8 +42,7 @@ public class MemberService {
             throw new EmailNotFoundException("존재하지 않는 이메일입니다.");
         }
 
-        Password password = Password.withEncrypt(request.getPassword());
-        if (!password.isSameAs(member.get().getPassword())) {
+        if(!member.get().isSamePassword(request.getPassword())) {
             throw new WrongPasswordException("잘못된 비밀번호입니다.");
         }
     }
