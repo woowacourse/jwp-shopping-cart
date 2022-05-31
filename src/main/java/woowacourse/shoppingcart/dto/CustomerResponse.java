@@ -3,24 +3,24 @@ package woowacourse.shoppingcart.dto;
 public class CustomerResponse {
 
     private String loginId;
-    private String name;
+    private String username;
 
     public CustomerResponse() {}
 
-    public CustomerResponse(String loginId, String name) {
+    public CustomerResponse(String loginId, String username) {
         this.loginId = loginId;
-        this.name = name;
+        this.username = username;
     }
 
     public static CustomerResponse of(LoginCustomer loginCustomer) {
-        return new CustomerResponse(loginCustomer.getLoginId(), loginCustomer.getName());
+        return new CustomerResponse(loginCustomer.getLoginId(), loginCustomer.getUsername());
     }
 
     public String getLoginId() {
         return loginId;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 }

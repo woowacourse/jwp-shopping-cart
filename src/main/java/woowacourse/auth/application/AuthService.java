@@ -26,7 +26,7 @@ public class AuthService {
 
         String token = jwtTokenProvider.createToken(tokenRequest.getLoginId());
         Customer customer = customerDao.findIdByLoginId(tokenRequest.getLoginId());
-        return new TokenResponse(token, customer.getName());
+        return new TokenResponse(token, customer.getUsername());
     }
 
     public LoginCustomer findCustomerByToken(String token) {

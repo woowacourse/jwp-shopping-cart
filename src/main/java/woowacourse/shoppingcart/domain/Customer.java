@@ -28,7 +28,7 @@ public class Customer {
         return loginId;
     }
 
-    public String getName() {
+    public String getUsername() {
         return username;
     }
 

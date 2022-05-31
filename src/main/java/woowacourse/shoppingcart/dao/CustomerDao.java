@@ -62,7 +62,7 @@ public class CustomerDao {
     public Customer save(Customer customer) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
         Long id = insertActor.executeAndReturnKey(parameterSource).longValue();
-        return new Customer(id, customer.getLoginId(), customer.getName(), customer.getPassword());
+        return new Customer(id, customer.getLoginId(), customer.getUsername(), customer.getPassword());
     }
 
     public boolean checkValidLogin(String loginId, String password) {

@@ -24,6 +24,6 @@ public class CustomerService {
     }
 
     private CustomerResponse toCustomerResponse(Customer customer) {
-        return new CustomerResponse(customer.getLoginId(), customer.getName());
+        return new CustomerResponse(customer.getLoginId(), customer.getUsername());
     }
 }
