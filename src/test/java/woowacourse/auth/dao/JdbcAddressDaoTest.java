@@ -51,4 +51,24 @@ class JdbcAddressDaoTest {
         assertThat(actual).extracting("customerId", "address", "detailAddress", "zoneCode")
                 .containsExactly(customerId, actual.getAddress(), actual.getDetailAddress(), actual.getZoneCode());
     }
+
+
+    @DisplayName("AddressEntity와 Customer id를 전달받아 해당하는 Address를 수정한다.")
+    @Test
+    void update() {
+        // given
+        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        addressDao.save(customerId, ADDRESS_ENTITY_1);
+
+        // when
+        AddressEntity newAddressEntity = new AddressEntity("경기도 양주시", "옥정동 배카라하우스", "12312");
+        addressDao.update(customerId, newAddressEntity);
+
+        AddressEntity updatedAddressEntity = addressDao.findById(customerId);
+
+        // then
+        assertThat(updatedAddressEntity).extracting("customerId", "address", "detailAddress", "zoneCode")
+                .containsExactly(customerId, newAddressEntity.getAddress(), newAddressEntity.getDetailAddress(),
+                        newAddressEntity.getZoneCode());
+    }
 }

@@ -35,7 +35,9 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public void update(int customerId, AddressEntity addressEntity) {
-
+        String sql = "UPDATE FULL_ADDRESS SET address = ?, detail_address = ?, zone_code = ? WHERE customer_id = ?";
+        jdbcTemplate.update(sql, addressEntity.getAddress(), addressEntity.getDetailAddress(),
+                addressEntity.getZoneCode(), customerId);
     }
 
     @Override
