@@ -39,7 +39,6 @@ public class Customer {
         validatePhoneNumber(phoneNumber);
     }
 
-
     private void validateUsername(String username) {
         Matcher matcher = USERNAME_PATTERN.matcher(username);
         if (!matcher.matches()) {
@@ -68,8 +67,10 @@ public class Customer {
     }
 
     public void modify(String address, String phoneNumber) {
-        this.address = address;
-        this.phoneNumber = phoneNumber;
+        this.address = Objects.requireNonNull(address, "address는 필수 입력 사항압니다.");
+        this.phoneNumber = Objects.requireNonNull(phoneNumber, "phoneNumber는 필수 입력 사항압니다.");
+        validateAddress(address);
+        validatePhoneNumber(phoneNumber);
     }
 
     public Long getId() {
