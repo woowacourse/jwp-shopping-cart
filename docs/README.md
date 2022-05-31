@@ -73,7 +73,7 @@
     - [x] 회원 정보 삭제
 
 - 05/31
-    - [ ] jjwt 버전 변경
+    - [x] jjwt 버전 변경
     - [x] token validate 추가
     - [ ] 도메인 검증 추가
         - username
