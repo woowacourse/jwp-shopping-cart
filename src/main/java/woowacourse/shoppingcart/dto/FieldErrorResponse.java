@@ -1,11 +1,14 @@
 package woowacourse.shoppingcart.dto;
 
-public class ErrorResponseWithField {
+public class FieldErrorResponse {
 
-    private final String field;
-    private final String message;
+    private String field;
+    private String message;
 
-    public ErrorResponseWithField(String field, String message) {
+    private FieldErrorResponse() {
+    }
+
+    public FieldErrorResponse(String field, String message) {
         this.field = field;
         this.message = message;
     }

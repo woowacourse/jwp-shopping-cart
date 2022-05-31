@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.dto.ErrorResponseWithField;
+import woowacourse.shoppingcart.dto.FieldErrorResponse;
 import woowacourse.shoppingcart.exception.DuplicateDomainException;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
@@ -42,17 +42,17 @@ public class ControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponseWithField handleInvalidRequest(final BindingResult bindingResult) {
+    public FieldErrorResponse handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
-        return new ErrorResponseWithField(mainError.getField(), mainError.getDefaultMessage());
+        return new FieldErrorResponse(mainError.getField(), mainError.getDefaultMessage());
     }
 
     @ExceptionHandler({DuplicateEmailException.class, DuplicateUsernameException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponseWithField handleDuplicatedRequest(DuplicateDomainException exception) {
-        return new ErrorResponseWithField(exception.getField(), exception.getMessage());
+    public FieldErrorResponse handleDuplicatedRequest(DuplicateDomainException exception) {
+        return new FieldErrorResponse(exception.getField(), exception.getMessage());
     }
 
     @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
