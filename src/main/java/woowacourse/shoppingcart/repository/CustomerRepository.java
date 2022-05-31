@@ -25,12 +25,20 @@ public class CustomerRepository {
         return customerDao.save(toEntity(customer));
     }
 
-    public void update(Customer customer) {
-        customerDao.update(toEntity(customer));
+    public void update(Long id, Customer customer) {
+        customerDao.update(toEntity(id, customer));
     }
 
-    public void delete(Customer customer) {
-        customerDao.delete(toEntity(customer));
+    public void delete(Long id, Customer customer) {
+        customerDao.delete(toEntity(id, customer));
+    }
+
+    private CustomerEntity toEntity(Long id, Customer customer) {
+        return new CustomerEntity(id,
+                customer.getUsername(),
+                customer.getPassword(),
+                customer.getNickname(),
+                customer.getAge());
     }
 
     private CustomerEntity toEntity(Customer customer) {

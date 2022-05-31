@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.GetMeResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -17,6 +18,7 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
+    @Transactional
     public Long signUp(SignUpRequest request) {
         Customer customer = new Customer(request.getUsername(),
                 request.getPassword(), request.getNickname(), request.getAge());
@@ -27,15 +29,17 @@ public class CustomerService {
         return new GetMeResponse(customerRepository.find(id));
     }
 
+    @Transactional
     public void updateMe(Long id, UpdateMeRequest request) {
         Customer customer = customerRepository.find(id);
         Customer updatedCustomer = new Customer(request.getUsername(),
                 customer.getPassword(),
                 request.getNickname(),
                 request.getAge());
-        customerRepository.update(updatedCustomer);
+        customerRepository.update(id, updatedCustomer);
     }
 
+    @Transactional
     public void updatePassword(Long id, UpdatePasswordRequest request) {
         Customer customer = customerRepository.find(id);
         if (!customer.hasSamePassword(request.getOldPassword())) {
@@ -45,11 +49,12 @@ public class CustomerService {
                 request.getNewPassword(),
                 customer.getNickname(),
                 customer.getAge());
-        customerRepository.update(updatedCustomer);
+        customerRepository.update(id, updatedCustomer);
     }
 
+    @Transactional
     public void deleteMe(Long id) {
         Customer customer = customerRepository.find(id);
-        customerRepository.update(customer);
+        customerRepository.delete(id, customer);
     }
 }

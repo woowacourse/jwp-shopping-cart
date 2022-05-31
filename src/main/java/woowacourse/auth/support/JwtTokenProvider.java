@@ -41,7 +41,7 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token).getBody();
         } catch (DecodingException e) {
-            throw new ForbiddenException("유효하지 않은 토큰입니다.");
+            throw new ForbiddenException("권한이 없습니다.");
         }
         validateExpiration(claims);
         return claims.getSubject();
@@ -49,7 +49,7 @@ public class JwtTokenProvider {
 
     private void validateExpiration(Claims claims) {
         if (claims.getExpiration().before(new Date())) {
-            throw new AuthorizationException("인증기간이 만료되었습니다.");
+            throw new AuthorizationException("다시 로그인해주세요.");
         }
     }
 
