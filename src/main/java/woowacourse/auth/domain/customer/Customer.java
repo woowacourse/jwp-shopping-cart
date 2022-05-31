@@ -1,6 +1,8 @@
 package woowacourse.auth.domain.customer;
 
 import java.util.Objects;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import woowacourse.auth.domain.customer.address.FullAddress;
 import woowacourse.auth.domain.customer.privacy.Privacy;
 import woowacourse.auth.exception.DisagreeToTermsException;
 
@@ -10,13 +12,11 @@ public class Customer {
     private final Password password;
     private final ProfileImageUrl profileImageUrl;
     private final Privacy privacy;
+    private final FullAddress fullAddress;
     private final boolean terms;
 
-    public Customer(Email email, Password password, ProfileImageUrl profileImageUrl, Privacy privacy, boolean terms) {
-        this(Id.empty(), email, password, profileImageUrl, privacy, terms);
-    }
-
     public Customer(Id id, Email email, Password password, ProfileImageUrl profileImageUrl, Privacy privacy,
+                    FullAddress fullAddress,
                     boolean terms) {
         validateTerms(terms);
         this.id = id;
@@ -24,7 +24,20 @@ public class Customer {
         this.password = password;
         this.profileImageUrl = profileImageUrl;
         this.privacy = privacy;
+        this.fullAddress = fullAddress;
         this.terms = terms;
+    }
+
+    public Customer(Email email, Password password, ProfileImageUrl profileImageUrl, Privacy privacy,
+                    FullAddress fullAddress, boolean terms) {
+        this(Id.empty(), email, password, profileImageUrl, privacy, fullAddress, terms);
+    }
+
+    public static Customer of(String email, String password, String profileImageUrl, Privacy privacy,
+                              FullAddress fullAddress, boolean terms) {
+        return new Customer(new Email(email), Password.fromPlainText(password, new BCryptPasswordEncoder()),
+                new ProfileImageUrl(profileImageUrl),
+                privacy, fullAddress, terms);
     }
 
     private static void validateTerms(boolean terms) {
@@ -53,6 +66,10 @@ public class Customer {
         return privacy;
     }
 
+    public FullAddress getFullAddress() {
+        return fullAddress;
+    }
+
     public boolean isTerms() {
         return terms;
     }
@@ -66,14 +83,15 @@ public class Customer {
             return false;
         }
         Customer customer = (Customer) o;
-        return terms == customer.terms && Objects.equals(id, customer.id) && Objects.equals(email, customer.email)
-                && Objects.equals(password, customer.password) && Objects.equals(profileImageUrl,
-                customer.profileImageUrl) && Objects.equals(privacy, customer.privacy);
+        return terms == customer.terms && Objects.equals(id, customer.id) && Objects.equals(email,
+                customer.email) && Objects.equals(password, customer.password) && Objects.equals(
+                profileImageUrl, customer.profileImageUrl) && Objects.equals(privacy, customer.privacy)
+                && Objects.equals(fullAddress, customer.fullAddress);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, profileImageUrl, privacy, terms);
+        return Objects.hash(id, email, password, profileImageUrl, privacy, fullAddress, terms);
     }
 
     @Override
@@ -84,6 +102,7 @@ public class Customer {
                 ", password=" + password +
                 ", profileImageUrl=" + profileImageUrl +
                 ", privacy=" + privacy +
+                ", fullAddress=" + fullAddress +
                 ", terms=" + terms +
                 '}';
     }

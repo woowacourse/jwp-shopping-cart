@@ -12,6 +12,10 @@ public class ZoneCode {
         this.value = value;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     private void validateFormat(String value) {
         if (Objects.isNull(value) || !value.matches(ZONE_CODE_REGEX)) {
             throw new InvalidZoneCodeFormatException();

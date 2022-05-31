@@ -14,12 +14,9 @@ class PrivacyTest {
         String gender = "male";
         String birthDay = "1998-12-21";
         String contact = "01011111111";
-        String address = "서울특별시 강남구 선릉역";
-        String detailAddress = "이디야 1층";
-        String zoneCode = "12345";
 
         // when
-        Privacy actual = Privacy.of(name, gender, birthDay, contact, address, detailAddress, zoneCode);
+        Privacy actual = Privacy.of(name, gender, birthDay, contact);
 
         // then
         assertThat(actual).isNotNull();

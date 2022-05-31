@@ -20,6 +20,10 @@ public class BirthDay {
         return new BirthDay(LocalDate.parse(value, DateTimeFormatter.ISO_DATE));
     }
 
+    public LocalDate getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

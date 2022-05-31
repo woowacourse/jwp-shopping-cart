@@ -17,6 +17,18 @@ public class FullAddress {
         return new FullAddress(new Address(address), DetailAddress.from(detailAddress), new ZoneCode(zoneCode));
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public DetailAddress getDetailAddress() {
+        return detailAddress;
+    }
+
+    public ZoneCode getZoneCode() {
+        return zoneCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

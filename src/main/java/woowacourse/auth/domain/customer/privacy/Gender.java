@@ -21,4 +21,8 @@ public enum Gender {
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("입력된 값에 해당하는 성별이 존재하지 않습니다."));
     }
+
+    public String getValue() {
+        return value;
+    }
 }

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import woowacourse.auth.domain.customer.address.FullAddress;
 import woowacourse.auth.domain.customer.privacy.Privacy;
 import woowacourse.auth.exception.DisagreeToTermsException;
 
@@ -20,11 +21,12 @@ class CustomerTest {
         Email email = new Email("devhudi@gmail.com");
         Password password = Password.fromPlainText("a!123456", passwordEncoder);
         ProfileImageUrl profileImageUrl = new ProfileImageUrl("http://gravatar.com/avatar/1?d=identicon");
-        Privacy privacy = Privacy.of("조동현", "male", "1998-12-21", "01011111111", "서울특별시 강남구 선릉역", "이디야 1층", "12345");
+        Privacy privacy = Privacy.of("조동현", "male", "1998-12-21", "01011111111");
+        FullAddress address = FullAddress.of("서울특별시 강남구 선릉역", "이디야 1층", "12345");
         boolean terms = true;
 
         // when
-        Customer actual = new Customer(email, password, profileImageUrl, privacy, terms);
+        Customer actual = new Customer(email, password, profileImageUrl, privacy, address, terms);
 
         // then
         assertThat(actual).isNotNull();
@@ -37,11 +39,12 @@ class CustomerTest {
         Email email = new Email("devhudi@gmail.com");
         Password password = Password.fromPlainText("a!123456", passwordEncoder);
         ProfileImageUrl profileImageUrl = new ProfileImageUrl("http://gravatar.com/avatar/1?d=identicon");
-        Privacy privacy = Privacy.of("조동현", "male", "1998-12-21", "01011111111", "서울특별시 강남구 선릉역", "이디야 1층", "12345");
+        Privacy privacy = Privacy.of("조동현", "male", "1998-12-21", "01011111111");
+        FullAddress address = FullAddress.of("서울특별시 강남구 선릉역", "이디야 1층", "12345");
         boolean terms = false;
 
         // when & then
-        assertThatThrownBy(() -> new Customer(email, password, profileImageUrl, privacy, terms))
+        assertThatThrownBy(() -> new Customer(email, password, profileImageUrl, privacy, address, terms))
                 .isInstanceOf(DisagreeToTermsException.class);
     }
 }
