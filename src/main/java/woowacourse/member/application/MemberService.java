@@ -31,30 +31,17 @@ public class MemberService {
         memberDao.save(member);
     }
 
-    public Long findIdByEmail(LoginRequest request) {
-        Optional<Member> member = memberDao.findMemberByEmail(request.getEmail());
-        authenticate(member, request);
-        return member.orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다.")).getId();
-    }
-
-    private void authenticate(Optional<Member> member, LoginRequest request) {
-        if (member.isEmpty()) {
-            throw new EmailNotFoundException("존재하지 않는 이메일입니다.");
-        }
-
-        if (!member.get().isSamePassword(request.getPassword())) {
+    public Long authenticate(LoginRequest request) {
+        Member member = validateExistMember(memberDao.findMemberByEmail(request.getEmail()));
+        if (!member.isSamePassword(request.getPassword())) {
             throw new WrongPasswordException("잘못된 비밀번호입니다.");
         }
+        return member.getId();
     }
 
     public MemberInfoResponse findMemberById(long id) {
-        Optional<Member> member = memberDao.findMemberById(id);
-
-        if (member.isEmpty()) {
-            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
-        }
-
-        return new MemberInfoResponse(member.get());
+        Member member = validateExistMember(memberDao.findMemberById(id));
+        return new MemberInfoResponse(member);
     }
 
     public void deleteMemberById(long id) {
@@ -68,5 +55,9 @@ public class MemberService {
         if (memberDao.existMemberByEmail(request.getEmail())) {
             throw new DuplicateEmailException("이메일은 중복될 수 없습니다.");
         }
+    }
+
+    private Member validateExistMember(Optional<Member> member) {
+        return member.orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
     }
 }
