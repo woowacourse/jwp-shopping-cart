@@ -34,7 +34,7 @@ public class AuthService {
     }
 
     public Long extractIdFromToken(final String token) {
-        if (jwtTokenProvider.validateToken(token)) {
+        if (!jwtTokenProvider.validateToken(token)) {
             throw new InvalidTokenException();
         }
         return Long.parseLong(jwtTokenProvider.getPayload(token));
