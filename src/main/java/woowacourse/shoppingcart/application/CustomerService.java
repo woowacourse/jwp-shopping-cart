@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -42,5 +43,12 @@ public class CustomerService {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         customer.changePassword(changePasswordRequest.getPrevPassword(), changePasswordRequest.getNewPassword());
         customerDao.updatePassword(customer);
+    }
+
+    public void changeNickname(String email, ChangeCustomerRequest changeCustomerRequest) {
+        Customer customer = customerDao.findIdByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        customer.changeNickname(changeCustomerRequest.getNickname());
+        customerDao.updateNickname(customer);
     }
 }
