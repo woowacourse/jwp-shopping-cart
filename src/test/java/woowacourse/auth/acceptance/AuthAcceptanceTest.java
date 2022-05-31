@@ -2,6 +2,7 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.util.HttpRequestUtil.get;
+import static woowacourse.util.HttpRequestUtil.getWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.post;
 import static woowacourse.util.HttpRequestUtil.postWithAuthorization;
 
@@ -18,6 +19,7 @@ import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.response.CheckResponse;
 import woowacourse.auth.dto.response.ErrorResponse;
 import woowacourse.auth.dto.response.LoginResponse;
+import woowacourse.auth.dto.response.MemberResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
@@ -176,5 +178,27 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         assertThat(message).isEqualTo("유효하지 않은 토큰입니다.");
+    }
+
+    @DisplayName("토큰에 해당하는 사용자의 회원 정보와 200을 응답한다.")
+    @Test
+    void showMember() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+                "abc@woowahan.com",
+                "1q2w3e4r!",
+                "닉네임"
+        );
+        post("/api/members", memberCreateRequest);
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+
+        String token = post("/api/login", loginRequest).as(LoginResponse.class)
+                .getToken();
+
+        ExtractableResponse<Response> response = getWithAuthorization("/api/members/auth/me", token);
+        MemberResponse memberResponse = response.as(MemberResponse.class);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com");
+        assertThat(memberResponse.getNickname()).isEqualTo("닉네임");
     }
 }

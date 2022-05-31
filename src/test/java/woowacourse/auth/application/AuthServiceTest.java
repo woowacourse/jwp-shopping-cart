@@ -17,6 +17,8 @@ import woowacourse.auth.dto.request.NicknameUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.request.PasswordUpdateRequest;
 import woowacourse.auth.dto.response.LoginResponse;
+import woowacourse.auth.dto.response.MemberResponse;
+import woowacourse.auth.exception.AuthorizationException;
 
 @SpringBootTest
 @Transactional
@@ -85,6 +87,7 @@ class AuthServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+
     @DisplayName("이메일과 닉네임을 받아 닉네임을 수정한다.")
     @Test
     void updateNickname() {
@@ -130,6 +133,26 @@ class AuthServiceTest {
 
         assertThatCode(() -> authService.login(loginRequest))
                 .doesNotThrowAnyException();
+    }
+
+    @DisplayName("회원의 정보를 반환한다.")
+    @Test
+    void findMember() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        authService.save(memberCreateRequest);
+
+        MemberResponse memberResponse = authService.findMember("abc@woowahan.com");
+
+        assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com");
+        assertThat(memberResponse.getNickname()).isEqualTo("닉네임");
+    }
+
+    @DisplayName("존재하지 않는 회원의 정보를 요청하면 예외를 반환한다.")
+    @Test
+    void findMember_NotFoundMember() {
+        assertThatThrownBy(() -> authService.findMember("abc@woowahan.com"))
+                .isInstanceOf(AuthorizationException.class)
+                .hasMessage("유효하지 않은 토큰입니다.");
     }
 
     @DisplayName("존재하지 않는 회원의 비밀번호를 수정하려고 하면 예외를 반환한다.")

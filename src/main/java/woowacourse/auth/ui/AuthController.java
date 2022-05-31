@@ -14,6 +14,7 @@ import woowacourse.auth.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.response.CheckResponse;
 import woowacourse.auth.dto.response.LoginResponse;
+import woowacourse.auth.dto.response.MemberResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 
 @RestController
@@ -49,5 +50,10 @@ public class AuthController {
     public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal String payload,
                                                          @RequestBody PasswordCheckRequest passwordCheckRequest) {
         return ResponseEntity.ok(authService.checkPassword(payload, passwordCheckRequest));
+    }
+
+    @GetMapping("/members/auth/me")
+    public ResponseEntity<MemberResponse> showMember(@AuthenticationPrincipal String payload) {
+        return ResponseEntity.ok(authService.findMember(payload));
     }
 }
