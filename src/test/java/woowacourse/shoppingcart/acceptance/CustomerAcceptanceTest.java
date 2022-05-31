@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
 
@@ -43,7 +44,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/api/validation?email=hudi@gmail.com")
+                .post("/api/validation?email=" + CUSTOMER_REQUEST_1.getEmail())
                 .then().log().all()
                 .extract();
 
@@ -61,9 +62,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> customer = createCustomer();
         String customerUri = customer.header("Location");
+        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
                 .when().get(customerUri)
                 .then().log().all().extract();
 
@@ -86,9 +89,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> customer = createCustomer();
         String customerUri = customer.header("Location");
+        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(CUSTOMER_REQUEST_2)
                 .when().put(customerUri)
@@ -104,9 +109,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> customer = createCustomer();
         String customerUri = customer.header("Location");
+        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
                 .when().delete(customerUri)
                 .then().log().all().extract();
 
@@ -136,5 +143,25 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .post("/api/customers")
                 .then().log().all()
                 .extract();
+    }
+
+    private TokenResponse getTokenResponse(String email, String password) {
+        ExtractableResponse<Response> response = getSignInResponse(email, password);
+        return response.jsonPath().getObject(".", TokenResponse.class);
+    }
+
+    private ExtractableResponse<Response> getSignInResponse(String email, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .body(params)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/customer/authentication/sign-in")
+                .then().log().all()
+                .extract();
+        return response;
     }
 }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.LoginFailedException;
@@ -18,6 +19,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 
 // TODO: SpringBootTest 대신 적용할 수 있는 방법 공부하기
 @SpringBootTest
+@Transactional
 class AuthServiceTest {
     private final AuthService authService;
     private final CustomerService customerService;
