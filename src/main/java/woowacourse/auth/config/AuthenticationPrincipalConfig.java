@@ -27,7 +27,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        System.out.println("인터셉터 등록");
         registry.addInterceptor(loginInterceptor)
                 .order(1)
                 .addPathPatterns("/customers/me")

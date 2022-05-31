@@ -7,7 +7,7 @@ import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.domain.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -30,11 +30,11 @@ public class AuthService {
         return new TokenResponse(token);
     }
 
-    public CustomerResponse getCustomerByToken(String token) {
+    public LoginCustomer getCustomerByToken(String token) {
         if (!tokenProvider.validateToken(token)) {
             throw new AuthorizationException();
         }
         String payload = tokenProvider.getPayload(token);
-        return CustomerResponse.of(customerDao.findByLoginId(payload));
+        return LoginCustomer.of(customerDao.findByLoginId(payload));
     }
 }

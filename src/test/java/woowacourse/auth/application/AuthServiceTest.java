@@ -16,8 +16,8 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.LoginCustomer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
@@ -82,7 +82,7 @@ class AuthServiceTest {
         String token = jwtTokenProvider.createToken(페퍼_아이디);
 
         //when
-        CustomerResponse customer = authService.getCustomerByToken(token);
+        LoginCustomer customer = authService.getCustomerByToken(token);
 
         //then
         assertAll(
