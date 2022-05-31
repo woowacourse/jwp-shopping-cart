@@ -1,3 +1,5 @@
+DELETE
+FROM customer;
 insert into customer (name)
 values ('puterism'),
        ('tanney-102'),
