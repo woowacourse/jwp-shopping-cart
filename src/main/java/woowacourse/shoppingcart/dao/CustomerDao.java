@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,8 +60,10 @@ public class CustomerDao {
         return Optional.ofNullable(DataAccessUtils.singleResult(query));
     }
 
-    public Long findIdByUserName(String customerName) {
-        return null;
+    public Long getIdByAccount(String customerName) {
+        final Customer byAccount = findByAccount(customerName).orElseThrow(CustomerNotFoundException::new);
+
+        return byAccount.getId();
     }
 
     public Optional<Customer> findById(long customerId) {

@@ -23,7 +23,7 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
+    private static final String USER = "leo0842";
     private Long cartId1;
     private Long cartId2;
 
