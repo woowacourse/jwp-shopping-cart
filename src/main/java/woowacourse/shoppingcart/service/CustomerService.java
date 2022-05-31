@@ -1,15 +1,19 @@
 package woowacourse.shoppingcart.service;
 
+import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
+import woowacourse.shoppingcart.exception.AuthorizationFailException;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.PasswordMismatchException;
 
 @Service
 public class CustomerService {
@@ -51,8 +55,18 @@ public class CustomerService {
         }
     }
 
-    public void deleteCustomer(final Long id) {
+    public void deleteCustomer(final Long id, final DeleteCustomerDto deleteCustomerDto) {
+        final Customer customer = customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
+        checkPassword(deleteCustomerDto, customer);
+
         customerDao.deleteById(id);
+    }
+
+    private void checkPassword(final DeleteCustomerDto deleteCustomerDto, final Customer customer) {
+        if(!passwordEncoder.matches(deleteCustomerDto.getPassword(), customer.getPassword())){
+            throw new PasswordMismatchException();
+        }
     }
 
     public CustomerDto findCustomerByEmail(final String email) {

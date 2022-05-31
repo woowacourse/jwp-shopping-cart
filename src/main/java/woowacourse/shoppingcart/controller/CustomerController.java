@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.LoginCustomer;
 import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.exception.ForbiddenException;
@@ -45,11 +46,12 @@ public class CustomerController {
         return ResponseEntity.ok(customerDto);
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable final Long id,
+                                               @RequestBody final DeleteCustomerDto deleteCustomerDto,
                                                @AuthenticationPrincipal LoginCustomer loginCustomer) {
         checkAuthorization(id, loginCustomer.getEmail());
-        customerService.deleteCustomer(id);
+        customerService.deleteCustomer(id, deleteCustomerDto);
 
         return ResponseEntity.noContent().build();
     }
