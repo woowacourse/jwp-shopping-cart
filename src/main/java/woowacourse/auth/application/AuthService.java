@@ -23,11 +23,18 @@ public class AuthService {
 
     public Long extractIdFromRequest(HttpServletRequest request) {
         String token = AuthorizationExtractor.extract(request);
+        return Long.parseLong(jwtTokenProvider.getPayload(token));
+    }
 
-        if(token == null){
-            throw new InvalidTokenException("유효하지 않은 토큰입니다.");
+    public void validateToken(HttpServletRequest request) {
+        String token = AuthorizationExtractor.extract(request);
+
+        if (token == null) {
+            throw new InvalidTokenException("토큰이 없습니다.");
         }
 
-        return Long.parseLong(jwtTokenProvider.getPayload(token));
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new InvalidTokenException("유효하지 않은 토큰입니다.");
+        }
     }
 }
