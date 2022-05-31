@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.exception.DuplicateNameException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -18,6 +19,9 @@ public class CustomerService {
     }
 
     public void addCustomer(final CustomerRequest customerRequest) {
+        if (customerDao.existsByName(customerRequest.getName())) {
+            throw new DuplicateNameException();
+        }
         customerDao.save(customerRequest.getName(), customerRequest.getPassword());
     }
 

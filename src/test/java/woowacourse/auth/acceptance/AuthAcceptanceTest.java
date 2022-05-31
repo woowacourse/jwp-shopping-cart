@@ -73,7 +73,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all().extract();
 
         // then
-        assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
@@ -98,6 +98,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // then
-        assertThat(invalidTokenResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(invalidTokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }

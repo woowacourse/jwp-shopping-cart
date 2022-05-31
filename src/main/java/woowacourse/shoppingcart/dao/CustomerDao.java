@@ -70,4 +70,9 @@ public class CustomerDao {
         final String query = "SELECT EXISTS (SELECT id FROM customer where username = ? and password = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name, password));
     }
+
+    public boolean existsByName(String name) {
+        final String query = "SELECT EXISTS (SELECT id FROM customer where username = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name));
+    }
 }

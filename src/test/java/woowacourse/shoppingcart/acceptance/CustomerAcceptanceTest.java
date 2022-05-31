@@ -69,7 +69,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // then
-        assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // then
-        assertThat(editResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(editResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
@@ -155,7 +155,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // then
-        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     private String 로그인_후_토큰_획득(String name, String password) {
