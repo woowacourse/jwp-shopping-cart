@@ -4,8 +4,8 @@ public class Customer {
 
     private final Long id;
     private final String email;
-    private final String userName;
-    private final String password;
+    private String userName;
+    private String password;
 
     public Customer(final Long id, final String email, final String userName, final String password) {
         this.id = id;
@@ -16,6 +16,11 @@ public class Customer {
 
     public Customer(final String email, final String userName, final String password) {
         this(null, email, userName, password);
+    }
+
+    public void update(final String userName, final String password) {
+        this.userName = userName;
+        this.password = password;
     }
 
     public boolean equalsPassword(final String password) {
