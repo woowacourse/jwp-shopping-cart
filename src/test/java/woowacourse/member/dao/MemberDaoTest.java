@@ -62,6 +62,24 @@ class MemberDaoTest {
         assertThat(result).isEmpty();
     }
 
+    @DisplayName("id를 통해 회원을 찾아 회원 이름을 변경한다.")
+    @Test
+    void updateName() {
+        memberDao.updateName(1L, "메아리");
+
+        Optional<Member> result = memberDao.findMemberById(1L);
+        assertThat(result.get().getName()).isEqualTo("메아리");
+    }
+
+    @DisplayName("id를 통해 회원을 찾아 회원 비밀번호를 변경한다.")
+    @Test
+    void updatePassword() {
+        memberDao.updatePassword(1L, "NewPassword!");
+
+        Optional<Member> result = memberDao.findMemberById(1L);
+        assertThat(result.get().getPassword()).isEqualTo("NewPassword!");
+    }
+
     @DisplayName("id를 통해 멤버 정보를 삭제한다.")
     @Test
     void deleteById() {

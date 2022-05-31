@@ -78,4 +78,14 @@ public class MemberDao {
             throw new MemberNotFoundException("존재하지 않는 회원입니다.");
         }
     }
+
+    public void updateName(long id, String name) {
+        String SQL = "UPDATE member SET name = ? WHERE id = ?";
+        jdbcTemplate.update(SQL, name, id);
+    }
+
+    public void updatePassword(long id, String password) {
+        String SQL = "UPDATE member SET password = ? WHERE id = ?";
+        jdbcTemplate.update(SQL, password, id);
+    }
 }

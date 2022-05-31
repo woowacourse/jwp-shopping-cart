@@ -1,5 +1,6 @@
 package woowacourse.member.domain;
 
+import woowacourse.member.dto.UpdateNameRequest;
 import woowacourse.member.exception.InvalidMemberEmailException;
 import woowacourse.member.exception.InvalidMemberNameException;
 
@@ -68,5 +69,9 @@ public class Member {
 
     public boolean isSamePassword(String comparison) {
         return password.isSameAs(comparison);
+    }
+
+    public boolean isSameName(String comparison) {
+        return name.equals(comparison);
     }
 }

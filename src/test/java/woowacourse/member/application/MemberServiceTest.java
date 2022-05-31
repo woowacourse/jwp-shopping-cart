@@ -6,9 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.member.dto.DuplicateEmailRequest;
-import woowacourse.member.dto.MemberInfoResponse;
-import woowacourse.member.dto.SignUpRequest;
+import woowacourse.member.domain.PasswordEncoder;
+import woowacourse.member.dto.*;
 import woowacourse.member.exception.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +47,7 @@ class MemberServiceTest {
     @Test
     void verifyValidMember() {
         assertDoesNotThrow(
-                () -> memberService.findIdByEmail(new LoginRequest("ari@wooteco.com", "Wooteco1!"))
+                () -> memberService.authenticate(new LoginRequest("ari@wooteco.com", "Wooteco1!"))
         );
     }
 
@@ -56,16 +55,16 @@ class MemberServiceTest {
     @Test
     void verifyValidMemberWithNotExistEmail() {
         assertThatThrownBy(
-                () -> memberService.findIdByEmail(new LoginRequest("pobi@wooteco.com", "Wooteco!"))
-        ).isInstanceOf(EmailNotFoundException.class)
-                .hasMessageContaining("존재하지 않는 이메일입니다.");
+                () -> memberService.authenticate(new LoginRequest("pobi@wooteco.com", "Wooteco!"))
+        ).isInstanceOf(MemberNotFoundException.class)
+                .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
     @DisplayName("잘못된 비밀번호인 경우 예외가 발생한다.")
     @Test
     void verifyValidMemberWithWrongPassword() {
         assertThatThrownBy(
-                () -> memberService.findIdByEmail(new LoginRequest("ari@wooteco.com", "Javajigi!!"))
+                () -> memberService.authenticate(new LoginRequest("ari@wooteco.com", "Javajigi!!"))
         ).isInstanceOf(WrongPasswordException.class)
                 .hasMessageContaining("잘못된 비밀번호입니다.");
     }
@@ -90,7 +89,65 @@ class MemberServiceTest {
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
-    @DisplayName("올바른 id로 회원 정보를 삭제한다..")
+    @DisplayName("존재하지 않는 이메일인 경우 중복체크에서 문제가 발생하지 않는다.")
+    @Test
+    void checkDuplicateEmailWithNotDuplicateEmail() {
+        assertDoesNotThrow(
+                () -> memberService.checkDuplicateEmail(new DuplicateEmailRequest("pobi@wooteco.com"))
+        );
+    }
+
+    @DisplayName("이미 존재하는 이메일인 경우 중복체크시 예외가 발생한다.")
+    @Test
+    void checkDuplicateEmailWithDuplicateEmail() {
+        assertThatThrownBy(
+                () -> memberService.checkDuplicateEmail(new DuplicateEmailRequest("ari@wooteco.com"))
+        ).isInstanceOf(DuplicateEmailException.class)
+                .hasMessageContaining("이메일은 중복될 수 없습니다.");
+    }
+
+    @DisplayName("올바른 id로 회원 이름을 변경한다.")
+    @Test
+    void updateName() {
+        memberService.updateName(1L, new UpdateNameRequest("메아리"));
+        assertThat(memberService.findMemberById(1L).getName()).isEqualTo("메아리");
+    }
+
+    @DisplayName("현재이름과 같은 이름으로 변경시 예외가 발생한다.")
+    @Test
+    void updateNameWithSameName() {
+        assertThatThrownBy(
+                () -> memberService.updateName(1L, new UpdateNameRequest("아리"))
+        ).isInstanceOf(InvalidMemberNameException.class)
+                .hasMessageContaining("현재 이름과 같은 이름으로 변경할 수 없습니다.");
+    }
+
+    @DisplayName("올바른 id로 회원 비밀번호를 변경한다.")
+    @Test
+    void updatePassword() {
+        memberService.updatePassword(1L, new UpdatePasswordRequest("Wooteco1!","NewPassword1!"));
+        assertThat(memberService.authenticate(new LoginRequest("ari@wooteco.com", "NewPassword1!"))).isEqualTo(1L);
+    }
+
+    @DisplayName("현재 비밀번호와 일치하지 않을시 예외가 발생한다.")
+    @Test
+    void updatePasswordWithIncorrectPassword() {
+        assertThatThrownBy(
+                () -> memberService.updatePassword(1L, new UpdatePasswordRequest("wrongPassword", "NewPassword1"))
+        ).isInstanceOf(InvalidPasswordException.class)
+                .hasMessageContaining("현재 비밀번호와 일치하지 않습니다.");
+    }
+
+    @DisplayName("현재 비밀번호와 같은 비밀번호로 변경시 예외가 발생한다.")
+    @Test
+    void updatePasswordWithSamePassword() {
+        assertThatThrownBy(
+                () -> memberService.updatePassword(1L, new UpdatePasswordRequest("Wooteco1!", "Wooteco1!"))
+        ).isInstanceOf(InvalidPasswordException.class)
+                .hasMessageContaining("현재 비밀번호와 같은 비밀번호로 변경할 수 없습니다.");
+    }
+
+    @DisplayName("올바른 id로 회원 정보를 삭제한다.")
     @Test
     void deleteById() {
         memberService.deleteMemberById(1L);
@@ -108,22 +165,5 @@ class MemberServiceTest {
                 () -> memberService.deleteMemberById(100L)
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
-    }
-
-    @DisplayName("존재하지 않는 이메일인 경우 중복체크에서 문제가 발생하지 않는다.")
-    @Test
-    void checkDuplicateEmailWithNotDuplicateEmail() {
-        assertDoesNotThrow(
-                () -> memberService.checkDuplicateEmail(new DuplicateEmailRequest("pobi@wooteco.com"))
-        );
-    }
-
-    @DisplayName("이미 존재하는 이메일인 경우 중복체크시 예외가 발생한다.")
-    @Test
-    void checkDuplicateEmailWithDuplicateEmail() {
-        assertThatThrownBy(
-                () -> memberService.checkDuplicateEmail(new DuplicateEmailRequest("ari@wooteco.com"))
-        ).isInstanceOf(DuplicateEmailException.class)
-                .hasMessageContaining("이메일은 중복될 수 없습니다.");
     }
 }
