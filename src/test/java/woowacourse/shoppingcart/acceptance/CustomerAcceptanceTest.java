@@ -127,6 +127,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        //TODO : 예외 메시지 추가 확인
+        assertThat(response.body().asString()).isEqualTo("존재하지 않는 유저입니다.");
     }
 }

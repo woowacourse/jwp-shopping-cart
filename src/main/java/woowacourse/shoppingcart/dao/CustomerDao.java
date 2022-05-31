@@ -41,10 +41,10 @@ public class CustomerDao {
         return simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
     }
 
-    public Long findIdByName(final String userName) { // TODO : 기존 메서드 삭제 여부 결정
+    public Long findIdByName(final String name) {
         try {
             final String query = "SELECT id FROM CUSTOMER WHERE name = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            return jdbcTemplate.queryForObject(query, Long.class, name.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }

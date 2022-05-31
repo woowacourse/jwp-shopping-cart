@@ -67,6 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.body().asString()).isEqualTo("Email 또는 Password가 일치하지 않습니다.");
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
@@ -83,5 +84,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.body().asString()).isEqualTo("유효하지 않거나 만료된 토큰입니다.");
     }
 }
