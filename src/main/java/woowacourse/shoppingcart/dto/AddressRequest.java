@@ -6,7 +6,8 @@ public class AddressRequest {
     private String detailAddress;
     private String zoneCode;
 
-    public AddressRequest() {}
+    public AddressRequest() {
+    }
 
     public AddressRequest(String address, String detailAddress, String zoneCode) {
         this.address = address;

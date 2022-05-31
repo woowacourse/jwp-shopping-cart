@@ -12,7 +12,8 @@ public class CustomerRequest {
     private AddressRequest address;
     private boolean terms;
 
-    public CustomerRequest() {}
+    public CustomerRequest() {
+    }
 
     public CustomerRequest(String email, String password, String profileImageUrl, String name, String gender,
                            String birthDay, String contact, String address, String detailAddress, String zoneCode,

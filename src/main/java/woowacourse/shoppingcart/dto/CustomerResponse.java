@@ -10,7 +10,8 @@ public class CustomerResponse {
     private String contact;
     private AddressResponse fullAddress;
 
-    public CustomerResponse() {}
+    public CustomerResponse() {
+    }
 
     public CustomerResponse(String email, String profileImage, String name, String gender, String birthDay,
                             String phoneNumber, String address, String detailAddress, String zipCode) {

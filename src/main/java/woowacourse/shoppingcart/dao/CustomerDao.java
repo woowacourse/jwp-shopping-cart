@@ -1,11 +1,10 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Locale;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-
-import java.util.Locale;
 
 @Repository
 public class CustomerDao {

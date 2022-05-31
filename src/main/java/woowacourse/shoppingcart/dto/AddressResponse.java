@@ -6,7 +6,8 @@ public class AddressResponse {
     private String DetailAddress;
     private String zoneCode;
 
-    public AddressResponse(){}
+    public AddressResponse() {
+    }
 
     public AddressResponse(String address, String detailAddress, String zipCode) {
         this.address = address;
