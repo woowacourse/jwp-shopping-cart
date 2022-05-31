@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.EncryptedPassword;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -59,7 +59,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -81,7 +81,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -99,7 +99,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -117,7 +117,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -144,18 +144,19 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
         customerDao.save(customer);
 
         // when
-        customerDao.updatePassword("username", new Password("changedpassword123"));
+        customerDao.updatePassword("username",
+                new EncryptedPassword("47625ed74cab8fbc0a8348f3df1feb07f87601e34d62bd12eb0d51616566fab5"));
 
         // then
         assertThat(customerDao.findByUsername("username").getPassword())
-                .isEqualTo("changedpassword123");
+                .isEqualTo("47625ed74cab8fbc0a8348f3df1feb07f87601e34d62bd12eb0d51616566fab5");
     }
 
     @Test
@@ -164,7 +165,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
