@@ -2,19 +2,16 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.application.dto.request.LoginServiceRequest;
+import woowacourse.auth.application.dto.request.MemberCreateServiceRequest;
+import woowacourse.auth.application.dto.request.MemberUpdateServiceRequest;
+import woowacourse.auth.application.dto.response.LoginServiceResponse;
+import woowacourse.auth.application.dto.response.MemberServiceResponse;
 import woowacourse.auth.dao.MemberDao;
 import woowacourse.auth.domain.Email;
 import woowacourse.auth.domain.Member;
 import woowacourse.auth.domain.Nickname;
 import woowacourse.auth.domain.Password;
-import woowacourse.auth.dto.request.LoginRequest;
-import woowacourse.auth.dto.request.MemberCreateRequest;
-import woowacourse.auth.dto.request.MemberUpdateRequest;
-import woowacourse.auth.dto.request.PasswordCheckRequest;
-import woowacourse.auth.dto.request.PasswordUpdateRequest;
-import woowacourse.auth.dto.response.CheckResponse;
-import woowacourse.auth.dto.response.LoginResponse;
-import woowacourse.auth.dto.response.MemberResponse;
 import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.support.TokenManager;
 
@@ -30,16 +27,16 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public void save(MemberCreateRequest memberCreateRequest) {
-        validateUniqueEmail(memberCreateRequest);
-        Member member = new Member(memberCreateRequest.getEmail(), memberCreateRequest.getPassword(),
-                memberCreateRequest
+    public void save(MemberCreateServiceRequest memberCreateServiceRequest) {
+        validateUniqueEmail(memberCreateServiceRequest);
+        Member member = new Member(memberCreateServiceRequest.getEmail(), memberCreateServiceRequest.getPassword(),
+                memberCreateServiceRequest
                         .getNickname());
         memberDao.save(member);
     }
 
-    private void validateUniqueEmail(MemberCreateRequest memberCreateRequest) {
-        if (existsEmail(memberCreateRequest.getEmail())) {
+    private void validateUniqueEmail(MemberCreateServiceRequest memberCreateServiceRequest) {
+        if (existsEmail(memberCreateServiceRequest.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일 주소입니다.");
         }
     }
@@ -51,11 +48,11 @@ public class AuthService {
     }
 
     @Transactional
-    public LoginResponse login(LoginRequest loginRequest) {
-        Member member = findByEmail(loginRequest.getEmail(), new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
-        validatePassword(member.getPassword(), loginRequest.getPassword());
+    public LoginServiceResponse login(LoginServiceRequest loginServiceRequest) {
+        Member member = findByEmail(loginServiceRequest.getEmail(), new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
+        validatePassword(member.getPassword(), loginServiceRequest.getPassword());
         String token = tokenManager.createToken(member.getEmail());
-        return new LoginResponse(token, member.getNickname());
+        return new LoginServiceResponse(token, member.getNickname());
     }
 
     private Member findByEmail(String email, RuntimeException exception) {
@@ -70,24 +67,23 @@ public class AuthService {
     }
 
     @Transactional
-    public CheckResponse checkPassword(String email, PasswordCheckRequest passwordCheckRequest) {
+    public boolean checkPassword(String email, String password) {
         Member member = memberDao.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
-        boolean result = member.getPassword()
-                .equals(passwordCheckRequest.getPassword());
-        return new CheckResponse(result);
+        return member.getPassword()
+                .equals(password);
     }
 
     @Transactional
-    public MemberResponse findMember(String email) {
+    public MemberServiceResponse findMember(String email) {
         Member member = findByEmail(email, new AuthorizationException("유효하지 않은 토큰입니다."));
-        return new MemberResponse(member);
+        return new MemberServiceResponse(member);
     }
 
     @Transactional(readOnly = true)
-    public void updateMember(String email, MemberUpdateRequest memberUpdateRequest) {
+    public void updateMember(String email, MemberUpdateServiceRequest memberUpdateServiceRequest) {
         validateExists(email);
-        String nickname = new Nickname(memberUpdateRequest.getNickname())
+        String nickname = new Nickname(memberUpdateServiceRequest.getNickname())
                 .getValue();
         memberDao.updateNicknameByEmail(email, nickname);
     }
@@ -99,10 +95,9 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public void updatePassword(String email, PasswordUpdateRequest passwordUpdateRequest) {
+    public void updatePassword(String email, String newPassword) {
         validateExists(email);
-        String password = new Password(passwordUpdateRequest.getPassword())
-                .getValue();
+        String password = new Password(newPassword).getValue();
         memberDao.updatePasswordByEmail(email, password);
     }
 

@@ -1,4 +1,4 @@
-package woowacourse.auth.dto.request;
+package woowacourse.auth.ui.dto.request;
 
 import javax.validation.constraints.Pattern;
 

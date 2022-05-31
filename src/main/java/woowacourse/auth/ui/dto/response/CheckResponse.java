@@ -1,4 +1,4 @@
-package woowacourse.auth.dto.response;
+package woowacourse.auth.ui.dto.response;
 
 public class CheckResponse {
 
