@@ -2,15 +2,19 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.fixture.PasswordFixture.basicPassword;
+import static woowacourse.fixture.TokenFixture.BEARER;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.fixture.PasswordFixture;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -21,7 +25,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         // given
-        CustomerRequest request = new CustomerRequest("기론", PasswordFixture.basicPassword);
+        CustomerRequest request = new CustomerRequest("기론", basicPassword);
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -41,16 +45,24 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 조회하면 200 OK를 반환한다.")
+    @DisplayName("로그인 한 유저가 내 정보 조회하면 200 OK를 반환한다.")
     @Test
     void getMe() {
         // given
-        final long id = 1L;
-
+        final TokenRequest tokenRequest = new TokenRequest("puterism", basicPassword);
+        final TokenResponse tokenResponse = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .when().post("/api/login")
+                .then().log().all()
+                .extract()
+                .as(TokenResponse.class);
         // when
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
-                .when().get("/api/customers/" + id)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
+                .when().get("/api/customers/me")
                 .then().log().all()
                 .extract();
 
@@ -63,19 +75,27 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 수정하면 200 OK를 반환한다.")
+    @DisplayName("로그인 한 유저가 내 정보 수정하면 200 OK를 반환한다.")
     @Test
     void updateMe() {
         // given
-        final long id = 1L;
-        CustomerRequest request = new CustomerRequest("puterism", "321");
-
-        // when
-        ExtractableResponse<Response> extractableResponse = RestAssured
+        final TokenRequest tokenRequest = new TokenRequest("puterism", basicPassword);
+        final TokenResponse tokenResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .when().post("/api/login")
+                .then().log().all()
+                .extract()
+                .as(TokenResponse.class);
+        // when
+        CustomerRequest request = new CustomerRequest("puterism", "321");
+        ExtractableResponse<Response> extractableResponse = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put("/api/customers/" + id)
+                .when().put("/api/customers/me")
                 .then().log().all()
                 .extract();
 
@@ -88,22 +108,32 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("회원탈퇴를 하면 204 NO_CONTENT를 반환한다.")
+    @DisplayName("로그인 한 유저가 회원탈퇴를 하면 204 NO_CONTENT를 반환한다.")
     @Test
     void deleteMe() {
         // given
-        final long id = 1L;
+        final TokenRequest tokenRequest = new TokenRequest("puterism", basicPassword);
+        final TokenResponse tokenResponse = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .when().post("/api/login")
+                .then().log().all()
+                .extract()
+                .as(TokenResponse.class);
 
         // when
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
-                .when().delete("/api/customers/" + id)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
+                .when().delete("/api/customers/me")
                 .then().log().all()
                 .extract();
 
         ExtractableResponse<Response> findResponse = RestAssured
                 .given().log().all()
-                .when().get("/api/customers/" + id)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
+                .when().get("/api/customers/me")
                 .then().log().all()
                 .extract();
 

@@ -4,13 +4,14 @@ import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -31,22 +32,22 @@ public class CustomerController {
         return ResponseEntity.created(URI.create("/api/customers/" + id)).build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponse> getMe(@PathVariable Long id) {
-        CustomerResponse response = customerService.getMeById(id);
+    @GetMapping("/me")
+    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal Customer customer) {
+        CustomerResponse response = customerService.getMeById(customer.getId());
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponse> updateCustomer(@PathVariable Long id,
+    @PutMapping("/me")
+    public ResponseEntity<CustomerResponse> updateCustomer(@AuthenticationPrincipal Customer customer,
                                                            @RequestBody CustomerRequest customerRequest) {
-        CustomerResponse response = customerService.updateById(id, customerRequest);
+        CustomerResponse response = customerService.updateById(customer.getId(), customerRequest);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
-        customerService.deleteById(id);
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal Customer customer) {
+        customerService.deleteById(customer.getId());
         return ResponseEntity.noContent().build();
     }
 }
