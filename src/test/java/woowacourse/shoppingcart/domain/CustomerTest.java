@@ -43,6 +43,21 @@ class CustomerTest {
         );
     }
 
+    @DisplayName("username 형식이 맞지 않으면 예외를 던진다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"test", "testtesttesttesttesttest", "TESTTEST", "test.test"})
+    void create_error_usernameFormat(String username) {
+        assertThatThrownBy(() -> new Customer(username, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("username 형식에 맞으면 customer가 생성된다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"pup-paw", "pup_paw", "123456", "a1b2c3_-"})
+    void create_valid_username(String username) {
+        assertDoesNotThrow(() -> new Customer(username, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER));
+    }
+
     @DisplayName("이메일 형식이 맞지 않으면 예외를 던진다.")
     @ParameterizedTest
     @ValueSource(strings = {"@email.com", "test@", "testemail.com", "test@email", "email"})
