@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class Customer {
 
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-z0-9_-]{5,20}$");
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-z0-9._-]+@[a-z]+[.]+[a-z]{2,3}$");
     private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("\\d{3}-\\d{4}-\\d{4}");
 
     private final Long id;
