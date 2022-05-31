@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.Fixtures.CUSTOMER_INVALID_REQUEST_1;
 import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
 import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_2;
 
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
 
@@ -25,7 +27,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("유저 회원가입 성공")
     void joinSuccess() {
         // given
-        ExtractableResponse<Response> response = createCustomer();
+        ExtractableResponse<Response> response = createCustomer(CUSTOMER_REQUEST_1);
 
         //then
         assertAll(
@@ -35,10 +37,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    @DisplayName("유저 회원가입 실패")
+    void joinFailed() {
+        // given
+        ExtractableResponse<Response> response = createCustomer(CUSTOMER_INVALID_REQUEST_1);
+
+        //then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.jsonPath().getString("message")).isNotNull()
+        );
+    }
+
+    @Test
     @DisplayName("이메일 중복 검사")
     void validateEmailDuplication() {
         // given
-        createCustomer();
+        createCustomer(CUSTOMER_REQUEST_1);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -60,7 +75,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         // given
-        ExtractableResponse<Response> customer = createCustomer();
+        ExtractableResponse<Response> customer = createCustomer(CUSTOMER_REQUEST_1);
         String customerUri = customer.header("Location");
         TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
 
@@ -87,7 +102,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        ExtractableResponse<Response> customer = createCustomer();
+        ExtractableResponse<Response> customer = createCustomer(CUSTOMER_REQUEST_1);
         String customerUri = customer.header("Location");
         TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
 
@@ -107,7 +122,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        ExtractableResponse<Response> customer = createCustomer();
+        ExtractableResponse<Response> customer = createCustomer(CUSTOMER_REQUEST_1);
         String customerUri = customer.header("Location");
         TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
 
@@ -121,18 +136,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    private ExtractableResponse<Response> createCustomer() {
+    private ExtractableResponse<Response> createCustomer(CustomerRequest customerRequest) {
         Map<String, Object> params = new HashMap<>();
-        params.put("email", CUSTOMER_REQUEST_1.getEmail());
-        params.put("password", CUSTOMER_REQUEST_1.getPassword());
-        params.put("profileImageUrl", CUSTOMER_REQUEST_1.getProfileImageUrl());
-        params.put("name", CUSTOMER_REQUEST_1.getName());
-        params.put("gender", CUSTOMER_REQUEST_1.getGender());
-        params.put("birthDay", CUSTOMER_REQUEST_1.getBirthDay());
-        params.put("contact", CUSTOMER_REQUEST_1.getContact());
-        params.put("fullAddress", Map.of("address", CUSTOMER_REQUEST_1.getFullAddress().getAddress(), "detailAddress",
-                CUSTOMER_REQUEST_1.getFullAddress().getDetailAddress(), "zoneCode",
-                CUSTOMER_REQUEST_1.getFullAddress().getZoneCode()));
+        params.put("email", customerRequest.getEmail());
+        params.put("password", customerRequest.getPassword());
+        params.put("profileImageUrl", customerRequest.getProfileImageUrl());
+        params.put("name", customerRequest.getName());
+        params.put("gender", customerRequest.getGender());
+        params.put("birthDay", customerRequest.getBirthDay());
+        params.put("contact", customerRequest.getContact());
+        params.put("fullAddress", Map.of("address", customerRequest.getFullAddress().getAddress(), "detailAddress",
+                customerRequest.getFullAddress().getDetailAddress(), "zoneCode",
+                customerRequest.getFullAddress().getZoneCode()));
         params.put("terms", true);
 
         //when
