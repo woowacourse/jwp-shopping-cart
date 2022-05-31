@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.dto.CheckResponse;
-import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.LoginResponse;
-import woowacourse.auth.dto.MemberCreateRequest;
-import woowacourse.auth.dto.PasswordCheckRequest;
+import woowacourse.auth.dto.request.LoginRequest;
+import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.PasswordCheckRequest;
+import woowacourse.auth.dto.response.CheckResponse;
+import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 
 @RestController

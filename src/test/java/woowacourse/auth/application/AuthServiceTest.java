@@ -11,12 +11,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.LoginResponse;
-import woowacourse.auth.dto.MemberCreateRequest;
-import woowacourse.auth.dto.NicknameUpdateRequest;
-import woowacourse.auth.dto.PasswordCheckRequest;
-import woowacourse.auth.dto.PasswordUpdateRequest;
+import woowacourse.auth.dto.request.LoginRequest;
+import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.NicknameUpdateRequest;
+import woowacourse.auth.dto.request.PasswordCheckRequest;
+import woowacourse.auth.dto.request.PasswordUpdateRequest;
+import woowacourse.auth.dto.response.LoginResponse;
 
 @SpringBootTest
 @Transactional

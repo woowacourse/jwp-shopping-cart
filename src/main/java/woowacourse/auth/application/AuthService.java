@@ -6,13 +6,13 @@ import woowacourse.auth.domain.Email;
 import woowacourse.auth.domain.Member;
 import woowacourse.auth.domain.Nickname;
 import woowacourse.auth.domain.Password;
-import woowacourse.auth.dto.CheckResponse;
-import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.LoginResponse;
-import woowacourse.auth.dto.MemberCreateRequest;
-import woowacourse.auth.dto.NicknameUpdateRequest;
-import woowacourse.auth.dto.PasswordCheckRequest;
-import woowacourse.auth.dto.PasswordUpdateRequest;
+import woowacourse.auth.dto.request.LoginRequest;
+import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.NicknameUpdateRequest;
+import woowacourse.auth.dto.request.PasswordCheckRequest;
+import woowacourse.auth.dto.request.PasswordUpdateRequest;
+import woowacourse.auth.dto.response.CheckResponse;
+import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Service
