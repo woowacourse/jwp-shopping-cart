@@ -36,6 +36,10 @@ public class Password {
         }
     }
 
+    public Password update(String password) {
+        return new Password(password);
+    }
+
     public String getValue() {
         return value;
     }

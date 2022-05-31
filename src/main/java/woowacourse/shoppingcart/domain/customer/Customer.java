@@ -4,7 +4,7 @@ public class Customer {
 
     private final Long id;
     private final Username username;
-    private final Password password;
+    private Password password;
     private PhoneNumber phoneNumber;
     private String address;
 
@@ -44,6 +44,10 @@ public class Customer {
 
     public void updateAddress(String address) {
         this.address = address;
+    }
+
+    public void updatePassword(String password) {
+        this.password = this.password.update(password);
     }
 
     public Long getId() {

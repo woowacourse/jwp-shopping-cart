@@ -17,7 +17,7 @@
   - [x] JWT 기반 토큰인증
 - [x] 회원 정보 조회
 - [x] 회원 정보 수정
-  - [ ] password 
+  - [x] password 
   - [x] phoneNumber
   - [x] address
 - [ ] 회원 탈퇴

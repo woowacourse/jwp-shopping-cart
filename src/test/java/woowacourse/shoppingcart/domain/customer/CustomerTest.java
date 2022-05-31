@@ -84,4 +84,19 @@ class CustomerTest {
 
         assertThat(customer.getAddress()).isEqualTo(newAddress);
     }
+
+    @DisplayName("password를 수정한다.")
+    @Test
+    void updatePassword() {
+        String username = "dongho108";
+        String password = "password1234";
+        String phoneNumber = "01012341234";
+        String address = "인천 서구 검단로";
+
+        Customer customer = Customer.of(username, password, phoneNumber, address);
+        String newPassword = "password1111";
+        customer.updatePassword(newPassword);
+
+        assertThat(customer.getPassword().getValue()).isEqualTo(newPassword);
+    }
 }

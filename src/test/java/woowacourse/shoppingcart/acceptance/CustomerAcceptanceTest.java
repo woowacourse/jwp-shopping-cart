@@ -183,6 +183,39 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("password 수정")
+    @Test
+    void updatePassword() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+
+        RestAssured.given().log().all()
+            .body(signupRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/signup")
+            .then().log().all()
+            .extract();
+
+        String accessToken = RestAssured
+            .given().log().all()
+            .body(new LoginRequest("dongho108", "ehdgh1234"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/api/customers/login")
+            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+
+        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("password1234");
+        RestAssured
+            .given().log().all()
+            .auth().oauth2(accessToken)
+            .body(updateCustomerRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().patch("/api/customers/password")
+            .then().log().all().statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {

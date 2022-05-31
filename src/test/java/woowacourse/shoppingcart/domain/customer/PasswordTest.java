@@ -49,4 +49,14 @@ class PasswordTest {
             .hasMessage("비밀번호가 일치하지 않습니다.")
             .isInstanceOf(PasswordMisMatchException.class);
     }
+
+    @DisplayName("비밀번호를 수정한다.")
+    @Test
+    void update() {
+        Password password = new Password("password1234");
+        String newPassword = "password1111";
+        Password updatePassword = password.update(newPassword);
+
+        assertThat(updatePassword.getValue()).isEqualTo(newPassword);
+    }
 }

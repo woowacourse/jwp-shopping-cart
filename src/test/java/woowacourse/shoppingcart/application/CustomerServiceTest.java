@@ -66,7 +66,7 @@ class CustomerServiceTest {
         customerService.save(signupRequest);
 
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01012123434", "서울시 여러분");
-        customerService.update("dongho108", updateCustomerRequest);
+        customerService.updateInfo("dongho108", updateCustomerRequest);
 
         Customer customer = customerService.findByUsername("dongho108");
 
@@ -74,5 +74,20 @@ class CustomerServiceTest {
             () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
             () -> assertThat(customer.getAddress()).isEqualTo(updateCustomerRequest.getAddress())
         );
+    }
+
+    @DisplayName("password를 수정한다.")
+    @Test
+    void updatePassword() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        customerService.save(signupRequest);
+
+        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("ehdgh1111");
+        customerService.updatePassword("dongho108", updateCustomerRequest);
+
+        Customer customer = customerService.findByUsername("dongho108");
+
+        assertThat(customer.getPassword().getValue()).isEqualTo(updateCustomerRequest.getPassword());
     }
 }

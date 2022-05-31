@@ -93,7 +93,7 @@ public class CustomerDaoTest {
         );
     }
 
-    @DisplayName("입력받은 Customer로 수정한다.")
+    @DisplayName("입력받은 Customer의 phoneNumber와 address를 수정한다.")
     @Test
     void update() {
         // given
@@ -109,5 +109,20 @@ public class CustomerDaoTest {
             () -> assertThat(findCustomer.getPhoneNumber()).isEqualTo(newCustomer.getPhoneNumber()),
             () -> assertThat(findCustomer.getAddress()).isEqualTo(newCustomer.getAddress())
         );
+    }
+
+    @DisplayName("입력받은 Customer의 password를 변경한다.")
+    @Test
+    void updatePassword() {
+        // given
+        Customer customer = Customer.of("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        Customer savedCustomer = customerDao.save(customer);
+
+        Customer newCustomer = Customer.of(savedCustomer.getId(), "dongho108", "ehdgh1111", "01000001111", "서울시 선릉역");
+        customerDao.update(newCustomer);
+
+        Customer findCustomer = customerDao.findByUsername(newCustomer.getUsername().getValue()).get();
+
+        assertThat(findCustomer.getPassword()).isEqualTo(newCustomer.getPassword());
     }
 }

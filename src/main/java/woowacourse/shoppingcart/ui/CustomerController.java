@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,9 +36,16 @@ public class CustomerController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody UpdateCustomerRequest updateCustomerRequest,
+    public ResponseEntity<Void> updateInfo(@RequestBody UpdateCustomerRequest updateCustomerRequest,
         HttpServletRequest request) {
-        customerService.update((String)request.getAttribute("username"), updateCustomerRequest);
+        customerService.updateInfo((String)request.getAttribute("username"), updateCustomerRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updatePassword(@RequestBody UpdateCustomerRequest updateCustomerRequest,
+        HttpServletRequest request) {
+        customerService.updatePassword((String)request.getAttribute("username"), updateCustomerRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 }

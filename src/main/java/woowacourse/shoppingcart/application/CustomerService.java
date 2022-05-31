@@ -41,10 +41,16 @@ public class CustomerService {
         return () -> new EmptyResultException("해당 username으로 customer를 찾을 수 없습니다.");
     }
 
-    public void update(String username, UpdateCustomerRequest updateCustomerRequest) {
+    public void updateInfo(String username, UpdateCustomerRequest updateCustomerRequest) {
         Customer customer = findByUsername(username);
         customer.updatePhoneNumber(updateCustomerRequest.getPhoneNumber());
         customer.updateAddress(updateCustomerRequest.getAddress());
+        customerDao.update(customer);
+    }
+
+    public void updatePassword(String username, UpdateCustomerRequest updateCustomerRequest) {
+        Customer customer = findByUsername(username);
+        customer.updatePassword(updateCustomerRequest.getPassword());
         customerDao.update(customer);
     }
 }
