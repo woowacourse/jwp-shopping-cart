@@ -2,6 +2,7 @@ package woowacourse.helper.fixture;
 
 import woowacourse.member.domain.Member;
 import woowacourse.member.dto.MemberRegisterRequest;
+import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 
 public class MemberFixture {
 
@@ -14,7 +15,7 @@ public class MemberFixture {
     public static final String UNAUTHORIZED_MESSAGE = "[ERROR] 인증이 되지 않은 유저입니다.";
 
     public static Member createMember(String email, String password, String name) {
-        return new Member(email, password, name);
+        return Member.from(email, password, name, new SHA256PasswordEncoder());
     }
     public static MemberRegisterRequest createMemberRegisterRequest(String email, String password, String name) {
         return new MemberRegisterRequest(email, password, name);

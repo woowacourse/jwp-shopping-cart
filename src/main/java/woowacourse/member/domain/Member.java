@@ -27,9 +27,9 @@ public class Member {
         this.name = name;
     }
 
-    public Member(String email, String password, String name) {
-        this(null, email, password, name);
+    public static Member from(String email, String password, String name, PasswordEncoder passwordEncoder) {
         validateRightPassword(password);
+        return new Member(null, email, passwordEncoder.encode(password), name);
     }
 
     private void validateRightEmail(final String email) {
@@ -38,7 +38,7 @@ public class Member {
         }
     }
 
-    private void validateRightPassword(final String password) {
+    private static void validateRightPassword(final String password) {
         if (!Pattern.matches(PASSWORD_REGEX, password)) {
             throw new PasswordNotValidException();
         }
@@ -50,11 +50,13 @@ public class Member {
         }
     }
 
-    public void encodePassword(final PasswordEncoder passwordEncoder) {
-        password = passwordEncoder.encode(password);
+    public void validateWrongPassword(final String oldPassword, final PasswordEncoder passwordEncoder) {
+        if(!authenticate(passwordEncoder.encode(oldPassword))) {
+            throw new WrongPasswordException();
+        }
     }
 
-    public boolean authenticate(final String password) {
+    private boolean authenticate(final String password) {
         return password.equals(this.password);
     }
 
@@ -76,12 +78,6 @@ public class Member {
     private void validateOldSameNewPassword(final String oldPassword, final String newPassword) {
         if (oldPassword.equals(newPassword)) {
             throw new PasswordChangeException();
-        }
-    }
-
-    public void validateWrongPassword(final String oldPassword, final PasswordEncoder passwordEncoder) {
-        if(!authenticate(passwordEncoder.encode(oldPassword))) {
-            throw new WrongPasswordException();
         }
     }
 

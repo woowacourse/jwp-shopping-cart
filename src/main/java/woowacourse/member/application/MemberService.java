@@ -29,8 +29,10 @@ public class MemberService {
 
     public Long save(final MemberRegisterRequest memberRegisterRequest) {
         validateDuplicateEmail(memberRegisterRequest.getEmail());
-        Member member = memberRegisterRequest.toEntity();
-        member.encodePassword(passwordEncoder);
+        Member member = Member.from(memberRegisterRequest.getEmail(),
+                memberRegisterRequest.getPassword(),
+                memberRegisterRequest.getName(),
+                passwordEncoder);
         return memberDao.save(member);
     }
 

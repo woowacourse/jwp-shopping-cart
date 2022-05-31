@@ -1,6 +1,7 @@
 package woowacourse.member.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.helper.fixture.MemberFixture.EMAIL;
 import static woowacourse.helper.fixture.MemberFixture.ENCODE_PASSWORD;
@@ -25,17 +26,16 @@ public class MemberTest {
     @Test
     void encodePassword() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
-        member.encodePassword(new SHA256PasswordEncoder());
 
         assertThat(member.getPassword()).isEqualTo(ENCODE_PASSWORD);
     }
 
     @DisplayName("비밀번호를 확인한다.")
     @Test
-    void authenticate() {
+    void validateWrongPassword() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
 
-        assertThat(member.authenticate(PASSWORD)).isTrue();
+        assertThatNoException().isThrownBy(() -> member.validateWrongPassword(PASSWORD, new SHA256PasswordEncoder()));
     }
 
     @DisplayName("이름을 변경한다.")
@@ -82,7 +82,6 @@ public class MemberTest {
     @Test
     void updatePassword() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
-        member.encodePassword(new SHA256PasswordEncoder());
         String originPassword = member.getPassword();
 
         member.updatePassword(PASSWORD, "Maru1234!", new SHA256PasswordEncoder());
@@ -95,7 +94,6 @@ public class MemberTest {
     @Test
     void updatePasswordNotSameOriginPassword() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
-        member.encodePassword(new SHA256PasswordEncoder());
 
         assertThatThrownBy(() ->
                 member.updatePassword("Wrong1!", "Maru1234!", new SHA256PasswordEncoder()))
@@ -106,7 +104,6 @@ public class MemberTest {
     @Test
     void updatePasswordNotRight() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
-        member.encodePassword(new SHA256PasswordEncoder());
 
         assertThatThrownBy(() ->
                 member.updatePassword(PASSWORD, "1!", new SHA256PasswordEncoder()))
@@ -117,7 +114,6 @@ public class MemberTest {
     @Test
     void updatePasswordSameWithOld() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
-        member.encodePassword(new SHA256PasswordEncoder());
 
         assertThatThrownBy(() ->
                 member.updatePassword(PASSWORD, PASSWORD, new SHA256PasswordEncoder()))

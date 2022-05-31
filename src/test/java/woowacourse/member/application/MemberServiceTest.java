@@ -1,6 +1,7 @@
 package woowacourse.member.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.helper.fixture.MemberFixture.EMAIL;
@@ -118,7 +119,9 @@ public class MemberServiceTest {
         memberService.updatePassword(id, new MemberPasswordUpdateRequest(PASSWORD,"Maru1234!"));
 
         Member member = memberDao.findById(id).get();
-        assertThat(member.authenticate(new SHA256PasswordEncoder().encode("Maru1234!"))).isTrue();
+
+        assertThatNoException()
+                .isThrownBy(() -> member.validateWrongPassword("Maru1234!", new SHA256PasswordEncoder()));
     }
 
     @DisplayName("회원이 존재하지 않는 경우 삭제를 실패한다.")

@@ -31,10 +31,6 @@ public class MemberRegisterRequest {
         this.name = name;
     }
 
-    public Member toEntity() {
-        return new Member(email, password, name);
-    }
-
     public String getEmail() {
         return email;
     }
