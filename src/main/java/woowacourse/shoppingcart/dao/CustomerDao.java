@@ -85,4 +85,12 @@ public class CustomerDao {
 
         return namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class) != 0;
     }
+
+    public void delete(String loginId, String password) {
+        final String query = "DELETE FROM customer where loginId = :loginId AND password = :password";
+        MapSqlParameterSource parameter = new MapSqlParameterSource("loginId", loginId);
+        parameter.addValue("password", password);
+
+        namedParameterJdbcTemplate.update(query, parameter);
+    }
 }

@@ -56,12 +56,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 로그인_요청(loginRequest);
         TokenResponse tokenResponse = response.as(TokenResponse.class);
 
-        ExtractableResponse<Response> updateResponse = 내정보_수정_요청(tokenResponse.getAccessToken(),
+        ExtractableResponse<Response> updatedResponse = 내정보_수정_요청(tokenResponse.getAccessToken(),
             "loginId", "angie", "12345678aA!");
 
         assertAll(() -> {
-            assertThat(updateResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            assertThat(updateResponse.as(CustomerResponse.class)).extracting("loginId", "username")
+            assertThat(updatedResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            assertThat(updatedResponse.as(CustomerResponse.class)).extracting("loginId", "username")
                 .containsExactly("loginId", "angie");
         });
     }
@@ -69,6 +69,28 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
+        LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
+        ExtractableResponse<Response> response = 로그인_요청(loginRequest);
+        TokenResponse tokenResponse = response.as(TokenResponse.class);
+
+        ExtractableResponse<Response> deletedResponse = 회원_탈퇴_요청(tokenResponse.getAccessToken(), "12345678aA!");
+
+        assertThat(deletedResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    private ExtractableResponse<Response> 회원_탈퇴_요청(String accessToken, String password) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("password", password);
+
+        return RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().oauth2(accessToken)
+            .body(requestBody)
+            .when().delete("/customers/me")
+            .then().log().all()
+            .extract();
     }
 
     public static ExtractableResponse<Response> 사용자_생성_요청(String loginId, String username, String password) {
