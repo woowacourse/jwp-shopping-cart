@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import woowacourse.auth.exception.AuthorizationException;
 
 @Component
-public class JwtTokenProvider {
+public class JwtTokenProvider implements TokenManager {
 
     private final Key signingKey;
     private final long validityInMilliseconds;
@@ -25,6 +25,7 @@ public class JwtTokenProvider {
         this.validityInMilliseconds = validityInMilliseconds;
     }
 
+    @Override
     public String createToken(String payload) {
         Claims claims = Jwts.claims().setSubject(payload);
         Date now = new Date();
@@ -38,6 +39,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    @Override
     public String getPayload(String token) {
         if (!validateToken(token)) {
             throw new AuthorizationException("유효하지 않은 토큰입니다.");
@@ -50,6 +52,7 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
+    @Override
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parserBuilder()

@@ -6,17 +6,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.TokenManager;
 import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 import woowacourse.auth.ui.LoginInterceptor;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenManager tokenManager;
 
-    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthenticationPrincipalConfig(TokenManager tokenManager) {
+        this.tokenManager = tokenManager;
     }
 
     @Override
@@ -26,11 +26,11 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor(jwtTokenProvider)).addPathPatterns("/api/members/auth/**");
+        registry.addInterceptor(new LoginInterceptor(tokenManager)).addPathPatterns("/api/members/auth/**");
     }
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
+        return new AuthenticationPrincipalArgumentResolver(tokenManager);
     }
 }

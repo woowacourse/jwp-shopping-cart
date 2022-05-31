@@ -15,17 +15,17 @@ import woowacourse.auth.dto.response.CheckResponse;
 import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.dto.response.MemberResponse;
 import woowacourse.auth.exception.AuthorizationException;
-import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.TokenManager;
 
 @Service
 public class AuthService {
 
     private final MemberDao memberDao;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenManager tokenManager;
 
-    public AuthService(MemberDao memberDao, JwtTokenProvider jwtTokenProvider) {
+    public AuthService(MemberDao memberDao, TokenManager tokenManager) {
         this.memberDao = memberDao;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.tokenManager = tokenManager;
     }
 
     public void save(MemberCreateRequest memberCreateRequest) {
@@ -50,7 +50,7 @@ public class AuthService {
     public LoginResponse login(LoginRequest loginRequest) {
         Member member = findByEmail(loginRequest.getEmail(), new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
         validatePassword(member.getPassword(), loginRequest.getPassword());
-        String token = jwtTokenProvider.createToken(member.getEmail());
+        String token = tokenManager.createToken(member.getEmail());
         return new LoginResponse(token, member.getNickname());
     }
 
