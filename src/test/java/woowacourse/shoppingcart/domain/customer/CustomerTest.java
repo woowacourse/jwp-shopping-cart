@@ -54,4 +54,34 @@ class CustomerTest {
             .hasMessage("비밀번호가 일치하지 않습니다.")
             .isInstanceOf(PasswordMisMatchException.class);
     }
+
+    @DisplayName("phoneNumber를 수정한다.")
+    @Test
+    void updatePhoneNumber() {
+        String username = "dongho108";
+        String password = "password1234";
+        String phoneNumber = "01012341234";
+        String address = "인천 서구 검단로";
+
+        Customer customer = Customer.of(username, password, phoneNumber, address);
+        String newPhoneNumber = "01011112222";
+        customer.updatePhoneNumber(newPhoneNumber);
+
+        assertThat(customer.getPhoneNumber().getValue()).isEqualTo(newPhoneNumber);
+    }
+
+    @DisplayName("address를 수정한다.")
+    @Test
+    void updateAddress() {
+        String username = "dongho108";
+        String password = "password1234";
+        String phoneNumber = "01012341234";
+        String address = "인천 서구 검단로";
+
+        Customer customer = Customer.of(username, password, phoneNumber, address);
+        String newAddress = "서울시 강남구";
+        customer.updateAddress(newAddress);
+
+        assertThat(customer.getAddress()).isEqualTo(newAddress);
+    }
 }

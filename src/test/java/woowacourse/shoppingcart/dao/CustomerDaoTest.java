@@ -92,4 +92,22 @@ public class CustomerDaoTest {
             () -> assertThat(findCustomer.getAddress()).isEqualTo(savedCustomer.getAddress())
         );
     }
+
+    @DisplayName("입력받은 Customer로 수정한다.")
+    @Test
+    void update() {
+        // given
+        Customer customer = Customer.of("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        Customer savedCustomer = customerDao.save(customer);
+
+        Customer newCustomer = Customer.of(savedCustomer.getId(), "dongho108", "ehdgh1234", "01000001111", "서울시 선릉역");
+        customerDao.update(newCustomer);
+
+        Customer findCustomer = customerDao.findByUsername(newCustomer.getUsername().getValue()).get();
+
+        assertAll(
+            () -> assertThat(findCustomer.getPhoneNumber()).isEqualTo(newCustomer.getPhoneNumber()),
+            () -> assertThat(findCustomer.getAddress()).isEqualTo(newCustomer.getAddress())
+        );
+    }
 }

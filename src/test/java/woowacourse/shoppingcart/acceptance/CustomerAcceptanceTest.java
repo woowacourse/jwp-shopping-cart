@@ -12,12 +12,14 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.ExceptionResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -134,9 +136,51 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("phoneNumber, address 수정")
     @Test
     void updateMe() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+
+        RestAssured.given().log().all()
+            .body(signupRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/signup")
+            .then().log().all()
+            .extract();
+
+        String accessToken = RestAssured
+            .given().log().all()
+            .body(new LoginRequest("dongho108", "ehdgh1234"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/api/customers/login")
+            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+
+        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01011112222", "서울시 강남구");
+        ValidatableResponse validatableResponse = RestAssured
+            .given().log().all()
+            .auth().oauth2(accessToken)
+            .body(updateCustomerRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().put("/api/customers")
+            .then().log().all();
+
+        CustomerResponse customerResponse = RestAssured
+            .given().log().all()
+            .auth().oauth2(accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/customers")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+
+        assertAll(
+            () -> validatableResponse.statusCode(HttpStatus.NO_CONTENT.value()),
+            () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
+            () -> assertThat(customerResponse.getAddress()).isEqualTo(updateCustomerRequest.getAddress())
+        );
     }
 
     @DisplayName("회원탈퇴")

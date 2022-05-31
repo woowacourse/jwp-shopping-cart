@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
@@ -38,5 +39,12 @@ public class CustomerService {
 
     private Supplier<EmptyResultException> throwEmptyCustomerException() {
         return () -> new EmptyResultException("해당 username으로 customer를 찾을 수 없습니다.");
+    }
+
+    public void update(String username, UpdateCustomerRequest updateCustomerRequest) {
+        Customer customer = findByUsername(username);
+        customer.updatePhoneNumber(updateCustomerRequest.getPhoneNumber());
+        customer.updateAddress(updateCustomerRequest.getAddress());
+        customerDao.update(customer);
     }
 }

@@ -18,6 +18,10 @@ public class PhoneNumber {
         }
     }
 
+    public PhoneNumber update(String phoneNumber) {
+        return new PhoneNumber(phoneNumber);
+    }
+
     public String getValue() {
         return value;
     }

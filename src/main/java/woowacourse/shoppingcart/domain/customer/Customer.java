@@ -5,8 +5,8 @@ public class Customer {
     private final Long id;
     private final Username username;
     private final Password password;
-    private final PhoneNumber phoneNumber;
-    private final String address;
+    private PhoneNumber phoneNumber;
+    private String address;
 
     public Customer(Long id, Username username, Password password, PhoneNumber phoneNumber, String address) {
         this.id = id;
@@ -36,6 +36,14 @@ public class Customer {
 
     public void matchPassword(String password) {
         this.password.match(password);
+    }
+
+    public void updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = this.phoneNumber.update(phoneNumber);
+    }
+
+    public void updateAddress(String address) {
+        this.address = address;
     }
 
     public Long getId() {

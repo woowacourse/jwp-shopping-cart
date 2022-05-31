@@ -16,8 +16,10 @@
 - [x] 로그인
   - [x] JWT 기반 토큰인증
 - [x] 회원 정보 조회
-- [ ] 회원 정보 수정
-  - [ ] password, phoneNumber, address 를 수정할 수 있어야 한다.
+- [x] 회원 정보 수정
+  - [ ] password 
+  - [x] phoneNumber
+  - [x] address
 - [ ] 회원 탈퇴
 - API 스펙은 [API 문서](https://www.notion.so/a00bc92443f04c52a852ce16501e981a) 참고
 

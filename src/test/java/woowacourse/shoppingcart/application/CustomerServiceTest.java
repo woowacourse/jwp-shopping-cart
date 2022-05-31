@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
 
@@ -54,6 +55,24 @@ class CustomerServiceTest {
             () -> assertThat(findCustomer.getPassword()).isEqualTo(savedCustomer.getPassword()),
             () -> assertThat(findCustomer.getPhoneNumber()).isEqualTo(savedCustomer.getPhoneNumber()),
             () -> assertThat(findCustomer.getAddress()).isEqualTo(savedCustomer.getAddress())
+        );
+    }
+
+    @DisplayName("phoneNumber와 address를 수정한다.")
+    @Test
+    void updateCustomer() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        customerService.save(signupRequest);
+
+        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01012123434", "서울시 여러분");
+        customerService.update("dongho108", updateCustomerRequest);
+
+        Customer customer = customerService.findByUsername("dongho108");
+
+        assertAll(
+            () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
+            () -> assertThat(customer.getAddress()).isEqualTo(updateCustomerRequest.getAddress())
         );
     }
 }
