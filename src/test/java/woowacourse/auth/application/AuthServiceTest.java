@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -10,10 +11,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.application.dto.LoginServiceRequest;
+import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -29,20 +32,45 @@ class AuthServiceTest {
 
     @Test
     @DisplayName("이메일과 비밀번호를 입력 받아 토큰을 발급받는다.")
-    void login() {
+    void certify() {
         // given
         final String token = "dsfsdfds";
-        final TokenRequest tokenRequest = new TokenRequest("clay@gmail.com", "12345678");
-        Mockito.when(customerDao.findByEmail(tokenRequest.getEmail()))
+        final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "12345678");
+        Mockito.when(customerDao.findByEmail(loginServiceRequest.getEmail()))
                 .thenReturn(Optional.of(new Customer(1L, "클레이", "clay@gmail.com", "12345678")));
         Mockito.when(jwtTokenProvider.createToken(Long.toString(1L)))
                 .thenReturn(token);
 
         // when
-        final String actual = authService.login(tokenRequest.toServiceDto());
+        final String actual = authService.certify(loginServiceRequest);
 
         // then
         assertThat(actual).isEqualTo(token);
     }
 
+    @Test
+    @DisplayName("존재하지 않는 이메일로 사용자를 인증할 경우 예외가 발생한다.")
+    void certify_invalidEmail_throwsException() {
+        // given
+        final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "12345678");
+        Mockito.when(customerDao.findByEmail(loginServiceRequest.getEmail()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThatThrownBy(() -> authService.certify(loginServiceRequest))
+                .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @Test
+    @DisplayName("사용자 인증 시 비밀번호가 일치하지 않을 경우 예외가 발생한다.")
+    void certify_passwordNotMatch_throwsException() {
+        // given
+        final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "11111111");
+        Mockito.when(customerDao.findByEmail(loginServiceRequest.getEmail()))
+                .thenReturn(Optional.of(new Customer(1L, "클레이", "klay@gmail.com", "12345678")));
+
+        // when, then
+        assertThatThrownBy(() -> authService.certify(loginServiceRequest))
+                .isInstanceOf(PasswordNotMatchException.class);
+    }
 }
