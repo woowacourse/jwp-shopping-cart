@@ -17,11 +17,11 @@ class JwtTokenProviderTest {
     @DisplayName("토큰의 payload를 검증한다.")
     void getPayload() {
         // given
-        String email = "kun@naver.com";
-        String token = jwtTokenProvider.createToken(email);
+        final String email = "kun@naver.com";
+        final String token = jwtTokenProvider.createToken(email);
 
         // when
-        String actual = jwtTokenProvider.getPayload(token);
+        final String actual = jwtTokenProvider.getPayload(token);
 
         // then
         assertThat(actual).isEqualTo(email);
@@ -31,11 +31,11 @@ class JwtTokenProviderTest {
     @DisplayName("유효한 토큰을 검증하면 true를 반환한다.")
     void validateToken_validToken_trueReturned() {
         // given
-        String email = "kun@naver.com";
-        String token = jwtTokenProvider.createToken(email);
+        final String email = "kun@naver.com";
+        final String token = jwtTokenProvider.createToken(email);
 
         // when
-        boolean actual = jwtTokenProvider.validateToken(token);
+        final boolean actual = jwtTokenProvider.validateToken(token);
 
         // then
         assertThat(actual).isTrue();
@@ -45,10 +45,10 @@ class JwtTokenProviderTest {
     @DisplayName("유효하지 않은 토큰을 검증하면 false를 반환한다.")
     void validateToken_invalidToken_falseReturned() {
         // given
-        String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWNrQG5hdmVyLmNvbSIsImlhdCI6MTY1MzkxMDkyOSwiZXhwIjoxNjUzOTE0NTI5fQ.BTqxwStzF2UpSznVp3X1QiDMoaNo4xZFd2DDvQjui5w";
+        final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWNrQG5hdmVyLmNvbSIsImlhdCI6MTY1MzkxMDkyOSwiZXhwIjoxNjUzOTE0NTI5fQ.BTqxwStzF2UpSznVp3X1QiDMoaNo4xZFd2DDvQjui5w";
 
         // when
-        boolean actual = jwtTokenProvider.validateToken(token);
+        final boolean actual = jwtTokenProvider.validateToken(token);
 
         // then
         assertThat(actual).isFalse();
@@ -58,10 +58,10 @@ class JwtTokenProviderTest {
     @DisplayName("payload가 동일하고 생성 시점이 같지 않으면 다른 토큰이다.")
     void validateToken_invalidToken_falseReturned2() {
         // given
-        String expected = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWNrQG5hdmVyLmNvbSIsImlhdCI6MTY1MzkxMDkyOSwiZXhwIjoxNjUzOTE0NTI5fQ.BTqxwStzF2UpSznVp3X1QiDMoaNo4xZFd2DDvQjui5w";
+        final String expected = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaWNrQG5hdmVyLmNvbSIsImlhdCI6MTY1MzkxMDkyOSwiZXhwIjoxNjUzOTE0NTI5fQ.BTqxwStzF2UpSznVp3X1QiDMoaNo4xZFd2DDvQjui5w";
 
         // when
-        String actual = jwtTokenProvider.createToken("rick@naver.com");
+        final String actual = jwtTokenProvider.createToken("rick@naver.com");
 
         // then
         assertThat(actual).isNotEqualTo(expected);

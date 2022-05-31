@@ -22,20 +22,20 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(final CustomerService customerService) {
         this.customerService = customerService;
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid CustomerCreationRequest customerCreationRequest) {
+    public ResponseEntity<Void> create(@RequestBody @Valid final CustomerCreationRequest customerCreationRequest) {
         customerService.create(customerCreationRequest);
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal Customer customer) {
-        CustomerResponse response = new CustomerResponse(
+    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal final Customer customer) {
+        final CustomerResponse response = new CustomerResponse(
                 customer.getEmail(),
                 customer.getNickname()
         );
@@ -43,14 +43,14 @@ public class CustomerController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal final Customer customer) {
         customerService.delete(customer);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> updateMe(@AuthenticationPrincipal Customer customer,
-                                         @Valid @RequestBody CustomerUpdationRequest request) {
+    public ResponseEntity<Void> updateMe(@AuthenticationPrincipal final Customer customer,
+                                         @Valid @RequestBody final CustomerUpdationRequest request) {
         customerService.update(customer, request);
         return ResponseEntity.noContent().build();
     }

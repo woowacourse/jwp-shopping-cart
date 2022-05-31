@@ -10,18 +10,18 @@ public class Customer {
     private final String email;
     private final String password;
 
-    public Customer(Long id, String nickname, String email, String password) {
+    public Customer(final Long id, final String nickname, final String email, final String password) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
     }
 
-    public Customer(String nickname, String email, String password) {
+    public Customer(final String nickname, final String email, final String password) {
         this(null, nickname, email, hash(password));
     }
 
-    private static String hash(String password) {
+    private static String hash(final String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
@@ -43,14 +43,14 @@ public class Customer {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Customer customer = (Customer) o;
+        final Customer customer = (Customer) o;
         return Objects.equals(nickname, customer.nickname) && Objects.equals(email, customer.email);
     }
 

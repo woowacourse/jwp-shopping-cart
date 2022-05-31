@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
     private final CustomerService customerService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public WebConfig(CustomerService customerService, JwtTokenProvider jwtTokenProvider) {
+    public WebConfig(final CustomerService customerService, final JwtTokenProvider jwtTokenProvider) {
         this.customerService = customerService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -29,7 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new LoginCustomerResolver(customerService, jwtTokenProvider));
     }
 }

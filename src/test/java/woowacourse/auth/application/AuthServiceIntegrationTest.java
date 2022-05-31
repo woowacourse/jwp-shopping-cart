@@ -40,7 +40,7 @@ public class AuthServiceIntegrationTest {
     @Test
     void login_notExistEmail_exceptionThrown() {
         // given
-        TokenRequest request = new TokenRequest("rick@email.com", PASSWORD);
+        final TokenRequest request = new TokenRequest("rick@email.com", PASSWORD);
 
         // when, then
         assertThatThrownBy(() -> authService.login(request))
@@ -51,7 +51,7 @@ public class AuthServiceIntegrationTest {
     @Test
     void login_differentSamePassword_exceptionThrown() {
         // given
-        TokenRequest request = new TokenRequest(customer.getEmail(), "1q2w3e4r");
+        final TokenRequest request = new TokenRequest(customer.getEmail(), "1q2w3e4r");
 
         // when, then
         assertThatThrownBy(() -> authService.login(request))
@@ -62,10 +62,10 @@ public class AuthServiceIntegrationTest {
     @DisplayName("로그인 성공할 경우에 토큰을 발급한다.")
     void login_success_tokenReturned() {
         // given
-        TokenRequest request = new TokenRequest(customer.getEmail(), PASSWORD);
+        final TokenRequest request = new TokenRequest(customer.getEmail(), PASSWORD);
 
         // when
-        String accessToken = authService.login(request);
+        final String accessToken = authService.login(request);
 
         // then
         assertThat(accessToken).isNotBlank();

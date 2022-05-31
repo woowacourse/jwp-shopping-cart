@@ -17,7 +17,7 @@ public class CustomerCreationRequest {
     private CustomerCreationRequest() {
     }
 
-    public CustomerCreationRequest(String email, String password, String nickname) {
+    public CustomerCreationRequest(final String email, final String password, final String nickname) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;

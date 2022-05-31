@@ -20,16 +20,16 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void login() {
         // given
-        String email = "email@email.com";
-        String password = "1q2w3e4r";
+        final String email = "email@email.com";
+        final String password = "1q2w3e4r";
 
-        CustomerCreationRequest signUpRequest = new CustomerCreationRequest(email, password, "kun");
+        final CustomerCreationRequest signUpRequest = new CustomerCreationRequest(email, password, "kun");
         postUser(signUpRequest);
 
-        TokenRequest request = new TokenRequest(email, password);
+        final TokenRequest request = new TokenRequest(email, password);
 
         // when
-        ValidatableResponse response = postLogin(request);
+        final ValidatableResponse response = postLogin(request);
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -41,11 +41,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @CsvSource(value = {
             "kun#naver.com:12345667a:이메일 양식이 잘못 되었습니다.",
             "kun@naver.com:1234:비밀번호 양식이 잘못 되었습니다."}, delimiter = ':')
-    void login_wrongForm_400(String email, String password, String message) {
+    void login_wrongForm_400(final String email, final String password, final String message) {
 
         // when
         final TokenRequest request = new TokenRequest(email, password);
-        ValidatableResponse response = postLogin(request);
+        final ValidatableResponse response = postLogin(request);
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())
@@ -57,13 +57,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void login_wrongPassword_400() {
         // given
-        String email = "kun@email.com";
-        CustomerCreationRequest request = new CustomerCreationRequest(email, "123456qwer", "kun");
+        final String email = "kun@email.com";
+        final CustomerCreationRequest request = new CustomerCreationRequest(email, "123456qwer", "kun");
         postUser(request);
 
         // when
-        TokenRequest tokenRequest = new TokenRequest(email, "qwer123456");
-        ValidatableResponse response = postLogin(tokenRequest);
+        final TokenRequest tokenRequest = new TokenRequest(email, "qwer123456");
+        final ValidatableResponse response = postLogin(tokenRequest);
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())

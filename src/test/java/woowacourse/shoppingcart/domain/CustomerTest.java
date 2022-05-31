@@ -10,11 +10,11 @@ class CustomerTest {
     @Test
     void hashPassword() {
         //given
-        String password = "qwer123";
+        final String password = "qwer123";
 
         //when
-        Customer customer = new Customer("kun", "kun@email.com", password);
-        String actual = customer.getPassword();
+        final Customer customer = new Customer("kun", "kun@email.com", password);
+        final String actual = customer.getPassword();
 
         //then
         Assertions.assertThat(actual).isNotEqualTo(password);

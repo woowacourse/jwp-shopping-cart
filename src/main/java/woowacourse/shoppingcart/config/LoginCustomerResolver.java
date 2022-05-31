@@ -19,28 +19,28 @@ public class LoginCustomerResolver implements HandlerMethodArgumentResolver {
     private final CustomerService customerService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public LoginCustomerResolver(CustomerService customerService, JwtTokenProvider jwtTokenProvider) {
+    public LoginCustomerResolver(final CustomerService customerService, final JwtTokenProvider jwtTokenProvider) {
         this.customerService = customerService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String token = AuthorizationExtractor.extract(request);
+    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
+                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
+        final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        final String token = AuthorizationExtractor.extract(request);
 
-        boolean isValidToken = jwtTokenProvider.validateToken(token);
+        final boolean isValidToken = jwtTokenProvider.validateToken(token);
         if (!isValidToken) {
             throw new UnauthorizedTokenException();
         }
 
-        String email = jwtTokenProvider.getPayload(token);
+        final String email = jwtTokenProvider.getPayload(token);
 
         return customerService.getByEmail(email);
     }

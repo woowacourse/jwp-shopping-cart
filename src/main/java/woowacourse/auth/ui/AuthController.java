@@ -14,14 +14,14 @@ public class AuthController {
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(final AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@Valid @RequestBody TokenRequest request) {
-        String accessToken = authService.login(request);
-        TokenResponse response = new TokenResponse(accessToken);
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody final TokenRequest request) {
+        final String accessToken = authService.login(request);
+        final TokenResponse response = new TokenResponse(accessToken);
         return ResponseEntity.ok(response);
     }
 }

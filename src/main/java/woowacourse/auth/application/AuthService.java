@@ -15,22 +15,22 @@ public class AuthService {
     private final CustomerService customerService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(CustomerService customerService, JwtTokenProvider jwtTokenProvider) {
+    public AuthService(final CustomerService customerService, final JwtTokenProvider jwtTokenProvider) {
         this.customerService = customerService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public String login(TokenRequest request) {
+    public String login(final TokenRequest request) {
         try {
-            Customer customer = customerService.getByEmail(request.getEmail());
+            final Customer customer = customerService.getByEmail(request.getEmail());
             checkPassword(request, customer);
             return jwtTokenProvider.createToken(request.getEmail());
-        } catch (NotFoundCustomerException exception) {
+        } catch (final NotFoundCustomerException exception) {
             throw new InvalidLoginException();
         }
     }
 
-    private void checkPassword(TokenRequest request, Customer customer) {
+    private void checkPassword(final TokenRequest request, final Customer customer) {
         if (!BCrypt.checkpw(request.getPassword(), customer.getPassword())) {
             throw new InvalidLoginException();
         }

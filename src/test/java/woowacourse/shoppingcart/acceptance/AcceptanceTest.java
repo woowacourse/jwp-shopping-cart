@@ -24,7 +24,7 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    protected ValidatableResponse postUser(CustomerCreationRequest request) {
+    protected ValidatableResponse postUser(final CustomerCreationRequest request) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -33,7 +33,7 @@ public class AcceptanceTest {
                 .then().log().all();
     }
 
-    protected ValidatableResponse postLogin(TokenRequest request) {
+    protected ValidatableResponse postLogin(final TokenRequest request) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +42,7 @@ public class AcceptanceTest {
                 .then().log().all();
     }
 
-    protected ValidatableResponse getMe(String accessToken) {
+    protected ValidatableResponse getMe(final String accessToken) {
         return RestAssured
                 .given().log().all()
                 .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)

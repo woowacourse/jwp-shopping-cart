@@ -27,7 +27,7 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(Customer customer) {
+    public Long save(final Customer customer) {
         final String query = "INSERT INTO customer (nickname, email, password) VALUES (?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -51,26 +51,26 @@ public class CustomerDao {
         }
     }
 
-    public boolean existEmail(String email) {
+    public boolean existEmail(final String email) {
         final String query = "SELECT EXISTS(SELECT * FROM customer WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);
     }
 
-    public Customer findByEmail(String email) {
+    public Customer findByEmail(final String email) {
         try {
             final String query = "SELECT * FROM customer WHERE email = ?";
             return jdbcTemplate.queryForObject(query, rowMapper, email);
-        } catch (EmptyResultDataAccessException exception) {
+        } catch (final EmptyResultDataAccessException exception) {
             throw new NotFoundCustomerException();
         }
     }
 
-    public void updateById(Long id, Customer updatedCustomer) {
+    public void updateById(final Long id, final Customer updatedCustomer) {
         final String query = "UPDATE customer SET nickname = ?, password = ? WHERE id = ?";
         jdbcTemplate.update(query, updatedCustomer.getNickname(), updatedCustomer.getPassword(), id);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(final Long id) {
         final String query = "DELETE FROM customer WHERE id = ?";
         jdbcTemplate.update(query, id);
     }

@@ -13,7 +13,7 @@ public class CustomerUpdationRequest {
     private CustomerUpdationRequest() {
     }
 
-    public CustomerUpdationRequest(String nickname, String password) {
+    public CustomerUpdationRequest(final String nickname, final String password) {
         this.nickname = nickname;
         this.password = password;
     }

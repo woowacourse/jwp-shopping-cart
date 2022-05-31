@@ -26,16 +26,13 @@ import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
+    private static MockedStatic<BCrypt> bcrypt;
     @InjectMocks
     private AuthService authService;
-
     @Mock
     private CustomerService customerService;
-
     @Mock
     private JwtTokenProvider jwtTokenProvider;
-
-    private static MockedStatic<BCrypt> bcrypt;
 
     @BeforeEach
     void setUp() {
@@ -51,7 +48,7 @@ class AuthServiceTest {
     @Test
     void login_notExistEmail_exceptionThrown() {
         // given
-        TokenRequest request = new TokenRequest("email@email.com", "1q2w3e4r");
+        final TokenRequest request = new TokenRequest("email@email.com", "1q2w3e4r");
 
         given(customerService.getByEmail(request.getEmail()))
                 .willThrow(NotFoundCustomerException.class);
@@ -65,10 +62,10 @@ class AuthServiceTest {
     @Test
     void login_differentSamePassword_exceptionThrown() {
         // given
-        String email = "email@email.com";
-        TokenRequest request = new TokenRequest(email, "1q2w3e4r");
+        final String email = "email@email.com";
+        final TokenRequest request = new TokenRequest(email, "1q2w3e4r");
 
-        Customer customer = new Customer("knu", email, "q1w2e3r4");
+        final Customer customer = new Customer("knu", email, "q1w2e3r4");
         given(customerService.getByEmail(request.getEmail()))
                 .willReturn(customer);
 
@@ -81,23 +78,23 @@ class AuthServiceTest {
     @DisplayName("로그인 성공할 경우에 토큰을 발급한다.")
     void login_success_tokenReturned() {
         // given
-        String email = "kun@email.com";
-        String password = "qwerasdf123";
-        TokenRequest request = new TokenRequest(email, password);
+        final String email = "kun@email.com";
+        final String password = "qwerasdf123";
+        final TokenRequest request = new TokenRequest(email, password);
 
-        Customer customer = new Customer(1L, "kun", email, password);
+        final Customer customer = new Customer(1L, "kun", email, password);
         given(customerService.getByEmail(email))
                 .willReturn(customer);
 
         given(BCrypt.checkpw(any(String.class), any(String.class)))
                 .willReturn(true);
 
-        String expected = "asdfqwerzxcv123456";
+        final String expected = "asdfqwerzxcv123456";
         given(jwtTokenProvider.createToken(email))
                 .willReturn(expected);
 
         // when
-        String accessToken = authService.login(request);
+        final String accessToken = authService.login(request);
 
         // then
         assertThat(accessToken).isEqualTo(expected);

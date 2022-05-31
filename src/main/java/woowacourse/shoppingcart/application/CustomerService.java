@@ -12,29 +12,29 @@ public class CustomerService {
 
     private final CustomerDao customerDao;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(final CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 
-    public Long create(CustomerCreationRequest request) {
-        boolean existEmail = customerDao.existEmail(request.getEmail());
+    public Long create(final CustomerCreationRequest request) {
+        final boolean existEmail = customerDao.existEmail(request.getEmail());
         if (existEmail) {
             throw new DuplicateEmailException();
         }
-        Customer customer = new Customer(request.getNickname(), request.getEmail(), request.getPassword());
+        final Customer customer = new Customer(request.getNickname(), request.getEmail(), request.getPassword());
         return customerDao.save(customer);
     }
 
-    public Customer getByEmail(String email) {
+    public Customer getByEmail(final String email) {
         return customerDao.findByEmail(email);
     }
 
-    public void update(Customer customer, CustomerUpdationRequest request) {
-        Customer updatedCustomer = new Customer(request.getNickname(), customer.getEmail(), request.getPassword());
+    public void update(final Customer customer, final CustomerUpdationRequest request) {
+        final Customer updatedCustomer = new Customer(request.getNickname(), customer.getEmail(), request.getPassword());
         customerDao.updateById(customer.getId(), updatedCustomer);
     }
 
-    public void delete(Customer customer) {
+    public void delete(final Customer customer) {
         customerDao.deleteById(customer.getId());
     }
 }

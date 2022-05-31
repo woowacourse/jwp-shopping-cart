@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
@@ -9,9 +11,6 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -48,7 +47,7 @@ public class CartService {
         final Long customerId = customerDao.findInByNickname(customerName);
         try {
             return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new InvalidProductException();
         }
     }

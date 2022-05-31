@@ -33,8 +33,8 @@ class CustomerServiceTest {
     @DisplayName("이미 가입 이메일로 회원가입을 하면 예외를 던진다.")
     void create_alreadyExistEmail_exceptionThrown() {
         // given
-        String email = "kun@naver.com";
-        CustomerCreationRequest request = new CustomerCreationRequest(email, "1q2w3e4r", "kun");
+        final String email = "kun@naver.com";
+        final CustomerCreationRequest request = new CustomerCreationRequest(email, "1q2w3e4r", "kun");
 
         given(customerDao.existEmail(email))
                 .willReturn(true);
@@ -48,21 +48,21 @@ class CustomerServiceTest {
     @DisplayName("유저를 생성한다.")
     void create() {
         // given
-        String email = "kun@naver.com";
-        String nickname = "kun";
-        String password = "qwerasdf123";
-        CustomerCreationRequest request = new CustomerCreationRequest(email, password, nickname);
+        final String email = "kun@naver.com";
+        final String nickname = "kun";
+        final String password = "qwerasdf123";
+        final CustomerCreationRequest request = new CustomerCreationRequest(email, password, nickname);
 
         given(customerDao.existEmail(email))
                 .willReturn(false);
 
-        long expected = 1L;
-        Customer customer = new Customer(nickname, email, password);
+        final long expected = 1L;
+        final Customer customer = new Customer(nickname, email, password);
         given(customerDao.save(customer))
                 .willReturn(expected);
 
         // when
-        Long actual = customerService.create(request);
+        final Long actual = customerService.create(request);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -72,7 +72,7 @@ class CustomerServiceTest {
     @DisplayName("이메일이 존재하지 않으면 예외를 발생시킨다.")
     void getByEmail_notExistEmail_exceptionThrown() {
         // given
-        String email = "asdf@email.com";
+        final String email = "asdf@email.com";
 
         given(customerDao.findByEmail(email))
                 .willThrow(NotFoundCustomerException.class);
@@ -86,13 +86,13 @@ class CustomerServiceTest {
     @DisplayName("이메일이 존재하는 경우에, Customer를 반환한다.")
     void getByEmail_existEmail_customerReturned() {
         // given
-        String email = "email@email.com";
-        Customer expected = new Customer("kun", email, "qwerasdf123");
+        final String email = "email@email.com";
+        final Customer expected = new Customer("kun", email, "qwerasdf123");
         given(customerDao.findByEmail(email))
                 .willReturn(expected);
 
         // when
-        Customer actual = customerService.getByEmail(email);
+        final Customer actual = customerService.getByEmail(email);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -102,11 +102,11 @@ class CustomerServiceTest {
     @DisplayName("Customer를 수정한다.")
     void update_customer_void() {
         // given
-        String email = "kun@email.com";
-        String password = "qwerasdf321";
-        Customer customer = new Customer(1L, "kun", email, password);
+        final String email = "kun@email.com";
+        final String password = "qwerasdf321";
+        final Customer customer = new Customer(1L, "kun", email, password);
 
-        CustomerUpdationRequest request = new CustomerUpdationRequest("rick", "qwerasdf123");
+        final CustomerUpdationRequest request = new CustomerUpdationRequest("rick", "qwerasdf123");
 
         // when, then
         assertThatCode(() -> customerService.update(customer, request))
@@ -117,7 +117,7 @@ class CustomerServiceTest {
     @DisplayName("Customer를 삭제한다.")
     void delete_customer_void() {
         // given
-        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
+        final Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
 
         given(customerDao.findByEmail(customer.getEmail()))
                 .willThrow(NotFoundCustomerException.class);

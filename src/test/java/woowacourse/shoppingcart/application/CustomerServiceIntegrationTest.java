@@ -42,7 +42,7 @@ public class CustomerServiceIntegrationTest {
     @DisplayName("이미 가입 이메일로 회원가입을 하면 예외를 던진다.")
     void create_alreadyExistEmail_exceptionThrown() {
         // given
-        CustomerCreationRequest request = new CustomerCreationRequest(customer.getEmail(), "1q2w3e4r", "kun");
+        final CustomerCreationRequest request = new CustomerCreationRequest(customer.getEmail(), "1q2w3e4r", "kun");
 
         // when, then
         Assertions.assertThatThrownBy(() -> customerService.create(request))
@@ -53,13 +53,13 @@ public class CustomerServiceIntegrationTest {
     @DisplayName("유저를 생성한다.")
     void create() {
         // given
-        String email = "kun@naver.com";
-        String nickname = "kun2";
-        String password = "qwerasdf123";
-        CustomerCreationRequest request = new CustomerCreationRequest(email, password, nickname);
+        final String email = "kun@naver.com";
+        final String nickname = "kun2";
+        final String password = "qwerasdf123";
+        final CustomerCreationRequest request = new CustomerCreationRequest(email, password, nickname);
 
         // when
-        Long actual = customerService.create(request);
+        final Long actual = customerService.create(request);
 
         // then
         assertThat(actual).isNotNull();
@@ -69,7 +69,7 @@ public class CustomerServiceIntegrationTest {
     @DisplayName("이메일이 존재하지 않으면 예외를 발생시킨다.")
     void getByEmail_notExistEmail_exceptionThrown() {
         // given
-        String email = "asdf@email.com";
+        final String email = "asdf@email.com";
 
         // when, then
         assertThatThrownBy(() -> customerService.getByEmail(email))
@@ -80,7 +80,7 @@ public class CustomerServiceIntegrationTest {
     @DisplayName("이메일이 존재하는 경우에, Customer를 반환한다.")
     void getByEmail_existEmail_customerReturned() {
         // when
-        Customer actual = customerService.getByEmail(customer.getEmail());
+        final Customer actual = customerService.getByEmail(customer.getEmail());
 
         // then
         assertThat(actual).isEqualTo(customer);
@@ -90,9 +90,9 @@ public class CustomerServiceIntegrationTest {
     @DisplayName("Customer를 수정한다.")
     void update_customer_void() {
         // given
-        Customer loginCustomer = new Customer(id, customer.getNickname(), customer.getEmail(), customer.getPassword());
+        final Customer loginCustomer = new Customer(id, customer.getNickname(), customer.getEmail(), customer.getPassword());
 
-        CustomerUpdationRequest request = new CustomerUpdationRequest("rick", "qwerasdf123");
+        final CustomerUpdationRequest request = new CustomerUpdationRequest("rick", "qwerasdf123");
 
         // when, then
         assertThatCode(() -> customerService.update(loginCustomer, request))
@@ -103,7 +103,7 @@ public class CustomerServiceIntegrationTest {
     @DisplayName("Customer를 삭제한다.")
     void delete_customer_void() {
         // given
-        Customer loginCustomer = new Customer(id, customer.getNickname(), customer.getEmail(), customer.getPassword());
+        final Customer loginCustomer = new Customer(id, customer.getNickname(), customer.getEmail(), customer.getPassword());
 
         // when, then
         assertAll(

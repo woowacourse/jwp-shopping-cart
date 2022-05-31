@@ -23,10 +23,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void create_right_200() {
         // given
-        CustomerCreationRequest request = new CustomerCreationRequest("kun@naver.com", "1q2w3e4r", "kun");
+        final CustomerCreationRequest request = new CustomerCreationRequest("kun@naver.com", "1q2w3e4r", "kun");
 
         // when
-        ValidatableResponse response = postUser(request);
+        final ValidatableResponse response = postUser(request);
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
@@ -38,12 +38,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             "kun#naver.com:12345667a:쿤aa:이메일 양식이 잘못 되었습니다.",
             "kun@naver.com:1234:쿤aa:비밀번호 양식이 잘못 되었습니다.",
             "kun@naver.com:123456677aa:쿤:닉네임 양식이 잘못 되었습니다."}, delimiter = ':')
-    void create_wrongForm_400(String email, String password, String nickname, String message) {
+    void create_wrongForm_400(final String email, final String password, final String nickname, final String message) {
         //given
-        CustomerCreationRequest request = new CustomerCreationRequest(email, password, nickname);
+        final CustomerCreationRequest request = new CustomerCreationRequest(email, password, nickname);
 
         //when
-        ValidatableResponse response = postUser(request);
+        final ValidatableResponse response = postUser(request);
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())
@@ -55,12 +55,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void create_duplicateEmail_400() {
         //given
-        CustomerCreationRequest request = new CustomerCreationRequest("kun@naver.com", "1q2w3e4r", "kun");
+        final CustomerCreationRequest request = new CustomerCreationRequest("kun@naver.com", "1q2w3e4r", "kun");
 
         postUser(request);
 
         //when
-        ValidatableResponse response = postUser(request);
+        final ValidatableResponse response = postUser(request);
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())
@@ -72,21 +72,21 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe_validToken_200() {
         // given
-        String email = "kun@gmail.com";
-        String nickname = "kun";
-        String password = "1q2w3e4r";
+        final String email = "kun@gmail.com";
+        final String nickname = "kun";
+        final String password = "1q2w3e4r";
 
-        CustomerCreationRequest signUpRequest = new CustomerCreationRequest(email, password, nickname);
+        final CustomerCreationRequest signUpRequest = new CustomerCreationRequest(email, password, nickname);
         postUser(signUpRequest);
 
-        TokenRequest tokenRequest = new TokenRequest(email, password);
-        String accessToken = postLogin(tokenRequest)
+        final TokenRequest tokenRequest = new TokenRequest(email, password);
+        final String accessToken = postLogin(tokenRequest)
                 .extract()
                 .as(TokenResponse.class)
                 .getAccessToken();
 
         // when
-        ValidatableResponse response = getMe(accessToken);
+        final ValidatableResponse response = getMe(accessToken);
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -98,22 +98,22 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        String email = "kun@email.com";
-        String password = "qwerasdf123";
-        CustomerCreationRequest createRequest = new CustomerCreationRequest(email, password, "kun");
+        final String email = "kun@email.com";
+        final String password = "qwerasdf123";
+        final CustomerCreationRequest createRequest = new CustomerCreationRequest(email, password, "kun");
         postUser(createRequest);
 
-        TokenRequest tokenRequest = new TokenRequest(email, password);
-        String accessToken = postLogin(tokenRequest)
+        final TokenRequest tokenRequest = new TokenRequest(email, password);
+        final String accessToken = postLogin(tokenRequest)
                 .extract()
                 .as(TokenResponse.class)
                 .getAccessToken();
 
-        String updatedNickname = "rick";
-        CustomerUpdationRequest updateRequest = new CustomerUpdationRequest(updatedNickname, "qwerasdf321");
+        final String updatedNickname = "rick";
+        final CustomerUpdationRequest updateRequest = new CustomerUpdationRequest(updatedNickname, "qwerasdf321");
 
         // when
-        ValidatableResponse response = RestAssured
+        final ValidatableResponse response = RestAssured
                 .given().log().all()
                 .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -121,7 +121,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().put("/users/me")
                 .then().log().all();
 
-        ValidatableResponse updatedResponse = getMe(accessToken);
+        final ValidatableResponse updatedResponse = getMe(accessToken);
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
@@ -133,25 +133,25 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        String email = "kun@email.com";
-        String password = "qwerasdf123";
-        CustomerCreationRequest createRequest = new CustomerCreationRequest(email, password, "kun");
+        final String email = "kun@email.com";
+        final String password = "qwerasdf123";
+        final CustomerCreationRequest createRequest = new CustomerCreationRequest(email, password, "kun");
         postUser(createRequest);
 
-        TokenRequest tokenRequest = new TokenRequest(email, password);
-        String accessToken = postLogin(tokenRequest)
+        final TokenRequest tokenRequest = new TokenRequest(email, password);
+        final String accessToken = postLogin(tokenRequest)
                 .extract()
                 .as(TokenResponse.class)
                 .getAccessToken();
 
         // when
-        ValidatableResponse response = RestAssured
+        final ValidatableResponse response = RestAssured
                 .given().log().all()
                 .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
                 .when().delete("/users/me")
                 .then().log().all();
 
-        ValidatableResponse loginResponse = postLogin(tokenRequest);
+        final ValidatableResponse loginResponse = postLogin(tokenRequest);
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
