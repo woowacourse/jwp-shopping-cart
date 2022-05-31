@@ -23,4 +23,8 @@ public class CustomerEntity {
     public Customer getCustomer() {
         return customer;
     }
+
+    public String getNickname() {
+        return customer.getNickname();
+    }
 }
