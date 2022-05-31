@@ -6,7 +6,7 @@ public class UpdateCustomerRequest {
     private String phoneNumber;
     private String address;
 
-    public UpdateCustomerRequest() {
+    private UpdateCustomerRequest() {
     }
 
     public UpdateCustomerRequest(String password) {

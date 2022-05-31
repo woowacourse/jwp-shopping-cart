@@ -12,7 +12,7 @@ public class ExceptionResponse {
     @JsonProperty("message")
     private List<String> messages;
 
-    public ExceptionResponse() {
+    private ExceptionResponse() {
     }
 
     public ExceptionResponse(List<String> messages) {
