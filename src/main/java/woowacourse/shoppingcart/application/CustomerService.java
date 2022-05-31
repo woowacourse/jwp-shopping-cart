@@ -45,6 +45,7 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerException::new);
     }
 
+    @Transactional
     public CustomerUpdateResponse updateCustomer(final Long customerId,
                                                  final CustomerUpdateRequest customerUpdateRequest) {
         final Customer customer = getById(customerId);
@@ -53,5 +54,10 @@ public class CustomerService {
         }
         customer.update(customerUpdateRequest.getUserName(), customerUpdateRequest.getNewPassword());
         return new CustomerUpdateResponse(customer.getUserName());
+    }
+
+    @Transactional
+    public void removeCustomer(final Long customerId) {
+        customerDao.deleteById(customerId);
     }
 }

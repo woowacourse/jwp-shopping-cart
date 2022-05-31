@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
 import woowacourse.shoppingcart.exception.DuplicatedCustomerEmailException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.CustomerDao;
 
@@ -96,5 +97,17 @@ class CustomerServiceTest {
         assertThatThrownBy(() ->customerService.updateCustomer(customerId,
                 new CustomerUpdateRequest(newUserName, newPassword, newPassword)))
                 .isInstanceOf(WrongPasswordException.class);
+    }
+
+    @DisplayName("회원을 탈퇴한다.")
+    @Test
+    void removeCustomer() {
+        final Long customerId = customerService.registerCustomer(
+                new CustomerRegisterRequest(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
+
+        customerService.removeCustomer(customerId);
+
+        assertThatThrownBy(() ->customerService.findById(customerId))
+                .isInstanceOf(InvalidCustomerException.class);
     }
 }
