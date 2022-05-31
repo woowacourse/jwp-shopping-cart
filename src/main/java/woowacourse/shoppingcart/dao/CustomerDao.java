@@ -74,7 +74,7 @@ public class CustomerDao {
         return Optional.ofNullable(DataAccessUtils.singleResult(result));
     }
 
-    public int updateById(long id, String nickname, String address, String phoneNumber) {
+    public int update(long id, String nickname, String address, String phoneNumber) {
         final String sql = "UPDATE customer SET nickname=:nickname, address=:address, phone_number=:phone_number " +
                 "WHERE id=:id";
 

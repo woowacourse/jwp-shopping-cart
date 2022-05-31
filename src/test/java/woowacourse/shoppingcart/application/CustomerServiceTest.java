@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import woowacourse.auth.dto.PhoneNumber;
+import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDto;
@@ -42,7 +43,7 @@ class CustomerServiceTest {
 
         // when
         final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumber("010", "1234", "5678"));
-        final CustomerDto customerDto = customerService.createCustomer(signupRequest);
+        final CustomerDto customerDto = customerService.create(signupRequest);
 
         // then
         assertThat(customerDto.getId()).isEqualTo(1L);
@@ -59,7 +60,7 @@ class CustomerServiceTest {
         final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumber("010", "1234", "5678"));
 
         // then
-        assertThatThrownBy(() -> customerService.createCustomer(signupRequest))
+        assertThatThrownBy(() -> customerService.create(signupRequest))
                 .isInstanceOf(DuplicatedAccountException.class)
                 .hasMessage("이미 존재하는 아이디입니다.");
     }
@@ -99,7 +100,22 @@ class CustomerServiceTest {
         )
                 .isInstanceOf(CustomerNotFoundException.class)
                 .hasMessage("회원을 찾을 수 없습니다.");
+    }
 
 
+    @Test
+    @DisplayName("id와 변경할 회원 정보로 회원 정보를 수정한다.")
+    void updateCustomer() {
+        // given
+        given(customerDao.update(any(Long.class),
+                any(String.class),
+                any(String.class),
+                any(String.class))).willReturn(1);
+
+        // when
+        final int affectedRows = customerService.update(1L, new UpdateCustomerRequest("hamcheeseburger", "코린네", new PhoneNumber("010", "1234", "1234")));
+
+        // then
+        assertThat(affectedRows).isEqualTo(1);
     }
 }

@@ -94,7 +94,7 @@ public class CustomerDaoTest {
         String phoneNumber = "01012341234";
 
         // when
-        final int affectedRows = customerDao.updateById(1L, nickname, address, phoneNumber);
+        final int affectedRows = customerDao.update(1L, nickname, address, phoneNumber);
         final Optional<Customer> customer = customerDao.findById(1L);
 
         assert (customer.isPresent());

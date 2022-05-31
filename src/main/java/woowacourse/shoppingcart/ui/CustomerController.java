@@ -25,7 +25,7 @@ public class CustomerController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@RequestBody @Valid SignupRequest signupRequest) throws URISyntaxException {
-        customerService.createCustomer(signupRequest);
+        customerService.create(signupRequest);
 
         return ResponseEntity.created(new URI("/signin"))
                 .build();
