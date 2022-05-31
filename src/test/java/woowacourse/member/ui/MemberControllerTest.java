@@ -9,6 +9,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -34,6 +35,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.helper.restdocs.RestDocsTest;
+import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
@@ -147,6 +149,32 @@ public class MemberControllerTest extends RestDocsTest {
                 requestFields(
                         fieldWithPath("oldPassword").description("이전 비밀번호"),
                         fieldWithPath("newPassword").description("현재 비밀번호")
+                )));
+    }
+
+    @DisplayName("회원을 탈퇴한다.")
+    @Test
+    void deleteMember() throws Exception {
+        MemberDeleteRequest memberDeleteRequest = new MemberDeleteRequest(PASSWORD);
+        doNothing().when(memberService).deleteById(anyLong(), any(MemberDeleteRequest.class));
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        ResultActions resultActions = mockMvc.perform(delete("/api/members/me")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memberDeleteRequest)))
+                .andExpect(status().isNoContent());
+
+        resultActions.andDo(document("member-delete",
+                getRequestPreprocessor(),
+                getResponsePreprocessor(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                requestFields(
+                        fieldWithPath("password").description("비밀번호")
                 )));
     }
 }
