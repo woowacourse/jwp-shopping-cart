@@ -8,6 +8,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import woowacourse.shoppingcart.dto.CommonExceptionDto;
+import woowacourse.shoppingcart.dto.ValidationExceptionDto;
 import woowacourse.shoppingcart.exception.*;
 
 import javax.validation.ConstraintViolationException;
@@ -16,9 +18,14 @@ import java.util.List;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ValidationExceptionDto> handleValidationException(final ValidationException e) {
+        return ResponseEntity.status(e.getHttpStatus()).body(new ValidationExceptionDto(e.getField(), e.getMessage()));
+    }
+
     @ExceptionHandler(CartException.class)
-    public ResponseEntity handleCustomException(final CartException e) {
-        return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
+    public ResponseEntity<CommonExceptionDto> handleCustomException(final CartException e) {
+        return ResponseEntity.status(e.getHttpStatus()).body(new CommonExceptionDto(e.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)
