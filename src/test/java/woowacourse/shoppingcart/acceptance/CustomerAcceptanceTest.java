@@ -10,14 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
         // given
-        Customer customer = new Customer("email", "pw", "name", "phone", "address");
+        Customer customer = new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -27,10 +29,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .post("/customers")
                 .then().log().all()
                 .extract();
+        CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
+        assertThat(customerResponse).extracting("email", "name", "phone", "address")
+                .containsExactly("email", "name", "010-1234-5678", "address");
     }
 
     @DisplayName("내 정보 조회")

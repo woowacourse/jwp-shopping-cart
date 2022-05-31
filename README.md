@@ -5,7 +5,7 @@
 [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
 
 ## 1단계 기능 목록
-- [ ] 회원 가입
+- [x] 회원 가입
     - [x] [ERROR] email 중복 예외 처리
     - [x] [ERROR] 전화번호 형식 확인
     - [x] [ERROR] password 형식 확인
