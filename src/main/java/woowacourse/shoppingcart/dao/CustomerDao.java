@@ -30,12 +30,17 @@ public class CustomerDao {
         return simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByName(final String userName) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
+            final String query = "SELECT id FROM customer WHERE name = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
+    }
+
+    public boolean existEmail(final String email) {
+        final String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, email);
     }
 }

@@ -44,7 +44,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByName(userName);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -58,9 +58,25 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByName(userName);
 
         // then
         assertThat(customerId).isEqualTo(16L);
+    }
+
+    @DisplayName("email이 존재하는지 확인한다.")
+    @Test
+    void existEmail() {
+        //given
+        String email = "email";
+        Customer customer =
+                new Customer(email, "Pw123456!", "name", "010-1234-5678", "address");
+        customerDao.save(customer);
+
+        //when
+        boolean isExistEmail = customerDao.existEmail(email);
+
+        //then
+        assertThat(isExistEmail).isTrue();
     }
 }
