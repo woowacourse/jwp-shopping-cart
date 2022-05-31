@@ -452,10 +452,40 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_member_api">Member api</a>
 <ul class="sectlevel1">
-<li><a href="#_member_register">member register</a>
+<li><a href="#_member_duplicate_email">member duplicate email</a>
 <ul class="sectlevel2">
 <li><a href="#_request_2">request</a></li>
 <li><a href="#_response_2">response</a></li>
+</ul>
+</li>
+<li><a href="#_member_register">member register</a>
+<ul class="sectlevel2">
+<li><a href="#_request_3">request</a></li>
+<li><a href="#_response_3">response</a></li>
+</ul>
+</li>
+<li><a href="#_member_me">member me</a>
+<ul class="sectlevel2">
+<li><a href="#_request_4">request</a></li>
+<li><a href="#_response_4">response</a></li>
+</ul>
+</li>
+<li><a href="#_member_name_update">member name update</a>
+<ul class="sectlevel2">
+<li><a href="#_request_5">request</a></li>
+<li><a href="#_response_5">response</a></li>
+</ul>
+</li>
+<li><a href="#_member_password_update">member password update</a>
+<ul class="sectlevel2">
+<li><a href="#_request_6">request</a></li>
+<li><a href="#_response_6">response</a></li>
+</ul>
+</li>
+<li><a href="#_member_delete">member delete</a>
+<ul class="sectlevel2">
+<li><a href="#_request_7">request</a></li>
+<li><a href="#_response_7">response</a></li>
 </ul>
 </li>
 </ul>
@@ -505,10 +535,42 @@ Content-Length: 149
 </div>
 <h1 id="_member_api" class="sect0">Member api</h1>
 <div class="sect1">
-<h2 id="_member_register">member register</h2>
+<h2 id="_member_duplicate_email">member duplicate email</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_request_2">request</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/members/duplicate-email HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Content-Length: 34
+Host: localhost:8080
+
+{
+  "email" : "member@gmail.com"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_2">response</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_member_register">member register</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_request_3">request</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/members HTTP/1.1
@@ -526,14 +588,147 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect2">
-<h3 id="_response_2">response</h3>
+<h3 id="_response_3">response</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 201 Created
 Vary: Origin
 Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_member_me">member me</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_request_4">request</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/members/me HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjUzODIwOTg2LCJleHAiOjE2NTM4MjQ1ODZ9.le7-3iZnWEAn1OwoMnIJl8UXfg1t5Tnpog58kV89f1c
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_4">response</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: /api/members</code></pre>
+Content-Type: application/json
+Content-Length: 67
+
+{
+  "id" : 1,
+  "email" : "member@gmail.com",
+  "name" : "member"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_member_name_update">member name update</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_request_5">request</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/members/me/name HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjUzODIwOTg2LCJleHAiOjE2NTM4MjQ1ODZ9.le7-3iZnWEAn1OwoMnIJl8UXfg1t5Tnpog58kV89f1c
+Accept: application/json
+Content-Length: 23
+Host: localhost:8080
+
+{
+  "name" : "member"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_5">response</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_member_password_update">member password update</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_request_6">request</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/members/me/password HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjUzODIwOTg2LCJleHAiOjE2NTM4MjQ1ODZ9.le7-3iZnWEAn1OwoMnIJl8UXfg1t5Tnpog58kV89f1c
+Accept: application/json
+Content-Length: 70
+Host: localhost:8080
+
+{
+  "oldPassword" : "Member1234!",
+  "newPassword" : "NewPassword1!"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_6">response</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_member_delete">member delete</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_request_7">request</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/members/me HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjUzODIwOTg2LCJleHAiOjE2NTM4MjQ1ODZ9.le7-3iZnWEAn1OwoMnIJl8UXfg1t5Tnpog58kV89f1c
+Accept: application/json
+Content-Length: 32
+Host: localhost:8080
+
+{
+  "password" : "Member1234!"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_7">response</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
 </div>
@@ -542,7 +737,7 @@ Location: /api/members</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-05-29 20:21:22 +0900
+Last updated 2022-05-31 15:41:59 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
