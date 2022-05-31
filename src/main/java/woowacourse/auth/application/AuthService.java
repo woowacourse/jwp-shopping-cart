@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
@@ -10,6 +11,7 @@ import woowacourse.shoppingcart.exception.InvalidLoginException;
 import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class AuthService {
 
     private final CustomerService customerService;
@@ -20,6 +22,7 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Transactional(readOnly = true)
     public String login(final TokenRequest request) {
         try {
             final Customer customer = customerService.getByEmail(request.getEmail());
