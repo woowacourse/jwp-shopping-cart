@@ -64,4 +64,9 @@ public class CustomerDao {
             throw new NotFoundCustomerException();
         }
     }
+
+    public void deleteById(Long id) {
+        final String query = "DELETE FROM customer WHERE id = ?";
+        jdbcTemplate.update(query, id);
+    }
 }

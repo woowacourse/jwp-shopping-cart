@@ -116,4 +116,20 @@ public class CustomerDaoTest {
         // then
         assertThat(actual.getEmail()).isEqualTo(email);
     }
+
+    @Test
+    @DisplayName("Id에 해당하는 데이터가 존재하면 Customer를 삭제한다.")
+    void deleteById_existId_void() {
+        // given
+        String email = "kun@email.com";
+        Customer customer = new Customer("kun", email, "qwerasdf123");
+        Long id = customerDao.save(customer);
+
+        // when
+        customerDao.deleteById(id);
+
+        // then
+        assertThatThrownBy(() -> customerDao.findByEmail(email))
+                .isInstanceOf(NotFoundCustomerException.class);
+    }
 }
