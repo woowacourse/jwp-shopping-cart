@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.repository;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
 @Repository
@@ -17,8 +16,7 @@ public class CustomerRepository {
 
     public Customer find(Long id) {
         return customerDao.findById(id)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."))
-                .toDomain();
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
     }
 
     public boolean checkUsernameExistence(String userName) {
@@ -26,29 +24,14 @@ public class CustomerRepository {
     }
 
     public Long save(Customer customer) {
-        return customerDao.save(toEntity(customer));
+        return customerDao.save(customer);
     }
 
-    public void update(Long id, Customer customer) {
-        customerDao.update(toEntity(id, customer));
+    public void update(Customer customer) {
+        customerDao.update(customer);
     }
 
-    public void delete(Long id, Customer customer) {
-        customerDao.delete(toEntity(id, customer));
-    }
-
-    private CustomerEntity toEntity(Long id, Customer customer) {
-        return new CustomerEntity(id,
-                customer.getUsername(),
-                customer.getPassword(),
-                customer.getNickname(),
-                customer.getAge());
-    }
-
-    private CustomerEntity toEntity(Customer customer) {
-        return new CustomerEntity(customer.getUsername(),
-                customer.getPassword(),
-                customer.getNickname(),
-                customer.getAge());
+    public void delete(Customer customer) {
+        customerDao.delete(customer);
     }
 }

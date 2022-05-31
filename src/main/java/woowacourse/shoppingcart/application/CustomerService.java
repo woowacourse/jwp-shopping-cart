@@ -39,11 +39,12 @@ public class CustomerService {
     @Transactional
     public void updateMe(Long id, UpdateMeRequest request) {
         Customer customer = customerRepository.find(id);
-        Customer updatedCustomer = new Customer(request.getUsername(),
+        Customer updatedCustomer = new Customer(id,
+                request.getUsername(),
                 customer.getPassword(),
                 request.getNickname(),
                 request.getAge());
-        customerRepository.update(id, updatedCustomer);
+        customerRepository.update(updatedCustomer);
     }
 
     @Transactional
@@ -52,16 +53,17 @@ public class CustomerService {
         if (!customer.hasSamePassword(request.getOldPassword())) {
             throw new IllegalArgumentException("현재 비밀번호를 잘못 입력하였습니다.");
         }
-        Customer updatedCustomer = new Customer(customer.getUsername(),
+        Customer updatedCustomer = new Customer(id,
+                customer.getUsername(),
                 request.getNewPassword(),
                 customer.getNickname(),
                 customer.getAge());
-        customerRepository.update(id, updatedCustomer);
+        customerRepository.update(updatedCustomer);
     }
 
     @Transactional
     public void deleteMe(Long id) {
         Customer customer = customerRepository.find(id);
-        customerRepository.delete(id, customer);
+        customerRepository.delete(customer);
     }
 }

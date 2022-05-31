@@ -10,13 +10,13 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.domain.Customer;
 
 @Repository
 public class CustomerDao {
 
-    static final RowMapper<CustomerEntity> ROW_MAPPER = (resultSet, rowNum) ->
-            new CustomerEntity(resultSet.getLong("id"),
+    static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) ->
+            new Customer(resultSet.getLong("id"),
                     resultSet.getString("username"),
                     resultSet.getString("password"),
                     resultSet.getString("nickname"),
@@ -28,7 +28,7 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<CustomerEntity> findById(Long id) {
+    public Optional<Customer> findById(Long id) {
         final String sql = "SELECT id, username, password, nickname, age FROM customer "
                 + "WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -38,7 +38,7 @@ public class CustomerDao {
                 .stream().findAny();
     }
 
-    public Optional<CustomerEntity> findByUserName(String userName) {
+    public Optional<Customer> findByUserName(String userName) {
         final String sql = "SELECT id, username, password, nickname, age FROM customer "
                 + "WHERE username = :username";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -57,7 +57,7 @@ public class CustomerDao {
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
-    public Long save(CustomerEntity customer) {
+    public Long save(Customer customer) {
         final String sql = "INSERT INTO customer(username, password, nickname, age) "
                 + "VALUES(:username, :password, :nickname, :age)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -67,7 +67,7 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void update(CustomerEntity customer) {
+    public void update(Customer customer) {
         final String sql = "UPDATE customer SET username = :username, "
                 + "password = :password, nickname = :nickname, age = :age "
                 + "WHERE id = :id";
@@ -76,7 +76,7 @@ public class CustomerDao {
         jdbcTemplate.update(sql, params);
     }
 
-    public void delete(CustomerEntity customer) {
+    public void delete(Customer customer) {
         final String sql = "DELETE FROM customer WHERE id = :id";
         SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
 
