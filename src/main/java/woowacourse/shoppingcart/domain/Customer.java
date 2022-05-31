@@ -25,7 +25,6 @@ public class Customer {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-
     public Long getId() {
         return id;
     }
