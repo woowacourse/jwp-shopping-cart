@@ -27,8 +27,8 @@ public class CustomerDaoTest {
         this.customerDao = new CustomerDao(jdbcTemplate, dataSource);
     }
 
-    @Test
     @DisplayName("customer를 등록한다.")
+    @Test
     void saveCustomer() {
         Customer customer =
                 new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
@@ -36,8 +36,8 @@ public class CustomerDaoTest {
         assertThat(customerId).isEqualTo(1L);
     }
 
-    @Test
     @DisplayName("email과 password가 일치하는 customer의 id를 반환한다.")
+    @Test
     void findIdByEmailAndPassword() {
         Customer customer =
                 new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
@@ -90,5 +90,21 @@ public class CustomerDaoTest {
 
         //then
         assertThat(isExistEmail).isTrue();
+    }
+
+    @DisplayName("id가 일치하는 customer를 반환한다.")
+    @Test
+    void findCustomerById() {
+        //given
+        Customer customer =
+                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Long customerId = customerDao.save(customer);
+
+        //when
+        Customer response = customerDao.findCustomerById(customerId);
+
+        //then
+        assertThat(response).extracting("email", "password", "name", "phone", "address")
+                .containsExactly("email", "Pw123456!", "name", "010-1234-5678", "address");
     }
 }

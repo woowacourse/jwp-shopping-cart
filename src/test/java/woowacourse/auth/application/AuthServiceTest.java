@@ -23,8 +23,8 @@ class AuthServiceTest {
     @Autowired
     private AuthService authService;
 
-    @Test
     @DisplayName("회원을 등록한다.")
+    @Test
     void saveCustomer() {
         CustomerRequest customer =
                 new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
@@ -34,8 +34,8 @@ class AuthServiceTest {
                 .containsExactly("email", "name", "010-2222-3333", "address");
     }
 
-    @Test
     @DisplayName("중복되는 email이면 예외가 발생한다.")
+    @Test
     void existEmailException() {
         CustomerRequest customer =
                 new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
@@ -45,8 +45,8 @@ class AuthServiceTest {
                 .hasMessageContaining("중복된 email 입니다.");
     }
 
-    @Test
     @DisplayName("email과 password를 이용하여 일치하는 customer의 id를 찾는다.")
+    @Test
     void loginCustomer() {
         CustomerRequest customer =
                 new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
@@ -58,8 +58,8 @@ class AuthServiceTest {
         assertThat(customerId).isEqualTo(1L);
     }
 
-    @Test
     @DisplayName("email과 password를 이용하여 일치하는 customer가 없는 경우 예외를 발생시킨다.")
+    @Test
     void notExistsCustomerException() {
         TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
         assertThatThrownBy(() -> authService.loginCustomer(tokenRequest))
@@ -67,8 +67,8 @@ class AuthServiceTest {
                 .hasMessageContaining("Email 또는 Password가 일치하지 않습니다.");
     }
 
-    @Test
     @DisplayName("customer id를 이용하여 token을 발급한다.")
+    @Test
     void createToken() {
         CustomerRequest customer =
                 new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");

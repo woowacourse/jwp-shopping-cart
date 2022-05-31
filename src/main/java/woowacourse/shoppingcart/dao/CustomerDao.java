@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -17,6 +18,14 @@ public class CustomerDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+
+    private final RowMapper<Customer> customerRowMapper = (resultSet, rowNum) -> new Customer(
+            resultSet.getString("email"),
+            resultSet.getString("password"),
+            resultSet.getString("name"),
+            resultSet.getString("phone"),
+            resultSet.getString("address")
+    );
 
     public CustomerDao(final JdbcTemplate jdbcTemplate,
                        final DataSource dataSource) {
@@ -52,5 +61,10 @@ public class CustomerDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public Customer findCustomerById(Long customerId) {
+        String query = "SELECT * FROM CUSTOMER WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, customerRowMapper, customerId);
     }
 }
