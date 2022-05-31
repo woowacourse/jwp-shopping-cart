@@ -11,8 +11,7 @@
     - [x] [ERROR] password 형식 확인
     - [x] [ERROR] 이름 형식 확인
 - [ ] 로그인 (토큰 발급)
-  - [ ] [ERROR] 존재하지 않는 email 일 경우 예외 처리 (custom exception)
-  - [ ] [ERROR] 비밀번호가 일치하지 않을 경우 예외 처리 (custom exception)
+  - [ ] [ERROR] email 이 존재하지 않거나, password 가 일치하지 않는 경우 예외 처리 (custom exception)
 - [ ] 회원 정보 조회 (토큰 활용)
   - [ ] [ERROR] 유효하지 않은 토큰일 경우 예외 처리
   - [ ] [ERROR] 회원이 존재하지 않을 경우 예외 처리
