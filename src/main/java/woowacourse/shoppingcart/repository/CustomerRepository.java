@@ -21,6 +21,10 @@ public class CustomerRepository {
                 .toDomain();
     }
 
+    public boolean checkUsernameExistence(String userName) {
+        return customerDao.findByUserName(userName).isPresent();
+    }
+
     public Long save(Customer customer) {
         return customerDao.save(toEntity(customer));
     }

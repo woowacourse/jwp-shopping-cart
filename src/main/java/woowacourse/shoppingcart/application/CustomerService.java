@@ -3,10 +3,12 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
 import woowacourse.shoppingcart.dto.response.GetMeResponse;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Service
@@ -27,6 +29,11 @@ public class CustomerService {
 
     public GetMeResponse getMe(Long id) {
         return new GetMeResponse(customerRepository.find(id));
+    }
+
+    public UniqueUsernameResponse checkUniqueUsername(UniqueUsernameRequest request) {
+        boolean isUnique = !customerRepository.checkUsernameExistence(request.getUsername());
+        return new UniqueUsernameResponse(isUnique);
     }
 
     @Transactional

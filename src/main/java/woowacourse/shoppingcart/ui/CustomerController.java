@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 
 @RestController
 @RequestMapping("/customers")
@@ -69,5 +71,11 @@ public class CustomerController {
         Long customerId = authService.findUserIdByToken(token);
         customerService.updatePassword(customerId, updatePasswordRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/username/duplication")
+    public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(@RequestBody UniqueUsernameRequest request) {
+        UniqueUsernameResponse response = customerService.checkUniqueUsername(request);
+        return ResponseEntity.ok(response);
     }
 }

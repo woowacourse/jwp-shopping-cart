@@ -35,8 +35,17 @@ public class CustomerDao {
         params.addValue("id", id);
 
         return jdbcTemplate.query(sql, params, ROW_MAPPER)
-                .stream()
-                .findAny();
+                .stream().findAny();
+    }
+
+    public Optional<CustomerEntity> findByUserName(String userName) {
+        final String sql = "SELECT id, username, password, nickname, age FROM customer "
+                + "WHERE username = :username";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("username", userName);
+
+        return jdbcTemplate.query(sql, params, ROW_MAPPER)
+                .stream().findAny();
     }
 
     public Long findIdByUserName(String userName) {
