@@ -102,10 +102,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = patchMethodRequestWithBearerAuth(changeGeneralInfoRequest, token,
                 "/api/customers/me?target=generalInfo");
         final CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
+
+        final ExtractableResponse<Response> responseAfterChanged = getMethodRequestWithBearerAuth(token,
+                "/api/customers/me");
+        final String modifiedUsername = responseAfterChanged.jsonPath().getString("username");
+
         assertAll(
                 ()-> assertThat(customerResponse.getEmail()).isEqualTo(email),
                 ()-> assertThat(customerResponse.getUsername()).isEqualTo("루나2"),
-                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                ()-> assertThat(modifiedUsername).isEqualTo("루나2")
         );
     }
 
@@ -126,9 +132,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest(password);
         final ExtractableResponse<Response> response = deleteMethodRequestWithBearerAuth(deleteCustomerRequest, token,
                 "/api/customers/me");
+
+        final ExtractableResponse<Response> responseAfterDeleted = postMethodRequest(loginRequest,
+                "/api/auth/login");
+
         assertAll(
                 ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                ()-> assertThat(response.header("Location")).isEqualTo("/")
+                ()-> assertThat(response.header("Location")).isEqualTo("/"),
+                ()-> assertThat(responseAfterDeleted.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         );
     }
 }
