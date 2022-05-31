@@ -12,31 +12,33 @@ method: POST
 
 URL: “/api/members”
 
-content-type: application/x-www-form-urlencoded → 확인해보고 추후 결정
+content-type: application/json
 
-### 이메일 중복 체크 / 규칙 검증 성공 시
+### 이메일 중복 체크 성공 시
 
 method: GET
 
-URL: “/api/members?email={email}” - 추후 수정
+URL: “/api/members?email={email}”
 
-content-type: application/x-www-form-urlencoded → 확인해보고 추후 결정
+content-type: application/json
 
-응답 코드: 204 No Content
+응답 코드: 200 OK
 
-- 예시
+```
+{
+  success: "true"
+}
+```
 
-  [https://nid.naver.com/user2/joinAjax?m=checkId&id=byeongju98&key=ZmA6bCoU5HyinV34](https://nid.naver.com/user2/joinAjax?m=checkId&id=byeongju98&key=ZmA6bCoU5HyinV34)
-
-  ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/acb9821c-3c2c-40ee-99ce-3cd181024719/Untitled.png)
-
-### 이메일 중복 체크 / 규칙 검증 실패 시
+### 이메일 중복 체크 과정에서 규칙 검증 실패 시
 
 응답 코드: 400 Bad Request
 
 ### 회원 가입 성공 시
 
 응답 코드: 201 Created
+
+Location 주지 않기
 
 ### 회원 가입 실패 시
 
@@ -54,7 +56,7 @@ content-type: application/x-www-form-urlencoded → 확인해보고 추후 결�
 
 ```jsx
 {
-    message: “…”,
+  message: "...",
 }
 ```
 
@@ -74,7 +76,7 @@ content-type: application/x-www-form-urlencoded → 확인해보고 추후 결�
 하나의
 특수
 문자 :
-    "^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$"
+        "^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$"
 ```
 
 ### 이메일 규칙
@@ -100,7 +102,7 @@ method: POST
 
 URL: “/api/login”
 
-content-type: application/x-www-form-urlencoded → 확인해보고 추후 결정
+content-type: application/json
 
 ### 로그인 성공 시
 
@@ -110,10 +112,10 @@ responseBody:
 
 ```jsx
 {
-    nickname: "...",
-        token
+  nickname: "...",
+          token
 :
-    "...",
+  "...",
 }
 ```
 
@@ -125,7 +127,7 @@ responseBody:
 
 # 로그아웃
 
-프론트엔드에서 JWT 토큰 삭제 (확인해보고 수정 가능)
+프론트엔드에서 JWT 토큰 삭제
 
 # 회원 권한 인가
 
@@ -149,23 +151,28 @@ Authorization: Bearer {token}
 
   응답 코드: 403 Forbidden
 
+
 # 회원 정보 페이지
 
 ### 비밀번호 확인
 
 method: POST
 
-URL: “/api/passwordConfirm”
+URL: “/api/members/auth/password-check”
 
-응답 코드: 204 No Content
+응답 코드: 200 OK
 
-응답 실패 코드: 400 Bad Request
+```
+{
+  success: "true"
+}
+```
 
 ### 회원 정보 조회
 
 method: GET
 
-URL: “/api/members/me” + 토큰 정보로 식별
+URL: “/api/members/auth/me” + 토큰 정보로 식별
 
 응답 코드: 200 OK
 
@@ -173,8 +180,8 @@ response body
 
 ```
 {
-  email: ,
-  nickname: ,
+  email: "...",
+  nickname: "...",
 }
 ```
 
@@ -182,23 +189,23 @@ response body
 
 method: PATCH
 
-(닉네임 + @) URL: “/api/members/me” + 토큰 정보로 식별
+(닉네임 + @) URL: “/api/members/auth/me” + 토큰 정보로 식별
 
 request body
 
 ```
 {
-  nickname: ,
+  nickname: "...",
 }
 ```
 
-(비밀번호) URL: “/api/members/password” + 토큰 정보로 식별
+(비밀번호) URL: “/api/members/auth/password” + 토큰 정보로 식별
 
 request body
 
-```
+```json
 {
-  password: ,
+  password: "..."
 }
 ```
 
@@ -208,6 +215,6 @@ request body
 
 method: DELETE
 
-URL: “/api/members/me” + 토큰 정보로 식별
+URL: “/api/members/auth/me” + 토큰 정보로 식별
 
 응답 코드: 204 No Content
