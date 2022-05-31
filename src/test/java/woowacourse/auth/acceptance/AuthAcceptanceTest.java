@@ -97,7 +97,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         params.put("fullAddress", Map.of("address", "서울특별시 강남구 선릉역", "detailAddress", "이디야 책상", "zoneCode", "12345"));
         params.put("terms", true);
 
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        RestAssured.given().log().all()
                 .body(params)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
