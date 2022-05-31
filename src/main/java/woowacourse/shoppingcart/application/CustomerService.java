@@ -46,4 +46,13 @@ public class CustomerService {
         final Customer updatedCustomer = customerDao.findByEmail(email);
         return new CustomerResponse(updatedCustomer.getEmail(), updatedCustomer.getUsername());
     }
+
+    public void delete(String email, String password) {
+        final Customer customer = customerDao.findByEmail(email);
+        if(customer.isDifferentPassword(password)){
+            throw new AuthException("기존 비밀번호와 맞지 않습니다.", ErrorResponse.INCORRECT_PASSWORD);
+        }
+        customerDao.delete(customer.getId());
+
+    }
 }

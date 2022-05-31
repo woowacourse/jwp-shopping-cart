@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import woowacourse.shoppingcart.dto.ChangeGeneralInfoRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -53,5 +55,12 @@ public class CustomerController {
         final CustomerResponse customerResponse = customerService
                 .changeGeneralInfo(email, changeGeneralInfoRequest.getUsername());
         return ResponseEntity.ok().body(customerResponse);
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<CustomerResponse> delete(@AuthenticationPrincipal String email, @RequestBody
+            DeleteCustomerRequest deleteCustomerRequest) {
+        customerService.delete(email, deleteCustomerRequest.getPassword());
+        return ResponseEntity.noContent().location(URI.create("/")).build();
     }
 }

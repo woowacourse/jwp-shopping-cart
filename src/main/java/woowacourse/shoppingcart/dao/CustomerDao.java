@@ -59,4 +59,9 @@ public class CustomerDao {
         final String sql = "UPDATE customer SET username = ? WHERE id = ?";
         jdbcTemplate.update(sql, username, id);
     }
+
+    public void delete(Long id) {
+        final String sql = "DELETE FROM customer WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

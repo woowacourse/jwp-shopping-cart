@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.AcceptanceTestFixture.deleteMethodRequestWithBearerAuth;
 import static woowacourse.AcceptanceTestFixture.getMethodRequestWithBearerAuth;
 import static woowacourse.AcceptanceTestFixture.patchMethodRequestWithBearerAuth;
 import static woowacourse.AcceptanceTestFixture.postMethodRequest;
@@ -16,6 +17,7 @@ import woowacourse.shoppingcart.dto.ChangeGeneralInfoRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -110,5 +112,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        final String email = "test@gmail.com";
+        final String password = "password0!";
+        final String username = "루나";
+        final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
+        postMethodRequest(customerRequest, "/api/customers");
+
+        final LoginRequest loginRequest = new LoginRequest(email, password);
+        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest,
+                "/api/auth/login");
+
+        final String token = tokenResponse.jsonPath().getString("accessToken");
+        final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest(password);
+        final ExtractableResponse<Response> response = deleteMethodRequestWithBearerAuth(deleteCustomerRequest, token,
+                "/api/customers/me");
+        assertAll(
+                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                ()-> assertThat(response.header("Location")).isEqualTo("/")
+        );
     }
 }
