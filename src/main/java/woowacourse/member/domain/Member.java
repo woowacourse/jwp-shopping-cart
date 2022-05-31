@@ -5,6 +5,7 @@ import woowacourse.member.exception.EmailNotValidException;
 import woowacourse.member.exception.NameNotValidException;
 import woowacourse.member.exception.PasswordChangeException;
 import woowacourse.member.exception.PasswordNotValidException;
+import woowacourse.member.exception.WrongPasswordException;
 import woowacourse.member.infrastructure.PasswordEncoder;
 
 public class Member {
@@ -65,22 +66,22 @@ public class Member {
     public void updatePassword(final String oldPassword,
                                final String newPassword,
                                final PasswordEncoder passwordEncoder) {
-        validatePassword(oldPassword, passwordEncoder);
+        validateWrongPassword(oldPassword, passwordEncoder);
         validateRightPassword(newPassword);
         String encodeNewPassword = passwordEncoder.encode(newPassword);
-        validateSamePassword(password, encodeNewPassword);
+        validateOldSameNewPassword(password, encodeNewPassword);
         password = encodeNewPassword;
     }
 
-    private void validateSamePassword(final String oldPassword, final String newPassword) {
+    private void validateOldSameNewPassword(final String oldPassword, final String newPassword) {
         if (oldPassword.equals(newPassword)) {
             throw new PasswordChangeException();
         }
     }
 
-    private void validatePassword(final String oldPassword, final PasswordEncoder passwordEncoder) {
+    public void validateWrongPassword(final String oldPassword, final PasswordEncoder passwordEncoder) {
         if(!authenticate(passwordEncoder.encode(oldPassword))) {
-            throw new PasswordChangeException();
+            throw new WrongPasswordException();
         }
     }
 

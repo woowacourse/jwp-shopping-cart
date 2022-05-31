@@ -13,7 +13,6 @@ import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.dto.MemberResponse;
 import woowacourse.member.exception.DuplicateMemberEmailException;
 import woowacourse.member.exception.NoMemberException;
-import woowacourse.member.exception.WrongPasswordException;
 import woowacourse.member.infrastructure.PasswordEncoder;
 
 @Transactional
@@ -35,6 +34,7 @@ public class MemberService {
         return memberDao.save(member);
     }
 
+    @Transactional(readOnly = true)
     public void validateDuplicateEmail(final EmailCheckRequest emailCheckRequest) {
         validateDuplicateEmail(emailCheckRequest.getEmail());
     }
@@ -49,11 +49,7 @@ public class MemberService {
     public Member login(final TokenRequest tokenRequest) {
         Member member = memberDao.findByEmail(tokenRequest.getEmail())
                 .orElseThrow(NoMemberException::new);
-
-        String encode = passwordEncoder.encode(tokenRequest.getPassword());
-        if (!member.authenticate(encode)) {
-            throw new WrongPasswordException();
-        }
+        member.validateWrongPassword(tokenRequest.getPassword(), passwordEncoder);
         return member;
     }
 
@@ -83,13 +79,7 @@ public class MemberService {
     public void deleteById(final Long id, final MemberDeleteRequest memberDeleteRequest) {
         Member member = memberDao.findById(id)
                 .orElseThrow(NoMemberException::new);
-        validateWrongPassword(memberDeleteRequest, member);
+        member.validateWrongPassword(memberDeleteRequest.getPassword(), passwordEncoder);
         memberDao.deleteById(id);
-    }
-
-    private void validateWrongPassword(final MemberDeleteRequest memberDeleteRequest, final Member member) {
-        if (!member.authenticate(passwordEncoder.encode(memberDeleteRequest.getPassword()))) {
-            throw new WrongPasswordException();
-        }
     }
 }

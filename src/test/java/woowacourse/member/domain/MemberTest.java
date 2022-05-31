@@ -16,6 +16,7 @@ import woowacourse.member.exception.EmailNotValidException;
 import woowacourse.member.exception.NameNotValidException;
 import woowacourse.member.exception.PasswordChangeException;
 import woowacourse.member.exception.PasswordNotValidException;
+import woowacourse.member.exception.WrongPasswordException;
 import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 
 public class MemberTest {
@@ -98,7 +99,7 @@ public class MemberTest {
 
         assertThatThrownBy(() ->
                 member.updatePassword("Wrong1!", "Maru1234!", new SHA256PasswordEncoder()))
-                .isInstanceOf(PasswordChangeException.class);
+                .isInstanceOf(WrongPasswordException.class);
     }
 
     @DisplayName("비밀번호 변경시 변경할 비밀번호가 조건에 맞지 않으면 예외가 발생한다.")
