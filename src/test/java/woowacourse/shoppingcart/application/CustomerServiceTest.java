@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
@@ -70,5 +71,26 @@ class CustomerServiceTest {
 
         Customer actual = customerDao.findCustomerByUserName(customerRequest1.getUserName());
         assertThat(actual.getPassword()).isEqualTo(newPassword);
+    }
+
+    @DisplayName("비밀번호를 제외한 회원 정보를 성공적으로 변경한다.")
+    @Test
+    void updateInfo() {
+        customerService.addCustomer(customerRequest1);
+        String newNickName = "김태현";
+        int newAge = 27;
+        Customer originCustomer = Customer.of(customerRequest1.getUserName(), customerRequest1.getPassword(),
+                customerRequest1.getNickName(), customerRequest1.getAge());
+        CustomerRequest updateCustomer =
+                new CustomerRequest(originCustomer.getUserName(), originCustomer.getPassword(), newNickName, newAge);
+
+        customerService.updateInfo(originCustomer, updateCustomer);
+
+        Customer actual = customerDao.findCustomerByUserName(customerRequest1.getUserName());
+
+        assertAll(
+                () -> assertThat(actual.getNickName()).isEqualTo(newNickName),
+                () -> assertThat(actual.getAge()).isEqualTo(newAge)
+        );
     }
 }

@@ -49,4 +49,9 @@ public class CustomerService {
         Customer updateCustomer = customer.updatePassword(passwordRequest.getNewPassword());
         customerDao.updatePassword(updateCustomer);
     }
+
+    public void updateInfo(Customer customer, CustomerRequest customerRequest) {
+        Customer updateCustomer = customer.updateInfo(customerRequest.getNickName(), customerRequest.getAge());
+        customerDao.updateInfo(updateCustomer);
+    }
 }

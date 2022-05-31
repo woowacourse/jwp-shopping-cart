@@ -32,6 +32,10 @@ public class Customer {
         return new Customer(userName, new Password(newPassword), nickName, age);
     }
 
+    public Customer updateInfo(String nickName, int age) {
+        return new Customer(userName, password, new NickName(nickName), new Age(age));
+    }
+
     public String getUserName() {
         return userName.getUserName();
     }
