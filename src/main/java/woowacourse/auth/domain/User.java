@@ -1,9 +1,9 @@
-package woowacourse.domain;
+package woowacourse.auth.domain;
 
 public class User {
 
     private final Long id;
-    private final String username;
+    private final String username; // TODO: id vs username as token payload
     private final String password;
 
     public User(Long id, String username, String password) {
