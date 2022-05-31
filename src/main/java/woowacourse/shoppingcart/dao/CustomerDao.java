@@ -20,6 +20,7 @@ public class CustomerDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     private final RowMapper<Customer> customerRowMapper = (resultSet, rowNum) -> new Customer(
+            resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("password"),
             resultSet.getString("name"),
@@ -42,7 +43,7 @@ public class CustomerDao {
 
     public Long findIdByName(final String userName) {
         try {
-            final String query = "SELECT id FROM customer WHERE name = ?";
+            final String query = "SELECT id FROM CUSTOMER WHERE name = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
@@ -50,7 +51,7 @@ public class CustomerDao {
     }
 
     public boolean existEmail(final String email) {
-        final String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ?)";
+        final String query = "SELECT EXISTS (SELECT * FROM CUSTOMER WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);
     }
 
@@ -69,7 +70,13 @@ public class CustomerDao {
     }
 
     public boolean existId(Long customerId) {
-        final String query = "SELECT EXISTS (SELECT * FROM customer WHERE id = ?)";
+        final String query = "SELECT EXISTS (SELECT * FROM CUSTOMER WHERE id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, customerId);
+    }
+
+    public void update(Customer customer) {
+        final String query = "UPDATE CUSTOMER SET name = (?), password = (?), phone = (?), address = (?) WHERE id = (?)";
+        jdbcTemplate.update(query, customer.getName(), customer.getPassword(), customer.getPhone(),
+                customer.getAddress(), customer.getId());
     }
 }

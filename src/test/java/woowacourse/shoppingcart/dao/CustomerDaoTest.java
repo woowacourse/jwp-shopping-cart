@@ -122,4 +122,22 @@ public class CustomerDaoTest {
         //then
         assertThat(isExistId).isTrue();
     }
+
+    @DisplayName("name과 password, phone, address를 받아 customer를 수정한다.")
+    @Test
+    void updateCustomer() {
+        //given
+        Customer customer =
+                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Long id = customerDao.save(customer);
+
+        //when
+        Customer updateCustomer = new Customer(id, "email", "Pw123456!!", "name2", "010-1234-1234", "address2");
+        customerDao.update(updateCustomer);
+
+        //then
+        Customer actual = customerDao.findCustomerById(id);
+        assertThat(actual).extracting("email", "password", "name", "phone", "address")
+                .containsExactly("email", "Pw123456!!", "name2", "010-1234-1234", "address2");
+    }
 }
