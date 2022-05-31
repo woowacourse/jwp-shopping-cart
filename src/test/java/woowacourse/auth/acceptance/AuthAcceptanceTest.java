@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 
@@ -26,7 +26,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         final CustomerCreationRequest signUpRequest = new CustomerCreationRequest(email, password, "kun");
         postUser(signUpRequest);
 
-        final TokenRequest request = new TokenRequest(email, password);
+        final LoginRequest request = new LoginRequest(email, password);
 
         // when
         final ValidatableResponse response = postLogin(request);
@@ -44,7 +44,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void login_wrongForm_400(final String email, final String password, final String message) {
 
         // when
-        final TokenRequest request = new TokenRequest(email, password);
+        final LoginRequest request = new LoginRequest(email, password);
         final ValidatableResponse response = postLogin(request);
 
         // then
@@ -62,8 +62,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
         postUser(request);
 
         // when
-        final TokenRequest tokenRequest = new TokenRequest(email, "qwer123456");
-        final ValidatableResponse response = postLogin(tokenRequest);
+        final LoginRequest loginRequest = new LoginRequest(email, "qwer123456");
+        final ValidatableResponse response = postLogin(loginRequest);
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())

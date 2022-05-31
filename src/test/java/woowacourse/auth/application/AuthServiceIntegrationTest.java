@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidLoginException;
@@ -38,7 +38,7 @@ class AuthServiceIntegrationTest {
     @DisplayName("로그인하려는 이메일이 존재하지 않으면 예외를 던진다.")
     void login_notExistEmail_exceptionThrown() {
         // given
-        final TokenRequest request = new TokenRequest("rick@email.com", PASSWORD);
+        final LoginRequest request = new LoginRequest("rick@email.com", PASSWORD);
 
         // when, then
         assertThatThrownBy(() -> authService.login(request))
@@ -49,7 +49,7 @@ class AuthServiceIntegrationTest {
     @DisplayName("로그인하려는 비밀번호가 일치하지 않으면 예외를 던진다.")
     void login_differentSamePassword_exceptionThrown() {
         // given
-        final TokenRequest request = new TokenRequest(customer.getEmail(), "1q2w3e4r");
+        final LoginRequest request = new LoginRequest(customer.getEmail(), "1q2w3e4r");
 
         // when, then
         assertThatThrownBy(() -> authService.login(request))
@@ -60,7 +60,7 @@ class AuthServiceIntegrationTest {
     @DisplayName("로그인 성공할 경우에 토큰을 발급한다.")
     void login_success_tokenReturned() {
         // given
-        final TokenRequest request = new TokenRequest(customer.getEmail(), PASSWORD);
+        final LoginRequest request = new LoginRequest(customer.getEmail(), PASSWORD);
 
         // when
         final String accessToken = authService.login(request);

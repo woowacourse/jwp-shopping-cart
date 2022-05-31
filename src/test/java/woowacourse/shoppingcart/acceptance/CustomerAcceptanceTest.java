@@ -10,8 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
@@ -79,10 +79,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final CustomerCreationRequest signUpRequest = new CustomerCreationRequest(email, password, nickname);
         postUser(signUpRequest);
 
-        final TokenRequest tokenRequest = new TokenRequest(email, password);
-        final String accessToken = postLogin(tokenRequest)
+        final LoginRequest loginRequest = new LoginRequest(email, password);
+        final String accessToken = postLogin(loginRequest)
                 .extract()
-                .as(TokenResponse.class)
+                .as(LoginResponse.class)
                 .getAccessToken();
 
         // when
@@ -103,10 +103,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final CustomerCreationRequest createRequest = new CustomerCreationRequest(email, password, "kun");
         postUser(createRequest);
 
-        final TokenRequest tokenRequest = new TokenRequest(email, password);
-        final String accessToken = postLogin(tokenRequest)
+        final LoginRequest loginRequest = new LoginRequest(email, password);
+        final String accessToken = postLogin(loginRequest)
                 .extract()
-                .as(TokenResponse.class)
+                .as(LoginResponse.class)
                 .getAccessToken();
 
         final String updatedNickname = "rick";
@@ -138,10 +138,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final CustomerCreationRequest createRequest = new CustomerCreationRequest(email, password, "kun");
         postUser(createRequest);
 
-        final TokenRequest tokenRequest = new TokenRequest(email, password);
-        final String accessToken = postLogin(tokenRequest)
+        final LoginRequest loginRequest = new LoginRequest(email, password);
+        final String accessToken = postLogin(loginRequest)
                 .extract()
-                .as(TokenResponse.class)
+                .as(LoginResponse.class)
                 .getAccessToken();
 
         // when
@@ -151,7 +151,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().delete("/users/me")
                 .then().log().all();
 
-        final ValidatableResponse loginResponse = postLogin(tokenRequest);
+        final ValidatableResponse loginResponse = postLogin(loginRequest);
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());

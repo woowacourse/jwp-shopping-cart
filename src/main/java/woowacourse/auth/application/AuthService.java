@@ -3,7 +3,7 @@ package woowacourse.auth.application;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
@@ -23,7 +23,7 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public String login(final TokenRequest request) {
+    public String login(final LoginRequest request) {
         try {
             final Customer customer = customerService.getByEmail(request.getEmail());
             checkPassword(request, customer);
@@ -33,7 +33,7 @@ public class AuthService {
         }
     }
 
-    private void checkPassword(final TokenRequest request, final Customer customer) {
+    private void checkPassword(final LoginRequest request, final Customer customer) {
         if (!BCrypt.checkpw(request.getPassword(), customer.getPassword())) {
             throw new InvalidLoginException();
         }

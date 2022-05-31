@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.application.ServiceMockTest;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidLoginException;
@@ -24,7 +24,7 @@ class AuthServiceTest extends ServiceMockTest {
     @DisplayName("로그인하려는 이메일이 존재하지 않으면 예외를 던진다.")
     void login_notExistEmail_exceptionThrown() {
         // given
-        final TokenRequest request = new TokenRequest("email@email.com", "1q2w3e4r");
+        final LoginRequest request = new LoginRequest("email@email.com", "1q2w3e4r");
 
         given(customerService.getByEmail(request.getEmail()))
                 .willThrow(NotFoundCustomerException.class);
@@ -39,7 +39,7 @@ class AuthServiceTest extends ServiceMockTest {
     void login_differentSamePassword_exceptionThrown() {
         // given
         final String email = "email@email.com";
-        final TokenRequest request = new TokenRequest(email, "1q2w3e4r");
+        final LoginRequest request = new LoginRequest(email, "1q2w3e4r");
 
         final Customer customer = new Customer("knu", email, "q1w2e3r4");
         given(customerService.getByEmail(request.getEmail()))
@@ -56,7 +56,7 @@ class AuthServiceTest extends ServiceMockTest {
         // given
         final String email = "kun@email.com";
         final String password = "qwerasdf123";
-        final TokenRequest request = new TokenRequest(email, password);
+        final LoginRequest request = new LoginRequest(email, password);
 
         final Customer customer = new Customer(1L, "kun", email, password);
         given(customerService.getByEmail(email))

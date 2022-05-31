@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 
@@ -35,7 +35,7 @@ public abstract class AcceptanceTest {
                 .then().log().all();
     }
 
-    protected ValidatableResponse postLogin(final TokenRequest request) {
+    protected ValidatableResponse postLogin(final LoginRequest request) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
