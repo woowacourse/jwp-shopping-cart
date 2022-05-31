@@ -31,7 +31,7 @@ class AuthServiceTest {
     void setUp() {
         customer = Customer.builder()
                 .username("username")
-                .password("password123")
+                .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -44,7 +44,7 @@ class AuthServiceTest {
         customerDao.save(customer);
 
         // when & then
-        assertThatThrownBy(() -> authService.login(new TokenRequest("username", "123password")))
+        assertThatThrownBy(() -> authService.login(new TokenRequest("username", "wrongpassword")))
                 .isInstanceOf(InvalidAuthException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }

@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.InvalidAuthException;
+import woowacourse.auth.support.Encryption;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -14,16 +16,25 @@ public class AuthService {
 
     private final CustomerDao customerDao;
     private final JwtTokenProvider jwtTokenProvider;
+    private final Encryption encryption;
 
-    public AuthService(final CustomerDao customerDao, final JwtTokenProvider jwtTokenProvider) {
+    public AuthService(final CustomerDao customerDao, final JwtTokenProvider jwtTokenProvider,
+                       final Encryption encryption) {
         this.customerDao = customerDao;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.encryption = encryption;
     }
 
     public TokenResponse login(final TokenRequest request) {
         Customer customer = customerDao.findByUsername(request.getUsername());
-        customer.matchPassword(request.getPassword());
+        validatePasswordIsCorrect(customer, request);
         String accessToken = jwtTokenProvider.createToken(customer.getUsername());
         return new TokenResponse(accessToken);
+    }
+
+    private void validatePasswordIsCorrect(Customer customer, TokenRequest request) {
+        if (!encryption.isSame(customer.getPassword(), request.getPassword())) {
+            throw new InvalidAuthException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

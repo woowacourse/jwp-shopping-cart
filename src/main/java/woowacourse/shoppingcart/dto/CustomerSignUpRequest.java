@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncryptedPassword;
 
 public class CustomerSignUpRequest {
 
@@ -28,10 +29,10 @@ public class CustomerSignUpRequest {
         this.address = address;
     }
 
-    public Customer toCustomer() {
+    public Customer toCustomer(EncryptedPassword password) {
         return Customer.builder()
                 .username(username)
-                .password(password)
+                .password(password.getPassword())
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .build();
