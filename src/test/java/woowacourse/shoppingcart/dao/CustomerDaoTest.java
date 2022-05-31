@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -9,8 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -42,10 +42,11 @@ public class CustomerDaoTest {
     void findIdByUserNameTest() {
 
         // given
-        final String userName = "puterism";
+        final String nickname = "test4";
+        customerDao.save(new Customer("test4@naver.com", "test4", "Password123!"));
 
         // when
-        final Long customerId = customerDao.findIdByNickname(userName);
+        final Long customerId = customerDao.findIdByNickname(nickname);
 
         // then
         assertThat(customerId).isNotNull();
@@ -56,10 +57,11 @@ public class CustomerDaoTest {
     void findIdByUserNameTestIgnoreUpperLowerCase() {
 
         // given
-        final String userName = "gwangyeol";
+        final String nickname = "Test4";
+        customerDao.save(new Customer("test4@naver.com", "test4", "Password123!"));
 
         // when
-        final Long customerId = customerDao.findIdByNickname(userName);
+        final Long customerId = customerDao.findIdByNickname(nickname);
 
         // then
         assertThat(customerId).isNotNull();
@@ -75,5 +77,20 @@ public class CustomerDaoTest {
 
         // when && then
         assertThat(customerDao.existsByNickname(nickname)).isTrue();
+    }
+
+    @DisplayName("email을 통해 Customer를 찾는다.")
+    @Test
+    void findIdByEmail() {
+
+        // given
+        String email = "beomWhale@naver.com";
+        Long savedId = customerDao.save(new Customer(email, "beom1234", "Password123!"));
+
+        // when
+        Customer customer = customerDao.findIdByEmail(email).get();
+
+        // then
+        assertThat(savedId).isEqualTo(customer.getId());
     }
 }
