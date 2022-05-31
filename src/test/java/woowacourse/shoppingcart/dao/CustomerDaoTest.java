@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static woowacourse.fixture.PasswordFixture.basicPassword;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -95,7 +96,7 @@ public class CustomerDaoTest {
         assertAll(
                 () -> assertThat(customer.getId()).isEqualTo(id),
                 () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
-                () -> assertThat(customer.getPassword()).isEqualTo("123")
+                () -> assertThat(customer.getPassword()).isEqualTo(basicPassword)
         );
     }
 
@@ -152,5 +153,21 @@ public class CustomerDaoTest {
         assertThatThrownBy(() -> customerDao.deleteById(id))
                 .isExactlyInstanceOf(CannotDeleteException.class)
                 .hasMessageContaining("해당 데이터 삭제에 실패했습니다.");
+    }
+
+    @DisplayName("존재하는 유저이름으로 유저를 찾는다.")
+    @Test
+    void findByUserName() {
+        // given
+        final String userName = "puterism";
+
+        //when
+        final Customer customer = customerDao.findByUserName(userName).get();
+        // then
+        assertAll(
+                () -> assertThat(customer.getUserName()).isEqualTo(userName),
+                () -> assertThat(customer.getPassword()).isEqualTo(basicPassword)
+        );
+
     }
 }

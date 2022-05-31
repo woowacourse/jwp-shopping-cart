@@ -21,7 +21,7 @@
 ## 인증 기능
 
 - [ ] 로그인 기능
-    - [ ] JWT Access Token을 발급한다.
+    - [X] JWT Access Token을 발급한다.
     - [ ] JWT Access Token을 이용하여 유효성을 검증한다.
     - [ ] 유효성 검증에 실패하면 로그인 페이지로 redirect 한다.
 

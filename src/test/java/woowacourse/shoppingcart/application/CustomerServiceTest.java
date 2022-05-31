@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import woowacourse.fixture.PasswordFixture;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -37,7 +38,7 @@ class CustomerServiceTest {
     void signUp() {
         // given
         final String userName = "기론";
-        final String password = "1234";
+        final String password = PasswordFixture.basicPassword;
         given(customerDao.existsByUserName(userName)).willReturn(false);
         given(customerDao.save(userName, password)).willReturn(1L);
 
@@ -58,7 +59,7 @@ class CustomerServiceTest {
     void signUpWithDuplicateUserName() {
         // given
         final String userName = "기론";
-        final String password = "1234";
+        final String password = PasswordFixture.basicPassword;
         given(customerDao.existsByUserName(userName)).willReturn(true);
 
         // when
@@ -79,7 +80,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "기론";
-        final String password = "1234";
+        final String password = PasswordFixture.basicPassword;
         Customer customer = new Customer(id, userName, password);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
@@ -115,7 +116,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "기론";
-        final String password = "1234";
+        final String password = PasswordFixture.basicPassword;
         Customer customer = new Customer(id, userName, password);
         Customer updatedCustomer = new Customer(id, userName, "321");
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
@@ -158,7 +159,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "기론";
-        final String password = "1234";
+        final String password = PasswordFixture.basicPassword;
         Customer customer = new Customer(id, userName, password);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
@@ -180,7 +181,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "기론";
-        final String password = "1234";
+        final String password = PasswordFixture.basicPassword;
         Customer customer = new Customer(id, userName, password);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
         doNothing().when(customerDao).deleteById(id);

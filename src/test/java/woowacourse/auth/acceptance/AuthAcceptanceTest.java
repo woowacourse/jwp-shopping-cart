@@ -1,24 +1,48 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.CustomerRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
-    @DisplayName("Bearer Auth 로그인 성공")
+
+    @DisplayName("등록된 회원이 로그인을 하면 토큰을 발급받는다.")
     @Test
-    void myInfoWithBearerAuth() {
+    void loginReturnBearerToken() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+        CustomerRequest request = new CustomerRequest("기론", "12345678");
+
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        final TokenRequest tokenRequest = new TokenRequest("기론", "12345678");
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .when().post("/api/login")
+                .then().log().all()
+                .extract();
+        final TokenResponse tokenResponse = extract.as(TokenResponse.class);
 
         // then
-        // 내 정보가 조회된다
+        assertThat(tokenResponse.getAccessToken()).isNotNull();
     }
 
     @DisplayName("Bearer Auth 로그인 실패")

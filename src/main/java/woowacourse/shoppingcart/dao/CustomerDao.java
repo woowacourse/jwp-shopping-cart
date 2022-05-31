@@ -68,6 +68,12 @@ public class CustomerDao {
         return Optional.ofNullable(DataAccessUtils.singleResult(customers));
     }
 
+    public Optional<Customer> findByUserName(final String userName) {
+        final String query = "SELECT id, username, password FROM customer WHERE username = ?";
+        final List<Customer> customers = jdbcTemplate.query(query, rowMapper(), userName);
+        return Optional.ofNullable(DataAccessUtils.singleResult(customers));
+    }
+
     public Customer update(final Long id, final String userName, final String password) {
         final String query = "UPDATE customer SET userName = ?, password = ? WHERE id = ?";
         final int update = jdbcTemplate.update(query, userName, password, id);

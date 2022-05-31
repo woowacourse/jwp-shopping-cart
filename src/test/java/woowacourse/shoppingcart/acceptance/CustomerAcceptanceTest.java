@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.fixture.PasswordFixture;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -20,7 +21,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         // given
-        CustomerRequest request = new CustomerRequest("기론", "123");
+        CustomerRequest request = new CustomerRequest("기론", PasswordFixture.basicPassword);
 
         // when
         ExtractableResponse<Response> response = RestAssured
