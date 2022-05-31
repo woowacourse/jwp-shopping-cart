@@ -92,5 +92,41 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        // given
+        Customer customer = new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        RestAssured.given().log().all()
+                .body(customer)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/customers")
+                .then().log().all()
+                .extract();
+
+        String accessToken = RestAssured.given().log().all()
+                .body(new TokenRequest("email", "Pw123456!"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/customers/login")
+                .then().log().all()
+                .extract().as(TokenResponse.class).getAccessToken();
+        //when
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .when()
+                .delete("/customers")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .extract();
+        //then
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/customers")
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        //TODO : 예외 메시지 추가 확인
     }
 }
