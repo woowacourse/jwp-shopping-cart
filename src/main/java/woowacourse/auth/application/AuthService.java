@@ -28,4 +28,9 @@ public class AuthService {
             throw new LoginFailException();
         }
     }
+
+    public Customer findCustomerByToken(String token) {
+        String email = jwtTokenProvider.getPayload(token);
+        return customerService.findByEmail(email);
+    }
 }
