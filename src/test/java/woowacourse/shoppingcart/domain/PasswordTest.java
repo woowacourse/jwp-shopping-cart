@@ -48,7 +48,7 @@ class PasswordTest {
                 Arguments.of("!@#$%^&*"),
                 Arguments.of("1234abcd"),
                 Arguments.of("abcd!@#$"),
-                Arguments.of("!@#4abcd")
+                Arguments.of("!@#$abcd")
         );
     }
 }

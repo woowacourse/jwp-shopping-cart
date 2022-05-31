@@ -8,7 +8,7 @@ public class Password {
 
     private static final int MIN_THRESHOLD = 8;
     private static final int MAX_THRESHOLD = 16;
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile("([0-9]+[a-zA-Z]+[!@#$%^&*()]+)");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()]).+$");
 
     private final String value;
 
