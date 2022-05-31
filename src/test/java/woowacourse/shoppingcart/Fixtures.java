@@ -3,6 +3,7 @@ package woowacourse.shoppingcart;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.ProfileImageUrl;
@@ -31,4 +32,7 @@ public class Fixtures {
     public static CustomerRequest CUSTOMER_REQUEST_1 = new CustomerRequest("seongwoo0513@example.com", "string&123",
             "http://gravatar.com/avatar/1?d=identicon",
             "박성우", "male", "1999-03-23", "01022223333", new AddressRequest("서울특별시 강남구 선릉역", "이디야 1층", "12345"), true);
+
+    public static TokenRequest TOKEN_REQUEST_1 = new TokenRequest(CUSTOMER_REQUEST_1.getEmail(),
+            CUSTOMER_REQUEST_1.getPassword());
 }
