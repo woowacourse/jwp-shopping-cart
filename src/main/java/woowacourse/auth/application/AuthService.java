@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dao.MemberDao;
 import woowacourse.auth.domain.Email;
 import woowacourse.auth.domain.Member;
@@ -28,6 +29,7 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Transactional
     public void save(MemberCreateRequest memberCreateRequest) {
         validateUniqueEmail(memberCreateRequest);
         Member member = new Member(memberCreateRequest.getEmail(), memberCreateRequest.getPassword(),
@@ -42,11 +44,13 @@ public class AuthService {
         }
     }
 
+    @Transactional(readOnly = true)
     public boolean existsEmail(String email) {
         String validatedEmail = new Email(email).getValue();
         return memberDao.existsEmail(validatedEmail);
     }
 
+    @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest loginRequest) {
         Member member = findByEmail(loginRequest.getEmail(), new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
         validatePassword(member.getPassword(), loginRequest.getPassword());
@@ -65,6 +69,7 @@ public class AuthService {
         }
     }
 
+    @Transactional(readOnly = true)
     public CheckResponse checkPassword(String email, PasswordCheckRequest passwordCheckRequest) {
         Member member = memberDao.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
@@ -78,6 +83,7 @@ public class AuthService {
         return new MemberResponse(member);
     }
 
+    @Transactional
     public void updateMember(String email, MemberUpdateRequest memberUpdateRequest) {
         validateExists(email);
         String nickname = new Nickname(memberUpdateRequest.getNickname())
@@ -91,6 +97,7 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public void updatePassword(String email, PasswordUpdateRequest passwordUpdateRequest) {
         validateExists(email);
         String password = new Password(passwordUpdateRequest.getPassword())
@@ -98,6 +105,7 @@ public class AuthService {
         memberDao.updatePasswordByEmail(email, password);
     }
 
+    @Transactional
     public void delete(String email) {
         validateExists(email);
         memberDao.deleteByEmail(email);
