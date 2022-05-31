@@ -1,19 +1,35 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Locale;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-
-import java.util.Locale;
 
 @Repository
 public class CustomerDao {
+    private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = (rs, rowNum) -> {
+        return new Customer(
+                rs.getLong("id"),
+                rs.getString("email"),
+                rs.getString("name"),
+                rs.getString("password")
+        );
+    };
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public CustomerDao(final JdbcTemplate jdbcTemplate) {
+    public CustomerDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("customer")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long findIdByUserName(final String userName) {
@@ -23,5 +39,38 @@ public class CustomerDao {
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
+    }
+
+    public Optional<Customer> findById(Long id) {
+        final String sql = "SELECT id, email, name, password FROM Customer WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public void save(Customer customer) {
+        simpleJdbcInsert.execute(new BeanPropertySqlParameterSource(customer));
+    }
+
+    public Optional<Customer> findByEmail(String email) {
+        final String sql = "SELECT id, email, name, password FROM CUSTOMER where email = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, email));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public void update(Customer customer) {
+        final String sql = "UPDATE Customer SET name = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql, customer.getName(), customer.getId());
+    }
+
+    public void delete(long id) {
+        final String sql = "DELETE FROM Customer WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

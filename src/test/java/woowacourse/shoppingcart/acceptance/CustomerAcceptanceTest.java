@@ -13,7 +13,9 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
@@ -25,6 +27,9 @@ import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 @Sql("/truncate.sql")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @DisplayName("이름, 이메일, 비밀번호를 입력해서 회원 등록 요청한다")
     @Test
     void addCustomer() {
@@ -35,10 +40,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> 회원생성응답 = post(CUSTOMER_URI, 회원생성요청);
 
         // then
-        assertAll(
-                () -> assertThat(회원생성응답.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(회원생성응답.header("Location")).isNotBlank()
-        );
+        assertThat(회원생성응답.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @DisplayName("회원 이름과 이메일을 확인할 수 있다")
@@ -57,7 +59,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(회원조회응답.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(회원응답.getName()).isEqualTo(회원생성요청.getName()),
-                () -> assertThat(회원응답.getName()).isEqualTo(회원생성요청.getEmail())
+                () -> assertThat(회원응답.getEmail()).isEqualTo(회원생성요청.getEmail())
         );
     }
 
@@ -93,6 +95,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         //when
         final String token = getToken(잉_로그인요청);
         final ExtractableResponse<Response> 회원탈퇴응답 = delete(CUSTOMER_URI, 회원탈퇴요청, token);
+
+        System.out.println();
+        System.out.println();
 
         //then
         assertAll(

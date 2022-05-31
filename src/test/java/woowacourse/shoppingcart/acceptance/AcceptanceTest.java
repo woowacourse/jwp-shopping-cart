@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.acceptance;
 
 import static woowacourse.ShoppingCartFixture.LOGIN_URI;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -24,9 +26,19 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private String toJson(Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     protected ExtractableResponse<Response> post(String uri, Object object) {
         return RestAssured.given().log().all()
-                .body(object)
+                .body(toJson(object))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post(uri)
@@ -37,6 +49,7 @@ public class AcceptanceTest {
     protected ExtractableResponse<Response> get(String uri, String token) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get(uri)
                 .then().log().all()
@@ -46,7 +59,7 @@ public class AcceptanceTest {
     protected ExtractableResponse<Response> put(String uri, Object object, String token) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + token)
-                .body(object)
+                .body(toJson(object))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .put(uri)
@@ -57,7 +70,8 @@ public class AcceptanceTest {
     protected ExtractableResponse<Response> delete(String uri, Object object, String token) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + token)
-                .body(object)
+                .body(toJson(object))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .delete(uri)
                 .then().log().all()
