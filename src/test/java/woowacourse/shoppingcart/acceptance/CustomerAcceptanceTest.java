@@ -82,6 +82,20 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         });
     }
 
+    @DisplayName("유효하지 않는 토큰으로 내 정보 조회 시 401 상태코드를 반환한다.")
+    @Test
+    void getMe_error_invalidToken() {
+        String accessToken = "aaaaaaa.bbbbbbb.ccccccc";
+
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract();
+    }
+
     @DisplayName("내 정보를 수정한다.")
     @Test
     void updateMe() {

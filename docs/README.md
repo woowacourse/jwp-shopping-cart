@@ -74,4 +74,4 @@
 
 - 05/31
     - [ ] 도메인 검증 추가
-    - [ ] token validate 추가
+    - [x] token validate 추가
