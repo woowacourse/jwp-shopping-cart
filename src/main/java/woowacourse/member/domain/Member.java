@@ -28,19 +28,12 @@ public class Member {
     }
 
     public static Member from(String email, String password, String name, PasswordEncoder passwordEncoder) {
-        validateRightPassword(password);
         return new Member(null, email, passwordEncoder.encode(password), name);
     }
 
     private void validateRightEmail(final String email) {
         if (!Pattern.matches(EMAIL_REGEX, email)) {
             throw new EmailNotValidException();
-        }
-    }
-
-    private static void validateRightPassword(final String password) {
-        if (!Pattern.matches(PASSWORD_REGEX, password)) {
-            throw new PasswordNotValidException();
         }
     }
 
@@ -69,7 +62,6 @@ public class Member {
                                final String newPassword,
                                final PasswordEncoder passwordEncoder) {
         validateWrongPassword(oldPassword, passwordEncoder);
-        validateRightPassword(newPassword);
         String encodeNewPassword = passwordEncoder.encode(newPassword);
         validateOldSameNewPassword(password, encodeNewPassword);
         password = encodeNewPassword;

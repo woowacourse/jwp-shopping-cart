@@ -8,6 +8,7 @@ import static woowacourse.helper.fixture.MemberFixture.ENCODE_PASSWORD;
 import static woowacourse.helper.fixture.MemberFixture.NAME;
 import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
 import static woowacourse.helper.fixture.MemberFixture.createMember;
+import static woowacourse.helper.fixture.MemberFixture.passwordEncoder;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ public class MemberTest {
     void validateWrongPassword() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
 
-        assertThatNoException().isThrownBy(() -> member.validateWrongPassword(PASSWORD, new SHA256PasswordEncoder()));
+        assertThatNoException().isThrownBy(() -> member.validateWrongPassword(PASSWORD, passwordEncoder()));
     }
 
     @DisplayName("이름을 변경한다.")
@@ -84,7 +85,7 @@ public class MemberTest {
         Member member = createMember(EMAIL, PASSWORD, NAME);
         String originPassword = member.getPassword();
 
-        member.updatePassword(PASSWORD, "Maru1234!", new SHA256PasswordEncoder());
+        member.updatePassword(PASSWORD, "Maru1234!", passwordEncoder());
         String updatedPassword = member.getPassword();
 
         assertThat(originPassword).isNotEqualTo(updatedPassword);
@@ -96,7 +97,7 @@ public class MemberTest {
         Member member = createMember(EMAIL, PASSWORD, NAME);
 
         assertThatThrownBy(() ->
-                member.updatePassword("Wrong1!", "Maru1234!", new SHA256PasswordEncoder()))
+                member.updatePassword("Wrong1!", "Maru1234!", passwordEncoder()))
                 .isInstanceOf(WrongPasswordException.class);
     }
 
@@ -106,7 +107,7 @@ public class MemberTest {
         Member member = createMember(EMAIL, PASSWORD, NAME);
 
         assertThatThrownBy(() ->
-                member.updatePassword(PASSWORD, "1!", new SHA256PasswordEncoder()))
+                member.updatePassword(PASSWORD, "1!", passwordEncoder()))
                 .isInstanceOf(PasswordNotValidException.class);
     }
 
@@ -116,7 +117,7 @@ public class MemberTest {
         Member member = createMember(EMAIL, PASSWORD, NAME);
 
         assertThatThrownBy(() ->
-                member.updatePassword(PASSWORD, PASSWORD, new SHA256PasswordEncoder()))
+                member.updatePassword(PASSWORD, PASSWORD, passwordEncoder()))
                 .isInstanceOf(PasswordChangeException.class);
     }
 }

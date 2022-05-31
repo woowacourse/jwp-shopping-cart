@@ -9,6 +9,7 @@ import static woowacourse.helper.fixture.MemberFixture.NAME;
 import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
 import static woowacourse.helper.fixture.MemberFixture.createMember;
 import static woowacourse.helper.fixture.MemberFixture.createMemberRegisterRequest;
+import static woowacourse.helper.fixture.MemberFixture.passwordEncoder;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -121,7 +122,7 @@ public class MemberServiceTest {
         Member member = memberDao.findById(id).get();
 
         assertThatNoException()
-                .isThrownBy(() -> member.validateWrongPassword("Maru1234!", new SHA256PasswordEncoder()));
+                .isThrownBy(() -> member.validateWrongPassword("Maru1234!", passwordEncoder()));
     }
 
     @DisplayName("회원이 존재하지 않는 경우 삭제를 실패한다.")

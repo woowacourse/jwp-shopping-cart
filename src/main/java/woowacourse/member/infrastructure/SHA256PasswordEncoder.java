@@ -8,8 +8,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class SHA256PasswordEncoder implements PasswordEncoder {
 
+    private final PasswordValidator passwordValidator;
+
+    public SHA256PasswordEncoder(final PasswordValidator passwordValidator) {
+        this.passwordValidator = passwordValidator;
+    }
+
     @Override
     public String encode(String password) {
+        passwordValidator.validate(password);
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
