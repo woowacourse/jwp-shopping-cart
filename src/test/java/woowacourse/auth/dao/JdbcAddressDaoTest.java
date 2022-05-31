@@ -1,6 +1,7 @@
 package woowacourse.auth.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.auth.Fixtures.ADDRESS_ENTITY_1;
 import static woowacourse.auth.Fixtures.CUSTOMER_ENTITY_1;
 
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.auth.entity.AddressEntity;
 
@@ -70,5 +72,20 @@ class JdbcAddressDaoTest {
         assertThat(actual).extracting("customerId", "address", "detailAddress", "zoneCode")
                 .containsExactly(customerId, newAddressEntity.getAddress(), newAddressEntity.getDetailAddress(),
                         newAddressEntity.getZoneCode());
+    }
+
+    @DisplayName("id를 전달받아 해당하는 Address를 삭제한다.")
+    @Test
+    void delete() {
+        // given
+        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        addressDao.save(customerId, ADDRESS_ENTITY_1);
+
+        // when
+        addressDao.delete(customerId);
+
+        // then
+        assertThatThrownBy(() -> addressDao.findById(customerId))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

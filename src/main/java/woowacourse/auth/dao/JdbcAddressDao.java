@@ -42,6 +42,7 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public void delete(int customerId) {
-
+        String sql = "DELETE FROM FULL_ADDRESS WHERE customer_id = ?";
+        jdbcTemplate.update(sql, customerId);
     }
 }
