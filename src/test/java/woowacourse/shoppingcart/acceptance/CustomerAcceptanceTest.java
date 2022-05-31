@@ -6,12 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -49,7 +51,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-            () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("이미 존재하는 닉네임입니다.")
+            () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
+                "이미 존재하는 닉네임입니다.")
         );
     }
 
@@ -60,47 +63,91 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String email = "beomWhale1@naver.com";
         String password = "Password12345!";
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-                email, "범고래1", password);
+            email, "범고래1", password);
         createCustomer(customerCreateRequest);
 
         TokenRequest tokenRequest = new TokenRequest(email, password);
 
         TokenResponse tokenResponse = RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .post("/api/login")
-                .then().extract().as(TokenResponse.class);
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(tokenRequest)
+            .post("/api/login")
+            .then().extract().as(TokenResponse.class);
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .auth().oauth2(tokenResponse.getAccessToken())
-                .when().log().all()
-                .delete("/api/customers")
-                .then().extract();
+            .auth().oauth2(tokenResponse.getAccessToken())
+            .when().log().all()
+            .delete("/api/customers")
+            .then().extract();
 
         // then
         ExtractableResponse<Response> loginResponse = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().log().all()
-                .post("/api/login")
-                .then().log().all()
-                .extract();
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(tokenRequest)
+            .when().log().all()
+            .post("/api/login")
+            .then().log().all()
+            .extract();
 
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(loginResponse.body().jsonPath().getString("message")).isEqualTo("존재하지 않는 회원입니다.")
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+            () -> assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+            () -> assertThat(loginResponse.body().jsonPath().getString("message")).isEqualTo(
+                "존재하지 않는 회원입니다.")
         );
     }
 
-    private ExtractableResponse<Response> createCustomer(CustomerCreateRequest customerCreateRequest) {
+    @DisplayName("이전 패스워드와 새로운 패스워드를 입력받아 새로운 패스워드로 변경한다.")
+    @Test
+    void changePassword() {
+        // given: 회원 가입이 되어있다.
+        String email = "beomWhale1@naver.com";
+        String password = "Password12345!";
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+            email, "범고래1", password);
+        createCustomer(customerCreateRequest);
+
+        RestAssured.given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(new TokenRequest(email, password))
+            .post("/api/login")
+            .then();
+
+        // when
+        String newPassword = "Password123456!";
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(password,
+            newPassword);
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(changePasswordRequest)
+            .when()
+            .patch("/api/customers/password")
+            .then().extract();
+
+        ExtractableResponse<Response> loginResponse = RestAssured.given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(new TokenRequest(email, newPassword))
+            .post("/api/login")
+            .then()
+            .extract();
+
+        // then
+        assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+            () -> assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
+    }
+
+    private ExtractableResponse<Response> createCustomer(
+        CustomerCreateRequest customerCreateRequest) {
         return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerCreateRequest)
-                .when()
-                .post("/api/customers")
-                .then()
-                .extract();
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(customerCreateRequest)
+            .when()
+            .post("/api/customers")
+            .then()
+            .extract();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -77,5 +78,24 @@ public class CustomerServiceTest {
 
         // then
         assertThat(customerResponse).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @DisplayName("새로운 패스워드를 입력받아 새로운 패스워드로 변경한다.")
+    @Test
+    void changePassword() {
+        // given
+        String prevPassword = "Password123!";
+        String email = "beomWhale@naver.com";
+        Customer customer = new Customer(email, "beomWhale", prevPassword);
+        customerDao.save(customer);
+
+        // when
+        String newPassword = "Password1234!";
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(prevPassword, newPassword);
+        customerService.changePassword(email, changePasswordRequest);
+        Customer findCustomer = customerDao.findIdByEmail(email).get();
+
+        // then
+        assertThat(findCustomer.isPasswordMatched(newPassword)).isTrue();
     }
 }
