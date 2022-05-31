@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @Service
 public class CustomerService {
@@ -20,5 +21,8 @@ public class CustomerService {
 
     public CustomerResponse findById(final TokenRequest request) {
         return null;
+    }
+
+    public void update(final TokenRequest tokenRequest, final CustomerUpdateRequest customerUpdateRequest) {
     }
 }

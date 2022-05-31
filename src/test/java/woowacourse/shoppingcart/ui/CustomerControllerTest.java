@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -19,11 +20,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -42,7 +44,7 @@ class CustomerControllerTest {
     @DisplayName("회원 가입을 한다.")
     void signUp() throws Exception {
         // given
-        CustomerRequest request = new CustomerRequest("jo@naver.com","jojogreen", "1234");
+        CustomerRequest request = new CustomerRequest("jo@naver.com", "jojogreen", "1234");
 
         // when
         when(customerService.signUp(any()))
@@ -50,10 +52,10 @@ class CustomerControllerTest {
 
         // then
         mockMvc.perform(post("/customers/signUp")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(request))
-        ).andDo(print())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(request))
+                ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location", "/customers/1"));
@@ -65,11 +67,9 @@ class CustomerControllerTest {
         // given
         CustomerLoginRequest request = new CustomerLoginRequest("jiwoo@naver.com", "1234");
 
-
         // when
         when(customerService.login(any()))
                 .thenReturn(new CustomerLoginResponse("token", 1L, "jiwoo@naver.com", "hunch"));
-
 
         // then
         mockMvc.perform(post("/customers/login")
@@ -96,11 +96,28 @@ class CustomerControllerTest {
 
         // then
         mockMvc.perform(get("/auth/customers/profile")
-                        .header("Authorization", "token")
+                        .header("Authorization", request)
                 ).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(1L))
+                .andExpect(jsonPath("id").value(request.getId()))
                 .andExpect(jsonPath("userId").value("jo@naver.com"))
                 .andExpect(jsonPath("nickname").value("jojogreen"));
+    }
+
+    @Test
+    @DisplayName("내 정보를 수정한다.")
+    void updateProfile() throws Exception {
+        // given
+        TokenRequest tokenRequest = new TokenRequest(1L);
+        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest("hunch");
+
+        // then
+        mockMvc.perform(patch("/auth/customers/profile")
+                        .header("Authorization", tokenRequest)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(updateRequest))
+                ).andDo(print())
+                .andExpect(status().isOk());
     }
 }
