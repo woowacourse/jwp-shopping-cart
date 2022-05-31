@@ -4,7 +4,9 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +31,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
 
+        jdbcTemplate.update("INSERT INTO customer (username) VALUES ('"+ USER +"')");
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }
