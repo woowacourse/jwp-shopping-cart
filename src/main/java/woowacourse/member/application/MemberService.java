@@ -5,12 +5,10 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
+import woowacourse.member.dto.DuplicateEmailRequest;
 import woowacourse.member.dto.MemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
-import woowacourse.member.exception.EmailNotFoundException;
-import woowacourse.member.exception.InvalidMemberEmailException;
-import woowacourse.member.exception.MemberNotFoundException;
-import woowacourse.member.exception.WrongPasswordException;
+import woowacourse.member.exception.*;
 
 import java.util.Optional;
 
@@ -36,7 +34,7 @@ public class MemberService {
     public Long findIdByEmail(LoginRequest request) {
         Optional<Member> member = memberDao.findMemberByEmail(request.getEmail());
         authenticate(member, request);
-        return member.get().getId();
+        return member.orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다.")).getId();
     }
 
     private void authenticate(Optional<Member> member, LoginRequest request) {
@@ -44,7 +42,7 @@ public class MemberService {
             throw new EmailNotFoundException("존재하지 않는 이메일입니다.");
         }
 
-        if(!member.get().isSamePassword(request.getPassword())) {
+        if (!member.get().isSamePassword(request.getPassword())) {
             throw new WrongPasswordException("잘못된 비밀번호입니다.");
         }
     }
@@ -52,7 +50,7 @@ public class MemberService {
     public MemberInfoResponse findMemberById(long id) {
         Optional<Member> member = memberDao.findMemberById(id);
 
-        if(member.isEmpty()){
+        if (member.isEmpty()) {
             throw new MemberNotFoundException("존재하지 않는 회원입니다.");
         }
 
@@ -63,6 +61,12 @@ public class MemberService {
         int deletedRowCount = memberDao.deleteById(id);
         if (deletedRowCount == 0) {
             throw new MemberNotFoundException("존재하지 않는 회원입니다.");
+        }
+    }
+
+    public void checkDuplicateEmail(DuplicateEmailRequest request) {
+        if (memberDao.existMemberByEmail(request.getEmail())) {
+            throw new DuplicateEmailException("이메일은 중복될 수 없습니다.");
         }
     }
 }

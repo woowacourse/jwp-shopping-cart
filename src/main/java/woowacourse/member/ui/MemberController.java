@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.application.MemberService;
+import woowacourse.member.dto.DuplicateEmailRequest;
 import woowacourse.member.dto.MemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
 
@@ -35,5 +36,11 @@ public class MemberController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMember(@AuthenticationPrincipal Long id) {
         memberService.deleteMemberById(id);
+    }
+
+    @PostMapping("/duplicate-email")
+    @ResponseStatus(HttpStatus.OK)
+    public void checkDuplicateEmail(@Valid @RequestBody DuplicateEmailRequest request) {
+        memberService.checkDuplicateEmail(request);
     }
 }

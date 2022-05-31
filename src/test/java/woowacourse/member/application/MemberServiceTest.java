@@ -6,12 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.LoginRequest;
+import woowacourse.member.dto.DuplicateEmailRequest;
 import woowacourse.member.dto.MemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
-import woowacourse.member.exception.InvalidMemberEmailException;
-import woowacourse.member.exception.EmailNotFoundException;
-import woowacourse.member.exception.MemberNotFoundException;
-import woowacourse.member.exception.WrongPasswordException;
+import woowacourse.member.exception.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -50,15 +48,15 @@ class MemberServiceTest {
     @Test
     void verifyValidMember() {
         assertDoesNotThrow(
-                () -> memberService.findIdByEmail(new LoginRequest("ari@wooteco.com","Wooteco1!"))
+                () -> memberService.findIdByEmail(new LoginRequest("ari@wooteco.com", "Wooteco1!"))
         );
     }
 
     @DisplayName("존재하지 않는 이메일인 경우 예외가 발생한다.")
     @Test
-    void verifyValidMemberWithNotExistEmail(){
+    void verifyValidMemberWithNotExistEmail() {
         assertThatThrownBy(
-                () -> memberService.findIdByEmail(new LoginRequest("pobi@wooteco.com","Wooteco!"))
+                () -> memberService.findIdByEmail(new LoginRequest("pobi@wooteco.com", "Wooteco!"))
         ).isInstanceOf(EmailNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 이메일입니다.");
     }
@@ -67,7 +65,7 @@ class MemberServiceTest {
     @Test
     void verifyValidMemberWithWrongPassword() {
         assertThatThrownBy(
-                () -> memberService.findIdByEmail(new LoginRequest("ari@wooteco.com","Javajigi!!"))
+                () -> memberService.findIdByEmail(new LoginRequest("ari@wooteco.com", "Javajigi!!"))
         ).isInstanceOf(WrongPasswordException.class)
                 .hasMessageContaining("잘못된 비밀번호입니다.");
     }
@@ -85,7 +83,7 @@ class MemberServiceTest {
 
     @DisplayName("존재하지 않는 id로 회원을 찾는 경우 예외가 발생한다.")
     @Test
-    void findMemberByIdWithNotExistId(){
+    void findMemberByIdWithNotExistId() {
         assertThatThrownBy(
                 () -> memberService.findMemberById(100L)
         ).isInstanceOf(MemberNotFoundException.class)
@@ -105,10 +103,27 @@ class MemberServiceTest {
 
     @DisplayName("존재하지 않는 id로 삭제하려는 경우 예외가 발생한다.")
     @Test
-    void deleteWithNotExistId(){
+    void deleteWithNotExistId() {
         assertThatThrownBy(
                 () -> memberService.deleteMemberById(100L)
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("존재하지 않는 이메일인 경우 중복체크에서 문제가 발생하지 않는다.")
+    @Test
+    void checkDuplicateEmailWithNotDuplicateEmail() {
+        assertDoesNotThrow(
+                () -> memberService.checkDuplicateEmail(new DuplicateEmailRequest("pobi@wooteco.com"))
+        );
+    }
+
+    @DisplayName("이미 존재하는 이메일인 경우 중복체크시 예외가 발생한다.")
+    @Test
+    void checkDuplicateEmailWithDuplicateEmail() {
+        assertThatThrownBy(
+                () -> memberService.checkDuplicateEmail(new DuplicateEmailRequest("ari@wooteco.com"))
+        ).isInstanceOf(DuplicateEmailException.class)
+                .hasMessageContaining("이메일은 중복될 수 없습니다.");
     }
 }
