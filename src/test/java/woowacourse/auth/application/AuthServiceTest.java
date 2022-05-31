@@ -12,11 +12,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.application.dto.LoginServiceRequest;
+import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -58,7 +58,7 @@ class AuthServiceTest {
 
         // when, then
         assertThatThrownBy(() -> authService.certify(loginServiceRequest))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(NoSuchEmailException.class);
     }
 
     @Test

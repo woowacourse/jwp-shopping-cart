@@ -2,11 +2,11 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import woowacourse.auth.application.dto.LoginServiceRequest;
+import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 public class AuthService {
@@ -21,7 +21,7 @@ public class AuthService {
 
     public String certify(final LoginServiceRequest loginServiceRequest) {
         final Customer customer = customerDao.findByEmail(loginServiceRequest.getEmail())
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(NoSuchEmailException::new);
         if (!customer.isSamePassword(loginServiceRequest.getPassword())) {
             throw new PasswordNotMatchException();
         }

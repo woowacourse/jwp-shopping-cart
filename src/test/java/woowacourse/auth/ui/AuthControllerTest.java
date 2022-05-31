@@ -10,11 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
 @Sql("classpath:data.sql")
@@ -56,7 +56,7 @@ class AuthControllerTest {
 
         // when, then
         assertThatThrownBy(() -> authController.login(tokenRequest))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(NoSuchEmailException.class);
     }
 
     @Test
