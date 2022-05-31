@@ -1,5 +1,6 @@
 package woowacourse.auth.ui;
 
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/members")
-    public ResponseEntity<Void> signUp(@RequestBody MemberCreateRequest memberCreateRequest) {
+    public ResponseEntity<Void> signUp(@RequestBody @Valid MemberCreateRequest memberCreateRequest) {
         authService.save(memberCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
@@ -46,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
@@ -63,7 +64,7 @@ public class AuthController {
 
     @PatchMapping("/members/auth/me")
     public ResponseEntity<Void> updateMember(@AuthenticationPrincipal String payload,
-                                             @RequestBody MemberUpdateRequest memberUpdateRequest) {
+                                             @RequestBody @Valid MemberUpdateRequest memberUpdateRequest) {
         authService.updateMember(payload, memberUpdateRequest);
         return ResponseEntity.noContent()
                 .build();
@@ -71,7 +72,7 @@ public class AuthController {
 
     @PatchMapping("/members/auth/password")
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal String payload,
-                                               @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+                                               @RequestBody @Valid PasswordUpdateRequest passwordUpdateRequest) {
         authService.updatePassword(payload, passwordUpdateRequest);
         return ResponseEntity.noContent()
                 .build();
