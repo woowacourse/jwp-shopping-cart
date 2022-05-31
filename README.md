@@ -25,6 +25,11 @@
 - [x] Token 기반의 로그인
     - [x] account 와 password 를 받아 토큰을 생성한다.
 
+- [ ] 회원 정보 조회
+  - [x] request header 로 토큰을 받아 회원 정보를 조회한다. 
+  - [x] request header 에 token 이 포함되지 않으면 예외를 발생한다.
+  - [ ] 알맞은 회원정보가 없을 시, 회원 정보가 없다는 예외를 발생한다.
+
 - [ ] 회원 정보 수정
     - [x] nickname, address, phoneNumber 을 받아 회원 정보를 수정한다.
     - [x] request header 에 token 이 포함되지 않으면 예외를 발생한다.
