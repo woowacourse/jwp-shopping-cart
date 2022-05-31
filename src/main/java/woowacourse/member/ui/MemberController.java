@@ -4,9 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.application.MemberService;
-import woowacourse.member.dto.DuplicateEmailRequest;
-import woowacourse.member.dto.MemberInfoResponse;
-import woowacourse.member.dto.SignUpRequest;
+import woowacourse.member.dto.*;
 
 import javax.validation.Valid;
 
@@ -32,15 +30,27 @@ public class MemberController {
         return memberService.findMemberById(id);
     }
 
-    @DeleteMapping("/me")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMember(@AuthenticationPrincipal Long id) {
-        memberService.deleteMemberById(id);
-    }
-
     @PostMapping("/duplicate-email")
     @ResponseStatus(HttpStatus.OK)
     public void checkDuplicateEmail(@Valid @RequestBody DuplicateEmailRequest request) {
         memberService.checkDuplicateEmail(request);
+    }
+
+    @PutMapping("/me/name")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateName(@AuthenticationPrincipal Long id, @Valid @RequestBody UpdateNameRequest request) {
+        memberService.updateName(id, request);
+    }
+
+    @PutMapping("/me/password")
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePassword(@AuthenticationPrincipal Long id, @Valid @RequestBody UpdatePasswordRequest request) {
+        memberService.updatePassword(id, request);
+    }
+
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMember(@AuthenticationPrincipal Long id) {
+        memberService.deleteMemberById(id);
     }
 }

@@ -57,10 +57,10 @@ public class OrderControllerTest {
 
         // when // then
         mockMvc.perform(post("/api/members/" + memberName + "/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(requestDtos))
-        ).andDo(print())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(requestDtos))
+                ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
@@ -82,7 +82,7 @@ public class OrderControllerTest {
 
         // when // then
         mockMvc.perform(get("/api/members/" + memberName + "/orders/" + orderId)
-        ).andDo(print())
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
                 .andExpect(jsonPath("orderDetails[0].productId").value(2L))
@@ -109,7 +109,7 @@ public class OrderControllerTest {
 
         // when // then
         mockMvc.perform(get("/api/members/" + memberName + "/orders/")
-        ).andDo(print())
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))

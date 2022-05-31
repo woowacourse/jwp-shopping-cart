@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.member.domain.PasswordEncoder;
 import woowacourse.member.dto.*;
 import woowacourse.member.exception.*;
 
@@ -125,7 +124,7 @@ class MemberServiceTest {
     @DisplayName("올바른 id로 회원 비밀번호를 변경한다.")
     @Test
     void updatePassword() {
-        memberService.updatePassword(1L, new UpdatePasswordRequest("Wooteco1!","NewPassword1!"));
+        memberService.updatePassword(1L, new UpdatePasswordRequest("Wooteco1!", "NewPassword1!"));
         assertThat(memberService.authenticate(new LoginRequest("ari@wooteco.com", "NewPassword1!"))).isEqualTo(1L);
     }
 

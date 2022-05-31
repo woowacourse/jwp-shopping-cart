@@ -9,6 +9,8 @@ import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.member.dto.DuplicateEmailRequest;
 import woowacourse.member.dto.SignUpRequest;
+import woowacourse.member.dto.UpdateNameRequest;
+import woowacourse.member.dto.UpdatePasswordRequest;
 
 @DisplayName("회원 관련 기능")
 public class MemberAcceptanceTest extends AcceptanceTest {
@@ -76,18 +78,63 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("이름을 정상적으로 수정하는 경우 200 ok를 반환한다.")
     @Test
-    void getMe() {
+    void updateName() {
+        SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
+        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+
+        LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
+        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+                .extract().as(TokenResponse.class).getAccessToken();
+
+        UpdateNameRequest updateNameRequest = new UpdateNameRequest("자바지기");
+        RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updateNameRequest, "/api/members/me/name")
+                .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("이전 이름과 동일한 이름으로 수정하는 경우 400 Bad Request를 반환한다.")
     @Test
-    void updateMyName() {
+    void updateNameWithSameName() {
+        SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
+        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+
+        LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
+        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+                .extract().as(TokenResponse.class).getAccessToken();
+
+        UpdateNameRequest updateNameRequest = new UpdateNameRequest("포비");
+        RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updateNameRequest, "/api/members/me/name")
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("비밀번호를 정상적으로 수정하는 경우 200 ok를 반환한다.")
     @Test
-    void updateMyPassword() {
+    void updatePassword() {
+        SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
+        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+
+        LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
+        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+                .extract().as(TokenResponse.class).getAccessToken();
+
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("Wooteco1!", "NewPassword1!");
+        RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updatePasswordRequest, "/api/members/me/password")
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("이전 비밀번호와 동일한 비밀번호로 수정하는 경우 400 Bad Request를 반환한다.")
+    @Test
+    void updatePasswordWithSamePassword() {
+        SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
+        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+
+        LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
+        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+                .extract().as(TokenResponse.class).getAccessToken();
+
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("Wooteco1!", "Wooteco1!");
+        RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updatePasswordRequest, "/api/members/me/password")
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

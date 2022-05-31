@@ -42,16 +42,16 @@ public class PasswordTest {
 
     @DisplayName("비밀번호가 일치한다면 true를 반환한다.")
     @Test
-    void isSameAs(){
-        Password password  = Password.withEncrypt("Wooteco123!");
+    void isSameAs() {
+        Password password = Password.withEncrypt("Wooteco123!");
         boolean result = password.isSameAs("Wooteco123!");
         assertThat(result).isTrue();
     }
 
     @DisplayName("비밀번호가 일치하지 않는다면 false를 반환한다.")
     @Test
-    void isNotSameAs(){
-        Password password  = Password.withEncrypt("Wooteco123!");
+    void isNotSameAs() {
+        Password password = Password.withEncrypt("Wooteco123!");
         String expected = PasswordEncoder.encrypt("Wooteco123?");
         boolean result = password.isSameAs(expected);
         assertThat(result).isFalse();
