@@ -58,7 +58,6 @@ public class CustomerDao {
 
     public boolean existsByEmail(final Customer customer) {
         final String sql = "SELECT EXISTS (SELECT * FROM customer WHERE email = :email)";
-
         final Map<String, Object> params = new HashMap<>();
         params.put("email", customer.getEmail());
 
@@ -70,6 +69,18 @@ public class CustomerDao {
         final HashMap<String, Object> params = new HashMap<>();
         params.put("email", email);
 
+        return findCustomer(sql, params);
+    }
+
+    public Optional<Customer> findById(final Long id) {
+        final String sql = "SELECT id, name, email, password FROM customer WHERE id = :id";
+        final HashMap<String, Object> params = new HashMap<>();
+        params.put("id", id);
+
+        return findCustomer(sql, params);
+    }
+
+    private Optional<Customer> findCustomer(final String sql, final HashMap<String, Object> params) {
         try {
             return Optional.ofNullable(namedJdbcTemplate.queryForObject(sql, params, CustomerDao::rowMapper));
         } catch (final EmptyResultDataAccessException e) {
