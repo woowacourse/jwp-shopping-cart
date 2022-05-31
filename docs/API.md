@@ -1,5 +1,3 @@
-# 장바구니 협업
-
 # 회원 가입
 
 ### 회원 가입 시 필요한 정보
@@ -26,7 +24,7 @@ content-type: application/json
 
 ```
 {
-  success: "true"
+  "success: "true"
 }
 ```
 
@@ -54,41 +52,30 @@ Location 주지 않기
 
 1. 서버가 뻗은 경우 (500 Internal Server Error)
 
-```jsx
+```
 {
-  message: "...",
+  "message": "...",
 }
 ```
 
 ### 비밀번호 규칙
 
-```jsx
-최소
-8
-자, 최대
-20
-자
-최소
-하나의
-문자, 하나의
-숫자
-및
-하나의
-특수
-문자 :
-        "^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$"
+```
+최소 8 자, 최대 20 자 최소 하나의 문자, 하나의 숫자 및 하나의 특수 문자 :
+"^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$"
 ```
 
 ### 이메일 규칙
 
-```java
+```
 "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$"
 ```
 
 ### 닉네임 규칙
 
-```java
-한글 최대 5자
+```
+한글로만 최소 1자 최대 5자
+"^[ㄱ-ㅎ|가-힣|]{1,5}$"
 ```
 
 # 로그인
@@ -110,12 +97,10 @@ content-type: application/json
 
 responseBody:
 
-```jsx
+```
 {
-  nickname: "...",
-          token
-:
-  "...",
+  "nickname": "...",
+  "token": "...",
 }
 ```
 
@@ -145,12 +130,15 @@ Authorization: Bearer {token}
 
 응답 코드: 401 Unauthorized (인증 안된 경우와 메시지 다르게 구분)
 
+### 삭제된 회원의 토큰으로 접근을 시도할 때
+
+응답 코드: 401 Unauthorized (메시지 다르게 구분)
+
 - 403은 생략
 
-  ### 다른 회원 정보에 접근하려고 하면
+### 다른 회원 정보에 접근하려고 하면
 
-  응답 코드: 403 Forbidden
-
+응답 코드: 403 Forbidden
 
 # 회원 정보 페이지
 
@@ -164,7 +152,7 @@ URL: “/api/members/auth/password-check”
 
 ```
 {
-  success: "true"
+  "success": "true"
 }
 ```
 
@@ -180,8 +168,8 @@ response body
 
 ```
 {
-  email: "...",
-  nickname: "...",
+  "email": "...",
+  "nickname": "...",
 }
 ```
 
@@ -195,7 +183,7 @@ request body
 
 ```
 {
-  nickname: "...",
+  "nickname": "...",
 }
 ```
 
@@ -203,9 +191,9 @@ request body
 
 request body
 
-```json
+```
 {
-  password: "..."
+  "password": "...",
 }
 ```
 
