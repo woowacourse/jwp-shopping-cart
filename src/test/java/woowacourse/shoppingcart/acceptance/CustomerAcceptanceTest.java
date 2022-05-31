@@ -113,13 +113,46 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().put("/customers/me/password")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+
+        assertCustomer(accessToken, "forky", "forky@4321", "복희", 26);
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("내 비밀번호를 제외한 정보를 수정한다.")
     @Test
     void updateMyInfo() {
         signUpCustomer();
         String accessToken = getTokenByLogin();
+
+        CustomerRequest customerRequest =
+                new CustomerRequest("forky", "forky@1234", "권복희", 12);
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().put("/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+        assertCustomer(accessToken, "forky", "forky@1234", "권복희", 12);
+    }
+
+    private void assertCustomer(String accessToken, String userName, String password, String nickName, int age) {
+        CustomerResponse customerResponse = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(CustomerResponse.class);
+
+        assertAll(
+                () -> assertThat(customerResponse.getUserName()).isEqualTo(userName),
+                () -> assertThat(customerResponse.getPassword()).isEqualTo(password),
+                () -> assertThat(customerResponse.getNickName()).isEqualTo(nickName),
+                () -> assertThat(customerResponse.getAge()).isEqualTo(age)
+        );
     }
 
     @DisplayName("회원탈퇴")

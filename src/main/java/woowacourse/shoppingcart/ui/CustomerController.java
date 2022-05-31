@@ -44,8 +44,9 @@ public class CustomerController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<CustomerResponse> updateInfo(@AuthenticationPrincipal Customer customer,
+    public ResponseEntity<Void> updateInfo(@AuthenticationPrincipal Customer customer,
                                                        @RequestBody CustomerRequest customerRequest) {
+        customerService.updateInfo(customer, customerRequest);
         return null;
     }
 
