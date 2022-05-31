@@ -22,15 +22,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        if (isRegisterExclude(request.getRequestURI(), request.getMethod())) {
-            return true;
-        }
         logger.info("request uri = {}, request method = {} ", request.getRequestURI(), request.getMethod());
         String token = AuthorizationExtractor.extract(request);
         return jwtTokenProvider.validateToken(token);
-    }
-
-    private boolean isRegisterExclude(final String uri, final String method) {
-        return uri.contains(MEMBERS_RESOURCE) && HttpMethod.POST.matches(method);
     }
 }
