@@ -34,6 +34,10 @@ public class Customer {
             address);
     }
 
+    public void matchPassword(String password) {
+        this.password.match(password);
+    }
+
     public Long getId() {
         return id;
     }

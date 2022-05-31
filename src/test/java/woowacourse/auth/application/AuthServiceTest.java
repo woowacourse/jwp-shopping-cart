@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
@@ -14,8 +15,11 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.exception.PasswordMisMatchException;
+import woowacourse.shoppingcart.exception.UserNotFoundException;
 
 @SpringBootTest
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 class AuthServiceTest {
 
     @Autowired
@@ -51,5 +55,35 @@ class AuthServiceTest {
             () -> assertThat(customer.getPhoneNumber()).isEqualTo(savedCustomer.getPhoneNumber()),
             () -> assertThat(customer.getAddress()).isEqualTo(savedCustomer.getAddress())
         );
+    }
+
+    @DisplayName("username이 일치하지 않으면 UserNotFoundException을 반환해야 한다.")
+    @Test
+    void validateEmptyUser() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        customerService.save(signupRequest);
+
+        // when
+        LoginRequest loginRequest = new LoginRequest("dongho109", "password1234");
+
+        // then
+        assertThatThrownBy(() -> authService.validateLogin(loginRequest))
+            .isInstanceOf(UserNotFoundException.class);
+    }
+
+    @DisplayName("password가 일치하지 않으면 PasswordMisMatchException을 반환해야 한다.")
+    @Test
+    void validateWrongPassword() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        customerService.save(signupRequest);
+
+        // when
+        LoginRequest loginRequest = new LoginRequest("dongho108", "password");
+
+        // then
+        assertThatThrownBy(() -> authService.validateLogin(loginRequest))
+            .isInstanceOf(PasswordMisMatchException.class);
     }
 }

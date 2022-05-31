@@ -234,6 +234,38 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("비밀번호가 일치하지 않으면 (401)unauthorized 를 반환해야 한다.")
+    @Test
+    void loginByInvalidPassword() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+
+        RestAssured.given().log().all()
+            .body(signupRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/api/customers/signup")
+            .then().log().all()
+            .extract();
+
+        // when
+        ValidatableResponse validatableResponse = RestAssured
+            .given().log().all()
+            .body(new LoginRequest("dongho108", "password"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/api/customers/login")
+            .then().log().all();
+        ExceptionResponse exceptionResponse = validatableResponse.extract().as(ExceptionResponse.class);
+
+        // then
+        assertAll(
+            () -> validatableResponse.statusCode(HttpStatus.UNAUTHORIZED.value()),
+            () -> assertThat(exceptionResponse.getMessages())
+                .containsExactly("비밀번호가 일치하지 않습니다.")
+        );
+    }
+
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {

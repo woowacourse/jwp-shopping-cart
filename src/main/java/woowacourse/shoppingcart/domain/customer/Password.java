@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.regex.Pattern;
 
+import woowacourse.shoppingcart.exception.PasswordMisMatchException;
+
 public class Password {
     private static final int MIN_LENGTH = 8;
     private static final int MAX_LENGTH = 20;
@@ -25,6 +27,12 @@ public class Password {
     private void validatePattern(String value) {
         if (!PATTERN.matcher(value).find()) {
             throw new IllegalArgumentException("username은 영어와 숫자로 이루어져야 합니다.");
+        }
+    }
+
+    public void match(String password) {
+        if (!value.equals(password)) {
+            throw new PasswordMisMatchException();
         }
     }
 

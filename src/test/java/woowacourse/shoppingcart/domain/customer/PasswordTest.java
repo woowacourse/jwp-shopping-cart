@@ -1,10 +1,14 @@
 package woowacourse.shoppingcart.domain.customer;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import woowacourse.shoppingcart.exception.PasswordMisMatchException;
 
 class PasswordTest {
 
@@ -30,5 +34,19 @@ class PasswordTest {
     void createInvalidPatternUsername(String value) {
         assertThatThrownBy(() -> new Password(value))
             .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("비밀번호가 일치하면 예외를 반환하지 않아야 한다.")
+    @Test
+    void matchPassword() {
+        assertDoesNotThrow(() -> new Password("12341234").match("12341234"));
+    }
+
+    @DisplayName("비밀번호가 일치하지 않으면 예외를 반환해야 한다.")
+    @Test
+    void matchWrongPassword() {
+        assertThatThrownBy(() -> new Password("12341234").match("43214321"))
+            .hasMessage("비밀번호가 일치하지 않습니다.")
+            .isInstanceOf(PasswordMisMatchException.class);
     }
 }
