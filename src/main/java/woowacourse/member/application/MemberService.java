@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
+import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
@@ -32,6 +33,10 @@ public class MemberService {
         Member member = memberRegisterRequest.toEntity();
         member.encodePassword(passwordEncoder);
         return memberDao.save(member);
+    }
+
+    public void validateDuplicateEmail(final EmailCheckRequest emailCheckRequest) {
+        validateDuplicateEmail(emailCheckRequest.getEmail());
     }
 
     private void validateDuplicateEmail(final String email) {

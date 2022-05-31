@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.exception.dto.ErrorResponse;
-import woowacourse.member.acceptance.MemberAcceptanceTest;
+import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 
 public enum TMember {
@@ -29,6 +29,10 @@ public enum TMember {
         this.email = email;
         this.password = password;
         this.name = name;
+    }
+
+    public ExtractableResponse<Response> validateDuplicateEmail() {
+        return request("/api/members/duplicate-email", new EmailCheckRequest(email));
     }
 
     public ExtractableResponse<Response> register() {

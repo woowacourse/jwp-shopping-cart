@@ -67,4 +67,11 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = MARU.loginAnd().deleteMember();
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
+
+    @DisplayName("회원가입 전 이메일 중복체크에 성공하면 200 ok를 반환한다.")
+    @Test
+    void checkDuplicateEmail() {
+        ExtractableResponse<Response> response = MARU.validateDuplicateEmail();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
 }

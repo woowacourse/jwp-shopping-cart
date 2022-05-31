@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
@@ -60,5 +61,11 @@ public class MemberController {
                                              @Valid @RequestBody MemberDeleteRequest memberDeleteRequest) {
         memberService.deleteById(memberId, memberDeleteRequest);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/duplicate-email")
+    public ResponseEntity<Void> validateDuplicateEmail(@Valid @RequestBody EmailCheckRequest emailCheckRequest) {
+        memberService.validateDuplicateEmail(emailCheckRequest);
+        return ResponseEntity.ok().build();
     }
 }

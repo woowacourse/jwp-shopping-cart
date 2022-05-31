@@ -35,6 +35,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.helper.restdocs.RestDocsTest;
+import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
@@ -175,6 +176,28 @@ public class MemberControllerTest extends RestDocsTest {
                 ),
                 requestFields(
                         fieldWithPath("password").description("비밀번호")
+                )));
+    }
+
+    @DisplayName("이메일 중복 체크에 성공한다.")
+    @Test
+    void validateDuplicateEmail() throws Exception {
+        EmailCheckRequest emailCheckRequest = new EmailCheckRequest(EMAIL);
+
+        doNothing().when(memberService).validateDuplicateEmail(any(EmailCheckRequest.class));
+
+        ResultActions resultActions = mockMvc.perform(post("/api/members/duplicate-email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(emailCheckRequest)))
+                .andExpect(status().isOk());
+
+        //docs
+        resultActions.andDo(document("member-duplicate-email",
+                getRequestPreprocessor(),
+                getResponsePreprocessor(),
+                requestFields(
+                        fieldWithPath("email").type(STRING).description("이메일")
                 )));
     }
 }

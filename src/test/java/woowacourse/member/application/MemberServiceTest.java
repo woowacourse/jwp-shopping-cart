@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
+import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
@@ -142,5 +143,13 @@ public class MemberServiceTest {
         memberService.deleteById(id, new MemberDeleteRequest(PASSWORD));
 
         assertThat(memberDao.findById(id).isEmpty()).isTrue();
+    }
+
+    @DisplayName("이메일 중복이 있으면 에러를 발생한다.")
+    @Test
+    void validateDuplicateEmailExist() {
+        memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
+        assertThatThrownBy(() -> memberService.validateDuplicateEmail(new EmailCheckRequest(EMAIL)))
+                .isInstanceOf(DuplicateMemberEmailException.class);
     }
 }
