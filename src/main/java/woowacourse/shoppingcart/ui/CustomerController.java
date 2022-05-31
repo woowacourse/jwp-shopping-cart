@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.auth.application.AuthService;
-import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
@@ -25,11 +23,9 @@ import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 public class CustomerController {
 
     private final CustomerService customerService;
-    private final AuthService authService;
 
-    public CustomerController(CustomerService customerService, AuthService authService) {
+    public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
-        this.authService = authService;
     }
 
     @PostMapping
@@ -40,35 +36,27 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<GetMeResponse> getMe(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        Long customerId = authService.findUserIdByToken(token);
+    public ResponseEntity<GetMeResponse> getMe(@AuthenticationPrincipal Long customerId) {
         GetMeResponse currentCustomer = customerService.getMe(customerId);
         return ResponseEntity.ok(currentCustomer);
     }
 
     @PutMapping("/me")
     public ResponseEntity<Void> updateMe(@RequestBody UpdateMeRequest updateMeRequest,
-                                         HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        Long customerId = authService.findUserIdByToken(token);
+                                         @AuthenticationPrincipal Long customerId) {
         customerService.updateMe(customerId, updateMeRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMe(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        Long customerId = authService.findUserIdByToken(token);
+    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal Long customerId) {
         customerService.deleteMe(customerId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me/password")
     public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest,
-                                               HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        Long customerId = authService.findUserIdByToken(token);
+                                               @AuthenticationPrincipal Long customerId) {
         customerService.updatePassword(customerId, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }
