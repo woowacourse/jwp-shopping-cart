@@ -1,24 +1,18 @@
 package woowacourse.shoppingcart.dto;
 
-public class CustomerLoginResponse {
+public class CustomerResponse {
 
-    private String accessToken;
     private Long id;
     private String userId;
     private String nickname;
 
-    public CustomerLoginResponse() {
+    public CustomerResponse() {
     }
 
-    public CustomerLoginResponse(final String accessToken, final Long id, final String userId, final String nickname) {
-        this.accessToken = accessToken;
+    public CustomerResponse(final Long id, final String userId, final String nickname) {
         this.id = id;
         this.userId = userId;
         this.nickname = nickname;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
     }
 
     public Long getId() {
