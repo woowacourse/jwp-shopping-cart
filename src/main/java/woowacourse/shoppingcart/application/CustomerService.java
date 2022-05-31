@@ -23,8 +23,7 @@ public class CustomerService {
         customerDao.save(new Customer(email, encryptedPassword.getPassword(), username));
     }
 
-    public CustomerResponse showCustomer(String token) {
-        final String email = jwtTokenProvider.getPayload(token);
+    public CustomerResponse showCustomer(String email) {
         final Customer customer = customerDao.findByEmail(email);
 
         return new CustomerResponse(customer.getEmail(), customer.getUsername());
