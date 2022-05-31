@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.service;
+package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;

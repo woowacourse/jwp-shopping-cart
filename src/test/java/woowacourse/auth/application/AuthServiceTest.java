@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.service.CustomerService;
+import woowacourse.shoppingcart.application.CustomerService;
 
 // TODO: SpringBootTest 대신 적용할 수 있는 방법 공부하기
 @SpringBootTest
