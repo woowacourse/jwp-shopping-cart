@@ -7,6 +7,7 @@ import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -37,13 +38,11 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
-
     @GetMapping("/me")
-    public ResponseEntity<Customer> customer(HttpServletRequest request) {
+    public ResponseEntity<CustomerResponse> customer(HttpServletRequest request) {
         String customerName = getNameFromToken(request);
         return ResponseEntity.ok(customerService.findCustomerByName(customerName));
     }
-
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> withDraw(HttpServletRequest request) {

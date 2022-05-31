@@ -6,6 +6,7 @@ import woowacourse.auth.application.AuthorizationException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -24,15 +25,16 @@ public class CustomerService {
         customerDao.deleteByName(customerName);
     }
 
-    public Customer findCustomerByName(String customerName) {
-        return customerDao.findCustomerByName(customerName);
+    public CustomerResponse findCustomerByName(final String customerName) {
+        final Customer customer = customerDao.findCustomerByName(customerName);
+        return new CustomerResponse(customer.getName());
     }
 
     public void editCustomerByName(final String customerName, final CustomerRequest editRequest) {
         customerDao.updateByName(customerName, editRequest.getPassword());
     }
 
-    public void validateNameAndPassword(String name, String password) {
+    public void validateNameAndPassword(final String name, final String password) {
         if (customerDao.existsIdByNameAndPassword(name, password)) {
             return;
         }
