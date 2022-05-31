@@ -2,6 +2,7 @@ package woowacourse.auth.ui;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,6 +73,13 @@ public class AuthController {
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal String payload,
                                                @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
         authService.updatePassword(payload, passwordUpdateRequest);
+        return ResponseEntity.noContent()
+                .build();
+    }
+
+    @DeleteMapping("/members/auth/me")
+    public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal String payload) {
+        authService.delete(payload);
         return ResponseEntity.noContent()
                 .build();
     }

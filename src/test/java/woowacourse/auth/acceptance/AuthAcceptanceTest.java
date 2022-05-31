@@ -1,6 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.util.HttpRequestUtil.deleteWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.get;
 import static woowacourse.util.HttpRequestUtil.getWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.patchWithAuthorization;
@@ -300,5 +301,48 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(message).isEqualTo("비밀번호 형식이 올바르지 않습니다.");
+    }
+
+    @DisplayName("토큰에 해당하는 회원을 삭제하고 성공하면 204를 응답한다.")
+    @Test
+    void deleteMember_NoContent() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+                "abc@woowahan.com",
+                "1q2w3e4r!",
+                "닉네임"
+        );
+        post("/api/members", memberCreateRequest);
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+
+        String token = post("/api/login", loginRequest).as(LoginResponse.class)
+                .getToken();
+
+        ExtractableResponse<Response> response = deleteWithAuthorization("/api/members/auth/me", token);
+        ExtractableResponse<Response> loginResponse = post("/api/login", loginRequest);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("이미 삭제된 회원의 토큰으로 접근하려고 하면 401을 응답한다.")
+    @Test
+    void requestWithDeletedMemberToken_Unauthorized() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+                "abc@woowahan.com",
+                "1q2w3e4r!",
+                "닉네임"
+        );
+        post("/api/members", memberCreateRequest);
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+        String token = post("/api/login", loginRequest).as(LoginResponse.class)
+                .getToken();
+        deleteWithAuthorization("/api/members/auth/me", token);
+
+        ExtractableResponse<Response> response = deleteWithAuthorization("/api/members/auth/me", token);
+        String message = response.as(ErrorResponse.class)
+                .getMessage();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(message).isEqualTo("유효하지 않은 토큰입니다.");
     }
 }

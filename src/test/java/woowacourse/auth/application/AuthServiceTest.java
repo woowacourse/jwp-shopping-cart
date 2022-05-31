@@ -211,7 +211,7 @@ class AuthServiceTest {
     @Test
     void deleteMember_NotFoundMember() {
         assertThatThrownBy(() -> authService.delete("abc@woowahan.com"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 회원입니다.");
+                .isInstanceOf(AuthorizationException.class)
+                .hasMessage("유효하지 않은 토큰입니다.");
     }
 }
