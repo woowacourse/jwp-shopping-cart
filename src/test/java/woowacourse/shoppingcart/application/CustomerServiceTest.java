@@ -14,13 +14,20 @@ import org.springframework.test.context.TestConstructor;
 import javax.sql.DataSource;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
 import woowacourse.shoppingcart.exception.DuplicatedCustomerEmailException;
+import woowacourse.shoppingcart.exception.WrongPasswordException;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.CustomerDao;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class CustomerServiceTest {
+
+    private static final String CUSTOMER_EMAIL = "guest@woowa.com";
+    private static final String CUSTOMER_NAME = "guest";
+    private static final String CUSTOMER_PASSWORD = "qwe123!@#";
 
     private final CustomerService customerService;
 
@@ -33,7 +40,7 @@ class CustomerServiceTest {
     @Test
     void registerCustomer() {
         final CustomerRegisterRequest customerRegisterRequest = new CustomerRegisterRequest(
-                "guest@woowa.com", "guest", "qwe123!@#");
+                CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD);
         assertDoesNotThrow(() -> customerService.registerCustomer(customerRegisterRequest));
     }
 
@@ -41,11 +48,11 @@ class CustomerServiceTest {
     @Test
     void validateCustomerEmailNotDuplicated() {
         final CustomerRegisterRequest customerRegisterRequest = new CustomerRegisterRequest(
-                "guest@woowa.com", "guest", "qwe123!@#");
+                CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD);
         customerService.registerCustomer(customerRegisterRequest);
 
         assertThatThrownBy(() -> customerService.registerCustomer(new CustomerRegisterRequest(
-                "guest@woowa.com", "guest1", "qwe123!@#")))
+                CUSTOMER_EMAIL, "guest1", CUSTOMER_PASSWORD)))
                 .isInstanceOf(DuplicatedCustomerEmailException.class);
     }
 
@@ -53,13 +60,41 @@ class CustomerServiceTest {
     @Test
     void findById() {
         final CustomerRegisterRequest customerRegisterRequest = new CustomerRegisterRequest(
-                "guest@woowa.com", "guest", "qwe123!@#");
+                CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD);
         final Long customerId = customerService.registerCustomer(customerRegisterRequest);
 
         final CustomerResponse customerResponse = customerService.findById(customerId);
 
         assertThat(customerResponse)
                 .extracting("email", "userName")
-                .containsExactly("guest@woowa.com", "guest");
+                .containsExactly(CUSTOMER_EMAIL, CUSTOMER_NAME);
+    }
+
+    @DisplayName("회원 정보를 수정한다.")
+    @Test
+    void updateCustomer() {
+        final Long customerId = customerService.registerCustomer(
+                new CustomerRegisterRequest(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
+
+        final String newUserName = "Guest123123";
+        final String newPassword = "qwer1234!@#$";
+        final CustomerUpdateResponse actual = customerService.updateCustomer(customerId,
+                new CustomerUpdateRequest(newUserName, CUSTOMER_PASSWORD, newPassword));
+
+        assertThat(actual.getUserName()).isEqualTo(newUserName);
+    }
+
+    @DisplayName("기존 비밀번호가 일치하지 않으면 회원 정보를 수정할 수 없다.")
+    @Test
+    void validatePasswordWhenUpdate() {
+        final Long customerId = customerService.registerCustomer(
+                new CustomerRegisterRequest(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
+
+        final String newUserName = "Guest123123";
+        final String newPassword = "qwer1234!@#$";
+
+        assertThatThrownBy(() ->customerService.updateCustomer(customerId,
+                new CustomerUpdateRequest(newUserName, newPassword, newPassword)))
+                .isInstanceOf(WrongPasswordException.class);
     }
 }

@@ -6,8 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
 import woowacourse.shoppingcart.exception.DuplicatedCustomerEmailException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.WrongPasswordException;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.CustomerDao;
 
 @Service
@@ -32,9 +35,23 @@ public class CustomerService {
         return customerDao.save(customer);
     }
 
-    public CustomerResponse findById(Long customerId) {
+    public CustomerResponse findById(final Long customerId) {
+        final Customer customer = getById(customerId);
+        return new CustomerResponse(customer.getEmail(), customer.getUserName());
+    }
+
+    private Customer getById(final Long customerId) {
         return customerDao.findById(customerId)
-                .map(customer -> new CustomerResponse(customer.getEmail(), customer.getUserName()))
                 .orElseThrow(InvalidCustomerException::new);
+    }
+
+    public CustomerUpdateResponse updateCustomer(final Long customerId,
+                                                 final CustomerUpdateRequest customerUpdateRequest) {
+        final Customer customer = getById(customerId);
+        if (!customer.equalsPassword(customerUpdateRequest.getPassword())) {
+            throw new WrongPasswordException();
+        }
+        customer.update(customerUpdateRequest.getUserName(), customerUpdateRequest.getNewPassword());
+        return new CustomerUpdateResponse(customer.getUserName());
     }
 }
