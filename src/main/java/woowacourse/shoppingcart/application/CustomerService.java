@@ -3,10 +3,10 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.GetMeResponse;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.UpdateMeRequest;
-import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
+import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Service

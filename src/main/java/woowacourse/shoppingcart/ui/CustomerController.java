@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.GetMeResponse;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.UpdateMeRequest;
-import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
+import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 
 @RestController
 @RequestMapping("/customers")
@@ -54,6 +54,14 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMe(HttpServletRequest request) {
+        String token = AuthorizationExtractor.extract(request);
+        Long customerId = authService.findUserIdByToken(token);
+        customerService.deleteMe(customerId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PutMapping("/me/password")
     public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest,
                                                HttpServletRequest request) {
@@ -61,13 +69,5 @@ public class CustomerController {
         Long customerId = authService.findUserIdByToken(token);
         customerService.updatePassword(customerId, updatePasswordRequest);
         return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMe(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        Long customerId = authService.findUserIdByToken(token);
-        customerService.deleteMe(customerId);
-        return ResponseEntity.noContent().build();
     }
 }

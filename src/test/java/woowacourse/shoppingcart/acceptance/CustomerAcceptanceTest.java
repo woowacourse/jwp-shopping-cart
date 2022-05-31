@@ -12,10 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.GetMeResponse;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.UpdateMeRequest;
-import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
+import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayName("회원 관련 기능")

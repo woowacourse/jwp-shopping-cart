@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.exception.ForbiddenException;
-import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.response.ErrorResponse;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
 @RestControllerAdvice

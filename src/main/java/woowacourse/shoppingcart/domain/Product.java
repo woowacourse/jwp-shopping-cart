@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import javax.validation.constraints.NotNull;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.request.Request;
 
 public class Product {
     @NotNull(groups = Request.id.class)
