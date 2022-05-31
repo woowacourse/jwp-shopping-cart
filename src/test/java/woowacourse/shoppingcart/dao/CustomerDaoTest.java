@@ -118,7 +118,25 @@ public class CustomerDaoTest {
     }
 
     @Test
-    @DisplayName("Id에 해당하는 데이터가 존재하면 Customer를 삭제한다.")
+    @DisplayName("Id에 해당하는 Customer를 수정한다.")
+    void updateById_matchId_void() {
+        // given
+        String email = "kun@email.com";
+        Customer customer = new Customer("kun", email, "qwerasdf123");
+
+        Long id = customerDao.save(customer);
+        Customer updatedCustomer = new Customer("rick", email, "qwerasdf321");
+
+        // when
+        customerDao.updateById(id, updatedCustomer);
+
+        // then
+        assertThat(customerDao.findByEmail(email))
+                .isEqualTo(updatedCustomer);
+    }
+
+    @Test
+    @DisplayName("Id에 해당하는 Customer를 삭제한다.")
     void deleteById_existId_void() {
         // given
         String email = "kun@email.com";

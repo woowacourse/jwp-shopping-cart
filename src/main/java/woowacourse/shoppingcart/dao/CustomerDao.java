@@ -65,6 +65,11 @@ public class CustomerDao {
         }
     }
 
+    public void updateById(Long id, Customer updatedCustomer) {
+        final String query = "UPDATE customer SET username = ?, password = ? WHERE id = ?";
+        jdbcTemplate.update(query, updatedCustomer.getUsername(), updatedCustomer.getPassword(), id);
+    }
+
     public void deleteById(Long id) {
         final String query = "DELETE FROM customer WHERE id = ?";
         jdbcTemplate.update(query, id);
