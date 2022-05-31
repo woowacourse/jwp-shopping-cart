@@ -25,8 +25,7 @@ public class AuthService {
         return new TokenResponse(accessToken);
     }
 
-    public Customer findCustomerByToken(String token) {
-        String payload = jwtTokenProvider.getPayload(token);
-        return customerService.findByUsername(payload);
+    public Customer findCustomerByUsername(String username) {
+        return customerService.findByUsername(username);
     }
 }

@@ -24,6 +24,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             throw new AuthorizationException();
         }
 
+        request.setAttribute("username", jwtTokenProvider.getPayload(token));
         return true;
     }
 }

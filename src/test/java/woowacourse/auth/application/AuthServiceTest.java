@@ -36,16 +36,14 @@ class AuthServiceTest {
         assertThat(jwtTokenProvider.validateToken(token.getAccessToken())).isTrue();
     }
 
-    @DisplayName("토큰으로 Customer를 조회한다.")
+    @DisplayName("username으로 Customer를 조회한다.")
     @Test
     void findCustomerByToken() {
         SignupRequest signupRequest = new SignupRequest("dongho108", "password1234", "01012341234", "인천시 서구");
         Customer savedCustomer = customerService.save(signupRequest);
 
         LoginRequest loginRequest = new LoginRequest("dongho108", "password1234");
-        TokenResponse token = authService.createToken(loginRequest);
-
-        Customer customer = authService.findCustomerByToken(token.getAccessToken());
+        Customer customer = authService.findCustomerByUsername(loginRequest.getUsername());
 
         assertAll(
             () -> assertThat(customer.getUsername()).isEqualTo(savedCustomer.getUsername()),

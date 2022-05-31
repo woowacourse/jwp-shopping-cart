@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
 @RequestMapping("/api/customers")
@@ -34,8 +33,7 @@ public class AuthController {
 
     @GetMapping
     public ResponseEntity<CustomerResponse> findCustomerInfo(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        Customer customer = authService.findCustomerByToken(token);
+        Customer customer = authService.findCustomerByUsername((String) request.getAttribute("username"));
         return ResponseEntity.ok().body(CustomerResponse.from(customer));
     }
 }
