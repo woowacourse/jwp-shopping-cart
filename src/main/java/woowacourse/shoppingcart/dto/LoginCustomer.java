@@ -7,9 +7,7 @@ public class LoginCustomer {
     private String loginId;
     private String username;
 
-
     public LoginCustomer() {
-
     }
 
     public LoginCustomer(Customer customer) {

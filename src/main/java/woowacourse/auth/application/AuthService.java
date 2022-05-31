@@ -20,8 +20,8 @@ public class AuthService {
     }
 
     public TokenResponse createToken(TokenRequest tokenRequest) {
-        if (!customerDao.checkInvalidLogin(tokenRequest.getLoginId(), tokenRequest.getPassword())) {
-            throw new IllegalArgumentException();
+        if (!customerDao.checkValidLogin(tokenRequest.getLoginId(), tokenRequest.getPassword())) {
+            throw new IllegalArgumentException("아이디나 패스워드 정보가 일치하지 않습니다.");
         }
 
         String token = jwtTokenProvider.createToken(tokenRequest.getLoginId());
@@ -34,10 +34,6 @@ public class AuthService {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
         String payload = jwtTokenProvider.getPayload(token);
-
-        if (!customerDao.existByLoginId(payload)) {
-            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
-        }
 
         return new LoginCustomer(customerDao.findIdByLoginId(payload));
     }

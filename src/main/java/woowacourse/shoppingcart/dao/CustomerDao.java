@@ -65,10 +65,32 @@ public class CustomerDao {
         return new Customer(id, customer.getLoginId(), customer.getUsername(), customer.getPassword());
     }
 
-    public boolean checkInvalidLogin(String loginId, String password) {
+    public boolean checkValidLogin(String loginId, String password) {
         final String query = "SELECT EXISTS (SELECT 1 FROM customer WHERE loginId = :loginId and password = :password)";
         MapSqlParameterSource parameters = new MapSqlParameterSource("loginId", loginId);
         parameters.addValue("password", password);
         return namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class) != 0;
+    }
+
+    public Customer update(Customer customer) {
+        final String query = "UPDATE customer SET username = :username WHERE loginId = :loginId and password = :password";
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
+        namedParameterJdbcTemplate.update(query, parameterSource);
+        return customer;
+    }
+
+    public boolean existByUsername(String username) {
+        final String query = "SELECT EXISTS (SELECT 1 FROM customer WHERE username = :username)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("username", username);
+
+        return namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class) != 0;
+    }
+
+    public void delete(String loginId, String password) {
+        final String query = "DELETE FROM customer where loginId = :loginId AND password = :password";
+        MapSqlParameterSource parameter = new MapSqlParameterSource("loginId", loginId);
+        parameter.addValue("password", password);
+
+        namedParameterJdbcTemplate.update(query, parameter);
     }
 }

@@ -5,12 +5,12 @@
   + [ ] 비밀번호 규칙이 맞는지 확인 - (추후적용)
     + 대문자 하나 이상, 소문자 하나 이상, 특수문자, 숫자, 8-15글자 
   + [x] 아이디 중복이면 예외
-+ [ ] 로그인
++ [x] 로그인
   + id, 비밀번호 잘못되었을 때 예외
-  + 정상적으로 로그인 될 경우 token과 username을 넘긴다.
-+ [ ] 수정
+  + 정상적으로 로그인 될 경우 token과 name 넘긴다.
++ [x] 수정
   + 비밀번호가 일치하면 수정 할 수 있다.
-  + username만 수정 가능하다.
+  + name 수정 가능하다.
   + 비밀번호가 일치하지 않을 때 예외
 + [ ] 탈퇴
   + 비밀번호가 일치해야 탈퇴할 수 있다.
@@ -33,7 +33,7 @@
 // request
 {
 	"loginId": string, 
-	"userName": string,
+	"name": string,
 	"password": string
 }
 ```
@@ -44,7 +44,7 @@
 // 201
 {
 	"loginId": string,
-	"userName": string
+	"name": string
 }
 
 // 400 Bad Request
@@ -71,7 +71,7 @@
 // 200
 {
  	"accessToken": string,
-	"username": string
+	"name": string
 }
 
 // 401 Unauthorized (로그인 실패)
@@ -81,11 +81,11 @@
 
 ### 정보 조회
 
-`GET` /customers
+`GET` /customers/me
 
 ```tsx
 headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`
 },
 ```
 
@@ -94,20 +94,20 @@ headers: {
 
 {
 	"loginId": string, 
-	"username": string
+	"name": string
 }
 ```
 
 
 ### 수정
 
-`PUT` /customers
+`PUT` /customers/me
 
 1. **들어가서 수정하고 비밀번호 쳐야 확정**
 
 ```json
 headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`
 },
 ```
 
@@ -116,7 +116,7 @@ headers: {
 
 {
 	"loginId": string, 
-	"username": string,
+	"name": string,
 	"password": string
 }
 ```
@@ -127,7 +127,7 @@ headers: {
 // 200
 {
 	"loginId": string, 
-	"username": string
+	"name": string
 }
 
 // 400 Bad Request
@@ -136,13 +136,13 @@ headers: {
 
 ### 탈퇴
 
-`DELETE` /customers
+`DELETE` /customers/me
 
 - 탈퇴를 비밀번호 한번 더 치고 탈퇴시키기
 
 ```json
 headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`
 },
 ```
 
@@ -150,7 +150,7 @@ headers: {
 // request
 
 {
-	"password": string,
+	"password": string
 }
 ```
 
