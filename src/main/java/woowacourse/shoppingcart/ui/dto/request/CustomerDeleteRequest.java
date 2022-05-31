@@ -5,8 +5,11 @@ import javax.validation.constraints.NotBlank;
 public class CustomerDeleteRequest {
 
     @NotBlank
-    private final String password;
+    private String password;
 
+    public CustomerDeleteRequest() {
+    }
+    
     public CustomerDeleteRequest(String password) {
         this.password = password;
     }

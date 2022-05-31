@@ -1,8 +1,11 @@
 package woowacourse.shoppingcart.ui.dto.request;
 
 public class CustomerResponse {
-    private final String name;
-    private final String email;
+    private String name;
+    private String email;
+
+    public CustomerResponse() {
+    }
 
     public CustomerResponse(String name, String email) {
         this.name = name;

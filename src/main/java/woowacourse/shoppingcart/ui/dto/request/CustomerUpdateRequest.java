@@ -4,9 +4,12 @@ import javax.validation.constraints.NotBlank;
 
 public class CustomerUpdateRequest {
     @NotBlank
-    private final String name;
+    private String name;
     @NotBlank
-    private final String password;
+    private String password;
+
+    public CustomerUpdateRequest() {
+    }
 
     public CustomerUpdateRequest(String name, String password) {
         this.name = name;
