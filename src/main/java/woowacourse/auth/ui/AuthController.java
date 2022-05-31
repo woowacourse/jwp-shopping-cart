@@ -18,7 +18,7 @@ public class AuthController {
 
     @PostMapping("/api/login")
     public TokenResponse login(@RequestBody final TokenRequest tokenRequest) {
-        final String token = authService.login(tokenRequest.toServiceDto());
+        final String token = authService.certify(tokenRequest.toServiceDto());
         return new TokenResponse(token);
     }
 }

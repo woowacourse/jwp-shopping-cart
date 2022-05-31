@@ -19,7 +19,7 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public String login(final LoginServiceRequest loginServiceRequest) {
+    public String certify(final LoginServiceRequest loginServiceRequest) {
         final Customer customer = customerDao.findByEmail(loginServiceRequest.getEmail())
                 .orElseThrow(InvalidCustomerException::new);
         if (!customer.isSamePassword(loginServiceRequest.getPassword())) {
