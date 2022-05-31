@@ -33,4 +33,8 @@ public class Customer {
     public Long getId() {
         return id;
     }
+
+    public boolean isValidPassword(String password) {
+        return this.password.equals(password);
+    }
 }

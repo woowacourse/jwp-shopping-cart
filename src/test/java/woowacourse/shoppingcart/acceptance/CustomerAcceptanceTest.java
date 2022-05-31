@@ -19,13 +19,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("정상적인 회원가입")
     @Test
     void successSignUp() {
-        Map<String, String> body = Map.of(
-                "email", "tonic@email.com",
-                "password", "12345678a",
-                "nickname", "토닉"
-        );
+        String email = "tonic@email.com";
+        String password = "12345678a";
+        String nickname = "토닉";
 
-        ExtractableResponse<Response> response = 회원가입_요청(body);
+        ExtractableResponse<Response> response = 회원가입_요청(email, password, nickname);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
@@ -34,13 +32,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @MethodSource("provideInvalidSignUpForm")
     void invalidSignUpFormatRequest(String email, String password, String nickname) {
-        Map<String, String> body = Map.of(
-                "email", email,
-                "password", password,
-                "nickname", nickname
-        );
-
-        ExtractableResponse<Response> response = 회원가입_요청(body);
+        ExtractableResponse<Response> response = 회원가입_요청(email, password, nickname);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1000);
@@ -60,14 +52,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("중복된 이메일로 회원가입시 400 응답")
     @Test
     void duplicatedSignUp() {
-        Map<String, String> body = Map.of(
-                "email", "tonic@email.com",
-                "password", "12345678a",
-                "nickname", "토닉"
-        );
-        회원가입_요청(body);
+        String email = "tonic@email.com";
+        String password = "12345678a";
+        String nickname = "토닉";
+        회원가입_요청(email, password, nickname);
 
-        ExtractableResponse<Response> response = 회원가입_요청(body);
+        ExtractableResponse<Response> response = 회원가입_요청(email, password, nickname);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1001);

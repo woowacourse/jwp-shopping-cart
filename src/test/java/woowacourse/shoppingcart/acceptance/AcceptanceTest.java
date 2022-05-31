@@ -23,11 +23,31 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    protected ExtractableResponse<Response> 회원가입_요청(Map<String, String> body) {
+    protected ExtractableResponse<Response> 회원가입_요청(String email, String password, String nickname) {
+        Map<String, String> body = Map.of(
+                "email", email,
+                "password", password,
+                "nickname", nickname
+        );
+
         return RestAssured.given().log().all()
                 .body(body)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/users")
                 .then().log().all().extract();
+    }
+
+    protected ExtractableResponse<Response> 로그인_요청(String email, String password) {
+        Map<String, String> body = Map.of(
+                "email", email,
+                "password", password
+        );
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .body(body)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract();
+        return response;
     }
 }

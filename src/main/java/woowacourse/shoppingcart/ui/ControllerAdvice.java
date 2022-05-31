@@ -21,7 +21,8 @@ public class ControllerAdvice {
 
     public enum ErrorCode {
         INVALID_FORMAT_ERROR(1000, "잘못된 형식입니다."),
-        DUPLICATE_CUSTOMER_ERROR(1001, "이미 존재하는 회원입니다.");
+        DUPLICATE_CUSTOMER_ERROR(1001, "이미 존재하는 회원입니다."),
+        NOT_FOUND_CUSTOMER_ERROR(1002, "존재하지 않는 회원입니다.");
         private int errorCode;
         private String message;
 
@@ -68,7 +69,6 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
@@ -76,5 +76,12 @@ public class ControllerAdvice {
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler({
+            InvalidCustomerException.class
+    })
+    public ResponseEntity<ErrorResponse> handleShoppingCartException(final ShoppingCartException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 }

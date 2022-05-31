@@ -64,6 +64,16 @@ public class CustomerDao {
         }
     }
 
+    public Optional<Customer> findByEmail(String email) {
+        try {
+            final String query = "SELECT email, password, nickname, id FROM customer WHERE email = ?";
+            Customer customer = jdbcTemplate.queryForObject(query, ROW_MAPPER, email);
+            return Optional.of(customer);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public boolean existByEmail(String email) {
         final String query = "SELECT EXISTS(SELECT id FROM customer WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);

@@ -1,11 +1,11 @@
 package woowacourse.shoppingcart.exception;
 
-public class InvalidCustomerException extends RuntimeException {
-    public InvalidCustomerException() {
-        this("존재하지 않는 유저입니다.");
-    }
+public class InvalidCustomerException extends ShoppingCartException {
 
-    public InvalidCustomerException(final String msg) {
-        super(msg);
+    private static final String MESSAGE = "존재하지 않는 유저입니다.";
+    private static final int ERROR_CODE = 1002;
+
+    public InvalidCustomerException() {
+        super(ERROR_CODE, MESSAGE);
     }
 }
