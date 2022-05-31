@@ -20,7 +20,7 @@ public class AuthService {
 
 	public TokenResponse login(TokenRequest tokenRequest) {
 		Customer customer = customerService.findByEmail(tokenRequest.getEmail());
-		if (!customer.isSamePassword(tokenRequest.getPassword())) {
+		if (customer.isInvalidPassword(tokenRequest.getPassword())) {
 			throw new InvalidAuthException("비밀번호가 일치하지 않습니다.");
 		}
 		return new TokenResponse(customer.getNickname(), tokenProvider.createToken(customer.getEmail()));

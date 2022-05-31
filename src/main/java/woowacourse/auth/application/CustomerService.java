@@ -52,7 +52,7 @@ public class CustomerService {
 	}
 
 	private void validatePassword(Customer customer, CustomerUpdateRequest request) {
-		if (!customer.isSamePassword(request.getPassword())) {
+		if (customer.isInvalidPassword(request.getPassword())) {
 			throw new InvalidAuthException("비밀번호가 달라서 수정할 수 없습니다.");
 		}
 	}

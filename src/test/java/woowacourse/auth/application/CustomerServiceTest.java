@@ -91,7 +91,7 @@ class CustomerServiceTest {
 		// given
 		CustomerUpdateRequest request = new CustomerUpdateRequest(
 			"thor", "a1234!", "b1234!");
-		Customer customer = new Customer(1L, "does", "a1234!", "b1234!");
+		Customer customer = new Customer(1L, email, "a1234!", "b1234!");
 
 		// when
 		Customer update = customerService.update(customer, request);
@@ -106,7 +106,7 @@ class CustomerServiceTest {
 		// given
 		CustomerUpdateRequest request = new CustomerUpdateRequest(
 			"thor", "a1234!", "b1234!");
-		Customer customer = new Customer(1L, "does", "a123456!", "b1234!");
+		Customer customer = new Customer(1L, email, "a123456!", "b1234!");
 
 		// when
 		assertThatThrownBy(() -> customerService.update(customer, request))

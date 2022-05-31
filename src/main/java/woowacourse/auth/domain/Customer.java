@@ -2,28 +2,42 @@ package woowacourse.auth.domain;
 
 import static lombok.EqualsAndHashCode.*;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Getter
 public class Customer {
 
-	@Include
-	private Long id;
-	private final String email;
-	private final String password;
-	private final String nickname;
+	@Include @Getter
+	private final Long id;
+	private final Email email;
+	private final Password password;
+	private final Nickname nickname;
 
-	public Customer(String email, String password, String nickname) {
-		this.email = email;
-		this.password = password;
-		this.nickname = nickname;
+	public Customer(Long id, String email, String password, String nickname) {
+		this.id = id;
+		this.email = new Email(email);
+		this.password = new Password(password);
+		this.nickname = new Nickname(nickname);
 	}
 
-	public boolean isSamePassword(String password) {
-		return this.password.equals(password);
+	public Customer(String email, String password, String nickname) {
+		this(null, email, password, nickname);
+	}
+
+	public boolean isInvalidPassword(String password) {
+		return !this.password.isSame(password);
+	}
+
+	public String getPassword() {
+		return password.getValue();
+	}
+
+	public String getNickname() {
+		return nickname.getValue();
+	}
+
+	public String getEmail() {
+		return email.getValue();
 	}
 }
