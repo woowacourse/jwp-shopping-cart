@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -24,5 +26,12 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerResponse save(@RequestBody CustomerRequest customerRequest) {
         return authService.save(customerRequest);
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public TokenResponse login(@RequestBody TokenRequest tokenRequest) {
+        Long customerId = authService.loginCustomer(tokenRequest);
+        return authService.createToken(customerId);
     }
 }
