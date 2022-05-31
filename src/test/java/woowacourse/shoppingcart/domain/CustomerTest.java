@@ -20,14 +20,14 @@ class CustomerTest {
 
         // when && then
         assertThatThrownBy(() -> new Customer(email, nickname, password))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이메일 형식이 맞지 않습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이메일 형식이 맞지 않습니다.");
     }
 
     @DisplayName("패스워드 형식이 맞지 않는 경우 예외가 발생한다.")
     @ParameterizedTest
     @ValueSource(strings = {"password123!", "PASSWORD123!", "Password123", "Password!@#", "Aa1!123",
-        "Password123412341234!"})
+            "Password123412341234!"})
     void throwsExceptionWhenInvalidPasswordFormat(String password) {
         // given
         String email = "beomWhale@gmail.com";
@@ -35,8 +35,8 @@ class CustomerTest {
 
         // when && then
         assertThatThrownBy(() -> new Customer(email, nickname, password))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("패스워드 형식이 맞지 않습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("패스워드 형식이 맞지 않습니다.");
     }
 
     @DisplayName("닉네임 형식이 맞지 않는 경우 예외가 발생한다.")
@@ -49,8 +49,8 @@ class CustomerTest {
 
         // when && then
         assertThatThrownBy(() -> new Customer(email, nickname, password))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("닉네임 형식이 맞지 않습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("닉네임 형식이 맞지 않습니다.");
     }
 
     @DisplayName("입력된 패스워드가 기존 패스워드와 일치하는지 확인한다.")
@@ -84,11 +84,11 @@ class CustomerTest {
         String newPassword = "Password1234!";
 
         assertThatThrownBy(() -> customer.changePassword(password + "1", newPassword))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이전 패스워드가 틀렸습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이전 패스워드가 틀렸습니다.");
     }
 
-    @DisplayName("패스워드 변경 시,  새로운 패스워드가 형식에 맞지 않는 경우 예외가 발생한다.")
+    @DisplayName("패스워드 변경 시, 새로운 패스워드가 형식에 맞지 않는 경우 예외가 발생한다.")
     @ParameterizedTest
     @ValueSource(strings = {"password123!", "PASSWORD123!", "Password123", "Password!@#", "Aa1!123"})
     void throwExceptionWhenInvalidPassword(String newPassword) {
@@ -96,7 +96,36 @@ class CustomerTest {
         Customer customer = new Customer("awesome@gmail.com", "awesome", password);
 
         assertThatThrownBy(() -> customer.changePassword(password + "1", newPassword))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("패스워드 형식이 맞지 않습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("패스워드 형식이 맞지 않습니다.");
+    }
+
+    @DisplayName("새로운 닉네임을 입력받아 닉네임을 변경한다.")
+    @Test
+    void changeNickname() {
+        // given
+        String prevNickname = "awesome";
+        Customer customer = new Customer("awesome@gmail.com", prevNickname, "Password123!");
+
+        // when
+        String newNickname = "changed";
+        customer.changeNickname(newNickname);
+
+        // then
+        assertThat(customer.getNickname()).isEqualTo(newNickname);
+    }
+
+    @DisplayName("닉네임 변경 시, 새로운 닉네임이 형식에 맞지 않는 경우 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "NICKNAME!", "nickname123"})
+    void throwExceptionWhenInvalidNickname(String newNickname) {
+        // given
+        String prevNickname = "awesome";
+        Customer customer = new Customer("awesome@gmail.com", prevNickname, "Password123!");
+
+        // when
+        assertThatThrownBy(() -> customer.changeNickname(newNickname))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("닉네임 형식이 맞지 않습니다.");
     }
 }

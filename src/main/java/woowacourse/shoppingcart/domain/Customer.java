@@ -16,7 +16,7 @@ public class Customer {
 
     private final Long id;
     private final String email;
-    private final String nickname;
+    private String nickname;
     private String password;
 
     public Customer(Long id, String email, String nickname, String password) {
@@ -105,5 +105,10 @@ public class Customer {
             throw new IllegalArgumentException("이전 패스워드가 틀렸습니다.");
         }
         password = newPassword;
+    }
+
+    public void changeNickname(String nickname) {
+        validateNicknameFormat(nickname);
+        this.nickname = nickname;
     }
 }
