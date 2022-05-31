@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDto;
@@ -14,10 +15,13 @@ public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(final JwtTokenProvider jwtTokenProvider, final CustomerDao customerDao) {
+    public AuthService(final JwtTokenProvider jwtTokenProvider, final CustomerDao customerDao,
+                       final PasswordEncoder passwordEncoder) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.customerDao = customerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -40,7 +44,7 @@ public class AuthService {
     }
 
     private void checkPassword(final SignInDto signInDto, final Customer customer) {
-        if (!customer.getPassword().equals(signInDto.getPassword())) {
+        if (!passwordEncoder.matches(signInDto.getPassword(), customer.getPassword())) {
             throw new AuthorizationFailException("로그인에 실패했습니다.");
         }
     }

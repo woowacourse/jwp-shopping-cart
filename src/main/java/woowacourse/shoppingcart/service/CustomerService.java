@@ -2,15 +2,12 @@ package woowacourse.shoppingcart.service;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDto;
-import woowacourse.auth.dto.SignInDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
-import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
-import woowacourse.shoppingcart.exception.AuthorizationFailException;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -18,15 +15,18 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(final CustomerDao customerDao) {
+    public CustomerService(final CustomerDao customerDao,
+                           final PasswordEncoder passwordEncoder) {
         this.customerDao = customerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Long signUp(final SignUpDto signUpDto){
         final Customer newCustomer = Customer.createWithoutId(
                 signUpDto.getEmail(),
-                signUpDto.getPassword(),
+                passwordEncoder.encrypt(signUpDto.getPassword()),
                 signUpDto.getUsername()
         );
 
