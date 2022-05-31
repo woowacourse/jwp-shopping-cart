@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -21,14 +22,20 @@ import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-    @ExceptionHandler({LoginFailureException.class, TokenInvalidException.class})
-    public ResponseEntity<ExceptionResponse> handleLoginFailureException(RuntimeException e) {
+    // TODO 로그인 실패, 토큰 유효성 검증 실패 시 400 대신 401 Unauthorized 로 하면 어떨까? https://datatracker.ietf.org/doc/html/rfc7235
+    @ExceptionHandler(LoginFailureException.class)
+    public ResponseEntity<ExceptionResponse> handleLoginFailureException(LoginFailureException e) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(TokenInvalidException.class)
+    public ResponseEntity<ExceptionResponse> handleTokenInvalidException(TokenInvalidException e) {
+        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException() {
-        return ResponseEntity.badRequest().body("Unhandled Exception");
+    public ResponseEntity<ExceptionResponse> handleUnhandledException(RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse("서버 내부 오류가 발생하였습니다."));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
