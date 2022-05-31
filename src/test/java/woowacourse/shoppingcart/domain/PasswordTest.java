@@ -24,7 +24,7 @@ class PasswordTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"12345a!", "1234567891234567891a!"})
+    @ValueSource(strings = {"12345a!", "1234567891234567!"})
     @DisplayName("패스워드의 길이가 올바르지 않은 경우, 예외를 발생한다.")
     void invalidLengthException(String value) {
         assertThatExceptionOfType(InvalidPasswordException.class)
