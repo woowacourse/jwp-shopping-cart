@@ -22,7 +22,7 @@ public class AuthService {
     public String login(final LoginServiceRequest loginServiceRequest) {
         final Customer customer = customerDao.findByEmail(loginServiceRequest.getEmail())
                 .orElseThrow(InvalidCustomerException::new);
-        if (!customer.getPassword().equals(loginServiceRequest.getPassword())) {
+        if (!customer.isSamePassword(loginServiceRequest.getPassword())) {
             throw new PasswordNotMatchException();
         }
 
