@@ -9,7 +9,7 @@ public interface CustomerDao {
 
     CustomerEntity findByEmail(String email);
 
-    void update(CustomerEntity customerEntity);
+    void update(int id, CustomerEntity customerEntity);
 
     void delete(int id);
 

@@ -95,4 +95,15 @@ public class CustomerService {
                 privacyEntity.getBirthDay().format(DateTimeFormatter.ISO_DATE), privacyEntity.getContact(),
                 addressResponse, customerEntity.isTerms());
     }
+
+    public void updateCustomerById(int customerId, CustomerRequest customerRequest) {
+        Customer customer = convertRequestToCustomer(customerRequest);
+        CustomerEntity customerEntity = convertCustomerToEntity(customer);
+        PrivacyEntity privacyEntity = convertPrivacyToEntity(customer.getPrivacy());
+        AddressEntity addressEntity = convertAddressToEntity(customer.getFullAddress());
+
+        customerDao.update(customerId, customerEntity);
+        privacyDao.update(customerId, privacyEntity);
+        addressDao.update(customerId, addressEntity);
+    }
 }

@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_2;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -82,6 +83,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        // given
+        ExtractableResponse<Response> customer = createCustomer();
+        String customerUri = customer.header("Location");
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(CUSTOMER_REQUEST_2)
+                .when().put(customerUri)
+                .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("회원탈퇴")

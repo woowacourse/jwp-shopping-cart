@@ -33,6 +33,11 @@ public class Fixtures {
             "http://gravatar.com/avatar/1?d=identicon",
             "박성우", "male", "1999-03-23", "01022223333", new AddressRequest("서울특별시 강남구 선릉역", "이디야 1층", "12345"), true);
 
+    public static CustomerRequest CUSTOMER_REQUEST_2 = new CustomerRequest("seongwoo0513@example.com", "string&123",
+            "http://gravatar.com/avatar/1?d=identicon",
+            "조동현", "male", "1999-03-23", "01012345678", new AddressRequest("서울특별시 성동구 왕십리역", "길바닥", "54321"), true);
+
+
     public static TokenRequest TOKEN_REQUEST_1 = new TokenRequest(CUSTOMER_REQUEST_1.getEmail(),
             CUSTOMER_REQUEST_1.getPassword());
 }

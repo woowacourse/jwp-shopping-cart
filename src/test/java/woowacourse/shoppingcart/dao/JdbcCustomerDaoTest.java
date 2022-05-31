@@ -77,7 +77,7 @@ class JdbcCustomerDaoTest {
                 "http://gravatar.com/avatar/2?d=identicon", true);
 
         // when
-        customerDao.update(newCustomerEntity);
+        customerDao.update(customerId, newCustomerEntity);
         CustomerEntity actual = customerDao.findById(customerId);
 
         // then

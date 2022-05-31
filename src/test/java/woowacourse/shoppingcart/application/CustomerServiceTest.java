@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_2;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
@@ -80,5 +81,21 @@ class CustomerServiceTest {
         // when & then
         assertThatThrownBy(() -> customerService.getCustomerById(id + 1))
                 .isInstanceOf(CustomerNotFoundException.class);
+    }
+
+    @DisplayName("Customer Id를 통해 해당 유저의 정보를 수정할 수 있다.")
+    @Test
+    void updateCustomer() {
+        // given
+        int id = customerService.create(CUSTOMER_REQUEST_1);
+
+        // when
+        customerService.updateCustomerById(id, CUSTOMER_REQUEST_2);
+        CustomerResponse customerResponse = customerService.getCustomerById(id);
+
+        // then
+        assertThat(customerResponse).extracting("profileImageUrl", "name", "gender", "contact")
+                .containsExactly(CUSTOMER_REQUEST_2.getProfileImageUrl(), CUSTOMER_REQUEST_2.getName(),
+                        CUSTOMER_REQUEST_2.getGender(), CUSTOMER_REQUEST_2.getContact());
     }
 }
