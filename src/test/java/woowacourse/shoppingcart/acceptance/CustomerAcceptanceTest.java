@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -9,25 +10,24 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CustomerDetailResponse;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
+    private static final String NAME = "클레이";
+    private static final String EMAIL = "djwhy5510@naver.com";
+    private static final String PASSWORD = "12345678";
+
     @DisplayName("회원가입")
     @Test
-    void addCustomer() {
-        // given 이름, 이메일, 비밀번호를 입력하고
-        CustomerRegisterRequest request = new CustomerRegisterRequest("클레이", "djwhy5510@naver.com", "12345678");
-
-        // when 회원 등록을 요청하면
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/customer")
-                .then().log().all()
-                .extract();
+    void register() {
+        // given, when 이름, 이메일, 비밀번호를 입력하고 회원 등록을 요청하면
+        ExtractableResponse<Response> response = requestPostWithBody("/api/customer",
+                new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
 
         // then 회원이 성공적으로 등록된다.
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -35,8 +35,29 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("내 정보 조회")
     @Test
-    void getMe() {
+    void showMyDetail() {
+        // given 회원가입 후 로그인하여 토큰을 발급받고
+        requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
+        String accessToken = requestPostWithBody("/api/login", new TokenRequest(EMAIL, PASSWORD))
+                .as(TokenResponse.class)
+                .getAccessToken();
+
+        // when 내 정보를 조회하면
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customer")
+                .then().log().all()
+                .extract();
+
+        // then 성공적으로 정보를 조회한다.
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.as(CustomerDetailResponse.class)).usingRecursiveComparison()
+                        .isEqualTo(new CustomerDetailResponse(NAME, EMAIL))
+        );
     }
+
 
     @DisplayName("내 정보 수정")
     @Test
