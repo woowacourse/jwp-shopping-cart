@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.member.domain.Member;
-import woowacourse.shoppingcart.exception.InvalidMemberException;
+import woowacourse.member.exception.MemberNotFoundException;
 
 import javax.sql.DataSource;
 import java.util.Locale;
@@ -57,7 +57,7 @@ public class MemberDao {
         }
     }
 
-    private RowMapper<Member> rowMapper= (resultSet, rowNum) ->
+    private RowMapper<Member> rowMapper = (resultSet, rowNum) ->
             Member.withoutEncrypt(
                     resultSet.getLong("id"),
                     resultSet.getString("email"),
@@ -75,7 +75,7 @@ public class MemberDao {
             final String query = "SELECT id FROM member WHERE name = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidMemberException();
+            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 }
