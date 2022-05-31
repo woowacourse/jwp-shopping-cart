@@ -6,15 +6,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import com.ori.acceptancetest.SpringBootAcceptanceTest;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.TokenRequest;
 
 @DisplayName("인증 관련 기능")
 @SpringBootAcceptanceTest
@@ -28,16 +24,10 @@ public class AuthAcceptanceTest {
 	@Test
 	void myInfoWithBearerAuth() {
 		// given
-		signUp(new CustomerRequest(email, password, nickname));
+		RestUtils.signUp(email, password, nickname);
 
 		// when
-		ExtractableResponse<Response> loginResponse = RestAssured.given().log().all()
-			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.body(new TokenRequest(email, password))
-			.when().post("/auth/login")
-			.then().log().all()
-			.extract();
-
+		ExtractableResponse<Response> loginResponse = RestUtils.login(email, password);
 		// then
 		assertAll(
 			() -> assertThat(loginResponse.jsonPath().getString("nickname")).isEqualTo("does"),
@@ -45,30 +35,29 @@ public class AuthAcceptanceTest {
 		);
 	}
 
-	@DisplayName("로그인 실패")
+	@DisplayName("비밀 번호를 틀리면 로그인하지 못한다.")
 	@Test
-	void myInfoWithBadBearerAuth() {
+	void myInfoWithInvalidPassword() {
 		// given
-		signUp(new CustomerRequest(email, password, nickname));
+		RestUtils.signUp(email, password, nickname);
 
 		// when
-		ExtractableResponse<Response> loginResponse = RestAssured.given().log().all()
-			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.body(new TokenRequest(email, "a1234!!!23"))
-			.when().post("/auth/login")
-			.then().log().all()
-			.extract();
+		ExtractableResponse<Response> loginResponse = RestUtils.login(email, "a1234!!!23");
 
 		// then
 		assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 	}
 
-	private void signUp(CustomerRequest request) {
-		RestAssured.given().log().all()
-			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.body(request)
-			.when().post("/customers")
-			.then().log().all()
-			.extract();
+	@DisplayName("이메일을 틀리면 로그인하지 못한다.")
+	@Test
+	void myInfoWithInvalidEmail() {
+		// given
+		RestUtils.signUp(email, password, nickname);
+
+		// when
+		ExtractableResponse<Response> loginResponse = RestUtils.login("email@gmail.com", password);
+
+		// then
+		assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 	}
 }
