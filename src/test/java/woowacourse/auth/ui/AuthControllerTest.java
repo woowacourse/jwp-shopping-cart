@@ -19,11 +19,14 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @SpringBootTest
 class AuthControllerTest {
 
-    @Autowired
-    private AuthController authController;
+    private final AuthController authController;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    public AuthControllerTest(AuthController authController, JwtTokenProvider jwtTokenProvider) {
+        this.authController = authController;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @DisplayName("로그인에 성공한다.")
     @Test
