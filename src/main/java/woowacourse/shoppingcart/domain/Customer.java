@@ -26,6 +26,10 @@ public class Customer {
         this.password = password;
     }
 
+    public boolean isPasswordMatched(String password) {
+        return this.password.equals(password);
+    }
+
     private void validateEmailFormat(String email) {
         Matcher matcher = EMAIL_PATTERN.matcher(email);
         if (!matcher.matches()) {
