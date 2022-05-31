@@ -1,7 +1,8 @@
 package woowacourse.auth.support;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import javax.servlet.http.HttpServletRequest;
+import woowacourse.shoppingcart.exception.AuthorizationFailException;
 
 public class AuthorizationExtractor {
     public static final String AUTHORIZATION = "Authorization";
@@ -22,7 +23,6 @@ public class AuthorizationExtractor {
                 return authHeaderValue;
             }
         }
-
-        return null;
+        throw new AuthorizationFailException("토큰 값이 비어있습니다.");
     }
 }

@@ -18,11 +18,9 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerService {
 
     private final CustomerDao customerDao;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public CustomerService(final CustomerDao customerDao, final JwtTokenProvider jwtTokenProvider) {
+    public CustomerService(final CustomerDao customerDao) {
         this.customerDao = customerDao;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public Long signUp(final SignUpDto signUpDto){
@@ -39,26 +37,6 @@ public class CustomerService {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
         return new CustomerDto(customer.getId(), customer.getEmail(), customer.getUsername());
-    }
-
-    public TokenResponseDto login(final SignInDto signInDto) {
-        final Customer customer = customerDao.findByEmail(signInDto.getEmail())
-                .orElseThrow(() -> new AuthorizationFailException("로그인에 실패했습니다."));
-
-        checkPassword(signInDto, customer);
-
-        final String accessToken = makeAccessToken(customer);
-        return new TokenResponseDto(accessToken, jwtTokenProvider.getValidityInMilliseconds());
-    }
-
-    private String makeAccessToken(final Customer customer) {
-        return jwtTokenProvider.createToken(customer.getUsername());
-    }
-
-    private void checkPassword(final SignInDto signInDto, final Customer customer) {
-        if (!customer.getPassword().equals(signInDto.getPassword())) {
-            throw new AuthorizationFailException("로그인에 실패했습니다.");
-        }
     }
 
     public CustomerDto updateCustomer(final Long id, final UpdateCustomerDto updateCustomerDto){

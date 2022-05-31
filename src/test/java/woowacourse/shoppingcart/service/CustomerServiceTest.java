@@ -39,21 +39,6 @@ class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("로그인 정보를 받아서 토큰을 반환한다.")
-    void login() {
-        final String customerUsername = "테스트";
-        final SignUpDto signUpDto = new SignUpDto("test@test.com", "testtest", customerUsername);
-        customerService.signUp(signUpDto);
-
-        final SignInDto signInDto = new SignInDto("test@test.com", "testtest");
-        final TokenResponseDto token = customerService.login(signInDto);
-
-        final String payload = jwtTokenProvider.getPayload(token.getAccessToken());
-
-        assertThat(payload).isEqualTo(customerUsername);
-    }
-
-    @Test
     @DisplayName("수정하려는 Customer 정보를 받아서 수정된 Customer 정보를 반환한다.")
     void updateCustomer() {
         final String changedName = "바뀐이름";
