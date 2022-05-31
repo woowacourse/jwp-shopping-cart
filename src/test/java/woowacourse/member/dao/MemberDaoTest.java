@@ -61,4 +61,12 @@ class MemberDaoTest {
         Optional<Member> result = memberDao.findMemberById(100L);
         assertThat(result).isEmpty();
     }
+
+    @DisplayName("id를 통해 멤버 정보를 삭제한다.")
+    @Test
+    void deleteById() {
+        memberDao.deleteById(1L);
+        Optional<Member> member = memberDao.findMemberById(1L);
+        assertThat(member).isEmpty();
+    }
 }

@@ -58,4 +58,11 @@ public class MemberService {
 
         return new MemberInfoResponse(member.get());
     }
+
+    public void deleteMemberById(long id) {
+        int deletedRowCount = memberDao.deleteById(id);
+        if (deletedRowCount == 0) {
+            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
+        }
+    }
 }

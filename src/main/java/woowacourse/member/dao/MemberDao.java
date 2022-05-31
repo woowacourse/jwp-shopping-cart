@@ -65,6 +65,11 @@ public class MemberDao {
                     resultSet.getString("password")
             );
 
+    public int deleteById(long id) {
+        String SQL = "DELETE FROM member WHERE id = ?";
+        return jdbcTemplate.update(SQL, id);
+    }
+
     public Long findIdByUserName(final String userName) {
         try {
             final String query = "SELECT id FROM member WHERE name = ?";

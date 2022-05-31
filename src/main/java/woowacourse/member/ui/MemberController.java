@@ -27,7 +27,13 @@ public class MemberController {
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public MemberInfoResponse findUserInfo(@AuthenticationPrincipal Long id) {
+    public MemberInfoResponse findMemberInfo(@AuthenticationPrincipal Long id) {
         return memberService.findMemberById(id);
+    }
+
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMember(@AuthenticationPrincipal Long id) {
+        memberService.deleteMemberById(id);
     }
 }

@@ -83,11 +83,31 @@ class MemberServiceTest {
         );
     }
 
-    @DisplayName("존재하지 않는 id 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 id로 회원을 찾는 경우 예외가 발생한다.")
     @Test
     void findMemberByIdWithNotExistId(){
         assertThatThrownBy(
                 () -> memberService.findMemberById(100L)
+        ).isInstanceOf(MemberNotFoundException.class)
+                .hasMessageContaining("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("올바른 id로 회원 정보를 삭제한다..")
+    @Test
+    void deleteById() {
+        memberService.deleteMemberById(1L);
+
+        assertThatThrownBy(
+                () -> memberService.findMemberById(100L)
+        ).isInstanceOf(MemberNotFoundException.class)
+                .hasMessageContaining("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("존재하지 않는 id로 삭제하려는 경우 예외가 발생한다.")
+    @Test
+    void deleteWithNotExistId(){
+        assertThatThrownBy(
+                () -> memberService.deleteMemberById(100L)
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
