@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class AuthAcceptanceTest extends AcceptanceTest {
 
     private static final String EMAIL = "leo@woowahan.com";
-    private static final String PASSWORD = "1234";
+    private static final String PASSWORD = "Bunny1234!@";
     private static final String NAME = "leo";
     private static final String PHONE = "010-1234-5678";
     private static final String ADDRESS = "Seoul";
@@ -197,17 +197,68 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
+    @DisplayName("Bearer Auth 로그인 실패 - 이메일 불 일치")
     @Test
-    void myInfoWithBadBearerAuth() {
+    void myInfoWithBadBearerAuthInvalidEmail() {
         // given
         // 회원이 등록되어 있고
+        CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(customerRequest)
+                .when().post("/customers")
+                .then().log().all()
+                .extract();
 
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
+        TokenRequest tokenRequest = new TokenRequest("test@test.com", PASSWORD);
+        ExtractableResponse<Response> loginResponse = RestAssured
+                .given().log().all()
+                .body(tokenRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/customers/login")
+                .then().log().all()
+                .extract();
 
         // then
         // 토큰 발급 요청이 거부된다
+        assertAll(() -> assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(loginResponse.jsonPath().getString("message")).isEqualTo("존재하지 않는 이메일 입니다."));
+    }
+
+    @DisplayName("Bearer Auth 로그인 실패 - 비밀번호 불 일치")
+    @Test
+    void myInfoWithBadBearerAuthInvalidPassword() {
+        // given
+        // 회원이 등록되어 있고
+        CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(customerRequest)
+                .when().post("/customers")
+                .then().log().all()
+                .extract();
+
+        // when
+        // 잘못된 id, password를 사용해 토큰을 요청하면
+        TokenRequest tokenRequest = new TokenRequest(EMAIL, "Bunny1234!");
+        ExtractableResponse<Response> loginResponse = RestAssured
+                .given().log().all()
+                .body(tokenRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/customers/login")
+                .then().log().all()
+                .extract();
+
+        // then
+        // 토큰 발급 요청이 거부된다
+        assertAll(() -> assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(loginResponse.jsonPath().getString("message")).isEqualTo("비밀번호가 일치하지 않습니다."));
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
@@ -215,8 +266,36 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithWrongBearerAuth() {
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(customerRequest)
+                .when().post("/customers")
+                .then().log().all()
+                .extract();
+
+        TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
+        String accessToken = RestAssured
+                .given().log().all()
+                .body(tokenRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/customers/login")
+                .then().log().all()
+                .extract().as(TokenResponse.class).getAccessToken();
+
+        ExtractableResponse<Response> customerResponse = RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken + "l")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers")
+                .then().log().all()
+                .extract();
 
         // then
         // 내 정보 조회 요청이 거부된다
+        assertAll(() -> assertThat(customerResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(customerResponse.jsonPath().getString("message")).isEqualTo("유효하지 않은 토큰입니다."));
     }
 }

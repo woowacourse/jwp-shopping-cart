@@ -50,7 +50,7 @@ public class CustomerDao {
         try {
             return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email), new CustomerMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException("존재하지 않는 이메일 입니다.");
         }
     }
 
@@ -59,7 +59,7 @@ public class CustomerDao {
         try {
             return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), new CustomerMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException("존재하지 않는 아이디 입니다.");
         }
     }
 
