@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
@@ -98,7 +99,22 @@ class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("customer를 삭제한다.")
+    @DisplayName("Customer를 수정한다.")
+    void update_customer_void() {
+        // given
+        String email = "kun@email.com";
+        String password = "qwerasdf321";
+        Customer customer = new Customer(1L, "kun", email, password);
+
+        CustomerUpdationRequest request = new CustomerUpdationRequest("rick", "qwerasdf123");
+
+        // when, then
+        assertThatCode(() -> customerService.update(customer, request))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("Customer를 삭제한다.")
     void delete_customer_void() {
         // given
         Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");

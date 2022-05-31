@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 
 @Service
@@ -26,6 +27,11 @@ public class CustomerService {
 
     public Customer getByEmail(String email) {
         return customerDao.findByEmail(email);
+    }
+
+    public void update(Customer customer, CustomerUpdationRequest request) {
+        Customer updatedCustomer = new Customer(request.getNickname(), customer.getEmail(), request.getPassword());
+        customerDao.updateById(customer.getId(), updatedCustomer);
     }
 
     public void delete(Customer customer) {
