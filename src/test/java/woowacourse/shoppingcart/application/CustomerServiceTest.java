@@ -8,25 +8,17 @@ import static org.mockito.BDDMockito.given;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
-@ExtendWith(MockitoExtension.class)
-class CustomerServiceTest {
+class CustomerServiceTest extends ServiceMockTest {
 
     @InjectMocks
     private CustomerService customerService;
-
-    @Mock
-    private CustomerDao customerDao;
 
     @Test
     @DisplayName("이미 가입 이메일로 회원가입을 하면 예외를 던진다.")

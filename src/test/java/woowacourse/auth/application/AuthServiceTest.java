@@ -4,48 +4,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mockStatic;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.application.ServiceMockTest;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidLoginException;
 import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
-@ExtendWith(MockitoExtension.class)
-class AuthServiceTest {
-
-    private static MockedStatic<BCrypt> bcrypt;
+class AuthServiceTest extends ServiceMockTest {
 
     @InjectMocks
     private AuthService authService;
-
-    @Mock
-    private CustomerService customerService;
-
-    @Mock
-    private JwtTokenProvider jwtTokenProvider;
-
-    @BeforeEach
-    void setUp() {
-        bcrypt = mockStatic(BCrypt.class);
-    }
-
-    @AfterEach
-    void close() {
-        bcrypt.close();
-    }
 
     @Test
     @DisplayName("로그인하려는 이메일이 존재하지 않으면 예외를 던진다.")
