@@ -1,35 +1,40 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_EMAIL;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_PASSWORD;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_SAVE_REQUEST;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_USERNAME;
+import static woowacourse.shoppingcart.CustomerFixtures.UPDATE_ADDRESS;
+import static woowacourse.shoppingcart.CustomerFixtures.UPDATE_PHONE_NUMBER;
+import static woowacourse.shoppingcart.CustomerFixtures.UPDATE_REQUEST;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_ADDRESS;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_EMAIL;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_PASSWORD;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_PHONE_NUMBER;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_SAVE_REQUEST;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_USERNAME;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
-    private static final String USERNAME = "test";
-    private static final String EMAIL = "test@email.com";
-    private static final String PASSWORD = "1234567890";
-    private static final String ADDRESS = "서울 강남구 테헤란로 411, 성담빌딩 13층 (선릉 캠퍼스)";
-    private static final String PHONE_NUMBER = "010-0000-0000";
-
     @DisplayName("회원가입을 한다.")
     @Test
     void addCustomer() {
-        CustomerSaveRequest request = new CustomerSaveRequest(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        CustomerSaveRequest request = MAT_SAVE_REQUEST;
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
@@ -46,7 +51,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보를 조회한다.")
     @Test
     void getMe() {
-        CustomerSaveRequest request = new CustomerSaveRequest(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        CustomerSaveRequest request = YAHO_SAVE_REQUEST;
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
@@ -56,7 +61,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         String accessToken = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(USERNAME, PASSWORD))
+                .body(new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD))
                 .when().post("/api/auth/token")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -75,10 +80,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(() -> {
             assertThat(customerResponse.getId()).isNotNull();
-            assertThat(customerResponse.getUsername()).isEqualTo(USERNAME);
-            assertThat(customerResponse.getEmail()).isEqualTo(EMAIL);
-            assertThat(customerResponse.getAddress()).isEqualTo(ADDRESS);
-            assertThat(customerResponse.getPhoneNumber()).isEqualTo(PHONE_NUMBER);
+            assertThat(customerResponse.getUsername()).isEqualTo(YAHO_USERNAME);
+            assertThat(customerResponse.getEmail()).isEqualTo(YAHO_EMAIL);
+            assertThat(customerResponse.getAddress()).isEqualTo(YAHO_ADDRESS);
+            assertThat(customerResponse.getPhoneNumber()).isEqualTo(YAHO_PHONE_NUMBER);
         });
     }
 
@@ -99,7 +104,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보를 수정한다.")
     @Test
     void updateMe() {
-        CustomerSaveRequest request = new CustomerSaveRequest(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        CustomerSaveRequest request = MAT_SAVE_REQUEST;
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
@@ -109,7 +114,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         String accessToken = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(USERNAME, PASSWORD))
+                .body(new TokenRequest(MAT_USERNAME, MAT_PASSWORD))
                 .when().post("/api/auth/token")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -117,12 +122,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .as(TokenResponse.class)
                 .getAccessToken();
 
-        String address = "선릉역";
-        String phoneNumber = "010-1111-1111";
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerUpdateRequest(address, phoneNumber))
+                .body(UPDATE_REQUEST)
                 .when().put("/api/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value())
@@ -139,17 +142,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(() -> {
             assertThat(customerResponse.getId()).isNotNull();
-            assertThat(customerResponse.getUsername()).isEqualTo(USERNAME);
-            assertThat(customerResponse.getEmail()).isEqualTo(EMAIL);
-            assertThat(customerResponse.getAddress()).isEqualTo(address);
-            assertThat(customerResponse.getPhoneNumber()).isEqualTo(phoneNumber);
+            assertThat(customerResponse.getUsername()).isEqualTo(MAT_USERNAME);
+            assertThat(customerResponse.getEmail()).isEqualTo(MAT_EMAIL);
+            assertThat(customerResponse.getAddress()).isEqualTo(UPDATE_ADDRESS);
+            assertThat(customerResponse.getPhoneNumber()).isEqualTo(UPDATE_PHONE_NUMBER);
         });
     }
 
     @DisplayName("회원을 탈퇴한다.")
     @Test
     void deleteMe() {
-        CustomerSaveRequest request = new CustomerSaveRequest(USERNAME, EMAIL, PASSWORD, ADDRESS, PHONE_NUMBER);
+        CustomerSaveRequest request = YAHO_SAVE_REQUEST;
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
@@ -159,7 +162,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         String accessToken = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(USERNAME, PASSWORD))
+                .body(new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD))
                 .when().post("/api/auth/token")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())

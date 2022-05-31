@@ -35,7 +35,6 @@ public class Customer {
         this.phoneNumber = Objects.requireNonNull(phoneNumber, "phoneNumber는 필수 입력 사항압니다.");
         validateUsername(username);
         validateEmail(email);
-        validatePassword(password);
         validatePhoneNumber(phoneNumber);
     }
 
@@ -50,12 +49,6 @@ public class Customer {
         Matcher matcher = EMAIL_PATTERN.matcher(email);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("email 형식이 올바르지 않습니다. (형식: example@email.com");
-        }
-    }
-
-    private void validatePassword(String password) {
-        if (10 > password.length() || password.length() > 20) {
-            throw new IllegalArgumentException("password 형식이 올바르지 않습니다. (길이: 10 ~ 20)");
         }
     }
 
