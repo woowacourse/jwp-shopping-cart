@@ -86,4 +86,14 @@ public class CustomerDao {
 
         return namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(parameters));
     }
+
+
+    public int deleteById(long id) {
+        final String sql = "DELETE FROM customer WHERE id=:id";
+
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", id);
+
+        return namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(parameters));
+    }
 }

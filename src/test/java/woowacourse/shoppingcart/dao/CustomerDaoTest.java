@@ -108,4 +108,19 @@ public class CustomerDaoTest {
                 () -> assertThat(actual.getPhoneNumber()).isEqualTo("01012341234")
         );
     }
+
+    @Test
+    @DisplayName("회원을 삭제한다.")
+    void deleteById() {
+        // given
+        long id = 1L;
+        // when
+        int affectedRows = customerDao.deleteById(id);
+        final Optional<Customer> deletedCustomer = customerDao.findById(id);
+        // then
+        assertAll(
+                () -> assertThat(affectedRows).isEqualTo(1),
+                () -> assertThat(deletedCustomer.isEmpty()).isTrue()
+        );
+    }
 }
