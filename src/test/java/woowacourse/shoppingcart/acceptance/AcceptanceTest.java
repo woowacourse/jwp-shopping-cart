@@ -29,7 +29,17 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    protected ExtractableResponse<Response> 회원가입(MemberRequest memberRequest) {
+    private ExtractableResponse<Response> 이메일_중복_체크(final String email) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/members?email=" + email)
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> 회원가입(final MemberRequest memberRequest) {
+        이메일_중복_체크(memberRequest.getEmail());
         return RestAssured
                 .given().log().all()
                 .body(memberRequest)
@@ -39,7 +49,7 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    protected String 로그인_후_토큰발급(TokenRequest tokenRequest) {
+    protected String 로그인_후_토큰발급(final TokenRequest tokenRequest) {
         return RestAssured
                 .given().log().all()
                 .body(tokenRequest)
@@ -50,11 +60,11 @@ public class AcceptanceTest {
                 .extract().as(TokenResponse.class).getAccessToken();
     }
 
-    protected ExtractableResponse<Response> 회원정보_조회(String accessToken) {
+    protected ExtractableResponse<Response> 회원정보_조회(final String accessToken) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .when().get("/api/members/me")
+                .when().get("/api/members/auth/me")
                 .then().log().all()
                 .extract();
     }

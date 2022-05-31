@@ -13,9 +13,9 @@ import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.MemberResponse;
 
 @DisplayName("회원 관련 기능")
-public class MemberAcceptanceTest extends AcceptanceTest {
+public class CustomerAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("회원가입")
+    @DisplayName("이메일 중복 체크 후 회원가입")
     @Test
     void addMember() {
         assertThat(회원가입(파랑).statusCode()).isEqualTo(HttpStatus.CREATED.value());
