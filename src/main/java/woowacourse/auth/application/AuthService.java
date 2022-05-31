@@ -47,4 +47,9 @@ public class AuthService {
         String accessToken = jwtTokenProvider.createToken(String.valueOf(customerId));
         return new TokenResponse(accessToken);
     }
+
+    public CustomerResponse findById(Long customerId) {
+        Customer customer = customerDao.findCustomerById(customerId);
+        return CustomerResponse.from(customer);
+    }
 }

@@ -81,4 +81,20 @@ class AuthServiceTest {
 
         assertThat(accessToken.getAccessToken()).isNotBlank();
     }
+
+    @DisplayName("customer id을 이용하여 회원 정보를 조회한다.")
+    @Test
+    void findCustomer() {
+        CustomerRequest customer =
+                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
+        CustomerResponse savedResponse = authService.save(customer);
+
+        CustomerResponse customerResponse = authService.findById(1L);
+
+        assertThat(customerResponse).extracting("email", "name", "phone", "address")
+                .containsExactly(savedResponse.getEmail(), savedResponse.getName(),
+                        savedResponse.getPhone(), savedResponse.getAddress());
+    }
+
+    //TODO : CustomerResponse equals 정의 or getter 사용할지
 }
