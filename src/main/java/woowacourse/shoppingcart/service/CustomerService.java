@@ -54,4 +54,10 @@ public class CustomerService {
     public void deleteCustomer(final Long id) {
         customerDao.deleteById(id);
     }
+
+    public CustomerDto findCustomerByEmail(final String email) {
+        final Customer customer = customerDao.findByEmail(email)
+                .orElseThrow(InvalidCustomerException::new);
+        return new CustomerDto(customer.getId(), customer.getEmail(), customer.getUsername());
+    }
 }

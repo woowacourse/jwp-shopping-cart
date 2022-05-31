@@ -39,24 +39,25 @@ public class CustomerController {
     public ResponseEntity<CustomerDto> updateCustomer(@PathVariable final Long id,
                                                       @RequestBody UpdateCustomerDto updateCustomerDto,
                                                       @AuthenticationPrincipal LoginCustomer loginCustomer) {
-        checkAuthorization(id, loginCustomer);
+        checkAuthorization(id, loginCustomer.getEmail());
         final CustomerDto customerDto = customerService.updateCustomer(id, updateCustomerDto);
 
         return ResponseEntity.ok(customerDto);
     }
 
-    private void checkAuthorization(final Long id, final LoginCustomer loginCustomer) {
-        if (!loginCustomer.getId().equals(id)) {
-            throw new ForbiddenException();
-        }
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable final Long id,
                                                @AuthenticationPrincipal LoginCustomer loginCustomer) {
-        checkAuthorization(id, loginCustomer);
+        checkAuthorization(id, loginCustomer.getEmail());
         customerService.deleteCustomer(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    private void checkAuthorization(final Long id, final String email) {
+        final CustomerDto loginCustomer = customerService.findCustomerByEmail(email);
+        if (!loginCustomer.getId().equals(id)) {
+            throw new ForbiddenException();
+        }
     }
 }
