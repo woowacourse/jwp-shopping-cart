@@ -8,6 +8,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.PhoneNumber;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dto.SignupRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -110,7 +113,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                    () -> assertThat(response.asString()).isEqualTo("비밀번호 길이는 8~20자를 만족해야 합니다.")
+                () -> assertThat(response.asString()).isEqualTo("비밀번호 길이는 8~20자를 만족해야 합니다.")
         );
     }
 
@@ -165,14 +168,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 조회")
     @Test
-    void getMe() {
-    }
+    @DisplayName("회원 정보 수정에 성공한다.")
+    void updateCustomer() {
+        // given
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
 
-    @DisplayName("내 정보 수정")
-    @Test
-    void updateMe() {
+        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
+        // when
+        final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("회원탈퇴")

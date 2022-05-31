@@ -10,6 +10,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import woowacourse.auth.dto.UpdateCustomerRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -53,6 +54,17 @@ public class AcceptanceTest {
 
     protected ExtractableResponse<Response> put(String uri, Object param) {
         return RestAssured.given().log().all()
+                .body(param)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    public ExtractableResponse<Response> put(String uri, String token, Object param) {
+        return RestAssured.given().log().all()
+                .header(new Header("Authorization", "BEARER " + token))
                 .body(param)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()

@@ -26,7 +26,7 @@
     - [x] account 와 password 를 받아 토큰을 생성한다.
 
 - [ ] 회원 정보 수정
-    - [ ] nickname, address, phoneNumber 을 받아 회원 정보를 수정한다.
+    - [x] nickname, address, phoneNumber 을 받아 회원 정보를 수정한다.
     - [ ] request header 에 token 이 포함되지 않으면 예외를 발생한다.
     - [ ] nickname 의 글자수가 2~10을 벗어나면 예외를 발생한다.
     - [ ] address 의 글자수가 255자를 초과하면 예외를 발생한다.
