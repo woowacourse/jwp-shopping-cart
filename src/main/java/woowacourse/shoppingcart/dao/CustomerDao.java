@@ -61,4 +61,13 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
     }
+
+    public Customer findByLoginId(String loginId) {
+        try {
+            final String query = "SELECT id, loginid, name, password FROM customer WHERE loginid = :loginId";
+            return namedParameterJdbcTemplate.queryForObject(query, Map.of("loginId", loginId), ROW_MAPPER);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
 }

@@ -35,6 +35,10 @@ public class Customer {
         }
     }
 
+    public boolean isSamePassword(String password) {
+        return this.password.equals(password);
+    }
+
     public Long getId() {
         return id;
     }

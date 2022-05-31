@@ -86,4 +86,17 @@ public class CustomerDaoTest {
                 () -> assertThat(customer.getName()).isEqualTo(페퍼_이름)
         );
     }
+
+    @DisplayName("LoginId로 고객을 조회한다.")
+    @Test
+    void findByLoginId() {
+        // given
+        customerDao.save(페퍼);
+
+        // when
+        Customer customer = customerDao.findByLoginId(페퍼_아이디);
+
+        // then
+        assertThat(customer.getName()).isEqualTo(페퍼_이름);
+    }
 }
