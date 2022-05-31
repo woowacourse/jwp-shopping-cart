@@ -41,7 +41,7 @@ public class CustomerDao {
         return simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
     }
 
-    public Long findIdByName(final String userName) {
+    public Long findIdByName(final String userName) { // TODO : 기존 메서드 삭제 여부 결정
         try {
             final String query = "SELECT id FROM CUSTOMER WHERE name = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
@@ -50,7 +50,7 @@ public class CustomerDao {
         }
     }
 
-    public boolean existEmail(final String email) {
+    public boolean existByEmail(final String email) {
         final String query = "SELECT EXISTS (SELECT * FROM CUSTOMER WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);
     }
@@ -64,12 +64,12 @@ public class CustomerDao {
         }
     }
 
-    public Customer findCustomerById(Long customerId) {
+    public Customer findById(Long customerId) {
         String query = "SELECT * FROM CUSTOMER WHERE id = ?";
         return jdbcTemplate.queryForObject(query, customerRowMapper, customerId);
     }
 
-    public boolean existId(Long customerId) {
+    public boolean existById(Long customerId) {
         final String query = "SELECT EXISTS (SELECT * FROM CUSTOMER WHERE id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, customerId);
     }
@@ -78,5 +78,10 @@ public class CustomerDao {
         final String query = "UPDATE CUSTOMER SET name = (?), password = (?), phone = (?), address = (?) WHERE id = (?)";
         jdbcTemplate.update(query, customer.getName(), customer.getPassword(), customer.getPhone(),
                 customer.getAddress(), customer.getId());
+    }
+
+    public void deleteById(Long customerId) {
+        final String query = "DELETE FROM CUSTOMER WHERE id = ?";
+        jdbcTemplate.update(query, customerId);
     }
 }

@@ -86,7 +86,7 @@ public class CustomerDaoTest {
         customerDao.save(customer);
 
         //when
-        boolean isExistEmail = customerDao.existEmail(email);
+        boolean isExistEmail = customerDao.existByEmail(email);
 
         //then
         assertThat(isExistEmail).isTrue();
@@ -101,7 +101,7 @@ public class CustomerDaoTest {
         Long customerId = customerDao.save(customer);
 
         //when
-        Customer response = customerDao.findCustomerById(customerId);
+        Customer response = customerDao.findById(customerId);
 
         //then
         assertThat(response).extracting("email", "password", "name", "phone", "address")
@@ -117,7 +117,7 @@ public class CustomerDaoTest {
         Long id = customerDao.save(customer);
 
         //when
-        boolean isExistId = customerDao.existId(id);
+        boolean isExistId = customerDao.existById(id);
 
         //then
         assertThat(isExistId).isTrue();
@@ -136,8 +136,23 @@ public class CustomerDaoTest {
         customerDao.update(updateCustomer);
 
         //then
-        Customer actual = customerDao.findCustomerById(id);
+        Customer actual = customerDao.findById(id);
         assertThat(actual).extracting("email", "password", "name", "phone", "address")
                 .containsExactly("email", "Pw123456!!", "name2", "010-1234-1234", "address2");
+    }
+
+    @DisplayName("id를 이용하여 customer를 삭제한다.")
+    @Test
+    void delete() {
+        //given
+        Customer customer =
+                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Long id = customerDao.save(customer);
+
+        //when
+        customerDao.deleteById(id);
+
+        //then
+        assertThat(customerDao.existById(id)).isFalse();
     }
 }

@@ -31,7 +31,7 @@ public class AuthService {
     }
 
     private void validateDuplicationEmail(CustomerRequest customerRequest) {
-        if (customerDao.existEmail(customerRequest.getEmail())) {
+        if (customerDao.existByEmail(customerRequest.getEmail())) {
             throw new IllegalArgumentException("중복된 email 입니다.");
         }
     }
@@ -49,20 +49,25 @@ public class AuthService {
     }
 
     public CustomerResponse findById(Long customerId) {
-        checkExistId(customerId);
-        Customer customer = customerDao.findCustomerById(customerId);
+        checkExistById(customerId);
+        Customer customer = customerDao.findById(customerId);
         return CustomerResponse.from(customer);
     }
 
-    private void checkExistId(Long customerId) {
-        if (!customerDao.existId(customerId)) {
+    private void checkExistById(Long customerId) {
+        if (!customerDao.existById(customerId)) {
             throw new InvalidCustomerException();
         }
     }
 
     public void update(Long customerId, CustomerRequest customerRequest) {
-        checkExistId(customerId);
+        checkExistById(customerId);
         Customer customer = customerRequest.createCustomer(customerId);
         customerDao.update(customer);
+    }
+
+    public void deleteById(Long customerId) {
+        checkExistById(customerId);
+        customerDao.deleteById(customerId);
     }
 }
