@@ -67,4 +67,9 @@ public class CustomerDao {
         String query = "SELECT * FROM CUSTOMER WHERE id = ?";
         return jdbcTemplate.queryForObject(query, customerRowMapper, customerId);
     }
+
+    public boolean existId(Long customerId) {
+        final String query = "SELECT EXISTS (SELECT * FROM customer WHERE id = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, customerId);
+    }
 }

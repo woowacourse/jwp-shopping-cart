@@ -107,4 +107,19 @@ public class CustomerDaoTest {
         assertThat(response).extracting("email", "password", "name", "phone", "address")
                 .containsExactly("email", "Pw123456!", "name", "010-1234-5678", "address");
     }
+
+    @DisplayName("id가 존재하는지 확인한다.")
+    @Test
+    void existId() {
+        //given
+        Customer customer =
+                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Long id = customerDao.save(customer);
+
+        //when
+        boolean isExistId = customerDao.existId(id);
+
+        //then
+        assertThat(isExistId).isTrue();
+    }
 }

@@ -97,4 +97,12 @@ class AuthServiceTest {
     }
 
     //TODO : CustomerResponse equals 정의 or getter 사용할지
+
+    @DisplayName("존재하지 않는 id를 이용하여 회원 정보를 조회하면 예외가 발생한다.")
+    @Test
+    void checkExistIdException() {
+        assertThatThrownBy(() -> authService.findById(1L))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessageContaining("존재하지 않는 유저입니다.");
+    }
 }

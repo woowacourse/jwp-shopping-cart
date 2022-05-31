@@ -49,7 +49,14 @@ public class AuthService {
     }
 
     public CustomerResponse findById(Long customerId) {
+        checkExistId(customerId);
         Customer customer = customerDao.findCustomerById(customerId);
         return CustomerResponse.from(customer);
+    }
+
+    private void checkExistId(Long customerId) {
+        if (!customerDao.existId(customerId)) {
+            throw new InvalidCustomerException();
+        }
     }
 }
