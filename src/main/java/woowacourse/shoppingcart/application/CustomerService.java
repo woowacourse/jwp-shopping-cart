@@ -21,11 +21,9 @@ public class CustomerService {
     }
 
     public Customer signUp(CustomerRequest customerRequest) {
-        customerDao.save(
-                customerRequest.getEmail(),
-                customerRequest.getNickname(),
-                customerRequest.getPassword());
+        Customer customer = customerRequest.toCustomer();
+        customerDao.save(customer.getEmail(), customer.getNickname(), customer.getPassword());
 
-        return customerRequest.toCustomer();
+        return customer;
     }
 }

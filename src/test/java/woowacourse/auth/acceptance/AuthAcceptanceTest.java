@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.MemberResponse;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -29,14 +29,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
         ExtractableResponse<Response> response = 회원정보_조회(accessToken);
-        MemberResponse memberResponse = response.as(MemberResponse.class);
+        CustomerResponse customerResponse = response.as(CustomerResponse.class);
 
         // then
         // 내 정보가 조회된다
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(memberResponse.getEmail()).isEqualTo("email@email.com"),
-                () -> assertThat(memberResponse.getNickname()).isEqualTo("파랑")
+                () -> assertThat(customerResponse.getEmail()).isEqualTo("email@email.com"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("파랑")
         );
     }
 

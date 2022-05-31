@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.MemberResponse;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -28,12 +28,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String accessToken = 로그인_후_토큰발급(파랑토큰);
 
         ExtractableResponse<Response> response = 회원정보_조회(accessToken);
-        MemberResponse memberResponse = response.as(MemberResponse.class);
+        CustomerResponse customerResponse = response.as(CustomerResponse.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(memberResponse.getEmail()).isEqualTo("email@email.com"),
-                () -> assertThat(memberResponse.getNickname()).isEqualTo("파랑")
+                () -> assertThat(customerResponse.getEmail()).isEqualTo("email@email.com"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("파랑")
         );
     }
 

@@ -1,17 +1,22 @@
 package woowacourse.shoppingcart.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicateCheckResponse;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
 class CustomerControllerTest {
@@ -29,9 +34,47 @@ class CustomerControllerTest {
     void checkDuplicateEmail(final String email, final boolean expected) {
         ResponseEntity<EmailDuplicateCheckResponse> response = customerController.checkDuplicateEmail(email);
 
+        HttpStatus statusCode = response.getStatusCode();
+        EmailDuplicateCheckResponse actual = Objects.requireNonNull(response.getBody());
+
         assertAll(
-                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK),
-                () -> assertThat(Objects.requireNonNull(response.getBody()).getSuccess()).isEqualTo(expected)
+                () -> assertThat(statusCode).isEqualTo(HttpStatus.OK),
+                () -> assertThat(actual.getSuccess()).isEqualTo(expected)
         );
+    }
+
+    @DisplayName("회원가입을 진행한다.")
+    @Test
+    void signUp() {
+        String email = "newemail@email.com";
+        String nickname = "쿼리치";
+        String password = "password123!";
+
+        CustomerRequest customerRequest = new CustomerRequest(email, nickname, password);
+
+        ResponseEntity<CustomerResponse> response = customerController.signUp(customerRequest);
+
+        HttpStatus statusCode = response.getStatusCode();
+        CustomerResponse actual = Objects.requireNonNull(response.getBody());
+
+        assertAll(
+                () -> assertThat(statusCode).isEqualTo(HttpStatus.CREATED),
+                () -> assertThat(actual.getEmail()).isEqualTo(email),
+                () -> assertThat(actual.getNickname()).isEqualTo(nickname)
+        );
+    }
+
+    @DisplayName("회원가입을 진행한다.")
+    @ParameterizedTest
+    @CsvSource(value = {
+            "잘못된 이메일, 파리채, password123!",
+            "email@email.com, eng, password123!",
+            "email@email.com, 파리채, asd123!"
+    })
+    void signUpFail(final String email, final String nickname, final String password) {
+        CustomerRequest customerRequest = new CustomerRequest(email, nickname, password);
+
+        assertThatThrownBy(() -> customerController.signUp(customerRequest))
+                .isInstanceOf(InvalidCustomerException.class);
     }
 }
