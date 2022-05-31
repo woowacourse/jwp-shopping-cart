@@ -18,13 +18,11 @@ public class UserNames {
                 .collect(Collectors.toUnmodifiableSet()));
     }
 
-    public void add(String userName) {
-        add(new UserName(userName));
+    public boolean contains(String userName) {
+        return contains(new UserName(userName));
     }
 
-    public void add(UserName userName) {
-        if (!names.add(userName)) {
-            throw new IllegalArgumentException("기존 회원 아이디와 중복되는 아이디입니다.");
-        }
+    public boolean contains(UserName userName) {
+        return names.contains(userName);
     }
 }

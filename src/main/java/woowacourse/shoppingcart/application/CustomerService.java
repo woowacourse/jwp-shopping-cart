@@ -6,8 +6,9 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.UserNames;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
+import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
 
 @Transactional
 @Service
@@ -18,19 +19,29 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public CustomerResponse addCustomer(CustomerRequest customerRequest) {
+    public void addCustomer(CustomerRequest customerRequest) {
+        validateUserName(customerRequest);
         Customer customer = Customer.of(
                 customerRequest.getUserName(), customerRequest.getPassword(),
                 customerRequest.getNickName(), customerRequest.getAge()
         );
-        UserNames userNames = UserNames.from(customerDao.findAllUserNames());
-        userNames.add(customerRequest.getUserName());
+        customerDao.save(customer);
+    }
 
-        Long id = customerDao.save(customer);
-        return new CustomerResponse(
-                id, customerRequest.getUserName(), customerRequest.getPassword(),
-                customerRequest.getNickName(), customerRequest.getAge()
-        );
+    private void validateUserName(CustomerRequest customerRequest) {
+        if (isDuplicateUserName(customerRequest.getUserName())) {
+            throw new IllegalArgumentException("기존 회원 아이디와 중복되는 아이디입니다.");
+        }
+    }
+
+    public UserNameDuplicationResponse checkDuplication(UserNameDuplicationRequest userNameDuplicationRequest) {
+        boolean isUnique = !isDuplicateUserName(userNameDuplicationRequest.getUsername());
+        return new UserNameDuplicationResponse(isUnique);
+    }
+
+    private boolean isDuplicateUserName(String userName) {
+        UserNames userNames = UserNames.from(customerDao.findAllUserNames());
+        return userNames.contains(userName);
     }
 
     public void updatePassword(Customer customer, PasswordRequest passwordRequest) {

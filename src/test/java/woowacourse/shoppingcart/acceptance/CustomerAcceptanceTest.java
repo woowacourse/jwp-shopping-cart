@@ -10,6 +10,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -21,7 +22,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         CustomerRequest customerRequest =
-                new CustomerRequest("forky", "forky123#","복희",  26);
+                new CustomerRequest("forky", "forky123#", "복희", 26);
         RestAssured.given().log().all()
                 .body(customerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -30,6 +31,36 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .header("Location", equalTo("/customers/me"));
+    }
+
+    @DisplayName("아이디가 중복되지 않을 때, 아이디 중복 여부를 검사한다.")
+    @Test
+    void checkDuplicationUserName_unique() {
+        signUpCustomer();
+        UserNameDuplicationRequest request = new UserNameDuplicationRequest("kth990303");
+        RestAssured.given().log().all()
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/username/duplication")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("unique", equalTo(true));
+    }
+
+    @DisplayName("아이디가 중복될 때, 아이디 중복 여부를 검사한다.")
+    @Test
+    void checkDuplicationUserName_duplicated() {
+        signUpCustomer();
+        UserNameDuplicationRequest request = new UserNameDuplicationRequest("forky");
+        RestAssured.given().log().all()
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/username/duplication")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("unique", equalTo(false));
     }
 
     @DisplayName("로그인한 회원이 자신의 정보를 조회한다.")
