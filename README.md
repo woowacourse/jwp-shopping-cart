@@ -6,7 +6,7 @@
 
 ## 1단계 기능 목록
 - [ ] 회원 가입
-    - [ ] [ERROR] email 중복 예외 처리
+    - [x] [ERROR] email 중복 예외 처리
     - [x] [ERROR] 전화번호 형식 확인
     - [x] [ERROR] password 형식 확인
     - [x] [ERROR] 이름 형식 확인
