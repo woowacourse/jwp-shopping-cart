@@ -101,8 +101,34 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updateMe() {
     }
 
-    @DisplayName("회원탈퇴")
+    @DisplayName("유효한 토큰으로 회원 탈퇴에 성공한다.")
     @Test
     void deleteMe() {
+        // given
+        String email = "kun@email.com";
+        String password = "qwerasdf123";
+        CustomerCreationRequest createRequest = new CustomerCreationRequest(email, password, "kun");
+        postUser(createRequest);
+
+        TokenRequest tokenRequest = new TokenRequest(email, password);
+        String accessToken = postLogin(tokenRequest)
+                .extract()
+                .as(TokenResponse.class)
+                .getAccessToken();
+
+        // when
+        ValidatableResponse response = RestAssured
+                .given().log().all()
+                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                .when().delete("/users")
+                .then().log().all();
+
+        ValidatableResponse loginResponse = postLogin(tokenRequest);
+
+        // then
+        response.statusCode(HttpStatus.OK.value());
+        loginResponse.statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("errorCode", equalTo("1002"))
+                .body("message", equalTo("로그인에 실패했습니다."));
     }
 }

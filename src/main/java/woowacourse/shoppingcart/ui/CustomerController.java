@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,5 +38,11 @@ public class CustomerController {
                 customer.getUsername()
         );
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal Customer customer) {
+        customerService.delete(customer);
+        return ResponseEntity.ok().build();
     }
 }
