@@ -5,7 +5,7 @@ import woowacourse.shoppingcart.exception.InvalidEmailException;
 
 public class Email {
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9]+@[a-zA-Z0-9]+[.]com");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-z0-9-_.]+@[a-z]+[.][a-z]{2,3}");
 
     private final String value;
 

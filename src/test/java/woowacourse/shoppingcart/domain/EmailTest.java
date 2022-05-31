@@ -3,8 +3,12 @@ package woowacourse.shoppingcart.domain;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import woowacourse.shoppingcart.exception.InvalidEmailException;
 
 class EmailTest {
@@ -18,21 +22,27 @@ class EmailTest {
                 .doesNotThrowAnyException();
     }
 
-    @Test
-    @DisplayName("이메일에 @가 없는 경우, 예외를 발생한다.")
-    void noAtEmailException() {
-        String value = "testemailemail.com";
-
+    @ParameterizedTest
+    @MethodSource("provideInvalidEmail")
+    @DisplayName("이메일 형식이 잘못된 경우, 예외를 발생한다.")
+    void invalidFormException(String value) {
         assertThatExceptionOfType(InvalidEmailException.class)
                 .isThrownBy(() -> new Email(value));
     }
 
-    @Test
-    @DisplayName("이메일이 .com 으로 끝나지 않는 경우 예외를 발생한다.")
-    void noTrailingWithDotComException() {
-        String value = "testemail@email";
-
-        assertThatExceptionOfType(InvalidEmailException.class)
-                .isThrownBy(() -> new Email(value));
+    private static Stream<Arguments> provideInvalidEmail() {
+        return Stream.of(
+                Arguments.of("Example@test.com"),
+                Arguments.of("example!@test.com"),
+                Arguments.of("exam12@@test.com"),
+                Arguments.of("example@Test.com"),
+                Arguments.of("example@test@.com"),
+                Arguments.of("example@test1.com"),
+                Arguments.of("example@test.KR"),
+                Arguments.of("example@test.krrr"),
+                Arguments.of("example@test...."),
+                Arguments.of("example@test.c0m"),
+                Arguments.of("example@test.c")
+        );
     }
 }
