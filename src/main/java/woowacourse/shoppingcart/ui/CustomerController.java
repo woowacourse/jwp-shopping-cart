@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,16 +29,22 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerResponse> registerCustomer(
-            @RequestBody CustomerRegisterRequest customerRegisterRequest) {
+            @RequestBody final CustomerRegisterRequest customerRegisterRequest) {
         final Long customerId = customerService.registerCustomer(customerRegisterRequest);
         final CustomerResponse customerResponse = customerService.findById(customerId);
 
         return ResponseEntity.created(URI.create("/customers/" + customerId)).body(customerResponse);
     }
 
+    @GetMapping
+    public ResponseEntity<CustomerResponse> findCustomer(@AuthenticationPrincipal final Long id) {
+        final CustomerResponse customerResponse = customerService.findById(id);
+        return ResponseEntity.ok(customerResponse);
+    }
+
     @PatchMapping
     public ResponseEntity<CustomerUpdateResponse> updateCustomer(
-            @AuthenticationPrincipal Long id, @RequestBody CustomerUpdateRequest customerUpdateRequest) {
+            @AuthenticationPrincipal final Long id, @RequestBody final CustomerUpdateRequest customerUpdateRequest) {
         final CustomerUpdateResponse customerUpdateResponse = customerService.updateCustomer(id, customerUpdateRequest);
         return ResponseEntity.ok(customerUpdateResponse);
     }
