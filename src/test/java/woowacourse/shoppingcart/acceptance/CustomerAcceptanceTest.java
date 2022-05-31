@@ -215,6 +215,24 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    @DisplayName("존재하지 않은 회원 id로 회원 정보 조회 시 상태코드 400을 반환한다.")
+    void customerNotExistWhenGetCustomer() {
+        // given
+        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
+
+        delete("/customers", token.getAccessToken(), new DeleteCustomerRequest("Password123!"));
+
+        // when
+        final ExtractableResponse<Response> response = get("/customers", token.getAccessToken());
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo("회원을 찾을 수 없습니다.")
+        );
+    }
+
+    @Test
     @DisplayName("회원 정보 수정에 성공한다.")
     void updateCustomer() {
         // given
