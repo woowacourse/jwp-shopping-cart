@@ -47,6 +47,10 @@ public class CustomerDao {
 
     public Optional<Long> findIdByEmailAndPassword(String email, String password) {
         String query = "SELECT id FROM CUSTOMER WHERE email = ? AND password = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, Long.class, email, password));
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, Long.class, email, password));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
