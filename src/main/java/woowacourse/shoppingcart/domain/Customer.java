@@ -100,8 +100,9 @@ public class Customer {
     }
 
     public void changePassword(String prevPassword, String newPassword) {
+        validatePasswordFormat(newPassword);
         if (!password.equals(prevPassword)) {
-            throw new IllegalArgumentException("이전 비밀번호가 틀렸습니다.");
+            throw new IllegalArgumentException("이전 패스워드가 틀렸습니다.");
         }
         password = newPassword;
     }

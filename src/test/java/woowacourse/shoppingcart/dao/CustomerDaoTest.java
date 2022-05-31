@@ -110,4 +110,22 @@ public class CustomerDaoTest {
         Optional<Customer> maybeCustomer = customerDao.findIdByEmail(email);
         assertThat(maybeCustomer.isEmpty()).isTrue();
     }
+
+    @DisplayName("email을 통해 Customer를 삭제한다.")
+    @Test
+    void updatePassword() {
+        // given
+        String email = "beomWhale@naver.com";
+        String prevPassword = "Password123!";
+        String nickname = "beom1234";
+        Long savedId = customerDao.save(new Customer(email, nickname, prevPassword));
+        String newPassword = "Password1234!";
+        customerDao.updatePassword(new Customer(savedId, email, nickname, newPassword));
+
+        // when
+        Customer customer = customerDao.findIdByEmail(email).get();
+
+        // then
+        assertThat(customer.isPasswordMatched(newPassword)).isTrue();
+    }
 }

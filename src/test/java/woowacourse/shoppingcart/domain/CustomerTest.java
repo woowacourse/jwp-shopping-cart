@@ -1,12 +1,12 @@
 package woowacourse.shoppingcart.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CustomerTest {
 
@@ -76,7 +76,7 @@ class CustomerTest {
         assertThat(customer.isPasswordMatched(newPassword)).isTrue();
     }
 
-    @DisplayName("패스워드 변경 시, 이전 비밀번호와 다르면 예외가 발생한다.")
+    @DisplayName("패스워드 변경 시, 이전 패스워드와 다르면 예외가 발생한다.")
     @Test
     void throwExceptionWhenNotMatchPassword() {
         String password = "Password123!";
@@ -85,6 +85,18 @@ class CustomerTest {
 
         assertThatThrownBy(() -> customer.changePassword(password + "1", newPassword))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이전 비밀번호가 틀렸습니다.");
+            .hasMessage("이전 패스워드가 틀렸습니다.");
+    }
+
+    @DisplayName("패스워드 변경 시,  새로운 패스워드가 형식에 맞지 않는 경우 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"password123!", "PASSWORD123!", "Password123", "Password!@#", "Aa1!123"})
+    void throwExceptionWhenInvalidPassword(String newPassword) {
+        String password = "Password123!";
+        Customer customer = new Customer("awesome@gmail.com", "awesome", password);
+
+        assertThatThrownBy(() -> customer.changePassword(password + "1", newPassword))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("패스워드 형식이 맞지 않습니다.");
     }
 }
