@@ -144,6 +144,34 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("내 정보 수정시 기존과 같은 username을 입력한 경우 200 OK를 응답한다.")
+    @Test
+    void update_same_origin_name() {
+        long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("roma"));
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("내 정보 수정 시 중복된 username으로 변경하려는 경우 400 응답을 반환한다.")
+    @Test
+    void update_duplicated_username() {
+        long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("yujo11"));
+
+        ErrorResponseWithField errorResponseWithField = response.as(ErrorResponseWithField.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(errorResponseWithField).usingRecursiveComparison()
+                        .isEqualTo(new ErrorResponseWithField("username", "이미 가입된 닉네임입니다."))
+        );
+    }
+
     @DisplayName("내 정보 수정시 잘못된 형식의 username을 입력한 경우 400 응답을 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {"01234567890", "", " "})

@@ -19,21 +19,23 @@ public class CustomerService {
     }
 
     public Long save(CustomerCreateRequest request) {
-        boolean existCustomerBySameEmail = customerDao.findByEmail(request.getEmail()).isPresent();
-        boolean existCustomerBySameUsername = customerDao.findByUsername(request.getUsername()).isPresent();
-
-        validateDuplication(existCustomerBySameEmail, existCustomerBySameUsername);
+        validateUsernameDuplication(request.getUsername());
+        validateEmailDuplication(request.getEmail());
 
         return customerDao.save(request.toEntity());
     }
 
-    private void validateDuplication(boolean existCustomerBySameEmail, boolean existCustomerBySameUsername) {
-        if (existCustomerBySameEmail) {
-            throw new DuplicateEmailException();
-        }
-
+    private void validateUsernameDuplication(String username) {
+        boolean existCustomerBySameUsername = customerDao.findByUsername(username).isPresent();
         if (existCustomerBySameUsername) {
             throw new DuplicateUsernameException();
+        }
+    }
+
+    private void validateEmailDuplication(String email) {
+        boolean existCustomerBySameEmail = customerDao.findByEmail(email).isPresent();
+        if (existCustomerBySameEmail) {
+            throw new DuplicateEmailException();
         }
     }
 
@@ -53,8 +55,17 @@ public class CustomerService {
     }
 
     public void update(Long id, CustomerUpdateRequest request) {
-        validateCustomerExists(id);
+        if (isSameOriginUsername(id, request)) {
+            return;
+        }
+        validateUsernameDuplication(request.getUsername());
+
         customerDao.update(id, request.getUsername());
+    }
+
+    private boolean isSameOriginUsername(Long id, CustomerUpdateRequest request) {
+        Customer foundCustomer = findById(id);
+        return foundCustomer.getUsername().equals(request.getUsername());
     }
 
     public void delete(Long id) {
