@@ -1,5 +1,7 @@
 package woowacourse.auth.support;
 
+import static java.util.Arrays.stream;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,7 +17,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (request.getMethod().equals("POST") && request.getRequestURI().startsWith("/api/customers")) {
+        if (AllowList.matches(request)) {
             return true;
         }
         String token = AuthorizationExtractor.extract(request);
@@ -24,5 +26,27 @@ public class LoginInterceptor implements HandlerInterceptor {
             throw new InvalidTokenException();
         }
         return true;
+    }
+
+    private enum AllowList {
+
+        CUSTOMERS_POST("POST", "/api/customers");
+
+        private final String method;
+        private final String uri;
+
+        AllowList(String method, String uri) {
+            this.method = method;
+            this.uri = uri;
+        }
+
+        public static boolean matches(HttpServletRequest request) {
+            return stream(values())
+                    .anyMatch(api -> matchesInternal(request, api));
+        }
+
+        private static boolean matchesInternal(HttpServletRequest request, AllowList api) {
+            return request.getMethod().equals(api.method) && request.getRequestURI().equals(api.uri);
+        }
     }
 }
