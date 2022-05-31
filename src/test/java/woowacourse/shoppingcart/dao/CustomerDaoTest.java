@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,5 +62,29 @@ public class CustomerDaoTest {
 
         Customer foundCustomer = customerDao.findById(savedId).orElseThrow();
         assertThat(customer.getName()).isEqualTo(foundCustomer.getName());
+    }
+
+    @DisplayName("회원을 수정한다.")
+    @Test
+    void updateCustomer() {
+        Long id = 1L;
+        Customer foundCustomer = customerDao.findById(id).orElseThrow();
+        Customer updatingCustomer = foundCustomer.update("some-address", "010-9999-9999");
+        customerDao.update(id, updatingCustomer);
+
+        Customer updatedCustomer = customerDao.findById(id).orElseThrow();
+
+        assertAll(
+                () -> assertThat(updatedCustomer.getAddress()).isEqualTo("some-address"),
+                () -> assertThat(updatedCustomer.getPhoneNumber()).isEqualTo("010-9999-9999")
+        );
+    }
+
+    @DisplayName("회원을 탈퇴한다.")
+    @Test
+    void deleteCustomer() {
+        customerDao.deleteById(1L);
+
+        assertThat(customerDao.findById(1L)).isEmpty();
     }
 }

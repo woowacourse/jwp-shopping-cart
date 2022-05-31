@@ -26,6 +26,10 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
+    public Customer update(String address, String phoneNumber) {
+        return new Customer(name, password, email, new Address(address), new PhoneNumber(phoneNumber));
+    }
+
     public String getName() {
         return name.getValue();
     }

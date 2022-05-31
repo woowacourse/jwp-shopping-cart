@@ -62,4 +62,18 @@ public class CustomerDao {
             return Optional.empty();
         }
     }
+
+    public boolean update(Long id, Customer customer) {
+        final String query = "UPDATE customer SET address = ?, phone_number = ? WHERE id = ?";
+        return isUpdated(jdbcTemplate.update(query, customer.getAddress(), customer.getPhoneNumber(), id));
+    }
+
+    private boolean isUpdated(int updatedCount) {
+        return updatedCount > 0;
+    }
+
+    public boolean deleteById(Long id) {
+        final String query = "DELETE FROM customer WHERE id = ?";
+        return isUpdated(jdbcTemplate.update(query, id));
+    }
 }
