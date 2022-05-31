@@ -9,8 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
@@ -95,5 +97,18 @@ public class CustomerDaoTest {
                 () -> assertThat(actual.getNickName()).isEqualTo(expected.getNickName()),
                 () -> assertThat(actual.getAge()).isEqualTo(expected.getAge())
         );
+    }
+
+    @DisplayName("회원 정보를 삭제한다")
+    @Test
+    void delete() {
+        Customer given = Customer.of("forky", "forky@1234", "복희", 26);
+
+        customerDao.save(given);
+        customerDao.delete(given);
+
+        assertThatExceptionOfType(InvalidCustomerException.class)
+                .isThrownBy(() -> customerDao.findCustomerByUserName(given.getUserName()))
+                .withMessageContaining("존재");
     }
 }

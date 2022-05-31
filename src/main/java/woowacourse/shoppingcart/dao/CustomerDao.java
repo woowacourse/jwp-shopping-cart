@@ -85,4 +85,9 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
     }
+
+    public void delete(Customer customer) {
+        final String sql = "DELETE FROM customer WHERE username = ?";
+        jdbcTemplate.update(sql, customer.getUserName());
+    }
 }
