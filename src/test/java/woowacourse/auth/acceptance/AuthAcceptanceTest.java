@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
@@ -97,12 +98,30 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBadBearerAuth() {
         // given
         // 회원이 등록되어 있고
+        String email = "beomWhale1@naver.com";
+        String nickname = "범고래1";
+        String password = "Password12345!";
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+                email, nickname, password);
+        createCustomer(customerCreateRequest);
 
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
+        TokenRequest tokenRequest = new TokenRequest(email, password+"1");
+
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .post("/api/login")
+                .then().extract();
 
         // then
         // 토큰 발급 요청이 거부된다
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("비밀번호가 일치하지 않습니다.")
+        );
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
