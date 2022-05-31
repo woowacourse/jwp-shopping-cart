@@ -44,4 +44,9 @@
     - [x] 비밀번호를 받아 회원을 탈퇴한다.
     - [x] 비밀번호가 일치하지 않으면 예외를 발생한다.
 
-### 
+- [ ] JWT 의존성 변경
+- [ ] 비밀번호 암호화
+- [ ] RestDocs 적용
+- [ ] Interceptor 써보기
+- [ ] test에서 application.properties 주입 방법 without SpringbootTest
+
