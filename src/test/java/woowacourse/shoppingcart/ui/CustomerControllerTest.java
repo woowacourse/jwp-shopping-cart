@@ -26,6 +26,7 @@ import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -117,6 +118,23 @@ class CustomerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(updateRequest))
+                ).andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("비밀번호를 변경한다.")
+    void updatePassword() throws Exception {
+        // given
+        TokenRequest tokenRequest = new TokenRequest(1L);
+        PasswordRequest passwordRequest = new PasswordRequest("1234", "2345");
+
+        // then
+        mockMvc.perform(patch("/auth/customers/profile/password")
+                        .header("Authorization", tokenRequest)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(passwordRequest))
                 ).andDo(print())
                 .andExpect(status().isOk());
     }

@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @RestController
 public class CustomerController {
@@ -47,6 +48,13 @@ public class CustomerController {
     public ResponseEntity<Void> updateProfile(final @AuthenticationPrincipal TokenRequest tokenRequest,
                                               final @RequestBody CustomerUpdateRequest customerUpdateRequest) {
         customerService.update(tokenRequest, customerUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/auth/customers/profile/password")
+    public ResponseEntity<Void> updatePassword(final @AuthenticationPrincipal TokenRequest tokenRequest,
+                                              final @RequestBody PasswordRequest passwordRequest) {
+        customerService.updatePassword(tokenRequest, passwordRequest);
         return ResponseEntity.ok().build();
     }
 }
