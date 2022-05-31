@@ -18,12 +18,11 @@ public class JwtTokenProvider {
     private long validityInMilliseconds;
 
     public String createToken(String payload) {
-        Claims claims = Jwts.claims().setSubject(payload);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
-                .setClaims(claims)
+                .claim("email", payload)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -35,7 +34,7 @@ public class JwtTokenProvider {
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .get("email", String.class);
     }
 
     public boolean validateToken(String token) {

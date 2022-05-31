@@ -11,8 +11,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.auth.dto.ErrorResponse;
 import woowacourse.auth.exception.LoginFailException;
+import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.ErrorResponseWithField;
+import woowacourse.shoppingcart.exception.DuplicateDomainException;
+import woowacourse.shoppingcart.exception.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -34,13 +38,19 @@ public class ControllerAdvice {
         return new ErrorResponse("존재하지 않는 데이터 요청입니다.");
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleInvalidRequest(final BindingResult bindingResult) {
+    public ErrorResponseWithField handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
-        return new ErrorResponse(mainError.getDefaultMessage());
+        return new ErrorResponseWithField(mainError.getField(), mainError.getDefaultMessage());
+    }
+
+    @ExceptionHandler({DuplicateEmailException.class, DuplicateUsernameException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseWithField handleDuplicatedRequest(DuplicateDomainException exception) {
+        return new ErrorResponseWithField(exception.getField(), exception.getMessage());
     }
 
     @ExceptionHandler(LoginFailException.class)

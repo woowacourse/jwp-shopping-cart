@@ -11,25 +11,25 @@
 
 ### 기능 요구 사항
 
-- [ ] 회원가입
-    - 회원가입 시에는 Body로 email, nickName, password를 입력받는다.
+- [x] 회원가입
+    - 회원가입 시에는 Body로 email, username, password를 입력받는다.
     - [x] `성공`
         - 201 Created를 반환한다.
         - Location Header에 `/members/{id}` 를 반환한다.
-    - [ ] `예외`
+    - [x] `예외`
         - email
             - 중복된 이메일로 가입을 요청
             - 8자 이상 50자 이하가 아닌 경우
             - 이메일 형식이 아닌 경우
             - 이메일 내에 공백이 존재할 경우
-        - nickName
+        - username
             - 중복된 닉네임으로 가입을 요청
             - 1자 이상 10자 이하가 아닌 경우
             - 닉네임 내에 공백이 존재할 경우
         - password
             - 8자 이상 20자 이하가 아닌 경우
             - 패스워드 내에 공백이 존재할 경우
-- [ ] 로그인
+- [x] 로그인
     - 로그인 시에는 Body로 email, password를 입력받는다.
     - [x] `성공`
         - 200 OK를 반환한다.
@@ -39,12 +39,12 @@
 - [ ] 회원 정보 조회
     - [x] `성공`
         - 200 OK를 반환한다.
-        - Body로 id, email, nickName을 반환한다.
+        - Body로 id, email, username을 반환한다.
 - [ ] 회원 정보 수정
-    - 회원정보 수정 시 Body로 nickName을 입력받는다.
+    - 회원정보 수정 시 Body로 username을 입력받는다.
     - [x] `성공`
           - 200 OK를 반환한다.
-          - Body로 id, email, nickName을 반환한다.
+          - Body로 id, email, username을 반환한다.
       - `예외`
           - 중복된 닉네임으로 수정을 요청 (이전 닉네임과 같은 경우 예외가 아니다.)
           - 1자 이상 10자 이하가 아닌 경우
@@ -55,7 +55,7 @@
 
 - [x] ErrorDto 적용
 - [ ] 예외 사항 적용
-- [ ] Raw 타입 찾아서 수정
+- [x] Raw 타입 찾아서 수정
 
 ### 인증 관련 요구사항
 - 사용자 인증은 JWT 토큰으로 진행한다.

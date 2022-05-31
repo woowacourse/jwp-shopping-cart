@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +30,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody CustomerCreateRequest request) {
+    public ResponseEntity<Void> create(@Valid @RequestBody CustomerCreateRequest request) {
         Long savedId = customerService.save(request);
         return ResponseEntity.created(URI.create("/api/customers/" + savedId)).build();
     }
@@ -43,7 +44,7 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerResponse update(@PathVariable long id, @RequestBody CustomerUpdateRequest request) {
+    public CustomerResponse update(@PathVariable long id, @Valid @RequestBody CustomerUpdateRequest request) {
         customerService.update(id, request);
         Customer customer = customerService.findById(id);
 

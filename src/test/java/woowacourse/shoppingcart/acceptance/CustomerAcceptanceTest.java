@@ -8,10 +8,14 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.ErrorResponseWithField;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
@@ -29,6 +33,79 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
                 () -> assertThat(response.header("Location")).startsWith("/api/customers/")
         );
+    }
+
+    @DisplayName("회원가입시 중복된 email로 가입하려는 경우 400 응답을 반환한다.")
+    @Test
+    void addCustomer_duplicated_email() {
+        ExtractableResponse<Response> response = 회원가입_요청(
+                new CustomerCreateRequest("puterism@naver.com", "roma", "12345678"));
+
+        ErrorResponseWithField errorResponseWithField = response.as(ErrorResponseWithField.class);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponseWithField).usingRecursiveComparison()
+                .isEqualTo(new ErrorResponseWithField("email", "이미 가입된 이메일입니다."));
+    }
+
+    @DisplayName("회원가입시 중복된 username으로 가입하려는 경우 400 응답을 반환한다.")
+    @Test
+    void addCustomer_duplicated_username() {
+        ExtractableResponse<Response> response = 회원가입_요청(
+                new CustomerCreateRequest("philz@naver.com", "puterism", "12345678"));
+
+        ErrorResponseWithField errorResponseWithField = response.as(ErrorResponseWithField.class);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponseWithField).usingRecursiveComparison()
+                .isEqualTo(new ErrorResponseWithField("username", "이미 가입된 닉네임입니다."));
+    }
+
+
+    @DisplayName("회원 가입시 잘못된 형식의 email을 입력한 경우 400 응답을 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"not_email_format", "philz @gmail.com", ""})
+    @NullSource
+    void create_exception_parameter_email(String email) {
+        // given
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, "philz", "12345678");
+
+        // when
+        ExtractableResponse<Response> response = 회원가입_요청(customerCreateRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("회원 가입시 잘못된 형식의 username을 입력한 경우 400 응답을 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"01234567890", "", " "})
+    @NullSource
+    void create_exception_parameter_name(String username) {
+        // given
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest("philz@gmail.com", username,
+                "12345678");
+
+        // when
+        ExtractableResponse<Response> response = 회원가입_요청(customerCreateRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("회원 가입시 잘못된 형식의 password을 입력한 경우 400 응답을 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "1234", "012345678901234567890"})
+    @NullSource
+    void create_exception_parameter_password(String password) {
+        // given
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest("philz@gmail.com", "philz", password);
+
+        // when
+        ExtractableResponse<Response> response = 회원가입_요청(customerCreateRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("내 정보 조회")
@@ -65,6 +142,22 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(customerResponse).usingRecursiveComparison()
                         .isEqualTo(expected)
         );
+    }
+
+    @DisplayName("내 정보 수정시 잘못된 형식의 username을 입력한 경우 400 응답을 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"01234567890", "", " "})
+    @NullSource
+    void update_exception_parameter_name(String username) {
+        // given
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("puterism@naver.com", "12349053145"));
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(username);
+
+        // when
+        ExtractableResponse<Response> response = 회원정보수정_요청(token, 1L, customerUpdateRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("회원탈퇴")

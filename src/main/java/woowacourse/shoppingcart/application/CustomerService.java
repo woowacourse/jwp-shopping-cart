@@ -5,6 +5,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.exception.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -17,7 +19,22 @@ public class CustomerService {
     }
 
     public Long save(CustomerCreateRequest request) {
+        boolean existCustomerBySameEmail = customerDao.findByEmail(request.getEmail()).isPresent();
+        boolean existCustomerBySameUsername = customerDao.findByUsername(request.getUsername()).isPresent();
+
+        validateDuplication(existCustomerBySameEmail, existCustomerBySameUsername);
+
         return customerDao.save(request.toEntity());
+    }
+
+    private void validateDuplication(boolean existCustomerBySameEmail, boolean existCustomerBySameUsername) {
+        if (existCustomerBySameEmail) {
+            throw new DuplicateEmailException();
+        }
+
+        if (existCustomerBySameUsername) {
+            throw new DuplicateUsernameException();
+        }
     }
 
     public Customer findById(long id) {
