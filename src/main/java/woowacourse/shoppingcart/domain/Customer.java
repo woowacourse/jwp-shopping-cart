@@ -6,19 +6,19 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 public class Customer {
 
     private final Long id;
-    private final String username;
+    private final String nickname;
     private final String email;
     private final String password;
 
-    public Customer(Long id, String username, String email, String password) {
+    public Customer(Long id, String nickname, String email, String password) {
         this.id = id;
-        this.username = username;
+        this.nickname = nickname;
         this.email = email;
         this.password = password;
     }
 
-    public Customer(String username, String email, String password) {
-        this(null, username, email, hash(password));
+    public Customer(String nickname, String email, String password) {
+        this(null, nickname, email, hash(password));
     }
 
     private static String hash(String password) {
@@ -30,8 +30,8 @@ public class Customer {
         return id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNickname() {
+        return nickname;
     }
 
     public String getEmail() {
@@ -51,19 +51,19 @@ public class Customer {
             return false;
         }
         Customer customer = (Customer) o;
-        return Objects.equals(username, customer.username) && Objects.equals(email, customer.email);
+        return Objects.equals(nickname, customer.nickname) && Objects.equals(email, customer.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, email);
+        return Objects.hash(nickname, email);
     }
 
     @Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+                ", nickname='" + nickname + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }

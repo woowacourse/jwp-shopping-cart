@@ -37,7 +37,7 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal Customer customer) {
         CustomerResponse response = new CustomerResponse(
                 customer.getEmail(),
-                customer.getUsername()
+                customer.getNickname()
         );
         return ResponseEntity.ok(response);
     }

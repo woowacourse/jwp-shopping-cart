@@ -19,7 +19,7 @@ public class CustomerDao {
     private final RowMapper<Customer> rowMapper = (rs, rowNum) ->
             new Customer(
                     rs.getLong("id"),
-                    rs.getString("username"),
+                    rs.getString("nickname"),
                     rs.getString("email"),
                     rs.getString("password"));
 
@@ -28,12 +28,12 @@ public class CustomerDao {
     }
 
     public Long save(Customer customer) {
-        final String query = "INSERT INTO customer (username, email, password) VALUES (?, ?, ?)";
+        final String query = "INSERT INTO customer (nickname, email, password) VALUES (?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, customer.getUsername());
+            preparedStatement.setString(1, customer.getNickname());
             preparedStatement.setString(2, customer.getEmail());
             preparedStatement.setString(3, customer.getPassword());
             return preparedStatement;
@@ -42,10 +42,10 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findInByNickname(final String nickname) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            final String query = "SELECT id FROM customer WHERE nickname = ?";
+            return jdbcTemplate.queryForObject(query, Long.class, nickname.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
@@ -66,8 +66,8 @@ public class CustomerDao {
     }
 
     public void updateById(Long id, Customer updatedCustomer) {
-        final String query = "UPDATE customer SET username = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(query, updatedCustomer.getUsername(), updatedCustomer.getPassword(), id);
+        final String query = "UPDATE customer SET nickname = ?, password = ? WHERE id = ?";
+        jdbcTemplate.update(query, updatedCustomer.getNickname(), updatedCustomer.getPassword(), id);
     }
 
     public void deleteById(Long id) {
