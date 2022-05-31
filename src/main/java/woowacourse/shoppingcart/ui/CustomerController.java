@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.CustomerLoginRequest;
+import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
 @RestController
@@ -21,5 +23,11 @@ public class CustomerController {
     public ResponseEntity<Void> signUp(@RequestBody CustomerRequest request) {
         Long id = customerService.signUp(request);
         return ResponseEntity.created(URI.create("/customers/" + id)).build();
+    }
+
+    @PostMapping("/customers/login")
+    public ResponseEntity<CustomerLoginResponse> login(@RequestBody CustomerLoginRequest request) {
+        CustomerLoginResponse response = customerService.login(request);
+        return ResponseEntity.ok().body(response);
     }
 }

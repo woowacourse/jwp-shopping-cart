@@ -1,17 +1,14 @@
 package woowacourse.shoppingcart.dto;
 
-public class CustomerRequest {
-
+public class CustomerLoginRequest {
     private String userId;
-    private String nickname;
     private String password;
 
-    public CustomerRequest() {
+    public CustomerLoginRequest() {
     }
 
-    public CustomerRequest(final String userId, final String nickname, final String password) {
+    public CustomerLoginRequest(final String userId, final String password) {
         this.userId = userId;
-        this.nickname = nickname;
         this.password = password;
     }
 
@@ -21,9 +18,5 @@ public class CustomerRequest {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getNickname() {
-        return nickname;
     }
 }
