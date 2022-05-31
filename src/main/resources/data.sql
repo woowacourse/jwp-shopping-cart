@@ -4,7 +4,7 @@ values ('puterism', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-123
        ('jho2301', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),
        ('365kim', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),
        ('dudtjr913', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),
-       ('jum0', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),
+       ('jum00', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),
        ('hyuuunjukim', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),
        ('zereight', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),
        ('devhyun637', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),
