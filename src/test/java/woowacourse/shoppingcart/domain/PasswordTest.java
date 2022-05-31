@@ -5,13 +5,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import woowacourse.exception.LoginException;
 
 public class PasswordTest {
 
     @DisplayName("패스워드는 10글자 이상이어야 한다.")
     @Test
     void password() {
-        assertThatThrownBy(()-> Password.from("pwd")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(()-> Password.from("pwd")).isInstanceOf(LoginException.class);
     }
 
     @DisplayName("같은 문자열로 암호화하였을 경우 두 암호화된 패스워드는 같다.")
