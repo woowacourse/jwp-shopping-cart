@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -33,12 +34,19 @@ public class AcceptanceTest {
     }
 
     protected ValidatableResponse postLogin(TokenRequest request) {
-        ValidatableResponse response = RestAssured
+        return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().post("/login")
                 .then().log().all();
-        return response;
+    }
+
+    protected ValidatableResponse getMe(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                .when().get("/users/me")
+                .then().log().all();
     }
 }

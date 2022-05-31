@@ -9,10 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -84,11 +86,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .getAccessToken();
 
         // when
-        ValidatableResponse response = RestAssured
-                .given().log().all()
-                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
-                .when().get("/users/me")
-                .then().log().all();
+        ValidatableResponse response = getMe(accessToken);
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -96,9 +94,39 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body("nickname", equalTo(nickname));
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("유효한 토큰으로 회원 정보 수정을 성공한다.")
     @Test
     void updateMe() {
+        // given
+        String email = "kun@email.com";
+        String password = "qwerasdf123";
+        CustomerCreationRequest createRequest = new CustomerCreationRequest(email, password, "kun");
+        postUser(createRequest);
+
+        TokenRequest tokenRequest = new TokenRequest(email, password);
+        String accessToken = postLogin(tokenRequest)
+                .extract()
+                .as(TokenResponse.class)
+                .getAccessToken();
+
+        String updatedNickname = "rick";
+        CustomerUpdationRequest updateRequest = new CustomerUpdationRequest(updatedNickname, "qwerasdf321");
+
+        // when
+        ValidatableResponse response = RestAssured
+                .given().log().all()
+                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(updateRequest)
+                .when().put("/users")
+                .then().log().all();
+
+        ValidatableResponse updatedResponse = getMe(accessToken);
+
+        // then
+        response.statusCode(HttpStatus.OK.value());
+
+        updatedResponse.body("nickname", equalTo(updatedNickname));
     }
 
     @DisplayName("유효한 토큰으로 회원 탈퇴에 성공한다.")
