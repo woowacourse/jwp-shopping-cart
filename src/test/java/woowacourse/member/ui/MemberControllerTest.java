@@ -109,7 +109,7 @@ public class MemberControllerTest extends RestDocsTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memberNameUpdateRequest)))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
 
         // docs
         resultActions.andDo(document("member-name-update",
@@ -138,7 +138,7 @@ public class MemberControllerTest extends RestDocsTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memberPasswordUpdateRequest)))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
 
         // docs
         resultActions.andDo(document("member-password-update",

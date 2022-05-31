@@ -29,14 +29,4 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         ErrorResponse errorResponse = MARU.failedLogin("Wrongpw1234!");
         assertThat(errorResponse.getMessage()).isEqualTo("[ERROR] 비밀번호가 틀렸습니다.");
     }
-
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보 조회 요청이 거부된다
-    }
 }

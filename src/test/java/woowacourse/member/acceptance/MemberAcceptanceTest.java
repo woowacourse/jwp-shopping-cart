@@ -49,7 +49,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     void updateMyName() {
         MARU.register();
         ExtractableResponse<Response> response = MARU.loginAnd().updateMyName(NAME);
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("토큰을 헤더에 담아 비밀번호 수정을 요청하면 204 no content를 반환한다.")
@@ -57,7 +57,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     void updateMyPassword() {
         MARU.register();
         ExtractableResponse<Response> response = MARU.loginAnd().updateMyPassword(PASSWORD);
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("토큰을 헤더에 담고 비밀번호를 보내고 삭제를 요청하면 204 no content를 반환한다.")

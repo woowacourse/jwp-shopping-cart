@@ -46,14 +46,14 @@ public class MemberController {
     public ResponseEntity<Void> updateName(@AuthenticationPrincipal Long memberId,
                                            @Valid @RequestBody MemberNameUpdateRequest memberNameUpdateRequest) {
         memberService.updateName(memberId, memberNameUpdateRequest);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/me/password")
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal Long memberId,
                                                @Valid @RequestBody MemberPasswordUpdateRequest memberPasswordUpdateRequest) {
         memberService.updatePassword(memberId, memberPasswordUpdateRequest);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")
