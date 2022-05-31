@@ -28,4 +28,8 @@ public class AuthService {
 
         return jwtTokenProvider.createToken(String.valueOf(customer.getId()));
     }
+
+    public Long parseToId(final String token) {
+        return Long.parseLong(jwtTokenProvider.getPayload(token));
+    }
 }

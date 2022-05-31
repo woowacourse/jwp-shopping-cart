@@ -73,4 +73,19 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.certify(loginServiceRequest))
                 .isInstanceOf(PasswordNotMatchException.class);
     }
+
+    @Test
+    @DisplayName("토큰을 ID로 변환한다.")
+    void parseToLong() {
+        // given
+        final Long expected = 1L;
+        Mockito.when(jwtTokenProvider.getPayload("mytoken"))
+                .thenReturn(String.valueOf(expected));
+
+        // when
+        final Long id = authService.parseToId("mytoken");
+
+        // then
+        assertThat(id).isEqualTo(expected);
+    }
 }
