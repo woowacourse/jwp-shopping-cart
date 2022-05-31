@@ -4,8 +4,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.ui.dto.TokenRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerSignUpRequest;
 
 public class ResponseCreator {

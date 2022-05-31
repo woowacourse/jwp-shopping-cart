@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,12 +37,6 @@ public class CustomerDao {
                 .addValue("email", customer.getEmail())
                 .addValue("password", customer.getPassword())
                 .addValue("nickname", customer.getNickname());
-
-        try {
-
-        } catch (EmptyResultDataAccessException e) {
-
-        }
         return simpleJdbcInsert.executeAndReturnKey(sqlParameter).longValue();
     }
 
@@ -75,5 +70,17 @@ public class CustomerDao {
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("nickname", nickname);
         Long count = template.queryForObject(sql, nameParameters, Long.class);
         return count != 0;
+    }
+
+    public Optional<Customer> findByEmailAndPassword(String email, String password) {
+        String query = "SELECT id, email, password, nickname FROM customer WHERE email = :email AND password = :password";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource("email", email)
+                .addValue("password", password);
+        try {
+            Customer customer = template.queryForObject(query, nameParameters, CUSTOMER_ROW_MAPPER);
+            return Optional.ofNullable(customer);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

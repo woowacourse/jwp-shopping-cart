@@ -1,13 +1,11 @@
-package woowacourse.auth.dto;
+package woowacourse.auth.application.dto;
 
-public class TokenRequest {
+public class TokenCreateRequest {
+
     private String email;
     private String password;
 
-    public TokenRequest() {
-    }
-
-    public TokenRequest(String email, String password) {
+    public TokenCreateRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }

@@ -15,8 +15,6 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    // 데이터 넣을 때는 exist 검증해서 값을
-
     public Long save(CustomerSaveRequest request) {
         validateCustomerRequest(request);
         return customerDao.save(request.toEntity());
@@ -30,7 +28,6 @@ public class CustomerService {
         if (customerDao.existByNickname(request.getNickname())){
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 닉네임입니다.");
         }
-
     }
 
     public CustomerResponse findById(Long id) {

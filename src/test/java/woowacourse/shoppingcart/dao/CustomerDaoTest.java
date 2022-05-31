@@ -34,13 +34,27 @@ public class CustomerDaoTest {
     @DisplayName("회원을 저장한다.")
     void saveCustomer() {
         // given
-        Customer customer = new Customer(1L, "email@email.com", "password123!A", "rookie");
+        Customer customer = new Customer("email@email.com", "password123!A", "rookie");
 
         // when
         Long id = customerDao.save(customer);
 
         // then
         assertThat(id).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("이메일과 패스워드를 통해서 회원을 조회할 수 있다.")
+    void findByEmailAndPassword() {
+        // given
+        customerDao.save(new Customer("email@email.com", "password123!A", "rookie"));
+
+        // when
+        Customer customer = customerDao.findByEmailAndPassword("email@email.com", "password123!A").get();
+
+        // then
+        assertThat(customer).usingRecursiveComparison()
+                .isEqualTo(new Customer(1L, "email@email.com", "password123!A", "rookie"));
     }
 
 //    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
