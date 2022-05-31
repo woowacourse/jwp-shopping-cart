@@ -13,10 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.CustomerRequest;
+import woowacourse.auth.dto.CustomerUpdateRequest;
+import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 
 @ExtendWith(MockitoExtension.class)
@@ -78,5 +79,31 @@ class CustomerServiceTest {
 		// then
 		assertThatThrownBy(() ->customerService.findByEmail("123@gmail.com"))
 			.isInstanceOf(InvalidCustomerException.class);
+	}
+
+	@DisplayName("회원 정보를 수정한다.")
+	@Test
+	void updateCustomer() {
+		// given
+		CustomerUpdateRequest request = new CustomerUpdateRequest("thor", "a1234!", "b1234!");
+		Customer customer = new Customer(1L, "does", "a1234!", "b1234!");
+
+		// when
+		Customer update = customerService.update(customer, request);
+
+		// then
+		assertThat(update.getNickname()).isEqualTo("thor");
+	}
+
+	@DisplayName("기존 비밀번호가 다르면 수정하지 못한다.")
+	@Test
+	void updateCustomerPasswordFail() {
+		// given
+		CustomerUpdateRequest request = new CustomerUpdateRequest("thor", "a1234!", "b1234!");
+		Customer customer = new Customer(1L, "does", "a123456!", "b1234!");
+
+		// when
+		assertThatThrownBy(() -> customerService.update(customer, request))
+			.isInstanceOf(InvalidAuthException.class);
 	}
 }

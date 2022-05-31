@@ -1,6 +1,7 @@
 package woowacourse.auth.dao;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -63,5 +64,16 @@ public class CustomerDao {
 	public void delete(Long id) {
 		String sql = "DELETE FROM customer WHERE id = :id";
 		jdbcTemplate.update(sql, Map.of("id", id));
+	}
+
+	public void update(Customer customer) {
+		String sql = "update customer set "
+			+ "email = :email, "
+			+ "nickname = :nickname, "
+			+ "password = :password "
+			+ "where id = :id";
+		if (jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer)) == 0) {
+			throw new NoSuchElementException("수정하려는 Customer가 없습니다.");
+		}
 	}
 }

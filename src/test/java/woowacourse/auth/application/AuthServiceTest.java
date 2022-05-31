@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 import woowacourse.auth.support.JwtTokenProvider;
 
@@ -67,6 +68,6 @@ class AuthServiceTest {
 
 		// when
 		assertThatThrownBy(() -> authService.login(new TokenRequest("123@gmail.com", "a1234!!!")))
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(InvalidAuthException.class);
 	}
 }

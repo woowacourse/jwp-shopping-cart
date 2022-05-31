@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.CustomerRequest;
+import woowacourse.auth.dto.CustomerUpdateRequest;
+import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 
 @RequiredArgsConstructor
@@ -36,6 +38,23 @@ public class CustomerService {
 
 	public void delete(Customer customer) {
 		customerDao.delete(customer.getId());
+	}
+
+	public Customer update(Customer customer, CustomerUpdateRequest request) {
+		validatePassword(customer, request);
+		Customer updatedCustomer = new Customer(customer.getId(),
+			customer.getEmail(),
+			request.getNewPassword(),
+			request.getNickname()
+		);
+		customerDao.update(updatedCustomer);
+		return updatedCustomer;
+	}
+
+	private void validatePassword(Customer customer, CustomerUpdateRequest request) {
+		if (!customer.isSamePassword(request.getPassword())) {
+			throw new InvalidAuthException("비밀번호가 달라서 수정할 수 없습니다.");
+		}
 	}
 }
 

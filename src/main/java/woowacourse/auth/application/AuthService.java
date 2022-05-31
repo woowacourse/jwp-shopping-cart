@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Service
@@ -20,7 +21,7 @@ public class AuthService {
 	public TokenResponse login(TokenRequest tokenRequest) {
 		Customer customer = customerService.findByEmail(tokenRequest.getEmail());
 		if (!customer.isSamePassword(tokenRequest.getPassword())) {
-			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+			throw new InvalidAuthException("비밀번호가 일치하지 않습니다.");
 		}
 		return new TokenResponse(customer.getNickname(), tokenProvider.createToken(customer.getEmail()));
 	}

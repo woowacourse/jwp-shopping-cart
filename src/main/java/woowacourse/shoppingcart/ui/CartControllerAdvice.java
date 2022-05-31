@@ -13,8 +13,8 @@ import woowacourse.shoppingcart.exception.*;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 
-@RestControllerAdvice
-public class ControllerAdvice {
+@RestControllerAdvice(basePackages = "woowacourse.shoppingcart")
+public class CartControllerAdvice {
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handle() {

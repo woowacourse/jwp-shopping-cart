@@ -1,7 +1,9 @@
 package woowacourse.auth.dao;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -101,5 +103,37 @@ class CustomerDaoTest {
 
 		assertThat(customerDao.findByEmail(save.getEmail()))
 			.isEmpty();
+	}
+
+	@DisplayName("회원 정보를 수정한다.")
+	@Test
+	void update() {
+		// given
+		Customer save = customerDao.save(new Customer("123@gmail.com", "a1234!", "does"));
+
+		// when
+		customerDao.update(new Customer(save.getId(), save.getEmail(), "b1234!", "thor"));
+
+		// then
+		Optional<Customer> update = customerDao.findByEmail(save.getEmail());
+		assertAll(
+			() -> assertThat(update)
+				.map(Customer::getNickname)
+				.get()
+				.isEqualTo("thor"),
+			() -> assertThat(update)
+				.map(Customer::getPassword)
+				.get()
+				.isEqualTo("b1234!")
+		);
+	}
+
+	@DisplayName("없는 회원을 수정하면 예외 발생.")
+	@Test
+	void updateException() {
+		// when
+		assertThatThrownBy(() -> customerDao.update(
+			new Customer(1L, "123$gmail.com", "b1234!", "thor")))
+			.isInstanceOf(NoSuchElementException.class);
 	}
 }
