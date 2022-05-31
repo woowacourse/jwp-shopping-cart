@@ -47,4 +47,18 @@ class MemberDaoTest {
         Optional<Member> result = memberDao.findMemberByEmail("pobi@wooteco.com");
         assertThat(result).isEmpty();
     }
+
+    @DisplayName("id로 회원을 찾아 반환한다.")
+    @Test
+    void findMemberById() {
+        Optional<Member> result = memberDao.findMemberById(1L);
+        assertThat(result.get().getName()).isEqualTo("아리");
+    }
+
+    @DisplayName("존재하지 않는 id인 경우 빈 Optional을 반환한다.")
+    @Test
+    void findMemberByNotExistId() {
+        Optional<Member> result = memberDao.findMemberById(100L);
+        assertThat(result).isEmpty();
+    }
 }

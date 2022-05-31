@@ -6,12 +6,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.LoginRequest;
+import woowacourse.member.dto.MemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.exception.InvalidMemberEmailException;
 import woowacourse.member.exception.EmailNotFoundException;
+import woowacourse.member.exception.MemberNotFoundException;
 import woowacourse.member.exception.WrongPasswordException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
@@ -66,5 +70,25 @@ class MemberServiceTest {
                 () -> memberService.findIdByEmail(new LoginRequest("ari@wooteco.com","Javajigi!!"))
         ).isInstanceOf(WrongPasswordException.class)
                 .hasMessageContaining("잘못된 비밀번호입니다.");
+    }
+
+    @DisplayName("올바른 id로 회원정보를 조회한다.")
+    @Test
+    void findMemberById() {
+        MemberInfoResponse response = memberService.findMemberById(1L);
+
+        assertAll(
+                () -> assertThat(response.getEmail()).isEqualTo("ari@wooteco.com"),
+                () -> assertThat(response.getName()).isEqualTo("아리")
+        );
+    }
+
+    @DisplayName("존재하지 않는 id 경우 예외가 발생한다.")
+    @Test
+    void findMemberByIdWithNotExistId(){
+        assertThatThrownBy(
+                () -> memberService.findMemberById(100L)
+        ).isInstanceOf(MemberNotFoundException.class)
+                .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 }

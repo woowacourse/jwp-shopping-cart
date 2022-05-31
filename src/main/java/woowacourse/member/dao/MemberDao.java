@@ -47,6 +47,16 @@ public class MemberDao {
         }
     }
 
+    public Optional<Member> findMemberById(long id) {
+        try {
+            String SQL = "SELECT id, email, name, password FROM member WHERE id = ?";
+            Member member = jdbcTemplate.queryForObject(SQL, rowMapper, id);
+            return Optional.ofNullable(member);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     private RowMapper<Member> rowMapper= (resultSet, rowNum) ->
             Member.withoutEncrypt(
                     resultSet.getLong("id"),
