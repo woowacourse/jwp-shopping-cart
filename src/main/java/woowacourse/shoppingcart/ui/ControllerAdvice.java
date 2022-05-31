@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.application.AuthorizationException;
+import woowacourse.auth.application.ForbiddenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
@@ -25,6 +26,11 @@ public class ControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(AuthorizationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(toErrorResponse(e));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(ForbiddenException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(toErrorResponse(e));
     }
 
 //    @ExceptionHandler(EmptyResultDataAccessException.class)

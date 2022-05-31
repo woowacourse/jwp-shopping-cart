@@ -23,8 +23,13 @@ public class AuthService {
         if (checkInvalidLogin(username, password)) {
             throw new AuthorizationException();
         }
-        String accessToken = jwtTokenProvider.createToken(username);
+        String accessToken = jwtTokenProvider.createToken("1");
         return new TokenResponse(accessToken);
+    }
+
+    public Long findUserIdByToken(String token) {
+        String payload = jwtTokenProvider.getPayload(token);
+        return Long.valueOf(payload);
     }
 
     public boolean checkInvalidLogin(String principal, String credentials) {
