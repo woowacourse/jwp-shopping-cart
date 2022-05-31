@@ -187,13 +187,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .then().log().all().extract();
 
         // then
-        RestAssured
+        ValidatableResponse validatableResponse = RestAssured
             .given().log().all()
             .auth().oauth2(INVALID_ACCESS_TOKEN)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when().get("/api/customers")
-            .then().log().all()
-            .statusCode(HttpStatus.UNAUTHORIZED.value());
+            .then().log().all();
+        ExceptionResponse response = validatableResponse.extract().as(ExceptionResponse.class);
+
+        assertAll(
+            () -> validatableResponse.statusCode(HttpStatus.UNAUTHORIZED.value()),
+            () -> assertThat(response.getMessages())
+                .containsExactly("유효하지 않은 토큰입니다.")
+        );
     }
 
     @DisplayName("해당 아이디가 존재하지 않으면 (401)unauthorized 를 반환해야 한다.")
@@ -221,10 +227,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExceptionResponse exceptionResponse = validatableResponse.extract().as(ExceptionResponse.class);
 
         // then
-        validatableResponse.statusCode(HttpStatus.UNAUTHORIZED.value());
-        assertThat(exceptionResponse.getMessages())
-            .hasSize(1)
-            .containsExactly("해당하는 username이 없습니다.");
+        assertAll(
+            () -> validatableResponse.statusCode(HttpStatus.UNAUTHORIZED.value()),
+            () -> assertThat(exceptionResponse.getMessages())
+                .containsExactly("해당하는 username이 없습니다.")
+        );
     }
 
     @DisplayName("내 정보 수정")

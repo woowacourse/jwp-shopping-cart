@@ -76,6 +76,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity handleAuthException(final AuthorizationException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        ExceptionResponse response = new ExceptionResponse(List.of(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 }
