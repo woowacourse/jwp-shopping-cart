@@ -1,9 +1,13 @@
 package woowacourse.shoppingcart.domain;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import woowacourse.shoppingcart.exception.InvalidAddressException;
 
 class AddressTest {
 
@@ -14,5 +18,16 @@ class AddressTest {
 
         assertThatCode(() -> new Address(value))
                 .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("주소의 최대 길이인 255자를 넘으면, 예외를 발생한다.")
+    void invalidLengthException() {
+        String value = IntStream.rangeClosed(0, 255)
+                .mapToObj(i -> "x")
+                .collect(Collectors.joining());
+
+        assertThatExceptionOfType(InvalidAddressException.class)
+                .isThrownBy(() -> new Address(value));
     }
 }
