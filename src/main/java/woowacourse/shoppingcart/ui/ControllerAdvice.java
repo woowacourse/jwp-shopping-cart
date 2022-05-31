@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.ui;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -20,6 +22,10 @@ import woowacourse.shoppingcart.exception.ShoppingCartException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
+
+    private static final ErrorResponse INTERNAL_SERVER_RESPONSE = new ErrorResponse("997", "서버가 요청을 처리할 수 없습니다.");
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleUnhandledException() {
@@ -65,5 +71,13 @@ public class ControllerAdvice {
         return ResponseEntity
                 .status(exception.getHttpStatus())
                 .body(exception.toErrorResponse());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGlobalException(final Exception exception) {
+        logger.error(exception.getMessage());
+        return ResponseEntity
+                .internalServerError()
+                .body(INTERNAL_SERVER_RESPONSE);
     }
 }
