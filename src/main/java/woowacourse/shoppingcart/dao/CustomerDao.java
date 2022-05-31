@@ -27,6 +27,14 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public Customer save(final Customer customer) {
+        final String sql = "insert into customer(email, name, phone, address, password) values (:email, :name, :phone, :address, :password)";
+        final SqlParameterSource query = new BeanPropertySqlParameterSource(customer);
+        KeyHolder keyholder = new GeneratedKeyHolder();
+        jdbcTemplate.update(sql, query, keyholder, new String[]{"id"});
+        return new Customer(Objects.requireNonNull(keyholder.getKey()).longValue(), customer);
+    }
+
     public Long findIdByUserName(final String userName) {
         try {
             final String sql = "SELECT id FROM customer WHERE name = :name";
@@ -35,14 +43,6 @@ public class CustomerDao {
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
-    }
-
-    public Customer save(final Customer customer) {
-        final String sql = "insert into customer(email, name, phone, address, password) values (:email, :name, :phone, :address, :password)";
-        final SqlParameterSource query = new BeanPropertySqlParameterSource(customer);
-        KeyHolder keyholder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, query, keyholder, new String[]{"id"});
-        return new Customer(Objects.requireNonNull(keyholder.getKey()).longValue(), customer);
     }
 
     public Customer findByEmail(final String email) {
