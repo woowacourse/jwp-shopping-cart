@@ -10,7 +10,8 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.exception.InvalidTokenException;
+import woowacourse.exception.AuthException;
+import woowacourse.exception.dto.ErrorResponse;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
     private final AuthService authService;
@@ -34,7 +35,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         final String token = AuthorizationExtractor.extract(nativeRequest);
 
         if(!jwtTokenProvider.validateToken(token)){
-            throw new InvalidTokenException();
+            throw new AuthException("유효하지 않은 토큰입니다.", ErrorResponse.INVALID_TOKEN);
         }
         return jwtTokenProvider.getPayload(token);
     }

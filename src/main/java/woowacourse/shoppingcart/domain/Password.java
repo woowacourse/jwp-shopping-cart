@@ -46,6 +46,10 @@ public class Password {
         return builder.toString();
     }
 
+    public static boolean isSameEncryptedPassword(String encryptedPassword, String password) {
+        return encryptedPassword.equals(encrypt(password));
+    }
+
     public String getPassword() {
         return password;
     }

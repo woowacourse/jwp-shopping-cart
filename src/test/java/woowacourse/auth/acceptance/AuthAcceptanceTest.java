@@ -48,13 +48,23 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBadBearerAuth() {
         // given
-        // 회원이 등록되어 있고
+        final String email = "test@a.com";
+        final String password = "password0!";
+        final String username = "테스트";
+        final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
+
+        postMethodRequest(customerRequest, "/api/customers");
 
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+        final LoginRequest loginRequest = new LoginRequest(email, "diffPwd0!");
+        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest, "/api/auth/login");
+        final int errorCode = tokenResponse.jsonPath().getInt("errorCode");
 
         // then
-        // 토큰 발급 요청이 거부된다
+        assertAll(
+                ()-> assertThat(errorCode).isEqualTo(2001),
+                ()-> assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        );
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
@@ -66,7 +76,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                ()-> assertThat(errorCode).isEqualTo(3004),
+                ()-> assertThat(errorCode).isEqualTo(3002),
                 ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         );
     }

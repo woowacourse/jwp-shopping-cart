@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> register(@RequestBody CustomerRequest customerRequest) {
+    public ResponseEntity<Void> register(@Valid @RequestBody CustomerRequest customerRequest) {
         customerService.register(customerRequest.getEmail(),
                 customerRequest.getPassword(),
                 customerRequest.getUsername());
