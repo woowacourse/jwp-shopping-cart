@@ -35,7 +35,7 @@ public class CustomerController {
     }
 
     @PutMapping("/customers")
-    public void updateCustomer(@AuthenticationPrincipal long customerId, @RequestBody UpdateCustomerRequest updateCustomerRequest) {
+    public void updateCustomer(@AuthenticationPrincipal long customerId, @RequestBody @Valid UpdateCustomerRequest updateCustomerRequest) {
         customerService.update(customerId, updateCustomerRequest);
     }
 }

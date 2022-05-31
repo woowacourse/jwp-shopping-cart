@@ -30,14 +30,14 @@
   - [x] request header 에 token 이 포함되지 않으면 예외를 발생한다.
   - [ ] 알맞은 회원정보가 없을 시, 회원 정보가 없다는 예외를 발생한다.
 
-- [ ] 회원 정보 수정
+- [x] 회원 정보 수정
     - [x] nickname, address, phoneNumber 을 받아 회원 정보를 수정한다.
     - [x] request header 에 token 이 포함되지 않으면 예외를 발생한다.
-    - [ ] nickname 의 글자수가 2~10을 벗어나면 예외를 발생한다.
-    - [ ] address 의 글자수가 255자를 초과하면 예외를 발생한다.
-    - [ ] phoneNumber 의 양식이 일치하지 않으면 예외를 발생한다.
-        - [ ] start, middle, last 의 형식을 지닌다.
-        - [ ] start 는 3글자, middle과 last는 4글자이다.
+    - [x] nickname 의 글자수가 2~10을 벗어나면 예외를 발생한다.
+    - [x] address 의 글자수가 255자를 초과하면 예외를 발생한다.
+    - [x] phoneNumber 의 양식이 일치하지 않으면 예외를 발생한다.
+        - [x] start, middle, last 의 형식을 지닌다.
+        - [x] start 는 3글자, middle과 last는 4글자이다.
 
 - [ ] 회원탈퇴
     - [ ] request header 에 token 이 포함되지 않으면 예외를 발생한다.

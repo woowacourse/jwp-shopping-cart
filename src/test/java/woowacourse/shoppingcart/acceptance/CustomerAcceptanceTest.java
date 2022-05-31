@@ -37,7 +37,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("중복된 아이디로 회원가입 요청 시 400 상태코드를 반환한다.")
+    @DisplayName("회원가입 시 중복된 아이디로 회원가입 요청 시 400 상태코드를 반환한다.")
     void signupWithDuplicated() {
         // when
         final ExtractableResponse<Response> response = post("/signup", 에덴);
@@ -51,7 +51,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @CsvSource(value = {"123", "1234567890123456"})
-    @DisplayName("아이디 길이가 4~15자를 벗어나면 400 상태코드를 반환한다.")
+    @DisplayName("회원가입 시 아이디 길이가 4~15자를 벗어나면 400 상태코드를 반환한다.")
     void invalidAccountLength(String account) {
         // given
         final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumber("010", "1234", "5678"));
@@ -68,7 +68,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @CsvSource(value = {"YEONLOG,yeonlog", "aa_01,aa01"})
-    @DisplayName("아이디가 대문자이면 소문자로 변경하고 특수문자가 들어가면 제거한다.")
+    @DisplayName("회원가입 시 아이디가 대문자이면 소문자로 변경하고 특수문자가 들어가면 제거한다.")
     void changeAccountPattern(String account, String expectedAccount) {
         // given
         final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumber("010", "1234", "5678"));
@@ -87,7 +87,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @CsvSource(value = {"1", "12345678901"})
-    @DisplayName("닉네임 길이가 2~10자를 벗어나면 400 상태코드를 반환한다.")
+    @DisplayName("회원가입 시 닉네임 길이가 2~10자를 벗어나면 400 상태코드를 반환한다.")
     void invalidNicknameLength(String nickName) {
         // given
         final SignupRequest signupRequest = new SignupRequest("account", nickName, "Password123!", "address", new PhoneNumber("010", "1234", "5678"));
@@ -104,7 +104,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @CsvSource(value = {"Abc123!", "Abc123abc123abc123abc123!!"})
-    @DisplayName("비밀번호 길이가 8~20자를 벗어나면 400 상태코드를 반환한다.")
+    @DisplayName("회원가입 시 비밀번호 길이가 8~20자를 벗어나면 400 상태코드를 반환한다.")
     void invalidPasswordLength(String password) {
         // given
         final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address", new PhoneNumber("010", "1234", "5678"));
@@ -121,7 +121,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @CsvSource(value = {"12345678aa", "aA!!!!Aa", "korinnee123", "qwe123!!!", "tjdtksdlWkd"})
-    @DisplayName("비밀번호가 영어 대문자, 소문자, 숫자 중 2종류 이상을 조합하지 않았다면 상태코드 400을 반환한다.")
+    @DisplayName("회원가입 시 비밀번호가 영어 대문자, 소문자, 숫자 중 2종류 이상을 조합하지 않았다면 상태코드 400을 반환한다.")
     void invalidPasswordPattern(String password) {
         // given
         final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address", new PhoneNumber("010", "1234", "5678"));
@@ -137,7 +137,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("주소의 길이가 255자를 초과하면 상태코드 400을 반환한다.")
+    @DisplayName("회원가입 시 주소의 길이가 255자를 초과하면 상태코드 400을 반환한다.")
     void invalidAddressLength() {
         // given
         String address = "a".repeat(256);
@@ -155,7 +155,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @CsvSource(value = {"01,1234,1234", "0101,1234,1234", "010,123,1234", "010,12345,1234", "010,1234,123", "010,1234,12345"})
-    @DisplayName("휴대폰 번호의 각각 길이가 3, 4, 4자가 아니면 상태코드 400을 반환한다.")
+    @DisplayName("회원가입 시 휴대폰 번호의 각각 길이가 3, 4, 4자가 아니면 상태코드 400을 반환한다.")
     void invalidPhoneNumberLength(String start, String middle, String end) {
         // given
         final SignupRequest signupRequest = new SignupRequest("account", "nickname", "Password123!", "address", new PhoneNumber(start, middle, end));
@@ -263,6 +263,64 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(response.asString()).isEqualTo("잘못된 형식의 토큰입니다.")
+        );
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"1", "12345678901"})
+    @DisplayName("회원 수정 시 닉네임 길이가 2~10자를 벗어나면 400 상태코드를 반환한다.")
+    void invalidNicknameLengthWhenUpdateCustomer(String nickName) {
+        // given
+        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
+
+        // when
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest(nickName, "address", new PhoneNumber("010", "1234", "5678"));
+        final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo("닉네임 길이는 2~10자를 만족해야 합니다.")
+        );
+    }
+
+    @Test
+    @DisplayName("회원수정 시 주소의 길이가 255자를 초과하면 상태코드 400을 반환한다.")
+    void invalidAddressLengthWhenUpdateCustomer() {
+        // given
+        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
+
+        // when
+        String address = "a".repeat(256);
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", address, new PhoneNumber("010", "1234", "5678"));
+        final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo("주소 길이는 255자를 초과할 수 없습니다.")
+        );
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"01,1234,1234", "0101,1234,1234", "010,123,1234", "010,12345,1234", "010,1234,123", "010,1234,12345"})
+    @DisplayName("회원수정 시 휴대폰 번호의 각각 길이가 3, 4, 4자가 아니면 상태코드 400을 반환한다.")
+    void invalidPhoneNumberLengthWhenUpdateCustomer(String start, String middle, String end) {
+        // given
+        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
+
+        // when
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "address", new PhoneNumber(start, middle, end
+        ));
+        final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.asString()).isEqualTo("휴대폰번호 형식이 일치하지 않습니다.")
         );
     }
 
