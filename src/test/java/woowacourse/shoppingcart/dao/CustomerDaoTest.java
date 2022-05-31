@@ -12,6 +12,8 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
 
+import java.util.Optional;
+
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -92,5 +94,20 @@ public class CustomerDaoTest {
 
         // then
         assertThat(savedId).isEqualTo(customer.getId());
+    }
+
+    @DisplayName("email을 통해 Customer를 삭제한다.")
+    @Test
+    void deleteByEmail() {
+        // given
+        String email = "beomWhale@naver.com";
+        customerDao.save(new Customer(email, "beom1234", "Password123!"));
+
+        // when
+        customerDao.deleteByEmail(email);
+
+        // then
+        Optional<Customer> maybeCustomer = customerDao.findIdByEmail(email);
+        assertThat(maybeCustomer.isEmpty()).isTrue();
     }
 }

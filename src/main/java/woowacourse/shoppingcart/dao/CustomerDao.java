@@ -30,7 +30,7 @@ public class CustomerDao {
 
     public Long findIdByNickname(final String nickname) {
         try {
-            final String query = "SELECT id FROM customer WHERE nickname = ?";
+            String query = "SELECT id FROM customer WHERE nickname = ?";
             return jdbcTemplate.queryForObject(query, Long.class,
                 nickname.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
@@ -61,10 +61,15 @@ public class CustomerDao {
 
     public Optional<Customer> findIdByEmail(final String email) {
         try {
-            final String query = "SELECT id, email, nickname, password FROM customer WHERE email = ?";
+            String query = "SELECT id, email, nickname, password FROM customer WHERE email = ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, email));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public void deleteByEmail(String email) {
+        String query = "DELETE FROM customer WHERE email = ?";
+        jdbcTemplate.update(query, email);
     }
 }
