@@ -27,4 +27,8 @@ public class CustomerService {
     public Customer getByEmail(String email) {
         return customerDao.findByEmail(email);
     }
+
+    public void delete(Customer customer) {
+        customerDao.deleteById(customer.getId());
+    }
 }
