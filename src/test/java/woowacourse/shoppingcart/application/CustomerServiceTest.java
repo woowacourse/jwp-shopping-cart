@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.dao.JdbcAddressDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.dao.JdbcPrivacyDao;
 import woowacourse.shoppingcart.dao.PrivacyDao;
+import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
 
 @JdbcTest
 class CustomerServiceTest {
@@ -37,5 +38,18 @@ class CustomerServiceTest {
 
         //when & then
         assertThat(id).isNotNull();
+    }
+
+    @DisplayName("email 중복 여부를 반환한다.")
+    @Test
+    void checkDuplicatedEmail() {
+        // given
+        customerService.create(CUSTOMER_REQUEST_1);
+
+        //when
+        EmailDuplicationResponse response = customerService.isDuplicatedEmail(CUSTOMER_REQUEST_1.getEmail());
+
+        //then
+        assertThat(response.getIsDuplicated()).isTrue();
     }
 }

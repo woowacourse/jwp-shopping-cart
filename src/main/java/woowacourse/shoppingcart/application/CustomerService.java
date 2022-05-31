@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.address.FullAddress;
 import woowacourse.shoppingcart.domain.customer.privacy.Privacy;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
 import woowacourse.shoppingcart.entity.AddressEntity;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
@@ -37,6 +38,10 @@ public class CustomerService {
         addressDao.save(customerId, addressEntity);
 
         return customerId;
+    }
+
+    public EmailDuplicationResponse isDuplicatedEmail(String email) {
+        return new EmailDuplicationResponse(customerDao.hasEmail(email));
     }
 
     private Customer convertRequestToCustomer(CustomerRequest customerRequest) {
