@@ -143,4 +143,20 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(findResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
         );
     }
+
+    @DisplayName("유효하지않은 토큰을 담아서 요청을 보내면 401-UNAUTHORIZED를 반환한다.")
+    @Test
+    void getMeWithInvalidToken() {
+        // given
+        final String invalidToken = "invalidToken";
+        // when
+        ExtractableResponse<Response> extractableResponse = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, BEARER + invalidToken)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .extract();
+        // then
+        assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
 }
