@@ -23,6 +23,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("이메일과 패스워드로 로그인한다.")
     @Test
     void login() {
+        // given
         String email = "beomWhale1@naver.com";
         String nickname = "범고래1";
         String password = "Password12345!";
@@ -30,14 +31,16 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 email, nickname, password);
         createCustomer(customerCreateRequest);
 
-        TokenRequest tokenRequest = new TokenRequest(email, password);
 
+        // when
+        TokenRequest tokenRequest = new TokenRequest(email, password);
         ExtractableResponse<Response> loginResponse = RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(tokenRequest)
                 .post("/api/login")
                 .then().extract();
 
+        // then
         assertThat(loginResponse.body().jsonPath().getString("accessToken")).isNotNull();
     }
 
@@ -46,8 +49,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
         String email = "beomWhale1@naver.com";
         String nickname = "범고래1";
         String password = "Password12345!";
@@ -65,7 +66,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
         String accessToken = loginResponse.body().jsonPath().getString("accessToken");
 
         CustomerResponse customerResponse = RestAssured.given().log().all()
@@ -76,10 +76,26 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract().as(CustomerResponse.class);
 
         // then
-        // 내 정보가 조회된다
         assertAll(
                 () -> assertThat(customerResponse.getEmail()).isEqualTo(email),
                 () -> assertThat(customerResponse.getNickname()).isEqualTo(nickname)
+        );
+    }
+
+    @DisplayName("로그인 하지 않고, 정보 조회 시 예외가 발생한다.")
+    @Test
+    void findCustomerInfoNotLogin() {
+        // given && when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .when().log().all()
+            .get("/api/customers/me")
+            .then().log().all()
+            .extract();
+
+        // then
+        assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+            () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("인증되지 않은 사용자입니다.")
         );
     }
 
