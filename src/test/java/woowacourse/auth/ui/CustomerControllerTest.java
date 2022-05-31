@@ -1,6 +1,5 @@
 package woowacourse.auth.ui;
 
-import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -9,38 +8,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.test.web.servlet.ResultActions;
 
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.application.CustomerService;
-import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.CustomerUpdateRequest;
 import woowacourse.auth.dto.CustomerUpdateResponse;
-import woowacourse.auth.exception.InvalidAuthException;
-import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 
-@WebMvcTest({CustomerController.class, AuthService.class})
-class CustomerControllerTest {
-
-	private final String email = "123@gmail.com";
-	private final String password = "a1234!";
-	private final String nickname = "does";
+class CustomerControllerTest extends ControllerTest{
 
 	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
-	@MockBean
 	private CustomerService customerService;
-	@MockBean
-	private JwtTokenProvider tokenProvider;
+	@Autowired
+	private AuthService authService;
 
 	@DisplayName("회원가입을 한다.")
 	@Test
@@ -48,14 +33,14 @@ class CustomerControllerTest {
 		// given
 		CustomerRequest request = new CustomerRequest(email, password, nickname);
 		String requestJson = objectMapper.writeValueAsString(request);
-		given(customerService.signUp(any(CustomerRequest.class)))
-			.willReturn(new Customer(1L, email, password, nickname));
 
 		// when
-		mockMvc.perform(post("/customers")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(requestJson))
-			.andExpect(status().isCreated())
+		ResultActions result = mockMvc.perform(post("/customers")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(requestJson));
+
+		// then
+		result.andExpect(status().isCreated())
 			.andExpect(content().json(objectMapper.writeValueAsString(
 				new CustomerResponse(email, nickname)))
 			);
@@ -66,32 +51,33 @@ class CustomerControllerTest {
 	void signUpDuplicatedEmail() throws Exception {
 		// given
 		CustomerRequest request = new CustomerRequest(email, password, nickname);
+		customerService.signUp(request);
 		String requestJson = objectMapper.writeValueAsString(request);
-		given(customerService.signUp(any(CustomerRequest.class)))
-			.willThrow(IllegalArgumentException.class);
 
 		// when
-		mockMvc.perform(post("/customers")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(requestJson))
-			.andExpect(status().isBadRequest());
+		ResultActions result = mockMvc.perform(post("/customers")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(requestJson));
+
+		// then
+		result.andExpect(status().isBadRequest());
 	}
 
 	@DisplayName("이메일의 형식이 올바르지 못하면 400 반환")
 	@ParameterizedTest
-	@ValueSource(strings = {"123gmail.com", "123@gmailcom", "123gamilcom"})
+	@ValueSource(strings = {"123gmail.com", "123gamilcom", "@gmail.com"})
 	void emailFormatException(String email) throws Exception {
 		// given
 		CustomerRequest request = new CustomerRequest(email, password, nickname);
 		String requestJson = objectMapper.writeValueAsString(request);
-		given(customerService.signUp(any(CustomerRequest.class)))
-			.willThrow(IllegalArgumentException.class);
 
 		// when
-		mockMvc.perform(post("/customers")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(requestJson))
-			.andExpect(status().isBadRequest());
+		ResultActions result = mockMvc.perform(post("/customers")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(requestJson));
+
+		// then
+		result.andExpect(status().isBadRequest());
 	}
 
 	@DisplayName("닉네임의 형식이 올바르지 못하면 400 반환")
@@ -101,14 +87,14 @@ class CustomerControllerTest {
 		// given
 		CustomerRequest request = new CustomerRequest(email, password, nickname);
 		String requestJson = objectMapper.writeValueAsString(request);
-		given(customerService.signUp(any(CustomerRequest.class)))
-			.willThrow(IllegalArgumentException.class);
 
 		// when
-		mockMvc.perform(post("/customers")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(requestJson))
-			.andExpect(status().isBadRequest());
+		ResultActions result = mockMvc.perform(post("/customers")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(requestJson));
+
+		// then
+		result.andExpect(status().isBadRequest());
 	}
 
 	@DisplayName("비밀번호의 형식이 올바르지 못하면 400 반환")
@@ -118,19 +104,23 @@ class CustomerControllerTest {
 		// given
 		CustomerRequest request = new CustomerRequest(email, password, nickname);
 		String requestJson = objectMapper.writeValueAsString(request);
-		given(customerService.signUp(any(CustomerRequest.class)))
-			.willThrow(IllegalArgumentException.class);
 
 		// when
-		mockMvc.perform(post("/customers")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(requestJson))
-			.andExpect(status().isBadRequest());
+		ResultActions result = mockMvc.perform(post("/customers")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(requestJson));
+
+		// then
+		result.andExpect(status().isBadRequest());
 	}
 
 	@DisplayName("토큰이 없을 때 탈퇴를 하려고 하면 401 반환")
 	@Test
 	void signOutNotLogin() throws Exception {
+		// given
+		CustomerRequest request = new CustomerRequest(email, password, nickname);
+		customerService.signUp(request);
+
 		// when
 		mockMvc.perform(delete("/customers"))
 			.andExpect(status().isUnauthorized());
@@ -140,23 +130,24 @@ class CustomerControllerTest {
 	@Test
 	void signOutwithToken() throws Exception {
 		// given
-		String token = "access-token";
-		loginCheck(token);
+		CustomerRequest request = new CustomerRequest(email, password, nickname);
+		customerService.signUp(request);
+		TokenResponse token = authService.login(new TokenRequest(email, password));
 
 		// when
-		mockMvc.perform(delete("/customers")
-				.header("Authorization", "Bearer " + token))
-			.andExpect(status().isNoContent());
+		ResultActions result = mockMvc.perform(delete("/customers")
+			.header("Authorization", "Bearer " + token.getAccessToken()));
+
+		// then
+		result.andExpect(status().isNoContent());
 	}
 
 	@DisplayName("토큰이 있을 때 회원정보 수정을 한다.")
 	@Test
 	void updateCustomer() throws Exception {
 		// given
-		String token = "access-token";
-		Customer loginCustomer = loginCheck(token);
-		given(customerService.update(eq(loginCustomer), any(CustomerUpdateRequest.class)))
-			.willReturn(new Customer(1L, email, "b1234", "thor"));
+		customerService.signUp(new CustomerRequest(email, password, nickname));
+		TokenResponse tokenResponse = authService.login(new TokenRequest(email, password));
 
 		// when
 		CustomerUpdateRequest request = new CustomerUpdateRequest(
@@ -164,11 +155,13 @@ class CustomerControllerTest {
 		);
 		CustomerUpdateResponse response = new CustomerUpdateResponse("thor");
 
-		mockMvc.perform(patch("/customers")
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", "Bearer " + token)
-				.content(objectMapper.writeValueAsString(request)))
-			.andExpect(content().json(objectMapper.writeValueAsString(response)))
+		ResultActions result = mockMvc.perform(patch("/customers")
+			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+			.content(objectMapper.writeValueAsString(request)));
+
+		// then
+		result.andExpect(content().json(objectMapper.writeValueAsString(response)))
 			.andExpect(status().isOk());
 	}
 
@@ -176,62 +169,54 @@ class CustomerControllerTest {
 	@Test
 	void updateCustomerNotToken() throws Exception {
 		// given
+		customerService.signUp(new CustomerRequest(email, password, nickname));
+
+		// when
 		CustomerUpdateRequest request = new CustomerUpdateRequest(
 			"thor", "a1234!", "b1234!"
 		);
+		ResultActions result = mockMvc.perform(patch("/customers")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(request)));
 
-		// when
-		mockMvc.perform(patch("/customers")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(request)))
-			.andExpect(status().isUnauthorized());
-	}
-
-	private Customer loginCheck(String token) {
-		given(tokenProvider.getPayload(token))
-			.willReturn(email);
-		given(tokenProvider.validateToken(token))
-			.willReturn(true);
-		Customer loginCustomer = new Customer(1L, email, password, nickname);
-		given(customerService.findByEmail(email))
-			.willReturn(loginCustomer);
-		return loginCustomer;
+		// then
+		result.andExpect(status().isUnauthorized());
 	}
 
 	@DisplayName("기존 비밀번호가 다르면 정보를 수정할 수 없다.")
 	@Test
 	void updateCustomerNotSamePassword() throws Exception {
 		// given
-		String token = "access-token";
-		Customer loginCustomer = loginCheck(token);
-		given(customerService.update(eq(loginCustomer), any(CustomerUpdateRequest.class)))
-			.willThrow(new InvalidAuthException());
-
-		CustomerUpdateRequest request = new CustomerUpdateRequest(
-			"thor", "a1234!", "b1234!"
-		);
+		customerService.signUp(new CustomerRequest(email, password, nickname));
+		TokenResponse tokenResponse = authService.login(new TokenRequest(email, password));
 
 		// when
-		mockMvc.perform(patch("/customers")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(request)))
-			.andExpect(status().isUnauthorized());
+		CustomerUpdateRequest request = new CustomerUpdateRequest(
+			"thor", "a1234567!", "b1234!"
+		);
+		ResultActions result = mockMvc.perform(patch("/customers")
+			.header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(request)));
+
+		// then
+		result.andExpect(status().isUnauthorized());
 	}
 
 	@DisplayName("회원정보를 조회할 수 있다.")
 	@Test
 	void findCustomer() throws Exception {
 		// given
-		String token = "access-token";
-		Customer loginCustomer = loginCheck(token);
+		customerService.signUp(new CustomerRequest(email, password, nickname));
+		TokenResponse tokenResponse = authService.login(new TokenRequest(email, password));
 
 		// when
-		mockMvc.perform(get("/customers")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(new CustomerResponse(loginCustomer))))
-			.andExpect(status().isOk());
+		ResultActions result = mockMvc.perform(get("/customers")
+			.header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+			.contentType(MediaType.APPLICATION_JSON));
+
+		// then
+		result.andExpect(status().isOk());
 	}
 
 }
