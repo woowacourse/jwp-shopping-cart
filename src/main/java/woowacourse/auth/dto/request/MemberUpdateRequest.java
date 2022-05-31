@@ -1,13 +1,13 @@
 package woowacourse.auth.dto.request;
 
-public class NicknameUpdateRequest {
+public class MemberUpdateRequest {
 
     private String nickname;
 
-    public NicknameUpdateRequest() {
+    public MemberUpdateRequest() {
     }
 
-    public NicknameUpdateRequest(String nickname) {
+    public MemberUpdateRequest(String nickname) {
         this.nickname = nickname;
     }
 

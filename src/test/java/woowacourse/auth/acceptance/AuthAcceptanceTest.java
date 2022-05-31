@@ -3,6 +3,7 @@ package woowacourse.auth.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.util.HttpRequestUtil.get;
 import static woowacourse.util.HttpRequestUtil.getWithAuthorization;
+import static woowacourse.util.HttpRequestUtil.patchWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.post;
 import static woowacourse.util.HttpRequestUtil.postWithAuthorization;
 
@@ -15,6 +16,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.response.CheckResponse;
 import woowacourse.auth.dto.response.ErrorResponse;
@@ -153,7 +155,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("로그인을 하지 않고(토큰이 없는 경우) 인증이 필요한 URI에 접근하면 401을 응답한다.")
     @Test
-    void requestWithUnauthorized() {
+    void requestWithUnauthorized_Unauthorized() {
         ExtractableResponse<Response> response = post(
                 "/api/members/auth/password-check",
                 new PasswordCheckRequest("1q2w3e4r!")
@@ -167,7 +169,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("유효하지 않은 토큰으로 인증이 필요한 URI에 접근하면 401을 응답한다.")
     @Test
-    void requestWithInvalidToken() {
+    void requestWithInvalidToken_Unauthorized() {
         ExtractableResponse<Response> response = postWithAuthorization(
                 "/api/members/auth/password-check",
                 "abc",
@@ -182,7 +184,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("토큰에 해당하는 사용자의 회원 정보와 200을 응답한다.")
     @Test
-    void showMember() {
+    void showMember_Ok() {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
                 "abc@woowahan.com",
                 "1q2w3e4r!",
@@ -200,5 +202,54 @@ class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com");
         assertThat(memberResponse.getNickname()).isEqualTo("닉네임");
+    }
+
+    @DisplayName("토큰에 해당하는 사용자의 회원 정보를 수정하고 성공하면 204를 응답한다.")
+    @Test
+    void updateMember_NoContent() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+                "abc@woowahan.com",
+                "1q2w3e4r!",
+                "닉네임"
+        );
+        post("/api/members", memberCreateRequest);
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+
+        String token = post("/api/login", loginRequest).as(LoginResponse.class)
+                .getToken();
+
+        MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("바뀐닉네임");
+        ExtractableResponse<Response> response =
+                patchWithAuthorization("/api/members/auth/me", token, memberUpdateRequest);
+        MemberResponse memberResponse = getWithAuthorization("/api/members/auth/me", token)
+                .as(MemberResponse.class);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com");
+        assertThat(memberResponse.getNickname()).isEqualTo("바뀐닉네임");
+    }
+
+    @DisplayName("형식에 맞지 않는 회원 정보로 수정하려고 하면 400을 응답한다.")
+    @Test
+    void updateMember_BadRequest() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+                "abc@woowahan.com",
+                "1q2w3e4r!",
+                "닉네임"
+        );
+        post("/api/members", memberCreateRequest);
+        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+
+        String token = post("/api/login", loginRequest).as(LoginResponse.class)
+                .getToken();
+
+        MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("잘못된닉네임");
+        ExtractableResponse<Response> response =
+                patchWithAuthorization("/api/members/auth/me", token, memberUpdateRequest);
+        String message = response.as(ErrorResponse.class)
+                .getMessage();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(message).isEqualTo("닉네임 형식이 올바르지 않습니다.");
     }
 }

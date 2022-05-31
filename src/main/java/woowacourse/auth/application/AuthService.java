@@ -8,7 +8,7 @@ import woowacourse.auth.domain.Nickname;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.MemberCreateRequest;
-import woowacourse.auth.dto.request.NicknameUpdateRequest;
+import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.request.PasswordUpdateRequest;
 import woowacourse.auth.dto.response.CheckResponse;
@@ -78,16 +78,16 @@ public class AuthService {
         return new MemberResponse(member);
     }
 
-    public void updateNickname(String email, NicknameUpdateRequest nicknameUpdateRequest) {
+    public void updateMember(String email, MemberUpdateRequest memberUpdateRequest) {
         validateExists(email);
-        String nickname = new Nickname(nicknameUpdateRequest.getNickname())
+        String nickname = new Nickname(memberUpdateRequest.getNickname())
                 .getValue();
         memberDao.updateNicknameByEmail(email, nickname);
     }
 
     private void validateExists(String email) {
         if (!existsEmail(email)) {
-            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+            throw new AuthorizationException("유효하지 않은 토큰입니다.");
         }
     }
 

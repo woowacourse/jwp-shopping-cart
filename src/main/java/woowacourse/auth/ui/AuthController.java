@@ -3,6 +3,7 @@ package woowacourse.auth.ui;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.response.CheckResponse;
 import woowacourse.auth.dto.response.LoginResponse;
@@ -55,5 +57,13 @@ public class AuthController {
     @GetMapping("/members/auth/me")
     public ResponseEntity<MemberResponse> showMember(@AuthenticationPrincipal String payload) {
         return ResponseEntity.ok(authService.findMember(payload));
+    }
+
+    @PatchMapping("/members/auth/me")
+    public ResponseEntity<Void> updateMember(@AuthenticationPrincipal String payload,
+                                             @RequestBody MemberUpdateRequest memberUpdateRequest) {
+        authService.updateMember(payload, memberUpdateRequest);
+        return ResponseEntity.noContent()
+                .build();
     }
 }

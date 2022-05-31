@@ -45,18 +45,20 @@ public class HttpRequestUtil {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> put(String uri, Object requestBody) {
+    public static ExtractableResponse<Response> patchWithAuthorization(String uri, String token, Object requestBody) {
         return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + token)
                 .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put(uri)
+                .patch(uri)
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> delete(String uri) {
+    public static ExtractableResponse<Response> deleteWithAuthorization(String uri, String token) {
         return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + token)
                 .when()
                 .delete(uri)
                 .then().log().all()

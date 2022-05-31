@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.MemberCreateRequest;
-import woowacourse.auth.dto.request.NicknameUpdateRequest;
+import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.request.PasswordUpdateRequest;
 import woowacourse.auth.dto.response.LoginResponse;
@@ -88,13 +88,13 @@ class AuthServiceTest {
     }
 
 
-    @DisplayName("이메일과 닉네임을 받아 닉네임을 수정한다.")
+    @DisplayName("이메일과 수정할 회원 정보를 받아 회원 정보를 수정한다.")
     @Test
-    void updateNickname() {
+    void updateMember() {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         authService.save(memberCreateRequest);
 
-        authService.updateNickname("abc@woowahan.com", new NicknameUpdateRequest("바뀐닉네임"));
+        authService.updateMember("abc@woowahan.com", new MemberUpdateRequest("바뀐닉네임"));
         LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
         String nickname = authService.login(loginRequest)
                 .getNickname();
@@ -102,12 +102,12 @@ class AuthServiceTest {
         assertThat(nickname).isEqualTo("바뀐닉네임");
     }
 
-    @DisplayName("존재하지 않는 회원의 닉네임을 수정하려고 하면 예외를 반환한다.")
+    @DisplayName("존재하지 않는 회원의 정보를 수정하려고 하면 예외를 반환한다.")
     @Test
-    void updateNickName_NotFoundMember() {
-        assertThatThrownBy(() -> authService.updateNickname("abc@woowahan.com", new NicknameUpdateRequest("바뀐닉네임")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 회원입니다.");
+    void updateMember_NotFoundMember() {
+        assertThatThrownBy(() -> authService.updateMember("abc@woowahan.com", new MemberUpdateRequest("바뀐닉네임")))
+                .isInstanceOf(AuthorizationException.class)
+                .hasMessage("유효하지 않은 토큰입니다.");
     }
 
     @DisplayName("올바르지 않은 형식의 닉네임으로 변경하려고 하면 예외를 반환한다.")
@@ -116,7 +116,7 @@ class AuthServiceTest {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         authService.save(memberCreateRequest);
 
-        assertThatThrownBy(() -> authService.updateNickname("abc@woowahan.com", new NicknameUpdateRequest("1234")))
+        assertThatThrownBy(() -> authService.updateMember("abc@woowahan.com", new MemberUpdateRequest("1234")))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("닉네임 형식이 올바르지 않습니다.");
     }
@@ -159,8 +159,8 @@ class AuthServiceTest {
     @Test
     void updatePassword_NotFoundMember() {
         assertThatThrownBy(() -> authService.updatePassword("abc@woowahan.com", new PasswordUpdateRequest("1q2w3e4r@")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 회원입니다.");
+                .isInstanceOf(AuthorizationException.class)
+                .hasMessage("유효하지 않은 토큰입니다.");
     }
 
     @DisplayName("올바르지 않은 형식의 비밀번호로 변경하려고 하면 예외를 반환한다.")
