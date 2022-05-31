@@ -67,4 +67,11 @@ public class JdbcCustomerDao implements CustomerDao {
         String sql = "DELETE FROM CUSTOMER WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public boolean hasEmail(String email) {
+        String sql = "SELECT EXISTS(SELECT * FROM CUSTOMER WHERE email = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, email));
+
+    }
 }

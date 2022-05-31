@@ -23,6 +23,7 @@ public class AuthService {
     public TokenResponse generateToken(TokenRequest tokenRequest) {
         String email = tokenRequest.getEmail();
         String password = tokenRequest.getPassword();
+        validateEmailExisting(email);
         CustomerEntity customerEntity = customerDao.findByEmail(email);
         validatePassword(password, customerEntity);
 
@@ -30,6 +31,12 @@ public class AuthService {
         String token = jwtTokenProvider.createToken(String.valueOf(customerId));
 
         return new TokenResponse(token, customerId);
+    }
+
+    private void validateEmailExisting(String email) {
+        if (!customerDao.hasEmail(email)) {
+            throw new LoginFailedException();
+        }
     }
 
     private void validatePassword(String password, CustomerEntity customerEntity) {

@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
 import static woowacourse.shoppingcart.Fixtures.TOKEN_REQUEST_1;
@@ -10,7 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.LoginFailedException;
 import woowacourse.shoppingcart.application.CustomerService;
 
 // TODO: SpringBootTest 대신 적용할 수 있는 방법 공부하기
@@ -41,5 +44,27 @@ class AuthServiceTest {
                 () -> assertThat(tokenResponse.getAccessToken()).isNotBlank(),
                 () -> assertThat(tokenResponse.getCustomerId()).isPositive()
         );
+    }
+
+    @DisplayName("존재하지 않는 이메일을 전달시 예외가 발생한다.")
+    @Test
+    void generateToken_throwsExceptionIfEmailNotExists() {
+        // given
+        TokenRequest tokenRequest = new TokenRequest("notexists@gmail.com", "1234!@a2443");
+
+        // when
+        assertThatThrownBy(() -> authService.generateToken(tokenRequest))
+                .isInstanceOf(LoginFailedException.class);
+    }
+
+    @DisplayName("이메일은 존재하지만 비밀번호가 일치하지 않은 경우 예외가 발생한다.")
+    @Test
+    void generateToken_throwsExceptionIfInvalidPassword() {
+        // given
+        TokenRequest tokenRequest = new TokenRequest("seongwoo0513@example.com", "1234!@a2443");
+
+        // when
+        assertThatThrownBy(() -> authService.generateToken(tokenRequest))
+                .isInstanceOf(LoginFailedException.class);
     }
 }

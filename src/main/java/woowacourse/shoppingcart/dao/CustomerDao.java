@@ -12,4 +12,6 @@ public interface CustomerDao {
     void update(CustomerEntity customerEntity);
 
     void delete(int id);
+
+    boolean hasEmail(String email);
 }

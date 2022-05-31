@@ -7,6 +7,8 @@ import static woowacourse.shoppingcart.Fixtures.CUSTOMER_ENTITY_1;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -97,4 +99,20 @@ class JdbcCustomerDaoTest {
         assertThatThrownBy(() -> customerDao.findById(customerId))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
+
+    @DisplayName("email을 전달받아 존재여부를 반환한다.")
+    @CsvSource(value = {"devhudi@gmail.com,true", "notexists@gmail.com,false"})
+    @ParameterizedTest
+    void checkEmailExists(String email, boolean expected) {
+        // given
+        customerDao.save(CUSTOMER_ENTITY_1);
+
+        // when
+        boolean actual = customerDao.hasEmail(email);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
+
+    }
+
 }
