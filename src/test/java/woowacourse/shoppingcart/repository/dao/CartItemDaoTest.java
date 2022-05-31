@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dao;
+package woowacourse.shoppingcart.repository.dao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +12,8 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
+import woowacourse.shoppingcart.repository.dao.CartItemDao;
+import woowacourse.shoppingcart.repository.dao.ProductDao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

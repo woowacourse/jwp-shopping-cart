@@ -1,0 +1,44 @@
+package woowacourse.shoppingcart.repository;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.repository.dao.CustomerDao;
+
+
+@JdbcTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+class CustomerRepositoryTest {
+
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    public CustomerRepositoryTest(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.customerRepository = new CustomerRepository(new CustomerDao(jdbcTemplate, namedParameterJdbcTemplate));
+    }
+
+    @DisplayName("customer 를 DB 에 저장한다.")
+    @Test
+    void create() {
+        // given
+        Customer customer = Customer.ofNullId("jo@naver.com", "abcde123!", "jojogreen", false);
+
+        // when
+        Long id = customerRepository.create(customer);
+
+        // then
+        Customer createdCustomer = customerRepository.findById(id);
+        assertThat(createdCustomer)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(customer);
+    }
+}

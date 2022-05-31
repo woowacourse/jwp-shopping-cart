@@ -32,6 +32,13 @@ public class Customer {
         this.withdrawal = withdrawal;
     }
 
+    public static Customer ofNullId(final String username,
+                                    final String password,
+                                    final String nickname,
+                                    final boolean withdrawal) {
+        return new Customer(null, username, password, nickname, withdrawal);
+    }
+
     private void validateUsername(final String username) {
         if (!usernamePattern.matcher(username).matches()) {
             throw new InvalidInputException("올바르지 않은 포맷의 아이디 입니다.");
@@ -48,5 +55,25 @@ public class Customer {
         if (!nicknamePattern.matcher(nickname).matches()) {
             throw new InvalidInputException("올바르지 않은 포맷의 닉네임 입니다.");
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public boolean isWithdrawal() {
+        return withdrawal;
     }
 }
