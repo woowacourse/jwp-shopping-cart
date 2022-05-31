@@ -31,4 +31,12 @@ public class AuthService {
 
         return new SignInResponse(username, email, token);
     }
+
+    public String decode(String token) {
+        return jwtTokenProvider.getPayload(token);
+    }
+
+    public boolean isValidToken(String token) {
+        return jwtTokenProvider.validateToken(token);
+    }
 }

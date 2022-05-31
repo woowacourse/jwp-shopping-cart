@@ -51,6 +51,11 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
+    @ExceptionHandler({IllegalStateException.class})
+    public ResponseEntity handleInvalidToken(RuntimeException e) {
+        return ResponseEntity.status(401).body(new ErrorResponse(e.getMessage()));
+    }
+
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity handleValidAnnotation(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getBindingResult()

@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.SignUpResponse;
 
@@ -30,5 +32,11 @@ public class CustomerService {
         customerDao.saveCustomer(name, email, password);
 
         return new SignUpResponse(name, email);
+    }
+
+    public CustomerResponse findCustomerInformation(String username) {
+        Customer customer = customerDao.findCustomerByUserName(username);
+        String email = customer.getEmail();
+        return new CustomerResponse(username, email);
     }
 }

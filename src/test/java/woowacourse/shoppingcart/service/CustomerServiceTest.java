@@ -47,4 +47,14 @@ public class CustomerServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 이미 존재하는 이메일입니다.");
     }
+
+    @Test
+    void 회원정보_조회() {
+        var customerResponse = customerService.findCustomerInformation("puterism");
+
+        assertAll(
+                () -> assertThat(customerResponse.getUsername()).isEqualTo("puterism"),
+                () -> assertThat(customerResponse.getEmail()).isEqualTo("crew01@naver.com")
+        );
+    }
 }

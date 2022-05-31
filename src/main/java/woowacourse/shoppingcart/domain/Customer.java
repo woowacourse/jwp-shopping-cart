@@ -38,4 +38,8 @@ public class Customer {
     public String getUsername() {
         return name;
     }
+
+    public String getEmail() {
+        return email;
+    }
 }

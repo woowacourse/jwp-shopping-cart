@@ -3,7 +3,9 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import io.jsonwebtoken.Jwts;
 import io.restassured.RestAssured;
+import java.util.Date;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,6 +13,9 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.SignInRequest;
+import woowacourse.shoppingcart.dto.SignInResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.SignUpResponse;
 
@@ -161,6 +166,56 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @Test
+    void 유효한_토큰으로_정보를_조회하는_경우() {
+        String email = "crew01@naver.com";
+        String password = "a123";
+
+        String accessToken = RestAssured
+                .given().log().all()
+                .body(new SignInRequest(email, password))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract().as(SignInResponse.class).getToken();
+
+        CustomerResponse customerResponse = RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/users/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+
+        assertAll(
+                () -> assertThat(customerResponse.getUsername()).isEqualTo("puterism"),
+                () -> assertThat(customerResponse.getEmail()).isEqualTo("crew01@naver.com")
+        );
+    }
+
+    @Test
+    void 유효기간이_지난_토큰으로_정보를_조회하는_경우() {
+        Date now = new Date(0L);
+        Date validity = new Date(1L);
+
+        var invalidToken = Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .compact();
+
+        var response = RestAssured
+                .given().log().all()
+                .auth().oauth2(invalidToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/users/me")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value()).extract();
+
+        assertAll(
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("[ERROR] 만료된 토큰입니다."),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        );
+    }
 
     @DisplayName("내 정보 조회")
     @Test
