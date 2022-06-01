@@ -11,7 +11,7 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 
 @Service
 @Transactional
@@ -28,7 +28,7 @@ public class AuthService {
     public TokenResponse createToken(TokenRequest request) {
         try {
             checkCustomer(request);
-        } catch (EmptyResultDataAccessException | InvalidPasswordException e) {
+        } catch (EmptyResultDataAccessException | IncorrectPasswordException e) {
             throw new InvalidLoginException("Login Fail");
         }
 

@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.domain.customer.vo;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 
 public class Password {
 
@@ -39,7 +39,7 @@ public class Password {
 
     public void checkPassword(String password) {
         if (!this.password.equals(password)) {
-            throw new InvalidPasswordException("고객 정보가 일치하지 않습니다.");
+            throw new IncorrectPasswordException("고객 정보가 일치하지 않습니다.");
         }
     }
 

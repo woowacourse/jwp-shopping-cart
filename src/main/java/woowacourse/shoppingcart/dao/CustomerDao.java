@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 
 @Repository
 public class CustomerDao {
@@ -52,7 +52,7 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE username = :username";
             return jdbcTemplate.queryForObject(query, Map.of("username", userName.toLowerCase(ROOT)), Long.class);
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidPasswordException();
+            throw new IncorrectPasswordException();
         }
     }
 
