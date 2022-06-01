@@ -6,7 +6,7 @@ import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
 
 import javax.validation.Valid;
@@ -31,7 +31,7 @@ public class CustomerController {
     }
 
     @GetMapping("/customers")
-    public CustomerDto getCustomers(@AuthenticationPrincipal long customerId) {
+    public CustomerResponse getCustomers(@AuthenticationPrincipal long customerId) {
         return customerService.getById(customerId);
     }
 

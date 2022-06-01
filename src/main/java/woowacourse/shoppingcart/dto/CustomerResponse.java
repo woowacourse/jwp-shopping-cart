@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.dto;
 import woowacourse.auth.dto.PhoneNumber;
 import woowacourse.shoppingcart.domain.Customer;
 
-public class CustomerDto {
+public class CustomerResponse {
 
     private final long id;
     private final String account;
@@ -11,7 +11,7 @@ public class CustomerDto {
     private final String address;
     private final PhoneNumber phoneNumber;
 
-    public CustomerDto(long id, String account, String nickname, String address, PhoneNumber phoneNumber) {
+    public CustomerResponse(long id, String account, String nickname, String address, PhoneNumber phoneNumber) {
         this.id = id;
         this.account = account;
         this.nickname = nickname;
@@ -20,9 +20,9 @@ public class CustomerDto {
     }
 
 
-    public static CustomerDto of(Customer customer) {
+    public static CustomerResponse of(Customer customer) {
         final PhoneNumber phoneNumber = PhoneNumber.of(customer.getPhoneNumber());
-        return new CustomerDto(customer.getId(), customer.getAccount(), customer.getNickname(), customer.getAddress(), phoneNumber);
+        return new CustomerResponse(customer.getId(), customer.getAccount(), customer.getNickname(), customer.getAddress(), phoneNumber);
     }
 
     public long getId() {

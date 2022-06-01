@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.*;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -182,12 +182,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         final ExtractableResponse<Response> response = get("/customers", token.getAccessToken());
-        final CustomerDto customerDto = response.jsonPath().getObject(".", CustomerDto.class);
+        final CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
 
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(customerDto.getId()).isEqualTo(2L)
+                () -> assertThat(customerResponse.getId()).isEqualTo(2L)
         );
     }
 

@@ -7,7 +7,7 @@ import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.DuplicatedAccountException;
@@ -27,14 +27,13 @@ public class CustomerService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public CustomerDto create(SignupRequest signupRequest) {
+    public CustomerResponse create(SignupRequest signupRequest) {
         final Customer customer = toCustomer(signupRequest);
 
         if (customerDao.findByAccount(customer.getAccount()).isPresent()) {
             throw new DuplicatedAccountException();
         }
-        final Customer savedCustomer = customerDao.save(customer);
-        return CustomerDto.of(savedCustomer);
+        return CustomerResponse.of(customerDao.save(customer));
     }
 
     private Customer toCustomer(SignupRequest signupRequest) {
@@ -48,11 +47,11 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
-    public CustomerDto getById(long customerId) {
+    public CustomerResponse getById(long customerId) {
         Customer customer = customerDao.findById(customerId)
                 .orElseThrow(CustomerNotFoundException::new);
 
-        return CustomerDto.of(customer);
+        return CustomerResponse.of(customer);
     }
 
     public int update(long customerId, UpdateCustomerRequest updateCustomerRequest) {
