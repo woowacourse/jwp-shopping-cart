@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import io.restassured.RestAssured;
+import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ public class AcceptanceTest {
     protected static final String TEST_EMAIL = "test@test.com";
     protected static final String TEST_PASSWORD = "testtest";
     protected static final String TEST_USERNAME = "test";
+    public static final Header EMPTY_HEADER = new Header("", "");
     @LocalServerPort
     int port;
 
@@ -28,23 +30,40 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    protected void createCustomer() {
-        SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
-
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpDto)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+    protected ExtractableResponse<Response> createCustomer(final SignUpDto signUpDto) {
+        return post("/api/customers", EMPTY_HEADER,  signUpDto);
     }
 
     protected ExtractableResponse<Response> loginCustomer(final String email, final String password) {
         final SignInDto signInDto = new SignInDto(email, password);
+        return post("/api/auth/login", EMPTY_HEADER,  signInDto);
+    }
+
+    protected ExtractableResponse<Response> post(final String uri, final Header header, final Object body) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signInDto)
-                .when().post("/api/auth/login")
+                .header(header)
+                .body(body)
+                .when().post(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> get(final String uri, final Header header) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(header)
+                .when().get(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> put(final String uri, final Object body, final Header header) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(header)
+                .body(body)
+                .when().put(uri)
                 .then().log().all()
                 .extract();
     }
