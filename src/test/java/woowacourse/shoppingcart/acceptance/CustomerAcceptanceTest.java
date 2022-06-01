@@ -311,12 +311,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String password = "dpepsWkd12!";
 
         회원_가입(회원_정보(account,
-                        "에덴",
-                        password,
-                        "에덴 동산",
-                        "010",
-                        "1234",
-                        "5678"));
+                "에덴",
+                password,
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678"));
 
         ExtractableResponse<Response> response = 토큰_발급(account, password);
 
@@ -330,12 +330,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String password = "dpepsWkd12!";
 
         회원_가입(회원_정보(account,
-                        "에덴",
-                        password,
-                        "에덴 동산",
-                        "010",
-                        "1234",
-                        "5678"));
+                "에덴",
+                password,
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678"));
 
         ExtractableResponse<Response> response = 토큰_발급(account, "dpepsWkd");
 
@@ -431,23 +431,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String last = "9999";
 
         String accessToken = 회원_가입_후_토큰_발급(account, password);
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("nickname", nickname);
-        request.put("address", address);
-        request.put("phoneNumber", 휴대폰_정보(start, middle, last));
+        Map<String, Object> request = 회원_수정_정보(nickname, address, start, middle, last);
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given()
-                .log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .put("/customers")
-                .then()
-                .log().all()
-                .extract();
+        ExtractableResponse<Response> response = 회원_수정(accessToken, request);
 
         // then
         ExtractableResponse<Response> customerResponse = 회원_조회(accessToken);
@@ -459,6 +446,161 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(getPhoneNumberValue(customerResponse, "middle")).isEqualTo(middle);
         assertThat(getPhoneNumberValue(customerResponse, "last")).isEqualTo(last);
     }
+
+    @Test
+    void 닉네임_글자수_초과해_수정_실패() {
+        // given
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+        String nickname = "변경닉네임변경닉네임호";
+        String address = "변경주소";
+        String start = "010";
+        String middle = "8888";
+        String last = "9999";
+
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
+        Map<String, Object> request = 회원_수정_정보(nickname, address, start, middle, last);
+
+        // when
+        ExtractableResponse<Response> response = 회원_수정(accessToken, request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
+    }
+
+    @Test
+    void 닉네임_글자수_부족으로_수정_실패() {
+        // given
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+        String nickname = "1";
+        String address = "변경주소";
+        String start = "010";
+        String middle = "8888";
+        String last = "9999";
+
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
+        Map<String, Object> request = 회원_수정_정보(nickname, address, start, middle, last);
+
+        // when
+        ExtractableResponse<Response> response = 회원_수정(accessToken, request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
+    }
+
+    @Test
+    void 닉네임_빈값_수정_실패() {
+        // given
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+        String nickname = "     ";
+        String address = "변경주소";
+        String start = "010";
+        String middle = "8888";
+        String last = "9999";
+
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
+        Map<String, Object> request = 회원_수정_정보(nickname, address, start, middle, last);
+
+        // when
+        ExtractableResponse<Response> response = 회원_수정(accessToken, request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
+    }
+
+    @Test
+    void 주소_글자수_초과_수정_실패() {
+        // given
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+        String nickname = "변경닉네임";
+        String address = "연".repeat(256);
+        String start = "010";
+        String middle = "8888";
+        String last = "9999";
+
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
+        Map<String, Object> request = 회원_수정_정보(nickname, address, start, middle, last);
+
+        // when
+        ExtractableResponse<Response> response = 회원_수정(accessToken, request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("주소는 최대 255자까지 가능합니다.");
+    }
+
+    @Test
+    void 주소_빈값_수정_실패() {
+        // given
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+        String nickname = "변경닉네임";
+        String address = "    ";
+        String start = "010";
+        String middle = "8888";
+        String last = "9999";
+
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
+        Map<String, Object> request = 회원_수정_정보(nickname, address, start, middle, last);
+
+        // when
+        ExtractableResponse<Response> response = 회원_수정(accessToken, request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("주소는 빈 값 생성이 불가능합니다.");
+    }
+
+    @Test
+    void 휴대폰번호_형식_불만족_수정_실패() {
+        // given
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+        String nickname = "변경닉네임";
+        String address = "에덴네";
+        String start = "0100";
+        String middle = "8888";
+        String last = "9999";
+
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
+        Map<String, Object> request = 회원_수정_정보(nickname, address, start, middle, last);
+
+        // when
+        ExtractableResponse<Response> response = 회원_수정(accessToken, request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("휴대폰 번호양식이 불일치 합니다.");
+    }
+
+    @Test
+    void 휴대폰번호_빈값_수정_실패() {
+        // given
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+        String nickname = "변경닉네임";
+        String address = "에덴네";
+        String start = "  ";
+        String middle = "  ";
+        String last = " ";
+
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
+        Map<String, Object> request = 회원_수정_정보(nickname, address, start, middle, last);
+
+        // when
+        ExtractableResponse<Response> response = 회원_수정(accessToken, request);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("휴대폰 번호양식이 불일치 합니다.");
+    }
+
 
     private String getValue(ExtractableResponse<Response> response, String value) {
         return response.body().jsonPath().getString(value);
@@ -550,6 +692,28 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(request)
                 .when()
                 .delete("/customers")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private Map<String, Object> 회원_수정_정보(String nickname, String address, String start,
+            String middle, String last) {
+        Map<String, Object> request = new HashMap<>();
+        request.put("nickname", nickname);
+        request.put("address", address);
+        request.put("phoneNumber", 휴대폰_정보(start, middle, last));
+        return request;
+    }
+
+    private ExtractableResponse<Response> 회원_수정(String accessToken, Map<String, Object> request) {
+        return RestAssured.given()
+                .log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .put("/customers")
                 .then()
                 .log().all()
                 .extract();
