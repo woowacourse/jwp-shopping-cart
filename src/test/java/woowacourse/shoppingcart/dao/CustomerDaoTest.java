@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
@@ -76,7 +77,7 @@ public class CustomerDaoTest {
     @Test
     void findByEmailFail() {
         // given
-        final String email = "invalidemail@email.com";
+        final String email = "notexistingemail@email.com";
 
         // when
         assertThatThrownBy(() -> customerDao.findByEmail(email))
@@ -122,9 +123,9 @@ public class CustomerDaoTest {
     @DisplayName("회원 정보를 저장한다.")
     @Test
     void save() {
-        String email = "newemail@email.com";
-        String nickname = "쿼리치";
-        String password = "password123!";
+        final String email = "newemail@email.com";
+        final String nickname = "쿼리치";
+        final String password = "password123!";
 
         assertThat(customerDao.save(email, nickname, password)).isNotNull();
     }
@@ -132,12 +133,32 @@ public class CustomerDaoTest {
     @DisplayName("중복되는 이메일로 회원 정보를 저장할 시 예외가 발생한다.")
     @Test
     void saveFail() {
-        String email = "email@email.com";
-        String nickname = "쿼리치";
-        String password = "password123!";
+        final String email = "email@email.com";
+        final String nickname = "쿼리치";
+        final String password = "password123!";
 
         assertThatThrownBy(() -> customerDao.save(email, nickname, password))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("이미 존재하는 이메일입니다.");
+    }
+
+    @DisplayName("회원 정보를 수정한다.")
+    @Test
+    void updateInfo() {
+        final String email = "email@email.com";
+        final String nickname = "파리채";
+
+        assertDoesNotThrow(() -> customerDao.updateInfo(email, nickname));
+    }
+
+    @DisplayName("회원 정보 수정 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
+    @Test
+    void updateInfoFail() {
+        final String email = "notexistingemail@email.com";
+        final String nickname = "파리채";
+
+        assertThatThrownBy(() -> customerDao.updateInfo(email, nickname))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("존재하지 않는 유저입니다.");
     }
 }

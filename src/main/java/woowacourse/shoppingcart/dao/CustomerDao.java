@@ -85,7 +85,7 @@ public class CustomerDao {
 
 
     public Long save(String email, String nickname, String password) {
-        Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("email", email);
         params.put("nickname", nickname);
         params.put("password", password);
@@ -94,6 +94,18 @@ public class CustomerDao {
             return simpleJdbcInsert.executeAndReturnKey(params).longValue();
         } catch (DuplicateKeyException e) {
             throw new InvalidCustomerException("이미 존재하는 이메일입니다.");
+        }
+    }
+
+    public void updateInfo(String email, String nickname) {
+        final String sql = "update customer set nickname = :nickname where email = :email";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+        params.put("nickname", nickname);
+
+        if (jdbcTemplate.update(sql, params) == 0) {
+            throw new InvalidCustomerException();
         }
     }
 }
