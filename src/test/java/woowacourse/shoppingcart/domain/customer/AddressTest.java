@@ -28,11 +28,10 @@ class AddressTest {
                 .hasMessage("address 형식이 올바르지 않습니다. (길이: 255 이하)");
     }
 
-    @DisplayName("address 형식에 맞으면 address이 생성된다.")
+    @DisplayName("address 형식에 맞으면 address가 생성된다.")
     @ParameterizedTest
     @ValueSource(strings = {MAT_ADDRESS, YAHO_ADDRESS})
     void create(String address) {
         assertDoesNotThrow(() -> new Address(address));
     }
-
 }
