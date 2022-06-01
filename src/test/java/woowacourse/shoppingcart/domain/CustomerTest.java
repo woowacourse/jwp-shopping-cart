@@ -16,39 +16,62 @@ class CustomerTest {
 
         @Test
         void 값이_유효한_경우_성공() {
+            Username username = new Username("유효한_아이디");
+            Password password = new Password("비밀번호");
+            Nickname nickname = new Nickname("닉네임");
+            Age age = new Age(10);
             assertThatNoException()
-                    .isThrownBy(() -> new Customer("유효한_아이디", "비밀번호", "닉네임", 10));
+                    .isThrownBy(() -> new Customer(username, password, nickname, age));
         }
 
         @Test
         void 아이디가_4글자_미만인_경우_예외발생() {
-            assertThatThrownBy(() -> new Customer("3글자", "비밀번호", "닉네임", 10))
+            Username username = new Username("3글자");
+            Password password = new Password("비밀번호");
+            Nickname nickname = new Nickname("닉네임");
+            Age age = new Age(10);
+            assertThatThrownBy(() -> new Customer(username, password, nickname, age))
                     .isInstanceOf(IllegalArgumentException.class);
         }
 
         @Test
         void 아이디가_20글자_초과인_경우_예외발생() {
-            String tooLongUsername = "123456789012345678901";
-            assertThatThrownBy(() -> new Customer(tooLongUsername, "비밀번호", "닉네임", 10))
+            Username username = new Username("123456789012345678901");
+            Password password = new Password("비밀번호");
+            Nickname nickname = new Nickname("닉네임");
+            Age age = new Age(10);
+            assertThatThrownBy(() -> new Customer(username, password, nickname, age))
                     .isInstanceOf(IllegalArgumentException.class);
         }
 
         @Test
         void 닉네임이_0글자인_경우_예외발생() {
-            assertThatThrownBy(() -> new Customer("유효한_아이디", "비밀번호", "", 10))
+            Username username = new Username("유효한_아이디");
+            Password password = new Password("비밀번호");
+            Nickname nickname = new Nickname("");
+            Age age = new Age(10);
+            assertThatThrownBy(() -> new Customer(username, password, nickname, age))
                     .isInstanceOf(IllegalArgumentException.class);
         }
 
         @Test
         void 닉네임이_10글자_초과인_경우_예외발생() {
+            Username username = new Username("유효한_아이디");
+            Password password = new Password("비밀번호");
+            Nickname nickname = new Nickname("12345678901");
+            Age age = new Age(10);
             String tooLongNickname = "12345678901";
-            assertThatThrownBy(() -> new Customer("유효한_아이디", "비밀번호", tooLongNickname, 10))
+            assertThatThrownBy(() -> new Customer(username, password, nickname, age))
                     .isInstanceOf(IllegalArgumentException.class);
         }
 
         @Test
         void 나이가_0이하인_경우_예외발생() {
-            assertThatThrownBy(() -> new Customer("유효한_아이디", "비밀번호", "닉네임", 0))
+            Username username = new Username("유효한_아이디");
+            Password password = new Password("비밀번호");
+            Nickname nickname = new Nickname("닉네임");
+            Age age = new Age(0);
+            assertThatThrownBy(() -> new Customer(username, password, nickname, age))
                     .isInstanceOf(IllegalArgumentException.class);
         }
     }

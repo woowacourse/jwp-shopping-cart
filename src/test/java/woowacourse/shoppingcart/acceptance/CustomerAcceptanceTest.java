@@ -206,7 +206,8 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
 
     private String 회원가입_요청_후_토큰_반환(SignUpRequest signupRequest) {
         회원가입_요청(signupRequest);
-        TokenRequest tokenRequest = new TokenRequest(signupRequest.getUsername(), signupRequest.getPassword());
+        TokenRequest tokenRequest = new TokenRequest(signupRequest.getUsername().getValue()
+                , signupRequest.getPassword().getValue());
         return RestAssured.given().log().all()
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
