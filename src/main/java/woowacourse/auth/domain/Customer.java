@@ -11,13 +11,13 @@ public class Customer {
 	@Include @Getter
 	private final Long id;
 	private final Email email;
-	private final Password password;
+	private final EncryptedPassword password;
 	private final Nickname nickname;
 
 	public Customer(Long id, String email, String password, String nickname) {
 		this.id = id;
 		this.email = new Email(email);
-		this.password = new Password(password);
+		this.password = new EncryptedPassword(password);
 		this.nickname = new Nickname(nickname);
 	}
 

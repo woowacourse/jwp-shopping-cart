@@ -16,10 +16,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
+import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerUpdateRequest;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
+import woowacourse.auth.support.EncryptionStrategy;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -30,6 +32,8 @@ class CustomerServiceTest {
 
 	@Mock
 	private CustomerDao customerDao;
+	@Mock
+	private EncryptionStrategy encryptionStrategy;
 	@InjectMocks
 	private CustomerService customerService;
 
@@ -41,6 +45,8 @@ class CustomerServiceTest {
 		Customer customer = new Customer(1L, email, password, nickname);
 		given(customerDao.save(any(Customer.class)))
 			.willReturn(customer);
+		given(encryptionStrategy.encode(new Password(password)))
+			.willReturn("ASEFASEGAERAETG");
 
 		// when
 		Customer saved = customerService.signUp(request);
@@ -100,8 +106,10 @@ class CustomerServiceTest {
 	void updateCustomer() {
 		// given
 		CustomerUpdateRequest request = new CustomerUpdateRequest(
-			"thor", "a1234!", "b1234!");
-		Customer customer = new Customer(1L, email, "a1234!", "b1234!");
+			"thor", password, "b1234!");
+		Customer customer = new Customer(1L, email, password, nickname);
+		given(encryptionStrategy.encode(new Password(password)))
+			.willReturn(password);
 
 		// when
 		Customer update = customerService.update(customer, request);

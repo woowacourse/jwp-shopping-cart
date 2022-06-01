@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import woowacourse.auth.domain.Customer;
+import woowacourse.auth.support.EncryptionStrategy;
+import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidAuthException;
@@ -29,6 +31,8 @@ class AuthServiceTest {
 	private CustomerService customerService;
 	@Mock
 	private JwtTokenProvider tokenProvider;
+	@Mock
+	private EncryptionStrategy encryptionStrategy;
 	@InjectMocks
 	private AuthService authService;
 
@@ -40,6 +44,8 @@ class AuthServiceTest {
 			.willReturn(new Customer(1L, email, password, nickname));
 		given(tokenProvider.createToken(email))
 			.willReturn("access-token");
+		given(encryptionStrategy.encode(new Password(password)))
+			.willReturn(password);
 
 		// when
 		TokenResponse response = authService.login(new TokenRequest(email, password));

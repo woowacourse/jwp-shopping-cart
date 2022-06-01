@@ -23,8 +23,4 @@ public class Password {
 			throw new IllegalArgumentException("비밀번호 형식에 맞지 않습니다.");
 		}
 	}
-
-	public boolean isSame(String value) {
-		return this.value.equals(value);
-	}
 }
