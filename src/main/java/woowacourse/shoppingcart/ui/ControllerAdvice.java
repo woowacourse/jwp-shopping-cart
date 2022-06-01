@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.exception.auth.EmailDuplicateException;
 import woowacourse.exception.auth.LoginFailureException;
+import woowacourse.exception.auth.PasswordIncorrectException;
 import woowacourse.exception.auth.TokenInvalidException;
 import woowacourse.exception.auth.UnauthorizedException;
+import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -24,7 +26,8 @@ import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-    @ExceptionHandler({LoginFailureException.class, EmailDuplicateException.class})
+    @ExceptionHandler({LoginFailureException.class, EmailDuplicateException.class, PasswordIncorrectException.class,
+            CustomerNotFoundException.class})
     public ResponseEntity<ExceptionResponse> handleLoginFailureException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }

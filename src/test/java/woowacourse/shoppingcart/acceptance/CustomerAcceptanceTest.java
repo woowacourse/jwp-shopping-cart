@@ -5,8 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.ShoppingCartFixture.CUSTOMER_URI;
 import static woowacourse.ShoppingCartFixture.잉_로그인요청;
+import static woowacourse.ShoppingCartFixture.잉_비밀번호수정요청;
+import static woowacourse.ShoppingCartFixture.잉_이름수정요청;
 import static woowacourse.ShoppingCartFixture.잉_회원생성요청;
-import static woowacourse.ShoppingCartFixture.잉_회원수정요청;
 import static woowacourse.ShoppingCartFixture.잉_회원탈퇴요청;
 
 import io.restassured.response.ExtractableResponse;
@@ -18,6 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
+import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
@@ -64,11 +66,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         final CustomerRequest 회원생성요청 = 잉_회원생성요청;
         post(CUSTOMER_URI, 회원생성요청);
-        final CustomerUpdateProfileRequest 회원수정요청 = 잉_회원수정요청;
+        final CustomerUpdateProfileRequest 회원수정요청 = 잉_이름수정요청;
 
         // when
         final String token = getToken(잉_로그인요청);
-        final ExtractableResponse<Response> 회원수정응답 = put(CUSTOMER_URI, 회원수정요청, token);
+        final ExtractableResponse<Response> 회원수정응답 = put(CUSTOMER_URI + "/profile", 회원수정요청, token);
         final CustomerResponse 회원조회응답 = get(CUSTOMER_URI, token).as(CustomerResponse.class);
 
         // then
@@ -85,18 +87,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         final CustomerRequest 회원생성요청 = 잉_회원생성요청;
         post(CUSTOMER_URI, 회원생성요청);
-        final CustomerUpdateProfileRequest 회원수정요청 = 잉_회원수정요청;
+        final CustomerUpdatePasswordRequest 잉비밀번호수정요청 = 잉_비밀번호수정요청;
 
         // when
         final String token = getToken(잉_로그인요청);
-        final ExtractableResponse<Response> 회원수정응답 = put(CUSTOMER_URI, 회원수정요청, token);
-        final CustomerResponse 회원조회응답 = get(CUSTOMER_URI, token).as(CustomerResponse.class);
+        final ExtractableResponse<Response> 회원수정응답 = put(CUSTOMER_URI + "/password", 잉비밀번호수정요청, token);
+        final ExtractableResponse<Response> 비밀번호수정실패응답 = put(CUSTOMER_URI + "/password", 잉비밀번호수정요청, token);
+        final ExceptionResponse 비밀번호수정실패 = 비밀번호수정실패응답.as(ExceptionResponse.class);
 
         // then
         assertAll(
                 () -> assertThat(회원수정응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(회원조회응답.getName()).isEqualTo(회원수정요청.getName()),
-                () -> assertThat(회원조회응답.getEmail()).isEqualTo(회원조회응답.getEmail())
+                () -> assertThat(비밀번호수정실패응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(비밀번호수정실패.getMessage()).contains("비밀번호가 일치하지 않습니다.")
         );
     }
 
