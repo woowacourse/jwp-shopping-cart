@@ -22,6 +22,10 @@ public class Customer {
         return new Customer(id, newName, email, password);
     }
 
+    public Customer updatePassword(final String newPassword) {
+        return new Customer(id, name, email, newPassword);
+    }
+
     public boolean isSamePassword(final String password) {
         return this.password.equals(password);
     }

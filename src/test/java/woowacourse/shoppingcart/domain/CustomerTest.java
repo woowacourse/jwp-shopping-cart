@@ -40,4 +40,18 @@ class CustomerTest {
         // then
         assertThat(actual.getName()).isEqualTo(newName);
     }
+
+    @Test
+    @DisplayName("비밀번호를 변경한다.")
+    void updatePassword() {
+        // given
+        final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
+        final String newPassword = "newpassword123";
+
+        // when
+        final Customer actual = customer.updatePassword(newPassword);
+
+        // then
+        assertThat(actual.getPassword()).isEqualTo(newPassword);
+    }
 }
