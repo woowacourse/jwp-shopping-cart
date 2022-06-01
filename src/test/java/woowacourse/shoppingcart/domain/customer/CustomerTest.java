@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import woowacourse.shoppingcart.dao.CustomerFixture;
 import woowacourse.shoppingcart.domain.address.FullAddress;
 
 @DisplayName("Customer 는")
@@ -20,10 +21,7 @@ class CustomerTest {
         @Test
         void validCustomer() {
             assertThatNoException().isThrownBy(
-                    () -> new Customer(1L, new Email("her0807@naver.com"), new Password("password1!"),
-                            "example.com", new Name("토미"), Gender.MALE, new Birthday("1988-08-07"),
-                            new Contact("12345678910"),
-                            new FullAddress("a", "b", "12345"))
+                    CustomerFixture.tommyCreator::get
             );
         }
 

@@ -1,4 +1,4 @@
-insert into customer (username)
+insert into customer (email, password, profileImageUrl, name, gender, birthday, contact, address, detailAddress, zoneCode, terms)
 values ('puterism@example.com', 'password!1', 'profile.com', 'name', 'male', '1999-03-28', '12345678910', 'seoulsi seunleung', '14th floor', '12345', true),
        ('tanney-102@example.com', 'password!1', 'profile.com', 'name', 'male', '1999-03-28', '12345678910', 'seoulsi seunleung', '14th floor', '12345', true),
        ('jho2301@example.com', 'password!1', 'profile.com', 'name', 'male', '1999-03-28', '12345678910', 'seoulsi seunleung', '14th floor', '12345', true),
