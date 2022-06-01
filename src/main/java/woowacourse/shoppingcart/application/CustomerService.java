@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.common.exception.BadRequestException;
 import woowacourse.common.exception.NotFoundException;
@@ -42,7 +42,8 @@ public class CustomerService {
 
     public TokenResponse signin(SigninRequest signinRequest) {
         String account = signinRequest.getAccount();
-        CustomerEntity customerEntity = customerDao.findByAccount(account);
+        CustomerEntity customerEntity = customerDao.findByAccount(account)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
         if (!EncryptAlgorithm.match(signinRequest.getPassword(), customerEntity.getPassword())) {
             throw new UnauthorizedException("로그인이 불가능합니다.");

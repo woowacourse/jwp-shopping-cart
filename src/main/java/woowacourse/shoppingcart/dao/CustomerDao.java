@@ -34,11 +34,11 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByAccount(final String account) {
         try {
-            final String sql = "SELECT id FROM customer WHERE account = :username";
-            SqlParameterSource source = new MapSqlParameterSource("username",
-                    userName.toLowerCase(Locale.ROOT));
+            final String sql = "SELECT id FROM customer WHERE account = :account";
+            SqlParameterSource source = new MapSqlParameterSource("account",
+                    account.toLowerCase(Locale.ROOT));
             return jdbcTemplate.queryForObject(sql, source, Long.class);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
@@ -60,10 +60,10 @@ public class CustomerDao {
         return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, source, Boolean.class));
     }
 
-    public CustomerEntity findByAccount(String account) {
+    public Optional<CustomerEntity> findByAccount(String account) {
         String sql = "SELECT * FROM customer WHERE account = :account";
         SqlParameterSource source = new MapSqlParameterSource("account", account);
-        return jdbcTemplate.queryForObject(sql, source, ROW_MAPPER);
+        return Optional.ofNullable(DataAccessUtils.singleResult(jdbcTemplate.query(sql, source, ROW_MAPPER)));
     }
 
     public Optional<CustomerEntity> findById(Long customerId) {
