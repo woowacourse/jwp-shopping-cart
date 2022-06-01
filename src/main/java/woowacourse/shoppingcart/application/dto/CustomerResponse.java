@@ -1,4 +1,4 @@
-package woowacourse.auth.dto;
+package woowacourse.shoppingcart.application.dto;
 
 import java.util.Objects;
 import woowacourse.shoppingcart.domain.Customer;

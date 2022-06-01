@@ -3,14 +3,17 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.CustomerSaveRequest;
+import woowacourse.shoppingcart.application.dto.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.application.dto.CustomerUpdateRequest;
 
 @SpringBootTest
 @Transactional
@@ -78,6 +81,40 @@ class CustomerServiceTest {
     void findByNotExistedId() {
         // given & when & then
         assertThatThrownBy(() -> customerService.findById(1L))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("회원 정보를 수정할 수 있다.")
+    void update() {
+        // given
+        CustomerSaveRequest request = new CustomerSaveRequest("email@email.com", "password1234A!", "rookie");
+        customerService.save(request);
+
+        // when
+        customerService.update(1L, new CustomerUpdateRequest("zero"));
+
+        // then
+        CustomerResponse customerResponse = customerService.findById(1L);
+        assertThat(customerResponse).isEqualTo(new CustomerResponse(1L, "email@email.com", "zero"));
+    }
+
+    @Test
+    @DisplayName("회원 비밀번호를 수정할 수 있다.")
+    void updatePassword() {
+        // given
+        CustomerSaveRequest request = new CustomerSaveRequest("email@email.com", "password1234A!", "rookie");
+        customerService.save(request);
+
+        // when & then
+        Assertions.assertDoesNotThrow(() -> customerService.updatePassword(1L, new CustomerUpdatePasswordRequest("password1234A!", "password1234A@")));
+    }
+
+    @Test
+    @DisplayName("id 값이 존재하지 않는 회원을 변경할 경우 예외가 발생한다.")
+    void updateByNotExistedId() {
+        // given & when & then
+        assertThatThrownBy(() -> customerService.update(1L, new CustomerUpdateRequest("rookie")))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +56,35 @@ public class CustomerDaoTest {
         // then
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(new Customer(1L, "email@email.com", "password123!A", "rookie"));
+    }
+
+    @Test
+    @DisplayName("비밀번호와 닉네임을 변경할 수 있다.")
+    void update() {
+        // given
+        customerDao.save(new Customer("email@email.com", "password123!A", "rookie"));
+
+        // when
+        customerDao.update(new Customer(1L, "email@email.com", "password123@Q", "zero"));
+
+        // then
+        Customer customer = customerDao.findById(1L).get();
+        assertThat(customer).usingRecursiveComparison()
+                .isEqualTo(new Customer(1L, "email@email.com", "password123@Q", "zero"));
+    }
+
+    @Test
+    @DisplayName("닉네임 중복을 확인할 수 있다.")
+    void checkDuplicatedNickname() {
+        // given
+        customerDao.save(new Customer("email1@email.com", "password123!A", "rookie"));
+        customerDao.save(new Customer("email2@email.com", "password123!A", "zero"));
+
+        // when & then
+        assertAll(
+                () -> assertThat(customerDao.existByNicknameExcludedId(1L, "rookie")).isFalse(),
+                () -> assertThat(customerDao.existByNicknameExcludedId(2L, "rookie")).isTrue()
+        );
     }
 
 //    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")

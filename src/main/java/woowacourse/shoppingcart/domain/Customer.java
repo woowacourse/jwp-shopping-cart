@@ -37,15 +37,27 @@ public class Customer {
         }
     }
 
-    private void validatePassword(String password) {
+    public void validatePassword(String password) {
         if (password.isBlank() || !Pattern.matches(PASSWORD_REGEX, password)) {
             throw new IllegalArgumentException("[ERROR] 패스워드 기본 형식에 어긋납니다.");
         }
     }
 
-    private void validateNickname(String nickname) {
+    public void validateNickname(String nickname) {
         if (nickname.isBlank() || !Pattern.matches(NICKNAME_REGEX, nickname)) {
             throw new IllegalArgumentException("[ERROR] 닉네임 기본 형식에 어긋납니다.");
+        }
+    }
+
+    public void equalPrevPassword(String prePassword) {
+        if (!password.equals(prePassword)) {
+            throw new IllegalArgumentException("[ERROR] 이전 비밀번호와 일치하지 않습니다.");
+        }
+    }
+
+    public void nonEqualNewPassword(String newPassword) {
+        if (password.equals(newPassword)) {
+            throw new IllegalArgumentException("[ERROR] 새로운 비밀번호가 이전 비밀번호와 동일합니다.");
         }
     }
 

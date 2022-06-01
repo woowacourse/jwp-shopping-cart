@@ -88,4 +88,21 @@ public class CustomerDao {
             return Optional.empty();
         }
     }
+
+    public boolean existByNicknameExcludedId(Long id, String nickname) {
+        String query = "SELECT EXISTS (SELECT * FROM customer WHERE id != :id AND nickname = :nickname)";
+
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource("id", id)
+                .addValue("nickname", nickname);
+        int count = template.queryForObject(query, nameParameters, Integer.class);
+        return count != 0;
+    }
+
+    public void update(Customer customer) {
+        String query = "UPDATE customer SET password=:password, nickname=:nickname where id=:id";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource("password", customer.getPassword())
+                .addValue("nickname", customer.getNickname())
+                .addValue("id", customer.getId());
+        template.update(query, nameParameters);
+    }
 }

@@ -6,7 +6,9 @@ import io.restassured.response.Response;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.ui.dto.TokenRequest;
+import woowacourse.shoppingcart.ui.dto.CustomerChangePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerSignUpRequest;
+import woowacourse.shoppingcart.ui.dto.CustomerChangeRequest;
 
 public class ResponseCreator {
 
@@ -37,6 +39,26 @@ public class ResponseCreator {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
                 .get("/api/customers/me")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> patchCustomers(TokenResponse tokenResponse, String zero) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+                .body(new CustomerChangeRequest(zero))
+                .patch("/api/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> patchPasswordCustomers(TokenResponse tokenResponse, String prePassword, String newPassword) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CustomerChangePasswordRequest(prePassword, newPassword))
+                .patch("/api/customers/password")
                 .then().log().all()
                 .extract();
     }
