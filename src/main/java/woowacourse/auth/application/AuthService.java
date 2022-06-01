@@ -35,8 +35,9 @@ public class AuthService {
 
         checkPassword(signInDto, customer);
 
-        final String accessToken = makeAccessToken(new CustomerDto(customer.getId(), customer.getEmail(), customer.getUsername()));
-        return new TokenResponseDto(accessToken, jwtTokenProvider.getValidityInMilliseconds());
+        final CustomerDto customerDto = new CustomerDto(customer.getId(), customer.getEmail(), customer.getUsername());
+        final String accessToken = makeAccessToken(customerDto);
+        return new TokenResponseDto(accessToken, jwtTokenProvider.getValidityInMilliseconds(), customerDto);
     }
 
     private String makeAccessToken(final CustomerDto customer) {
