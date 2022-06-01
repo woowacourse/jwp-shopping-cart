@@ -1,16 +1,18 @@
 package woowacourse.shoppingcart.domain;
 
 public class Customer {
-    private Long id;
-    private String name;
-    private String password;
 
-    public Customer() {
+    private final Long id;
+    private final String userName;
+    private final String password;
+
+    public Customer(final String name, final String password) {
+        this(null, name, password);
     }
 
-    public Customer(Long id, String name, String password) {
+    public Customer(final Long id, final String name, final String password) {
         this.id = id;
-        this.name = name;
+        this.userName = name;
         this.password = password;
     }
 
@@ -18,8 +20,8 @@ public class Customer {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
     public String getPassword() {

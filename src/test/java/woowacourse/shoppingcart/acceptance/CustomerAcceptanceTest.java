@@ -141,7 +141,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @Test

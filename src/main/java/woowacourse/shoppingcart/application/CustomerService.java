@@ -9,11 +9,11 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.support.Encryptor;
-import woowacourse.shoppingcart.support.SHA256Encryptor;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CustomerService {
+
     private final CustomerDao customerDao;
     private final Encryptor encryptor;
 
@@ -26,8 +26,8 @@ public class CustomerService {
         if (customerDao.existsByName(customerRequest.getName())) {
             throw new DuplicateNameException();
         }
-        String encryptedPassword = encryptor.encrypt(customerRequest.getPassword());
-        customerDao.save(customerRequest.getName(), encryptedPassword);
+        final String encryptedPassword = encryptor.encrypt(customerRequest.getPassword());
+        customerDao.save(new Customer(customerRequest.getName(), encryptedPassword));
     }
 
     public void deleteCustomerByName(final String customerName) {
@@ -35,18 +35,18 @@ public class CustomerService {
     }
 
     public CustomerResponse findCustomerByName(final String customerName) {
-        final Customer customer = customerDao.findCustomerByName(customerName);
-        return new CustomerResponse(customer.getName());
+        final Customer customer = customerDao.getByName(customerName);
+        return new CustomerResponse(customer.getUserName());
     }
 
     public void editCustomerByName(final String customerName, final CustomerRequest editRequest) {
         String encryptedPassword = encryptor.encrypt(editRequest.getPassword());
-        customerDao.updateByName(customerName, encryptedPassword);
+        customerDao.updatePasswordByName(customerName, encryptedPassword);
     }
 
     public void validateNameAndPassword(final String name, final String password) {
         String encryptedPassword = encryptor.encrypt(password);
-        if (customerDao.existsIdByNameAndPassword(name, encryptedPassword)) {
+        if (customerDao.existsByNameAndPassword(name, encryptedPassword)) {
             return;
         }
         throw new AuthorizationException("로그인에 실패했습니다.");

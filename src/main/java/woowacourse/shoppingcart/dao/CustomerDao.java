@@ -1,78 +1,78 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
-import java.sql.PreparedStatement;
 import java.util.Locale;
 
 @Repository
 public class CustomerDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) -> new Customer(
+            resultSet.getLong("id"),
+            resultSet.getString("userName"),
+            resultSet.getString("password"));
 
-    public CustomerDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private final SimpleJdbcInsert inserter;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public CustomerDao(final DataSource dataSource) {
+        this.inserter = new SimpleJdbcInsert(dataSource)
+                .withTableName("customer")
+                .usingGeneratedKeyColumns("id");
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public void save(String customerName, String password) {
-        final String query = "INSERT INTO customer (username, password) VALUES (?, ?)";
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, customerName);
-            preparedStatement.setString(2, password);
-            return preparedStatement;
-        }, keyHolder);
+    public Long save(final Customer customer) {
+        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(customer);
+        return inserter.executeAndReturnKey(parameters).longValue();
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Customer getByName(final String name) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            final String query = "SELECT * FROM customer WHERE username = :name";
+            return jdbcTemplate.queryForObject(query, Map.of("name", name), ROW_MAPPER);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }
 
-    public void deleteByName(String customerName) {
-        final String query = "DELETE FROM customer WHERE username = ?";
-        jdbcTemplate.update(query, customerName);
-    }
-
-    public Customer findCustomerByName(String customerName) {
+    public Long getIdByUserName(final String name) {
         try {
-            final String query = "SELECT id, password FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Customer(
-                            resultSet.getLong("id"),
-                            customerName,
-                            resultSet.getString("password")
-                    ), customerName
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            final String query = "SELECT id FROM customer WHERE username = :name";
+            return jdbcTemplate.queryForObject(query, Map.of("name", name.toLowerCase(Locale.ROOT)), Long.class);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
         }
     }
 
-    public void updateByName(String customerName, String newPassword) {
-        final String query = "UPDATE customer SET password = ? WHERE username = ?";
-        jdbcTemplate.update(query, newPassword, customerName);
+    public void updatePasswordByName(final String name, final String newPassword) {
+        final String query = "UPDATE customer SET password = :newPassword WHERE username = :name";
+        jdbcTemplate.update(query, Map.of("newPassword", newPassword, "name", name));
     }
 
-    public boolean existsIdByNameAndPassword(String name, String password) {
-        final String query = "SELECT EXISTS (SELECT id FROM customer where username = ? and password = ?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name, password));
+    public void deleteByName(final String name) {
+        final String query = "DELETE FROM customer WHERE username = :name";
+        jdbcTemplate.update(query, Map.of("name", name));
     }
 
-    public boolean existsByName(String name) {
-        final String query = "SELECT EXISTS (SELECT id FROM customer where username = ?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name));
+    public boolean existsByNameAndPassword(final String name, final String password) {
+        final String query = "SELECT EXISTS (SELECT id FROM customer where username = :name and password = :password)";
+        return Boolean.TRUE.equals(
+                jdbcTemplate.queryForObject(query, Map.of("name", name, "password", password), Boolean.class));
+    }
+
+    public boolean existsByName(final String name) {
+        final String query = "SELECT EXISTS (SELECT id FROM customer where username = :name)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Map.of("name", name), Boolean.class));
     }
 }

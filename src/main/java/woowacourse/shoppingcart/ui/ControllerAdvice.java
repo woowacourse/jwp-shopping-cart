@@ -52,7 +52,7 @@ public class ControllerAdvice {
             NotInCustomerCartItemException.class,
     })
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(AuthorizationException.class)
