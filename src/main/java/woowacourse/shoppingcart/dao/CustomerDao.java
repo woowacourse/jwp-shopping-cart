@@ -29,4 +29,9 @@ public class CustomerDao {
         String query = "SELECT EXISTS (SELECT id FROM customer WHERE user_id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, userId);
     }
+
+    public Boolean existCustomerByNickname(final String nickname) {
+        String query = "SELECT EXISTS (SELECT id FROM customer WHERE nickname = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, nickname);
+    }
 }

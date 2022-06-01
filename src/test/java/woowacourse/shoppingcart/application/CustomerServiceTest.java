@@ -111,4 +111,16 @@ class CustomerServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 존재하는 아이디입니다.");
     }
+
+    @DisplayName("중복된 닉네임을 가입할 수 없다.")
+    @Test
+    void validateDuplicateNickname() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("coobim", "nickname1", "1234");
+
+        // when & then
+        assertThatThrownBy(() -> customerService.signUp(signUpRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 닉네임입니다.");
+    }
 }

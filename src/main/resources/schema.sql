@@ -20,6 +20,9 @@ create table customer
 alter table customer
     add unique key (user_id);
 
+alter table customer
+    add unique key (nickname);
+
 create table product
 (
     id        bigint       not null auto_increment,

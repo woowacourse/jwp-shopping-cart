@@ -40,4 +40,8 @@ public class Customer {
     public String getUserId() {
         return userId;
     }
+
+    public String getNickname() {
+        return nickname;
+    }
 }

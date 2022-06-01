@@ -32,4 +32,14 @@ public class CustomerDaoTest {
         // then
         assertThat(actual).isEqualTo(true);
     }
+
+    @DisplayName("아이디가 존재하는지 확인한다.")
+    @Test
+    void existCustomerByNickname() {
+        // when
+        boolean actual = customerDao.existCustomerByNickname("nickname1");
+
+        // then
+        assertThat(actual).isEqualTo(true);
+    }
 }

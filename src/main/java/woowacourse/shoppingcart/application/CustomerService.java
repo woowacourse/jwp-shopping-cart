@@ -22,11 +22,18 @@ public class CustomerService {
 
     private void validateCustomer(final Customer customer) {
         validateDuplicateUserId(customer.getUserId());
+        validateDuplicateNickname(customer.getNickname());
     }
 
     private void validateDuplicateUserId(final String userId) {
         if (customerDao.existCustomerByUserId(userId)) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
+    }
+
+    private void validateDuplicateNickname(final String nickname) {
+        if (customerDao.existCustomerByNickname(nickname)) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
         }
     }
 }
