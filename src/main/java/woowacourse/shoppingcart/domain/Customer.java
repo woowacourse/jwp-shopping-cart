@@ -13,18 +13,18 @@ public class Customer {
 
     private final Username username;
     private final Password password;
-    private final String nickname;
+    private final Nickname nickname;
     private final int age;
 
     public Customer(String username, String password, String nickname, int age) {
         validate(password, nickname, age);
         this.username = new Username(username);
         this.password = new Password(password);
-        this.nickname = nickname;
+        this.nickname = new Nickname(nickname);
         this.age = age;
     }
 
-    public Customer(Username username, Password password, String nickname, int age) {
+    public Customer(Username username, Password password, Nickname nickname, int age) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
@@ -72,7 +72,7 @@ public class Customer {
         return password;
     }
 
-    public String getNickname() {
+    public Nickname getNickname() {
         return nickname;
     }
 

@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Nickname;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
@@ -43,7 +44,7 @@ public class CustomerService {
         Customer customer = customerRepository.find(id);
         Customer updatedCustomer = new Customer(new Username(request.getUsername()),
                 customer.getPassword(),
-                request.getNickname(),
+                new Nickname(request.getNickname()),
                 request.getAge());
         customerRepository.update(id, updatedCustomer);
     }

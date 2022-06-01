@@ -19,7 +19,7 @@ public class GetMeResponse {
     }
 
     public GetMeResponse(Customer customer) {
-        this(customer.getUsername().getValue(), customer.getNickname(), customer.getAge());
+        this(customer.getUsername().getValue(), customer.getNickname().getValue(), customer.getAge());
     }
 
     public String getUsername() {
