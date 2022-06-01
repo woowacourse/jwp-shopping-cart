@@ -7,6 +7,10 @@ import javax.validation.constraints.Pattern;
 public class PhoneNumber {
 
     private static final String errorMessage = "휴대폰번호 형식이 일치하지 않습니다.";
+    private static final int  PHONE_NUMBER_START_BEGIN_INDEX = 0;
+    private static final int PHONE_NUMBER_START_LAST_INDEX = 3;
+    private static final int PHONE_NUMBER_MIDDLE_LAST_INDEX = 7;
+    private static final int PHONE_NUMBER_END_LAST_INDEX = 11;
 
     @Pattern(regexp = "\\d{3}", message = errorMessage)
     private final String start;
@@ -23,7 +27,10 @@ public class PhoneNumber {
     }
 
     public static PhoneNumber of(String phoneNumber) {
-        return new PhoneNumber(phoneNumber.substring(0, 3), phoneNumber.substring(3, 7), phoneNumber.substring(7, 11));
+        return new PhoneNumber(
+                phoneNumber.substring(PHONE_NUMBER_START_BEGIN_INDEX, PHONE_NUMBER_START_LAST_INDEX),
+                phoneNumber.substring(PHONE_NUMBER_START_LAST_INDEX, PHONE_NUMBER_MIDDLE_LAST_INDEX),
+                phoneNumber.substring(PHONE_NUMBER_MIDDLE_LAST_INDEX, PHONE_NUMBER_END_LAST_INDEX));
     }
 
     public String getStart() {
