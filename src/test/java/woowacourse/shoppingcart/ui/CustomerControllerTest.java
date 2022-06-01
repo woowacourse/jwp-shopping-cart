@@ -13,12 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicateCheckResponse;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 class CustomerControllerTest {
 
     private final CustomerController customerController;
@@ -64,7 +67,7 @@ class CustomerControllerTest {
         );
     }
 
-    @DisplayName("회원가입을 진행한다.")
+    @DisplayName("회원가입에 실패한다.")
     @ParameterizedTest
     @CsvSource(value = {
             "잘못된 이메일, 파리채, password123!",
@@ -76,5 +79,25 @@ class CustomerControllerTest {
 
         assertThatThrownBy(() -> customerController.signUp(customerRequest))
                 .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @DisplayName("비밀번호를 확인한다.")
+    @Test
+    void checkPassword() {
+        PasswordRequest passwordRequest = new PasswordRequest("password123!");
+
+        ResponseEntity<Void> response = customerController.checkPassword("email@email.com", passwordRequest);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @DisplayName("비밀번호를 확인에 실패한다.")
+    @Test
+    void checkInvalidPassword() {
+        PasswordRequest passwordRequest = new PasswordRequest("password486!");
+
+        assertThatThrownBy(() -> customerController.checkPassword("email@email.com", passwordRequest))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
     }
 }
