@@ -10,13 +10,13 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.auth.domain.Customer2;
+import woowacourse.shoppingcart.domain.Customer;
 
 @Repository
 public class CustomerDao {
 
-    private static final RowMapper<Customer2> ROW_MAPPER = (resultSet, rowNum) ->
-            new Customer2(resultSet.getString("username"),
+    private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) ->
+            new Customer(resultSet.getString("username"),
                     resultSet.getString("password"),
                     resultSet.getString("nickname"),
                     resultSet.getInt("age"));
@@ -27,7 +27,7 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<Customer2> findByUserName(String userName) {
+    public Optional<Customer> findByUserName(String userName) {
         final String sql = "SELECT username, password, nickname, age FROM customer "
                 + "WHERE username = :username";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -46,7 +46,7 @@ public class CustomerDao {
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
-    public Long save(Customer2 customer) {
+    public Long save(Customer customer) {
         final String sql = "INSERT INTO customer(username, password, nickname, age) "
                 + "VALUES(:username, :password, :nickname, :age)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -56,7 +56,7 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateByUsername(Customer2 customer) {
+    public void updateByUsername(Customer customer) {
         final String sql = "UPDATE customer SET password = :password, "
                 + "nickname = :nickname, age = :age WHERE username = :username";
         SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
@@ -64,7 +64,7 @@ public class CustomerDao {
         jdbcTemplate.update(sql, params);
     }
 
-    public void delete(Customer2 customer) {
+    public void delete(Customer customer) {
         final String sql = "DELETE FROM customer WHERE username = :username";
         SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
 

@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.domain.Customer2;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.auth.domain.User;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
@@ -32,40 +32,40 @@ public class CustomerService {
 
     @Transactional
     public Long createCustomer(SignUpRequest request) {
-        Customer2 customer = new Customer2(request.getUsername(),
+        Customer customer = new Customer(request.getUsername(),
                 request.getPassword(), request.getNickname(), request.getAge());
         return customerDao.save(customer);
     }
 
     @Transactional
     public void updateNicknameAndAge(User user, UpdateMeRequest request) {
-        Customer2 customer = findCustomer(user);
+        Customer customer = findCustomer(user);
         if(!customer.hasSameUsername(request.getUsername())) {
             throw new IllegalArgumentException("아이디는 수정할 수 없습니다.");
         }
-        Customer2 updatedCustomer = new Customer2(customer.getUsername(),
+        Customer updatedCustomer = new Customer(customer.getUsername(),
                 customer.getPassword(), request.getNickname(), request.getAge());
         customerDao.updateByUsername(updatedCustomer);
     }
 
     @Transactional
     public void updatePassword(User user, UpdatePasswordRequest request) {
-        Customer2 customer = findCustomer(user);
+        Customer customer = findCustomer(user);
         if (!user.hasSamePassword(request.getOldPassword())) {
             throw new IllegalArgumentException("현재 비밀번호를 잘못 입력하였습니다.");
         }
-        Customer2 updatedCustomer = new Customer2(user.getUsername(),
+        Customer updatedCustomer = new Customer(user.getUsername(),
                 request.getNewPassword(), customer.getNickname(), customer.getAge());
         customerDao.updateByUsername(updatedCustomer);
     }
 
     @Transactional
     public void deleteCustomer(User user) {
-        Customer2 customer = findCustomer(user);
+        Customer customer = findCustomer(user);
         customerDao.delete(customer);
     }
 
-    private Customer2 findCustomer(User user) {
+    private Customer findCustomer(User user) {
         return customerDao.findByUserName(user.getUsername())
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
     }

@@ -4,23 +4,17 @@ import java.util.Objects;
 
 public class Customer {
 
-    private final Long id;
     private final String username;
     private final String password;
     private final String nickname;
     private final int age;
 
-    public Customer(Long id, String username, String password, String nickname, int age) {
+    public Customer(String username, String password, String nickname, int age) {
         validate(username, nickname, age);
-        this.id = id;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.age = age;
-    }
-
-    public Customer(String username, String password, String nickname, int age) {
-        this(null, username, password, nickname, age);
     }
 
     private void validate(String username, String nickname, int age) {
@@ -36,7 +30,7 @@ public class Customer {
     }
 
     private void validateNickname(String nickname) {
-        if (nickname.isEmpty() || nickname.length() > 10) {
+        if (nickname.isBlank() || nickname.length() > 10) {
             throw new IllegalArgumentException("닉네임은 최소 1글자, 최대 10글자여야 합니다.");
         }
     }
@@ -47,8 +41,8 @@ public class Customer {
         }
     }
 
-    public Long getId() {
-        return id;
+    public boolean hasSameUsername(String username) {
+        return this.username.equals(username);
     }
 
     public String getUsername() {
@@ -67,10 +61,6 @@ public class Customer {
         return age;
     }
 
-    public boolean hasSamePassword(String password) {
-        return this.password.equals(password);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -81,7 +71,6 @@ public class Customer {
         }
         Customer customer = (Customer) o;
         return age == customer.age
-                && Objects.equals(id, customer.id)
                 && Objects.equals(username, customer.username)
                 && Objects.equals(password, customer.password)
                 && Objects.equals(nickname, customer.nickname);
@@ -89,6 +78,6 @@ public class Customer {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, nickname, age);
+        return Objects.hash(username, password, nickname, age);
     }
 }

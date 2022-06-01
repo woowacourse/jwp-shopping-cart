@@ -12,7 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import woowacourse.auth.domain.Customer2;
+import woowacourse.shoppingcart.domain.Customer;
 
 @SuppressWarnings("NonAsciiCharacters")
 class CustomerDaoTest extends DatabaseTest {
@@ -37,10 +37,10 @@ class CustomerDaoTest extends DatabaseTest {
 
         @Test
         void 존재하는_고객인_경우_값이_있는_Optional_반환() {
-            Customer2 고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
             saveFixture(고객);
 
-            Customer2 actual = customerDao.findByUserName(유효한_아이디).get();
+            Customer actual = customerDao.findByUserName(유효한_아이디).get();
 
             assertThat(actual).isEqualTo(고객);
         }
@@ -61,7 +61,7 @@ class CustomerDaoTest extends DatabaseTest {
 
         @Test
         void 유효한_데이터를_저장하려는_경우_성공() {
-            Customer2 신규_고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer 신규_고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
             Long actual = customerDao.save(신규_고객);
             Long expected = 1L;
@@ -71,7 +71,7 @@ class CustomerDaoTest extends DatabaseTest {
 
         @Test
         void 중복되는_아이디로_데이터를_저장하려는_경우_예외발생() {
-            Customer2 고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
             saveFixture(고객);
 
             assertThatThrownBy(() -> customerDao.save(고객))
@@ -85,19 +85,19 @@ class CustomerDaoTest extends DatabaseTest {
 
         @Test
         void 유효한_데이터로_수정하려는_경우_성공() {
-            Customer2 고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
-            Customer2 수정된_고객 = new Customer2(유효한_아이디, "새로운_비밀번호", "새로운_닉네임", 80);
+            Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer 수정된_고객 = new Customer(유효한_아이디, "새로운_비밀번호", "새로운_닉네임", 80);
             saveFixture(고객);
 
             customerDao.updateByUsername(수정된_고객);
-            Customer2 actual = customerDao.findByUserName(유효한_아이디).get();
+            Customer actual = customerDao.findByUserName(유효한_아이디).get();
 
             assertThat(actual).isEqualTo(수정된_고객);
         }
 
         @Test
         void 존재하지_않는_데이터를_수장하려는_경우_예외_미발생() {
-            Customer2 고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
             assertThatNoException()
                     .isThrownBy(() -> customerDao.updateByUsername(고객));
@@ -110,7 +110,7 @@ class CustomerDaoTest extends DatabaseTest {
 
         @Test
         void 제거_성공() {
-            Customer2 고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
             saveFixture(고객);
 
             customerDao.delete(고객);
@@ -121,14 +121,14 @@ class CustomerDaoTest extends DatabaseTest {
 
         @Test
         void 존재하지_않는_데이터를_제거하려는_경우_예외_미발생() {
-            Customer2 고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
             assertThatNoException()
                     .isThrownBy(() -> customerDao.delete(고객));
         }
     }
 
-    private void saveFixture(Customer2 customer) {
+    private void saveFixture(Customer customer) {
         final String sql = "INSERT INTO customer(username, password, nickname, age) "
                 + "VALUES(:username, :password, :nickname, :age)";
         SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
