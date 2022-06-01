@@ -6,7 +6,8 @@ import java.util.regex.Pattern;
 
 public class Password {
 
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()])[A-Za-z\\d!@#$%^&*()]{8,16}$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(
+            "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()])[A-Za-z\\d!@#$%^&*()]{8,16}$");
 
     private String value;
 
@@ -25,7 +26,6 @@ public class Password {
 
     private static void validatePassword(String value) {
         checkNull(value);
-        checkLength(value);
         checkFormat(value);
     }
 
@@ -35,16 +35,11 @@ public class Password {
         }
     }
 
-    private static void checkLength(String value) {
-        if (value.length() < 8 || 16 < value.length()) {
-            throw new IllegalArgumentException("비밀번호 길이가 올바르지 않습니다. (길이: 8이상 16이하)");
-        }
-    }
-
     private static void checkFormat(String value) {
         Matcher matcher = PASSWORD_PATTERN.matcher(value);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("비밀번호 형식이 올바르지 않습니다. (영문자, 숫자, 특수문자!, @, #, $, %, ^, &, *, (, )를 모두 사용)");
+            throw new IllegalArgumentException("비밀번호 형식이 올바르지 않습니다. "
+                    + "(영문자, 숫자, 특수문자!, @, #, $, %, ^, &, *, (, )를 모두 사용, 8자 이상 16자 이내)");
         }
     }
 

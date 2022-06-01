@@ -29,7 +29,8 @@ public class Username {
     private void checkFormat(String value) {
         Matcher matcher = USERNAME_PATTERN.matcher(value);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("유저 네임 형식이 올바르지 않습니다. (영문 소문자, 숫자와 특수기호(_), (-)만 사용 가능)");
+            throw new IllegalArgumentException("유저 네임 형식이 올바르지 않습니다. "
+                    + "(영문 소문자, 숫자와 특수기호(_), (-)만 사용 가능, 5자 이상 20자 이내)");
         }
     }
 

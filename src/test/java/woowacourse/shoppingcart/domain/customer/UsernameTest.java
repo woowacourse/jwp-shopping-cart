@@ -24,7 +24,7 @@ class UsernameTest {
     void create_error_usernameFormat(String username) {
         assertThatThrownBy(() -> new Username(username))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("유저 네임 형식이 올바르지 않습니다. (영문 소문자, 숫자와 특수기호(_), (-)만 사용 가능)");
+                .hasMessage("유저 네임 형식이 올바르지 않습니다. (영문 소문자, 숫자와 특수기호(_), (-)만 사용 가능, 5자 이상 20자 이내)");
     }
 
     @DisplayName("username 형식에 맞으면 username이 생성된다.")

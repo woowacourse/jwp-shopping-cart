@@ -23,7 +23,7 @@ class PasswordTest {
     void create_error_passwordLength(String password) {
         assertThatThrownBy(() -> Password.createRaw(password))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("비밀번호 길이가 올바르지 않습니다. (길이: 8이상 16이하)");
+                .hasMessage("비밀번호 형식이 올바르지 않습니다. (영문자, 숫자, 특수문자!, @, #, $, %, ^, &, *, (, )를 모두 사용, 8자 이상 16자 이내)");
     }
 
     @DisplayName("고객이 입력한 password 형식이 맞지 않으면 예외를 던진다.")
@@ -32,7 +32,7 @@ class PasswordTest {
     void create_error_passwordFormat(String password) {
         assertThatThrownBy(() -> Password.createRaw(password))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("비밀번호 형식이 올바르지 않습니다. (영문자, 숫자, 특수문자!, @, #, $, %, ^, &, *, (, )를 모두 사용)");
+                .hasMessage("비밀번호 형식이 올바르지 않습니다. (영문자, 숫자, 특수문자!, @, #, $, %, ^, &, *, (, )를 모두 사용, 8자 이상 16자 이내)");
     }
 
     @DisplayName("고객이 입력한 password 형식에 맞으면 password이 생성된다.")
