@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -41,6 +42,9 @@ public class CustomerService {
     }
 
     public void updatePassword(final TokenRequest tokenRequest, final PasswordRequest passwordRequest) {
+        Password oldPassword = new Password(passwordRequest.getOldPassword());
+        Password newPassword = new Password(passwordRequest.getNewPassword());
+        customerRepository.updatePassword(tokenRequest.getId(), oldPassword, newPassword);
     }
 
     public void withdraw(final TokenRequest request) {

@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @SpringBootTest
 @Sql("/init.sql")
@@ -82,5 +84,23 @@ class CustomerServiceTest {
                 () -> assertThat(newCustomer.getNickname())
                         .isEqualTo(customerUpdateRequest.getNickname())
         );
+    }
+
+    @DisplayName("회원 비밀번호를 변경한다.")
+    @Test
+    void updatePassword() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("jo@naver.com", "jojogreen", "abcde1234!");
+        Long id = customerService.signUp(customerRequest);
+        TokenRequest tokenRequest = new TokenRequest(id);
+        PasswordRequest passwordRequest = new PasswordRequest("abcde1234!", "1234abcd@");
+
+        // when
+        customerService.updatePassword(tokenRequest, passwordRequest);
+
+        // then
+        CustomerLoginRequest customerLoginRequest =
+                new CustomerLoginRequest(customerRequest.getUserId(), passwordRequest.getNewPassword());
+        assertDoesNotThrow(() -> customerService.login(customerLoginRequest));
     }
 }

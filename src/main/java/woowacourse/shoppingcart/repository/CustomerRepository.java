@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.repository;
 
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
 @Repository
@@ -27,5 +28,9 @@ public class CustomerRepository {
 
     public void update(final Customer newCustomer) {
         customerDao.update(newCustomer);
+    }
+
+    public void updatePassword(final Long id, final Password oldPassword, final Password newPassword) {
+        customerDao.updatePassword(id, oldPassword.getPassword(), newPassword.getPassword());
     }
 }

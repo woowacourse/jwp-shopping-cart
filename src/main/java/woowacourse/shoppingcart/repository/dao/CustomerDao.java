@@ -42,7 +42,7 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException("존재하지 않는 유저입니다.");
         }
     }
 
@@ -68,7 +68,7 @@ public class CustomerDao {
         try {
             return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
         } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException("존재하지 않는 회원입니다.");
         }
     }
 
@@ -82,7 +82,7 @@ public class CustomerDao {
         try {
             return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
         } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException("존재하지 않는 회원이거나 비밀번호가 일치하지 않습니다.");
         }
     }
 
@@ -94,7 +94,20 @@ public class CustomerDao {
         try {
             namedParameterJdbcTemplate.update(query, params);
         } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException("존재하지 않는 회원입니다.");
+        }
+    }
+
+    public void updatePassword(final Long id, final String oldPassword, final String newPassword) {
+        String query = "update customer set password = :newPassword where id = :id and password = :oldPassword and exists" + REAL_CUSTOMER_QUERY;
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        params.put("newPassword", newPassword);
+        params.put("oldPassword", oldPassword);
+        try {
+            namedParameterJdbcTemplate.update(query, params);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new InvalidCustomerException("비밀번호가 일치하지 않습니다.");
         }
     }
 }

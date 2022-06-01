@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
 
@@ -75,5 +77,22 @@ class CustomerRepositoryTest {
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(newCustomer);
+    }
+
+    @DisplayName("해당 아이디의 비밀번호를 변경한다.")
+    @Test
+    void updatePassword() {
+        // given
+        Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
+        Long id = customerRepository.create(customer);
+        PasswordRequest passwordRequest = new PasswordRequest("1234abcd!", "1234abcd@");
+        Password oldPassword = new Password(passwordRequest.getOldPassword());
+        Password newPassword = new Password(passwordRequest.getNewPassword());
+
+        // when
+        customerRepository.updatePassword(id, oldPassword, newPassword);
+
+        // then
+        assertThat(customerRepository.findById(id).getPassword()).isEqualTo(newPassword.getPassword());
     }
 }
