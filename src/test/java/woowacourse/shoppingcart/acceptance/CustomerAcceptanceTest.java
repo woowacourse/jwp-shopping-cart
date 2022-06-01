@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.CustomerInfoRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -64,9 +65,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String accessToken = 로그인_후_토큰발급(파리채토큰);
         회원정보_조회(accessToken);
 
+        PasswordRequest passwordRequest = new PasswordRequest("newpassword123!");
+
         RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
+                .body(passwordRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().patch("/api/members/auth/password")
                 .then().log().all()

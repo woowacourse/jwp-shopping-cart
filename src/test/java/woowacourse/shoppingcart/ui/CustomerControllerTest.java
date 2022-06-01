@@ -135,4 +135,24 @@ class CustomerControllerTest {
         assertThatThrownBy(() -> customerController.updateCustomerInfo("email@email.com", customerInfoRequest))
                 .isInstanceOf(InvalidCustomerException.class);
     }
+
+    @DisplayName("비밀번호를 수정한다.")
+    @Test
+    void updateCustomerPassword() {
+        PasswordRequest passwordRequest = new PasswordRequest("newpassword123!");
+
+        ResponseEntity<Void> response = customerController.updateCustomerPassword("email@email.com", passwordRequest);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @DisplayName("형식이 잘못된 비밀번호로 수정하는 경우 예외가 발생한다.")
+    @Test
+    void updateInvalidCustomerPassword() {
+        PasswordRequest passwordRequest = new PasswordRequest("invalidpassword");
+
+        assertThatThrownBy(() -> customerController.updateCustomerPassword("email@email.com", passwordRequest))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("잘못된 비밀번호 형식입니다.");
+    }
 }

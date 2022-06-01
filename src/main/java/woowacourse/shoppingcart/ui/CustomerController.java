@@ -63,4 +63,11 @@ public class CustomerController {
         customerService.updateInfo(email, customerInfoRequest);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/auth/password")
+    public ResponseEntity<Void> updateCustomerPassword(@AuthenticationPrincipal String email,
+                                                       @RequestBody @Valid PasswordRequest passwordRequest) {
+        customerService.updatePassword(email, passwordRequest);
+        return ResponseEntity.noContent().build();
+    }
 }
