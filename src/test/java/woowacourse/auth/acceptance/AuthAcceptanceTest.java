@@ -135,6 +135,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/me")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 }

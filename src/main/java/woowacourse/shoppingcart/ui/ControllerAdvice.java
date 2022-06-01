@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -10,9 +11,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -46,6 +50,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
+            InvalidPasswordException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
@@ -54,5 +59,15 @@ public class ControllerAdvice {
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException() {
+        return ResponseEntity.internalServerError().body(new ErrorResponse("서버에 에러가 발생했습니다."));
     }
 }
