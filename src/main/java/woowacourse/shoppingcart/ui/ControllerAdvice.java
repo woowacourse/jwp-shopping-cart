@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import woowacourse.exception.InputFormatException;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
@@ -66,6 +67,11 @@ public class ControllerAdvice {
 
     @ExceptionHandler(JoinException.class)
     public ResponseEntity<ErrorResponse> handleJoinException(JoinException e){
+        return ResponseEntity.badRequest().body(e.getErrorResponse());
+    }
+
+    @ExceptionHandler(InputFormatException.class)
+    public ResponseEntity<ErrorResponse> handleInputFormatException(InputFormatException e){
         return ResponseEntity.badRequest().body(e.getErrorResponse());
     }
 }

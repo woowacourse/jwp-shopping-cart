@@ -6,7 +6,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @Service
 public class AuthService {

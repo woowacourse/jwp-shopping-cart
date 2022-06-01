@@ -5,15 +5,23 @@ import java.util.Locale;
 import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
+
+    private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = ((rs, rowNum) ->
+            new Customer(rs.getLong("id"),
+                    rs.getString("email"),
+                    Password.fromEncryptedInput(rs.getString("password")),
+                    rs.getString("username")));
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -34,6 +42,7 @@ public class CustomerDao {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
+
         Map<String, Object> params = new HashMap<>();
         params.put("email", customer.getEmail());
         params.put("username", customer.getUsername());
@@ -45,8 +54,7 @@ public class CustomerDao {
     public Customer findByEmail(String email) {
         final String sql = "SELECT id, email, password, username FROM customer WHERE email = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> new Customer(rs.getLong("id"
-            ), rs.getString("email"), rs.getString("password"), rs.getString("username"))), email);
+            return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, email);
         } catch (EmptyResultDataAccessException e) {
             throw new LoginException("존재하지 않는 이메일입니다.", ErrorResponse.LOGIN_FAIL);
         }

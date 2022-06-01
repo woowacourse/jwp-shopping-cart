@@ -1,13 +1,12 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
@@ -20,11 +19,10 @@ public class CustomerService {
     }
 
     public void register(String email, String password, String username) {
-        final Password encryptedPassword = Password.from(password);
         if(customerDao.existsByEmail(email)){
             throw new JoinException("이미 존재하는 이메일입니다.", ErrorResponse.DUPLICATED_EMAIL);
         }
-        customerDao.save(new Customer(email, encryptedPassword.getValue(), username));
+        customerDao.save(new Customer(email, Password.fromPlainInput(password), username));
     }
 
     public CustomerResponse showCustomer(String email) {
@@ -38,7 +36,7 @@ public class CustomerService {
         if(customer.isDifferentPassword(oldPassword)){
             throw new AuthException("기존 비밀번호와 맞지 않습니다.", ErrorResponse.INCORRECT_PASSWORD);
         }
-        final Password encryptedPassword = Password.from(newPassword);
+        final Password encryptedPassword = Password.fromPlainInput(newPassword);
         customerDao.updatePassword(customer.getId(), encryptedPassword.getValue());
     }
 
