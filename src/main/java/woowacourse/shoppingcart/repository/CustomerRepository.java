@@ -24,4 +24,8 @@ public class CustomerRepository {
     public Customer login(final String username, final String password) {
         return customerDao.login(username, password);
     }
+
+    public void update(final Customer newCustomer) {
+        customerDao.update(newCustomer);
+    }
 }

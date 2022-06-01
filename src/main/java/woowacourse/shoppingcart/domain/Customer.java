@@ -31,8 +31,7 @@ public class Customer {
 
     public static Customer ofNullId(final String username,
                                     final String password,
-                                    final String nickname,
-                                    final boolean withdrawal) {
+                                    final String nickname) {
         return new Customer(null, username, password, nickname);
     }
 

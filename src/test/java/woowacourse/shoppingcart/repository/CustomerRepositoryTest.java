@@ -29,7 +29,7 @@ class CustomerRepositoryTest {
     @Test
     void createAndFindById() {
         // given
-        Customer customer = Customer.ofNullId("jo@naver.com", "abcde123!", "jojogreen", false);
+        Customer customer = Customer.ofNullId("jo@naver.com", "abcde123!", "jojogreen");
 
         // when
         Long id = customerRepository.create(customer);
@@ -46,7 +46,7 @@ class CustomerRepositoryTest {
     @Test
     void login() {
         // given
-        Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen", false);
+        Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
         customerRepository.create(customer);
 
         // when
@@ -57,5 +57,23 @@ class CustomerRepositoryTest {
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(customer);
+    }
+
+    @DisplayName("해당 아이디의 회원정보를 변경한다.")
+    @Test
+    void update() {
+        // given
+        Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
+        Long id = customerRepository.create(customer);
+        Customer newCustomer = new Customer(id, "jo@naver.com", "1234abcd!", "hunch");
+
+        // when
+        customerRepository.update(newCustomer);
+
+        // then
+        assertThat(customerRepository.findById(id))
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(newCustomer);
     }
 }

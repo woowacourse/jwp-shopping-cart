@@ -80,4 +80,16 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
     }
+
+    public void update(final Customer newCustomer) {
+        String query = "update customer set nickname = :nickname where id = :id and exists" + REAL_CUSTOMER_QUERY;
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", newCustomer.getId());
+        params.put("nickname", newCustomer.getNickname());
+        try {
+            namedParameterJdbcTemplate.update(query, params);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new InvalidCustomerException();
+        }
+    }
 }

@@ -35,6 +35,9 @@ public class CustomerService {
     }
 
     public void update(final TokenRequest tokenRequest, final CustomerUpdateRequest customerUpdateRequest) {
+        Customer oldCustomer = customerRepository.findById(tokenRequest.getId());
+        Customer newCustomer = customerUpdateRequest.updatedCustomer(oldCustomer);
+        customerRepository.update(newCustomer);
     }
 
     public void updatePassword(final TokenRequest tokenRequest, final PasswordRequest passwordRequest) {

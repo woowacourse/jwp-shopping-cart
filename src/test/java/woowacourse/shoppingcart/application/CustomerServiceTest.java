@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CustomerServiceTest {
@@ -56,6 +57,28 @@ class CustomerServiceTest {
                         .isEqualTo(customerRequest.getUserId()),
                 () -> assertThat(customerLoginResponse.getNickname())
                         .isEqualTo(customerRequest.getNickname())
+        );
+    }
+
+    @DisplayName("회원 정보를 변경한다.")
+    @Test
+    void update() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("jo@naver.com", "jojogreen", "abcde1234!");
+        Long id = customerService.signUp(customerRequest);
+        TokenRequest tokenRequest = new TokenRequest(id);
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("hunch");
+
+        // when
+        customerService.update(tokenRequest, customerUpdateRequest);
+
+        // then
+        CustomerResponse newCustomer = customerService.findById(tokenRequest);
+        assertAll(
+                () -> assertThat(newCustomer.getUserId())
+                        .isEqualTo(customerRequest.getUserId()),
+                () -> assertThat(newCustomer.getNickname())
+                        .isEqualTo(customerUpdateRequest.getNickname())
         );
     }
 }
