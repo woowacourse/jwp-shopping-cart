@@ -64,7 +64,6 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,

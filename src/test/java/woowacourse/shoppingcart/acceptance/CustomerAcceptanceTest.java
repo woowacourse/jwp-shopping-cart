@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 
@@ -69,5 +70,25 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
+        final ExtractableResponse<Response> createResponse = createCustomer(signUpDto);
+        final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
+        final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
+
+        final ExtractableResponse<Response> deleteResponse = post(
+                createResponse.header("Location"),
+                new Header("Authorization", "Bearer " + tokenResponseDto.getAccessToken()),
+                new DeleteCustomerDto(TEST_PASSWORD)
+        );
+
+        final ExtractableResponse<Response> customerResponse = get(
+                createResponse.header("Location"),
+                new Header("Authorization", "Bearer " + tokenResponseDto.getAccessToken())
+        );
+
+        assertAll(
+                () -> assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(customerResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+        );
     }
 }
