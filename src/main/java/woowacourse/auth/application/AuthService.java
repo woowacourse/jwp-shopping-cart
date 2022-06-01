@@ -6,22 +6,21 @@ import woowacourse.auth.domain.User;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.AuthenticationException;
-import woowacourse.auth.support.JwtTokenProvider;
 
 @Service
 public class AuthService {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenService tokenService;
     private final UserDao userDao;
 
-    public AuthService(JwtTokenProvider jwtTokenProvider, UserDao userDao) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthService(JwtTokenService tokenService, UserDao userDao) {
+        this.tokenService = tokenService;
         this.userDao = userDao;
     }
 
     public TokenResponse createToken(TokenRequest tokenRequest) {
         User user = findValidUser(tokenRequest.getUsername(), tokenRequest.getPassword());
-        String accessToken = jwtTokenProvider.createToken(user.getTokenPayload());
+        String accessToken = tokenService.createToken(user.getTokenPayload());
         return new TokenResponse(accessToken);
     }
 
@@ -34,7 +33,7 @@ public class AuthService {
     }
 
     public User findUserByToken(String token) {
-        String username = jwtTokenProvider.getPayload(token);
+        String username = tokenService.getPayload(token);
         return findUser(username);
     }
 

@@ -1,4 +1,4 @@
-package woowacourse.auth.support;
+package woowacourse.auth.application;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -13,13 +13,17 @@ import woowacourse.auth.exception.AuthenticationException;
 import woowacourse.auth.exception.ForbiddenException;
 
 @Component
-public class JwtTokenProvider {
+public class JwtTokenService {
 
-    @Value("${security.jwt.token.secret-key}")
-    private String secretKey;
+    private final SecretKey secretKey;
 
-    @Value("${security.jwt.token.expire-length}")
-    private long validityInMilliseconds;
+    private final long validityInMilliseconds;
+
+    public JwtTokenService(@Value("${security.jwt.token.secret-key}") String secretKey,
+                           @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
+        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        this.validityInMilliseconds = validityInMilliseconds;
+    }
 
     public String createToken(String payload) {
         Claims claims = Jwts.claims().setSubject(payload);
@@ -29,7 +33,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(toKey())
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -45,7 +49,7 @@ public class JwtTokenProvider {
 
     private Claims extractClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(toKey())
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -56,9 +60,5 @@ public class JwtTokenProvider {
         if (claims.getExpiration().before(now)) {
             throw new AuthenticationException("다시 로그인해주세요.");
         }
-    }
-
-    private SecretKey toKey() {
-        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 }
