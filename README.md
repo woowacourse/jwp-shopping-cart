@@ -52,7 +52,9 @@
 
 # 기능 목록
 
-- 회원 가입 `POST /customers/signup` → `201 CREATED`
+- 회원 가입 `POST /customers` → `201 CREATED`
+- 아이디 중복 확인 `GET /customers/username/duplication` -> `200 OK`
+  - `{unique}`
 - 로그인 `POST /login` → `200 OK`
     - 아이디와 비밀번호 확인
         - [예외] 아이디나 비밀번호가 잘못 입력되면 `400 Bad Request`
@@ -68,13 +70,13 @@
     - 비밀번호 일치 여부 확인 후 DB의 정보 update
     - [예외] 로그인 되지 않은 상태로 접근하면 `401 Unauthorized`
     - [예외] password가 기존 password와 일치하지 않을 시 `400 Bad Request`
-- 패스워드 수정 `PATCH /customers/me` → `200 OK`
+- 패스워드 수정 `PUT /customers/me/password` → `200 OK`
     - 수정할 비밀번호 request body
         - `{oldPassword, newPassword}`
     - 비밀번호 일치 여부 확인 후 DB 정보 update
     - [예외] 로그인 되지 않은 상태로 접근하면 `401 Unauthorized`
     - [예외] oldPassword가 기존 password와 일치하지 않을 시 `400 Bad Request`
-- 회원 탈퇴 `DELETE /customers/me` → `200 OK`
+- 회원 탈퇴 `DELETE /customers/me` → `204 OK`
     - 해당하는 회원 정보 DB에서 삭제
     - [예외] 로그인 되지 않은 상태로 접근하면 `401 Unauthorized`
 
