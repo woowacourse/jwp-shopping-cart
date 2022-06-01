@@ -31,7 +31,7 @@ public class CustomerDaoTest {
     @DisplayName("회원을 저장한다.")
     void save() {
         // given
-        final Customer customer = new Customer("hamcheeseburger", "corinne", "password123", "address", "01012345678");
+        final Customer customer = new Customer("hamcheeseburger", "corinne", "Password123!", "address", "01012345678");
         // when
         final Customer savedCustomer = customerDao.save(customer);
         // then
@@ -39,7 +39,7 @@ public class CustomerDaoTest {
                 () -> assertThat(savedCustomer.getId()).isEqualTo(2L),
                 () -> assertThat(savedCustomer.getAccount()).isEqualTo("hamcheeseburger"),
                 () -> assertThat(savedCustomer.getNickname()).isEqualTo("corinne"),
-                () -> assertThat(savedCustomer.getPassword()).isEqualTo("password123"),
+                () -> assertThat(savedCustomer.getPassword()).isEqualTo("Password123!"),
                 () -> assertThat(savedCustomer.getAddress()).isEqualTo("address"),
                 () -> assertThat(savedCustomer.getPhoneNumber()).isEqualTo("01012345678")
         );
@@ -57,7 +57,7 @@ public class CustomerDaoTest {
         // then
         final Customer foundCustomer = customer.get();
         assertAll(
-                () -> assertThat(foundCustomer.getAccount()).isEqualTo("leo0842"),
+                () -> assertThat(foundCustomer.getAccount()).isEqualTo("pobi"),
                 () -> assertThat(foundCustomer.getNickname()).isEqualTo("eden"),
                 () -> assertThat(foundCustomer.getPassword()).isEqualTo("Password123!"),
                 () -> assertThat(foundCustomer.getAddress()).isEqualTo("address"),
@@ -69,7 +69,7 @@ public class CustomerDaoTest {
     @DisplayName("회원을 account 로 조회한다.")
     void findByAccount() {
         // given
-        final Optional<Customer> customer = customerDao.findByAccount("leo0842");
+        final Optional<Customer> customer = customerDao.findByAccount("pobi");
 
         // when
         assert (customer.isPresent());
@@ -77,7 +77,7 @@ public class CustomerDaoTest {
         // then
         final Customer foundCustomer = customer.get();
         assertAll(
-                () -> assertThat(foundCustomer.getAccount()).isEqualTo("leo0842"),
+                () -> assertThat(foundCustomer.getAccount()).isEqualTo("pobi"),
                 () -> assertThat(foundCustomer.getNickname()).isEqualTo("eden"),
                 () -> assertThat(foundCustomer.getPassword()).isEqualTo("Password123!"),
                 () -> assertThat(foundCustomer.getAddress()).isEqualTo("address"),

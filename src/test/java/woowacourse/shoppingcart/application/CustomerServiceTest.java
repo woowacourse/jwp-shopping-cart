@@ -32,7 +32,7 @@ class CustomerServiceTest {
 
     public CustomerServiceTest() {
         MockitoAnnotations.openMocks(this);
-        this.customerService = new CustomerService(customerDao);
+        this.customerService = new CustomerService(customerDao, new FakePasswordEncoder());
     }
 
     @Test

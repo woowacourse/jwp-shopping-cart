@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.application.FakePasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.LoginFailException;
@@ -29,7 +30,7 @@ class AuthServiceTest {
 
     AuthServiceTest() {
         openMocks(this);
-        this.authService = new AuthService(customerDao, jwtTokenProvider);
+        this.authService = new AuthService(customerDao, jwtTokenProvider, new FakePasswordEncoder());
     }
 
     @Test

@@ -47,7 +47,7 @@
 - [x] JWT 의존성 변경
 - [x] Error Response DTO 생성
 - [x] Service 에 Transactional 적용
-- [ ] 비밀번호 암호화
+- [x] 비밀번호 암호화
 - [ ] Interceptor 써보기
 - [ ] JwtProvider 설정 값 생성자 주입으로 변경
 - [ ] RestDocs 적용

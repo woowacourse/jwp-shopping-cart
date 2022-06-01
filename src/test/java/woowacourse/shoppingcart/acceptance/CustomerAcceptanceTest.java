@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,6 +20,11 @@ import static woowacourse.auth.acceptance.AcceptanceTestFixture.코린;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
+
+    @BeforeEach
+    void setup() {
+        post("/signup", 에덴);
+    }
 
     @Test
     @DisplayName("회원가입에 성공한다.")
@@ -181,7 +187,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(customerDto.getId()).isEqualTo(1L)
+                () -> assertThat(customerDto.getId()).isEqualTo(2L)
         );
     }
 
