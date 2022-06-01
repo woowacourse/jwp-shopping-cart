@@ -45,8 +45,10 @@
     - [x] 비밀번호가 일치하지 않으면 예외를 발생한다.
 
 - [x] JWT 의존성 변경
+- [ ] Error Response DTO 생성
+- [ ] Service 에 Transactional 적용
 - [ ] 비밀번호 암호화
-- [ ] RestDocs 적용
 - [ ] Interceptor 써보기
-- [ ] test에서 application.properties 주입 방법 without SpringbootTest
+- [ ] JwtProvider 설정 값 생성자 주입으로 변경
+- [ ] RestDocs 적용
 
