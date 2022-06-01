@@ -18,7 +18,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.domain.Age;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Nickname;
+import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.Username;
 
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
@@ -31,6 +35,10 @@ class CustomerDaoTest {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     private final CustomerDao customerDao;
+    private final Username 아이디 = new Username("아이디");
+    private final Password 비밀번호 = new Password("비밀번호");
+    private final Nickname 닉네임 = new Nickname("닉네임");
+    private final Age 열다섯 = new Age(15);
 
     public CustomerDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(jdbcTemplate);
@@ -43,10 +51,10 @@ class CustomerDaoTest {
         @Test
         void 존재하는_고객인_경우_값이_있는_Optional_반환() {
             long 식별자 = 1L;
-            CustomerEntity 고객 = new CustomerEntity(식별자, "아이디", "비밀번호", "닉네임", 15);
+            Customer 고객 = Customer.of(식별자, 아이디, 비밀번호, 닉네임, 열다섯);
             saveFixture(고객);
 
-            CustomerEntity actual = customerDao.findById(식별자).get();
+            Customer actual = customerDao.findById(식별자).get();
 
             assertThat(actual).isEqualTo(고객);
         }
@@ -67,7 +75,7 @@ class CustomerDaoTest {
 
         @Test
         void 유효한_데이터를_저장하려는_경우_성공() {
-            CustomerEntity 신규_고객 = new CustomerEntity("아이디", "비밀번호", "닉네임", 15);
+            Customer 신규_고객 = Customer.ofNoId(아이디, 비밀번호, 닉네임, 열다섯);
 
             Long actual = customerDao.save(신규_고객);
             Long expected = 1L;
@@ -77,7 +85,7 @@ class CustomerDaoTest {
 
         @Test
         void 중복되는_아이디로_데이터를_저장하려는_경우_예외발생() {
-            CustomerEntity 고객 = new CustomerEntity(1L, "아이디", "비밀번호", "닉네임", 15);
+            Customer 고객 = Customer.of(1L, 아이디, 비밀번호, 닉네임, 열다섯);
             saveFixture(고객);
 
             assertThatThrownBy(() -> customerDao.save(고객))
@@ -92,23 +100,24 @@ class CustomerDaoTest {
         @Test
         void 유효한_데이터로_수정하려는_경우_성공() {
             long 식별자 = 1L;
-            CustomerEntity 고객 = new CustomerEntity(식별자, "아이디", "비밀번호", "닉네임", 15);
-            CustomerEntity 수정된_고객 = new CustomerEntity(식별자, "아이디2", "비밀번호2", "닉네임2", 80);
+            Customer 고객 = Customer.of(식별자, 아이디, 비밀번호, 닉네임, 열다섯);
+            Customer 수정된_고객 = Customer.of(식별자, new Username("아이디2")
+                    , new Password("비밀번호2"), new Nickname("닉네임2"), new Age(80));
             saveFixture(고객);
 
             customerDao.update(수정된_고객);
-            CustomerEntity actual = findById(식별자);
+            Customer actual = findById(식별자);
 
             assertThat(actual).isEqualTo(수정된_고객);
         }
 
         @Test
         void 중복되는_아이디로_데이터를_수정하려는_경우_예외발생() {
-            String 조시 = "조시";
-            String 정 = "정";
-            saveFixture(new CustomerEntity(1L, 조시, "비밀번호", "닉네임", 15));
-            saveFixture(new CustomerEntity(2L, 정, "비밀번호", "닉네임", 15));
-            CustomerEntity 조시가_되고_싶은_정 = new CustomerEntity(2L, 조시, "비밀번호", "닉네임", 15);
+            Username 조시 = new Username("조시");
+            Username 정 = new Username("정");
+            saveFixture(Customer.of(1L, 조시, 비밀번호, 닉네임, 열다섯));
+            saveFixture(Customer.of(2L, 정, 비밀번호, 닉네임, 열다섯));
+            Customer 조시가_되고_싶은_정 = Customer.of(2L, 조시, 비밀번호, 닉네임, 열다섯);
 
             assertThatThrownBy(() -> customerDao.update(조시가_되고_싶은_정))
                     .isInstanceOf(DataAccessException.class);
@@ -116,7 +125,7 @@ class CustomerDaoTest {
 
         @Test
         void 존재하지_않는_데이터를_수장하려는_경우_예외_미발생() {
-            CustomerEntity 고객 = new CustomerEntity(1L, "아이디", "비밀번호", "닉네임", 15);
+            Customer 고객 = Customer.of(1L, 아이디, 비밀번호, 닉네임, 열다섯);
 
             assertThatNoException()
                     .isThrownBy(() -> customerDao.update(고객));
@@ -130,7 +139,7 @@ class CustomerDaoTest {
         @Test
         void 제거_성공() {
             long 식별자 = 1L;
-            CustomerEntity 고객 = new CustomerEntity(식별자, "아이디", "비밀번호", "닉네임", 15);
+            Customer 고객 = Customer.of(식별자, 아이디, 비밀번호, 닉네임, 열다섯);
             saveFixture(고객);
 
             customerDao.delete(고객);
@@ -141,14 +150,14 @@ class CustomerDaoTest {
 
         @Test
         void 존재하지_않는_데이터를_제거하려는_경우_예외_미발생() {
-            CustomerEntity 고객 = new CustomerEntity(1L, "아이디", "비밀번호", "닉네임", 15);
+            Customer 고객 = Customer.of(1L, 아이디, 비밀번호, 닉네임, 열다섯);
 
             assertThatNoException()
                     .isThrownBy(() -> customerDao.delete(고객));
         }
     }
 
-    private CustomerEntity findById(Long customerId) {
+    private Customer findById(Long customerId) {
         final String sql = "SELECT id, username, password, nickname, age FROM customer " +
                 "WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -157,7 +166,7 @@ class CustomerDaoTest {
         return jdbcTemplate.queryForObject(sql, params, CustomerDao.ROW_MAPPER);
     }
 
-    private void saveFixture(CustomerEntity customer) {
+    private void saveFixture(Customer customer) {
         final String sql = "INSERT INTO customer(id, username, password, nickname, age) "
                 + "VALUES(:id, :username, :password, :nickname, :age)";
         SqlParameterSource params = new BeanPropertySqlParameterSource(customer);

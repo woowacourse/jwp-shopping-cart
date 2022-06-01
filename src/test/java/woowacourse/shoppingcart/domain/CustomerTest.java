@@ -15,7 +15,7 @@ class CustomerTest {
         Password password = new Password("validPassword");
         Nickname nickname = new Nickname("닉네임");
         Age age = new Age(10);
-        Customer customer = new Customer(username, password, nickname, age);
+        Customer customer = Customer.ofNoId(username, password, nickname, age);
 
         boolean result = customer.hasSamePassword(password);
 

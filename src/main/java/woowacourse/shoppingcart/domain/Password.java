@@ -6,7 +6,7 @@ import woowacourse.shoppingcart.util.StringUtil;
 
 public class Password {
 
-    private static final Pattern PASSWORD_REGEX = Pattern.compile("^[a-zA-Z\\d!@#$%^*]+$");
+    private static final Pattern PASSWORD_REGEX = Pattern.compile("^(?=.*[!@#$%^*]{0,20})(?=.*[a-zA-Z])(?=.*[0-9]).$\n");
     private static final String WRONG_FORMAT_EXCEPTION = "비밀번호는 영문 대소문자, 숫자, 특수문자(!@#$%^*) 조합이여야 합니다.";
     private static final int MIN_PASSWORD_LENGTH = 8;
     private static final int MAX_PASSWORD_LENGTH = 20;
