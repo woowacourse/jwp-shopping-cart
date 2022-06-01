@@ -4,6 +4,7 @@ import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,17 +30,26 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpDto signUpDto){
         final Long createdId = customerService.signUp(signUpDto);
 
         return ResponseEntity.created(URI.create("/api/customers/" + createdId)).build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerDto> detailCustomer(@PathVariable final Long id,
+                                                      @AuthenticationPrincipal final LoginCustomer loginCustomer) {
+        checkAuthorization(id, loginCustomer.getEmail());
+
+        final CustomerDto customer = customerService.findCustomerById(id);
+        return ResponseEntity.ok(customer);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(@PathVariable final Long id,
-                                                      @RequestBody UpdateCustomerDto updateCustomerDto,
-                                                      @AuthenticationPrincipal LoginCustomer loginCustomer) {
+                                                      @RequestBody final UpdateCustomerDto updateCustomerDto,
+                                                      @AuthenticationPrincipal final LoginCustomer loginCustomer) {
         checkAuthorization(id, loginCustomer.getEmail());
         final CustomerDto customerDto = customerService.updateCustomer(id, updateCustomerDto);
 
