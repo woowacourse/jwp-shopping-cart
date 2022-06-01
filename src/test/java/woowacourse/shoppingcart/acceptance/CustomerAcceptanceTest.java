@@ -25,7 +25,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = 회원가입_요청(email, password, nickname);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("회원정보 양식이 잘못됐을 때 400에러를 응답한다.")
