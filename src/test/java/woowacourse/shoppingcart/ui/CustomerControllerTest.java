@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -23,6 +23,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
 @AutoConfigureMockMvc
@@ -99,22 +100,6 @@ class CustomerControllerTest {
         }
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"testwoowacoursecom", "test@woowacoursecom", "testwoowacourse.com", "@", ".", "@.",
-            ".@wo.com", "test.woowacourse@com", "", " "})
-    @DisplayName("get 메서드는 로그인 아이디가 이메일 형식이 아니면, Not Found를 던진다.")
-    void get_loginId_NotEmail(String loginId) throws Exception {
-        // given
-        String authorization = "Bearer " + jwtTokenProvider.createToken(loginId);
-
-        // when
-        final ResultActions response = mockMvc.perform(get("/customers/me")
-                .header(HttpHeaders.AUTHORIZATION, authorization));
-
-        // then
-        response.andExpect(status().isNotFound());
-    }
-
     @Nested
     @DisplayName("update 메서드는")
     class update {
@@ -167,6 +152,30 @@ class CustomerControllerTest {
 
             // when
             final ResultActions response = mockMvc.perform(put("/customers/me")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtTokenProvider.createToken(페퍼_아이디))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            response.andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
+    @DisplayName("delete 메서드는")
+    class delete {
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", " "})
+        @DisplayName("비밀번호가 공백이면, Bad Request를 던진다.")
+        void password_blank(String password) throws Exception {
+            // given
+            CustomerDeleteRequest request = new CustomerDeleteRequest(password);
+            String requestContent = objectMapper.writeValueAsString(request);
+
+            // when
+            final ResultActions response = mockMvc.perform(delete("/customers/me")
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtTokenProvider.createToken(페퍼_아이디))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent))

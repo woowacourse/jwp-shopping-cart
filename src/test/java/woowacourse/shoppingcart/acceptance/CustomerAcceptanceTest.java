@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -118,5 +119,22 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        //given
+        createCustomer(페퍼);
+        ExtractableResponse<Response> login = login(페퍼_아이디, 페퍼_비밀번호);
+        String accessToken = login.as(TokenResponse.class).getAccessToken();
+
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .body(new CustomerDeleteRequest(페퍼_비밀번호))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/customers/me")
+                .then().log().all()
+                .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }
