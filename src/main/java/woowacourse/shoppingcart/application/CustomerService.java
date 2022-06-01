@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.LoginCustomer;
+import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -45,5 +46,13 @@ public class CustomerService {
         if (!customer.isSamePassword(request.getPassword())) {
             throw new IllegalArgumentException("비밀번호는 변경할 수 없습니다.");
         }
+    }
+
+    public void delete(LoginCustomer loginCustomer, CustomerDeleteRequest customerDeleteRequest) {
+        Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
+        if (!customer.isSamePassword(customerDeleteRequest.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        customerDao.delete(loginCustomer.getLoginId());
     }
 }
