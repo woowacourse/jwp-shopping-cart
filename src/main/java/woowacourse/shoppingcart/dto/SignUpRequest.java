@@ -1,4 +1,4 @@
-package woowacourse.auth.dto;
+package woowacourse.shoppingcart.dto;
 
 import woowacourse.auth.domain.Customer;
 

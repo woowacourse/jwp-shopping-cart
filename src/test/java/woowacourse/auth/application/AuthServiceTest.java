@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
-import woowacourse.auth.dto.SignUpRequest;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest

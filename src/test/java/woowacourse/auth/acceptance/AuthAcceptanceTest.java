@@ -8,11 +8,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
-import woowacourse.auth.dto.SignUpRequest;
-import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -29,12 +29,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
-        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
 
         // when
         String token = RestAssured
                 .given().log().all()
-                .body(tokenRequest)
+                .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")
@@ -58,10 +58,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
         String token = RestAssured
                 .given().log().all()
-                .body(tokenRequest)
+                .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")
@@ -100,10 +100,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 잘못된 id, password를 사용해 토큰을 요청하면
         // then
         // 토큰 발급 요청이 거부된다
-        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1235");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1235");
         RestAssured
                 .given().log().all()
-                .body(tokenRequest)
+                .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")

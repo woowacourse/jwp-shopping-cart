@@ -6,10 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.DeleteCustomerRequest;
+import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
-import woowacourse.auth.dto.SignUpRequest;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
+import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 
 @DisplayName("회원 관련 기능")
@@ -42,10 +42,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
         String token = RestAssured
                 .given().log().all()
-                .body(tokenRequest)
+                .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")
@@ -74,10 +74,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
         String token = RestAssured
                 .given().log().all()
-                .body(tokenRequest)
+                .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")
@@ -108,10 +108,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
         String token = RestAssured
                 .given().log().all()
-                .body(tokenRequest)
+                .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")
@@ -141,10 +141,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
         String token = RestAssured
                 .given().log().all()
-                .body(tokenRequest)
+                .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")
@@ -174,10 +174,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        TokenRequest tokenRequest = new TokenRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
         RestAssured
                 .given().log().all()
-                .body(tokenRequest)
+                .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")

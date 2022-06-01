@@ -2,11 +2,11 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.dto.DeleteCustomerRequest;
-import woowacourse.auth.dto.SignUpRequest;
-import woowacourse.auth.dto.SignUpResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
+import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
