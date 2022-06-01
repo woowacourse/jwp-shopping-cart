@@ -106,4 +106,24 @@ public class CustomerDaoTest {
                 () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
         );
     }
+
+    @DisplayName("회원 비밀번호를 수정한다.")
+    @Test
+    void updatePassword() {
+        // given
+        Customer savedCustomer = new Customer(null, "test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerDao.save(savedCustomer);
+
+        // when
+        customerDao.updatePassword(customerId, "123dkhsd!");
+
+        // then
+        Customer customer = customerDao.findById(customerId).get();
+        assertAll(
+                () -> assertThat(customer.getId()).isEqualTo(customerId),
+                () -> assertThat(customer.getUserId()).isEqualTo("test@woowacourse.com"),
+                () -> assertThat(customer.getNickname()).isEqualTo("test"),
+                () -> assertThat(customer.getPassword()).isEqualTo("123dkhsd!")
+        );
+    }
 }

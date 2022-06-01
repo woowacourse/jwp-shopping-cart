@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -279,5 +280,47 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("닉네임을 입력해주세요.");
+    }
+
+    @DisplayName("존재하지 않는 사용자를 수정하려고 하면 안된다.")
+    @Test
+    void updatePassword() {
+        // given
+        TokenRequest tokenRequest = new TokenRequest("-1");
+        CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234(dddd", "47374*ffff");
+
+        // when & then
+        assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("사용자 비밀번호 수정 시 닉네임에 null 을 입력하면 안된다.")
+    @Test
+    void updatePasswordNullException() {
+        // given
+        Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
+        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234asdf!", null);
+
+        // when & than
+        assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("비밀번호를 입력해주세요.");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    @DisplayName("사용자 비밀번호 수정 시 닉네임에 빈값을 입력하면 안된다.")
+    void updatePasswordBlankException(String password) {
+        // given
+        Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
+        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234asdf!", password);
+
+        // when & than
+        assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("비밀번호를 입력해주세요.");
     }
 }

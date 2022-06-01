@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -49,6 +50,13 @@ public class CustomerService {
         customerDao.update(customerForUpdate.getId(), customerForUpdate.getNickname());
     }
 
+    @Transactional
+    public void updatePassword(final TokenRequest tokenRequest, final CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
+        Customer customer = findCustomerById(tokenRequest.getId());
+        Customer customerForUpdate = createCustomerForUpdatePassword(customerUpdatePasswordRequest, customer);
+        customerDao.updatePassword(customerForUpdate.getId(), customerForUpdate.getPassword());
+    }
+
     private Customer findCustomerByUserId(final String userId) {
         return customerDao.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -85,5 +93,10 @@ public class CustomerService {
     private Customer createCustomerForUpdate(final CustomerUpdateRequest customerUpdateRequest, final Customer customer) {
         return new Customer(customer.getId(), customer.getUserId(),
                 customerUpdateRequest.getNickname(), customer.getPassword());
+    }
+
+    private Customer createCustomerForUpdatePassword(final CustomerUpdatePasswordRequest customerUpdatePasswordRequest, final Customer customer) {
+        return new Customer(customer.getId(), customer.getUserId(),
+                customer.getNickname(), customerUpdatePasswordRequest.getNewPassword());
     }
 }

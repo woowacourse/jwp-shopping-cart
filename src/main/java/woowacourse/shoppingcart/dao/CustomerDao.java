@@ -95,4 +95,9 @@ public class CustomerDao {
         String query = "UPDATE customer SET nickname = ? WHERE id = ? and withdrawal = ?";
         jdbcTemplate.update(query, nickname, id, NOT_WITHDRAWAL);
     }
+
+    public void updatePassword(final Long id, final String password) {
+        String query = "UPDATE customer SET password = ? WHERE id = ? and withdrawal = ?";
+        jdbcTemplate.update(query, password, id, NOT_WITHDRAWAL);
+    }
 }
