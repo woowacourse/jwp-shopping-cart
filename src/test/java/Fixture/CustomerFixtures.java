@@ -23,7 +23,7 @@ public class CustomerFixtures {
 
     public static final String YAHO_USERNAME = "pup-paw";
     public static final String YAHO_EMAIL = "pup-paw@gmail.com";
-    public static final String YAHO_PASSWORD = "1q2w3e4r!";
+    public static final String YAHO_PASSWORD = "q1w2e3r4!";
     public static final String YAHO_ADDRESS = "서울 강남구 테헤란로 411, 성담빌딩 13층 (선릉 캠퍼스)";
     public static final String YAHO_PHONE_NUMBER = "010-0000-0000";
 

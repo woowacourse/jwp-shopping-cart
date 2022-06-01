@@ -41,7 +41,7 @@ public class CustomerDao {
     public Long findIdByUsername(String username) {
         try {
             String sql = "SELECT id FROM customer WHERE username = :username";
-            SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(username);
+            SqlParameterSource parameterSource = new MapSqlParameterSource("username", username);
             return jdbcTemplate.queryForObject(sql, parameterSource, Long.class);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
