@@ -1,7 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.exception.InvalidLoginFormException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -19,15 +19,15 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public String createToken(LoginRequest loginRequest) {
-        Customer customer = customerDao.findByEmail(loginRequest.getEmail())
+    public String createToken(TokenRequest tokenRequest) {
+        Customer customer = customerDao.findByEmail(tokenRequest.getEmail())
                 .orElseThrow(InvalidCustomerException::new);
 
-        if (!customer.isValidPassword(loginRequest.getPassword())) {
+        if (!customer.isValidPassword(tokenRequest.getPassword())) {
             throw new InvalidLoginFormException();
         }
 
-        return jwtTokenProvider.createToken(loginRequest.getEmail());
+        return jwtTokenProvider.createToken(tokenRequest.getEmail());
     }
 
 }

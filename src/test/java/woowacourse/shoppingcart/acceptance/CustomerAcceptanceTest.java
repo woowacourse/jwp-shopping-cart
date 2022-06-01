@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -101,13 +99,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         회원가입_요청("email@email.com", "12345678a", "tonic");
         String token = 토큰_요청("email@email.com", "12345678a");
 
-        assertThat(회원탈퇴_요청(token).statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-
-        ExtractableResponse<Response> response = 회원정보_요청(token);
+        ExtractableResponse<Response> 회원탈퇴_응답 = 회원탈퇴_요청(token);
+        ExtractableResponse<Response> 회원정보_응답 = 회원정보_요청(token);
 
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1002)
+                () -> assertThat(회원탈퇴_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(회원정보_응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(회원정보_응답.body().jsonPath().getInt("errorCode")).isEqualTo(1002)
         );
     }
 
@@ -132,15 +130,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         회원가입_요청("email@email.com", "12345678a", "tonic");
         String token = 토큰_요청("email@email.com", "12345678a");
 
-        Map<String, String> body = Map.of("nickname", nickname, "password", password);
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .when().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(body)
-                .put("/users/me")
-                .then().log().all().extract();
+        ExtractableResponse<Response> response = 회원정보_수정_요청(nickname, password, token);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -168,27 +158,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String newNickName = "토닉";
         String newPassword = "newpassword1";
 
-        Map<String, String> body = Map.of("nickname", newNickName, "password", newPassword);
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .when().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(body)
-                .put("/users/me")
-                .then().log().all().extract();
-
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-
-        ExtractableResponse<Response> response2 = 회원정보_요청(token);
+        ExtractableResponse<Response> 회원정보_수정_응답 = 회원정보_수정_요청(newNickName, newPassword, token);
+        ExtractableResponse<Response> 수정후_회원정보_응답 = 회원정보_요청(token);
+        ExtractableResponse<Response> 수정후_로그인_응답 = 로그인_요청(email, newPassword);
 
         assertAll(
-                () -> assertThat(response2.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response2.body().jsonPath().getString("nickname")).isEqualTo(newNickName)
+                () -> assertThat(회원정보_수정_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(수정후_회원정보_응답.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(수정후_회원정보_응답.body().jsonPath().getString("nickname")).isEqualTo(newNickName),
+                () -> assertThat(수정후_로그인_응답.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
-
-        assertThat(로그인_요청(email, newPassword).statusCode()).isEqualTo(HttpStatus.OK.value());
-
     }
 }

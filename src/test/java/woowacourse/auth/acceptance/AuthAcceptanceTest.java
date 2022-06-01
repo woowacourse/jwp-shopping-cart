@@ -76,8 +76,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("정상 케이스일 때 토큰과 함께 200을 응답")
     @Test
     void validCustomerLoginRequest() {
-        String password = "12345678a";
         String email = "email@email.com";
+        String password = "12345678a";
         String nickname = "tonic";
 
         회원가입_요청(email, password, nickname);
@@ -118,15 +118,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원정보_요청(accessToken);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보 조회 요청이 거부된다
     }
 }

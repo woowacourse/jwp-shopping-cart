@@ -70,4 +70,17 @@ public class AcceptanceTest {
                 .delete("/users/me")
                 .then().log().all().extract();
     }
+
+    protected ExtractableResponse<Response> 회원정보_수정_요청(String nickname, String password, String token) {
+        Map<String, String> body = Map.of("nickname", nickname, "password", password);
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .when().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(body)
+                .put("/users/me")
+                .then().log().all().extract();
+        return response;
+    }
 }

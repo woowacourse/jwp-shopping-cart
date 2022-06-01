@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.util.ArrayList;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -30,8 +28,9 @@ class CustomerServiceTest {
     @DisplayName("정상적으로 회원 등록")
     @Test
     void addCustomer() {
-        CustomerRequest request = new CustomerRequest("tonic@email.com", "12345678a", "토닉");
-        customerService.registCustomer(request);
+        SignUpRequest request = new SignUpRequest("tonic@email.com", "12345678a", "토닉");
+        customerService.registerCustomer(request);
+
         Customer customer = customerService.findByEmail("tonic@email.com");
         assertAll(
                 () -> assertThat(customer.getEmail()).isEqualTo("tonic@email.com"),
@@ -44,18 +43,18 @@ class CustomerServiceTest {
     @DisplayName("중복된 email로 회원 등록")
     @Test
     void duplicatedEmailCustomer() {
-        CustomerRequest request = new CustomerRequest("tonic@email.com", "12345678a", "토닉");
-        customerService.registCustomer(request);
+        SignUpRequest request = new SignUpRequest("tonic@email.com", "12345678a", "토닉");
+        customerService.registerCustomer(request);
 
-        assertThatThrownBy(() -> customerService.registCustomer(request))
+        assertThatThrownBy(() -> customerService.registerCustomer(request))
                 .isInstanceOf(DuplicateCustomerException.class);
     }
 
     @DisplayName("email로 회원 조회")
     @Test
     void findByEmail() {
-        CustomerRequest request = new CustomerRequest("tonic@email.com", "12345678a", "토닉");
-        customerService.registCustomer(request);
+        SignUpRequest request = new SignUpRequest("tonic@email.com", "12345678a", "토닉");
+        customerService.registerCustomer(request);
 
         Customer customer = customerService.findByEmail("tonic@email.com");
 
@@ -83,8 +82,8 @@ class CustomerServiceTest {
     @DisplayName("이메일로 회원 탈퇴")
     @Test
     void deleteByEmail() {
-        CustomerRequest request = new CustomerRequest("tonic@email.com", "12345678a", "토닉");
-        customerService.registCustomer(request);
+        SignUpRequest request = new SignUpRequest("tonic@email.com", "12345678a", "토닉");
+        customerService.registerCustomer(request);
 
         customerService.deleteByEmail("tonic@email.com");
 
@@ -101,8 +100,8 @@ class CustomerServiceTest {
     @DisplayName("정상적인 회원 정보 수정")
     @Test
     void updateCustomer() {
-        CustomerRequest request = new CustomerRequest("tonic@email.com", "12345678a", "토닉");
-        customerService.registCustomer(request);
+        SignUpRequest request = new SignUpRequest("tonic@email.com", "12345678a", "토닉");
+        customerService.registerCustomer(request);
 
         String newNickname = "토닉2";
         String newPassword = "newPassword1";

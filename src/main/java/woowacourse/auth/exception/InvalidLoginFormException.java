@@ -1,7 +1,5 @@
 package woowacourse.auth.exception;
 
-import woowacourse.shoppingcart.exception.ShoppingCartException;
-
 public class InvalidLoginFormException extends RuntimeException {
 
     private static final int ERROR_CODE = 1002;

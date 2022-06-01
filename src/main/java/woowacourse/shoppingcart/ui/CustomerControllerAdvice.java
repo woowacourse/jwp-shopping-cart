@@ -13,7 +13,7 @@ import woowacourse.shoppingcart.exception.ShoppingCartException;
 
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class CustomerAdvice {
+public class CustomerControllerAdvice {
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ErrorResponse> handleInvalidRequest() {
