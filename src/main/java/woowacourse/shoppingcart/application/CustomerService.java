@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;

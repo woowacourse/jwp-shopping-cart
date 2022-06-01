@@ -1,7 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.support.JwtTokenProvider;

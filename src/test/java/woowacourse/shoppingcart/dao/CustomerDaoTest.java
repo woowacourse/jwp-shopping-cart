@@ -10,7 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

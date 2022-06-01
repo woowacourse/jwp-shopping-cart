@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository

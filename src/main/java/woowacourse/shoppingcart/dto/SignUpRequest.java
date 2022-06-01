@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.Customer;
 
 public class SignUpRequest {
 
