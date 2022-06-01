@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,17 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.entity.CustomerEntity;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -67,7 +66,8 @@ public class CustomerDaoTest {
         final String password = "password123!";
 
         // when
-        final CustomerEntity customerEntity = customerDao.findByEmailAndPassword(email, password);
+        final CustomerEntity customerEntity = customerDao.findByEmailAndPassword(email, password)
+                .orElseThrow();
         final Customer customer = customerEntity.getCustomer();
 
         // then
@@ -83,9 +83,7 @@ public class CustomerDaoTest {
             "notexistingemail@email.com, invalid123!"})
     void findByEmailAndPassword(final String email, final String password) {
         // when
-        assertThatThrownBy(() -> customerDao.findByEmailAndPassword(email, password))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("아이디나 비밀번호를 잘못 입력했습니다.");
+        assertThat(customerDao.findByEmailAndPassword(email, password)).isEmpty();
     }
 
     @DisplayName("중복된 이메일이 있는지 확인한다.")

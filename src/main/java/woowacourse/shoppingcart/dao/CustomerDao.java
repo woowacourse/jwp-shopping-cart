@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -44,7 +45,7 @@ public class CustomerDao {
         }
     }
 
-    public CustomerEntity findByEmailAndPassword(final String email, final String password) {
+    public Optional<CustomerEntity> findByEmailAndPassword(final String email, final String password) {
         final String sql = "SELECT id, email, nickname, password FROM customer "
                 + "WHERE email = :email and password = :password";
 
@@ -53,9 +54,9 @@ public class CustomerDao {
         params.put("password", password);
 
         try {
-            return jdbcTemplate.queryForObject(sql, params, CUSTOMER_ENTITY_ROW_MAPPER);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, CUSTOMER_ENTITY_ROW_MAPPER));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다.");
+            return Optional.empty();
         }
     }
 
