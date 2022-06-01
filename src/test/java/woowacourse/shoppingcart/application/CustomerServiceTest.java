@@ -66,4 +66,13 @@ class CustomerServiceTest {
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }
+
+    @DisplayName("이메일로 회원정보를 찾는다.")
+    @Test
+    void findCustomerByEmail() {
+        String email = "email@email.com";
+        Customer customer = customerService.findCustomerByEmail(email);
+
+        assertThat(customer).isEqualTo(new Customer(email, "파랑", "password123!"));
+    }
 }

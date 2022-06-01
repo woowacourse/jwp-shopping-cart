@@ -33,4 +33,8 @@ public class CustomerService {
         customerDao.findByEmailAndPassword(email, passwordRequest.getPassword())
                 .orElseThrow(() -> new InvalidCustomerException("비밀번호가 일치하지 않습니다."));
     }
+
+    public Customer findCustomerByEmail(String email) {
+        return customerDao.findByEmail(email).getCustomer();
+    }
 }
