@@ -58,4 +58,26 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.save(new CustomerSaveRequest("email2@email.com", "password1234A!", "rookie")))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    @DisplayName("id 값으로 회원을 조회한다.")
+    void findById() {
+        // given
+        CustomerSaveRequest request = new CustomerSaveRequest("email@email.com", "password1234A!", "rookie");
+        Long customerId = customerService.save(request);
+
+        // when
+        CustomerResponse customerResponse = customerService.findById(customerId);
+
+        // then
+        assertThat(customerResponse).isEqualTo(new CustomerResponse(1L, "email@email.com", "rookie"));
+    }
+
+    @Test
+    @DisplayName("id 값이 존재하지 않는 회원을 조회할 경우 예외가 발생한다.")
+    void findByNotExistedId() {
+        // given & when & then
+        assertThatThrownBy(() -> customerService.findById(1L))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }

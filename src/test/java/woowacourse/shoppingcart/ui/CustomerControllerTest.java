@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.config.AuthenticationPrincipalConfig;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.ui.dto.CustomerSignUpRequest;
 
@@ -32,6 +34,19 @@ class CustomerControllerTest {
 
     @MockBean
     private AuthService authService;
+
+    @MockBean
+    private AuthenticationPrincipalConfig authenticationPrincipalConfig;
+
+    @Test
+    @DisplayName("아이디, 패스워드, 닉네임을 통해서 회원가입을 할 수 있다.")
+    void saveCustomer() throws Exception {
+        // given & when
+        ResultActions 회원가입_응답 = postCustomers("email@email.com", "password123!Q", "rookie");
+
+        // then
+        assertThat(회원가입_응답.andExpect(status().isCreated()));
+    }
 
     @Test
     @DisplayName("회원가입 시 공백을 입력하면 예외가 발생한다.")

@@ -24,10 +24,8 @@ public class ResponseCreator {
 
     public static ExtractableResponse<Response> postLogin(String email, String password) {
         TokenRequest request = new TokenRequest(email, password);
-
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
                 .body(request)
                 .post("/api/login")
                 .then().log().all()
@@ -36,8 +34,8 @@ public class ResponseCreator {
 
     public static ExtractableResponse<Response> getCustomers(TokenResponse tokenResponse) {
         return RestAssured.given().log().all()
-                .when()
-                .header("Authorization", "Bearer " + tokenResponse)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
                 .get("/api/customers/me")
                 .then().log().all()
                 .extract();

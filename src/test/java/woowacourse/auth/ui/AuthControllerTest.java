@@ -1,4 +1,4 @@
-package woowacourse.auth.acceptance;
+package woowacourse.auth.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.ui.AuthController;
+import woowacourse.auth.config.AuthenticationPrincipalConfig;
 import woowacourse.auth.ui.dto.TokenRequest;
 
 @WebMvcTest(AuthController.class)
@@ -30,6 +30,9 @@ public class AuthControllerTest {
 
     @MockBean
     private AuthService authService;
+
+    @MockBean
+    private AuthenticationPrincipalConfig authenticationPrincipalConfig;
 
     @Test
     @DisplayName("아이디, 페스워드를 통해서 로그인을 하면 토큰을 발급받는다.")

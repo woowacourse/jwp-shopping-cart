@@ -64,4 +64,14 @@ public class Customer {
     public String getNickname() {
         return nickname;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                '}';
+    }
 }

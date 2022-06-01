@@ -40,13 +40,6 @@ public class CustomerDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameter).longValue();
     }
 
-    public Customer findById(Long id) {
-        String query = "SELECT id, email, password, nickname FROM customer WHERE id = :id";
-        SqlParameterSource nameParameters = new MapSqlParameterSource("id", id);
-
-        return template.queryForObject(query, nameParameters, CUSTOMER_ROW_MAPPER);
-    }
-
     public Long findIdByUserName(final String userName) {
         try {
             final String query = "SELECT id FROM customer WHERE username = :username";
@@ -70,6 +63,18 @@ public class CustomerDao {
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("nickname", nickname);
         Long count = template.queryForObject(sql, nameParameters, Long.class);
         return count != 0;
+    }
+
+    public Optional<Customer> findById(Long id) {
+        String query = "SELECT id, email, password, nickname FROM customer WHERE id = :id";
+        SqlParameterSource nameParameters = new MapSqlParameterSource("id", id);
+
+        try {
+            Customer customer = template.queryForObject(query, nameParameters, CUSTOMER_ROW_MAPPER);
+            return Optional.ofNullable(customer);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<Customer> findByEmailAndPassword(String email, String password) {

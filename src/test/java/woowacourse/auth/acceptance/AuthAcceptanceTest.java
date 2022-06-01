@@ -1,6 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.acceptance.ResponseCreator.getCustomers;
 import static woowacourse.shoppingcart.acceptance.ResponseCreator.postLogin;
 
 import io.restassured.response.ExtractableResponse;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.http.HttpStatus;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.acceptance.ResponseCreator;
 
@@ -41,17 +43,17 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(로그인_응답됨.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-//    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-//    @Test
-//    void myInfoWithWrongBearerAuth() {
-//        // given
-//        ResponseCreator.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
-//        TokenResponse 위변조_토큰 = new TokenResponse("Forgery_Token");
-//
-//        // when
-//        ExtractableResponse<Response> 회원_조회_응답됨 = getCustomers(위변조_토큰);
-//
-//        // then
-//        assertThat(회원_조회_응답됨.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-//    }
+    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @Test
+    void myInfoWithWrongBearerAuth() {
+        // given
+        ResponseCreator.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
+        TokenResponse 위변조_토큰 = new TokenResponse("Forgery_Token");
+
+        // when
+        ExtractableResponse<Response> 회원_조회_응답됨 = getCustomers(위변조_토큰);
+
+        // then
+        assertThat(회원_조회_응답됨.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 }

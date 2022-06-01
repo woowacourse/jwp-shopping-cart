@@ -21,17 +21,18 @@ public class CustomerService {
     }
 
     private void validateCustomerRequest(CustomerSaveRequest request) {
-        if (customerDao.existByEmail(request.getEmail())){
+        if (customerDao.existByEmail(request.getEmail())) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 이메일입니다.");
         }
 
-        if (customerDao.existByNickname(request.getNickname())){
+        if (customerDao.existByNickname(request.getNickname())) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 닉네임입니다.");
         }
     }
 
     public CustomerResponse findById(Long id) {
-        Customer customer = customerDao.findById(id);
+        Customer customer = customerDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
         return new CustomerResponse(customer);
     }
 }

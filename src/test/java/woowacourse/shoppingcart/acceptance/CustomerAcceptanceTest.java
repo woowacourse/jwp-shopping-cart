@@ -1,13 +1,18 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.acceptance.ResponseCreator.getCustomers;
 import static woowacourse.shoppingcart.acceptance.ResponseCreator.postCustomers;
+import static woowacourse.shoppingcart.acceptance.ResponseCreator.postLogin;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.auth.dto.TokenResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -25,6 +30,21 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
+        // given
+        postCustomers("basic@email.com", "password123@Q", "rookie");
+        ExtractableResponse<Response> 로그인_응답됨 = postLogin("basic@email.com", "password123@Q");
+
+        // when
+        TokenResponse tokenResponse = 로그인_응답됨.as(TokenResponse.class);
+        ExtractableResponse<Response> 사용자_정보_응답됨 = getCustomers(tokenResponse);
+
+        // then
+        CustomerResponse 사용자_정보 = 사용자_정보_응답됨.as(CustomerResponse.class);
+        assertAll(
+                () -> assertThat(사용자_정보_응답됨.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(사용자_정보).usingRecursiveComparison()
+                        .isEqualTo(new CustomerResponse(1L, "basic@email.com", "rookie"))
+        );
     }
 
     @DisplayName("내 정보 수정")

@@ -17,4 +17,12 @@ public class TokenCreateRequest {
     public String getPassword() {
         return password;
     }
+
+    @Override
+    public String toString() {
+        return "TokenCreateRequest{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
