@@ -104,11 +104,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("유효하지 않는 토큰으로 회원 정보를 조회하는 경우 401 반환")
     @Test
     void requestGetMeWithInvalidToken() {
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer invalidToken")
-                .when().log().all().get("/users/me")
-                .then().log().all().extract();
+        ExtractableResponse<Response> response = 회원정보_요청("invalidToken");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -119,11 +115,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         회원가입_요청("email@email.com", "12345678a","tonic");
         String accessToken = 토큰_요청("email@email.com", "12345678a");
 
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .when().log().all().get("/users/me")
-                .then().log().all().extract();
+        ExtractableResponse<Response> response = 회원정보_요청(accessToken);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }

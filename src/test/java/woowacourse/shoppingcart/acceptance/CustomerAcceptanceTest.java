@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.stream.Stream;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("회원 관련 기능")
@@ -76,9 +74,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         회원가입_요청(email, password, nickname);
         String token = 토큰_요청(email, password);
 
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .when().log().all().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).get("/users/me")
-                .then().log().all().extract();
+        ExtractableResponse<Response> response = 회원정보_요청(token);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
@@ -87,13 +83,34 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("잘못된 토큰으로 회원 탈퇴 시 401 반환")
+    @Test
+    void deleteByInvalidToken() {
+        ExtractableResponse<Response> response = 회원탈퇴_요청("invalidToken");
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("존재하는 회원 탈퇴 시 204 반환")
+    @Test
+    void deleteByValidToken() {
+        회원가입_요청("email@email.com", "12345678a", "tonic");
+        String token = 토큰_요청("email@email.com", "12345678a");
+
+        ExtractableResponse<Response> response = 회원탈퇴_요청(token);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        ExtractableResponse<Response> response2 = 회원정보_요청(token);
+
+        assertAll(
+                () -> assertThat(response2.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response2.body().jsonPath().getInt("errorCode")).isEqualTo(1002)
+        );
+    }
+
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
-    }
-
-    @DisplayName("회원탈퇴")
-    @Test
-    void deleteMe() {
     }
 }

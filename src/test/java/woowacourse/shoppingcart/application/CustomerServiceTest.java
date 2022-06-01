@@ -4,12 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.ArrayList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
@@ -21,6 +23,8 @@ class CustomerServiceTest {
 
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private CustomerDao customerDao;
 
     @DisplayName("정상적으로 회원 등록")
     @Test
@@ -66,5 +70,23 @@ class CustomerServiceTest {
     void notFoundCustomerByEmailThrowException() {
         assertThatThrownBy(() -> customerService.findByEmail("tonic@email.com"))
                 .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @DisplayName("존재하지 않는 이메일로 탈퇴 시 예외 발생")
+    @Test
+    void deleteByNotExistEmail() {
+        assertThatThrownBy(() -> customerService.deleteByEmail("notExists@email.com"))
+                .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @DisplayName("이메일로 회원 탈퇴")
+    @Test
+    void deleteByEmail() {
+        CustomerRequest request = new CustomerRequest("tonic@email.com", "12345678a", "토닉");
+        customerService.registCustomer(request);
+
+        customerService.deleteByEmail("tonic@email.com");
+
+        assertThat(customerDao.existByEmail("tonic@email.com")).isFalse();
     }
 }

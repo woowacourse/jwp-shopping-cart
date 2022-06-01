@@ -35,4 +35,11 @@ public class CustomerService {
         return customerDao.findByEmail(email)
                 .orElseThrow(InvalidCustomerException::new);
     }
+
+    public void deleteByEmail(String email) {
+        if (!customerDao.existByEmail(email)) {
+            throw new InvalidCustomerException();
+        }
+        customerDao.deleteByEmail(email);
+    }
 }

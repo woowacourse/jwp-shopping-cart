@@ -78,4 +78,9 @@ public class CustomerDao {
         final String query = "SELECT EXISTS(SELECT id FROM customer WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);
     }
+
+    public void deleteByEmail(String email) {
+        final String query = "DELETE FROM customer WHERE email = ?";
+        jdbcTemplate.update(query, email);
+    }
 }
