@@ -21,7 +21,7 @@ import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayName("회원 관련 기능")
-class CustomerAcceptanceTest extends AcceptanceTest2 {
+class CustomerAcceptanceTest extends AcceptanceTest {
 
     private static final String 유효한_아이디 = "유효한_아이디";
     private static final SignUpRequest 유효한_사용자 = new SignUpRequest(유효한_아이디, "비밀번호", "닉네임", 15);

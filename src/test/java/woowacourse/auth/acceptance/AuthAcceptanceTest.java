@@ -12,12 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.acceptance.AcceptanceTest2;
+import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayName("인증 관련 기능")
-class AuthAcceptanceTest extends AcceptanceTest2 {
+class AuthAcceptanceTest extends AcceptanceTest {
 
     private static final String USERNAME = "valid_username";
     private static final String PASSWORD = "password";
