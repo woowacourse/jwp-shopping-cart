@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.application.dto.LoginServiceRequest;
 import woowacourse.auth.exception.NoSuchEmailException;
@@ -36,9 +36,9 @@ class AuthServiceTest {
         // given
         final String token = "dsfsdfds";
         final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "12345678");
-        Mockito.when(customerDao.findByEmail(loginServiceRequest.getEmail()))
+        when(customerDao.findByEmail(loginServiceRequest.getEmail()))
                 .thenReturn(Optional.of(new Customer(1L, "클레이", "clay@gmail.com", "12345678")));
-        Mockito.when(jwtTokenProvider.createToken(Long.toString(1L)))
+        when(jwtTokenProvider.createToken(Long.toString(1L)))
                 .thenReturn(token);
 
         // when
@@ -53,7 +53,7 @@ class AuthServiceTest {
     void certify_invalidEmail_throwsException() {
         // given
         final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "12345678");
-        Mockito.when(customerDao.findByEmail(loginServiceRequest.getEmail()))
+        when(customerDao.findByEmail(loginServiceRequest.getEmail()))
                 .thenReturn(Optional.empty());
 
         // when, then
@@ -66,7 +66,7 @@ class AuthServiceTest {
     void certify_passwordNotMatch_throwsException() {
         // given
         final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "11111111");
-        Mockito.when(customerDao.findByEmail(loginServiceRequest.getEmail()))
+        when(customerDao.findByEmail(loginServiceRequest.getEmail()))
                 .thenReturn(Optional.of(new Customer(1L, "클레이", "klay@gmail.com", "12345678")));
 
         // when, then
@@ -79,7 +79,7 @@ class AuthServiceTest {
     void parseToLong() {
         // given
         final Long expected = 1L;
-        Mockito.when(jwtTokenProvider.getPayload("mytoken"))
+        when(jwtTokenProvider.getPayload("mytoken"))
                 .thenReturn(String.valueOf(expected));
 
         // when
@@ -87,5 +87,20 @@ class AuthServiceTest {
 
         // then
         assertThat(id).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("토큰의 유효성을 검사한다.")
+    void isInvalidToken() {
+        // given
+        final String token = "validToken";
+        when(jwtTokenProvider.validateToken(token))
+                .thenReturn(true);
+
+        // when
+        final boolean actual = authService.isValidToken(token);
+
+        // then
+        assertThat(actual).isTrue();
     }
 }

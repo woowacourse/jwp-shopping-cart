@@ -38,7 +38,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void showMyDetail() {
         // given 회원가입 후 로그인하여 토큰을 발급받고
         requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
-        String accessToken = requestPostWithBody("/api/login", new TokenRequest(EMAIL, PASSWORD))
+        final String accessToken = requestPostWithBody("/api/login", new TokenRequest(EMAIL, PASSWORD))
                 .as(TokenResponse.class)
                 .getAccessToken();
 
@@ -57,7 +57,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                         .isEqualTo(new CustomerDetailResponse(NAME, EMAIL))
         );
     }
-
 
     @DisplayName("내 정보 수정")
     @Test

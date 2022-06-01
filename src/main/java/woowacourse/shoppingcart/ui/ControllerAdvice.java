@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.dto.ErrorResponse;
+import woowacourse.auth.exception.AuthorizationFailureException;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
@@ -59,5 +61,10 @@ public class ControllerAdvice {
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(AuthorizationFailureException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationFailureException(final AuthorizationFailureException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
     }
 }

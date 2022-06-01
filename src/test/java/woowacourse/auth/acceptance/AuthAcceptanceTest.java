@@ -114,11 +114,35 @@ class AuthAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @DisplayName("헤더에 Authorization 필드를 넘겨주지 않고 내 정보를 조회하면 요청이 거부된다.")
     @Test
-    void myInfoWithWrongBearerAuth() {
-        // when 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+    void showMyDetail_emptyHeader_unauthorized() {
+        // when 헤더에 Authorization 필드를 넘겨주지 않고 내 정보 조회를 요청하면
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customer")
+                .then().log().all()
+                .extract();
+
+        // then 401 응답코드가 반환된다.
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("유효하지 않은 토큰을 사용하여 내 정보를 조회하면 요청이 거부된다.")
+    @Test
+    void showMyDetail_invalidToken_unauthorized() {
+        // given 유효하지 않은 토큰을 사용하여
+        final String invalidToken = "1231323fksdjflskd";
+
+        // when 내 정보 조회를 요청하면
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .auth().oauth2(invalidToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customer")
+                .then().log().all()
+                .extract();
 
         // then 내 정보 조회 요청이 거부된다
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }
