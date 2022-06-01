@@ -5,8 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.dto.LoginRequest;
-import woowacourse.member.dto.*;
+import woowacourse.member.dto.request.LoginRequest;
+import woowacourse.member.dto.request.*;
+import woowacourse.member.dto.response.MemberInfoResponse;
 import woowacourse.member.exception.*;
 
 import static org.assertj.core.api.Assertions.assertThat;

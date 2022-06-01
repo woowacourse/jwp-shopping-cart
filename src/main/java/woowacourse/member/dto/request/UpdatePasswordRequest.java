@@ -1,4 +1,4 @@
-package woowacourse.member.dto;
+package woowacourse.member.dto.request;
 
 import javax.validation.constraints.NotBlank;
 

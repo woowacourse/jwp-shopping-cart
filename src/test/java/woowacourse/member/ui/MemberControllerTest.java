@@ -9,9 +9,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.auth.dto.LoginRequest;
+import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.member.dto.*;
+import woowacourse.member.dto.request.*;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

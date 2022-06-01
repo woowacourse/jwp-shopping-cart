@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
-import woowacourse.auth.dto.LoginRequest;
+import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.member.dto.*;
+import woowacourse.member.dto.request.*;
 
 @DisplayName("회원 관련 기능")
 public class MemberAcceptanceTest extends AcceptanceTest {

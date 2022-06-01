@@ -3,11 +3,12 @@ package woowacourse.member.ui;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.dto.LoginRequest;
+import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.application.MemberService;
-import woowacourse.member.dto.*;
+import woowacourse.member.dto.request.*;
+import woowacourse.member.dto.response.MemberInfoResponse;
 
 import javax.validation.Valid;
 

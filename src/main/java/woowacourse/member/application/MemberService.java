@@ -2,11 +2,12 @@ package woowacourse.member.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.LoginRequest;
+import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.Password;
-import woowacourse.member.dto.*;
+import woowacourse.member.dto.request.*;
+import woowacourse.member.dto.response.MemberInfoResponse;
 import woowacourse.member.exception.*;
 
 import java.util.Optional;
