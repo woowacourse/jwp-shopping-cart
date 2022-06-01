@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static woowacourse.ShoppingCartFixture.잉_회원생성요청;
 import static woowacourse.ShoppingCartFixture.잉_회원탈퇴요청;
 
@@ -13,10 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.exception.auth.EmailDuplicateException;
 import woowacourse.exception.auth.PasswordIncorrectException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
@@ -32,16 +36,63 @@ class CustomerServiceTest {
         this.customerService = new CustomerService(new CustomerDao(jdbcTemplate), new BCryptPasswordEncoder());
     }
 
+    @DisplayName("회원가입을 할 수 있다.")
+    @Test
+    void create() {
+        // given
+        final CustomerRequest 회원생성요청 = 잉_회원생성요청;
+
+        //when
+        final long id = customerService.create(회원생성요청);
+        final CustomerResponse 회원조회응답 = customerService.findById(id);
+
+        //then
+        assertAll(
+                () -> assertThat(회원조회응답.getEmail()).isEqualTo(회원생성요청.getEmail()),
+                () -> assertThat(회원조회응답.getName()).isEqualTo(회원생성요청.getName())
+        );
+    }
+
+    @DisplayName("이메일이 이미 존재하는 경우, 회원가입을 할 수 없다.")
+    @Test
+    void createWithExistedEmailShouldFail() {
+        // given
+        final CustomerRequest 회원생성요청 = 잉_회원생성요청;
+        customerService.create(회원생성요청);
+        final CustomerRequest 다시회원생성요청 = new CustomerRequest("리차드", 잉_회원생성요청.getEmail(), "richard1234");
+
+        //when then
+        assertThatThrownBy(() -> customerService.create(다시회원생성요청))
+                .isInstanceOf(EmailDuplicateException.class);
+    }
+
+    @DisplayName("회원 정보를 조회할 수 있다.")
+    @Test
+    void find() {
+        // given
+        final CustomerRequest 회원생성요청 = 잉_회원생성요청;
+        final long id = customerService.create(회원생성요청);
+
+        // when
+        final CustomerResponse 회원조회응답 = customerService.findById(id);
+
+        // then
+        assertAll(
+                () -> assertThat(회원조회응답.getEmail()).isEqualTo(회원생성요청.getEmail()),
+                () -> assertThat(회원조회응답.getName()).isEqualTo(회원생성요청.getName())
+        );
+    }
+
     @DisplayName("회원이름을 수정할 수 있다.")
     @Test
     void updateProfile() {
         // given
-        customerService.create(잉_회원생성요청);
+        final long id = customerService.create(잉_회원생성요청);
         final CustomerUpdateProfileRequest 잉_이름변경요청 = new CustomerUpdateProfileRequest(잉_회원생성요청.getName() + "수정");
 
         // when
-        customerService.updateProfile(1L, 잉_이름변경요청);
-        final CustomerResponse 수정된_잉 = customerService.findById(1L);
+        customerService.updateProfile(id, 잉_이름변경요청);
+        final CustomerResponse 수정된_잉 = customerService.findById(id);
 
         // then
         assertThat(수정된_잉.getName()).isEqualTo(잉_이름변경요청.getName());
@@ -63,12 +114,12 @@ class CustomerServiceTest {
     @Test
     void updatePasswordWithIncorrectPasswordShouldFail() {
         // given
-        customerService.create(잉_회원생성요청);
+        final long id = customerService.create(잉_회원생성요청);
         final CustomerUpdatePasswordRequest 잉_비밀번호수정요청 = new CustomerUpdatePasswordRequest(
                 잉_회원생성요청.getPassword() + "incorrect", 잉_회원생성요청.getPassword() + "new");
 
         // when then
-        assertThatThrownBy(() -> customerService.updatePassword(1L, 잉_비밀번호수정요청))
+        assertThatThrownBy(() -> customerService.updatePassword(id, 잉_비밀번호수정요청))
                 .isInstanceOf(PasswordIncorrectException.class);
     }
 
@@ -76,13 +127,13 @@ class CustomerServiceTest {
     @Test
     void updatePassword() {
         // given
-        customerService.create(잉_회원생성요청);
+        final long id = customerService.create(잉_회원생성요청);
         final CustomerUpdatePasswordRequest 잉_비밀번호수정요청 = new CustomerUpdatePasswordRequest(
                 잉_회원생성요청.getPassword(), 잉_회원생성요청.getPassword() + "new");
 
         // when then
-        customerService.updatePassword(1L, 잉_비밀번호수정요청);
-        assertThatThrownBy(() -> customerService.updatePassword(1L, 잉_비밀번호수정요청))
+        customerService.updatePassword(id, 잉_비밀번호수정요청);
+        assertThatThrownBy(() -> customerService.updatePassword(id, 잉_비밀번호수정요청))
                 .isInstanceOf(PasswordIncorrectException.class);
     }
 
@@ -90,9 +141,8 @@ class CustomerServiceTest {
     @Test
     void delete() {
         // given
-        customerService.create(잉_회원생성요청);
+        final long id = customerService.create(잉_회원생성요청);
         final CustomerDeleteRequest 잉회원탈퇴요청 = 잉_회원탈퇴요청;
-        final long id = 1L;
 
         // when then
         customerService.delete(id, 잉회원탈퇴요청);
@@ -104,9 +154,8 @@ class CustomerServiceTest {
     @Test
     void deleteWithIncorrectPasswordShouldFail() {
         // given
-        customerService.create(잉_회원생성요청);
+        final long id = customerService.create(잉_회원생성요청);
         final CustomerDeleteRequest 잉회원탈퇴요청 = new CustomerDeleteRequest(잉_회원생성요청.getPassword() + "stranger");
-        final long id = 1L;
 
         // when then
         assertThatThrownBy(() -> customerService.delete(id, 잉회원탈퇴요청))
