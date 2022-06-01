@@ -23,27 +23,7 @@ class CustomerTest {
             assertThatNoException()
                     .isThrownBy(() -> new Customer(username, password, nickname, age));
         }
-
-        @Test
-        void 아이디가_4글자_미만인_경우_예외발생() {
-            Username username = new Username("3글자");
-            Password password = new Password("비밀번호");
-            Nickname nickname = new Nickname("닉네임");
-            Age age = new Age(10);
-            assertThatThrownBy(() -> new Customer(username, password, nickname, age))
-                    .isInstanceOf(IllegalArgumentException.class);
-        }
-
-        @Test
-        void 아이디가_20글자_초과인_경우_예외발생() {
-            Username username = new Username("123456789012345678901");
-            Password password = new Password("비밀번호");
-            Nickname nickname = new Nickname("닉네임");
-            Age age = new Age(10);
-            assertThatThrownBy(() -> new Customer(username, password, nickname, age))
-                    .isInstanceOf(IllegalArgumentException.class);
-        }
-
+        
         @Test
         void 닉네임이_0글자인_경우_예외발생() {
             Username username = new Username("유효한_아이디");
