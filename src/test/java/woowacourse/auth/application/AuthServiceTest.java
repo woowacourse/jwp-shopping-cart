@@ -17,9 +17,13 @@ import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
+
+    private static final String RAW_PASSWORD = "12345678";
+    private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD);
 
     @InjectMocks
     private AuthService authService;
@@ -35,9 +39,9 @@ class AuthServiceTest {
     void certify() {
         // given
         final String token = "dsfsdfds";
-        final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "12345678");
+        final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", RAW_PASSWORD);
         when(customerDao.findByEmail(loginServiceRequest.getEmail()))
-                .thenReturn(Optional.of(new Customer(1L, "클레이", "clay@gmail.com", "12345678")));
+                .thenReturn(Optional.of(new Customer(1L, "클레이", "clay@gmail.com", PASSWORD)));
         when(jwtTokenProvider.createToken(Long.toString(1L)))
                 .thenReturn(token);
 
@@ -52,7 +56,7 @@ class AuthServiceTest {
     @DisplayName("존재하지 않는 이메일로 사용자를 인증할 경우 예외가 발생한다.")
     void certify_invalidEmail_throwsException() {
         // given
-        final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "12345678");
+        final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", RAW_PASSWORD);
         when(customerDao.findByEmail(loginServiceRequest.getEmail()))
                 .thenReturn(Optional.empty());
 
@@ -67,7 +71,7 @@ class AuthServiceTest {
         // given
         final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "11111111");
         when(customerDao.findByEmail(loginServiceRequest.getEmail()))
-                .thenReturn(Optional.of(new Customer(1L, "클레이", "klay@gmail.com", "12345678")));
+                .thenReturn(Optional.of(new Customer(1L, "클레이", "klay@gmail.com", PASSWORD)));
 
         // when, then
         assertThatThrownBy(() -> authService.certify(loginServiceRequest))

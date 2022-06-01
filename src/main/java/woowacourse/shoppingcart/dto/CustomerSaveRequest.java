@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.Customer;
-
 public class CustomerSaveRequest {
 
     private final String name;
@@ -12,10 +10,6 @@ public class CustomerSaveRequest {
         this.name = name;
         this.email = email;
         this.password = password;
-    }
-
-    public Customer toEntity() {
-        return new Customer(name, email, password);
     }
 
     public String getName() {
