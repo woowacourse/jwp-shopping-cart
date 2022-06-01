@@ -44,7 +44,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(token).isNotBlank();
     }
 
-    //    @Disabled
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {

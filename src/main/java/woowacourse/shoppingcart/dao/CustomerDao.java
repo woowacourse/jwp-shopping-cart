@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -55,7 +55,16 @@ public class CustomerDao {
         }
     }
 
-    public boolean existByUserName(String username) {
+    public Customer findByEmail(String email) {
+        try {
+            final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
+            return jdbcTemplate.queryForObject(query, customerRowMapper, email);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public boolean existByUsername(String username) {
         try {
             String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
             return jdbcTemplate.queryForObject(query, Boolean.class, username);
@@ -87,17 +96,8 @@ public class CustomerDao {
         jdbcTemplate.update(query, password, id);
     }
 
-    public void deleteByUserName(String username) {
+    public void deleteByUsername(String username) {
         final String query = "DELETE FROM customer WHERE username = ?";
         jdbcTemplate.update(query, username);
-    }
-
-    public Customer findByEmail(String email) {
-        try {
-            final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
-            return jdbcTemplate.queryForObject(query, customerRowMapper, email);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
     }
 }

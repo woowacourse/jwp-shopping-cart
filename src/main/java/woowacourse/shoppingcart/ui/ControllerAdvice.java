@@ -63,7 +63,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<ShoppingCartErrorResponse> handleAuthorizationException(AuthorizationException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ShoppingCartErrorResponse.from(exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ShoppingCartErrorResponse.from(exception.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
