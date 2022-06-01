@@ -17,7 +17,7 @@ import org.springframework.test.context.TestConstructor;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @TestInstance(Lifecycle.PER_CLASS)
-class DatabaseTest {
+public class DatabaseTest {
 
     @Autowired
     protected DataSource dataSource;
