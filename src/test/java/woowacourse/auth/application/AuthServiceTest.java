@@ -82,4 +82,30 @@ class AuthServiceTest {
 			() -> verify(tokenProvider, never()).createToken(any())
 		);
 	}
+
+	@DisplayName("토큰으로 customer를 조회한다.")
+	@Test
+	void findCustomer() {
+		// given
+		String token = "access-token";
+		given(tokenProvider.validateToken(token))
+			.willReturn(true);
+		given(tokenProvider.getPayload(token))
+			.willReturn(email);
+		given(customerService.findByEmail(email))
+			.willReturn(new Customer(1L, email, password, nickname));
+
+		// when
+		Customer customer = authService.findCustomerByToken(token);
+
+		// then
+		assertAll(
+			() -> assertThat(customer.getNickname()).isEqualTo(nickname),
+			() -> assertThat(customer.getEmail()).isEqualTo(email),
+			() -> assertThat(customer.getPassword()).isEqualTo(password),
+			() -> verify(tokenProvider).validateToken(token),
+			() -> verify(tokenProvider).getPayload(token),
+			() -> verify(customerService).findByEmail(email)
+		);
+	}
 }

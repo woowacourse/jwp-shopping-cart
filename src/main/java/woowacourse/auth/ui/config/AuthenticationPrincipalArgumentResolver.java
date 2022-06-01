@@ -8,18 +8,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import lombok.RequiredArgsConstructor;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.application.CustomerService;
-import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.Login;
 
-@RequiredArgsConstructor
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private final JwtTokenProvider jwtTokenProvider;
-    private final CustomerService customerService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -31,7 +23,6 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String email = jwtTokenProvider.getPayload(AuthorizationExtractor.extract(request));
-        return customerService.findByEmail(email);
+        return request.getAttribute("customer");
     }
 }
