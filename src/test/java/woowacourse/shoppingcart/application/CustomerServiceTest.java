@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.util.HashTool;
 
 @SuppressWarnings("NonAsciiChracters")
 @SpringBootTest
@@ -114,8 +115,9 @@ class CustomerServiceTest {
 
             LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", "12345678aA!");
 
-            assertThatCode(() -> customerService.checkPassword(loginCustomer.toCustomer(), customerRequest.getPassword()))
-                    .doesNotThrowAnyException();
+            assertThatCode(
+                    () -> customerService.checkPassword(loginCustomer.toCustomer().ofHashPassword(HashTool::hashing),
+                            customerRequest.getPassword())).doesNotThrowAnyException();
         }
 
         @Test

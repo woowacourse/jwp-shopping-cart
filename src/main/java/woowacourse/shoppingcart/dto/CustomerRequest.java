@@ -17,9 +17,8 @@ public class CustomerRequest {
         this.password = password;
     }
 
-    public static Customer toCustomer(CustomerRequest customerRequest) {
-        return new Customer(null, customerRequest.getLoginId(), customerRequest.getName(),
-                customerRequest.getPassword());
+    public Customer toCustomer() {
+        return new Customer(null, loginId, name, password);
     }
 
     public String getLoginId() {

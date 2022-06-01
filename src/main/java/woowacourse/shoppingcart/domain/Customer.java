@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.function.Function;
+
 public class Customer {
 
     private Long id;
@@ -18,6 +20,12 @@ public class Customer {
         this.loginId = loginId;
         this.username = username;
         this.password = password;
+    }
+
+    public Customer ofHashPassword(Function<String, String> hashing) {
+        String hashedPassword = hashing.apply(password);
+
+        return new Customer(this.loginId, this.username, hashedPassword);
     }
 
     public Long getId() {

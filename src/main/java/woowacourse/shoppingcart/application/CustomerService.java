@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.util.HashTool;
 
 @Service
 public class CustomerService {
@@ -21,8 +22,9 @@ public class CustomerService {
         if (customerDao.existByLoginId(customerRequest.getLoginId())) {
             throw new IllegalArgumentException("이미 존재하는 id입니다.");
         }
-        Customer customer = customerDao.save(CustomerRequest.toCustomer(customerRequest));
-        return toCustomerResponse(customer);
+        Customer customer = customerRequest.toCustomer().ofHashPassword(HashTool::hashing);
+        Customer savedCustomer = customerDao.save(customer);
+        return toCustomerResponse(savedCustomer);
     }
 
     private CustomerResponse toCustomerResponse(Customer customer) {
@@ -38,7 +40,7 @@ public class CustomerService {
         if (customerDao.existByUsername(customerRequest.getName())) {
             throw new IllegalArgumentException("이미 존재하는 유저네임입니다.");
         }
-        customerDao.update(CustomerRequest.toCustomer(customerRequest));
+        customerDao.update(customerRequest.toCustomer());
         return CustomerResponse.of(customerRequest);
     }
 
@@ -51,7 +53,9 @@ public class CustomerService {
     }
 
     public void checkPassword(Customer customer, String password) {
-        if (!customer.isSamePassword(password)) {
+        String hashedPassword = HashTool.hashing(password);
+
+        if (!customer.isSamePassword(hashedPassword)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
