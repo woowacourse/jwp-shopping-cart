@@ -2,6 +2,7 @@ package woowacourse.member.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.member.domain.Name;
 import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
@@ -66,8 +67,9 @@ public class MemberService {
 
     public void updateName(long id, UpdateNameRequest request) {
         Member member = validateExistMember(memberDao.findMemberById(id));
+        Name name = new Name(request.getName());
 
-        if (member.isSameName(request.getName())) {
+        if (member.isSameName(name)) {
             throw new InvalidMemberNameException("현재 이름과 같은 이름으로 변경할 수 없습니다.");
         }
         memberDao.updateName(id, request.getName());

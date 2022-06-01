@@ -2,34 +2,37 @@ package woowacourse.member.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.member.exception.InvalidMemberEmailException;
-import woowacourse.member.exception.InvalidMemberNameException;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MemberTest {
 
-    @DisplayName("이름은 공백이 포함되지 않아야 한다.")
     @Test
-    void nameNotContainSpace() {
-        assertThatThrownBy(() -> Member.withEncrypt("wooteco@naver.com", "woote co", "Wooteco1!"))
-                .isInstanceOf(InvalidMemberNameException.class)
-                .hasMessageContaining("이름에 공백이 포함될 수 없습니다.");
+    @DisplayName("이름이 같다면 true를 반환한다.")
+    void isSameNameWhenTrue() {
+        Member member = Member.withEncrypt("wooteco@email.com", "렉스", "Wooteco1!");
+        assertThat(member.isSameName(new Name("렉스"))).isTrue();
     }
 
-    @DisplayName("이름은 10자 이하여야 한다.")
     @Test
-    void nameLessThan10Letters() {
-        assertThatThrownBy(() -> Member.withEncrypt("wooteco@naver.com", "ILoveWooteco", "Wooteco1!"))
-                .isInstanceOf(InvalidMemberNameException.class)
-                .hasMessageContaining("이름은 10자 이하이어야 합니다.");
+    @DisplayName("이름이 다르다면 false를 반환한다.")
+    void isSameNameWhenFalse() {
+        Member member = Member.withEncrypt("wooteco@email.com", "렉스", "Wooteco1!");
+        assertThat(member.isSameName(new Name("롤렉스"))).isFalse();
     }
 
-    @DisplayName("이메일은 @이 포함된 올바른 형식이어야 한다.")
     @Test
-    void emailContainsAt() {
-        assertThatThrownBy(() -> Member.withEncrypt("wooteconaver.com", "wooteco", "Wooteco1!"))
-                .isInstanceOf(InvalidMemberEmailException.class)
-                .hasMessageContaining("올바르지 못한 이메일 형식입니다.");
+    @DisplayName("비밀번호가 같다면 true를 반환한다.")
+    void isSamePasswordWhenTrue() {
+        Member member = Member.withEncrypt("wooteco@email.com", "렉스", "Wooteco1!");
+        assertThat(member.isSamePassword(Password.withEncrypt("Wooteco1!"))).isTrue();
     }
+
+    @Test
+    @DisplayName("비밀번호가 다르다면 false를  반환한다.")
+    void isSamePasswordWhenFalse() {
+        Member member = Member.withEncrypt("wooteco@email.com", "렉스", "Wooteco1!");
+        assertThat(member.isSamePassword(Password.withEncrypt("Fake1!"))).isFalse();
+    }
+
 }
