@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerInfoRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -74,5 +75,14 @@ class CustomerServiceTest {
         Customer customer = customerService.findCustomerByEmail(email);
 
         assertThat(customer).isEqualTo(new Customer(email, "파랑", "password123!"));
+    }
+
+    @DisplayName("회원정보를 수정한다.")
+    @Test
+    void updateInfo() {
+        final String email = "email@email.com";
+        final CustomerInfoRequest customerInfoRequest = new CustomerInfoRequest("파리채");
+
+        assertDoesNotThrow(() -> customerService.updateInfo(email, customerInfoRequest));
     }
 }

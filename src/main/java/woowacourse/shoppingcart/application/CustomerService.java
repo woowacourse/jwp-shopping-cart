@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Nickname;
+import woowacourse.shoppingcart.dto.CustomerInfoRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -36,5 +38,10 @@ public class CustomerService {
 
     public Customer findCustomerByEmail(String email) {
         return customerDao.findByEmail(email).getCustomer();
+    }
+
+    public void updateInfo(String email, CustomerInfoRequest customerInfoRequest) {
+        Nickname nickname = customerInfoRequest.toNickname();
+        customerDao.updateInfo(email, nickname.getValue());
     }
 }
