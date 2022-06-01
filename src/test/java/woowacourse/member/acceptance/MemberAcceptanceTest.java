@@ -49,7 +49,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
                 .extract().as(TokenResponse.class).getAccessToken();
 
-        DeleteRequest deleteRequest = new DeleteRequest("Wooteco1!");
+        DeleteMemberRequest deleteRequest = new DeleteMemberRequest("Wooteco1!");
         RestAssuredConvenienceMethod.deleteRequestWithToken(accessToken, deleteRequest, "/api/members/me")
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

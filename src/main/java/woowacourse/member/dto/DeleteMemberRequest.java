@@ -2,15 +2,15 @@ package woowacourse.member.dto;
 
 import javax.validation.constraints.NotBlank;
 
-public class DeleteRequest {
+public class DeleteMemberRequest {
 
     @NotBlank(message = "비밀번호는 빈 값일 수 없습니다.")
     private String password;
 
-    private DeleteRequest() {
+    private DeleteMemberRequest() {
     }
 
-    public DeleteRequest(String password) {
+    public DeleteMemberRequest(String password) {
         this.password = password;
     }
 

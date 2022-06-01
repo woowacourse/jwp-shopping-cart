@@ -149,7 +149,7 @@ class MemberServiceTest {
     @DisplayName("올바른 id로 회원 정보를 삭제한다.")
     @Test
     void deleteById() {
-        memberService.deleteMemberById(1L, new DeleteRequest("Wooteco1!"));
+        memberService.deleteMemberById(1L, new DeleteMemberRequest("Wooteco1!"));
 
         assertThatThrownBy(
                 () -> memberService.findMemberById(100L)
@@ -161,7 +161,7 @@ class MemberServiceTest {
     @Test
     void deleteWithNotExistId() {
         assertThatThrownBy(
-                () -> memberService.deleteMemberById(100L, new DeleteRequest("Wooteco1!"))
+                () -> memberService.deleteMemberById(100L, new DeleteMemberRequest("Wooteco1!"))
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
@@ -170,7 +170,7 @@ class MemberServiceTest {
     @Test
     void deleteWithWrongPassword() {
         assertThatThrownBy(
-                () -> memberService.deleteMemberById(1L, new DeleteRequest("WrongPassword1!"))
+                () -> memberService.deleteMemberById(1L, new DeleteMemberRequest("WrongPassword1!"))
         ).isInstanceOf(InvalidPasswordException.class)
                 .hasMessageContaining("현재 비밀번호와 일치하지 않습니다.");
     }

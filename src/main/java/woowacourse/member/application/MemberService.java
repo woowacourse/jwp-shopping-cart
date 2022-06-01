@@ -44,7 +44,7 @@ public class MemberService {
         return new MemberInfoResponse(member);
     }
 
-    public void deleteMemberById(long id, DeleteRequest request) {
+    public void deleteMemberById(long id, DeleteMemberRequest request) {
         Member member = validateExistMember(memberDao.findMemberById(id));
         Password requestPassword = Password.withEncrypt(request.getPassword());
         if (!member.isSamePassword(requestPassword)) {
