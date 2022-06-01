@@ -23,11 +23,9 @@ public class CustomerDao {
             rs.getString("username")
     );
 
-
     public CustomerDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
 
     public Long save(final Customer customer) {
         final String query = "INSERT INTO CUSTOMER(email, password, username) values(?, ?, ?)";
@@ -48,7 +46,7 @@ public class CustomerDao {
         final String query = "SELECT id, email, password, username FROM CUSTOMER WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, memberRowMapper, createdMemberId));
-        } catch (EmptyResultDataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }

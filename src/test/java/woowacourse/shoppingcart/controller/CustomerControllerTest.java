@@ -3,14 +3,11 @@ package woowacourse.shoppingcart.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static woowacourse.fixture.Fixture.BEARER;
-import static woowacourse.fixture.Fixture.CUSTOMER_ID;
-import static woowacourse.fixture.Fixture.TEST_EMAIL;
-import static woowacourse.fixture.Fixture.TEST_PASSWORD;
-import static woowacourse.fixture.Fixture.TEST_USERNAME;
+import static woowacourse.fixture.Fixture.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +30,7 @@ import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.service.CustomerService;
 
-class CustomerControllerTest extends ControllerTest {
+class CustomerControllerTest extends ControllerTest{
 
     @Autowired
     private MockMvc mockMvc;
@@ -62,12 +59,12 @@ class CustomerControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(signUpDto)))
-                .andDo(print())
-                .andReturn()
-                .getResponse();
+                        .andDo(print())
+                        .andReturn()
+                        .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.getHeader(HttpHeaders.LOCATION)).isEqualTo("/api/customers/" + CUSTOMER_ID);
+        assertThat(response.getHeader(HttpHeaders.LOCATION)).isEqualTo("/api/customers/"+ CUSTOMER_ID);
     }
 
     @Test
@@ -76,8 +73,8 @@ class CustomerControllerTest extends ControllerTest {
         when(authService.extractEmail(any(String.class))).thenReturn("test@test.com");
         when(customerService.findCustomerByEmail(any(String.class)))
                 .thenReturn(new CustomerDto(CUSTOMER_ID, TEST_EMAIL, TEST_USERNAME));
-        when(customerService.updateCustomer(any(Long.class), any(UpdateCustomerDto.class))).thenReturn(new CustomerDto(
-                CUSTOMER_ID, TEST_EMAIL, "테스트2"));
+        when(customerService.updateCustomer(any(Long.class),any(UpdateCustomerDto.class))).thenReturn(new CustomerDto(
+                CUSTOMER_ID, TEST_EMAIL,"테스트2"));
 
         UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto("테스트2");
 
@@ -86,9 +83,9 @@ class CustomerControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(updateCustomerDto)))
-                .andDo(print())
-                .andReturn()
-                .getResponse();
+                        .andDo(print())
+                        .andReturn()
+                        .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
@@ -100,8 +97,7 @@ class CustomerControllerTest extends ControllerTest {
         when(authService.extractEmail(any(String.class))).thenReturn(TEST_EMAIL);
         when(customerService.findCustomerByEmail(any(String.class)))
                 .thenReturn(customerDto);
-        when(authService.login(any(SignInDto.class))).thenReturn(
-                new TokenResponseDto(accessToken, 1000000L, customerDto));
+        when(authService.login(any(SignInDto.class))).thenReturn(new TokenResponseDto(accessToken, 1000000L, customerDto));
         final DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto(TEST_PASSWORD);
         final MockHttpServletResponse response = mockMvc.perform(post("/api/customers/" + CUSTOMER_ID)
                         .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)

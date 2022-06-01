@@ -5,8 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static woowacourse.fixture.Fixture.TEST_EMAIL;
-import static woowacourse.fixture.Fixture.TEST_PASSWORD;
+import static woowacourse.fixture.Fixture.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.DeleteCustomerDto;
@@ -36,7 +36,7 @@ class CustomerServiceTest {
     void signUp() {
         when(passwordEncoder.matches(any(), any())).thenReturn(true);
         when(passwordEncoder.encrypt(any())).thenReturn("encryptedPassword");
-        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, "테스트");
+        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD,"테스트");
 
         final Long createdCustomerId = customerService.signUp(signUpDto);
         final CustomerDto savedCustomer = customerService.findCustomerById(createdCustomerId);
@@ -50,7 +50,7 @@ class CustomerServiceTest {
         when(passwordEncoder.matches(any(), any())).thenReturn(true);
         when(passwordEncoder.encrypt(any())).thenReturn("encryptedPassword");
         final String changedName = "바뀐이름";
-        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, "테스트");
+        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD,"테스트");
         final Long createdCustomerId = customerService.signUp(signUpDto);
         final UpdateCustomerDto changeForm = new UpdateCustomerDto(changedName);
 
@@ -65,8 +65,8 @@ class CustomerServiceTest {
         when(passwordEncoder.matches(any(), any())).thenReturn(true);
         when(passwordEncoder.encrypt(any())).thenReturn("encryptedPassword");
         final String duplicateName = "테스트2";
-        final SignUpDto signUpDto1 = new SignUpDto("test1@test.com", TEST_PASSWORD, "테스트1");
-        final SignUpDto signUpDto2 = new SignUpDto("test2@test.com", TEST_PASSWORD, duplicateName);
+        final SignUpDto signUpDto1 = new SignUpDto("test1@test.com", TEST_PASSWORD,"테스트1");
+        final SignUpDto signUpDto2 = new SignUpDto("test2@test.com", TEST_PASSWORD,duplicateName);
         final Long createdCustomerId = customerService.signUp(signUpDto1);
         customerService.signUp(signUpDto2);
         final UpdateCustomerDto changeForm = new UpdateCustomerDto(duplicateName);
@@ -81,7 +81,7 @@ class CustomerServiceTest {
     void deleteCustomer() {
         when(passwordEncoder.matches(any(), any())).thenReturn(true);
         when(passwordEncoder.encrypt(any())).thenReturn("encryptedPassword");
-        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, "테스트");
+        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD,"테스트");
         final Long createdCustomerId = customerService.signUp(signUpDto);
         DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto(TEST_PASSWORD);
 

@@ -30,7 +30,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpDto signUpDto) {
+    public ResponseEntity<Void> signUp(@Valid @RequestBody final SignUpDto signUpDto) {
         final Long createdId = customerService.signUp(signUpDto);
 
         return ResponseEntity.created(URI.create("/api/customers/" + createdId)).build();
@@ -58,7 +58,7 @@ public class CustomerController {
     @PostMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable final Long id,
                                                @RequestBody final DeleteCustomerDto deleteCustomerDto,
-                                               @AuthenticationPrincipal LoginCustomer loginCustomer) {
+                                               @AuthenticationPrincipal final LoginCustomer loginCustomer) {
         checkAuthorization(id, loginCustomer.getEmail());
         customerService.deleteCustomer(id, deleteCustomerDto);
 

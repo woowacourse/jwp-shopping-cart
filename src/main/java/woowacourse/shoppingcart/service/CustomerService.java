@@ -44,7 +44,8 @@ public class CustomerService {
     public CustomerDto updateCustomer(final Long id, final UpdateCustomerDto updateCustomerDto) {
         final Customer updateCustomer = Customer.createWithoutEmailAndPassword(
                 id,
-                updateCustomerDto.getUsername());
+                updateCustomerDto.getUsername()
+        );
         try {
             customerDao.update(updateCustomer);
             return findCustomerById(updateCustomer.getId());

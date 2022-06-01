@@ -1,20 +1,20 @@
 package woowacourse.auth.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.Fixture.BEARER;
-import static woowacourse.fixture.Fixture.TEST_EMAIL;
-import static woowacourse.fixture.Fixture.TEST_PASSWORD;
-import static woowacourse.fixture.Fixture.TEST_USERNAME;
-
+import static woowacourse.fixture.Fixture.*;
 import io.restassured.RestAssured;
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerDto;
@@ -33,12 +33,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final String accessToken = tokenResponseDto.getAccessToken();
 
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + accessToken)
-                .when().get("/api/customers/" + tokenResponseDto.getCustomer().getId())
-                .then().log().all()
-                .extract();
+        final ExtractableResponse<Response> response = get(
+                "/api/customers/"+ tokenResponseDto.getCustomer().getId(),
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+        );
 
         // then
         final CustomerDto actual = response.body().as(CustomerDto.class);
@@ -70,16 +68,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
 
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(new Header(AUTHORIZATION, BEARER + "invalidToken"))
-                .when().get("/api/customers/" + tokenResponseDto.getCustomer().getId())
-                .then().log().all()
-                .extract();
+        final ExtractableResponse<Response> response = get(
+                "/api/customers/"+ tokenResponseDto.getCustomer().getId(),
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + "invalidToken")
+        );
 
         // then
-        // 내 정보 조회 요청이 거부된다
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }

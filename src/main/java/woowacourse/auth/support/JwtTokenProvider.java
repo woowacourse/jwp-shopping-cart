@@ -25,9 +25,9 @@ public class JwtTokenProvider {
     }
 
     public String createToken(final String email) {
-        Claims claims = Jwts.claims(Map.of("email", email));
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
+        final Claims claims = Jwts.claims(Map.of("email", email));
+        final Date now = new Date();
+        final Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
                 .setClaims(claims)

@@ -13,18 +13,18 @@ import woowacourse.auth.support.LoginCustomer;
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
     private final AuthService authService;
 
-    public AuthenticationPrincipalArgumentResolver(AuthService authService) {
+    public AuthenticationPrincipalArgumentResolver(final AuthService authService) {
         this.authService = authService;
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
     }
 
     @Override
-    public LoginCustomer resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public LoginCustomer resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
+                                         final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final String token = (String) webRequest.getAttribute("token", RequestAttributes.SCOPE_REQUEST);
         final String email = authService.extractEmail(token);
         return new LoginCustomer(email);
