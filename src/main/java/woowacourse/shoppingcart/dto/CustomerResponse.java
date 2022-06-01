@@ -16,6 +16,10 @@ public class CustomerResponse {
         return new CustomerResponse(loginCustomer.getLoginId(), loginCustomer.getUsername());
     }
 
+    public static CustomerResponse of(CustomerRequest customerRequest) {
+        return new CustomerResponse(customerRequest.getLoginId(), customerRequest.getName());
+    }
+
     public String getLoginId() {
         return loginId;
     }

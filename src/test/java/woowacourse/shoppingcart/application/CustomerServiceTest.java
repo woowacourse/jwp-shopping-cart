@@ -12,9 +12,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.CustomerPasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.LoginCustomer;
 
 @SuppressWarnings("NonAsciiChracters")
 @SpringBootTest
@@ -68,17 +68,6 @@ class CustomerServiceTest {
         }
 
         @Test
-        void 비밀번호가_일치하지_않는_경우_예외발생() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
-            customerService.addCustomer(customerRequest);
-
-            CustomerRequest updateCustomerRequest = new CustomerRequest("angie", "seungpapang", "invalidPassword");
-
-            assertThatThrownBy(() -> customerService.updateCustomer(updateCustomerRequest))
-                .isInstanceOf(IllegalArgumentException.class);
-        }
-
-        @Test
         void 존재하지_않는_회원일_경우_예외발생() {
             CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
 
@@ -104,37 +93,41 @@ class CustomerServiceTest {
     class deletedCustomerTest {
 
         @Test
-        void 비밀번호가_일치할_경우_탈퇴_성공() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
-            customerService.addCustomer(customerRequest);
-
-            CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("12345678aA!");
-
-            assertThatCode(() -> customerService.deleteCustomer("angie", customerPasswordRequest))
-                .doesNotThrowAnyException();
-        }
-
-        @Test
-        void 비밀번호가_일치하지_않는_경우_예외발생() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
-            customerService.addCustomer(customerRequest);
-
-            CustomerPasswordRequest invalidPassword = new CustomerPasswordRequest("invalidPassword");
-
-            assertThatThrownBy(() -> customerService.deleteCustomer("angie", invalidPassword))
-                .isInstanceOf(IllegalArgumentException.class);
-        }
-
-        @Test
         void 존재하지_않는_회원일_경우_예외발생() {
             CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
             customerService.addCustomer(customerRequest);
 
-            CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("12345678aA!");
-
-            assertThatThrownBy(() -> customerService.deleteCustomer("seungpapang", customerPasswordRequest))
+            assertThatThrownBy(() -> customerService.deleteCustomer("seungpapang"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
+        }
+    }
+
+    @DisplayName("checkPassword 메서드는 회원의 비밀번호가 맞는지 확인한다.")
+    @Nested
+    class CheckPasswordTest {
+
+        @Test
+        void 회원의_비밀번호가_일치_할_경우_성공() {
+            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
+            customerService.addCustomer(customerRequest);
+
+            LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", "12345678aA!");
+
+            assertThatCode(() -> customerService.checkPassword(loginCustomer.toCustomer(), customerRequest.getPassword()))
+                    .doesNotThrowAnyException();
+        }
+
+        @Test
+        void 회원의_비밀번호가_일치하지_않을_경우_예외발생() {
+            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
+            customerService.addCustomer(customerRequest);
+
+            LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", "devilAngie");
+
+            assertThatThrownBy(() -> customerService.checkPassword(loginCustomer.toCustomer(), customerRequest.getPassword()))
+                    .isInstanceOf(IllegalArgumentException.class);
+
         }
     }
 }

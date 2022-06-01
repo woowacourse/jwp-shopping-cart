@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerPasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -33,25 +32,23 @@ public class CustomerService {
             throw new IllegalArgumentException("존재하지 않는 회원입니다.");
         }
 
-        if (!customerDao.checkValidLogin(customerRequest.getLoginId(),
-            customerRequest.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-
         if (customerDao.existByUsername(customerRequest.getName())) {
             throw new IllegalArgumentException("이미 존재하는 유저네임입니다.");
         }
-        Customer customer = customerDao.update(CustomerRequest.toCustomer(customerRequest));
-        return toCustomerResponse(customer);
+        customerDao.update(CustomerRequest.toCustomer(customerRequest));
+        return CustomerResponse.of(customerRequest);
     }
 
-    public void deleteCustomer(String loginId, CustomerPasswordRequest customerPasswordRequest) {
+    public void deleteCustomer(String loginId) {
         if (!customerDao.existByLoginId(loginId)) {
             throw new IllegalArgumentException("존재하지 않는 회원입니다.");
         }
-        if (!customerDao.checkValidLogin(loginId, customerPasswordRequest.getPassword())) {
+        customerDao.delete(loginId);
+    }
+
+    public void checkPassword(Customer customer, String password) {
+        if (!customer.isSamePassword(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        customerDao.delete(loginId, customerPasswordRequest.getPassword());
     }
 }

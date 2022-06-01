@@ -25,7 +25,7 @@ public class AuthService {
         }
 
         String token = jwtTokenProvider.createToken(tokenRequest.getLoginId());
-        Customer customer = customerDao.findIdByLoginId(tokenRequest.getLoginId());
+        Customer customer = customerDao.findByLoginId(tokenRequest.getLoginId());
         return new TokenResponse(token, customer.getUsername());
     }
 
@@ -35,6 +35,6 @@ public class AuthService {
         }
         String payload = jwtTokenProvider.getPayload(token);
 
-        return new LoginCustomer(customerDao.findIdByLoginId(payload));
+        return new LoginCustomer(customerDao.findByLoginId(payload));
     }
 }

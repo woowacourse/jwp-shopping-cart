@@ -42,7 +42,7 @@ public class CustomerDao {
         }
     }
 
-    public Customer findIdByLoginId(final String loginId) {
+    public Customer findByLoginId(final String loginId) {
         try {
             final String query = "SELECT * FROM customer WHERE loginId = :loginId";
             MapSqlParameterSource parameters = new MapSqlParameterSource("loginId", loginId);
@@ -66,17 +66,17 @@ public class CustomerDao {
     }
 
     public boolean checkValidLogin(String loginId, String password) {
-        final String query = "SELECT EXISTS (SELECT 1 FROM customer WHERE loginId = :loginId and password = :password)";
+        final String query = "SELECT EXISTS (SELECT 1 FROM customer WHERE loginId = :loginId AND password = :password)";
         MapSqlParameterSource parameters = new MapSqlParameterSource("loginId", loginId);
         parameters.addValue("password", password);
         return namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class) != 0;
     }
 
-    public Customer update(Customer customer) {
-        final String query = "UPDATE customer SET username = :username WHERE loginId = :loginId and password = :password";
+    public void update(Customer customer) {
+        final String query = "UPDATE customer SET username = :username WHERE loginId = :loginId";
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
+
         namedParameterJdbcTemplate.update(query, parameterSource);
-        return customer;
     }
 
     public boolean existByUsername(String username) {
@@ -86,10 +86,9 @@ public class CustomerDao {
         return namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class) != 0;
     }
 
-    public void delete(String loginId, String password) {
-        final String query = "DELETE FROM customer where loginId = :loginId AND password = :password";
+    public void delete(String loginId) {
+        final String query = "DELETE FROM customer WHERE loginId = :loginId";
         MapSqlParameterSource parameter = new MapSqlParameterSource("loginId", loginId);
-        parameter.addValue("password", password);
 
         namedParameterJdbcTemplate.update(query, parameter);
     }
