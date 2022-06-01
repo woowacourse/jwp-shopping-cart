@@ -39,6 +39,10 @@ public enum TMember {
         return request("/api/members", new MemberRegisterRequest(email, password, name));
     }
 
+    public ExtractableResponse<Response> failedRegister() {
+        return request("/api/members", new MemberRegisterRequest("", "", ""));
+    }
+
     public TokenResponse login() {
         if (Objects.nonNull(token)) {
             return new TokenResponse(token);

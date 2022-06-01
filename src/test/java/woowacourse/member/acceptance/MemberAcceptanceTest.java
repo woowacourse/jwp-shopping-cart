@@ -18,11 +18,33 @@ import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 @DisplayName("멤버 관련 기능")
 public class MemberAcceptanceTest extends AcceptanceTest {
 
+    @DisplayName("회원가입 전 이메일 중복체크에 성공하면 200 Ok를 반환한다.")
+    @Test
+    void checkDuplicateEmail() {
+        ExtractableResponse<Response> response = MARU.validateDuplicateEmail();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("회원가입 전 이메일 중복체크에 실패하면 400 Bad Request를 반환한다.")
+    @Test
+    void failedCheckDuplicateEmail() {
+        MARU.register();
+        ExtractableResponse<Response> response = MARU.validateDuplicateEmail();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("email, password, name을 입력해서 회원가입을 진행하면 201 Created를 반환한다.")
     @Test
     void register() {
         ExtractableResponse<Response> response = MARU.register();
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("입력 형식이 잘못 된 email, password, name을 입력해서 회원가입에 실패하면 400 Bad Request를 반환한다.")
+    @Test
+    void failedRegister() {
+        ExtractableResponse<Response> response = MARU.failedRegister();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("토큰을 헤더에 담아 정보 조회를 요청하면 200 OK와 id, email, name을 반환한다.")
@@ -44,7 +66,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(response.getMessage()).isEqualTo("[ERROR] 인증이 되지 않은 유저입니다.");
     }
 
-    @DisplayName("토큰을 헤더에 담아 이름 수정을 요청하면 204 no content륿 반환한다.")
+    @DisplayName("토큰을 헤더에 담아 이름 수정을 요청하면 200 OK를 반환한다.")
     @Test
     void updateMyName() {
         MARU.register();
@@ -52,12 +74,26 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    @DisplayName("토큰을 헤더에 담아 비밀번호 수정을 요청하면 204 no content를 반환한다.")
+    @DisplayName("토큰이 존재하지 않을 때 이름 수정을 요청하면 401 unauthorized와 에러 메시지를 반환한다.")
+    @Test
+    void updateMyNameNoLogin() {
+        ErrorResponse response = MARU.NoLoginAnd().updateMyName(NAME);
+        assertThat(response.getMessage()).isEqualTo("[ERROR] 인증이 되지 않은 유저입니다.");
+    }
+
+    @DisplayName("토큰을 헤더에 담아 비밀번호 수정을 요청하면 200 OK를 반환한다.")
     @Test
     void updateMyPassword() {
         MARU.register();
         ExtractableResponse<Response> response = MARU.loginAnd().updateMyPassword(PASSWORD);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("토큰이 존재하지 않을 때 비밀번호 수정을 요청하면 401 unauthorized와 에러 메시지를 반환한다.")
+    @Test
+    void updateMyPasswordNoLogin() {
+        ErrorResponse response = MARU.NoLoginAnd().updateMyPassword(PASSWORD);
+        assertThat(response.getMessage()).isEqualTo("[ERROR] 인증이 되지 않은 유저입니다.");
     }
 
     @DisplayName("토큰을 헤더에 담고 비밀번호를 보내고 삭제를 요청하면 204 no content를 반환한다.")
@@ -68,10 +104,10 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    @DisplayName("회원가입 전 이메일 중복체크에 성공하면 200 ok를 반환한다.")
+    @DisplayName("토큰이 존재하지 않을 때 비밀번호를 보내고 삭제를 요청하면 204 no content를 반환한다.")
     @Test
-    void checkDuplicateEmail() {
-        ExtractableResponse<Response> response = MARU.validateDuplicateEmail();
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    void deleteMemberNoLogin() {
+        ErrorResponse response = MARU.NoLoginAnd().deleteMember();
+        assertThat(response.getMessage()).isEqualTo("[ERROR] 인증이 되지 않은 유저입니다.");
     }
 }
