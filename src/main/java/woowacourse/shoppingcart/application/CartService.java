@@ -8,8 +8,8 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 

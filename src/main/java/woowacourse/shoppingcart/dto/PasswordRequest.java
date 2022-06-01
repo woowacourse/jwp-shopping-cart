@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.NotBlank;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.Password;
 
 public class PasswordRequest {
 

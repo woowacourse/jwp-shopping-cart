@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;

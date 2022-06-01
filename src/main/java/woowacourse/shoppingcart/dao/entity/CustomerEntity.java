@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dao.entity;
 
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerEntity {
 

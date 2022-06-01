@@ -17,10 +17,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.entity.CustomerEntity;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Nickname;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Nickname;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @JdbcTest

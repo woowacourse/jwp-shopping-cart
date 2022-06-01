@@ -11,10 +11,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.entity.CustomerEntity;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Nickname;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Nickname;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository

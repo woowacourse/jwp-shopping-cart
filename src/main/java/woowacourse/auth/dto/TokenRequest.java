@@ -1,7 +1,7 @@
 package woowacourse.auth.dto;
 
-import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Password;
 
 public class TokenRequest {
     private String email;

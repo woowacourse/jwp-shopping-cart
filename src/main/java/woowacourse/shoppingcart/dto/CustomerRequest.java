@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerRequest {
 
