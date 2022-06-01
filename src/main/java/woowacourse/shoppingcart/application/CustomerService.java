@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Service
 public class CustomerService {
+
     private CustomerRepository customerRepository;
 
     public CustomerService(final CustomerRepository customerRepository) {
@@ -24,7 +25,8 @@ public class CustomerService {
     }
 
     public CustomerLoginResponse login(final CustomerLoginRequest request) {
-        return null;
+        Customer customer = customerRepository.login(request.getUserId(), request.getPassword());
+        return CustomerLoginResponse.ofExceptToken(customer);
     }
 
     public CustomerResponse findById(final TokenRequest request) {
