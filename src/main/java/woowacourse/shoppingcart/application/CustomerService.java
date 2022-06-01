@@ -51,4 +51,9 @@ public class CustomerService {
     public void updatePassword(final String email, final PasswordRequest passwordRequest) {
         customerDao.updatePassword(new Email(email), passwordRequest.toPassword());
     }
+
+    @Transactional
+    public void delete(final String email) {
+        customerDao.delete(new Email(email));
+    }
 }

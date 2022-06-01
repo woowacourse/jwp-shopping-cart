@@ -94,4 +94,12 @@ class CustomerServiceTest {
 
         assertDoesNotThrow(() -> customerService.updatePassword(email, passwordRequest));
     }
+
+    @DisplayName("회원을 삭제한다.")
+    @Test
+    void delete() {
+        final String email = "email@email.com";
+
+        assertDoesNotThrow(() -> customerService.delete(email));
+    }
 }
