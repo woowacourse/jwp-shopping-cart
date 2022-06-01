@@ -58,6 +58,32 @@ public class CustomerDaoTest {
                 .hasMessage("존재하지 않는 유저입니다.");
     }
 
+    @DisplayName("이메일을 통해 회원엔티티를 찾는다.")
+    @Test
+    void findByEmail() {
+        // given
+        final String email = "email@email.com";
+
+        // when
+        final CustomerEntity customerEntity = customerDao.findByEmail(email);
+        final Customer customer = customerEntity.getCustomer();
+
+        // then
+        assertThat(customer).isEqualTo(new Customer(email, "파랑", "password123!"));
+    }
+
+    @DisplayName("존재하지 않는 이메일을 통해 회원엔티티를 찾을 경우 예외가 발생한다.")
+    @Test
+    void findByEmailFail() {
+        // given
+        final String email = "invalidemail@email.com";
+
+        // when
+        assertThatThrownBy(() -> customerDao.findByEmail(email))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("존재하지 않는 유저입니다.");
+    }
+
     @DisplayName("이메일과 비밀번호를 통해 회원엔티티를 찾는다.")
     @Test
     void findByEmailAndPassword() {

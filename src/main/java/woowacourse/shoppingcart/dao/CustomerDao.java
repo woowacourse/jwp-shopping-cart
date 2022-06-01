@@ -45,6 +45,20 @@ public class CustomerDao {
         }
     }
 
+    public CustomerEntity findByEmail(final String email) {
+        final String sql = "SELECT id, email, nickname, password FROM customer "
+                + "WHERE email = :email";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+
+        try {
+            return jdbcTemplate.queryForObject(sql, params, CUSTOMER_ENTITY_ROW_MAPPER);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
     public Optional<CustomerEntity> findByEmailAndPassword(final String email, final String password) {
         final String sql = "SELECT id, email, nickname, password FROM customer "
                 + "WHERE email = :email and password = :password";
