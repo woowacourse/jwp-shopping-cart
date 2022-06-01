@@ -28,7 +28,7 @@ public class AuthService {
         return new TokenResponse(tokenProvider.createToken(customer.getName()));
     }
 
-    public boolean validateToken(String token) {
+    public boolean isValid(String token) {
         return tokenProvider.validateToken(token);
     }
 

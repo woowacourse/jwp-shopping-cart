@@ -6,7 +6,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.dto.FindCustomerRequest;
@@ -29,14 +28,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader("Authorization");
         String token = AuthorizationExtractor.extractFromString(authorization);
-        validateToken(token);
         String payload = authService.getPayload(token);
         return new FindCustomerRequest(payload);
-    }
-
-    private void validateToken(String token) {
-        if (!authService.validateToken(token)) {
-            throw new InvalidTokenException();
-        }
     }
 }
