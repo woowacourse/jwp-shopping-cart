@@ -4,8 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Nickname;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.dto.CustomerInfoRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
@@ -22,32 +21,34 @@ public class CustomerService {
     }
 
     public boolean isDistinctEmail(String email) {
-        return !customerDao.existEmail(email);
+        return !customerDao.existEmail(new Email(email));
     }
 
+    @Transactional
     public Customer signUp(CustomerRequest customerRequest) {
         Customer customer = customerRequest.toCustomer();
-        customerDao.save(customer.getEmail(), customer.getNickname(), customer.getPassword());
+
+        customerDao.save(customer);
 
         return customer;
     }
 
     public void checkPassword(String email, PasswordRequest passwordRequest) {
-        customerDao.findByEmailAndPassword(email, passwordRequest.getPassword())
+        customerDao.findByEmailAndPassword(new Email(email), passwordRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("비밀번호가 일치하지 않습니다."));
     }
 
     public Customer findCustomerByEmail(String email) {
-        return customerDao.findByEmail(email).getCustomer();
+        return customerDao.findByEmail(new Email(email)).getCustomer();
     }
 
+    @Transactional
     public void updateInfo(String email, CustomerInfoRequest customerInfoRequest) {
-        Nickname nickname = customerInfoRequest.toNickname();
-        customerDao.updateInfo(email, nickname.getValue());
+        customerDao.updateInfo(new Email(email), customerInfoRequest.toNickname());
     }
 
+    @Transactional
     public void updatePassword(String email, PasswordRequest passwordRequest) {
-        Password password = passwordRequest.toPassword();
-        customerDao.updatePassword(email, password.getValue());
+        customerDao.updatePassword(new Email(email), passwordRequest.toPassword());
     }
 }

@@ -18,6 +18,9 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.entity.CustomerEntity;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
+import woowacourse.shoppingcart.domain.Nickname;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @JdbcTest
@@ -25,6 +28,11 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
+
+    private static final Customer 파랑 = new Customer("email@email.com", "파랑", "password123!");
+    private static final Email EMAIL = new Email("email@email.com");
+    private static final Password PASSWORD = new Password("password123!");
+    private static final Email NOT_EXISTING_EMAIL = new Email("notexistingemail@email.com");
 
     private final CustomerDao customerDao;
 
@@ -36,11 +44,8 @@ public class CustomerDaoTest {
     @DisplayName("이메일을 통해 회원 id 를 찾는다.")
     @Test
     void findIdByEmail() {
-        // given
-        final String email = "email@email.com";
-
-        // when
-        final Long customerId = customerDao.findIdByEmail(email);
+        // given & when
+        final Long customerId = customerDao.findIdByEmail(EMAIL);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -49,11 +54,7 @@ public class CustomerDaoTest {
     @DisplayName("존재하지 않는 이메일을 통해 회원 id 를 찾을 경우 예외가 발생한다.")
     @Test
     void findIdByNotExistingEmail() {
-        // given
-        final String email = "notexistingemail@email.com";
-
-        // when
-        assertThatThrownBy(() -> customerDao.findIdByEmail(email))
+        assertThatThrownBy(() -> customerDao.findIdByEmail(NOT_EXISTING_EMAIL))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -61,25 +62,18 @@ public class CustomerDaoTest {
     @DisplayName("이메일을 통해 회원엔티티를 찾는다.")
     @Test
     void findByEmail() {
-        // given
-        final String email = "email@email.com";
-
-        // when
-        final CustomerEntity customerEntity = customerDao.findByEmail(email);
+        // given & when
+        final CustomerEntity customerEntity = customerDao.findByEmail(EMAIL);
         final Customer customer = customerEntity.getCustomer();
 
         // then
-        assertThat(customer).isEqualTo(new Customer(email, "파랑", "password123!"));
+        assertThat(customer).isEqualTo(파랑);
     }
 
     @DisplayName("존재하지 않는 이메일을 통해 회원엔티티를 찾을 경우 예외가 발생한다.")
     @Test
     void findByEmailFail() {
-        // given
-        final String email = "notexistingemail@email.com";
-
-        // when
-        assertThatThrownBy(() -> customerDao.findByEmail(email))
+        assertThatThrownBy(() -> customerDao.findByEmail(NOT_EXISTING_EMAIL))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -87,19 +81,13 @@ public class CustomerDaoTest {
     @DisplayName("이메일과 비밀번호를 통해 회원엔티티를 찾는다.")
     @Test
     void findByEmailAndPassword() {
-        // given
-        final String email = "email@email.com";
-        final String password = "password123!";
-
-        // when
-        final CustomerEntity customerEntity = customerDao.findByEmailAndPassword(email, password)
+        final CustomerEntity customerEntity = customerDao.findByEmailAndPassword(EMAIL, PASSWORD)
                 .orElseThrow();
         final Customer customer = customerEntity.getCustomer();
 
-        // then
         assertAll(
                 () -> assertThat(customerEntity.getId()).isEqualTo(1L),
-                () -> assertThat(customer).isEqualTo(new Customer(email, "파랑", "password123!"))
+                () -> assertThat(customer).isEqualTo(파랑)
         );
     }
 
@@ -108,35 +96,30 @@ public class CustomerDaoTest {
     @CsvSource(value = {"email@email.com, invalid123!", "notexistingemail@email.com, password123!",
             "notexistingemail@email.com, invalid123!"})
     void findByEmailAndPassword(final String email, final String password) {
-        // when
-        assertThat(customerDao.findByEmailAndPassword(email, password)).isEmpty();
+        assertThat(customerDao.findByEmailAndPassword(new Email(email), new Password(password))).isEmpty();
     }
 
     @DisplayName("중복된 이메일이 있는지 확인한다.")
     @ParameterizedTest
     @CsvSource(value = {"email@email.com, true", "notexistingemail@email.com, false"})
     void existEmail(final String email, final Boolean expected) {
-        assertThat(customerDao.existEmail(email)).isEqualTo(expected);
+        assertThat(customerDao.existEmail(new Email(email))).isEqualTo(expected);
     }
 
     @DisplayName("회원 정보를 저장한다.")
     @Test
     void save() {
-        final String email = "newemail@email.com";
-        final String nickname = "쿼리치";
-        final String password = "password123!";
+        final Customer customer = new Customer("newemail@email.com", "쿼리치", "password123!");
 
-        assertThat(customerDao.save(email, nickname, password)).isNotNull();
+        assertThat(customerDao.save(customer)).isNotNull();
     }
 
     @DisplayName("중복되는 이메일로 회원 정보를 저장할 시 예외가 발생한다.")
     @Test
     void saveFail() {
-        final String email = "email@email.com";
-        final String nickname = "쿼리치";
-        final String password = "password123!";
+        final Customer customer = new Customer("email@email.com", "쿼리치", "password123!");
 
-        assertThatThrownBy(() -> customerDao.save(email, nickname, password))
+        assertThatThrownBy(() -> customerDao.save(customer))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("이미 존재하는 이메일입니다.");
     }
@@ -144,22 +127,20 @@ public class CustomerDaoTest {
     @DisplayName("회원 정보를 수정한다.")
     @Test
     void updateInfo() {
-        final String email = "email@email.com";
-        final String nickname = "파리채";
+        final Nickname 파리채 = new Nickname("파리채");
 
-        customerDao.updateInfo(email, nickname);
+        customerDao.updateInfo(EMAIL, 파리채);
 
-        CustomerEntity customerEntity = customerDao.findByEmail(email);
-        assertThat(customerEntity.getCustomer().getNickname()).isEqualTo(nickname);
+        CustomerEntity customerEntity = customerDao.findByEmail(EMAIL);
+        assertThat(customerEntity.getCustomer().getNickname()).isEqualTo(파리채.getValue());
     }
 
     @DisplayName("회원 정보 수정 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
     @Test
     void updateInfoFail() {
-        final String email = "notexistingemail@email.com";
-        final String nickname = "파리채";
+        final Nickname 파리채 = new Nickname("파리채");
 
-        assertThatThrownBy(() -> customerDao.updateInfo(email, nickname))
+        assertThatThrownBy(() -> customerDao.updateInfo(NOT_EXISTING_EMAIL, 파리채))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -167,22 +148,20 @@ public class CustomerDaoTest {
     @DisplayName("비밀번호를 수정한다.")
     @Test
     void updatePassword() {
-        final String email = "email@email.com";
-        final String password = "newpassword123!";
+        final Password password = new Password("newpassword123!");
 
-        customerDao.updatePassword(email, password);
+        customerDao.updatePassword(EMAIL, password);
 
-        CustomerEntity customerEntity = customerDao.findByEmail(email);
-        assertThat(customerEntity.getCustomer().getPassword()).isEqualTo(password);
+        final CustomerEntity customerEntity = customerDao.findByEmail(EMAIL);
+        assertThat(customerEntity.getCustomer().getPassword()).isEqualTo(password.getValue());
     }
 
     @DisplayName("비밀번호 수정 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
     @Test
     void updatePasswordFail() {
-        final String email = "notexistingemail@email.com";
-        final String nickname = "newpassword123";
+        final Password password = new Password("newpassword123!");
 
-        assertThatThrownBy(() -> customerDao.updatePassword(email, nickname))
+        assertThatThrownBy(() -> customerDao.updatePassword(NOT_EXISTING_EMAIL, password))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }

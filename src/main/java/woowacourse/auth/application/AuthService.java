@@ -21,7 +21,7 @@ public class AuthService {
     }
 
     public String createToken(TokenRequest tokenRequest) {
-        customerDao.findByEmailAndPassword(tokenRequest.getEmail(), tokenRequest.getPassword())
+        customerDao.findByEmailAndPassword(tokenRequest.toEmail(), tokenRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다."));
 
         return jwtTokenProvider.createToken(tokenRequest.getEmail());
@@ -29,8 +29,8 @@ public class AuthService {
 
     public String getNickname(TokenRequest tokenRequest) {
         CustomerEntity customerEntity = customerDao.findByEmailAndPassword(
-                        tokenRequest.getEmail(),
-                        tokenRequest.getPassword())
+                        tokenRequest.toEmail(),
+                        tokenRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다."));
 
         return customerEntity.getNickname();

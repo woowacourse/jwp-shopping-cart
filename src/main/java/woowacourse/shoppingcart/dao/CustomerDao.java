@@ -11,6 +11,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.entity.CustomerEntity;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
+import woowacourse.shoppingcart.domain.Nickname;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -32,11 +36,11 @@ public class CustomerDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long findIdByEmail(final String email) {
+    public Long findIdByEmail(final Email email) {
         final String query = "SELECT id FROM customer WHERE email = :email";
 
         Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
+        params.put("email", email.getValue());
 
         try {
             return jdbcTemplate.queryForObject(query, params, Long.class);
@@ -45,12 +49,12 @@ public class CustomerDao {
         }
     }
 
-    public CustomerEntity findByEmail(final String email) {
+    public CustomerEntity findByEmail(final Email email) {
         final String sql = "SELECT id, email, nickname, password FROM customer "
                 + "WHERE email = :email";
 
         Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
+        params.put("email", email.getValue());
 
         try {
             return jdbcTemplate.queryForObject(sql, params, CUSTOMER_ENTITY_ROW_MAPPER);
@@ -59,13 +63,13 @@ public class CustomerDao {
         }
     }
 
-    public Optional<CustomerEntity> findByEmailAndPassword(final String email, final String password) {
+    public Optional<CustomerEntity> findByEmailAndPassword(final Email email, final Password password) {
         final String sql = "SELECT id, email, nickname, password FROM customer "
                 + "WHERE email = :email and password = :password";
 
         Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
-        params.put("password", password);
+        params.put("email", email.getValue());
+        params.put("password", password.getValue());
 
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, CUSTOMER_ENTITY_ROW_MAPPER));
@@ -74,21 +78,21 @@ public class CustomerDao {
         }
     }
 
-    public boolean existEmail(String email) {
+    public boolean existEmail(final Email email) {
         final String sql = "select exists (select * from customer where email = :email)";
 
         Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
+        params.put("email", email.getValue());
 
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
 
 
-    public Long save(String email, String nickname, String password) {
+    public Long save(final Customer customer) {
         final Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
-        params.put("nickname", nickname);
-        params.put("password", password);
+        params.put("email", customer.getEmail());
+        params.put("nickname", customer.getNickname());
+        params.put("password", customer.getPassword());
 
         try {
             return simpleJdbcInsert.executeAndReturnKey(params).longValue();
@@ -97,24 +101,24 @@ public class CustomerDao {
         }
     }
 
-    public void updateInfo(String email, String nickname) {
+    public void updateInfo(final Email email, final Nickname nickname) {
         final String sql = "update customer set nickname = :nickname where email = :email";
 
         Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
-        params.put("nickname", nickname);
+        params.put("email", email.getValue());
+        params.put("nickname", nickname.getValue());
 
         if (jdbcTemplate.update(sql, params) == 0) {
             throw new InvalidCustomerException();
         }
     }
 
-    public void updatePassword(String email, String password) {
+    public void updatePassword(final Email email, final Password password) {
         final String sql = "update customer set password = :password where email = :email";
 
         Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
-        params.put("password", password);
+        params.put("email", email.getValue());
+        params.put("password", password.getValue());
 
         if (jdbcTemplate.update(sql, params) == 0) {
             throw new InvalidCustomerException();
