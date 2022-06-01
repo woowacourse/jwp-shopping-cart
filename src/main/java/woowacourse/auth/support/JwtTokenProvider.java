@@ -30,13 +30,11 @@ public class JwtTokenProvider {
 
     public long getPayload(String token) {
         try {
-            return Long.parseLong(
-                    Jwts.parser()
-                            .setSigningKey(secretKey)
-                            .parseClaimsJws(token)
-                            .getBody()
-                            .getId()
-            );
+            return Long.parseLong(String.valueOf(Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("id")));
         } catch (JwtException | IllegalArgumentException e) {
             throw new TokenInvalidException();
         }
