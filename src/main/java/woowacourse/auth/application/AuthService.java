@@ -2,11 +2,11 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dao.UserDao;
+import woowacourse.auth.domain.User;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.exception.AuthorizationException;
+import woowacourse.auth.exception.AuthenticationException;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.domain.User;
 
 @Service
 public class AuthService {
@@ -27,9 +27,9 @@ public class AuthService {
 
     private User findValidUser(String username, String password) {
         User user = userDao.findByUserName(username)
-                .orElseThrow(AuthorizationException::new);
+                .orElseThrow(AuthenticationException::new);
         if (!user.hasSamePassword(password)) {
-            throw new AuthorizationException();
+            throw new AuthenticationException();
         }
         return user;
     }
