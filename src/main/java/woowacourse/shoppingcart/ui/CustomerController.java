@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,8 +33,13 @@ public class CustomerController {
 
     @GetMapping("/me")
     public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal LoginCustomer loginCustomer) {
-        String loginId = loginCustomer.getLoginId();
-        String name = loginCustomer.getName();
-        return ResponseEntity.ok(new CustomerResponse(loginId, name));
+        return ResponseEntity.ok(customerService.findByLoginId(loginCustomer));
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal LoginCustomer loginCustomer,
+                                                     @RequestBody @Valid CustomerRequest customerRequest) {
+        CustomerResponse update = customerService.update(loginCustomer, customerRequest);
+        return ResponseEntity.ok(update);
     }
 }

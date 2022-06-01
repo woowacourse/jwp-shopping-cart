@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
@@ -83,9 +84,35 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    /*
+     *  Scenario: 내 정보 조회
+     *   given: 회원 가입된 회원이 존재하고, 로그인이 되어있다.
+     *   when: 내 회원 정보를 요청한다.
+     *   then: 200 OK 상태 코드와 회원 정보를 응답받는다.
+     */
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        //given
+        createCustomer(페퍼);
+        ExtractableResponse<Response> login = login(페퍼_아이디, 페퍼_비밀번호);
+        String accessToken = login.as(TokenResponse.class).getAccessToken();
+
+        //when
+        CustomerResponse updateResponse = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .body(new CustomerRequest(페퍼_아이디, "newName", 페퍼_비밀번호))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/customers/me")
+                .then().log().all()
+                .extract().as(CustomerResponse.class);
+
+        //then
+        Assertions.assertAll(
+                () -> assertThat(updateResponse.getLoginId()).isEqualTo(페퍼_아이디),
+                () -> assertThat(updateResponse.getName()).isEqualTo("newName")
+        );
     }
 
     @DisplayName("회원탈퇴")

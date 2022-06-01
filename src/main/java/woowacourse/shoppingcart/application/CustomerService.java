@@ -24,6 +24,11 @@ public class CustomerService {
         return CustomerResponse.of(savedCustomer);
     }
 
+    public CustomerResponse findByLoginId(LoginCustomer loginCustomer) {
+        Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
+        return CustomerResponse.of(customer);
+    }
+
     public CustomerResponse update(LoginCustomer loginCustomer, CustomerRequest customerRequest) {
         Customer savedCustomer = customerDao.findByLoginId(loginCustomer.getLoginId());
         checkUpdatable(savedCustomer, customerRequest);
