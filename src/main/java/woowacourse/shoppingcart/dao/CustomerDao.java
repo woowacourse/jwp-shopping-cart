@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,13 +21,11 @@ public class CustomerDao {
     private static final String TABLE_NAME = "customer";
     private static final String KEY_NAME = "id";
 
-    private final JdbcTemplate jdbcTemplate;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public CustomerDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns(KEY_NAME);
@@ -43,8 +40,9 @@ public class CustomerDao {
 
     public Long findIdByUsername(String username) {
         try {
-            String sql = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(sql, Long.class, username.toLowerCase(Locale.ROOT));
+            String sql = "SELECT id FROM customer WHERE username = :username";
+            SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(username);
+            return jdbcTemplate.queryForObject(sql, parameterSource, Long.class);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
@@ -56,7 +54,7 @@ public class CustomerDao {
                     + "FROM customer WHERE username = :username";
             SqlParameterSource parameterSource = new MapSqlParameterSource("username", username);
             return Optional.ofNullable(
-                    namedParameterJdbcTemplate.queryForObject(sql, parameterSource, generateCustomerMapper()));
+                    jdbcTemplate.queryForObject(sql, parameterSource, generateCustomerMapper()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -77,12 +75,12 @@ public class CustomerDao {
     public void update(Customer customer) {
         String sql = "UPDATE customer SET address = :address, phone_number = :phoneNumber WHERE username = :username";
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
-        namedParameterJdbcTemplate.update(sql, parameterSource);
+        jdbcTemplate.update(sql, parameterSource);
     }
 
     public void delete(Customer customer) {
         String sql = "DELETE FROM customer WHERE username = :username";
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
-        namedParameterJdbcTemplate.update(sql, parameterSource);
+        jdbcTemplate.update(sql, parameterSource);
     }
 }
