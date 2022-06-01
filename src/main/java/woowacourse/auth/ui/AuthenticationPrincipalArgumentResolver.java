@@ -23,8 +23,10 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     }
 
     @Override
-    public LoginCustomer resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public LoginCustomer resolveArgument(MethodParameter parameter,
+                                         ModelAndViewContainer mavContainer,
+                                         NativeWebRequest webRequest,
+                                         WebDataBinderFactory binderFactory) {
         final String token = (String) webRequest.getAttribute("token", RequestAttributes.SCOPE_REQUEST);
         final String email = authService.extractEmail(token);
         return new LoginCustomer(email);
