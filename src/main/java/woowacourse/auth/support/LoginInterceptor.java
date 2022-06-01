@@ -10,8 +10,6 @@ import woowacourse.auth.exception.WrongTokenException;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
-    private static final String MEMBERS_RESOURCE = "/api/members";
-
     private final JwtTokenProvider jwtTokenProvider;
     private final Logger logger;
 
