@@ -16,6 +16,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidLoginException;
+import woowacourse.shoppingcart.exception.ResourceNotFoundException;
 
 @Repository
 public class CustomerDao {
@@ -68,7 +70,7 @@ public class CustomerDao {
         try {
             return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
         } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidCustomerException("존재하지 않는 회원입니다.");
+            throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 
@@ -82,7 +84,7 @@ public class CustomerDao {
         try {
             return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
         } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidCustomerException("존재하지 않는 회원이거나 비밀번호가 일치하지 않습니다.");
+            throw new InvalidLoginException("로그인 할 수 없습니다.");
         }
     }
 
@@ -94,7 +96,7 @@ public class CustomerDao {
         try {
             namedParameterJdbcTemplate.update(query, params);
         } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidCustomerException("존재하지 않는 회원입니다.");
+            throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 
@@ -119,7 +121,7 @@ public class CustomerDao {
         try {
             namedParameterJdbcTemplate.update(query, params);
         } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidCustomerException("존재하지 않는 회원입니다.");
+            throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 }

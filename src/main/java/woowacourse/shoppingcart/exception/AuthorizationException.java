@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class AuthorizationException extends RuntimeException{
 
-    public static int STATUS_CODE = HttpStatus.FORBIDDEN.value();
+    public static final int STATUS_CODE = HttpStatus.FORBIDDEN.value();
 
     public AuthorizationException(final String message) {
         super(message);

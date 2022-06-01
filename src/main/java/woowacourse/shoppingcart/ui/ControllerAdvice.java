@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
+import java.util.List;
+import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -8,18 +10,18 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.shoppingcart.exception.*;
-
-import javax.validation.ConstraintViolationException;
-import java.util.List;
+import woowacourse.shoppingcart.exception.AuthorizationException;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidInputException;
+import woowacourse.shoppingcart.exception.InvalidLoginException;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.ResourceNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity handleUnhandledException() {
-//        return ResponseEntity.badRequest().body("Unhandled Exception");
-//    }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity handle() {
@@ -58,12 +60,27 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
+    public ResponseEntity resourceNotFoundException(final ResourceNotFoundException exception) {
+        return ResponseEntity.status(ResourceNotFoundException.STATUS_CODE).body(exception.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity invalidLoginException(final InvalidLoginException exception) {
+        return ResponseEntity.status(InvalidLoginException.STATUS_CODE).body(exception.getMessage());
+    }
+
+    @ExceptionHandler
     public ResponseEntity authorizationException(final AuthorizationException exception) {
         return ResponseEntity.status(AuthorizationException.STATUS_CODE).body(exception.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity invaildInputException(final InvalidInputException exception) {
+    public ResponseEntity invalidInputException(final InvalidInputException exception) {
         return ResponseEntity.status(InvalidInputException.STATUS_CODE).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity unhandledException() {
+        return ResponseEntity.badRequest().body("예상치못한 에러가 발생했습니다.");
     }
 }
