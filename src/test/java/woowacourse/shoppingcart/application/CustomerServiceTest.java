@@ -12,36 +12,61 @@ class CustomerServiceTest {
 
     private final CustomerService customerService = new CustomerService();
 
-    @DisplayName("사용자 이름에 null 을 입력하면 안된다.")
+    @DisplayName("아이디에 null 을 입력하면 안된다.")
     @Test
-    void signUpUsernameNullException() {
+    void signUpUserIdNullException() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest(null,"1234");
+        SignUpRequest signUpRequest = new SignUpRequest(null, "유콩", "1234");
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("사용자 이름을 입력해주세요.");
+                .hasMessage("아이디를 입력해주세요.");
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("사용자 이름에 빈값을 입력하면 안된다.")
-    void signUpUsernameBlankException(String username) {
+    @DisplayName("아이디에 빈값을 입력하면 안된다.")
+    void signUpUserIdBlankException(String userId) {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest(username,"1234");
+        SignUpRequest signUpRequest = new SignUpRequest(userId, "유콩", "1234");
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("사용자 이름을 입력해주세요.");
+                .hasMessage("아이디를 입력해주세요.");
+    }
+
+    @DisplayName("닉네임에 null 을 입력하면 안된다.")
+    @Test
+    void signUpNicknamedNullException() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("username", null, "1234");
+
+        // when & than
+        assertThatThrownBy(() -> customerService.signUp(signUpRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("닉네임을 입력해주세요.");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    @DisplayName("닉네임에 빈값을 입력하면 안된다.")
+    void signUpNicknameBlankException(String nickname) {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("username", nickname, "1234");
+
+        // when & than
+        assertThatThrownBy(() -> customerService.signUp(signUpRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("닉네임을 입력해주세요.");
     }
 
     @DisplayName("비밀번호에 null 을 입력하면 안된다.")
     @Test
     void signUpPasswordNullException() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("username", null);
+        SignUpRequest signUpRequest = new SignUpRequest("username", "유콩", null);
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -54,7 +79,7 @@ class CustomerServiceTest {
     @DisplayName("비밀번호에 빈값을 입력하면 안된다.")
     void signUpPasswordBlankException(String password) {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("username", password);
+        SignUpRequest signUpRequest = new SignUpRequest("username", "유콩", password);
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
