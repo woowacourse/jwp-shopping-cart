@@ -118,5 +118,34 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        CustomerRequest customerRequest = new CustomerRequest(
+                "username",
+                "password12!@",
+                "example@example.com",
+                "some-address",
+                "010-0000-0001"
+        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(customerRequest)
+                .when().post("/api/customers")
+                .then().log().all();
+
+        String token = "Bearer " + tokenProvider.createToken("username");
+        ExtractableResponse<Response> deletedResponse = RestAssured.given().log().all()
+                .header(new Header("Authorization", token))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/api/customers/me")
+                .then().log().all().extract();
+
+        ExtractableResponse<Response> foundResponse = RestAssured.given().log().all()
+                .header(new Header("Authorization", token))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all().extract();
+
+        assertThat(deletedResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(foundResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }

@@ -3,9 +3,9 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.FindCustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.FindCustomerRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -38,7 +38,12 @@ public class CustomerService {
     public void updateCustomer(FindCustomerRequest findCustomerRequest, UpdateCustomerRequest updateCustomerRequest) {
         Customer customer = customerDao.findByName(findCustomerRequest.getName())
                 .orElseThrow(InvalidCustomerException::new);
-        Customer updatedCustomer = customer.update(updateCustomerRequest.getAddress(), updateCustomerRequest.getPhoneNumber());
+        Customer updatedCustomer = customer.update(updateCustomerRequest.getAddress(),
+                updateCustomerRequest.getPhoneNumber());
         customerDao.update(updatedCustomer);
+    }
+
+    public void deleteCustomer(FindCustomerRequest findCustomerRequest) {
+        customerDao.deleteById(customerDao.findIdByName(findCustomerRequest.getName()));
     }
 }
