@@ -21,10 +21,6 @@ import woowacourse.shoppingcart.dto.SignUpDto;
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    public static final String TEST_EMAIL = "test@test.com";
-    public static final String TEST_PASSWORD = "testtest";
-    public static final String TEST_USERNAME = "test";
-
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
@@ -83,27 +79,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         // 내 정보 조회 요청이 거부된다
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-    }
-
-
-    private void createCustomer() {
-        SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
-
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpDto)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> loginCustomer(final String email, final String password) {
-        final SignInDto signInDto = new SignInDto(email, password);
-        return RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signInDto)
-                .when().post("/api/auth/login")
-                .then().log().all()
-                .extract();
     }
 }

@@ -79,6 +79,7 @@ class CustomerControllerTest {
     @Test
     @DisplayName("유저 이름을 받아서 기존 유저의 이름을 수정한 뒤 수정된 유저를 반환한다.")
     void updateCustomer() throws Exception {
+        when(authService.extractEmail(any(String.class))).thenReturn("test@test.com");
         when(customerService.findCustomerByEmail(any(String.class)))
                 .thenReturn(new CustomerDto(customerId, testEmail, testUsername));
         when(customerService.updateCustomer(any(Long.class),any(UpdateCustomerDto.class))).thenReturn(new CustomerDto(
@@ -102,11 +103,12 @@ class CustomerControllerTest {
     @DisplayName("URI path에 id를 받아 일치하는 회원을 삭제한다.")
     void deleteCustomer() throws Exception {
         final CustomerDto customerDto = new CustomerDto(customerId, testEmail, testUsername);
+        when(authService.extractEmail(any(String.class))).thenReturn("test@test.com");
         when(customerService.findCustomerByEmail(any(String.class)))
                 .thenReturn(customerDto);
         when(authService.login(any(SignInDto.class))).thenReturn(new TokenResponseDto(accessToken, 1000000L, customerDto));
         DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto("testtest");
-        final MockHttpServletResponse response = mockMvc.perform(delete("/api/customers/" + customerId)
+        final MockHttpServletResponse response = mockMvc.perform(post("/api/customers/" + customerId)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
