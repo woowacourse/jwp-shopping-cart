@@ -30,7 +30,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleUnhandledException() {
-        return ResponseEntity.badRequest().body("Unhandled Exception");
+        ExceptionResponse response = new ExceptionResponse(List.of("Unhandled Exception"));
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(DuplicatedUsernameException.class)
@@ -41,7 +42,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity handle() {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+        ExceptionResponse response = new ExceptionResponse(List.of("존재하지 않는 데이터 요청입니다."));
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(LoginException.class)
@@ -66,8 +68,9 @@ public class ControllerAdvice {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    public ResponseEntity handleInvalidRequest(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity handleInvalidRequest(final RuntimeException exception) {
+        ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler({
@@ -77,8 +80,9 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity handleInvalidAccess(final RuntimeException exception) {
+        ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler
