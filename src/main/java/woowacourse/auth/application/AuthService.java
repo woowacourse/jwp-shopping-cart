@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Service
@@ -13,8 +14,9 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public String createToken(final TokenRequest tokenRequest) {
-        return jwtTokenProvider.createToken(tokenRequest.getUserName());
+    public TokenResponse createToken(final TokenRequest tokenRequest) {
+        final String token = jwtTokenProvider.createToken(tokenRequest.getUserName());
+        return new TokenResponse(token);
     }
 
     public boolean isInvalidToken(String token) {
