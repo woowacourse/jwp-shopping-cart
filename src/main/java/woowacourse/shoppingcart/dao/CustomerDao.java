@@ -108,4 +108,16 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
     }
+
+    public void updatePassword(String email, String password) {
+        final String sql = "update customer set password = :password where email = :email";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+
+        if (jdbcTemplate.update(sql, params) == 0) {
+            throw new InvalidCustomerException();
+        }
+    }
 }

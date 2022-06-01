@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
@@ -148,7 +147,10 @@ public class CustomerDaoTest {
         final String email = "email@email.com";
         final String nickname = "파리채";
 
-        assertDoesNotThrow(() -> customerDao.updateInfo(email, nickname));
+        customerDao.updateInfo(email, nickname);
+
+        CustomerEntity customerEntity = customerDao.findByEmail(email);
+        assertThat(customerEntity.getCustomer().getNickname()).isEqualTo(nickname);
     }
 
     @DisplayName("회원 정보 수정 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
@@ -158,6 +160,29 @@ public class CustomerDaoTest {
         final String nickname = "파리채";
 
         assertThatThrownBy(() -> customerDao.updateInfo(email, nickname))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("존재하지 않는 유저입니다.");
+    }
+
+    @DisplayName("비밀번호를 수정한다.")
+    @Test
+    void updatePassword() {
+        final String email = "email@email.com";
+        final String password = "newpassword123!";
+
+        customerDao.updatePassword(email, password);
+
+        CustomerEntity customerEntity = customerDao.findByEmail(email);
+        assertThat(customerEntity.getCustomer().getPassword()).isEqualTo(password);
+    }
+
+    @DisplayName("비밀번호 수정 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
+    @Test
+    void updatePasswordFail() {
+        final String email = "notexistingemail@email.com";
+        final String nickname = "newpassword123";
+
+        assertThatThrownBy(() -> customerDao.updatePassword(email, nickname))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
