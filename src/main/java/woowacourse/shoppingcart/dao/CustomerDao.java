@@ -17,6 +17,8 @@ public class CustomerDao {
         var password = rs.getString("password");
         return new Customer(username, email, password);
     };
+    private static final String NOT_EXIST_EMAIL = "[ERROR] 존재하지 않는 이메일 입니다.";
+    private static final String NOT_EXIST_NAME = "[ERROR] 존재하지 않는 이름입니다.";
     private final JdbcTemplate jdbcTemplate;
 
     public CustomerDao(final JdbcTemplate jdbcTemplate) {
@@ -28,7 +30,7 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException(NOT_EXIST_NAME);
         }
     }
 
@@ -37,7 +39,7 @@ public class CustomerDao {
             final String query = "SELECT * FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, CUSTOMER_MAPPER, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException(NOT_EXIST_NAME);
         }
     }
 
@@ -71,7 +73,7 @@ public class CustomerDao {
             final String query = "SELECT * FROM customer WHERE email = ?";
             return jdbcTemplate.queryForObject(query, CUSTOMER_MAPPER, email);
         } catch (final EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 이메일 입니다.");
+            throw new InvalidCustomerException(NOT_EXIST_EMAIL);
         }
     }
 }

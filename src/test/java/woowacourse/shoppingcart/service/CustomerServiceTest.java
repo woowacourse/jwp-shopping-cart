@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -41,7 +42,7 @@ public class CustomerServiceTest {
         var signUpRequest = new SignUpRequest("puterism", "crew10@naver.com", "123");
 
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("[ERROR] 이미 존재하는 사용자 이름입니다.");
     }
 
@@ -50,7 +51,7 @@ public class CustomerServiceTest {
         var signUpRequest = new SignUpRequest("chicChoc", "crew01@naver.com", "123");
 
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("[ERROR] 이미 존재하는 이메일입니다.");
     }
 
@@ -82,7 +83,7 @@ public class CustomerServiceTest {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("1231", "a1234");
 
         assertThatThrownBy(() -> customerService.changePassword(username, changePasswordRequest)).isInstanceOf(
-                IllegalArgumentException.class);
+                InvalidCustomerException.class);
     }
 
     @Test
@@ -91,7 +92,7 @@ public class CustomerServiceTest {
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1231");
 
         assertThatThrownBy(() -> customerService.deleteUser(username, deleteCustomerRequest)).isInstanceOf(
-                IllegalArgumentException.class);
+                InvalidCustomerException.class);
     }
 
     @Test

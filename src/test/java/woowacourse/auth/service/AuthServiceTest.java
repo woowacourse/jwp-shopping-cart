@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dto.SignInRequest;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -35,6 +36,6 @@ public class AuthServiceTest {
     void 비밀번호가_일치하지_않는_경우() {
         var signInRequest = new SignInRequest("crew01@naver.com", "a12");
 
-        assertThatThrownBy(() -> authService.signIn(signInRequest)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> authService.signIn(signInRequest)).isInstanceOf(InvalidCustomerException.class);
     }
 }

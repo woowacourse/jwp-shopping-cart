@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.AuthorizationExtractor;
 
 public class AuthInterceptor implements HandlerInterceptor {
@@ -17,9 +18,13 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = AuthorizationExtractor.extract(request);
-        if (!authService.isValidToken(token)) {
-            throw new IllegalStateException("[ERROR] 만료된 토큰입니다.");
-        }
+        validateExpiredToken(token);
         return true;
+    }
+
+    private void validateExpiredToken(String token) {
+        if (!authService.isValidToken(token)) {
+            throw new InvalidTokenException();
+        }
     }
 }

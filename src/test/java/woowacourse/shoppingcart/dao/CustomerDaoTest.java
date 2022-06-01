@@ -93,6 +93,6 @@ public class CustomerDaoTest {
     @Test
     void 존재하지_않는_이메일을_조회할_경우() {
         assertThatThrownBy(() -> customerDao.findCustomerByEmail("bcc0830@naver.com")).isInstanceOf(
-                IllegalArgumentException.class);
+                InvalidCustomerException.class);
     }
 }
