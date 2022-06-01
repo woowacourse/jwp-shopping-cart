@@ -66,7 +66,7 @@ class CustomerServiceTest {
         Customer customer = Customer.of(customerRequest1.getUserName(), customerRequest1.getPassword(),
                 customerRequest1.getNickName(), customerRequest1.getAge());
 
-        String newPassword = "forkyforky";
+        String newPassword = "forky@forky123";
         PasswordRequest passwordRequest = new PasswordRequest(customer.getPassword(), newPassword);
         customerService.updatePassword(customer, passwordRequest);
 
