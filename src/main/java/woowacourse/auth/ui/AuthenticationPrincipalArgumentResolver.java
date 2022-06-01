@@ -8,17 +8,15 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.exception.AuthorizationException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private AuthService authService;
     private JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalArgumentResolver(AuthService authService, JwtTokenProvider jwtTokenProvider) {
-        this.authService = authService;
+    public AuthenticationPrincipalArgumentResolver(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -32,7 +30,14 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String auth = webRequest.getHeader(AUTHORIZATION);
-        String token = auth.substring(BEARER_TYPE.length()).trim();
+        String token = getToken(auth);
         return jwtTokenProvider.getPayload(token);
+    }
+
+    private String getToken(String auth) {
+        if (auth == null || auth.isBlank()) {
+            throw new AuthorizationException("토큰이 존재하지 않습니다.");
+        }
+        return auth.substring(BEARER_TYPE.length()).trim();
     }
 }

@@ -19,14 +19,18 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         String token = AuthorizationExtractor.extract(request);
-        if (token == null || token.isEmpty()) {
+        validateToken(token);
+
+        return super.preHandle(request, response, handler);
+    }
+
+    private void validateToken(String token) {
+        if (token == null || token.isBlank()) {
             throw new AuthorizationException("토큰이 존재하지 않습니다.");
         }
 
         if (!jwtTokenProvider.validateToken(token)) {
             throw new AuthorizationException("인증되지 않은 회원입니다.");
         }
-
-        return super.preHandle(request, response, handler);
     }
 }

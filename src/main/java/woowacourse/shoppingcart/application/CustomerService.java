@@ -32,21 +32,22 @@ public class CustomerService {
 
     public void updateMe(String username, UpdatePasswordRequest updatePasswordRequest) {
         Customer customer = customerDao.findByUsername(username);
-
-        if (!customerDao.isValidPasswordByUsername(username, updatePasswordRequest.getPassword())) {
-            throw new InvalidPasswordException();
-        }
-
+        validateCustomer(username, updatePasswordRequest.getPassword());
         customerDao.updatePassword(customer.getId(), updatePasswordRequest.getNewPassword());
     }
 
     public void deleteMe(String username, DeleteCustomerRequest deleteCustomerRequest) {
+        validateCustomer(username, deleteCustomerRequest.getPassword());
+        customerDao.deleteByUserName(username);
+    }
+
+    private void validateCustomer(String username, String updatePasswordRequest) {
         if (!customerDao.existByUserName(username)) {
             throw new InvalidCustomerException();
         }
-        if (!customerDao.isValidPasswordByUsername(username, deleteCustomerRequest.getPassword())) {
+
+        if (!customerDao.isValidPasswordByUsername(username, updatePasswordRequest)) {
             throw new InvalidPasswordException();
         }
-        customerDao.deleteByUserName(username);
     }
 }

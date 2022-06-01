@@ -20,10 +20,7 @@ public class AuthService {
     }
 
     public SignInResponse signIn(SignInRequest signInRequest) {
-        if (!customerDao.isValidPasswordByEmail(signInRequest.getEmail(), signInRequest.getPassword())) {
-            throw new InvalidCustomerException("로그인 실패");
-        }
-
+        validateCustomer(signInRequest);
         Customer customer = customerDao.findByEmail(signInRequest.getEmail());
 
         return new SignInResponse(
@@ -31,5 +28,11 @@ public class AuthService {
                 customer.getEmail(),
                 jwtTokenProvider.createToken(customer.getUsername())
         );
+    }
+
+    private void validateCustomer(SignInRequest signInRequest) {
+        if (!customerDao.isValidPasswordByEmail(signInRequest.getEmail(), signInRequest.getPassword())) {
+            throw new InvalidCustomerException("로그인 실패");
+        }
     }
 }
