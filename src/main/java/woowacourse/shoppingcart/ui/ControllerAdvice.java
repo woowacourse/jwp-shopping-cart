@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.common.dto.ErrorResponse;
 import woowacourse.common.exception.BadRequestException;
+import woowacourse.common.exception.NotFoundException;
 import woowacourse.common.exception.UnauthorizedException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -75,7 +76,13 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse handleIllegalArgument(UnauthorizedException e) {
+    public ErrorResponse handleUnauthorized(UnauthorizedException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFound(NotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

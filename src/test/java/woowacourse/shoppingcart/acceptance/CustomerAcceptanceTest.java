@@ -358,6 +358,21 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    void 존재하지_않는_사용자_정보_조회() {
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
+
+        회원_탈퇴(accessToken, password);
+
+        ExtractableResponse<Response> response = 회원_조회(accessToken);
+
+        assertThat(response.statusCode()).isEqualTo(404);
+        assertThat(getValue(response, "message")).contains("존재하지 않는 사용자입니다.");
+    }
+
+    @Test
     void 잘못된_토큰으로_회원_관련_요청() {
         String account = "leo8842";
         String password = "dpepsWkd12!";
@@ -386,10 +401,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         String accessToken = 회원_가입_후_토큰_발급(account, password);
 
-        Map<String, Object> request = new HashMap<>();
-        request.put("password", password);
-
-        ExtractableResponse<Response> response = 회원_탈퇴(accessToken, request);
+        ExtractableResponse<Response> response = 회원_탈퇴(accessToken, password);
 
         assertThat(response.statusCode()).isEqualTo(204);
     }
@@ -401,10 +413,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         String accessToken = 회원_가입_후_토큰_발급(account, password);
 
-        Map<String, Object> request = new HashMap<>();
-        request.put("password", password + "111");
-
-        ExtractableResponse<Response> response = 회원_탈퇴(accessToken, request);
+        ExtractableResponse<Response> response = 회원_탈퇴(accessToken, password);
 
         assertThat(response.statusCode()).isEqualTo(401);
         assertThat(getValue(response, "message")).contains("로그인이 불가능합니다.");
@@ -485,7 +494,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         return response;
     }
 
-    private ExtractableResponse<Response> 회원_탈퇴(String accessToken, Map<String, Object> request) {
+    private ExtractableResponse<Response> 회원_탈퇴(String accessToken, String password) {
+        Map<String, Object> request = new HashMap<>();
+        request.put("password", password);
+
         return RestAssured.given()
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

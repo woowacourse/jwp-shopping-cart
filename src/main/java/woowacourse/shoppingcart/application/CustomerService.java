@@ -56,13 +56,13 @@ public class CustomerService {
                         it.getNickname(),
                         it.getAddress(),
                         PhoneNumberResponse.from(it.getPhoneNumber())))
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용지입니다"));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
     }
 
     public void delete(Long customerId, PasswordRequest passwordRequest) {
         Optional<CustomerEntity> customerEntity = customerDao.findById(customerId);
         if (customerEntity.isEmpty()) {
-            throw new NotFoundException("존재하지 않는 사용지입니다");
+            throw new NotFoundException("존재하지 않는 사용자입니다.");
         }
 
         String rawPassword = passwordRequest.getPassword();
