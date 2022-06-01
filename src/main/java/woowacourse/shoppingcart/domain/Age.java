@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
+
 public class Age {
 
     private static final int MINIMUM_AGE = 0;
@@ -19,5 +21,22 @@ public class Age {
 
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Age age = (Age) o;
+        return value == age.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }
