@@ -100,4 +100,19 @@ class CustomerControllerTest {
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }
+
+    @DisplayName("회원 정보를 조회한다.")
+    @Test
+    void findCustomerInfo() {
+        ResponseEntity<CustomerResponse> response = customerController.findCustomerInfo("email@email.com");
+
+        HttpStatus statusCode = response.getStatusCode();
+        CustomerResponse actual = Objects.requireNonNull(response.getBody());
+
+        assertAll(
+                () -> assertThat(statusCode).isEqualTo(HttpStatus.OK),
+                () -> assertThat(actual.getEmail()).isEqualTo("email@email.com"),
+                () -> assertThat(actual.getNickname()).isEqualTo("파랑")
+        );
+    }
 }

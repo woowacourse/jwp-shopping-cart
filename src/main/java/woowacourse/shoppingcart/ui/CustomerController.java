@@ -47,4 +47,11 @@ public class CustomerController {
         customerService.checkPassword(email, passwordRequest);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/auth/me")
+    public ResponseEntity<CustomerResponse> findCustomerInfo(@AuthenticationPrincipal String email) {
+        Customer customer = customerService.findCustomerByEmail(email);
+        CustomerResponse customerResponse = new CustomerResponse(customer.getEmail(), customer.getNickname());
+        return ResponseEntity.ok().body(customerResponse);
+    }
 }
