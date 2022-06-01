@@ -413,10 +413,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         String accessToken = 회원_가입_후_토큰_발급(account, password);
 
-        ExtractableResponse<Response> response = 회원_탈퇴(accessToken, password);
+        ExtractableResponse<Response> response = 회원_탈퇴(accessToken, "1111");
 
         assertThat(response.statusCode()).isEqualTo(401);
-        assertThat(getValue(response, "message")).contains("로그인이 불가능합니다.");
+        assertThat(getValue(response, "message")).contains("비밀번호가 일치하지 않습니다.");
     }
 
     @Test

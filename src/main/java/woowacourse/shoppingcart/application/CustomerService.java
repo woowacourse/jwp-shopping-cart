@@ -73,7 +73,7 @@ public class CustomerService {
         String rawPassword = passwordRequest.getPassword();
         String encryptPassword = customerEntity.get().getPassword();
         if (!EncryptAlgorithm.match(rawPassword, encryptPassword)) {
-            throw new UnauthorizedException("로그인이 불가능합니다.");
+            throw new UnauthorizedException("비밀번호가 일치하지 않습니다.");
         }
 
         customerDao.deleteById(customerId);
