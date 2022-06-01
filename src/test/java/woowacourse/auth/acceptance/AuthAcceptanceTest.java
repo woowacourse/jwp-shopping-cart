@@ -23,8 +23,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         // id, password를 사용해 토큰을 발급받고
-        회원가입(파랑);
-        String accessToken = 로그인_후_토큰발급(파랑토큰);
+        회원가입(파리채);
+        String accessToken = 로그인_후_토큰발급(파리채토큰);
 
         // when
         // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
@@ -45,7 +45,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBadBearerAuth() {
         // given
         // 회원이 등록되어 있고
-        회원가입(파랑);
+        회원가입(파리채);
 
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면

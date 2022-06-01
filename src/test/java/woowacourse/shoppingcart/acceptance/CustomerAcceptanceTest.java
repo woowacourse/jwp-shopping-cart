@@ -18,30 +18,30 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("이메일 중복 체크 후 회원가입")
     @Test
     void addMember() {
-        assertThat(회원가입(파랑).statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(회원가입(파리채).statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
-        회원가입(파랑);
-        String accessToken = 로그인_후_토큰발급(파랑토큰);
+        회원가입(파리채);
+        String accessToken = 로그인_후_토큰발급(파리채토큰);
 
         ExtractableResponse<Response> response = 회원정보_조회(accessToken);
         CustomerResponse customerResponse = response.as(CustomerResponse.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(customerResponse.getEmail()).isEqualTo("email@email.com"),
-                () -> assertThat(customerResponse.getNickname()).isEqualTo("파랑")
+                () -> assertThat(customerResponse.getEmail()).isEqualTo("newemail@email.com"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("파리채")
         );
     }
 
     @DisplayName("내 닉네임 수정")
     @Test
     void updateNickname() {
-        회원가입(파랑);
-        String accessToken = 로그인_후_토큰발급(파랑토큰);
+        회원가입(파리채);
+        String accessToken = 로그인_후_토큰발급(파리채토큰);
         회원정보_조회(accessToken);
 
         RestAssured
@@ -56,8 +56,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 비밀번호 수정")
     @Test
     void updatePassword() {
-        회원가입(파랑);
-        String accessToken = 로그인_후_토큰발급(파랑토큰);
+        회원가입(파리채);
+        String accessToken = 로그인_후_토큰발급(파리채토큰);
         회원정보_조회(accessToken);
 
         RestAssured
@@ -72,8 +72,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
-        회원가입(파랑);
-        String accessToken = 로그인_후_토큰발급(파랑토큰);
+        회원가입(파리채);
+        String accessToken = 로그인_후_토큰발급(파리채토큰);
         회원정보_조회(accessToken);
 
         RestAssured

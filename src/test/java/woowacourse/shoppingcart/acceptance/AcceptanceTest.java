@@ -15,9 +15,9 @@ import woowacourse.shoppingcart.dto.PasswordRequest;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AcceptanceTest {
 
-    protected static final CustomerRequest 파랑 = new CustomerRequest("newemail@email.com", "파리채", "password123!");
-    protected static final TokenRequest 파랑토큰 = new TokenRequest("newemail@email.com", "password123!");
-    protected static final PasswordRequest 파랑비번 = new PasswordRequest("password123!");
+    protected static final CustomerRequest 파리채 = new CustomerRequest("newemail@email.com", "파리채", "password123!");
+    protected static final TokenRequest 파리채토큰 = new TokenRequest("newemail@email.com", "password123!");
+    protected static final PasswordRequest 파리채비번 = new PasswordRequest("password123!");
 
     @LocalServerPort
     int port;
@@ -69,7 +69,7 @@ public class AcceptanceTest {
     }
 
     protected ExtractableResponse<Response> 회원정보_조회(final String accessToken) {
-        비밀번호_확인(accessToken, 파랑비번);
+        비밀번호_확인(accessToken, 파리채비번);
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
