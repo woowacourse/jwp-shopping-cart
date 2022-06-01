@@ -22,7 +22,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Void> saveCustomer(@RequestBody @Valid CustomerSignUpRequest customerSignUpRequest) {
-        Long saveId = customerService.save(customerSignUpRequest.toServiceRequest());
-        return ResponseEntity.created(URI.create("/api/customers/" + saveId)).build();
+        customerService.save(customerSignUpRequest.toServiceRequest());
+        return ResponseEntity.created(URI.create("/api/customers")).build();
     }
 }
