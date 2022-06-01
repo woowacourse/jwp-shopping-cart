@@ -1,5 +1,7 @@
 package woowacourse.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import javax.validation.constraints.Pattern;
 
 public class PhoneNumber {
@@ -13,6 +15,7 @@ public class PhoneNumber {
     @Pattern(regexp = "\\d{4}", message = errorMessage)
     private final String end;
 
+    @JsonCreator
     public PhoneNumber(String start, String middle, String end) {
         this.start = start;
         this.middle = middle;

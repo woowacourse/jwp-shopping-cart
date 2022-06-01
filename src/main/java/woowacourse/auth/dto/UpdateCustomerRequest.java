@@ -1,5 +1,7 @@
 package woowacourse.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
@@ -12,6 +14,7 @@ public class UpdateCustomerRequest {
     @Valid
     private final PhoneNumber phoneNumber;
 
+    @JsonCreator
     public UpdateCustomerRequest(String nickname, String address, PhoneNumber phoneNumber) {
         this.nickname = nickname;
         this.address = address;
