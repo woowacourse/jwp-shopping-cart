@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.domain.Customer;
 
 @SpringBootTest
@@ -15,6 +16,9 @@ class AuthServiceTest {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -43,7 +47,8 @@ class AuthServiceTest {
         // when
         Customer customer = authService.findCustomerByToken(token);
 
-        Customer expected = new Customer("puterism@naver.com", "puterism", "12349053145");
+        Customer expected = new Customer("puterism@naver.com", "puterism",
+                passwordEncoder.encode(request.getPassword()));
         // then
 
         assertThat(customer).usingRecursiveComparison()

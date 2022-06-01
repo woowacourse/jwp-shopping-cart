@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
@@ -26,13 +27,15 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerServiceTest {
 
-    private final CustomerDao customerDao;
     private final CustomerService customerService;
+    private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
     public CustomerServiceTest(DataSource dataSource,
                                NamedParameterJdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(dataSource, jdbcTemplate);
-        customerService = new CustomerService(customerDao);
+        passwordEncoder = new PasswordEncoder();
+        customerService = new CustomerService(customerDao, passwordEncoder);
     }
 
     @DisplayName("Customer 를 저장한다.")
@@ -61,6 +64,7 @@ public class CustomerServiceTest {
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
 
         assertThat(customer).usingRecursiveComparison()
+                .ignoringFields("password")
                 .isEqualTo(expected);
     }
 
@@ -74,6 +78,7 @@ public class CustomerServiceTest {
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
 
         assertThat(customer).usingRecursiveComparison()
+                .ignoringFields("password")
                 .isEqualTo(expected);
     }
 
@@ -81,12 +86,14 @@ public class CustomerServiceTest {
     @Test
     void findByEmailAndPassword() {
         // when
-        Customer customer = customerService.findByEmailAndPassword("puterism@naver.com", "12349053145");
+        String encodedPassword = passwordEncoder.encode("12349053145");
+        Customer customer = customerService.findByEmailAndPassword("puterism@naver.com", encodedPassword);
 
         // then
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
 
         assertThat(customer).usingRecursiveComparison()
+                .ignoringFields("password")
                 .isEqualTo(expected);
     }
 

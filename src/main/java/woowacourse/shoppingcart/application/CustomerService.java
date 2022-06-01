@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
@@ -13,30 +14,19 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(CustomerDao customerDao, PasswordEncoder passwordEncoder) {
         this.customerDao = customerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Long save(CustomerCreateRequest request) {
         validateUsernameDuplication(request.getUsername());
         validateEmailDuplication(request.getEmail());
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return customerDao.save(request.toEntity());
-    }
-
-    private void validateUsernameDuplication(String username) {
-        boolean existCustomerBySameUsername = customerDao.findByUsername(username).isPresent();
-        if (existCustomerBySameUsername) {
-            throw new DuplicateUsernameException();
-        }
-    }
-
-    private void validateEmailDuplication(String email) {
-        boolean existCustomerBySameEmail = customerDao.findByEmail(email).isPresent();
-        if (existCustomerBySameEmail) {
-            throw new DuplicateEmailException();
-        }
     }
 
     public Customer findById(long id) {
@@ -71,6 +61,20 @@ public class CustomerService {
     public void delete(Long id) {
         validateCustomerExists(id);
         customerDao.delete(id);
+    }
+
+    private void validateUsernameDuplication(String username) {
+        boolean existCustomerBySameUsername = customerDao.findByUsername(username).isPresent();
+        if (existCustomerBySameUsername) {
+            throw new DuplicateUsernameException();
+        }
+    }
+
+    private void validateEmailDuplication(String email) {
+        boolean existCustomerBySameEmail = customerDao.findByEmail(email).isPresent();
+        if (existCustomerBySameEmail) {
+            throw new DuplicateEmailException();
+        }
     }
 
     private void validateCustomerExists(Long id) {

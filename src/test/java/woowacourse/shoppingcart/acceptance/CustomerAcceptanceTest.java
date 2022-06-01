@@ -94,7 +94,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("회원 가입시 잘못된 형식의 password을 입력한 경우 400 응답을 반환한다.")
-    @ParameterizedTest
+    @ParameterizedTest()
     @ValueSource(strings = {"", " ", "1234", "012345678901234567890"})
     @NullSource
     void create_exception_parameter_password(String password) {
@@ -196,11 +196,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @NullSource
     void update_exception_parameter_name(String username) {
         // given
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("puterism@naver.com", "12349053145"));
+        long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(username);
 
         // when
-        ExtractableResponse<Response> response = 회원정보수정_요청(token, 1L, customerUpdateRequest);
+        ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, customerUpdateRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -210,9 +211,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void update_otherId() {
         // given
-        ExtractableResponse<Response> createResponse = 회원가입_요청(
+        long savedId = 회원가입_요청_및_ID_추출(
                 new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
-        long savedId = ID_추출(createResponse);
         long 다른사람의_ID = savedId + 1L;
         String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
 
@@ -227,8 +227,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void delete() {
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("puterism@naver.com", "12349053145"));
-        ExtractableResponse<Response> response = 회원탈퇴_요청(token, 1L);
+        long savedId = 회원가입_요청_및_ID_추출(
+                new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+
+        ExtractableResponse<Response> response = 회원탈퇴_요청(token, savedId);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -236,8 +239,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("다른 사람의 정보를 수정하면 403을 반환한다")
     @Test
     void delete_otherId() {
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("puterism@naver.com", "12349053145"));
-        long 다른사람의_ID = 2L;
+        long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        long 다른사람의_ID = savedId + 1;
         ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
