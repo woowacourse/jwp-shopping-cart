@@ -4,16 +4,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.shoppingcart.dto.LoginResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
@@ -34,7 +38,7 @@ class CustomerServiceTest {
     @Test
     void signUpUserIdNullException() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest(null, "유콩", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(null, "유콩", "1234asdf!");
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -47,7 +51,7 @@ class CustomerServiceTest {
     @DisplayName("아이디에 빈값을 입력하면 안된다.")
     void signUpUserIdBlankException(String userId) {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest(userId, "유콩", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(userId, "유콩", "1234asdf!");
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -59,7 +63,7 @@ class CustomerServiceTest {
     @Test
     void signUpNicknamedNullException() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("username@woowacourse.com", null, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("username@woowacourse.com", null, "1234asdf!");
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -72,7 +76,7 @@ class CustomerServiceTest {
     @DisplayName("닉네임에 빈값을 입력하면 안된다.")
     void signUpNicknameBlankException(String nickname) {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("username@woowacourse.com", nickname, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("username@woowacourse.com", nickname, "1234asdf!");
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -109,7 +113,7 @@ class CustomerServiceTest {
     @Test
     void validateDuplicateUserId() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("puterism@woowacourse.com", "유콩", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("puterism@woowacourse.com", "유콩", "1234asdf!");
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -121,7 +125,7 @@ class CustomerServiceTest {
     @Test
     void validateDuplicateNickname() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", "nickname1", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", "nickname1", "1234asdf!");
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -133,7 +137,7 @@ class CustomerServiceTest {
     @Test
     void validateUserIdFormat() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("coobim", "nickname1", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("coobim", "nickname1", "1234asdf!");
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -146,7 +150,7 @@ class CustomerServiceTest {
     @DisplayName("닉네임이 영문, 한글, 숫자를 조합하여 2 ~ 10 자가 아니면 안된다.")
     void validateNicknameFormat(String nickname) {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", nickname, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", nickname, "1234asdf!");
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -165,5 +169,34 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호는 영문, 한글, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"asdf@woowacourse.com:1234asdf!", "puterism@woowacourse.com:12345asdf!"}, delimiter = ':')
+    @DisplayName("존재하지 않은 회원 정보로 로그인하면 안된다.")
+    void loginNonExistentCustomer(String userId, String password) {
+        // given
+        LoginRequest loginRequest = new LoginRequest(userId, password);
+
+        // when & then
+        assertThatThrownBy(() -> customerService.login(loginRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("로그인한다.")
+    @Test
+    void login() {
+        // given
+        LoginRequest loginRequest = new LoginRequest("puterism@woowacourse.com", "1234asdf!");
+
+        // when
+        LoginResponse loginResponse = customerService.login(loginRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(loginResponse.getUserId()).isEqualTo("puterism@woowacourse.com"),
+                () -> assertThat(loginResponse.getNickname()).isEqualTo("nickname")
+        );
     }
 }

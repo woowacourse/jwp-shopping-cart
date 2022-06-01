@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.shoppingcart.dto.LoginResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @Service
@@ -20,6 +22,12 @@ public class CustomerService {
         return customerDao.save(customer);
     }
 
+    public LoginResponse login(final LoginRequest loginRequest) {
+        validateExistingCustomer(loginRequest.getUserId(), loginRequest.getPassword());
+        Customer customer = customerDao.findByUserId(loginRequest.getUserId());
+        return LoginResponse.ofExceptToken(customer);
+    }
+
     private void validateCustomer(final Customer customer) {
         validateDuplicateUserId(customer.getUserId());
         validateDuplicateNickname(customer.getNickname());
@@ -34,6 +42,12 @@ public class CustomerService {
     private void validateDuplicateNickname(final String nickname) {
         if (customerDao.existCustomerByNickname(nickname)) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+        }
+    }
+
+    private void validateExistingCustomer(final String userId, final String password) {
+        if (!customerDao.existCustomer(userId, password)) {
+            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
         }
     }
 }

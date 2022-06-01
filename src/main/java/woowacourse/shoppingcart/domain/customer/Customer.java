@@ -2,14 +2,20 @@ package woowacourse.shoppingcart.domain.customer;
 
 public class Customer {
 
+    private final Long id;
     private final UserId userId;
     private final Nickname nickname;
     private final Password password;
 
-    public Customer(final String userId, final String nickname, final String password) {
+    public Customer(final Long id, final String userId, final String nickname, final String password) {
+        this.id = id;
         this.userId = new UserId(userId);
         this.nickname = new Nickname(nickname);
         this.password = new Password(password);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUserId() {

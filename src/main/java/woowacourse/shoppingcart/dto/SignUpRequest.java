@@ -4,9 +4,12 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class SignUpRequest {
 
-    private final String userId;
-    private final String nickname;
-    private final String password;
+    private String userId;
+    private String nickname;
+    private String password;
+
+    private SignUpRequest() {
+    }
 
     public SignUpRequest(final String userId, final String nickname, final String password) {
         this.userId = userId;
@@ -15,7 +18,7 @@ public class SignUpRequest {
     }
 
     public Customer toEntity() {
-        return new Customer(userId, nickname, password);
+        return new Customer(null, userId, nickname, password);
     }
 
     public String getUserId() {

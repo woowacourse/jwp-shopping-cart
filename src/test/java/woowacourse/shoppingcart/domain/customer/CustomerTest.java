@@ -13,7 +13,7 @@ class CustomerTest {
     @Test
     void userIdNullException() {
         // when & then
-        assertThatThrownBy(() -> new Customer(null, "유콩", "1234"))
+        assertThatThrownBy(() -> new Customer(null, null, "유콩", "1234"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("아이디를 입력해주세요.");
     }
@@ -23,7 +23,7 @@ class CustomerTest {
     @DisplayName("아이디에 빈값을 입력하면 안된다.")
     void userIdBlankException(String userId) {
         // when & then
-        assertThatThrownBy(() -> new Customer(userId, "유콩", "1234"))
+        assertThatThrownBy(() -> new Customer(null, userId, "유콩", "1234"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("아이디를 입력해주세요.");
     }
@@ -32,7 +32,7 @@ class CustomerTest {
     @Test
     void nicknameNullException() {
         // when & then
-        assertThatThrownBy(() -> new Customer("userId@woowacourse.com", null, "1234"))
+        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", null, "1234"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
@@ -42,7 +42,7 @@ class CustomerTest {
     @DisplayName("닉네임에 빈값을 입력하면 안된다.")
     void nicknameBlankException(String nickname) {
         // when & then
-        assertThatThrownBy(() -> new Customer("userId@woowacourse.com", nickname, "1234"))
+        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", nickname, "1234"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
@@ -51,7 +51,7 @@ class CustomerTest {
     @Test
     void passwordNullException() {
         // when & then
-        assertThatThrownBy(() -> new Customer("userId@woowacourse.com", "유콩", null))
+        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", "유콩", null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
@@ -61,7 +61,7 @@ class CustomerTest {
     @DisplayName("비밀번호에 빈값을 입력하면 안된다.")
     void passwordBlankException(String password) {
         // when & then
-        assertThatThrownBy(() -> new Customer("userId@woowacourse.com", "유콩", password))
+        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", "유콩", password))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
@@ -70,7 +70,7 @@ class CustomerTest {
     @Test
     void userIdFormatException() {
         // when & then
-        assertThatThrownBy(() -> new Customer("userId", "유콩", "1234"))
+        assertThatThrownBy(() -> new Customer(null, "userId", "유콩", "1234"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("아이디는 이메일 형식으로 입력해주세요.");
     }
@@ -80,7 +80,7 @@ class CustomerTest {
     @DisplayName("닉네임이 영문, 한글, 숫자를 조합하여 2 ~ 10 자가 아니면 안된다.")
     void nicknameFormatException(String nickname) {
         // when & then
-        assertThatThrownBy(() -> new Customer("userId@woowacourse.com", nickname, "1234"))
+        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", nickname, "1234"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("닉네임은 영문, 한글, 숫자를 조합하여 2 ~ 10 자를 입력해주세요.");
     }
@@ -90,7 +90,7 @@ class CustomerTest {
     @DisplayName("비밀번호가 영문, 한글, 숫자를 필수로 조합한 8 ~ 16 자가 아니면 안된다.")
     void passwordFormatException(String password) {
         // when & then
-        assertThatThrownBy(() -> new Customer("userId@woowacourse.com", "유콩", password))
+        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", "유콩", password))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호는 영문, 한글, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
     }
