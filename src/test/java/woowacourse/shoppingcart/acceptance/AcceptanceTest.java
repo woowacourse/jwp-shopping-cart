@@ -10,12 +10,14 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AcceptanceTest {
 
     protected static final CustomerRequest 파랑 = new CustomerRequest("newemail@email.com", "파리채", "password123!");
     protected static final TokenRequest 파랑토큰 = new TokenRequest("newemail@email.com", "password123!");
+    protected static final PasswordRequest 파랑비번 = new PasswordRequest("password123!");
 
     @LocalServerPort
     int port;
@@ -55,7 +57,19 @@ public class AcceptanceTest {
                 .extract().as(TokenResponse.class).getAccessToken();
     }
 
+    private ExtractableResponse<Response> 비밀번호_확인(final String accessToken, final PasswordRequest passwordRequest) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .body(passwordRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/members/auth/password-check")
+                .then().log().all()
+                .extract();
+    }
+
     protected ExtractableResponse<Response> 회원정보_조회(final String accessToken) {
+        비밀번호_확인(accessToken, 파랑비번);
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)

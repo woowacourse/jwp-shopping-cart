@@ -42,6 +42,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updateNickname() {
         회원가입(파랑);
         String accessToken = 로그인_후_토큰발급(파랑토큰);
+        회원정보_조회(accessToken);
 
         RestAssured
                 .given().log().all()
@@ -57,6 +58,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updatePassword() {
         회원가입(파랑);
         String accessToken = 로그인_후_토큰발급(파랑토큰);
+        회원정보_조회(accessToken);
 
         RestAssured
                 .given().log().all()
@@ -72,6 +74,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void deleteMe() {
         회원가입(파랑);
         String accessToken = 로그인_후_토큰발급(파랑토큰);
+        회원정보_조회(accessToken);
 
         RestAssured
                 .given().log().all()
