@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 class CustomerServiceTest {
 
     @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
 
     @DisplayName("회원가입을 하고 아이디로 회원을 찾는다.")
     @Test

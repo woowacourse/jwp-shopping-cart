@@ -23,6 +23,10 @@ public class CustomerLoginResponse {
         return new CustomerLoginResponse(null, customer.getId(), customer.getUsername(), customer.getNickname());
     }
 
+    public CustomerLoginResponse setToken(final String accessToken) {
+        return new CustomerLoginResponse(accessToken, id, userId, nickname);
+    }
+
     public String getAccessToken() {
         return accessToken;
     }

@@ -16,10 +16,10 @@ import java.util.List;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException() {
-        return ResponseEntity.badRequest().body("Unhandled Exception");
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity handleUnhandledException() {
+//        return ResponseEntity.badRequest().body("Unhandled Exception");
+//    }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity handle() {
@@ -51,5 +51,15 @@ public class ControllerAdvice {
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity authorizationException(final AuthorizationException exception) {
+        return ResponseEntity.status(AuthorizationException.STATUS_CODE).body(exception.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity invaildInputException(final InvalidInputException exception) {
+        return ResponseEntity.status(InvalidInputException.STATUS_CODE).body(exception.getMessage());
     }
 }

@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.repository.dao.CustomerDao;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class CustomerRepositoryTest {
 
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     @Autowired
     public CustomerRepositoryTest(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {

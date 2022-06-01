@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
@@ -21,9 +22,13 @@ import woowacourse.shoppingcart.dto.PasswordRequest;
 @RestController
 public class CustomerController {
 
+    private final JwtTokenProvider jwtTokenProvider;
+
     private final CustomerService customerService;
 
-    public CustomerController(final CustomerService customerService) {
+    public CustomerController(final JwtTokenProvider jwtTokenProvider,
+                              final CustomerService customerService) {
+        this.jwtTokenProvider = jwtTokenProvider;
         this.customerService = customerService;
     }
 
@@ -36,7 +41,8 @@ public class CustomerController {
     @PostMapping("/customers/login")
     public ResponseEntity<CustomerLoginResponse> login(final @RequestBody CustomerLoginRequest request) {
         CustomerLoginResponse response = customerService.login(request);
-        return ResponseEntity.ok().body(response);
+        String accessToken = jwtTokenProvider.createToken(String.valueOf(response.getId()));
+        return ResponseEntity.ok().body(response.setToken(accessToken));
     }
 
     @GetMapping("/auth/customers/profile")
