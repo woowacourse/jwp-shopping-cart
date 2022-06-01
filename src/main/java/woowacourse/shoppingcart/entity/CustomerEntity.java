@@ -31,6 +31,22 @@ public class CustomerEntity {
         this(null, username, password, nickname, age);
     }
 
+    public CustomerEntity(Customer customer) {
+        this(null,
+                customer.getUsername().getValue(),
+                customer.getPassword().getValue(),
+                customer.getNickname().getValue(),
+                customer.getAge().getValue());
+    }
+
+    public CustomerEntity(Long id, Customer customer) {
+        this(id,
+                customer.getUsername().getValue(),
+                customer.getPassword().getValue(),
+                customer.getNickname().getValue(),
+                customer.getAge().getValue());
+    }
+
     public Long getId() {
         return id;
     }
