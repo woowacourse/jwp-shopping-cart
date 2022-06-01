@@ -39,7 +39,8 @@ public class CustomerDao {
 	}
 
 	public Long findIdByUserName(String nickname) {
-		return null;
+		String sql = "select id from customer where nickname = :nickname";
+		return jdbcTemplate.queryForObject(sql, Map.of("nickname", nickname), Long.class);
 	}
 
 	public Optional<Customer> findByEmail(String email) {

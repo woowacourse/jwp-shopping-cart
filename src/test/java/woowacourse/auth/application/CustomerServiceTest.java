@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
@@ -45,7 +46,10 @@ class CustomerServiceTest {
 		Customer saved = customerService.signUp(request);
 
 		// then
-		assertThat(saved).isEqualTo(customer);
+		assertAll(
+			() -> assertThat(saved).isEqualTo(customer),
+			() -> verify(customerDao).save(any(Customer.class))
+		);
 	}
 
 	@DisplayName("중복 이메일은 저장하지 못 한다.")
@@ -57,8 +61,11 @@ class CustomerServiceTest {
 			.willReturn(true);
 
 		// then
-		assertThatThrownBy(() -> customerService.signUp(request))
-			.isInstanceOf(InvalidCustomerException.class);
+		assertAll(
+			() -> assertThatThrownBy(() -> customerService.signUp(request))
+				.isInstanceOf(InvalidCustomerException.class),
+			() -> verify(customerDao, never()).save(any())
+		);
 	}
 
 	@DisplayName("이메일로 회원을 조회한다.")
@@ -70,7 +77,10 @@ class CustomerServiceTest {
 			.willReturn(Optional.of(customer));
 
 		// then
-		assertThat(customerService.findByEmail("123@gmail.com")).isEqualTo(customer);
+		assertAll(
+			() -> assertThat(customerService.findByEmail(email)).isEqualTo(customer),
+			() -> verify(customerDao).findByEmail(email)
+		);
 	}
 
 	@DisplayName("이메일로 회원을 조회한다.")
@@ -81,7 +91,7 @@ class CustomerServiceTest {
 			.willReturn(Optional.empty());
 
 		// then
-		assertThatThrownBy(() ->customerService.findByEmail("123@gmail.com"))
+		assertThatThrownBy(() -> customerService.findByEmail(email))
 			.isInstanceOf(InvalidCustomerException.class);
 	}
 
@@ -97,7 +107,10 @@ class CustomerServiceTest {
 		Customer update = customerService.update(customer, request);
 
 		// then
-		assertThat(update.getNickname()).isEqualTo("thor");
+		assertAll(
+			() -> assertThat(update.getNickname()).isEqualTo("thor"),
+			() -> verify(customerDao).update(customer)
+		);
 	}
 
 	@DisplayName("기존 비밀번호가 다르면 수정하지 못한다.")
@@ -109,7 +122,10 @@ class CustomerServiceTest {
 		Customer customer = new Customer(1L, email, "a123456!", "b1234!");
 
 		// when
-		assertThatThrownBy(() -> customerService.update(customer, request))
-			.isInstanceOf(InvalidAuthException.class);
+		assertAll(
+			() -> assertThatThrownBy(() -> customerService.update(customer, request))
+				.isInstanceOf(InvalidAuthException.class),
+			() -> verify(customerDao, never()).update(any())
+		);
 	}
 }

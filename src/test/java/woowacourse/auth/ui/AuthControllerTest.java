@@ -1,5 +1,7 @@
 package woowacourse.auth.ui;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import woowacourse.auth.application.CustomerService;
@@ -14,7 +17,7 @@ import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 
-public class AuthControllerTest extends ControllerTest{
+public class AuthControllerTest extends ControllerTest {
 
 	@Autowired
 	private CustomerService customerService;
@@ -28,16 +31,18 @@ public class AuthControllerTest extends ControllerTest{
 		// when
 		ResultActions result = mockMvc.perform(post("/auth/login")
 			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(
-				new TokenRequest("123@gmail.com", "a1234!"))));
+			.content(objectMapper.writeValueAsString(new TokenRequest(email, password))));
 
 		// then
-		String token = "token";
-		String responseJson = objectMapper.writeValueAsString(
-			new TokenResponse(nickname, token)
+		String responseJson = result.andReturn()
+			.getResponse()
+			.getContentAsString();
+		TokenResponse tokenResponse = objectMapper.readValue(responseJson, TokenResponse.class);
+		assertAll(
+			() -> result.andExpect(status().isOk()),
+			() -> assertThat(tokenResponse.getNickname()).isEqualTo(nickname),
+			() -> assertThat(tokenProvider.getPayload(tokenResponse.getAccessToken())).isEqualTo(email)
 		);
-		result.andExpect(status().isOk())
-			.andExpect(content().json(responseJson));
 	}
 
 	@DisplayName("비밀번호가 틀려 로그인에 실패한다.")

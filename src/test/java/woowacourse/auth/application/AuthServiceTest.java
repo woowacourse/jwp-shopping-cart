@@ -36,9 +36,9 @@ class AuthServiceTest {
 	@Test
 	void login() {
 		// given
-		given(customerService.findByEmail("123@gmail.com"))
+		given(customerService.findByEmail(email))
 			.willReturn(new Customer(1L, email, password, nickname));
-		given(tokenProvider.createToken("123@gmail.com"))
+		given(tokenProvider.createToken(email))
 			.willReturn("access-token");
 
 		// when
@@ -47,7 +47,9 @@ class AuthServiceTest {
 		// then
 		assertAll(
 			() -> assertThat(response.getNickname()).isEqualTo("does"),
-			() -> assertThat(response.getAccessToken()).isEqualTo("access-token")
+			() -> assertThat(response.getAccessToken()).isEqualTo("access-token"),
+			() -> verify(customerService).findByEmail(email),
+			() -> verify(tokenProvider).createToken(email)
 		);
 	}
 
@@ -59,8 +61,11 @@ class AuthServiceTest {
 			.willThrow(InvalidCustomerException.class);
 
 		// when
-		assertThatThrownBy(() -> authService.login(new TokenRequest(email, password)))
-			.isInstanceOf(InvalidCustomerException.class);
+		assertAll(
+			() -> assertThatThrownBy(() -> authService.login(new TokenRequest(email, password)))
+				.isInstanceOf(InvalidCustomerException.class),
+			() -> verify(tokenProvider, never()).createToken(any())
+		);
 	}
 
 	@DisplayName("비밀번호가 틀리면 예외가 발생한다.")
@@ -71,7 +76,10 @@ class AuthServiceTest {
 			.willReturn(new Customer(1L, email, password, nickname));
 
 		// when
-		assertThatThrownBy(() -> authService.login(new TokenRequest(email, "a1234!!!")))
-			.isInstanceOf(InvalidAuthException.class);
+		assertAll(
+			() -> assertThatThrownBy(() -> authService.login(new TokenRequest(email, "a1234!!!")))
+				.isInstanceOf(InvalidAuthException.class),
+			() -> verify(tokenProvider, never()).createToken(any())
+		);
 	}
 }
