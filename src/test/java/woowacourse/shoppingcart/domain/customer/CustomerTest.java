@@ -1,19 +1,27 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import java.util.stream.Stream;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static woowacourse.shoppingcart.CustomerFixtures.*;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_ADDRESS;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_EMAIL;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_PASSWORD;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_PHONE_NUMBER;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_USERNAME;
+import static woowacourse.shoppingcart.CustomerFixtures.UPDATE_ADDRESS;
+import static woowacourse.shoppingcart.CustomerFixtures.UPDATE_PHONE_NUMBER;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_ADDRESS;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_EMAIL;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_PASSWORD;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_PHONE_NUMBER;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_USERNAME;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class CustomerTest {
 
@@ -21,24 +29,6 @@ class CustomerTest {
     @Test
     void create() {
         assertDoesNotThrow(() -> new Customer(MAT_USERNAME, MAT_EMAIL, MAT_PASSWORD, MAT_ADDRESS, MAT_PHONE_NUMBER));
-    }
-
-    @DisplayName("고객 생성을 위해 필요한 데이터가 null인 경우 예외를 던진다.")
-    @ParameterizedTest
-    @MethodSource("generateInvalidCustomer")
-    void create_error_null(String username, String email, String password, String address, String phoneNumber) {
-        assertThatThrownBy(() -> new Customer(username, email, password, address, phoneNumber))
-                .isInstanceOf(NullPointerException.class);
-    }
-
-    private static Stream<Arguments> generateInvalidCustomer() {
-        return Stream.of(
-                Arguments.of(null, YAHO_EMAIL, YAHO_PASSWORD, YAHO_ADDRESS, YAHO_PHONE_NUMBER),
-                Arguments.of(YAHO_USERNAME, null, YAHO_PASSWORD, YAHO_ADDRESS, YAHO_PHONE_NUMBER),
-                Arguments.of(YAHO_USERNAME, YAHO_EMAIL, null, YAHO_ADDRESS, YAHO_PHONE_NUMBER),
-                Arguments.of(YAHO_USERNAME, YAHO_EMAIL, YAHO_PASSWORD, null, YAHO_PHONE_NUMBER),
-                Arguments.of(YAHO_USERNAME, YAHO_EMAIL, YAHO_PASSWORD, YAHO_ADDRESS, null)
-        );
     }
 
     @DisplayName("username 형식이 맞지 않으면 예외를 던진다.")
