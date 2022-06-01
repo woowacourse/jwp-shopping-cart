@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 
 @Service
 @Transactional(readOnly = true)
@@ -52,6 +53,6 @@ public class CustomerService {
 
     private Customer getCustomer(String username) {
         return customerDao.findByUsername(username)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(NoSuchCustomerException::new);
     }
 }

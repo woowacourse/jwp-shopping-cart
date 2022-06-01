@@ -1,6 +1,11 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_PASSWORD;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_SAVE_REQUEST;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_USERNAME;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_PASSWORD;
+import static woowacourse.shoppingcart.CustomerFixtures.YAHO_USERNAME;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +16,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -18,17 +24,67 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
-        String accessToken = RestAssured.given().log().all()
+        generateCustomer(MAT_SAVE_REQUEST);
+        String accessToken = generateToken(new TokenRequest(MAT_USERNAME, MAT_PASSWORD));
+
+        CustomerResponse customerResponse = getMe(accessToken);
+
+        assertThat(customerResponse.getUsername()).isEqualTo(MAT_USERNAME);
+    }
+
+    @DisplayName("Bearer Auth 로그인 실패")
+    @Test
+    void myInfoWithBadBearerAuth() {
+        generateCustomer(MAT_SAVE_REQUEST);
+
+        TokenRequest tokenRequest = new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD);
+
+        RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest("puterism", "1234567890"))
+                .body(tokenRequest)
+                .when().post("/api/auth/token")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract();
+    }
+
+    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @Test
+    void myInfoWithWrongBearerAuth() {
+        String accessToken = "aaaaaaa.bbbbbbb.ccccccc";
+
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract();
+    }
+
+    private void generateCustomer(CustomerSaveRequest request) {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    private String generateToken(TokenRequest tokenRequest) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
                 .when().post("/api/auth/token")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .as(TokenResponse.class)
                 .getAccessToken();
+    }
 
-        CustomerResponse customerResponse = RestAssured.given().log().all()
+    private CustomerResponse getMe(String accessToken) {
+        return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/customers/me")
@@ -36,30 +92,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .as(CustomerResponse.class);
-
-        assertThat(customerResponse.getUsername()).isEqualTo("puterism");
-    }
-
-    @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
-
-        // then
-        // 토큰 발급 요청이 거부된다
-    }
-
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보 조회 요청이 거부된다
     }
 }

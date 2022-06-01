@@ -40,7 +40,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidCustomerException.class,
+            NoSuchCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
@@ -50,7 +50,10 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(InvalidTokenException.class)
+    @ExceptionHandler({
+            InvalidCustomerException.class,
+            InvalidTokenException.class
+    })
     public ResponseEntity<ErrorResponse> handleInvalidToken(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);

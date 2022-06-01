@@ -28,6 +28,7 @@ import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 
 @SpringBootTest
 @TestConstructor(autowireMode = AutowireMode.ALL)
@@ -60,7 +61,7 @@ class CustomerServiceTest {
     @Test
     void find() {
         CustomerSaveRequest request = YAHO_SAVE_REQUEST;
-        customerService.save(request);
+        customerService.save(YAHO_SAVE_REQUEST);
 
         CustomerResponse response = customerService.find(new LoginCustomer(request.getUsername()));
 
@@ -77,7 +78,7 @@ class CustomerServiceTest {
     @Test
     void find_error_notExist_username() {
         assertThatThrownBy(() -> customerService.find(new LoginCustomer("merong")))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(NoSuchCustomerException.class);
     }
 
     @DisplayName("존재하지 않는 uesrname과 password인 경우 예외를 던진다.")
@@ -109,7 +110,7 @@ class CustomerServiceTest {
     @Test
     void update_error_notExist_username() {
         assertThatThrownBy(() -> customerService.update(new LoginCustomer("merong"), UPDATE_REQUEST))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(NoSuchCustomerException.class);
     }
 
     @DisplayName("customer를 삭제한다.")
@@ -120,13 +121,13 @@ class CustomerServiceTest {
         customerService.delete(new LoginCustomer(YAHO_USERNAME));
 
         assertThatThrownBy(() -> customerService.find(new LoginCustomer(YAHO_USERNAME)))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(NoSuchCustomerException.class);
     }
 
     @DisplayName("존재하지 않는 username을 삭제하는 경우 예외를 던진다.")
     @Test
     void delete_error_notExist_username() {
         assertThatThrownBy(() -> customerService.delete(new LoginCustomer(YAHO_USERNAME)))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(NoSuchCustomerException.class);
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 
 import java.util.Optional;
 
@@ -42,7 +42,7 @@ public class CustomerDao {
             SqlParameterSource parameterSource = new MapSqlParameterSource("username", username);
             return jdbcTemplate.queryForObject(sql, parameterSource, Long.class);
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new NoSuchCustomerException();
         }
     }
 
