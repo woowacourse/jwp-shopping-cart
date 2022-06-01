@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -10,6 +11,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -27,27 +29,30 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
-        final String requestUrl = createCustomer();
+        ExtractableResponse<Response> response = createCustomer();
+        assertEquals(response.response().statusCode(), HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("내 정보 조회")
+    @Test
+    void getMe() {
+        final String requestUrl = createCustomer().response().header("location");
         final CustomerResponse expectedCustomerResponse = new CustomerResponse(
                 "example@example.com", "http://gravatar.com/avatar/1?d=identicon",
                 "name", "male", "1998-08-07", "12345678910", "address", "detailAddress", "12345"
         );
+
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .get(requestUrl)
                 .then().log().all()
                 .extract();
         final CustomerResponse customerResponse = response.body()
-                .jsonPath()
-                .getObject("", CustomerResponse.class);
+                        .jsonPath()
+                        .getObject("", CustomerResponse.class);
 
         assertThat(customerResponse).usingRecursiveComparison()
                 .isEqualTo(expectedCustomerResponse);
-    }
-
-    @DisplayName("내 정보 조회")
-    @Test
-    void getMe() {
     }
 
     @DisplayName("내 정보 수정")
@@ -60,17 +65,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void deleteMe() {
     }
 
-    private String createCustomer() {
+    private ExtractableResponse<Response> createCustomer() {
         final CustomerRequest customerRequest = new CustomerRequest(
                 "example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
                 "name", "male", "1998-08-07", "12345678910", "address", "detailAddress", "12345", true
         );
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(customerRequest)
-                .post("/api/users")
+                .post("/api/customers")
                 .then().log().all()
                 .extract();
-        return response.header("location");
     }
 }
