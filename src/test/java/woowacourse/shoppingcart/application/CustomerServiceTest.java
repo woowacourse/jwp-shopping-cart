@@ -9,7 +9,7 @@ import woowacourse.auth.dto.PhoneNumber;
 import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.DuplicatedAccountException;
@@ -45,10 +45,10 @@ class CustomerServiceTest {
 
         // when
         final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumber("010", "1234", "5678"));
-        final CustomerDto customerDto = customerService.create(signupRequest);
+        final CustomerResponse customerResponse = customerService.create(signupRequest);
 
         // then
-        assertThat(customerDto.getId()).isEqualTo(1L);
+        assertThat(customerResponse.getId()).isEqualTo(1L);
     }
 
     @Test
@@ -75,15 +75,15 @@ class CustomerServiceTest {
         given(customerDao.findById(any(Long.class))).willReturn(Optional.of(expected));
 
         // when
-        final CustomerDto customerDto = customerService.getById(1L);
+        final CustomerResponse customerResponse = customerService.getById(1L);
 
         // then
         assertAll(
-                () -> assertThat(customerDto.getId()).isEqualTo(1L),
-                () -> assertThat(customerDto.getAccount()).isEqualTo("hamcheeseburger"),
-                () -> assertThat(customerDto.getNickname()).isEqualTo("corinne"),
-                () -> assertThat(customerDto.getAddress()).isEqualTo("코린네"),
-                () -> assertThat(customerDto.getPhoneNumber().appendNumbers()).isEqualTo("01012345678")
+                () -> assertThat(customerResponse.getId()).isEqualTo(1L),
+                () -> assertThat(customerResponse.getAccount()).isEqualTo("hamcheeseburger"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("corinne"),
+                () -> assertThat(customerResponse.getAddress()).isEqualTo("코린네"),
+                () -> assertThat(customerResponse.getPhoneNumber().appendNumbers()).isEqualTo("01012345678")
         );
 
     }

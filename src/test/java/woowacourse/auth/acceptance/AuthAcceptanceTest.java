@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -35,13 +35,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
         final ExtractableResponse<Response> response = get("/customers", token.getAccessToken());
-        final CustomerDto customerDto = response.jsonPath().getObject(".", CustomerDto.class);
+        final CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
 
         // then
         // 내 정보가 조회된다
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(customerDto.getId()).isEqualTo(2L)
+                () -> assertThat(customerResponse.getId()).isEqualTo(2L)
         );
     }
 
