@@ -15,6 +15,7 @@ import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.PlainPassword;
 
 @SpringBootTest
 @Transactional
@@ -35,7 +36,7 @@ class AuthServiceTest {
     void setUp() {
         customer = Customer.builder()
                 .username("username")
-                .purePassword("password123")
+                .password(passwordEncoder.encode(new PlainPassword("password123")))
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -57,7 +58,7 @@ class AuthServiceTest {
     @DisplayName("로그인 성공")
     void login() {
         // given
-        customerDao.save(customer.encodePassword(passwordEncoder));
+        customerDao.save(customer);
 
         // when
         TokenResponse tokenResponse = authService.login(new TokenRequest("username", "password123"));

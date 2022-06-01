@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.PlainPassword;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
@@ -29,8 +30,8 @@ public class CustomerService {
         if (customerDao.existCustomerByUsername(request.getUsername())) {
             throw new InvalidCustomerException("이미 존재하는 유저 이름입니다.");
         }
-        Customer customer = request.toCustomer()
-                .encodePassword(passwordEncoder);
+        PlainPassword plainPassword = new PlainPassword(request.getPassword());
+        Customer customer = request.toCustomeWithPassword(passwordEncoder.encode(plainPassword));
         customerDao.save(customer);
     }
 
@@ -45,8 +46,9 @@ public class CustomerService {
 
     @Transactional
     public void updatePassword(final String username, final CustomerUpdatePasswordRequest request) {
-        Password encodedPassword = Password.purePassword(request.getPassword())
-                .encodePassword(passwordEncoder);
+        PlainPassword plainPassword = new PlainPassword(request.getPassword());
+        Password encodedPassword = passwordEncoder.encode(plainPassword);
+
         customerDao.updatePassword(username, encodedPassword);
     }
 

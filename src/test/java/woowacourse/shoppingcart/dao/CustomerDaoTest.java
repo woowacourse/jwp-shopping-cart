@@ -10,8 +10,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.support.EncryptPasswordEncoder;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.PlainPassword;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -19,10 +22,14 @@ import woowacourse.shoppingcart.domain.customer.Password;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 
+    private static final PlainPassword PLAIN_PASSWORD = new PlainPassword("password123");
+
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
     public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(jdbcTemplate);
+        passwordEncoder = new EncryptPasswordEncoder();
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -59,7 +66,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .purePassword("password123")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -81,7 +88,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .purePassword("password123")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -99,7 +106,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .purePassword("password123")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -117,7 +124,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .purePassword("password123")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
@@ -144,18 +151,19 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .purePassword("password123")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
         customerDao.save(customer);
+        Password changedPassword = passwordEncoder.encode(new PlainPassword("password321"));
 
         // when
-        customerDao.updatePassword("username", Password.purePassword("changedpassword123"));
+        customerDao.updatePassword("username", changedPassword);
 
         // then
         assertThat(customerDao.findByUsername("username").getPassword())
-                .isEqualTo("changedpassword123");
+                .isEqualTo(changedPassword.getPassword());
     }
 
     @Test
@@ -164,7 +172,7 @@ public class CustomerDaoTest {
         // given
         Customer customer = Customer.builder()
                 .username("username")
-                .purePassword("password123")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();

@@ -8,6 +8,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.PlainPassword;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,7 +27,9 @@ public class AuthService {
 
     public TokenResponse login(final TokenRequest request) {
         Customer customer = customerDao.findByUsername(request.getUsername());
-        customer.matchPassword(passwordEncoder, request.getPassword());
+        PlainPassword requestPassword = new PlainPassword(request.getPassword());
+        customer.matchPassword(passwordEncoder, requestPassword);
+
         String accessToken = jwtTokenProvider.createToken(customer.getUsername());
         return new TokenResponse(accessToken);
     }

@@ -21,7 +21,7 @@ public class CustomerDao {
             Customer.builder()
                     .id(rs.getLong("id"))
                     .username(rs.getString("username"))
-                    .encodedPassword(rs.getString("password"))
+                    .password(rs.getString("password"))
                     .phoneNumber(rs.getString("phone_number"))
                     .address(rs.getString("address"))
                     .build()
@@ -71,7 +71,8 @@ public class CustomerDao {
 
     public int update(final Customer customer) {
         final String query = "UPDATE customer SET phone_number = ?, address = ? WHERE username = ?";
-        int rowCount = jdbcTemplate.update(query, customer.getPhoneNumber(), customer.getAddress(), customer.getUsername());
+        int rowCount = jdbcTemplate
+                .update(query, customer.getPhoneNumber(), customer.getAddress(), customer.getUsername());
         if (rowCount == 0) {
             throw new InvalidCustomerException();
         }

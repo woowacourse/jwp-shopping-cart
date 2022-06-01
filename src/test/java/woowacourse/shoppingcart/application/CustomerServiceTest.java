@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -10,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.PlainPassword;
 import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -62,10 +63,9 @@ class CustomerServiceTest {
 
         // when
         customerService.updatePassword(USERNAME, new CustomerUpdatePasswordRequest(changedPassword));
-        String password = customerDao.findByUsername(USERNAME)
-                .getPassword();
+        Customer changedCustomer = customerDao.findByUsername(USERNAME);
 
         // then
-        assertThat(passwordEncoder.isMatchPassword(password, changedPassword)).isTrue();
+        assertDoesNotThrow(() -> changedCustomer.matchPassword(passwordEncoder, new PlainPassword(changedPassword)));
     }
 }

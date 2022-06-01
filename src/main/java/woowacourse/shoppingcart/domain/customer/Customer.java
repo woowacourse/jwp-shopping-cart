@@ -19,12 +19,8 @@ public class Customer {
         this.address = address;
     }
 
-    public Customer encodePassword(final PasswordEncoder passwordEncoder) {
-        return new Customer(id, username, password.encodePassword(passwordEncoder), phoneNumber, address);
-    }
-
-    public void matchPassword(final PasswordEncoder passwordEncoder, final String password) {
-        this.password.matchPassword(passwordEncoder, password);
+    public void matchPassword(final PasswordEncoder passwordEncoder, final PlainPassword plainPassword) {
+        password.matchPassword(passwordEncoder, plainPassword);
     }
 
     public Long getId() {
@@ -72,13 +68,13 @@ public class Customer {
             return this;
         }
 
-        public Builder purePassword(String password) {
-            this.password = Password.purePassword(password);
+        public Builder password(String password) {
+            this.password = new Password(password);
             return this;
         }
 
-        public Builder encodedPassword(String password) {
-            this.password = Password.encodedPassword(password);
+        public Builder password(Password password) {
+            this.password = password;
             return this;
         }
 

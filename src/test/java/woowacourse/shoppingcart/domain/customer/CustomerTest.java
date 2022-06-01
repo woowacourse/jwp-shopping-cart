@@ -13,7 +13,6 @@ class CustomerTest {
         // given
         Long id = 1L;
         String username = "username1";
-        String password = "password1";
         String phoneNumber = "01012345678";
         String address = "성담빌딩";
 
@@ -21,7 +20,6 @@ class CustomerTest {
         Customer customer = Customer.builder()
                 .id(id)
                 .username(username)
-                .purePassword(password)
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .build();
@@ -29,6 +27,7 @@ class CustomerTest {
         // then
         assertThat(customer)
                 .usingRecursiveComparison()
-                .isEqualTo(new Customer(id, new Username(username), Password.purePassword(password), new PhoneNumber(phoneNumber), new Address(address)));
+                .ignoringFields("password")
+                .isEqualTo(new Customer(id, new Username(username), null, new PhoneNumber(phoneNumber), new Address(address)));
     }
 }
