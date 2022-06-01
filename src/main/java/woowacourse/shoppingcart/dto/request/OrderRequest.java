@@ -4,10 +4,15 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
+
     @NotNull
-    private final Long cartId;
+    private Long cartId;
+
     @Min(0)
-    private final int quantity;
+    private int quantity;
+
+    public OrderRequest() {
+    }
 
     public OrderRequest(final Long cartId, final int quantity) {
         this.cartId = cartId;
@@ -18,7 +23,15 @@ public class OrderRequest {
         return cartId;
     }
 
+    public void setCartId(Long cartId) {
+        this.cartId = cartId;
+    }
+
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
