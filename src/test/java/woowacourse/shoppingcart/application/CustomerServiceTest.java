@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
+import woowacourse.shoppingcart.dto.CustomerProfileUpdateServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 
@@ -109,6 +110,20 @@ class CustomerServiceTest {
         // when, then
         assertThatThrownBy(() -> customerService.delete(request))
                 .isInstanceOf(PasswordNotMatchException.class);
+    }
 
+    @Test
+    @DisplayName("회원의 이름을 수정한다.")
+    void updateName() {
+        // given
+        when(customerDao.findById(1L))
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
+        when(customerDao.updateById(any(Customer.class)))
+                .thenReturn(1);
+
+        // when, then
+        final CustomerProfileUpdateServiceRequest request = new CustomerProfileUpdateServiceRequest(1L, "클레이");
+        assertThatCode(() -> customerService.updateName(request))
+                .doesNotThrowAnyException();
     }
 }
