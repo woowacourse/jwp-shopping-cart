@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.fixture.Fixture.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,15 +26,14 @@ class AuthServiceTest {
     @Test
     @DisplayName("로그인 정보를 받아서 토큰을 반환한다.")
     void login() {
-        final String customerEmail = "test@test.com";
-        final SignUpDto signUpDto = new SignUpDto(customerEmail, "testtest", "test");
+        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
         customerService.signUp(signUpDto);
-        final SignInDto signInDto = new SignInDto(customerEmail, "testtest");
+        final SignInDto signInDto = new SignInDto(TEST_EMAIL, TEST_PASSWORD);
 
         final TokenResponseDto token = authService.login(signInDto);
         final String subject = authService.extractEmail(token.getAccessToken());
 
-        assertThat(subject).isEqualTo(customerEmail);
+        assertThat(subject).isEqualTo(TEST_EMAIL);
     }
 
 }
