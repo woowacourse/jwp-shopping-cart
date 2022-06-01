@@ -62,6 +62,37 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all().statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("토큰이 없으면 내 정보를 조회할 수 없다.")
+    @Test
+    void getMeThrowException() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        RestAssured
+                .given().log().all()
+                .body(signUpRequest)
+                .contentType(ContentType.JSON)
+                .when().post("/users")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        RestAssured
+                .given().log().all()
+                .body(signInRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract().as(SignInResponse.class).getToken();
+
+        //when & then
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/users/me")
+                .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
     @DisplayName("내 정보를 수정할 수 있다.")
     @Test
     void updateMe() {
