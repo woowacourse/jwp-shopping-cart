@@ -24,8 +24,9 @@ import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 @DisplayName("회원 관련 기능")
 class CustomerAcceptanceTest extends AcceptanceTest {
 
-    private static final String 유효한_아이디 = "유효한_아이디";
-    private static final SignUpRequest 유효한_사용자 = new SignUpRequest(유효한_아이디, "비밀번호", "닉네임", 15);
+    private static final String 유효한_아이디 = "username";
+    private static final String 유효한_닉네임 = "닉네임";
+    private static final SignUpRequest 유효한_사용자 = new SignUpRequest(유효한_아이디, "password1@", 유효한_닉네임, 15);
 
     @Test
     void 회원가입() {
@@ -44,7 +45,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
 
             ExtractableResponse<Response> response = 내_정보_조회_요청(유효한_토큰);
             GetMeResponse actualBody = response.body().jsonPath().getObject(".", GetMeResponse.class);
-            GetMeResponse expectedBody = new GetMeResponse("유효한_아이디", "닉네임", 15);
+            GetMeResponse expectedBody = new GetMeResponse(유효한_아이디, 유효한_닉네임, 15);
 
             assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertThat(actualBody).isEqualTo(expectedBody);
@@ -65,8 +66,8 @@ class CustomerAcceptanceTest extends AcceptanceTest {
 
         @Test
         void 로그인된_경우_200() {
-            SignUpRequest 고객 = new SignUpRequest("유효한_아이디", "비밀번호", "닉네임", 15);
-            UpdateMeRequest 수정된_고객 = new UpdateMeRequest("유효한_아이디", "새로운_닉네임", 20);
+            SignUpRequest 고객 = new SignUpRequest(유효한_아이디, "password123@", 유효한_닉네임, 15);
+            UpdateMeRequest 수정된_고객 = new UpdateMeRequest(유효한_아이디, "새로운닉네임", 20);
             String 유효한_토큰 = 회원가입_요청_후_토큰_반환(고객);
 
             ExtractableResponse<Response> response = 내_정보_수정_요청(수정된_고객, 유효한_토큰);
@@ -123,9 +124,9 @@ class CustomerAcceptanceTest extends AcceptanceTest {
 
         @Test
         void 로그인되었고_현재_비밀번호를_제대로_입력한_경우_200() {
-            String 기존_비밀번호 = "비밀번호";
-            SignUpRequest customer = new SignUpRequest("유효한_아이디", 기존_비밀번호, "닉네임", 15);
-            UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(기존_비밀번호, "새로운_비밀번호");
+            String 기존_비밀번호 = "password1@";
+            SignUpRequest customer = new SignUpRequest(유효한_아이디, 기존_비밀번호, 유효한_닉네임, 15);
+            UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(기존_비밀번호, "newpw123@#$");
             String 유효한_토큰 = 회원가입_요청_후_토큰_반환(customer);
 
             ExtractableResponse<Response> response = 내_비밀번호_수정_요청(updatePasswordRequest, 유효한_토큰);
@@ -135,9 +136,9 @@ class CustomerAcceptanceTest extends AcceptanceTest {
 
         @Test
         void 로그인되었으나_현재_비밀번호를_잘못_입력한_경우_400() {
-            String 기존_비밀번호 = "비밀번호";
-            String 틀린_비밀번호 = "비밀번호!";
-            SignUpRequest customer = new SignUpRequest("유효한_아이디", 기존_비밀번호, "닉네임", 15);
+            String 기존_비밀번호 = "password1@";
+            String 틀린_비밀번호 = "wrong123@#";
+            SignUpRequest customer = new SignUpRequest(유효한_아이디, 기존_비밀번호, 유효한_닉네임, 15);
             UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(틀린_비밀번호, "새로운_비밀번호");
             String 유효한_토큰 = 회원가입_요청_후_토큰_반환(customer);
 

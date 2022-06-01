@@ -25,8 +25,8 @@ import woowacourse.shoppingcart.exception.NotFoundException;
 @SuppressWarnings("NonAsciiCharacters")
 class CustomerServiceTest extends DatabaseTest {
 
-    private static final String 유효한_아이디 = "valid_username";
-    private static final String 비밀번호 = "valid_pw";
+    private static final String 유효한_아이디 = "username";
+    private static final String 비밀번호 = "password1@";
     private static final EncryptedPassword 암호화된_비밀번호 = new Password(비밀번호).toEncrypted();
     private static final String 유효한_닉네임 = "닉네임";
     private static final int 유효한_나이 = 20;
@@ -80,7 +80,7 @@ class CustomerServiceTest extends DatabaseTest {
 
         @Test
         void 이미_존재하는_아이디인_경우_거짓() {
-            String 중복되는_아이디 = "duplicate_username";
+            String 중복되는_아이디 = "duplicate";
             saveFixture(new Customer(중복되는_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이));
 
             UniqueUsernameResponse actual = customerService.checkUniqueUsername(중복되는_아이디);
@@ -108,7 +108,7 @@ class CustomerServiceTest extends DatabaseTest {
         @Test
         void 중복된_아이디로_고객을_저장하려는_경우_예외발생() {
             SignUpRequest 회원가입_정보 = new SignUpRequest(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
-            SignUpRequest 아이디가_중복되는_회원가입_정보 = new SignUpRequest(유효한_아이디, "password!", "nickname", 80);
+            SignUpRequest 아이디가_중복되는_회원가입_정보 = new SignUpRequest(유효한_아이디, "password!2", "nickname", 80);
             customerService.createCustomer(회원가입_정보);
 
             assertThatThrownBy(() -> customerService.createCustomer(아이디가_중복되는_회원가입_정보))
@@ -151,8 +151,8 @@ class CustomerServiceTest extends DatabaseTest {
         }
 
         @Test
-        void 나이가_0살인_경우_예외발생() {
-            SignUpRequest 회원가입_정보 = new SignUpRequest(유효한_아이디, 비밀번호, 유효한_닉네임, 0);
+        void 나이가_음수인_경우_예외발생() {
+            SignUpRequest 회원가입_정보 = new SignUpRequest(유효한_아이디, 비밀번호, 유효한_닉네임, -1);
 
             assertThatThrownBy(() -> customerService.createCustomer(회원가입_정보))
                     .isInstanceOf(IllegalArgumentException.class);
@@ -169,7 +169,7 @@ class CustomerServiceTest extends DatabaseTest {
         @Test
         void 유효한_정보로_고객의_닉네임과_나이_수정() {
             saveFixture(유효한_고객);
-            String 새로운_닉네임 = "새로운_닉네임";
+            String 새로운_닉네임 = "새로운닉네임";
             int 새로운_나이 = 100;
             UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest(유효한_아이디, 새로운_닉네임, 새로운_나이);
 
@@ -213,7 +213,7 @@ class CustomerServiceTest extends DatabaseTest {
 
         private final User 유효한_사용자 = new User(유효한_아이디, 암호화된_비밀번호);
         private final Customer 유효한_고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
-        private final String 새로운_비밀번호 = "new_pw";
+        private final String 새로운_비밀번호 = "newpw123@#";
         private final EncryptedPassword 새로운_임호화된_비밀번호 = new Password(새로운_비밀번호).toEncrypted();
 
         @Test
@@ -231,7 +231,7 @@ class CustomerServiceTest extends DatabaseTest {
         @Test
         void 기존_비밀번호를_틀린_경우_예외발생() {
             saveFixture(유효한_고객);
-            String 틀린_기존_비밀번호 = "wrong_pw";
+            String 틀린_기존_비밀번호 = "wrong1234!@#";
             UpdatePasswordRequest 비밀번호_수정_정보 = new UpdatePasswordRequest(틀린_기존_비밀번호, 새로운_비밀번호);
 
             assertThatThrownBy(() -> customerService.updatePassword(유효한_사용자, 비밀번호_수정_정보))

@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.domain.Customer;
 @SuppressWarnings("NonAsciiCharacters")
 class CustomerDaoTest extends DatabaseTest {
 
-    private static final String 유효한_아이디 = "valid_username";
+    private static final String 유효한_아이디 = "username";
     private static final EncryptedPassword 비밀번호 = new EncryptedPassword("valid_password");
     private static final String 유효한_닉네임 = "nickname";
     private static final int 유효한_나이 = 20;
@@ -89,7 +89,7 @@ class CustomerDaoTest extends DatabaseTest {
         void 유효한_데이터로_수정하려는_경우_성공() {
             Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
             EncryptedPassword 새로운_비밀번호 = new EncryptedPassword("새로운_비밀번호");
-            Customer 수정된_고객 = new Customer(유효한_아이디, 새로운_비밀번호, "새로운_닉네임", 80);
+            Customer 수정된_고객 = new Customer(유효한_아이디, 새로운_비밀번호, "새로운닉네임", 80);
             saveFixture(고객);
 
             customerDao.updateByUsername(수정된_고객);

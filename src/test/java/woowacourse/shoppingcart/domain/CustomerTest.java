@@ -12,8 +12,7 @@ import woowacourse.auth.domain.EncryptedPassword;
 class CustomerTest {
 
     private static final String 유효한_아이디 = "validname";
-    private static final String 비밀번호 = "비밀번호";
-    private static final EncryptedPassword 암호화된_비밀번호 = new EncryptedPassword(비밀번호);
+    private static final EncryptedPassword 암호화된_비밀번호 = new EncryptedPassword("비밀번호");
     private static final String 유효한_닉네임 = "닉네임";
 
     @Test

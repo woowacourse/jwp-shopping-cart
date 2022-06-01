@@ -19,8 +19,8 @@ import woowacourse.shoppingcart.dto.request.SignUpRequest;
 @DisplayName("인증 관련 기능")
 class AuthAcceptanceTest extends AcceptanceTest {
 
-    private static final String USERNAME = "valid_username";
-    private static final String PASSWORD = "password";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password1@";
 
     @BeforeEach
     void setup() {
@@ -38,7 +38,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 로그인_실패() {
-        TokenRequest 잘못된_인증정보 = new TokenRequest(USERNAME, "wrong_password");
+        TokenRequest 잘못된_인증정보 = new TokenRequest(USERNAME, "wrong123@#$%");
 
         ExtractableResponse<Response> response = 로그인_요청(잘못된_인증정보);
 
