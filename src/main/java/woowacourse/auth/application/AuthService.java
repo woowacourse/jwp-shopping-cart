@@ -1,18 +1,18 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 public class AuthService {
 
-    private JwtTokenProvider jwtTokenProvider;
-    private CustomerDao customerDao;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final CustomerDao customerDao;
 
     public AuthService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;

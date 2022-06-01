@@ -10,7 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -54,7 +54,7 @@ public class CustomerDaoTest {
     void existByUserName() {
         customerDao.save(new Customer("레넌", "rennon@woowa.com", "1234"));
 
-        assertThat(customerDao.existByUserName("레넌")).isTrue();
+        assertThat(customerDao.existByUsername("레넌")).isTrue();
     }
 
     @Test
