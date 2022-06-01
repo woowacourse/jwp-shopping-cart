@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -96,6 +97,22 @@ class CustomerControllerTest {
             // then
             response.andExpect(status().isBadRequest());
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"testwoowacoursecom", "test@woowacoursecom", "testwoowacourse.com", "@", ".", "@.",
+            ".@wo.com", "test.woowacourse@com", "", " "})
+    @DisplayName("get 메서드는 로그인 아이디가 이메일 형식이 아니면, Not Found를 던진다.")
+    void get_loginId_NotEmail(String loginId) throws Exception {
+        // given
+        String authorization = "Bearer " + jwtTokenProvider.createToken(loginId);
+
+        // when
+        final ResultActions response = mockMvc.perform(get("/customers/me")
+                .header(HttpHeaders.AUTHORIZATION, authorization));
+
+        // then
+        response.andExpect(status().isNotFound());
     }
 
     @Nested

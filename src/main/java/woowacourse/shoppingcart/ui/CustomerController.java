@@ -32,12 +32,12 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer) {
         return ResponseEntity.ok(customerService.findByLoginId(loginCustomer));
     }
 
     @PutMapping("/me")
-    public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal LoginCustomer loginCustomer,
+    public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer,
                                                      @RequestBody @Valid CustomerRequest customerRequest) {
         CustomerResponse update = customerService.update(loginCustomer, customerRequest);
         return ResponseEntity.ok(update);
