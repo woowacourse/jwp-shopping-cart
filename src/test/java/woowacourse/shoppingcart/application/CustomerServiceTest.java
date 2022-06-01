@@ -18,7 +18,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateRequest;
+import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 
 @JdbcTest
 @TestConstructor(autowireMode = AutowireMode.ALL)
@@ -31,46 +32,58 @@ class CustomerServiceTest {
         this.customerService = new CustomerService(new CustomerDao(jdbcTemplate), new BCryptPasswordEncoder());
     }
 
-    @DisplayName("비밀번호가 일치한다면 회원이름을 수정할 수 있다.")
+    @DisplayName("회원이름을 수정할 수 있다.")
     @Test
-    void update() {
+    void updateProfile() {
         // given
         customerService.create(잉_회원생성요청);
-        final CustomerUpdateRequest 잉_이름변경요청 = new CustomerUpdateRequest(잉_회원생성요청.getName() + "수정",
-                잉_회원생성요청.getPassword());
+        final CustomerUpdateProfileRequest 잉_이름변경요청 = new CustomerUpdateProfileRequest(잉_회원생성요청.getName() + "수정");
 
         // when
-        customerService.update(1L, 잉_이름변경요청);
+        customerService.updateProfile(1L, 잉_이름변경요청);
         final CustomerResponse 수정된_잉 = customerService.findById(1L);
 
         // then
         assertThat(수정된_잉.getName()).isEqualTo(잉_이름변경요청.getName());
     }
 
-    @DisplayName("비밀번호가 일치하지 않을 경우, 회원이름을 수정할 수 없다.")
+    @DisplayName("존재하지 않는 회원인 경우, 회원 이름을 수정할 수 없다.")
     @Test
-    void updateWithIncorrectPasswordShouldFail() {
+    void updateProfileWithInvalidIdShouldFail() {
         // given
         customerService.create(잉_회원생성요청);
-        final CustomerUpdateRequest 잉_이름변경요청 = new CustomerUpdateRequest(잉_회원생성요청.getName() + "수정",
-                잉_회원생성요청.getPassword() + "stranger");
+        final CustomerUpdateProfileRequest 잉_이름변경요청 = new CustomerUpdateProfileRequest(잉_회원생성요청.getName() + "수정");
 
         // when then
-        assertThatThrownBy(() -> customerService.update(1L, 잉_이름변경요청))
+        assertThatThrownBy(() -> customerService.updateProfile(100L, 잉_이름변경요청))
+                .isInstanceOf(CustomerNotFoundException.class);
+    }
+
+    @DisplayName("비밀번호가 일치하지 않을 경우, 회원 비밀번호를 수정할 수 없다.")
+    @Test
+    void updatePasswordWithIncorrectPasswordShouldFail() {
+        // given
+        customerService.create(잉_회원생성요청);
+        final CustomerUpdatePasswordRequest 잉_비밀번호수정요청 = new CustomerUpdatePasswordRequest(
+                잉_회원생성요청.getPassword() + "incorrect", 잉_회원생성요청.getPassword() + "new");
+
+        // when then
+        assertThatThrownBy(() -> customerService.updatePassword(1L, 잉_비밀번호수정요청))
                 .isInstanceOf(PasswordIncorrectException.class);
     }
 
-    @DisplayName("존재하지 않는 회원인 경우, 회원 이름을 수정할 수 없다.")
+    @DisplayName("회원 비밀번호를 수정할 수 있다.")
     @Test
-    void updateWithInvalidIdShouldFail() {
+    void updatePassword() {
         // given
         customerService.create(잉_회원생성요청);
-        final CustomerUpdateRequest 잉_이름변경요청 = new CustomerUpdateRequest(잉_회원생성요청.getName() + "수정",
-                잉_회원생성요청.getPassword());
+        final CustomerUpdatePasswordRequest 잉_비밀번호수정요청 = new CustomerUpdatePasswordRequest(
+                잉_회원생성요청.getPassword(), 잉_회원생성요청.getPassword() + "new");
 
         // when then
-        assertThatThrownBy(() -> customerService.update(100L, 잉_이름변경요청))
-                .isInstanceOf(CustomerNotFoundException.class);
+        customerService.updatePassword(1L, 잉_비밀번호수정요청);
+        assertThatThrownBy(() -> customerService.updatePassword(1L, 잉_비밀번호수정요청))
+                .isInstanceOf(PasswordIncorrectException.class);
     }
 
     @DisplayName("비밀번호가 일치한다면 회원 탈퇴를 할 수 있다.")

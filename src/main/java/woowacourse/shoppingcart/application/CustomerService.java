@@ -59,7 +59,8 @@ public class CustomerService {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         validatePassword(customer, customerUpdatePasswordRequest.getOldPassword());
 
-        customerDao.updatePassword(customer.changePassword(customerUpdatePasswordRequest.getNewPassword()));
+        customerDao.updatePassword(
+                customer.changePassword(passwordEncoder.encode(customerUpdatePasswordRequest.getNewPassword())));
         return id;
     }
 
