@@ -12,38 +12,30 @@ public class Customer {
     private final Username username;
     private final Email email;
     private final String password;
-    private String address;
+    private Address address;
     private String phoneNumber;
 
     public Customer(Long id, Customer customer) {
         this(id, new Username(customer.getUsername()), new Email(customer.getEmail()), customer.getPassword(),
-                customer.getAddress(),
-                customer.getPhoneNumber());
+                new Address(customer.getAddress()), customer.getPhoneNumber());
     }
 
     public Customer(String username, String email, String password, String address, String phoneNumber) {
-        this(null, new Username(username), new Email(email), password, address, phoneNumber);
+        this(null, new Username(username), new Email(email), password, new Address(address), phoneNumber);
     }
 
     public Customer(Long id, String username, String email, String password, String address, String phoneNumber) {
-        this(id, new Username(username), new Email(email), password, address, phoneNumber);
+        this(id, new Username(username), new Email(email), password, new Address(address), phoneNumber);
     }
 
-    public Customer(Long id, Username username, Email email, String password, String address, String phoneNumber) {
+    public Customer(Long id, Username username, Email email, String password, Address address, String phoneNumber) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = Objects.requireNonNull(password, "password는 필수 입력 사항압니다.");
-        this.address = Objects.requireNonNull(address, "address는 필수 입력 사항압니다.");
+        this.address = address;
         this.phoneNumber = Objects.requireNonNull(phoneNumber, "phoneNumber는 필수 입력 사항압니다.");
-        validateAddress(address);
         validatePhoneNumber(phoneNumber);
-    }
-
-    private void validateAddress(String address) {
-        if (address.length() > 255) {
-            throw new IllegalArgumentException("address 형식이 올바르지 않습니다. (길이: 255 이하)");
-        }
     }
 
     private void validatePhoneNumber(String phoneNumber) {
@@ -54,9 +46,8 @@ public class Customer {
     }
 
     public void modify(String address, String phoneNumber) {
-        this.address = Objects.requireNonNull(address, "address는 필수 입력 사항압니다.");
+        this.address = new Address(address);
         this.phoneNumber = Objects.requireNonNull(phoneNumber, "phoneNumber는 필수 입력 사항압니다.");
-        validateAddress(address);
         validatePhoneNumber(phoneNumber);
     }
 
@@ -77,7 +68,7 @@ public class Customer {
     }
 
     public String getAddress() {
-        return address;
+        return address.getValue();
     }
 
     public String getPhoneNumber() {
