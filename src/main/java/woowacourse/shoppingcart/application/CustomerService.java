@@ -17,7 +17,7 @@ public class CustomerService {
     public Long signUp(final SignUpRequest signUpRequest) {
         Customer customer = signUpRequest.toEntity();
         validateCustomer(customer);
-        return 0L;
+        return customerDao.save(customer);
     }
 
     private void validateCustomer(final Customer customer) {

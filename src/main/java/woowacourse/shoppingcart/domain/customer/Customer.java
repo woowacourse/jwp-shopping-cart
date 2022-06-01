@@ -19,4 +19,8 @@ public class Customer {
     public String getNickname() {
         return nickname.getValue();
     }
+
+    public String getPassword() {
+        return password.getValue();
+    }
 }
