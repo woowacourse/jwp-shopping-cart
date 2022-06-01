@@ -49,7 +49,7 @@ public class CustomerService {
         try {
             customerDao.update(updateCustomer);
             return findCustomerById(updateCustomer.getId());
-        } catch (DataIntegrityViolationException e) {
+        } catch (final DataIntegrityViolationException e) {
             throw new DuplicateNameException("수정하려는 이름이 이미 존재합니다.");
         }
     }
