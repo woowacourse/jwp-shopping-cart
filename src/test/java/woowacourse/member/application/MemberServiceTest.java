@@ -67,14 +67,14 @@ public class MemberServiceTest {
         assertThat(memberService.login(tokenRequest).getEmail()).isEqualTo(EMAIL);
     }
 
-    @DisplayName("이메일이 존재하지 않을 경우 예외가 발생한다.")
+    @DisplayName("로그인 할 이메일이 존재하지 않을 경우 예외가 발생한다.")
     @Test
     void loginNoMember() {
         assertThatThrownBy(() -> memberService.login(new TokenRequest(EMAIL, PASSWORD)))
                 .isInstanceOf(NoMemberException.class);
     }
 
-    @DisplayName("비밀번호가 틀릴경우 예외가 발생한다.")
+    @DisplayName("로그인 할 비밀번호가 틀릴경우 예외가 발생한다.")
     @Test
     void loginWrongPassword() {
         memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
@@ -95,7 +95,7 @@ public class MemberServiceTest {
         );
     }
 
-    @DisplayName("회원이 없을 경우 예외를 발생한다.")
+    @DisplayName("회원 정보 조회 시 회원이 없을 경우 예외를 발생한다.")
     @Test
     void getMemberInformationNoMember() {
         assertThatThrownBy(() -> memberService.getMemberInformation(0L))
@@ -111,14 +111,29 @@ public class MemberServiceTest {
         assertThat(memberService.getMemberInformation(id).getName()).isEqualTo("MARU");
     }
 
+    @DisplayName("없는 회원의 이름을 수정하면 예외를 발생한다.")
+    @Test
+    void failedUpdateName() {
+        assertThatThrownBy(() -> memberService.updateName(0L, new MemberNameUpdateRequest("MARU")))
+                .isInstanceOf(NoMemberException.class);
+    }
+
     @DisplayName("회원 비밀번호를 수정한다.")
     @Test
     void updatePassword() {
         Long id = memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
-        memberService.updatePassword(id, new MemberPasswordUpdateRequest(PASSWORD,"Maru1234!"));
+        memberService.updatePassword(id, new MemberPasswordUpdateRequest(PASSWORD, "Maru1234!"));
 
         Member member = memberDao.findById(id).get();
         assertThat(member.authenticate(new SHA256PasswordEncoder().encode("Maru1234!"))).isTrue();
+    }
+
+    @DisplayName("없는 회원의 비밀번호를 수정하면 예외를 발생한다.")
+    @Test
+    void failedUpdatePassword() {
+        assertThatThrownBy(() ->
+                memberService.updatePassword(0L, new MemberPasswordUpdateRequest(PASSWORD, "Maru1234!"))
+        ).isInstanceOf(NoMemberException.class);
     }
 
     @DisplayName("회원이 존재하지 않는 경우 삭제를 실패한다.")

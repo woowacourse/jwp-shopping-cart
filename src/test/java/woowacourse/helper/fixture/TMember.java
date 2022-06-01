@@ -2,12 +2,10 @@ package woowacourse.helper.fixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Objects;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.exception.dto.ErrorResponse;
@@ -18,6 +16,8 @@ public enum TMember {
 
     MARU("maru@gmai.com", "Maru1234!", "송채원"),
     HUNI("huni@gmail.com", "Huni1234!", "최재훈");
+
+    private static final Request REQUEST = new Request();
 
     private final String email;
     private final String password;
@@ -32,50 +32,42 @@ public enum TMember {
     }
 
     public ExtractableResponse<Response> validateDuplicateEmail() {
-        return request("/api/members/duplicate-email", new EmailCheckRequest(email));
+        return REQUEST.post(new EmailCheckRequest(email), "/api/members/duplicate-email");
     }
 
     public ExtractableResponse<Response> register() {
-        return request("/api/members", new MemberRegisterRequest(email, password, name));
+        return REQUEST.post(new MemberRegisterRequest(email, password, name), "/api/members");
     }
 
     public ExtractableResponse<Response> failedRegister() {
-        return request("/api/members", new MemberRegisterRequest("", "", ""));
+        return REQUEST.post(new MemberRegisterRequest("", "", ""), "/api/members");
     }
 
     public TokenResponse login() {
         if (Objects.nonNull(token)) {
             return new TokenResponse(token);
         }
-        ExtractableResponse<Response> response = request("/api/auth", new TokenRequest(email, password));
+        ExtractableResponse<Response> response = REQUEST.post(new TokenRequest(email, password), "/api/auth");
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
-        TokenResponse tokenResponse = response
-                .as(TokenResponse.class);
+        TokenResponse tokenResponse = response.as(TokenResponse.class);
         token = tokenResponse.getAccessToken();
         return tokenResponse;
+    }
+
+    public ErrorResponse failedLogin(String wrongPassword) {
+        ExtractableResponse<Response> response = REQUEST.post(new TokenRequest(email, wrongPassword), "/api/auth");
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+
+        return response.as(ErrorResponse.class);
     }
 
     public LoginAnd loginAnd() {
         return new LoginAnd(this);
     }
 
-    public ErrorResponse failedLogin(String wrongPassword) {
-        ExtractableResponse<Response> response = request("/api/auth", new TokenRequest(email, wrongPassword));
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-
-        return response.as(ErrorResponse.class);
-    }
-
-
-    private ExtractableResponse<Response> request(String url, Object params) {
-        return RestAssured.given().log().all()
-                .body(params)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post(url)
-                .then().log().all()
-                .extract();
+    public NoLoginAnd NoLoginAnd() {
+        return new NoLoginAnd();
     }
 
     public String getEmail() {
@@ -92,9 +84,5 @@ public enum TMember {
 
     public String getToken() {
         return token;
-    }
-
-    public NoLoginAnd NoLoginAnd() {
-        return new NoLoginAnd();
     }
 }
