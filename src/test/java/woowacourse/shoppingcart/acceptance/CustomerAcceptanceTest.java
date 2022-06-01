@@ -51,32 +51,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보를 조회한다.")
     @Test
     void getMe() {
-        CustomerSaveRequest request = YAHO_SAVE_REQUEST;
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        generateCustomer(YAHO_SAVE_REQUEST);
 
-        String accessToken = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD))
-                .when().post("/api/auth/token")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .as(TokenResponse.class)
-                .getAccessToken();
+        String accessToken = generateToken(new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD));
 
-        CustomerResponse customerResponse = RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .as(CustomerResponse.class);
+        CustomerResponse customerResponse = findCustomer(accessToken);
 
         assertAll(() -> {
             assertThat(customerResponse.getId()).isNotNull();
@@ -104,23 +83,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보를 수정한다.")
     @Test
     void updateMe() {
-        CustomerSaveRequest request = MAT_SAVE_REQUEST;
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        generateCustomer(MAT_SAVE_REQUEST);
 
-        String accessToken = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(MAT_USERNAME, MAT_PASSWORD))
-                .when().post("/api/auth/token")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .as(TokenResponse.class)
-                .getAccessToken();
+        String accessToken = generateToken(new TokenRequest(MAT_USERNAME, MAT_PASSWORD));
 
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
@@ -131,14 +96,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .extract();
 
-        CustomerResponse customerResponse = RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .as(CustomerResponse.class);
+        CustomerResponse customerResponse = findCustomer(accessToken);
 
         assertAll(() -> {
             assertThat(customerResponse.getId()).isNotNull();
@@ -152,23 +110,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원을 탈퇴한다.")
     @Test
     void deleteMe() {
-        CustomerSaveRequest request = YAHO_SAVE_REQUEST;
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        generateCustomer(YAHO_SAVE_REQUEST);
 
-        String accessToken = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD))
-                .when().post("/api/auth/token")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .as(TokenResponse.class)
-                .getAccessToken();
+        String accessToken = generateToken(new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD));
 
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
@@ -185,5 +129,37 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
+    }
+
+    private void generateCustomer(CustomerSaveRequest request) {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    private String generateToken(TokenRequest request) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/auth/token")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(TokenResponse.class)
+                .getAccessToken();
+    }
+
+    private CustomerResponse findCustomer(String accessToken) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(CustomerResponse.class);
     }
 }
