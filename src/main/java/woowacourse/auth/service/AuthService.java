@@ -3,6 +3,7 @@ package woowacourse.auth.service;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidLoginException;
@@ -10,7 +11,7 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @Service
 @Transactional
@@ -27,7 +28,7 @@ public class AuthService {
     public TokenResponse createToken(TokenRequest request) {
         try {
             checkCustomer(request);
-        } catch (EmptyResultDataAccessException | InvalidCustomerException e) {
+        } catch (EmptyResultDataAccessException | InvalidPasswordException e) {
             throw new InvalidLoginException("Login Fail");
         }
 

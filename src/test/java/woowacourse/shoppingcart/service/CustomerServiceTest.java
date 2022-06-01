@@ -1,8 +1,7 @@
 package woowacourse.shoppingcart.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.jdbc.Sql;
+
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @SpringBootTest
 @Sql("/truncate.sql")
@@ -31,7 +31,7 @@ class CustomerServiceTest {
     public void save() {
         // given
         final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+            new CustomerRequest("email@email.com", "password1!", "azpi");
 
         // when
         customerService.save(request);
@@ -39,8 +39,8 @@ class CustomerServiceTest {
         // then
         final CustomerResponse response = customerService.findByEmail(request.getEmail());
         assertThat(response)
-                .extracting("email", "username")
-                .contains(request.getEmail(), request.getUsername());
+            .extracting("email", "username")
+            .contains(request.getEmail(), request.getUsername());
     }
 
     @DisplayName("email 을 통해서 해당 Customer를 조회할 수 있다.")
@@ -48,7 +48,7 @@ class CustomerServiceTest {
     public void findByEmail() {
         // given
         final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+            new CustomerRequest("email@email.com", "password1!", "azpi");
         customerService.save(request);
 
         // when
@@ -56,8 +56,8 @@ class CustomerServiceTest {
 
         // then
         assertThat(response)
-                .extracting("email", "username")
-                .contains(request.getEmail(), request.getUsername());
+            .extracting("email", "username")
+            .contains(request.getEmail(), request.getUsername());
     }
 
     @DisplayName("email과 함께 기존 비밀번호가 일치하면 새로운 비밀번호로 변경할 수 있다.")
@@ -65,11 +65,11 @@ class CustomerServiceTest {
     public void changePassword() {
         // given
         final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+            new CustomerRequest("email@email.com", "password1!", "azpi");
         customerService.save(request);
 
         final ChangePasswordRequest changePasswordRequest =
-                new ChangePasswordRequest("password1!", "password2!");
+            new ChangePasswordRequest("password1!", "password2!");
 
         // when & then
         assertDoesNotThrow(() -> customerService.changePassword(request.getEmail(), changePasswordRequest));
@@ -80,15 +80,15 @@ class CustomerServiceTest {
     public void failChangePassword() {
         // given
         final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+            new CustomerRequest("email@email.com", "password1!", "azpi");
         customerService.save(request);
 
         final ChangePasswordRequest changePasswordRequest =
-                new ChangePasswordRequest("password1!!", "password2!");
+            new ChangePasswordRequest("password1!!", "password2!");
 
         // when & then
         assertThatThrownBy(() -> customerService.changePassword(request.getEmail(), changePasswordRequest))
-                .isInstanceOf(InvalidCustomerException.class);
+            .isInstanceOf(InvalidPasswordException.class);
     }
 
     @DisplayName("email 을 기준으로 customer 정보를 업데이트할 수 있다.")
@@ -96,7 +96,7 @@ class CustomerServiceTest {
     public void updateCustomer() {
         // given
         final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+            new CustomerRequest("email@email.com", "password1!", "azpi");
         customerService.save(request);
 
         // when
@@ -104,8 +104,8 @@ class CustomerServiceTest {
 
         // then
         assertThat(response)
-                .extracting("email", "username")
-                .containsExactly("email@email.com", "dwoo");
+            .extracting("email", "username")
+            .containsExactly("email@email.com", "dwoo");
     }
 
     @DisplayName("비밀번호가 일치하면 회원정보를 삭제할 수 있다.")
@@ -113,7 +113,7 @@ class CustomerServiceTest {
     public void delete() {
         // given
         final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "azpi");
+            new CustomerRequest("email@email.com", "password1!", "azpi");
         customerService.save(request);
 
         // when
@@ -121,6 +121,6 @@ class CustomerServiceTest {
 
         // then
         assertThatThrownBy(() -> customerService.findByEmail(request.getEmail()))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+            .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

@@ -2,7 +2,8 @@ package woowacourse.shoppingcart.domain.customer.vo;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 public class Password {
 
@@ -38,7 +39,7 @@ public class Password {
 
     public void checkPassword(String password) {
         if (!this.password.equals(password)) {
-            throw new InvalidCustomerException("고객 정보가 일치하지 않습니다.");
+            throw new InvalidPasswordException("고객 정보가 일치하지 않습니다.");
         }
     }
 
@@ -54,7 +55,7 @@ public class Password {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Password password1 = (Password) o;
+        Password password1 = (Password)o;
         return Objects.equals(password, password1.password);
     }
 

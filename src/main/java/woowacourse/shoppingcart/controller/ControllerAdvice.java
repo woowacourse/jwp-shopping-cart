@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.controller;
 
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 import java.util.stream.Collectors;
+
 import javax.validation.ConstraintViolationException;
+
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +14,13 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -41,8 +44,8 @@ public class ControllerAdvice {
 
     private String getMessage(MethodArgumentNotValidException e) {
         return e.getFieldErrors().stream()
-                .map(FieldError::getDefaultMessage)
-                .collect(Collectors.joining(" "));
+            .map(FieldError::getDefaultMessage)
+            .collect(Collectors.joining(" "));
     }
 
     @ExceptionHandler
@@ -56,7 +59,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handle(InvalidCustomerException e) {
+    public ResponseEntity<ErrorResponse> handle(InvalidPasswordException e) {
         return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.INCORRECT_PASSWORD);
     }
 
@@ -71,18 +74,18 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            HttpMessageNotReadableException.class,
-            ConstraintViolationException.class,
+        HttpMessageNotReadableException.class,
+        ConstraintViolationException.class,
     })
     public ResponseEntity<String> handleInvalidRequest(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler({
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
+        InvalidCartItemException.class,
+        InvalidProductException.class,
+        InvalidOrderException.class,
+        NotInCustomerCartItemException.class,
     })
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
