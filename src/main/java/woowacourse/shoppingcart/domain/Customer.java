@@ -6,35 +6,35 @@ import java.util.regex.Pattern;
 public class Customer {
 
     private static final Pattern PASSWORD_REGEX = Pattern.compile("^[a-zA-Z\\d!@#$%^*]+$");
-    private static final int MIN_USERNAME_LENGTH = 4;
-    private static final int MAX_USERNAME_LENGTH = 20;
     private static final int MIN_PASSWORD_LENGTH = 8;
     private static final int MAX_PASSWORD_LENGTH = 20;
-    private static final int MIN_NICKNAME_LENGTH = 8;
+    private static final int MIN_NICKNAME_LENGTH = 1;
     private static final int MAX_NICKNAME_LENGTH = 20;
 
-    private final String username;
+    private final Username username;
     private final String password;
     private final String nickname;
     private final int age;
 
     public Customer(String username, String password, String nickname, int age) {
-        validate(username, password, nickname, age);
+        validate(password, nickname, age);
+        this.username = new Username(username);
+        this.password = password;
+        this.nickname = nickname;
+        this.age = age;
+    }
+
+    public Customer(Username username, String password, String nickname, int age) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.age = age;
     }
 
-    private void validate(String username, String password, String nickname, int age) {
-        validateUsername(username);
+    private void validate(String password, String nickname, int age) {
         validatePassword(password);
         validateNickname(nickname);
         validateAge(age);
-    }
-
-    private void validateUsername(String username) {
-        validateLength(username, MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH);
     }
 
     private void validatePassword(String password) {
@@ -64,7 +64,7 @@ public class Customer {
         }
     }
 
-    public String getUsername() {
+    public Username getUsername() {
         return username;
     }
 

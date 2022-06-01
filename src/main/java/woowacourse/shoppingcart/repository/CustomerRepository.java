@@ -39,14 +39,14 @@ public class CustomerRepository {
 
     private CustomerEntity toEntity(Long id, Customer customer) {
         return new CustomerEntity(id,
-                customer.getUsername(),
+                customer.getUsername().getValue(),
                 customer.getPassword(),
                 customer.getNickname(),
                 customer.getAge());
     }
 
     private CustomerEntity toEntity(Customer customer) {
-        return new CustomerEntity(customer.getUsername(),
+        return new CustomerEntity(customer.getUsername().getValue(),
                 customer.getPassword(),
                 customer.getNickname(),
                 customer.getAge());
