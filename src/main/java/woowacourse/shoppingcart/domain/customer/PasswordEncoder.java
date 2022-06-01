@@ -1,17 +1,16 @@
-package woowacourse.common.utils;
+package woowacourse.shoppingcart.domain.customer;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.springframework.stereotype.Component;
 
-public class EncryptAlgorithm {
+@Component
+public class PasswordEncoder {
 
     private static final String ALGORITHM = "SHA-256";
     private static final String FORMAT = "%02x";
 
-    private EncryptAlgorithm() {
-    }
-
-    public static String encrypt(String password) {
+    public String encrypt(String password) {
         try {
             MessageDigest digestAlgorithm = MessageDigest.getInstance(ALGORITHM);
             digestAlgorithm.update(password.getBytes());
@@ -21,7 +20,7 @@ public class EncryptAlgorithm {
         }
     }
 
-    private static String bytesToHex(byte[] bytes) {
+    private String bytesToHex(byte[] bytes) {
         StringBuilder builder = new StringBuilder();
         for (byte it : bytes) {
             builder.append(String.format(FORMAT, it));
@@ -29,7 +28,7 @@ public class EncryptAlgorithm {
         return builder.toString();
     }
 
-    public static boolean match(String rawPassword, String encodedPassword) {
+    public boolean match(String rawPassword, String encodedPassword) {
         return encrypt(rawPassword).equals(encodedPassword);
     }
 }

@@ -12,9 +12,13 @@ public class PhoneNumber {
 
     private final String value;
 
+    public PhoneNumber(String value) {
+        this.value = value;
+    }
+
     public PhoneNumber(String start, String middle, String last) {
+        this(start + middle + last);
         validate(start, middle, last);
-        this.value = start + middle + last;
     }
 
     private void validate(String start, String middle, String last) {
@@ -35,6 +39,18 @@ public class PhoneNumber {
             throw new IllegalArgumentException(
                     String.format("휴대폰 번호는 숫자만 가능합니다. %s-%s-%s", start, middle, last));
         }
+    }
+
+    public String getStart() {
+        return value.substring(0, START_LENGTH);
+    }
+
+    public String getMiddle() {
+        return value.substring(START_LENGTH, START_LENGTH + MIDDLE_LENGTH);
+    }
+
+    public String getLast() {
+        return value.substring(START_LENGTH + MIDDLE_LENGTH);
     }
 
     public String getValue() {

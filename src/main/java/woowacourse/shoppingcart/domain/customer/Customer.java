@@ -8,25 +8,52 @@ import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
 
 public class Customer {
 
+    private final Long id;
     private final Account account;
-    private final Nickname nickname;
+    private Nickname nickname;
     private final Password password;
-    private final Address address;
-    private final PhoneNumber phoneNumber;
+    private Address address;
+    private PhoneNumber phoneNumber;
 
-    public Customer(Account account, Nickname nickname, Password password, Address address,
-            PhoneNumber phoneNumber) {
-        this.account = account;
-        this.nickname = nickname;
-        this.password = password;
-        this.address = address;
+    private Customer(Long id, String account, String nickname, String password, String address,
+                     PhoneNumber phoneNumber) {
+        this.id = id;
+        this.account = new Account(account);
+        this.nickname = new Nickname(nickname);
+        this.password = new Password(password);
+        this.address = new Address(address);
         this.phoneNumber = phoneNumber;
     }
 
-    public Customer(String account, String nickname, String password, String address,
-            PhoneNumber phoneNumber) {
-        this(new Account(account), new Nickname(nickname), new Password(password),
-                new Address(address), phoneNumber);
+    public Customer(Long id, String account, String nickname, String password, String address, String phoneNumber) {
+        this(id, account, nickname, password, address, new PhoneNumber(phoneNumber));
+    }
+
+    public Customer(Long id, String account, String nickname, String password, String address,
+                    String phoneNumberStart, String phoneNumberMiddle, String phoneNumberLast) {
+        this(id, account, nickname, password, address,
+                new PhoneNumber(phoneNumberStart, phoneNumberMiddle, phoneNumberLast));
+    }
+
+    public void encryptPassword(PasswordEncoder passwordEncoder) {
+        password.validateRawPassword();
+        password.encrypt(passwordEncoder);
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = new Nickname(nickname);
+    }
+
+    public void changeAddress(String address) {
+        this.address = new Address(address);
+    }
+
+    public void changePhoneNumber(String start, String middle, String last) {
+        this.phoneNumber = new PhoneNumber(start, middle, last);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Account getAccount() {

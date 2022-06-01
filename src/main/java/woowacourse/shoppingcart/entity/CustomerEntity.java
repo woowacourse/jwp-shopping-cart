@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.entity;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
 
 public class CustomerEntity {
 
@@ -13,7 +12,7 @@ public class CustomerEntity {
     private final String phoneNumber;
 
     public CustomerEntity(Long id, String account, String nickname, String password,
-            String address, String phoneNumber) {
+                          String address, String phoneNumber) {
         this.id = id;
         this.account = account;
         this.nickname = nickname;
@@ -22,18 +21,19 @@ public class CustomerEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public CustomerEntity(String account, String nickname, String password,
-            String address, String phoneNumber) {
-        this(null, account, nickname, password, address, phoneNumber);
-    }
-
     public static CustomerEntity from(Customer customer) {
-        PhoneNumber phoneNumber = customer.getPhoneNumber();
-        return new CustomerEntity(customer.getAccount().getValue(),
+        return new CustomerEntity(
+                customer.getId(),
+                customer.getAccount().getValue(),
                 customer.getNickname().getValue(),
                 customer.getPassword().getValue(),
                 customer.getAddress().getValue(),
-                phoneNumber.getValue());
+                customer.getPhoneNumber().getValue()
+        );
+    }
+
+    public Customer toCustomer() {
+        return new Customer(id, account, nickname, password, address, phoneNumber);
     }
 
     public Long getId() {

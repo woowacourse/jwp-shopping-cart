@@ -23,7 +23,8 @@ public class CustomerRequest {
     }
 
     public Customer toCustomer() {
-        return new Customer(account, nickname, password, address, phoneNumber.toPhoneNumber());
+        return new Customer(null, account, nickname, password, address,
+                phoneNumber.getStart(), phoneNumber.getMiddle(), phoneNumber.getLast());
     }
 
     public String getAccount() {

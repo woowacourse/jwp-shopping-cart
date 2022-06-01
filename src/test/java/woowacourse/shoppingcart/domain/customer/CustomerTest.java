@@ -17,12 +17,7 @@ class CustomerTest {
 
     @Test
     void 고객_생성() {
-        Account account = new Account("yhh1056");
-        Nickname nickname = new Nickname("호호");
-        Password password = new Password("gusghWkd12!");
-        Address address = new Address("호호네");
-        PhoneNumber phoneNumber = new PhoneNumber("010", "1234", "5678");
-        Customer customer = new Customer(account, nickname, password, address, phoneNumber);
+        Customer customer = new Customer(null, "yhh1056", "호호", "gusghWkd12!", "호호네", "010", "1234", "5678");
 
         assertThat(customer).isNotNull();
     }

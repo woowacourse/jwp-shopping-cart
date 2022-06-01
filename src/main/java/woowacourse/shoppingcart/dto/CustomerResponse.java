@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.entity.CustomerEntity;
+
 public class CustomerResponse {
 
     private final String account;
@@ -12,6 +15,15 @@ public class CustomerResponse {
         this.nickname = nickname;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    public static CustomerResponse from(Customer customer) {
+        return new CustomerResponse(
+                customer.getAccount().getValue(),
+                customer.getNickname().getValue(),
+                customer.getAddress().getValue(),
+                PhoneNumberResponse.from(customer.getPhoneNumber())
+        );
     }
 
     public String getAccount() {

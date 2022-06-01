@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
+
 public class PhoneNumberResponse {
 
     private final String start;
@@ -12,8 +14,12 @@ public class PhoneNumberResponse {
         this.last = last;
     }
 
-    public static PhoneNumberResponse from(String phoneNumber) {
-        return new PhoneNumberResponse(phoneNumber.substring(0, 3), phoneNumber.substring(3, 7), phoneNumber.substring(7, 11));
+    public static PhoneNumberResponse from(PhoneNumber phoneNumber) {
+        return new PhoneNumberResponse(
+                phoneNumber.getStart(),
+                phoneNumber.getMiddle(),
+                phoneNumber.getLast()
+        );
     }
 
     public String getStart() {

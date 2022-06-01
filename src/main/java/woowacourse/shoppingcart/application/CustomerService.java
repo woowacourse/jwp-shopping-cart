@@ -1,22 +1,18 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.common.exception.BadRequestException;
 import woowacourse.common.exception.NotFoundException;
 import woowacourse.common.exception.UnauthorizedException;
-import woowacourse.common.utils.EncryptAlgorithm;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.vo.Address;
-import woowacourse.shoppingcart.domain.customer.vo.Nickname;
-import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
+import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.PhoneNumberResponse;
+import woowacourse.shoppingcart.dto.PhoneNumberRequest;
 import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.TokenResponse;
 import woowacourse.shoppingcart.entity.CustomerEntity;
@@ -30,10 +26,13 @@ public class CustomerService {
     private static final String MISMATCHED_PASSWORD_ERROR = "비밀번호가 일치하지 않습니다.";
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
     private final CustomerDao customerDao;
 
-    public CustomerService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
+    public CustomerService(JwtTokenProvider jwtTokenProvider,
+                           PasswordEncoder passwordEncoder, CustomerDao customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.passwordEncoder = passwordEncoder;
         this.customerDao = customerDao;
     }
 
@@ -42,6 +41,8 @@ public class CustomerService {
             throw new BadRequestException(DUPLICATED_CUSTOMER_ERROR);
         }
         Customer customer = customerRequest.toCustomer();
+        customer.encryptPassword(passwordEncoder);
+
         customerDao.save(CustomerEntity.from(customer));
     }
 
@@ -50,7 +51,7 @@ public class CustomerService {
         CustomerEntity customerEntity = customerDao.findByAccount(account)
                 .orElseThrow(() -> new NotFoundException(NO_CUSTOMER_ERROR));
 
-        if (!EncryptAlgorithm.match(signinRequest.getPassword(), customerEntity.getPassword())) {
+        if (!passwordEncoder.match(signinRequest.getPassword(), customerEntity.getPassword())) {
             throw new UnauthorizedException(LOGIN_FAILED_ERROR);
         }
 
@@ -59,25 +60,16 @@ public class CustomerService {
     }
 
     public CustomerResponse findById(Long customerId) {
-        Optional<CustomerEntity> customerEntity = customerDao.findById(customerId);
-        return customerEntity
-                .map(it -> new CustomerResponse(
-                        it.getAccount(),
-                        it.getNickname(),
-                        it.getAddress(),
-                        PhoneNumberResponse.from(it.getPhoneNumber())))
-                .orElseThrow(() -> new NotFoundException(NO_CUSTOMER_ERROR));
+        CustomerEntity customerEntity = findCustomerById(customerId);
+        return CustomerResponse.from(customerEntity.toCustomer());
     }
 
     public void delete(Long customerId, PasswordRequest passwordRequest) {
-        Optional<CustomerEntity> customerEntity = customerDao.findById(customerId);
-        if (customerEntity.isEmpty()) {
-            throw new NotFoundException(NO_CUSTOMER_ERROR);
-        }
+        CustomerEntity customerEntity = findCustomerById(customerId);
 
         String rawPassword = passwordRequest.getPassword();
-        String encryptPassword = customerEntity.get().getPassword();
-        if (!EncryptAlgorithm.match(rawPassword, encryptPassword)) {
+        String encryptPassword = customerEntity.getPassword();
+        if (!passwordEncoder.match(rawPassword, encryptPassword)) {
             throw new UnauthorizedException(MISMATCHED_PASSWORD_ERROR);
         }
 
@@ -85,18 +77,28 @@ public class CustomerService {
     }
 
     public void update(Long customerId, CustomerUpdateRequest customerUpdateRequest) {
-        if (!customerDao.existsById(customerId)) {
-            throw new NotFoundException(NO_CUSTOMER_ERROR);
-        }
+        CustomerEntity customerEntity = findCustomerById(customerId);
 
-        Nickname nickname = new Nickname(customerUpdateRequest.getNickname());
-        Address address = new Address(customerUpdateRequest.getAddress());
-        PhoneNumber phoneNumber = customerUpdateRequest.getPhoneNumber().toPhoneNumber();
+        Customer customer = customerEntity.toCustomer();
+        updateCustomer(customer, customerUpdateRequest);
 
-        CustomerEntity updateEntity = new CustomerEntity(customerId, null, nickname.getValue(),
-                null, address.getValue(),
-                phoneNumber.getValue());
+        customerDao.update(CustomerEntity.from(customer));
+    }
 
-        customerDao.update(updateEntity);
+    private CustomerEntity findCustomerById(Long customerId) {
+        return customerDao.findById(customerId)
+                .orElseThrow(() -> new NotFoundException(NO_CUSTOMER_ERROR));
+    }
+
+    private void updateCustomer(Customer customer, CustomerUpdateRequest customerUpdateRequest) {
+        customer.changeNickname(customerUpdateRequest.getNickname());
+        customer.changeAddress(customerUpdateRequest.getAddress());
+
+        PhoneNumberRequest phoneNumberRequest = customerUpdateRequest.getPhoneNumber();
+        customer.changePhoneNumber(
+                phoneNumberRequest.getStart(),
+                phoneNumberRequest.getMiddle(),
+                phoneNumberRequest.getLast()
+        );
     }
 }
