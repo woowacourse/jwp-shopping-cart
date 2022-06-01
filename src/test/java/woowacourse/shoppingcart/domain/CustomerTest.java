@@ -11,7 +11,8 @@ class CustomerTest {
 
     private static final String NAME = "클레이";
     private static final String EMAIL = "clay@gmail.com";
-    private static final String PASSWORD = "12345678";
+    private static final String RAW_PASSWORD = "12345678";
+    private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD);
 
     @DisplayName("비밀번호가 일치하는지 확인한다.")
     @ParameterizedTest
@@ -46,7 +47,7 @@ class CustomerTest {
     void updatePassword() {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
-        final String newPassword = "newpassword123";
+        final Password newPassword = Password.fromRawValue("1234567890");
 
         // when
         final Customer actual = customer.updatePassword(newPassword);

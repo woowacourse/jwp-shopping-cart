@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 
 @Repository
 public class CustomerDao {
@@ -30,7 +31,7 @@ public class CustomerDao {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getString("email"),
-                rs.getString("password")
+                Password.fromHashedValue(rs.getString("password"))
         );
     }
 
@@ -40,7 +41,7 @@ public class CustomerDao {
         final Map<String, Object> params = new HashMap<>();
         params.put("name", customer.getName());
         params.put("email", customer.getEmail());
-        params.put("password", customer.getPassword());
+        params.put("password", customer.getPassword().getHashedValue());
 
         namedJdbcTemplate.update(sql, new MapSqlParameterSource(params), keyHolder);
         final long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -93,7 +94,7 @@ public class CustomerDao {
         final HashMap<String, Object> params = new HashMap<>();
         params.put("id", customer.getId());
         params.put("name", customer.getName());
-        params.put("password", customer.getPassword());
+        params.put("password", customer.getPassword().getHashedValue());
 
         return namedJdbcTemplate.update(sql, params);
     }

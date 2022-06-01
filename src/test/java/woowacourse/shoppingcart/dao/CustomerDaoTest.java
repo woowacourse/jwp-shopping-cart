@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -20,7 +21,8 @@ public class CustomerDaoTest {
 
     private static final String NAME = "썬";
     private static final String EMAIL = "sunyong@gmail.com";
-    private static final String PASSWORD = "12345678";
+    private static final String RAW_PASSWORD = "12345678";
+    private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD);
 
     private final CustomerDao customerDao;
 
@@ -155,7 +157,7 @@ public class CustomerDaoTest {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
         final Customer savedCustomer = customerDao.save(customer);
-        final String newPassword = "newpassword123";
+        final Password newPassword = Password.fromRawValue("newpassword123");
 
         // when
         final Customer updatedCustomer = new Customer(savedCustomer.getId(), NAME, EMAIL, newPassword);

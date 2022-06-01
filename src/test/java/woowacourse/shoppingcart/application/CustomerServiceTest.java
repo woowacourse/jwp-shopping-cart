@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.dto.CustomerPasswordUpdateServiceRequest;
@@ -42,7 +43,7 @@ class CustomerServiceTest {
         // given
         final CustomerSaveRequest customerSaveRequest = new CustomerSaveRequest(NAME, EMAIL, PASSWORD);
         final Customer customer = new Customer(1L, customerSaveRequest.getName(), customerSaveRequest.getEmail(),
-                customerSaveRequest.getPassword());
+                Password.fromRawValue(customerSaveRequest.getPassword()));
         when(customerDao.save(any(Customer.class)))
                 .thenReturn(customer);
 
@@ -71,7 +72,7 @@ class CustomerServiceTest {
         final long id = 1L;
         final CustomerSaveRequest customerSaveRequest = new CustomerSaveRequest(NAME, EMAIL, PASSWORD);
         final Customer customer = new Customer(id, customerSaveRequest.getName(), customerSaveRequest.getEmail(),
-                customerSaveRequest.getPassword());
+                Password.fromRawValue(customerSaveRequest.getPassword()));
         when(customerDao.findById(any(Long.class)))
                 .thenReturn(Optional.of(customer));
 
@@ -90,7 +91,7 @@ class CustomerServiceTest {
         final CustomerDeleteServiceRequest request
                 = new CustomerDeleteServiceRequest(1L, PASSWORD);
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, Password.fromRawValue(PASSWORD))));
         when(customerDao.deleteById(1L))
                 .thenReturn(1);
 
@@ -106,7 +107,7 @@ class CustomerServiceTest {
         final CustomerDeleteServiceRequest request
                 = new CustomerDeleteServiceRequest(1L, "1111111111");
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, Password.fromRawValue(PASSWORD))));
 
         // when, then
         assertThatThrownBy(() -> customerService.delete(request))
@@ -118,7 +119,7 @@ class CustomerServiceTest {
     void updateName() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, Password.fromRawValue(PASSWORD))));
         when(customerDao.updateById(any(Customer.class)))
                 .thenReturn(1);
 
@@ -133,7 +134,7 @@ class CustomerServiceTest {
     void updatePassword() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, Password.fromRawValue(PASSWORD))));
         when(customerDao.updateById(any(Customer.class)))
                 .thenReturn(1);
 
@@ -149,7 +150,7 @@ class CustomerServiceTest {
     void updatePassword_passwordNotMatch_throwsException() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, Password.fromRawValue(PASSWORD))));
 
         // when
         final CustomerPasswordUpdateServiceRequest request = new CustomerPasswordUpdateServiceRequest(1L,

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.dto.CustomerPasswordUpdateServiceRequest;
@@ -22,11 +23,20 @@ public class CustomerService {
     }
 
     public void save(final CustomerSaveRequest customerSaveRequest) {
-        final Customer customer = customerSaveRequest.toEntity();
+        final Customer customer = new Customer(
+                customerSaveRequest.getName(),
+                customerSaveRequest.getEmail(),
+                Password.fromRawValue(customerSaveRequest.getPassword())
+        );
+
+        validateDuplicatedEmail(customer);
+        customerDao.save(customer);
+    }
+
+    private void validateDuplicatedEmail(final Customer customer) {
         if (customerDao.existsByEmail(customer)) {
             throw new DuplicatedEmailException();
         }
-        customerDao.save(customer);
     }
 
     public CustomerDetailServiceResponse findById(final Long id) {
@@ -60,7 +70,8 @@ public class CustomerService {
     public void updatePassword(final CustomerPasswordUpdateServiceRequest request) {
         final Customer customer = findCustomerById(request.getId());
         validatePassword(customer, request.getOldPassword());
-        final Customer updatedCustomer = customer.updatePassword(request.getNewPassword());
+        final String newPassword = request.getNewPassword();
+        final Customer updatedCustomer = customer.updatePassword(Password.fromRawValue(newPassword));
         customerDao.updateById(updatedCustomer);
     }
 }
