@@ -1,4 +1,4 @@
-package woowacourse.domain;
+package woowacourse.auth.domain;
 
 public class User {
 

@@ -6,7 +6,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.domain.User;
+import woowacourse.auth.domain.User;
 
 @Service
 public class AuthService {
