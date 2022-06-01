@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dto.CustomerInfoRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicateCheckResponse;
@@ -114,5 +115,24 @@ class CustomerControllerTest {
                 () -> assertThat(actual.getEmail()).isEqualTo("email@email.com"),
                 () -> assertThat(actual.getNickname()).isEqualTo("파랑")
         );
+    }
+
+    @DisplayName("회원 정보를 수정한다.")
+    @Test
+    void updateCustomerInfo() {
+        CustomerInfoRequest customerInfoRequest = new CustomerInfoRequest("파리채");
+
+        ResponseEntity<Void> response = customerController.updateCustomerInfo("email@email.com", customerInfoRequest);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @DisplayName("형식이 잘못된 닉네임으로 회원 정보를 수정하는 경우 예외가 발생한다.")
+    @Test
+    void updateInvalidCustomerInfo() {
+        CustomerInfoRequest customerInfoRequest = new CustomerInfoRequest("파리채채채채");
+
+        assertThatThrownBy(() -> customerController.updateCustomerInfo("email@email.com", customerInfoRequest))
+                .isInstanceOf(InvalidCustomerException.class);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerInfoRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicateCheckResponse;
@@ -43,7 +45,7 @@ public class CustomerController {
 
     @PostMapping("/auth/password-check")
     public ResponseEntity<Void> checkPassword(@AuthenticationPrincipal String email,
-                                              @RequestBody PasswordRequest passwordRequest) {
+                                              @RequestBody @Valid PasswordRequest passwordRequest) {
         customerService.checkPassword(email, passwordRequest);
         return ResponseEntity.noContent().build();
     }
@@ -53,5 +55,12 @@ public class CustomerController {
         Customer customer = customerService.findCustomerByEmail(email);
         CustomerResponse customerResponse = new CustomerResponse(customer.getEmail(), customer.getNickname());
         return ResponseEntity.ok().body(customerResponse);
+    }
+
+    @PatchMapping("/auth/me")
+    public ResponseEntity<Void> updateCustomerInfo(@AuthenticationPrincipal String email,
+                                                   @RequestBody @Valid CustomerInfoRequest customerInfoRequest) {
+        customerService.updateInfo(email, customerInfoRequest);
+        return ResponseEntity.noContent().build();
     }
 }
