@@ -7,11 +7,15 @@ import static woowacourse.ShoppingCartFixture.CUSTOMER_URI;
 import static woowacourse.ShoppingCartFixture.LOGIN_URI;
 import static woowacourse.ShoppingCartFixture.잉_회원생성요청;
 
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
@@ -79,6 +83,27 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(회원조회응답.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThatCode(() -> 회원조회응답.as(ExceptionResponse.class))
                         .doesNotThrowAnyException()
+        );
+    }
+
+    @DisplayName("Bearer Auth 빈 값으로 오는 경우")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "  ", "Bearer", "Bearer "})
+    void myInfoWithBlankBearerAuth(String token) {
+        // when
+        final ExtractableResponse<Response> 회원조회응답 = RestAssured.given().log().all()
+                .header("Authorization", token)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get(CUSTOMER_URI)
+                .then().log().all()
+                .extract();
+
+        // then
+        assertAll(
+                () -> assertThat(회원조회응답.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(회원조회응답.as(ExceptionResponse.class).getMessage())
+                        .isEqualTo("인증 정보가 확인되지 않습니다")
         );
     }
 }
