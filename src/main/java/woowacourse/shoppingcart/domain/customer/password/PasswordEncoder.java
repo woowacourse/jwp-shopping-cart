@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain.customer.password;
 
 public interface PasswordEncoder {
 
-    Password encode(Password rawPassword);
+    String encode(String rawPassword);
 
-    boolean matches(Password rawPassword, Password encodedPassword);
+    boolean matches(String rawPassword, String encodedPassword);
 }

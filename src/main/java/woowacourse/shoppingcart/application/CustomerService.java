@@ -1,8 +1,10 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.password.SHA256Encoder;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
@@ -19,22 +21,21 @@ public class CustomerService {
     }
 
     public CustomerResponse save(CustomerSaveRequest customerSaveRequest) {
-        Customer customer = customerDao.save(customerSaveRequest.toCustomer());
+        Customer customer = customerSaveRequest.toCustomer();
+        customer.encodePassword(new SHA256Encoder());
 
-        return new CustomerResponse(customer);
+        Customer savedCustomer = customerDao.save(customerSaveRequest.toCustomer());
+        return new CustomerResponse(savedCustomer);
     }
 
     public CustomerResponse find(LoginCustomer loginCustomer) {
         Customer customer = getCustomer(loginCustomer.getUsername());
-
         return new CustomerResponse(customer);
     }
 
     public void update(LoginCustomer loginCustomer, CustomerUpdateRequest customerUpdateRequest) {
         Customer customer = getCustomer(loginCustomer.getUsername());
-
         customer.modify(customerUpdateRequest.getAddress(), customerUpdateRequest.getPhoneNumber());
-
         customerDao.update(customer);
     }
 

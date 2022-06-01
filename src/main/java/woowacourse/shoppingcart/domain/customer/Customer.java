@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.domain.customer;
 import java.util.Objects;
 
 import woowacourse.shoppingcart.domain.customer.password.Password;
+import woowacourse.shoppingcart.domain.customer.password.PasswordEncoder;
 
 public class Customer {
 
@@ -39,6 +40,10 @@ public class Customer {
         this.password = password;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password.encode(passwordEncoder);
     }
 
     public void modify(String address, String phoneNumber) {

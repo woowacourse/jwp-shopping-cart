@@ -8,13 +8,11 @@ import java.util.Arrays;
 public class SHA256Encoder implements PasswordEncoder {
 
     @Override
-    public Password encode(Password rawPassword) {
+    public String encode(String rawPassword) {
         MessageDigest messageDigest = getMessageDigest();
-        String rawValue = rawPassword.getValue();
-        messageDigest.update(rawValue.getBytes(StandardCharsets.UTF_8));
+        messageDigest.update(rawPassword.getBytes(StandardCharsets.UTF_8));
 
-        String encodedValue = Arrays.toString(messageDigest.digest());
-        return Password.createEncoded(encodedValue);
+        return Arrays.toString(messageDigest.digest());
     }
 
     private MessageDigest getMessageDigest() {
@@ -26,7 +24,7 @@ public class SHA256Encoder implements PasswordEncoder {
     }
 
     @Override
-    public boolean matches(Password rawPassword, Password encodedPassword) {
+    public boolean matches(String rawPassword, String encodedPassword) {
         return encode(rawPassword).equals(encodedPassword);
     }
 }

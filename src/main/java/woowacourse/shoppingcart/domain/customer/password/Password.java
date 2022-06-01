@@ -8,7 +8,7 @@ public class Password {
 
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()])[A-Za-z\\d!@#$%^&*()]{8,16}$");
 
-    private final String value;
+    private String value;
 
     private Password(String value) {
         this.value = value;
@@ -46,6 +46,10 @@ public class Password {
         if (!matcher.matches()) {
             throw new IllegalArgumentException("비밀번호 형식이 올바르지 않습니다. (영문자, 숫자, 특수문자!, @, #, $, %, ^, &, *, (, )를 모두 사용)");
         }
+    }
+
+    public void encode(PasswordEncoder passwordEncoder) {
+        this.value = passwordEncoder.encode(this.value);
     }
 
     public String getValue() {
