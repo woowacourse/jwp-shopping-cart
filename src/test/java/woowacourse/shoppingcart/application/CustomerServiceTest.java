@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
+import woowacourse.shoppingcart.dto.CustomerPasswordUpdateServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerProfileUpdateServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
@@ -125,5 +126,37 @@ class CustomerServiceTest {
         final CustomerProfileUpdateServiceRequest request = new CustomerProfileUpdateServiceRequest(1L, "클레이");
         assertThatCode(() -> customerService.updateName(request))
                 .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("회원의 비밀번호를 수정한다.")
+    void updatePassword() {
+        // given
+        when(customerDao.findById(1L))
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
+        when(customerDao.updateById(any(Customer.class)))
+                .thenReturn(1);
+
+        // when, then
+        final CustomerPasswordUpdateServiceRequest request = new CustomerPasswordUpdateServiceRequest(1L, PASSWORD,
+                "newpassword123");
+        assertThatCode(() -> customerService.updatePassword(request))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("회원 비밀번호 수정시 기존 비밀번호와 다를 경우 예외가 발생한다.")
+    void updatePassword_passwordNotMatch_throwsException() {
+        // given
+        when(customerDao.findById(1L))
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
+
+        // when
+        final CustomerPasswordUpdateServiceRequest request = new CustomerPasswordUpdateServiceRequest(1L,
+                "wrongoldpassword", "newpassword123");
+
+        // then
+        assertThatThrownBy(() -> customerService.updatePassword(request))
+                .isInstanceOf(PasswordNotMatchException.class);
     }
 }

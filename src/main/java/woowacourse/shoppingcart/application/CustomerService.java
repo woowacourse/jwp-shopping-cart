@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
+import woowacourse.shoppingcart.dto.CustomerPasswordUpdateServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerProfileUpdateServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
@@ -54,5 +55,12 @@ public class CustomerService {
         if (!customer.isSamePassword(password)) {
             throw new PasswordNotMatchException();
         }
+    }
+
+    public void updatePassword(final CustomerPasswordUpdateServiceRequest request) {
+        final Customer customer = findCustomerById(request.getId());
+        validatePassword(customer, request.getOldPassword());
+        final Customer updatedCustomer = customer.updatePassword(request.getNewPassword());
+        customerDao.updateById(updatedCustomer);
     }
 }
