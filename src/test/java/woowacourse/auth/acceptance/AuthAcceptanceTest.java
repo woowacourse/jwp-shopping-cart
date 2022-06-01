@@ -34,7 +34,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + accessToken)
+                .header(AUTHORIZATION, BEARER + accessToken)
                 .when().get("/api/customers/"+ tokenResponseDto.getCustomer().getId())
                 .then().log().all()
                 .extract();
@@ -72,7 +72,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(new Header("Authorization", "Bearer " + "invalidToken"))
+                .header(new Header(AUTHORIZATION, BEARER + "invalidToken"))
                 .when().get("/api/customers/"+ tokenResponseDto.getCustomer().getId())
                 .then().log().all()
                 .extract();
