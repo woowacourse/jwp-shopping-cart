@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @SpringBootTest
@@ -82,5 +83,25 @@ public class CustomerServiceTest {
 
         assertThatThrownBy(() -> customerService.changePassword(username, changePasswordRequest)).isInstanceOf(
                 IllegalArgumentException.class);
+    }
+
+    @Test
+    void 회원탈퇴시_현재_비밀번호가_일치하지_않는_경우() {
+        String username = "puterism";
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1231");
+
+        assertThatThrownBy(() -> customerService.deleteUser(username, deleteCustomerRequest)).isInstanceOf(
+                IllegalArgumentException.class);
+    }
+
+    @Test
+    void 회원탈퇴() {
+        String username = "puterism";
+
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("a123");
+
+        customerService.deleteUser(username, deleteCustomerRequest);
+
+        assertThat(customerDao.isValidName(username)).isFalse();
     }
 }

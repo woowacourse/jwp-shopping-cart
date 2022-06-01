@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.SignInResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -371,7 +372,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value()).extract();
 
-
         var response = RestAssured
                 .given().log().all()
                 .body(new SignInRequest(email, password))
@@ -387,18 +387,136 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 조회")
-    @Test
-    void getMe() {
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", " "})
+    void 회원탈퇴시_비밀번호가_공백인_경우(String invalidPassword) {
+        String email = "crew01@naver.com";
+        String password = "a123";
+
+        String accessToken = RestAssured
+                .given().log().all()
+                .body(new SignInRequest(email, password))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract().as(SignInResponse.class).getToken();
+
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest(invalidPassword);
+
+        var response = RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .body(deleteCustomerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .delete("/users/me")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value()).extract();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
+                        "[ERROR] 비밀번호는 공백 또는 빈 값일 수 없습니다.")
+        );
     }
 
-    @DisplayName("내 정보 수정")
     @Test
-    void updateMe() {
+    void 유효기간이_지난_토큰으로_회원탈퇴_하는_경우() {
+        Date now = new Date(0L);
+        Date validity = new Date(1L);
+
+        var invalidToken = Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .compact();
+
+        var response = RestAssured
+                .given().log().all()
+                .auth().oauth2(invalidToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/users/me")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value()).extract();
+
+        assertAll(
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("[ERROR] 만료된 토큰입니다."),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+        );
     }
 
-    @DisplayName("회원탈퇴")
     @Test
-    void deleteMe() {
+    void 회원탈퇴시_기존_비밀번호가_다른_경우() {
+        String email = "crew01@naver.com";
+        String password = "a123";
+
+        String accessToken = RestAssured
+                .given().log().all()
+                .body(new SignInRequest(email, password))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract().as(SignInResponse.class).getToken();
+
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("a1234");
+
+        var response = RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .body(deleteCustomerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .delete("/users/me")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value()).extract();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
+                        "[ERROR] 비밀번호가 일치하지 않습니다.")
+        );
+    }
+
+    @Test
+    void 회원탈퇴() {
+        String email = "crew01@naver.com";
+        String password = "a123";
+
+        String accessToken = RestAssured
+                .given().log().all()
+                .body(new SignInRequest(email, password))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract().as(SignInResponse.class).getToken();
+
+        var deleteCustomerRequest = new DeleteCustomerRequest("a123");
+
+        RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .body(deleteCustomerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .delete("/users/me")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value()).extract();
+
+        var response = RestAssured
+                .given().log().all()
+                .body(new SignInRequest(email, password))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
+                        "[ERROR] 존재하지 않는 이메일 입니다.")
+        );
     }
 }

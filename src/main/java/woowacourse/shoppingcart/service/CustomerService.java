@@ -5,6 +5,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.SignUpResponse;
 
@@ -47,5 +48,13 @@ public class CustomerService {
             throw new IllegalArgumentException("[ERROR] 비밀번호가 일치하지 않습니다.");
         }
         customerDao.updatePassword(username, changePasswordRequest.getNewPassword());
+    }
+
+    public void deleteUser(String username, DeleteCustomerRequest deleteCustomerRequest) {
+        var customer = customerDao.findCustomerByUserName(username);
+        if (!customer.isSamePassword(deleteCustomerRequest.getPassword())) {
+            throw new IllegalArgumentException("[ERROR] 비밀번호가 일치하지 않습니다.");
+        }
+        customerDao.deleteByName(username);
     }
 }
