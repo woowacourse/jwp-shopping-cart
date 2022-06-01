@@ -101,9 +101,10 @@ class CustomerControllerTest {
     @Test
     @DisplayName("URI path에 id를 받아 일치하는 회원을 삭제한다.")
     void deleteCustomer() throws Exception {
+        final CustomerDto customerDto = new CustomerDto(customerId, testEmail, testUsername);
         when(customerService.findCustomerByEmail(any(String.class)))
-                .thenReturn(new CustomerDto(customerId, testEmail, testUsername));
-        when(authService.login(any(SignInDto.class))).thenReturn(new TokenResponseDto(accessToken, 1000000L));
+                .thenReturn(customerDto);
+        when(authService.login(any(SignInDto.class))).thenReturn(new TokenResponseDto(accessToken, 1000000L, customerDto));
         DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto("testtest");
         final MockHttpServletResponse response = mockMvc.perform(delete("/api/customers/" + customerId)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
