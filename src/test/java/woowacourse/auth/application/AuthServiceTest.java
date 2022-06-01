@@ -85,9 +85,6 @@ class AuthServiceTest {
         LoginCustomer customer = authService.getCustomerByToken(token);
 
         //then
-        assertAll(
-                () -> assertThat(customer.getLoginId()).isEqualTo(페퍼_아이디),
-                () -> assertThat(customer.getName()).isEqualTo(페퍼_이름)
-        );
+        assertThat(customer.getLoginId()).isEqualTo(페퍼_아이디);
     }
 }
