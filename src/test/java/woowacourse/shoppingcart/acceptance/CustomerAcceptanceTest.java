@@ -37,6 +37,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         var extract = createSignUpResult(signUpRequest).as(SignUpResponse.class);
 
+
+        
         assertAll(
                 () -> assertThat(extract.getUsername()).isEqualTo(NEW_USERNAME),
                 () -> assertThat(extract.getEmail()).isEqualTo(NEW_EMAIL)
