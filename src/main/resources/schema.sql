@@ -10,7 +10,7 @@ CREATE TABLE customer
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     nickname VARCHAR(255) NOT NULL,
-    age INTEGER NOT NULL,
+    age      INTEGER      NOT NULL,
     PRIMARY KEY (id)
 ) engine=InnoDB default charset=utf8mb4;
 

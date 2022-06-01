@@ -5,25 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.test.context.TestConstructor;
-import woowacourse.auth.dao.UserDao;
+import woowacourse.setup.DatabaseTest;
 import woowacourse.auth.domain.User;
 
 @SuppressWarnings("NonAsciiCharacters")
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@TestInstance(Lifecycle.PER_CLASS)
-class UserDaoTest {
+class UserDaoTest extends DatabaseTest {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;

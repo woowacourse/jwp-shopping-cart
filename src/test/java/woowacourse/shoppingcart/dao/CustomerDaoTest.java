@@ -12,6 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import woowacourse.setup.DatabaseTest;
 import woowacourse.shoppingcart.domain.Customer;
 
 @SuppressWarnings("NonAsciiCharacters")

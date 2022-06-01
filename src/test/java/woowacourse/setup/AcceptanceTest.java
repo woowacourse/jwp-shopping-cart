@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.acceptance;
+package woowacourse.setup;
 
 import io.restassured.RestAssured;
 import java.sql.Connection;

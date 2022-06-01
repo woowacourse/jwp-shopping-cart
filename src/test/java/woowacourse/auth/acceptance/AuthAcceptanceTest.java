@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.setup.AcceptanceTest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
 @SuppressWarnings("NonAsciiCharacters")

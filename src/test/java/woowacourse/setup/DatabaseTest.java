@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dao;
+package woowacourse.setup;
 
 import java.sql.Connection;
 import javax.sql.DataSource;
@@ -23,7 +23,7 @@ public class DatabaseTest {
     protected DataSource dataSource;
 
     @BeforeEach
-    void setUpSchema() throws Exception {
+    void setUpSchemaAndCleanse() throws Exception {
         try (Connection connection = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("schema.sql"));
         }
