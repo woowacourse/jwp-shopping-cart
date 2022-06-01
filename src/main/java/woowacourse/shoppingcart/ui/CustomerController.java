@@ -35,4 +35,12 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> showCustomer(@AuthenticationPrincipal FindCustomerRequest findCustomerRequest) {
         return ResponseEntity.ok(service.findCustomer(findCustomerRequest));
     }
+
+    @PutMapping("/me")
+    public ResponseEntity<Void> updateCustomer(
+            @AuthenticationPrincipal FindCustomerRequest findCustomerRequest,
+            @RequestBody UpdateCustomerRequest updateCustomerRequest) {
+        service.updateCustomer(findCustomerRequest, updateCustomerRequest);
+        return ResponseEntity.noContent().build();
+    }
 }

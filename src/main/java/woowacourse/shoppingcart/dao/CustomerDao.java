@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,15 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Repository
 public class CustomerDao {
 
+    private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = (resultSet, rowNum) ->
+            new Customer(
+                    resultSet.getLong("id"),
+                    resultSet.getString("username"),
+                    resultSet.getString("password"),
+                    resultSet.getString("email"),
+                    resultSet.getString("address"),
+                    resultSet.getString("phone_number")
+            );
     private final JdbcTemplate jdbcTemplate;
 
     public CustomerDao(final JdbcTemplate jdbcTemplate) {
@@ -50,14 +60,7 @@ public class CustomerDao {
     public Optional<Customer> findByUserName(final String username) {
         final String query = "SELECT * FROM customer WHERE username = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, (resultSet, rowNum) ->
-                    new Customer(
-                            resultSet.getString("username"),
-                            resultSet.getString("password"),
-                            resultSet.getString("email"),
-                            resultSet.getString("address"),
-                            resultSet.getString("phone_number")
-                    ), username));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, username));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -66,22 +69,15 @@ public class CustomerDao {
     public Optional<Customer> findById(final Long id) {
         final String query = "SELECT * FROM customer WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, (resultSet, rowNum) ->
-                    new Customer(
-                            resultSet.getString("username"),
-                            resultSet.getString("password"),
-                            resultSet.getString("email"),
-                            resultSet.getString("address"),
-                            resultSet.getString("phone_number")
-                    ), id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public boolean update(Long id, Customer customer) {
+    public boolean update(Customer customer) {
         final String query = "UPDATE customer SET address = ?, phone_number = ? WHERE id = ?";
-        return isUpdated(jdbcTemplate.update(query, customer.getAddress(), customer.getPhoneNumber(), id));
+        return isUpdated(jdbcTemplate.update(query, customer.getAddress(), customer.getPhoneNumber(), customer.getId()));
     }
 
     private boolean isUpdated(int updatedCount) {

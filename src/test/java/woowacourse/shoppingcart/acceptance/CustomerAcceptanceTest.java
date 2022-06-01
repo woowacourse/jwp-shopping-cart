@@ -78,6 +78,41 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        CustomerRequest customerRequest = new CustomerRequest(
+                "username",
+                "password12!@",
+                "example@example.com",
+                "some-address",
+                "010-0000-0001"
+        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(customerRequest)
+                .when().post("/api/customers")
+                .then().log().all();
+
+        String token = "Bearer " + tokenProvider.createToken("username");
+        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("another-address", "010-9999-9998");
+        ExtractableResponse<Response> updatedResponse = RestAssured.given().log().all()
+                .header(new Header("Authorization", token))
+                .body(updateCustomerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().put("/api/customers/me")
+                .then().log().all().extract();
+
+        ExtractableResponse<Response> foundResponse = RestAssured.given().log().all()
+                .header(new Header("Authorization", token))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all().extract();
+        CustomerResponse customerResponse = foundResponse.jsonPath().getObject(".", CustomerResponse.class);
+
+        assertAll(
+                () -> assertThat(updatedResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(customerResponse.getAddress()).isEqualTo("another-address"),
+                () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo("010-9999-9998")
+        );
     }
 
     @DisplayName("회원탈퇴")

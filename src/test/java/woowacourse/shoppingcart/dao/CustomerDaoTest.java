@@ -1,8 +1,10 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -57,11 +59,14 @@ public class CustomerDaoTest {
     @Test
     void saveCustomer() {
         Customer customer = new Customer("chleeslow", "1234abc!@", "woote@email.com", "선릉역", "010-9999-1111");
-
         Long savedId = customerDao.save(customer);
 
         Customer foundCustomer = customerDao.findById(savedId).orElseThrow();
-        assertThat(customer.getName()).isEqualTo(foundCustomer.getName());
+
+        assertAll(
+                () -> assertThat(foundCustomer.getId()).isEqualTo(savedId),
+                () -> assertThat(customer.getName()).isEqualTo(foundCustomer.getName())
+        );
     }
 
     @DisplayName("회원을 수정한다.")
@@ -70,7 +75,7 @@ public class CustomerDaoTest {
         Long id = 1L;
         Customer foundCustomer = customerDao.findById(id).orElseThrow();
         Customer updatingCustomer = foundCustomer.update("some-address", "010-9999-9999");
-        customerDao.update(id, updatingCustomer);
+        customerDao.update(updatingCustomer);
 
         Customer updatedCustomer = customerDao.findById(id).orElseThrow();
 
