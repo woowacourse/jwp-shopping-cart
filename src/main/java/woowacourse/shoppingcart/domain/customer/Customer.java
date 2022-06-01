@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 
+import woowacourse.shoppingcart.domain.customer.password.Password;
+
 public class Customer {
 
     private final Long id;
@@ -14,18 +16,18 @@ public class Customer {
     public Customer(Long id, Customer customer) {
         this(id, new Username(customer.getUsername()),
                 new Email(customer.getEmail()),
-                new Password(customer.getPassword()),
+                Password.createEncoded(customer.getPassword()),
                 new Address(customer.getAddress()),
                 new PhoneNumber(customer.getPhoneNumber()));
     }
 
     public Customer(String username, String email, String password, String address, String phoneNumber) {
-        this(null, new Username(username), new Email(email), new Password(password), new Address(address),
+        this(null, new Username(username), new Email(email), Password.createRaw(password), new Address(address),
                 new PhoneNumber(phoneNumber));
     }
 
     public Customer(Long id, String username, String email, String password, String address, String phoneNumber) {
-        this(id, new Username(username), new Email(email), new Password(password), new Address(address),
+        this(id, new Username(username), new Email(email), Password.createEncoded(password), new Address(address),
                 new PhoneNumber(phoneNumber));
     }
 

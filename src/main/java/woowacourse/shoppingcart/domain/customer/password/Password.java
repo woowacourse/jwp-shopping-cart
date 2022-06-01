@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain.customer;
+package woowacourse.shoppingcart.domain.customer.password;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -10,30 +10,38 @@ public class Password {
 
     private final String value;
 
-    public Password(String value) {
-        validatePassword(value);
+    private Password(String value) {
         this.value = value;
     }
 
-    private void validatePassword(String value) {
+    public static Password createEncoded(String value) {
+        return new Password(value);
+    }
+
+    public static Password createRaw(String value) {
+        validatePassword(value);
+        return new Password(value);
+    }
+
+    private static void validatePassword(String value) {
         checkNull(value);
         checkLength(value);
         checkFormat(value);
     }
 
-    private void checkNull(String value) {
+    private static void checkNull(String value) {
         if (value == null) {
             throw new NullPointerException("비밀번호는 필수 입력 사항입니다.");
         }
     }
 
-    private void checkLength(String value) {
+    private static void checkLength(String value) {
         if (value.length() < 8 || 16 < value.length()) {
             throw new IllegalArgumentException("비밀번호 길이가 올바르지 않습니다. (길이: 8이상 16이하)");
         }
     }
 
-    private void checkFormat(String value) {
+    private static void checkFormat(String value) {
         Matcher matcher = PASSWORD_PATTERN.matcher(value);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("비밀번호 형식이 올바르지 않습니다. (영문자, 숫자, 특수문자!, @, #, $, %, ^, &, *, (, )를 모두 사용)");
