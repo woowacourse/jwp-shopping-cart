@@ -153,4 +153,17 @@ class CustomerServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("닉네임은 영문, 한글, 숫자를 조합하여 2 ~ 10 자를 입력해주세요.");
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"12345678!", "asdsad^f#$", "1231234ads", "asd2$$", "adsfsdaf324234#@$#@$#@"})
+    @DisplayName("비밀번호가 영문, 한글, 숫자를 필수로 조합한 8 ~ 16 자가 아니면 안된다.")
+    void validatePasswordFormat(String password) {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", "유콩", password);
+
+        // when & then
+        assertThatThrownBy(() -> customerService.signUp(signUpRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("비밀번호는 영문, 한글, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
+    }
 }
