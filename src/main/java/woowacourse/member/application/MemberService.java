@@ -20,6 +20,7 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
+    @Transactional(readOnly = true)
     public Long logIn(LoginRequest request) {
         Member member = findMemberByEmail(request.getEmail());
         Password requestPassword = Password.withEncrypt(request.getPassword());
@@ -42,6 +43,7 @@ public class MemberService {
         validateDuplicateEmail(request.getEmail());
     }
 
+    @Transactional(readOnly = true)
     public MemberInfoResponse findMemberInfoById(long id) {
         Member member = findMemberById(id);
         return new MemberInfoResponse(member);
