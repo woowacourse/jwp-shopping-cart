@@ -10,8 +10,12 @@ import woowacourse.common.exception.UnauthorizedException;
 import woowacourse.common.utils.EncryptAlgorithm;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.vo.Address;
+import woowacourse.shoppingcart.domain.customer.vo.Nickname;
+import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberResponse;
 import woowacourse.shoppingcart.dto.SigninRequest;
@@ -72,5 +76,21 @@ public class CustomerService {
         }
 
         customerDao.deleteById(customerId);
+    }
+
+    public void update(Long customerId, CustomerUpdateRequest customerUpdateRequest) {
+        if (!customerDao.existsById(customerId)) {
+            throw new NotFoundException("존재하지 않는 사용자입니다.");
+        }
+
+        Nickname nickname = new Nickname(customerUpdateRequest.getNickname());
+        Address address = new Address(customerUpdateRequest.getAddress());
+        PhoneNumber phoneNumber = customerUpdateRequest.getPhoneNumber().toPhoneNumber();
+
+        CustomerEntity updateEntity = new CustomerEntity(customerId, null, nickname.getValue(),
+                null, address.getValue(),
+                phoneNumber.getStart() + phoneNumber.getMiddle() + phoneNumber.getLast());
+
+        customerDao.update(updateEntity);
     }
 }

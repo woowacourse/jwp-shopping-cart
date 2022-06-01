@@ -419,8 +419,53 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(getValue(response, "message")).contains("로그인이 불가능합니다.");
     }
 
+    @Test
+    void 회원정보_수정() {
+        // given
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+        String nickname = "변경닉네임";
+        String address = "변경주소";
+        String start = "010";
+        String middle = "8888";
+        String last = "9999";
+
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("nickname", nickname);
+        request.put("address", address);
+        request.put("phoneNumber", 휴대폰_정보(start, middle, last));
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .put("/customers")
+                .then()
+                .log().all()
+                .extract();
+
+        // then
+        ExtractableResponse<Response> customerResponse = 회원_조회(accessToken);
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(getValue(customerResponse, "nickname")).isEqualTo(nickname);
+        assertThat(getValue(customerResponse, "address")).isEqualTo(address);
+        assertThat(getPhoneNumberValue(customerResponse, "start")).isEqualTo(start);
+        assertThat(getPhoneNumberValue(customerResponse, "middle")).isEqualTo(middle);
+        assertThat(getPhoneNumberValue(customerResponse, "last")).isEqualTo(last);
+    }
+
     private String getValue(ExtractableResponse<Response> response, String value) {
         return response.body().jsonPath().getString(value);
+    }
+
+    private String getPhoneNumberValue(ExtractableResponse<Response> response, String value) {
+        return String.valueOf(response.body().jsonPath().getMap("phoneNumber").get(value));
     }
 
     private Map<String, Object> 회원_정보(String account, String nickname, String password,

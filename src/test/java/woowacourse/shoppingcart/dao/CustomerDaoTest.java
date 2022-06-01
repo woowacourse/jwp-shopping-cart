@@ -73,4 +73,12 @@ public class CustomerDaoTest {
 
         assertThat(customerDao.findById(id)).isEmpty();
     }
+
+    @Test
+    void ID를_이용해_존재_여부() {
+        Long id = customerDao.save(new CustomerEntity("yeonlog", "연로그", "asdf1234!", "연로그네", "01050505050"));
+        boolean result = customerDao.existsById(id);
+
+        assertThat(result).isTrue();
+    }
 }

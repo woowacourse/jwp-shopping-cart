@@ -77,4 +77,16 @@ public class CustomerDao {
         SqlParameterSource source = new MapSqlParameterSource("customerId", customerId);
         jdbcTemplate.update(sql, source);
     }
+
+    public boolean existsById(Long customerId) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM customer WHERE id = :customerId)";
+        SqlParameterSource source = new MapSqlParameterSource("customerId", customerId);
+        return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, source, Boolean.class));
+    }
+
+    public void update(CustomerEntity customerEntity) {
+        String sql = "UPDATE customer SET nickname = :nickname, address = :address, phone_number = :phoneNumber where id = :id";
+        SqlParameterSource source = new BeanPropertySqlParameterSource(customerEntity);
+        jdbcTemplate.update(sql, source);
+    }
 }
