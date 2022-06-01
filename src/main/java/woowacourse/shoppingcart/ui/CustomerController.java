@@ -15,7 +15,8 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateRequest;
+import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 
 @RestController
 @RequestMapping("/api/customer")
@@ -39,10 +40,17 @@ public class CustomerController {
         return ResponseEntity.ok().body(customerResponse);
     }
 
-    @PutMapping
-    public ResponseEntity<Void> update(@AuthenticationPrincipal Long id,
-                                       @RequestBody @Valid CustomerUpdateRequest customerUpdateRequest) {
-        customerService.update(id, customerUpdateRequest);
+    @PutMapping("/profile")
+    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal Long id,
+                                              @RequestBody @Valid CustomerUpdateProfileRequest customerUpdateProfileRequest) {
+        customerService.updateProfile(id, customerUpdateProfileRequest);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal Long id,
+                                               @RequestBody @Valid CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
+        customerService.updatePassword(id, customerUpdatePasswordRequest);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

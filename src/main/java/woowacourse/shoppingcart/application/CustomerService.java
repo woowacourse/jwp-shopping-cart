@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import woowacourse.exception.auth.EmailDuplicateException;
 import woowacourse.exception.auth.PasswordIncorrectException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -9,7 +10,8 @@ import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateRequest;
+import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 
 @Service
 public class CustomerService {
@@ -22,10 +24,19 @@ public class CustomerService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void create(CustomerRequest customerRequest) {
+    public long create(CustomerRequest customerRequest) {
+        validateDuplicateEmail(customerRequest);
+
         final String hashpw = passwordEncoder.encode(customerRequest.getPassword());
         final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getName(), hashpw);
-        customerDao.save(customer);
+
+        return customerDao.save(customer);
+    }
+
+    private void validateDuplicateEmail(CustomerRequest customerRequest) {
+        if (customerDao.findByEmail(customerRequest.getEmail()).isPresent()) {
+            throw new EmailDuplicateException();
+        }
     }
 
     public CustomerResponse findById(Long id) {
@@ -37,11 +48,19 @@ public class CustomerService {
         return customerDao.findByEmail(email).orElseThrow(CustomerNotFoundException::new);
     }
 
-    public void update(Long id, CustomerUpdateRequest customerUpdateRequest) {
+    public long updateProfile(Long id, CustomerUpdateProfileRequest customerUpdateProfileRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
-        validatePassword(customer, customerUpdateRequest.getPassword());
 
-        customerDao.update(customer.changeName(customerUpdateRequest.getName()));
+        customerDao.updateProfile(customer.changeName(customerUpdateProfileRequest.getName()));
+        return id;
+    }
+
+    public long updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
+        final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
+        validatePassword(customer, customerUpdatePasswordRequest.getOldPassword());
+
+        customerDao.updatePassword(customer.changePassword(customerUpdatePasswordRequest.getNewPassword()));
+        return id;
     }
 
     private void validatePassword(Customer customer, String inputPassword) {
@@ -50,10 +69,11 @@ public class CustomerService {
         }
     }
 
-    public void delete(long id, CustomerDeleteRequest customerDeleteRequest) {
+    public long delete(long id, CustomerDeleteRequest customerDeleteRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         validatePassword(customer, customerDeleteRequest.getPassword());
 
         customerDao.delete(id);
+        return id;
     }
 }

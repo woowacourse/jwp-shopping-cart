@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import woowacourse.exception.auth.EmailDuplicateException;
 import woowacourse.exception.auth.LoginFailureException;
 import woowacourse.exception.auth.TokenInvalidException;
 import woowacourse.exception.auth.UnauthorizedException;
@@ -23,8 +24,8 @@ import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-    @ExceptionHandler(LoginFailureException.class)
-    public ResponseEntity<ExceptionResponse> handleLoginFailureException(LoginFailureException e) {
+    @ExceptionHandler({LoginFailureException.class, EmailDuplicateException.class})
+    public ResponseEntity<ExceptionResponse> handleLoginFailureException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }
 

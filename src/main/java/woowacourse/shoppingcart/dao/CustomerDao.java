@@ -50,8 +50,9 @@ public class CustomerDao {
         }
     }
 
-    public void save(Customer customer) {
-        simpleJdbcInsert.execute(new BeanPropertySqlParameterSource(customer));
+    public long save(Customer customer) {
+        final Number number = simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(customer));
+        return number.longValue();
     }
 
     public Optional<Customer> findByEmail(String email) {
@@ -63,10 +64,16 @@ public class CustomerDao {
         }
     }
 
-    public void update(Customer customer) {
+    public void updateProfile(Customer customer) {
         final String sql = "UPDATE Customer SET name = ? WHERE id = ?";
 
         jdbcTemplate.update(sql, customer.getName(), customer.getId());
+    }
+
+    public void updatePassword(Customer customer) {
+        final String sql = "UPDATE Customer SET password = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql, customer.getPassword(), customer.getId());
     }
 
     public void delete(long id) {
