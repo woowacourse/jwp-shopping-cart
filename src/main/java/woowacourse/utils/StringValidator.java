@@ -4,13 +4,16 @@ import woowacourse.shoppingcart.exception.ValidationException;
 
 public class StringValidator {
 
-    public static boolean validateLength(final int min, final int max, final String target,
+    public static void validateLength(final int min, final int max, final String target,
                                          final ValidationException e) {
-        return !(target.length() < min || target.length() > max);
+        if (target.length() < min || target.length() > max) {
+            throw e;
+        }
     }
 
-    public static boolean validateNullOrBlank(final String target, final ValidationException e) {
-        return !(target.isEmpty() || target.isBlank());
+    public static void validateNullOrBlank(final String target, final ValidationException e) {
+        if (target == null || target.isBlank()) {
+            throw e;
+        }
     }
-
 }
