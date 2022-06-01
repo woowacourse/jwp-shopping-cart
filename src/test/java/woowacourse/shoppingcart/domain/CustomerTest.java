@@ -12,10 +12,10 @@ class CustomerTest {
     @Test
     void hasSamePasswordTest() {
         Username username = new Username("유효한_아이디");
-        Password password = new Password("validPassword");
+        Password password = new Password("password1@");
         Nickname nickname = new Nickname("닉네임");
         Age age = new Age(10);
-        Customer customer = Customer.ofNoId(username, password, nickname, age);
+        Customer customer = new Customer(username, password, nickname, age);
 
         boolean result = customer.hasSamePassword(password);
 

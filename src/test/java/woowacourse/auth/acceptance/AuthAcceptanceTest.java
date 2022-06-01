@@ -20,8 +20,8 @@ import woowacourse.shoppingcart.dto.request.SignUpRequest;
 class AuthAcceptanceTest extends AcceptanceTest2 {
 
     private static final String USERNAME = "유효한_아이디!";
-    private static final String PASSWORD = "validPassword!";
-    private static final String WRONG_PASSWORD = "unvalidPassword!";
+    private static final String PASSWORD = "validPassword!@1";
+    private static final String WRONG_PASSWORD = "unvalidPassword!1";
 
     @BeforeEach
     void setup() {
