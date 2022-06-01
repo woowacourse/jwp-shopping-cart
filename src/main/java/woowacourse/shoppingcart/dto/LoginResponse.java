@@ -19,8 +19,8 @@ public class LoginResponse {
         this.nickname = nickname;
     }
 
-    public static LoginResponse ofExceptToken(final Customer customer) {
-        return new LoginResponse(null, customer.getId(), customer.getUserId(), customer.getNickname());
+    public static LoginResponse of(final String token, final Customer customer) {
+        return new LoginResponse(token, customer.getId(), customer.getUserId(), customer.getNickname());
     }
 
     public String getToken() {

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.LoginRequest;
@@ -10,9 +11,11 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 @Service
 public class CustomerService {
 
+    private final AuthService authService;
     private final CustomerDao customerDao;
 
-    public CustomerService(final CustomerDao customerDao) {
+    public CustomerService(final AuthService authService, final CustomerDao customerDao) {
+        this.authService = authService;
         this.customerDao = customerDao;
     }
 
@@ -25,7 +28,8 @@ public class CustomerService {
     public LoginResponse login(final LoginRequest loginRequest) {
         validateExistingCustomer(loginRequest.getUserId(), loginRequest.getPassword());
         Customer customer = customerDao.findByUserId(loginRequest.getUserId());
-        return LoginResponse.ofExceptToken(customer);
+        String token = authService.createToken(customer.getId());
+        return LoginResponse.of(token, customer);
     }
 
     private void validateCustomer(final Customer customer) {

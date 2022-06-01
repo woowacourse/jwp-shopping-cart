@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.LoginResponse;
@@ -25,13 +26,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class CustomerServiceTest {
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private CustomerDao customerDao;
 
     private CustomerService customerService;
 
     @BeforeEach
     void setUp() {
-        customerService = new CustomerService(customerDao);
+        customerService = new CustomerService(authService, customerDao);
     }
 
     @DisplayName("아이디에 null 을 입력하면 안된다.")
@@ -195,6 +199,7 @@ class CustomerServiceTest {
 
         // then
         assertAll(
+                () -> assertThat(loginResponse.getToken()).isNotNull(),
                 () -> assertThat(loginResponse.getUserId()).isEqualTo("puterism@woowacourse.com"),
                 () -> assertThat(loginResponse.getNickname()).isEqualTo("nickname")
         );
