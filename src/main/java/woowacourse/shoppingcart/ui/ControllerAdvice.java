@@ -56,13 +56,13 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
-    // @ExceptionHandler(RuntimeException.class)
-    // public ResponseEntity<ErrorResponse> handleUnhandledException() {
-    //     return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
-    // }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+        return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
+    }
 
-    // @ExceptionHandler(Exception.class)
-    // public ResponseEntity<ErrorResponse> handleException() {
-    //     return ResponseEntity.internalServerError().body(new ErrorResponse("관리자에게 문의하세요!"));
-    // }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException() {
+        return ResponseEntity.internalServerError().body(new ErrorResponse("관리자에게 문의하세요!"));
+    }
 }

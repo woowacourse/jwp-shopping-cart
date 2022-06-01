@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain.customer;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static woowacourse.shoppingcart.CustomerFixtures.*;
+import static Fixture.CustomerFixtures.*;
 
 import java.util.stream.Stream;
 
@@ -12,8 +12,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import woowacourse.shoppingcart.domain.customer.Customer;
 
 class CustomerTest {
 

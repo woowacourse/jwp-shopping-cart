@@ -1,13 +1,14 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
-import static woowacourse.shoppingcart.CustomerFixtures.*;
+import static Fixture.CustomerFixtures.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import Fixture.SimpleRestAssured;
 import io.restassured.RestAssured;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
@@ -21,12 +22,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(YAHO_SAVE_REQUEST)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        SimpleRestAssured.saveCustomer(YAHO_SAVE_REQUEST);
 
         String accessToken = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

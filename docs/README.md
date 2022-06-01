@@ -96,7 +96,7 @@
 
 - 06/01
     - [x] 원시값 포장
-    - [ ] acceptance test 에서 중복되는 부분을 test fixture 로 만들기
-    - [ ] password 검증 추가
+    - [x] acceptance test 에서 중복되는 부분을 test fixture 로 만들기
+    - [x] password 검증 추가
         - 비밀번호는 `8 ~ 16자`여야 하고 `영문자`, `숫자`, `특수문자!, @, #, $, %, ^, &, *, (, )`를 모두 사용해야 한다.
     - [ ] password 암호화

@@ -26,7 +26,7 @@ public class CustomerController {
     }
 
     @PostMapping("/api/customers")
-    public ResponseEntity<Void> save(@Valid @RequestBody CustomerSaveRequest request) {
+    public ResponseEntity<Void> save(@RequestBody CustomerSaveRequest request) {
         CustomerResponse response = customerService.save(request);
         return ResponseEntity.created(URI.create("/api/customers/" + response.getId())).build();
     }
