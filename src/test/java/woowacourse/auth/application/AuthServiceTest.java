@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,11 +26,17 @@ class AuthServiceTest {
     @Test
     @DisplayName("로그인에 성공한다.")
     void signIn() {
+        // given
         customerService.addCustomer(new SignUpRequest("레넌", "rennon@woowa.com", "1234"));
+
+        // when
         SignInResponse signInResponse = authService.signIn(new SignInRequest("rennon@woowa.com", "1234"));
 
-        assertThat(signInResponse.getUsername()).isEqualTo("레넌");
-        assertThat(signInResponse.getToken()).isNotNull();
+        // then
+        assertAll(
+                () -> assertThat(signInResponse.getUsername()).isEqualTo("레넌"),
+                () -> assertThat(signInResponse.getToken()).isNotNull()
+        );
     }
 
     @Test

@@ -17,21 +17,21 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("Bearer 토큰이 생성된다")
+    @DisplayName("로그인 시 Bearer 토큰이 생성된다.")
     @Test
     void createToken() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(signUpRequest)
+                .contentType(ContentType.JSON)
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
 
         // when
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
         String token = RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -52,8 +52,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(signUpRequest)
+                .contentType(ContentType.JSON)
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -90,15 +90,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(signUpRequest)
+                .contentType(ContentType.JSON)
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        // when
+        // when & then
         // 잘못된 id, password를 사용해 토큰을 요청하면
-        // then
         // 토큰 발급 요청이 거부된다
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1235");
         RestAssured
@@ -118,15 +117,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(signUpRequest)
+                .contentType(ContentType.JSON)
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        // when
+        // when & then
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-        // then
         // 내 정보 조회 요청이 거부된다
         String token = "dummy";
         RestAssured

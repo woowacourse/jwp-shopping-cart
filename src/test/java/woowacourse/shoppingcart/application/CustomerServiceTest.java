@@ -28,7 +28,7 @@ public class CustomerServiceTest {
     private CustomerDao customerDao;
 
     @Test
-    @DisplayName("회원을 저장하고 회원 정보를 반환한다.")
+    @DisplayName("회원을 저장하고 회원 정보를 반환할 수 있다..")
     void addCustomer() {
         // given
         String name = "greenlawn";
@@ -46,7 +46,7 @@ public class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("나의 정보를 반환한다.")
+    @DisplayName("나의 정보를 반환할 수 있다.")
     void findMe() {
         // given
         String name = "greenlawn";
@@ -62,7 +62,7 @@ public class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("나의 정보를 수정한다.")
+    @DisplayName("나의 정보를 수정할 수 있다.")
     void updateMe() {
         // given
         String name = "greenlawn";
@@ -94,7 +94,7 @@ public class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("회원을 탈퇴한다.")
+    @DisplayName("회원을 탈퇴할 수 있다.")
     void deleteMe() {
         // given
         String name = "greenlawn";
@@ -105,8 +105,24 @@ public class CustomerServiceTest {
         // when
         customerService.deleteMe(name, new DeleteCustomerRequest("1234"));
 
-        // given
+        // then
         assertThatThrownBy(() -> customerDao.findByUsername(name))
                 .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @Test
+    @DisplayName("비밀번호가 틀리면 회원을 탈퇴할 수 없다.")
+    void deleteMeThrowException() {
+        // given
+        String name = "greenlawn";
+        String email = "green@woowa.com";
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        customerService.addCustomer(signUpRequest);
+
+        // when & then
+        assertThatThrownBy(() -> customerService.deleteMe(name, new DeleteCustomerRequest("1235")))
+                .isInstanceOf(InvalidPasswordException.class)
+                .hasMessage("비밀번호가 틀렸습니다.");
+
     }
 }

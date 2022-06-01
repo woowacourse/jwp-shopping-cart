@@ -18,26 +18,27 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("회원가입을 할 수 있다.")
     void addCustomer() {
+        // given
         SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "1234");
-
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(signUpRequest)
+                .contentType(ContentType.JSON)
+                // when & then
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("내 정보를 조회할 수 있다.")
     @Test
     void getMe() {
         //given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(signUpRequest)
+                .contentType(ContentType.JSON)
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -51,7 +52,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
-        //when
+        //when & then
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -61,15 +62,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all().statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("내 정보를 수정할 수 있다.")
     @Test
     void updateMe() {
         //given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(signUpRequest)
+                .contentType(ContentType.JSON)
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -83,12 +84,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
-        //when
+        //when & then
         UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("1234", "5678");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(updatePasswordRequest)
+                .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().patch("/users/me")
@@ -102,41 +103,41 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(signUpRequest)
+                .contentType(ContentType.JSON)
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssured
+        RestAssured
                 .given().log().all()
-                .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signInRequest)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
-        //when
+        //when & then
         UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("1234", "5678");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(updatePasswordRequest)
+                .contentType(ContentType.JSON)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().patch("/users/me")
                 .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("회원탈퇴")
+    @DisplayName("회원을 탈퇴할 수 있다.")
     @Test
     void deleteMe() {
         //given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(signUpRequest)
+                .contentType(ContentType.JSON)
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -150,12 +151,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
+        // when & then
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
                 .body(deleteCustomerRequest)
+                .contentType(ContentType.JSON)
                 .when().delete("/users/me")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
@@ -168,8 +170,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(signUpRequest)
+                .contentType(ContentType.JSON)
                 .when().post("/users")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -183,11 +185,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
+        // when & then
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1234");
         RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .body(deleteCustomerRequest)
+                .contentType(ContentType.JSON)
                 .when().delete("/users/me")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
