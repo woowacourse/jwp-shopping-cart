@@ -13,7 +13,7 @@ public class DeleteCustomerDto {
         this.password = password;
     }
 
-    public DeleteCustomerDto(final String password){
+    public DeleteCustomerDto(final String password) {
         this(null, password);
     }
 

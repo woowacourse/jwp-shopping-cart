@@ -84,7 +84,7 @@ public class CustomerDao {
         checkAffectedRowCount(changedRowCount);
     }
 
-    public void deleteById(final Long id){
+    public void deleteById(final Long id) {
         final String query = "DELETE FROM CUSTOMER WHERE id = ?";
 
         final int deletedRowCount = jdbcTemplate.update(connection -> {
@@ -97,7 +97,7 @@ public class CustomerDao {
     }
 
     private void checkAffectedRowCount(final int affectedRowCount) {
-        if(affectedRowCount != 1){
+        if (affectedRowCount != 1) {
             throw new InvalidCustomerException();
         }
     }

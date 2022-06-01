@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.controller;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +30,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpDto signUpDto){
+    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpDto signUpDto) {
         final Long createdId = customerService.signUp(signUpDto);
 
         return ResponseEntity.created(URI.create("/api/customers/" + createdId)).build();

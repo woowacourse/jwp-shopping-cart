@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.service;
 
-import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.support.PasswordEncoder;
@@ -10,7 +9,6 @@ import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
-import woowacourse.shoppingcart.exception.AuthorizationFailException;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.PasswordMismatchException;
@@ -27,7 +25,7 @@ public class CustomerService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Long signUp(final SignUpDto signUpDto){
+    public Long signUp(final SignUpDto signUpDto) {
         final Customer newCustomer = Customer.createWithoutId(
                 signUpDto.getEmail(),
                 passwordEncoder.encrypt(signUpDto.getPassword()),
@@ -43,14 +41,14 @@ public class CustomerService {
         return new CustomerDto(customer.getId(), customer.getEmail(), customer.getUsername());
     }
 
-    public CustomerDto updateCustomer(final Long id, final UpdateCustomerDto updateCustomerDto){
+    public CustomerDto updateCustomer(final Long id, final UpdateCustomerDto updateCustomerDto) {
         final Customer updateCustomer = Customer.createWithoutEmailAndPassword(
                 id,
                 updateCustomerDto.getUsername());
-        try{
+        try {
             customerDao.update(updateCustomer);
             return findCustomerById(updateCustomer.getId());
-        }catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateNameException("수정하려는 이름이 이미 존재합니다.");
         }
     }
@@ -64,7 +62,7 @@ public class CustomerService {
     }
 
     private void checkPassword(final DeleteCustomerDto deleteCustomerDto, final Customer customer) {
-        if(!passwordEncoder.matches(deleteCustomerDto.getPassword(), customer.getPassword())){
+        if (!passwordEncoder.matches(deleteCustomerDto.getPassword(), customer.getPassword())) {
             throw new PasswordMismatchException();
         }
     }
