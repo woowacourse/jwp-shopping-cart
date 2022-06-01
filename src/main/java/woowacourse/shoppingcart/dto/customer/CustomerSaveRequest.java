@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto.customer;
 
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
