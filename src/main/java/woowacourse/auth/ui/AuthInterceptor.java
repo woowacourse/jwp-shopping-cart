@@ -17,9 +17,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-                             Object handler) {
-
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (isPreflight(request)) {
             return true;
         }
@@ -42,5 +40,4 @@ public class AuthInterceptor implements HandlerInterceptor {
             throw new AuthorizationException();
         }
     }
-
 }

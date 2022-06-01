@@ -16,43 +16,44 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerController {
+
     private final CustomerService customerService;
     private final AuthService authService;
 
-    public CustomerController(CustomerService customerService, AuthService authService) {
+    public CustomerController(final CustomerService customerService, final AuthService authService) {
         this.customerService = customerService;
         this.authService = authService;
     }
 
     @PostMapping
-    public ResponseEntity<Void> signUp(@RequestBody @Valid CustomerRequest customerRequest) {
+    public ResponseEntity<Void> signUp(@RequestBody @Valid final CustomerRequest customerRequest) {
         customerService.addCustomer(customerRequest);
-        return ResponseEntity.created(
-                URI.create("/api/customers/" + customerRequest.getName())).build();
+        return ResponseEntity.created(URI.create("/api/customers/" + customerRequest.getName())).build();
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> edit(HttpServletRequest request, @RequestBody @Valid CustomerRequest editRequest) {
-        String customerName = getNameFromToken(request);
+    public ResponseEntity<Void> edit(final HttpServletRequest request,
+                                     @RequestBody @Valid final CustomerRequest editRequest) {
+        final String customerName = getNameFromToken(request);
         customerService.editCustomerByName(customerName, editRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> customer(HttpServletRequest request) {
-        String customerName = getNameFromToken(request);
+    public ResponseEntity<CustomerResponse> customer(final HttpServletRequest request) {
+        final String customerName = getNameFromToken(request);
         return ResponseEntity.ok(customerService.findCustomerByName(customerName));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> withDraw(HttpServletRequest request) {
-        String customerName = getNameFromToken(request);
+    public ResponseEntity<Void> withDraw(final HttpServletRequest request) {
+        final String customerName = getNameFromToken(request);
         customerService.deleteCustomerByName(customerName);
         return ResponseEntity.noContent().build();
     }
 
-    private String getNameFromToken(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
+    private String getNameFromToken(final HttpServletRequest request) {
+        final String token = AuthorizationExtractor.extract(request);
         return authService.getNameFromToken(token);
     }
 }
