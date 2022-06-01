@@ -44,7 +44,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/users/me")
-    public ResponseEntity changePassword(@AuthenticationPrincipal String username,
+    public ResponseEntity deleteCustomer(@AuthenticationPrincipal String username,
                                          @Valid @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
         customerService.deleteUser(username, deleteCustomerRequest);
         return ResponseEntity.noContent().build();
