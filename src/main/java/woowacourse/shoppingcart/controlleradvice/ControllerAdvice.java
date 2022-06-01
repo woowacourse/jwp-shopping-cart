@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.controller;
+package woowacourse.shoppingcart.controlleradvice;
 
 import static org.springframework.http.HttpStatus.*;
 
