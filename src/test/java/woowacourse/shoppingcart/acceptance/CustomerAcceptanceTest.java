@@ -42,7 +42,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("이미 존재하는 아이디입니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("이미 존재하는 아이디입니다.")
         );
     }
 
@@ -59,7 +59,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("아이디 길이는 4~15자를 만족해야 합니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("아이디 길이는 4~15자를 만족해야 합니다.")
         );
     }
 
@@ -78,7 +78,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("이미 존재하는 아이디입니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("이미 존재하는 아이디입니다.")
         );
     }
 
@@ -95,7 +95,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("닉네임 길이는 2~10자를 만족해야 합니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("닉네임 길이는 2~10자를 만족해야 합니다.")
         );
     }
 
@@ -112,7 +112,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("비밀번호 길이는 8~20자를 만족해야 합니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("비밀번호 길이는 8~20자를 만족해야 합니다.")
         );
     }
 
@@ -129,7 +129,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("비밀번호는 대소문자, 숫자, 특수문자가 반드시 1개 이상 포함되어야 합니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("비밀번호는 대소문자, 숫자, 특수문자가 반드시 1개 이상 포함되어야 합니다.")
         );
     }
 
@@ -146,7 +146,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("주소 길이는 255자를 초과할 수 없습니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("주소 길이는 255자를 초과할 수 없습니다.")
         );
     }
 
@@ -163,7 +163,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("휴대폰번호 형식이 일치하지 않습니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("휴대폰번호 형식이 일치하지 않습니다.")
         );
     }
 
@@ -195,7 +195,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.asString()).isEqualTo("로그인 후 사용이 가능합니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("로그인 후 사용이 가능합니다.")
         );
     }
 
@@ -210,7 +210,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.asString()).isEqualTo("잘못된 형식의 토큰입니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("잘못된 형식의 토큰입니다.")
         );
     }
 
@@ -228,7 +228,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("회원을 찾을 수 없습니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("회원을 찾을 수 없습니다.")
         );
     }
 
@@ -259,7 +259,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.asString()).isEqualTo("로그인 후 사용이 가능합니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("로그인 후 사용이 가능합니다.")
         );
     }
 
@@ -277,7 +277,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.asString()).isEqualTo("잘못된 형식의 토큰입니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("잘못된 형식의 토큰입니다.")
         );
     }
 
@@ -296,7 +296,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("닉네임 길이는 2~10자를 만족해야 합니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("닉네임 길이는 2~10자를 만족해야 합니다.")
         );
     }
 
@@ -315,7 +315,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("주소 길이는 255자를 초과할 수 없습니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("주소 길이는 255자를 초과할 수 없습니다.")
         );
     }
 
@@ -335,7 +335,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("휴대폰번호 형식이 일치하지 않습니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("휴대폰번호 형식이 일치하지 않습니다.")
         );
     }
 
@@ -368,7 +368,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.asString()).isEqualTo("비밀번호가 올바르지 않습니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("비밀번호가 올바르지 않습니다.")
         );
     }
 
@@ -384,7 +384,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.asString()).isEqualTo("로그인 후 사용이 가능합니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("로그인 후 사용이 가능합니다.")
         );
     }
 
@@ -402,7 +402,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.asString()).isEqualTo("잘못된 형식의 토큰입니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("잘못된 형식의 토큰입니다.")
         );
     }
 }

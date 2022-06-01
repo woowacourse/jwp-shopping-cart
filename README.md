@@ -45,7 +45,7 @@
     - [x] 비밀번호가 일치하지 않으면 예외를 발생한다.
 
 - [x] JWT 의존성 변경
-- [ ] Error Response DTO 생성
+- [x] Error Response DTO 생성
 - [ ] Service 에 Transactional 적용
 - [ ] 비밀번호 암호화
 - [ ] Interceptor 써보기
