@@ -7,7 +7,7 @@ import woowacourse.shoppingcart.exception.PasswordMisMatchException;
 public class Password {
     private static final int MIN_LENGTH = 8;
     private static final int MAX_LENGTH = 20;
-    private static final Pattern PATTERN = Pattern.compile("^[0-9a-zA-Z]*$");
+    private static final Pattern PATTERN = Pattern.compile("^(?=.*[0-9])(?=.*[a-zA-Z])[A-Za-z0-9]{8,20}$");
 
     private final String value;
 
