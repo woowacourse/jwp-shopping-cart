@@ -15,15 +15,13 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Value("${security.jwt.token.expire-length}")
-    private long validityInMilliseconds;
-
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/login")
-    public TokenResponse login(@RequestBody TokenRequest request) {
+    public TokenResponse login(@RequestBody TokenRequest request,
+                               @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
         String token = authService.createToken(request);
 
         return new TokenResponse(token, validityInMilliseconds);
