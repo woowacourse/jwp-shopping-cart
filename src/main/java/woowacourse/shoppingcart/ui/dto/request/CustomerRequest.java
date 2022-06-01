@@ -1,11 +1,13 @@
 package woowacourse.shoppingcart.ui.dto.request;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 public class CustomerRequest {
     @NotBlank
     private String name;
     @NotBlank
+    @Email
     private String email;
     @NotBlank
     private String password;
