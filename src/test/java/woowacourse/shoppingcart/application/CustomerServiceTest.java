@@ -35,7 +35,7 @@ class CustomerServiceTest {
 
             CustomerResponse actual = customerService.addCustomer(customerRequest);
 
-            assertThat(actual).extracting("loginId", "username")
+            assertThat(actual).extracting("loginId", "name")
                     .containsExactly("angie", "angel");
         }
 
@@ -63,7 +63,7 @@ class CustomerServiceTest {
 
             CustomerResponse actual = customerService.updateCustomer(updateCustomerRequest);
 
-            assertThat(actual).extracting("loginId", "username")
+            assertThat(actual).extracting("loginId", "name")
                 .containsExactly("angie", "seungpapang");
         }
 

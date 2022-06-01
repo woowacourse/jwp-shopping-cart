@@ -42,7 +42,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(() -> {
             assertThat(getMeResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            assertThat(customerResponse).extracting("loginId", "username")
+            assertThat(customerResponse).extracting("loginId", "name")
                 .containsExactly("loginId", "seungpapang");
         });
     }
@@ -61,7 +61,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(() -> {
             assertThat(updatedResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            assertThat(updatedResponse.as(CustomerResponse.class)).extracting("loginId", "username")
+            assertThat(updatedResponse.as(CustomerResponse.class)).extracting("loginId", "name")
                 .containsExactly("loginId", "angie");
         });
     }
@@ -96,7 +96,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> 사용자_생성_요청(String loginId, String username, String password) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("loginId", loginId);
-        requestBody.put("username", username);
+        requestBody.put("name", username);
         requestBody.put("password", password);
 
         return RestAssured
@@ -111,7 +111,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     private ExtractableResponse<Response> 내정보_수정_요청(String accessToken, String loginId, String username, String password) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("loginId", loginId);
-        requestBody.put("username", username);
+        requestBody.put("name", username);
         requestBody.put("password", password);
 
         return RestAssured

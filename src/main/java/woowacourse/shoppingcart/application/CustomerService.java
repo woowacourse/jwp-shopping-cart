@@ -38,7 +38,7 @@ public class CustomerService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        if (customerDao.existByUsername(customerRequest.getUsername())) {
+        if (customerDao.existByUsername(customerRequest.getName())) {
             throw new IllegalArgumentException("이미 존재하는 유저네임입니다.");
         }
         Customer customer = customerDao.update(CustomerRequest.toCustomer(customerRequest));

@@ -35,7 +35,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         // 내 정보가 조회된다
         assertAll(() -> {
-            assertThat(expected).extracting("loginId", "username")
+            assertThat(expected).extracting("loginId", "name")
                     .containsExactly("loginId", "seungpapang");
             assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         });
