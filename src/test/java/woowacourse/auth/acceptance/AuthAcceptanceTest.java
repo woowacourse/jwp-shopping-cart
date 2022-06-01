@@ -1,6 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.AcceptanceFixture.createCustomer;
 import static woowacourse.Fixture.페퍼;
 import static woowacourse.Fixture.페퍼_비밀번호;
@@ -8,7 +9,6 @@ import static woowacourse.Fixture.페퍼_아이디;
 import static woowacourse.Fixture.페퍼_이름;
 
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
-public class AuthAcceptanceTest extends AcceptanceTest {
+class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
@@ -47,7 +47,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         // 내 정보가 조회된다
-        Assertions.assertAll(
+        assertAll(
                 () -> assertThat(customer.getLoginId()).isEqualTo(페퍼_아이디),
                 () -> assertThat(customer.getName()).isEqualTo(페퍼_이름)
         );

@@ -72,7 +72,6 @@ class AuthControllerTest {
         // given
         TokenRequest request = new TokenRequest(loginId, 페퍼_비밀번호);
         String requestContent = objectMapper.writeValueAsString(request);
-        String token = jwtTokenProvider.createToken(페퍼_아이디);
 
         // when
         final ResultActions response = mockMvc.perform(post("/login")
@@ -88,11 +87,10 @@ class AuthControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     @DisplayName("비밀번호가 공백인 경우 Bad Request를 던진다.")
-    void login_noPassword(String password) throws Exception{
+    void login_noPassword(String password) throws Exception {
         // given
         TokenRequest request = new TokenRequest(페퍼_아이디, password);
         String requestContent = objectMapper.writeValueAsString(request);
-        String token = jwtTokenProvider.createToken(페퍼_아이디);
 
         // when
         final ResultActions response = mockMvc.perform(post("/login")

@@ -24,7 +24,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
-public class CustomerAcceptanceTest extends AcceptanceTest {
+class CustomerAcceptanceTest extends AcceptanceTest {
 
     /*
      *  Scenario: 회원 가입

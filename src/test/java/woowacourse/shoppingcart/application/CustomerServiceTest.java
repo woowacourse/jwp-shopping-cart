@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.Fixture.다른_비밀번호;
 import static woowacourse.Fixture.다른_아이디;
 import static woowacourse.Fixture.다른_이름;
@@ -10,7 +11,6 @@ import static woowacourse.Fixture.페퍼_비밀번호;
 import static woowacourse.Fixture.페퍼_아이디;
 import static woowacourse.Fixture.페퍼_이름;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ class CustomerServiceTest {
             CustomerResponse customerResponse = customerService.save(customerRequest);
 
             // then
-            Assertions.assertAll(
+            assertAll(
                     () -> assertThat(customerResponse.getLoginId()).isEqualTo(페퍼_아이디),
                     () -> assertThat(customerResponse.getName()).isEqualTo(페퍼_이름)
             );
@@ -91,9 +91,10 @@ class CustomerServiceTest {
             // given
             customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
             CustomerRequest customerRequest = new CustomerRequest(다른_아이디, 페퍼_이름, 페퍼_비밀번호);
+            LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
 
             // when & then
-            assertThatThrownBy(() -> customerService.update(new LoginCustomer(페퍼_아이디), customerRequest))
+            assertThatThrownBy(() -> customerService.update(loginCustomer, customerRequest))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("아이디는 변경할 수 없습니다.");
         }
@@ -104,10 +105,11 @@ class CustomerServiceTest {
             // given
             customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
             CustomerRequest customerRequest = new CustomerRequest(페퍼_아이디, 페퍼_이름, 다른_비밀번호);
+            LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
 
             // when & then
             assertThatThrownBy(
-                    () -> customerService.update(new LoginCustomer(페퍼_아이디), customerRequest)
+                    () -> customerService.update(loginCustomer, customerRequest)
             ).isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("비밀번호는 변경할 수 없습니다.");
         }
@@ -117,10 +119,11 @@ class CustomerServiceTest {
         void fail_notExistCustomer() {
             // given
             CustomerRequest customerRequest = new CustomerRequest(페퍼_아이디, 페퍼_이름, 다른_비밀번호);
+            LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
 
             // when & then
             assertThatThrownBy(
-                    () -> customerService.update(new LoginCustomer(페퍼_아이디), customerRequest)
+                    () -> customerService.update(loginCustomer, customerRequest)
             ).isInstanceOf(InvalidCustomerException.class)
                     .hasMessage("유효하지 않은 고객입니다");
         }
@@ -148,9 +151,10 @@ class CustomerServiceTest {
             // given
             customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
             CustomerDeleteRequest customerDeleteRequest = new CustomerDeleteRequest(다른_비밀번호);
+            LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
 
             // when & then
-            assertThatThrownBy(() -> customerService.delete(new LoginCustomer(페퍼_아이디), customerDeleteRequest))
+            assertThatThrownBy(() -> customerService.delete(loginCustomer, customerDeleteRequest))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("비밀번호가 일치하지 않습니다.");
         }
@@ -160,9 +164,10 @@ class CustomerServiceTest {
         void fail_notExistCustomer() {
             // given
             CustomerDeleteRequest customerDeleteRequest = new CustomerDeleteRequest(페퍼_비밀번호);
+            LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
 
             // when & then
-            assertThatThrownBy(() -> customerService.delete(new LoginCustomer(페퍼_아이디), customerDeleteRequest))
+            assertThatThrownBy(() -> customerService.delete(loginCustomer, customerDeleteRequest))
                     .isInstanceOf(InvalidCustomerException.class);
         }
     }
