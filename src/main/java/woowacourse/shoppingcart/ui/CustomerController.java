@@ -40,10 +40,7 @@ public class CustomerController {
     public ResponseEntity<Void> updateInfo(@RequestBody UpdateCustomerRequest updateCustomerRequest,
         HttpServletRequest request) {
         customerService.updateInfo((String)request.getAttribute("username"), updateCustomerRequest);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value())
-            .header("Access-Control-Allow-Origin", "*")
-            .build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 
     @PatchMapping("/password")
