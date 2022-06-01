@@ -28,11 +28,11 @@ public class CustomerService {
     @Transactional
     public Long signUp(SignUpRequest request) {
         Customer customer = request.toDomain();
-        checkAbleToSignUp(customer);
+        checkDuplicateCondition(customer);
         return customerDao.save(customer);
     }
 
-    private void checkAbleToSignUp(Customer customer) {
+    private void checkDuplicateCondition(Customer customer) {
         if (customerDao.exists(customer)) {
             throw new IllegalArgumentException("중복된 아이디입니다.");
         }
@@ -51,13 +51,11 @@ public class CustomerService {
     @Transactional
     public void updateMe(Long id, UpdateMeRequest request) {
         Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
-        Customer updatedCustomer = Customer.of(
-                id,
-                new Username(request.getUsername()),
-                customer.getPassword(),
-                new Nickname(request.getNickname()),
-                new Age(request.getAge()));
-        customerDao.update(updatedCustomer);
+        customer = customer.updateUsername(new Username(request.getUsername()))
+                .updateNickname(new Nickname(request.getNickname()))
+                .updateAge(new Age(request.getAge()));
+        checkDuplicateCondition(customer);
+        customerDao.update(customer);
     }
 
     @Transactional
@@ -67,13 +65,8 @@ public class CustomerService {
         if (!customer.hasSamePassword(oldPassword)) {
             throw new IllegalArgumentException("현재 비밀번호를 잘못 입력하였습니다.");
         }
-        Customer updatedCustomer = Customer.of(
-                id,
-                customer.getUsername(),
-                new Password(request.getNewPassword()),
-                customer.getNickname(),
-                customer.getAge());
-        customerDao.update(updatedCustomer);
+        customer = customer.updatePassword(new Password(request.getNewPassword()));
+        customerDao.update(customer);
     }
 
     @Transactional
