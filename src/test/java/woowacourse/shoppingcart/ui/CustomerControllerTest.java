@@ -21,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
@@ -38,6 +39,9 @@ class CustomerControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @MockBean
     private CustomerService customerService;
@@ -80,7 +84,7 @@ class CustomerControllerTest {
                         .content(objectMapper.writeValueAsString(request))
                 ).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("accessToken").value("token"))
+                .andExpect(jsonPath("accessToken").exists())
                 .andExpect(jsonPath("id").value(1L))
                 .andExpect(jsonPath("userId").value("jiwoo@naver.com"))
                 .andExpect(jsonPath("nickname").value("hunch"));
@@ -97,11 +101,12 @@ class CustomerControllerTest {
                 .thenReturn(new CustomerResponse(1L, "jo@naver.com", "jojogreen"));
 
         // then
+        String token = jwtTokenProvider.createToken(String.valueOf(request.getId()));
         mockMvc.perform(get("/auth/customers/profile")
-                        .header("Authorization", request)
+                        .header("Authorization", "Bearer " + token)
                 ).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(request.getId()))
+                .andExpect(jsonPath("id").value(1L))
                 .andExpect(jsonPath("userId").value("jo@naver.com"))
                 .andExpect(jsonPath("nickname").value("jojogreen"));
     }
@@ -114,8 +119,9 @@ class CustomerControllerTest {
         CustomerUpdateRequest updateRequest = new CustomerUpdateRequest("hunch");
 
         // then
+        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getId()));
         mockMvc.perform(patch("/auth/customers/profile")
-                        .header("Authorization", tokenRequest)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(updateRequest))
@@ -131,8 +137,9 @@ class CustomerControllerTest {
         PasswordRequest passwordRequest = new PasswordRequest("1234", "2345");
 
         // then
+        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getId()));
         mockMvc.perform(patch("/auth/customers/profile/password")
-                        .header("Authorization", tokenRequest)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(passwordRequest))
@@ -147,8 +154,9 @@ class CustomerControllerTest {
         TokenRequest tokenRequest = new TokenRequest(1L);
 
         // then
+        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getId()));
         mockMvc.perform(delete("/auth/customers/profile")
-                        .header("Authorization", tokenRequest)
+                        .header("Authorization", "Bearer " + token)
                 ).andDo(print())
                 .andExpect(status().isNoContent());
     }

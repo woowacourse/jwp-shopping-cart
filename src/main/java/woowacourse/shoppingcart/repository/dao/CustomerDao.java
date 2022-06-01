@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -50,7 +51,11 @@ public class CustomerDao {
                 + " values (:username, :password, :nickname, false)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource source = new BeanPropertySqlParameterSource(customer);
-        namedParameterJdbcTemplate.update(query, source, keyHolder);
+        try {
+            namedParameterJdbcTemplate.update(query, source, keyHolder);
+        } catch (DuplicateKeyException exception) {
+            throw new InvalidCustomerException("중복된 값이 존재합니다.");
+        }
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
