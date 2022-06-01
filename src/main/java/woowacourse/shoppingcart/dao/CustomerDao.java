@@ -55,7 +55,7 @@ public class CustomerDao {
 
     public String findPasswordByEmail(final Email email) {
         final String query = "SELECT password FROM customer WHERE email = ?";
-        return jdbcTemplate.queryForObject(query,  String.class, email.getValue());
+        return jdbcTemplate.queryForObject(query, String.class, email.getValue());
     }
 
     public Long findIdByUserName(final String userName) {

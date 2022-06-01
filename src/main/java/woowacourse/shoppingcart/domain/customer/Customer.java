@@ -16,7 +16,8 @@ public class Customer {
     private FullAddress fullAddress;
     private Terms terms;
 
-    private Customer(){}
+    private Customer() {
+    }
 
     public Customer(Long id, Email email, Password password, String profileImageUrl,
                     Name name, Gender gender, Birthday birthDay, Contact contact,
