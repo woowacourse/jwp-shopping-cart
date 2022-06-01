@@ -1,16 +1,16 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.fixture.RequestFixture.로그인_요청;
+import static woowacourse.fixture.RequestFixture.로그인_요청_및_토큰발급;
+import static woowacourse.fixture.RequestFixture.회원조회_요청;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
@@ -62,37 +62,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         // 내 정보 조회 요청이 거부된다
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    private ExtractableResponse<Response> 로그인_요청(TokenRequest request) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/auth/login")
-                .then().log().all()
-                .extract();
-    }
-
-    public String 로그인_요청_및_토큰발급(TokenRequest request) {
-        ExtractableResponse<Response> loginResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/auth/login")
-                .then().log().all()
-                .extract();
-
-        TokenResponse tokenResponse = loginResponse.body().as(TokenResponse.class);
-        return tokenResponse.getAccessToken();
-    }
-
-    public ExtractableResponse<Response> 회원조회_요청(String token, Long id) {
-        return RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .when().get("/api/customers/" + id)
-                .then().log().all()
-                .extract();
     }
 }

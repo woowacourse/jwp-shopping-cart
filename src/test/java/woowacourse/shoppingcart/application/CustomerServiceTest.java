@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.fixture.TestConstant.PARAM_TEST_NAME;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
@@ -116,7 +117,7 @@ public class CustomerServiceTest {
     }
 
     @DisplayName("존재하지 않는 email 혹은 password로 Customer를 조회하면 예외를 발생시킨다.")
-    @ParameterizedTest
+    @ParameterizedTest(name = PARAM_TEST_NAME)
     @CsvSource(value = {
             "failemail@naver.com:12349053145",
             "puterism@naver.com:failpassword",

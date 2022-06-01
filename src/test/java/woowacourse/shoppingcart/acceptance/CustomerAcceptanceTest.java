@@ -2,8 +2,15 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.fixture.RequestFixture.ID_추출;
+import static woowacourse.fixture.RequestFixture.로그인_요청_및_토큰발급;
+import static woowacourse.fixture.RequestFixture.회원가입_요청;
+import static woowacourse.fixture.RequestFixture.회원가입_요청_및_ID_추출;
+import static woowacourse.fixture.RequestFixture.회원정보수정_요청;
+import static woowacourse.fixture.RequestFixture.회원조회_요청;
+import static woowacourse.fixture.RequestFixture.회원탈퇴_요청;
+import static woowacourse.fixture.TestConstant.PARAM_TEST_NAME;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -12,9 +19,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.ErrorResponseWithField;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
@@ -63,7 +68,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
 
     @DisplayName("회원 가입시 잘못된 형식의 email을 입력한 경우 400 응답을 반환한다.")
-    @ParameterizedTest
+    @ParameterizedTest(name = PARAM_TEST_NAME)
     @ValueSource(strings = {"not_email_format", "philz @gmail.com", ""})
     @NullSource
     void create_exception_parameter_email(String email) {
@@ -78,7 +83,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("회원 가입시 잘못된 형식의 username을 입력한 경우 400 응답을 반환한다.")
-    @ParameterizedTest
+    @ParameterizedTest(name = PARAM_TEST_NAME)
     @ValueSource(strings = {"01234567890", "", " "})
     @NullSource
     void create_exception_parameter_name(String username) {
@@ -94,7 +99,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("회원 가입시 잘못된 형식의 password을 입력한 경우 400 응답을 반환한다.")
-    @ParameterizedTest()
+    @ParameterizedTest(name = PARAM_TEST_NAME)
     @ValueSource(strings = {"", " ", "1234", "012345678901234567890"})
     @NullSource
     void create_exception_parameter_password(String password) {
@@ -191,7 +196,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("내 정보 수정시 잘못된 형식의 username을 입력한 경우 400 응답을 반환한다.")
-    @ParameterizedTest
+    @ParameterizedTest(name = PARAM_TEST_NAME)
     @ValueSource(strings = {"01234567890", "", " "})
     @NullSource
     void update_exception_parameter_name(String username) {
@@ -245,67 +250,5 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
-    }
-
-    public String 로그인_요청_및_토큰발급(TokenRequest request) {
-        ExtractableResponse<Response> loginResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/auth/login")
-                .then().log().all()
-                .extract();
-
-        TokenResponse tokenResponse = loginResponse.body().as(TokenResponse.class);
-        return tokenResponse.getAccessToken();
-    }
-
-    public ExtractableResponse<Response> 회원가입_요청(CustomerCreateRequest request) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-    }
-
-    public long 회원가입_요청_및_ID_추출(CustomerCreateRequest request) {
-        return ID_추출(회원가입_요청(request));
-    }
-
-    public ExtractableResponse<Response> 회원조회_요청(String token, Long id) {
-        return RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .when().get("/api/customers/" + id)
-                .then().log().all()
-                .extract();
-    }
-
-    public ExtractableResponse<Response> 회원정보수정_요청(String token, long id, CustomerUpdateRequest request) {
-        return RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().put("/api/customers/" + id)
-                .then().log().all()
-                .extract();
-    }
-
-    public ExtractableResponse<Response> 회원탈퇴_요청(String token, long id) {
-        return RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/" + id)
-                .then().log().all()
-                .extract();
-    }
-
-    private long ID_추출(ExtractableResponse<Response> response) {
-        String[] locations = response.header("Location").split("/");
-        return Long.parseLong(locations[locations.length - 1]);
     }
 }
