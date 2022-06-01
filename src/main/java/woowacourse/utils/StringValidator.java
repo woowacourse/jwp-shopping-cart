@@ -13,7 +13,7 @@ public class StringValidator {
     }
 
     public static void validateNullOrBlank(final String target, final ValidationException e) {
-        if (target.isEmpty() || target.isBlank()) {
+        if (target == null || target.isBlank()) {
             throw e;
         }
     }
