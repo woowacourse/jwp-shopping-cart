@@ -1,41 +1,25 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 public class Customer {
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
-
-    private final String email;
+    private final Email email;
     private final Nickname nickname;
     private final Password password;
 
-    public Customer(String email, Nickname nickname, Password password) {
-        validate(email);
+    private Customer(Email email, Nickname nickname, Password password) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
     }
 
     public Customer(String email, String nickname, String password) {
-        this(email, new Nickname(nickname), new Password(password));
-    }
-
-    private void validate(String email) {
-        validateEmailFormat(email);
-    }
-
-    private void validateEmailFormat(String email) {
-        if (!EMAIL_PATTERN.matcher(email).matches()) {
-            throw new InvalidCustomerException("잘못된 이메일 형식입니다.");
-        }
+        this(new Email(email), new Nickname(nickname), new Password(password));
     }
 
     public String getEmail() {
-        return email;
+        return email.getValue();
     }
 
     public String getNickname() {
