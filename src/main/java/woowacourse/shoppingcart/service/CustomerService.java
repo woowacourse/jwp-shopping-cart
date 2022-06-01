@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.service;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.SignUpResponse;
@@ -38,5 +39,13 @@ public class CustomerService {
         Customer customer = customerDao.findCustomerByUserName(username);
         String email = customer.getEmail();
         return new CustomerResponse(username, email);
+    }
+
+    public void changePassword(String username, ChangePasswordRequest changePasswordRequest) {
+        Customer customer = customerDao.findCustomerByUserName(username);
+        if (!customer.isSamePassword(changePasswordRequest.getOldPassword())) {
+            throw new IllegalArgumentException("[ERROR] 비밀번호가 일치하지 않습니다.");
+        }
+        customerDao.updatePassword(username, changePasswordRequest.getNewPassword());
     }
 }

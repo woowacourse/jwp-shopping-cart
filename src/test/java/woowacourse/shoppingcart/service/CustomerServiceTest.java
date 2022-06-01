@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @SpringBootTest
@@ -17,6 +20,8 @@ public class CustomerServiceTest {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private CustomerDao customerDao;
 
     @Test
     void 회원가입() {
@@ -56,5 +61,26 @@ public class CustomerServiceTest {
                 () -> assertThat(customerResponse.getUsername()).isEqualTo("puterism"),
                 () -> assertThat(customerResponse.getEmail()).isEqualTo("crew01@naver.com")
         );
+    }
+
+    @Test
+    void 비밀번호를_수정하는_경우() {
+        String username = "puterism";
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("a123", "a1234");
+
+        customerService.changePassword(username, changePasswordRequest);
+
+        Customer customer = customerDao.findCustomerByUserName(username);
+
+        assertThat(customer.isSamePassword("a1234")).isTrue();
+    }
+
+    @Test
+    void 비밀번호를_수정할때_현재_비밀번호가_일치하지_않는_경우() {
+        String username = "puterism";
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("1231", "a1234");
+
+        assertThatThrownBy(() -> customerService.changePassword(username, changePasswordRequest)).isInstanceOf(
+                IllegalArgumentException.class);
     }
 }
