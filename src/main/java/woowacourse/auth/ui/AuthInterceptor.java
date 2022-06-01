@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import woowacourse.auth.exception.UnauthorizedException;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 
@@ -22,8 +23,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         String token = AuthorizationExtractor.extract(request);
 
         if (!jwtTokenProvider.validateToken(token)) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return false;
+            throw new UnauthorizedException();
         }
 
         return true;

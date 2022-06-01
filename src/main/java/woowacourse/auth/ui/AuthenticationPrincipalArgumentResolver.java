@@ -1,8 +1,7 @@
 package woowacourse.auth.ui;
 
-import org.apache.tomcat.util.http.parser.Authorization;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -31,7 +30,8 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String token = AuthorizationExtractor.extract(webRequest);
+        HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+        String token = AuthorizationExtractor.extract(request);
         return jwtTokenProvider.getPayload(token);
     }
 }
