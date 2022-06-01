@@ -41,12 +41,14 @@ public class Customer {
 
     private static void validateEmail(final String email) {
         StringValidator.validateNullOrBlank(email, new EmailValidationException("이메일에는 공백이 들어가면 안됩니다."));
-        StringValidator.validateLength(EMAIL_MIN_LENGTH, EMAIL_MAX_LENGTH, email, new EmailValidationException("이메일은 8자 이상 50자 이하여야합니다."));
+        StringValidator.validateLength(EMAIL_MIN_LENGTH, EMAIL_MAX_LENGTH, email,
+                new EmailValidationException("이메일은 8자 이상 50자 이하여야합니다."));
     }
 
     private static void validateUsername(final String username) {
         StringValidator.validateNullOrBlank(username, new UsernameValidationException("닉네임에는 공백이 들어가면 안됩니다."));
-        StringValidator.validateLength(USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH, username, new UsernameValidationException("닉네임은 1자 이상 10자 이하여야합니다."));
+        StringValidator.validateLength(USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH, username,
+                new UsernameValidationException("닉네임은 1자 이상 10자 이하여야합니다."));
     }
 
     public Long getId() {

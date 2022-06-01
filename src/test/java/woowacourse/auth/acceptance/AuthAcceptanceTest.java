@@ -1,19 +1,20 @@
 package woowacourse.auth.acceptance;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.Fixture.*;
+import static woowacourse.fixture.Fixture.BEARER;
+import static woowacourse.fixture.Fixture.TEST_EMAIL;
+import static woowacourse.fixture.Fixture.TEST_PASSWORD;
+import static woowacourse.fixture.Fixture.TEST_USERNAME;
+
 import io.restassured.RestAssured;
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerDto;
@@ -35,7 +36,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, BEARER + accessToken)
-                .when().get("/api/customers/"+ tokenResponseDto.getCustomer().getId())
+                .when().get("/api/customers/" + tokenResponseDto.getCustomer().getId())
                 .then().log().all()
                 .extract();
 
@@ -73,7 +74,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(new Header(AUTHORIZATION, BEARER + "invalidToken"))
-                .when().get("/api/customers/"+ tokenResponseDto.getCustomer().getId())
+                .when().get("/api/customers/" + tokenResponseDto.getCustomer().getId())
                 .then().log().all()
                 .extract();
 

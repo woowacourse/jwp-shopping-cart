@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
 
@@ -12,7 +11,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     public static final List<RequestEndPoint> excludedEndPoint = List.of(
             new RequestEndPoint("POST", "/api/customers"),
-             new RequestEndPoint("POST", "/api/auth/login")
+            new RequestEndPoint("POST", "/api/auth/login")
     );
 
     @Override
@@ -23,7 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         final String requestURI = request.getRequestURI();
         final RequestEndPoint requestEndPoint = new RequestEndPoint(requestMethod, requestURI);
 
-        if(excludedEndPoint.contains(requestEndPoint)){
+        if (excludedEndPoint.contains(requestEndPoint)) {
             return true;
         }
 
@@ -32,7 +31,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
-    public static class RequestEndPoint{
+    public static class RequestEndPoint {
         private final String httpMethod;
         private final String uri;
 
