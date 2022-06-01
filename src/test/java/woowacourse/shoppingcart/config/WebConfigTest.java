@@ -22,7 +22,7 @@ public class WebConfigTest {
     @Test
     public void cors() throws Exception {
         mockMvc.perform(
-                        options("/api/products")
+                        options("/products")
                                 .header(HttpHeaders.ORIGIN, "http://localhost:8080")
                                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
                 )

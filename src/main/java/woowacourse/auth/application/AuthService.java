@@ -11,8 +11,8 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Service
 public class AuthService {
 
-    private JwtTokenProvider jwtTokenProvider;
-    private CustomerDao customerDao;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final CustomerDao customerDao;
 
     public AuthService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;

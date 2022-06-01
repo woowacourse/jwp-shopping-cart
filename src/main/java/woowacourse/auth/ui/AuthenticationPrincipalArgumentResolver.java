@@ -14,11 +14,9 @@ import woowacourse.auth.support.JwtTokenProvider;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private AuthService authService;
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalArgumentResolver(AuthService authService, JwtTokenProvider jwtTokenProvider) {
-        this.authService = authService;
+    public AuthenticationPrincipalArgumentResolver(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -27,7 +25,6 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
     }
 
-    // parameter에 @AuthenticationPrincipal이 붙어있는 경우 동작
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {

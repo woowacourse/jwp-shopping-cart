@@ -25,6 +25,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService, jwtTokenProvider);
+        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
     }
 }
