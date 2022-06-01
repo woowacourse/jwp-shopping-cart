@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
+import woowacourse.shoppingcart.application.dto.TokenPayloadDto;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -38,6 +40,13 @@ public class CustomerDaoTest {
     @Test
     void createCustomer() {
         assertThatNoException().isThrownBy(() -> customerDao.createCustomer(CustomerFixture.tommy));
+    }
+
+    @DisplayName("전달 받은 이메일로 사용자 정보를 반환한다.")
+    @Test
+    void findByUserEmail() {
+        final TokenPayloadDto tokenPayloadDto = customerDao.findByUserEmail(new Email("puterism@example.com"));
+        assertThat(tokenPayloadDto.getId()).isNotNull();
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")

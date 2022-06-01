@@ -1,19 +1,28 @@
 package woowacourse.shoppingcart.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
+import woowacourse.shoppingcart.application.dto.TokenPayloadDto;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.NewPassword;
 
 @Service
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final JwtTokenProvider provider;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(CustomerDao customerDao, JwtTokenProvider provider) {
         this.customerDao = customerDao;
+        this.provider = provider;
     }
 
     public Long createCustomer(final CustomerDto newCustomer) {
@@ -22,10 +31,28 @@ public class CustomerService {
     }
 
     public TokenResponse signIn(final TokenRequest tokenRequest) {
-        // 이메일, 비밀번호를 도메인에서 검증한다.
-        // 이메일을 통해 디비에서 사용자 정보를 가져온다,
-        // 패스워드, 약관 동의를 제외한 나머지 정보를 JSON -> String -> 토큰으로 생성.
-        // 생성한 토큰을 반환한다.
-        return null;
+        final Email email = new Email(tokenRequest.getEmail());
+        final NewPassword password = new NewPassword(tokenRequest.getPassword());
+        final String foundPassword = customerDao.findPasswordByEmail(email);
+        verifyPassword(password, foundPassword);
+        TokenPayloadDto tokenPayloadDto = customerDao.findByUserEmail(email);
+        String payload = createPayload(tokenPayloadDto);
+        return new TokenResponse(provider.createToken(payload));
+    }
+
+    private void verifyPassword(final NewPassword password, final String hashedPassword) {
+        if (!password.isSamePassword(hashedPassword)) {
+            throw new IllegalArgumentException("올바르지 않은 비밀번호입니다.");
+        }
+    }
+
+    private String createPayload(TokenPayloadDto tokenPayloadDto) {
+        try {
+            ObjectMapper mapper = new JsonMapper();
+            return mapper.writeValueAsString(tokenPayloadDto);
+        } catch (JsonProcessingException e) {
+            throw new UnsupportedOperationException(e.getMessage());
+        }
+
     }
 }

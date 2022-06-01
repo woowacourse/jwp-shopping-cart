@@ -6,7 +6,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.Gender;
 import woowacourse.shoppingcart.domain.customer.Name;
-import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.NewPassword;
 import woowacourse.shoppingcart.domain.customer.Terms;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
@@ -42,7 +42,7 @@ public class CustomerDto {
     }
 
     public static Customer toCustomer(final CustomerDto request) {
-        return new Customer(0L, new Email(request.getEmail()), new Password(request.getPassword()),
+        return new Customer(0L, new Email(request.getEmail()), new NewPassword(request.getPassword()),
                 request.getProfileImageUrl(), new Name(request.getName()), Gender.form(request.getGender()),
                 new Birthday(request.getBirthDay()), new Contact(request.getContact()),
                 AddressDto.toFullAddress(request.getAddressDto()), new Terms(request.isTerms()));

@@ -17,15 +17,15 @@ public class PasswordTest {
         @DisplayName("올바른 비밀번호가 입력되었으면 비밀번호를 해시화하여 저장한디.")
         @Test
         void validPassword() {
-            assertThatNoException().isThrownBy(() -> new Password("password&1"));
+            assertThatNoException().isThrownBy(() -> new NewPassword("password&1"));
         }
 
         @DisplayName("비밀번호가 올바르지 않으면 에러를 던진다")
         @Test
         void invalidPassword() {
-            assertThatThrownBy(() -> new Password("invalid"))
+            assertThatThrownBy(() -> new NewPassword("invalid"))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage(Password.INVALID_PASSWORD_FORMAT);
+                    .hasMessage(NewPassword.INVALID_PASSWORD_FORMAT);
         }
     }
 }

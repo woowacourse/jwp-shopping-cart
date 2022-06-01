@@ -5,16 +5,18 @@ import woowacourse.shoppingcart.domain.address.FullAddress;
 
 public class Customer {
 
-    private final Long id;
-    private final Email email;
-    private final Password password;
-    private final String profileImageUrl;
-    private final Name name;
-    private final Gender gender;
-    private final Birthday birthDay;
-    private final Contact contact;
-    private final FullAddress fullAddress;
-    private final Terms terms;
+    private Long id;
+    private Email email;
+    private Password password;
+    private String profileImageUrl;
+    private Name name;
+    private Gender gender;
+    private Birthday birthDay;
+    private Contact contact;
+    private FullAddress fullAddress;
+    private Terms terms;
+
+    private Customer(){}
 
     public Customer(Long id, Email email, Password password, String profileImageUrl,
                     Name name, Gender gender, Birthday birthDay, Contact contact,
@@ -31,6 +33,13 @@ public class Customer {
         this.terms = terms;
     }
 
+    public Customer(Long id, Email email, Password password, String profileImageUrl,
+                    Name name, Gender gender, Birthday birthDay, Contact contact,
+                    FullAddress fullAddress) {
+        this(id, email, password, profileImageUrl, name, gender, birthDay, contact, fullAddress, new Terms(true));
+    }
+
+
     public Long getId() {
         return id;
     }
@@ -40,7 +49,7 @@ public class Customer {
     }
 
     public String getPassword() {
-        return password.getValue();
+        return password.getPassword();
     }
 
     public String getProfileImageUrl() {
