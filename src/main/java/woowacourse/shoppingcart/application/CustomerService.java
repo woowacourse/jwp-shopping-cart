@@ -1,8 +1,10 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
@@ -26,9 +28,24 @@ public class CustomerService {
     }
 
     public CustomerDetailServiceResponse findById(final Long id) {
-        final Customer customer = customerDao.findById(id)
-                .orElseThrow(InvalidCustomerException::new);
-
+        final Customer customer = findCustomerById(id);
         return CustomerDetailServiceResponse.from(customer);
+    }
+
+    private Customer findCustomerById(final Long id) {
+        return customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
+    }
+
+    public void delete(final CustomerDeleteServiceRequest request) {
+        final Customer customer = findCustomerById(request.getId());
+        validatePassword(customer, request.getPassword());
+        customerDao.deleteById(request.getId());
+    }
+
+    private void validatePassword(final Customer customer, final String password) {
+        if (!customer.isSamePassword(password)) {
+            throw new PasswordNotMatchException();
+        }
     }
 }

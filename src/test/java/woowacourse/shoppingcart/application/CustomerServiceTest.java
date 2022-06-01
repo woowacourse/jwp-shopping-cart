@@ -13,8 +13,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
@@ -48,7 +50,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("중복된 이메일로 회원 등록 시 예외를 발생한다.")
+    @DisplayName("중복된 이메일로 회원 등록 시 예외가 발생한다.")
     void save_duplicatedEmail_throwsException() {
         // given
         final CustomerSaveRequest customerSaveRequest = new CustomerSaveRequest(NAME, EMAIL, PASSWORD);
@@ -77,5 +79,36 @@ class CustomerServiceTest {
         // then
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(new CustomerDetailServiceResponse(NAME, EMAIL));
+    }
+
+    @Test
+    @DisplayName("회원을 삭제한다.")
+    void delete() {
+        // given
+        final CustomerDeleteServiceRequest request
+                = new CustomerDeleteServiceRequest(1L, PASSWORD);
+        when(customerDao.findById(1L))
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
+        when(customerDao.deleteById(1L))
+                .thenReturn(1);
+
+        // when
+        assertThatCode(() -> customerService.delete(request))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("회원 삭제시 비밀번호가 일치하지 않을 경우 예외가 발생한다.")
+    void delete_passwordNotMatch_throwsException() {
+        // given
+        final CustomerDeleteServiceRequest request
+                = new CustomerDeleteServiceRequest(1L, "1111111111");
+        when(customerDao.findById(1L))
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
+
+        // when, then
+        assertThatThrownBy(() -> customerService.delete(request))
+                .isInstanceOf(PasswordNotMatchException.class);
+
     }
 }
