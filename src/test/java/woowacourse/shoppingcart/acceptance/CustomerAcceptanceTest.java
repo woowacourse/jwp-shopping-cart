@@ -24,6 +24,7 @@ import woowacourse.shoppingcart.dto.ErrorResponseWithField;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -236,19 +237,29 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
         String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
 
-        ExtractableResponse<Response> response = 회원탈퇴_요청(token, savedId);
+        ExtractableResponse<Response> response = 회원탈퇴_요청(token, savedId, new PasswordRequest("12345678"));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    @DisplayName("다른 사람의 정보를 수정하면 403을 반환한다")
+    @DisplayName("다른 사람의 id로 회원탈퇴 하려하면 403을 반환한다")
     @Test
     void delete_otherId() {
         long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
         String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
         long 다른사람의_ID = savedId + 1;
-        ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID);
+        ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID, new PasswordRequest("12345678"));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
+    @DisplayName("회원 탈퇴시 입력한 비밀번호가 일치하지 않으면 400을 반환한다")
+    @Test
+    void delete_notMatchPassword() {
+        long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        ExtractableResponse<Response> response = 회원탈퇴_요청(token, savedId, new PasswordRequest("kkkkkkkk"));
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }

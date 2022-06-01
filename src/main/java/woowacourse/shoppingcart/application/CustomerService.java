@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.NotMatchPasswordException;
 
 @Service
 public class CustomerService {
@@ -79,5 +80,12 @@ public class CustomerService {
 
     private void validateCustomerExists(Long id) {
         findById(id);
+    }
+
+    public void checkSamePassword(String savedPassword, String enteredPassword) {
+        String encodedPassword = passwordEncoder.encode(enteredPassword);
+        if (!savedPassword.equals(encodedPassword)) {
+            throw new NotMatchPasswordException();
+        }
     }
 }

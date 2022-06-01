@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.fixture.TestConstant.PARAM_TEST_NAME;
 
 import javax.sql.DataSource;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,6 +22,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.NotMatchPasswordException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -158,5 +160,29 @@ public class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.findById(savedId))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
+    }
+
+    @DisplayName("Password 일치하는지 여부를 판단한다.")
+    @Test
+    void checkSamePassword() {
+        // given
+        String enteredPassword = "123456789";
+        String savedPassword = passwordEncoder.encode(enteredPassword);
+
+        // when then
+        Assertions.assertThatNoException()
+                .isThrownBy(() -> customerService.checkSamePassword(savedPassword, "123456789"));
+    }
+
+    @DisplayName("checkSamePassword는 Password 일치하지 않으면 예외를 발생시킨다.")
+    @Test
+    void checkSamePassword_unmatch_password() {
+        // given
+        String enteredPassword = "123456789";
+        String savedPassword = passwordEncoder.encode(enteredPassword);
+
+        // when then
+        Assertions.assertThatThrownBy(() -> customerService.checkSamePassword(savedPassword, "abcdefgh"))
+                .isInstanceOf(NotMatchPasswordException.class);
     }
 }

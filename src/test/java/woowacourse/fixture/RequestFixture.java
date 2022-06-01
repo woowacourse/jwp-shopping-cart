@@ -8,6 +8,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 
 public class RequestFixture {
 
@@ -68,12 +69,13 @@ public class RequestFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 회원탈퇴_요청(String token, long id) {
+    public static ExtractableResponse<Response> 회원탈퇴_요청(String token, long id, PasswordRequest request) {
         return RestAssured
                 .given().log().all()
+                .body(request)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/" + id)
+                .when().post("/api/customers/" + id)
                 .then().log().all()
                 .extract();
     }

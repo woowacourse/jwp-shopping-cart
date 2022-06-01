@@ -4,7 +4,6 @@ import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +18,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 import woowacourse.shoppingcart.exception.ForbiddenAccessException;
 
 @RestController
@@ -44,12 +44,6 @@ public class CustomerController {
         return new CustomerResponse(customer);
     }
 
-    private void validateAuthorizedUser(long id, Customer customer) {
-        if (!customer.getId().equals(id)) {
-            throw new ForbiddenAccessException();
-        }
-    }
-
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerResponse update(@PathVariable long id, @Valid @RequestBody CustomerUpdateRequest request,
@@ -61,10 +55,19 @@ public class CustomerController {
         return new CustomerResponse(updatedCustomer);
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id, @AuthenticationPrincipal Customer customer) {
+    public void delete(@PathVariable long id,
+                       @RequestBody PasswordRequest request,
+                       @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(id, customer);
+        customerService.checkSamePassword(customer.getPassword(), request.getPassword());
         customerService.delete(id);
+    }
+
+    private void validateAuthorizedUser(long id, Customer customer) {
+        if (!customer.getId().equals(id)) {
+            throw new ForbiddenAccessException();
+        }
     }
 }

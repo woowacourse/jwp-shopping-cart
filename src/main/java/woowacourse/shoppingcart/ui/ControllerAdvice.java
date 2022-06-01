@@ -24,6 +24,7 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.NotMatchPasswordException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -69,7 +70,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
-            ConstraintViolationException.class,
+            ConstraintViolationException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidRequest(final RuntimeException e) {
@@ -82,6 +83,7 @@ public class ControllerAdvice {
             InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
+            NotMatchPasswordException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidAccess(final RuntimeException e) {
