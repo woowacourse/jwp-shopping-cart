@@ -124,4 +124,15 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
     }
+
+    public void delete(final Email email) {
+        final String sql = "delete from customer where email = :email";
+
+        final Map<String, Object> params = new HashMap<>();
+        params.put("email", email.getValue());
+
+        if (jdbcTemplate.update(sql, params) == 0) {
+            throw new InvalidCustomerException();
+        }
+    }
 }

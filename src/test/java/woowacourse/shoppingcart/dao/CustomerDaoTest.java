@@ -165,4 +165,22 @@ public class CustomerDaoTest {
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
+
+    @DisplayName("회원을 삭제한다.")
+    @Test
+    void delete() {
+        customerDao.delete(EMAIL);
+
+        assertThatThrownBy(() -> customerDao.findByEmail(EMAIL))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("존재하지 않는 유저입니다.");
+    }
+
+    @DisplayName("회원 삭제 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
+    @Test
+    void deleteFail() {
+        assertThatThrownBy(() -> customerDao.delete(NOT_EXISTING_EMAIL))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("존재하지 않는 유저입니다.");
+    }
 }
