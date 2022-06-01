@@ -18,6 +18,10 @@ public class Customer {
         this(null, name, email, password);
     }
 
+    public Customer updateName(final String newName) {
+        return new Customer(id, newName, email, password);
+    }
+
     public boolean isSamePassword(final String password) {
         return this.password.equals(password);
     }

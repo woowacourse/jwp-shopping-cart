@@ -131,4 +131,21 @@ public class CustomerDaoTest {
         // then
         assertThat(actual).isOne();
     }
+
+    @Test
+    @DisplayName("id에 해당하는 회원의 이름을 수정한다.")
+    void updateNameById() {
+        // given
+        final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
+        final Customer savedCustomer = customerDao.save(customer);
+        final String newName = "라라";
+
+        // when
+        final Customer updatedCustomer = savedCustomer.updateName(newName);
+        customerDao.updateById(updatedCustomer);
+        final Customer actual = customerDao.findById(updatedCustomer.getId()).get();
+
+        // then
+        assertThat(actual.getName()).isEqualTo(newName);
+    }
 }
