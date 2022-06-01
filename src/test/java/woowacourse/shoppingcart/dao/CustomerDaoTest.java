@@ -27,7 +27,7 @@ public class CustomerDaoTest {
     @Test
     void existCustomerByUserId() {
         // when
-        boolean actual = customerDao.existCustomerByUserId("puterism");
+        boolean actual = customerDao.existCustomerByUserId("puterism@woowacourse.com");
 
         // then
         assertThat(actual).isEqualTo(true);

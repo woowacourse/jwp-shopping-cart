@@ -7,12 +7,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
+@Transactional
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 class CustomerServiceTest {
 
     @Autowired
@@ -54,7 +58,7 @@ class CustomerServiceTest {
     @Test
     void signUpNicknamedNullException() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("username", null, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("username@woowacourse.com", null, "1234");
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -67,7 +71,7 @@ class CustomerServiceTest {
     @DisplayName("닉네임에 빈값을 입력하면 안된다.")
     void signUpNicknameBlankException(String nickname) {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("username", nickname, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("username@woowacourse.com", nickname, "1234");
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -79,7 +83,7 @@ class CustomerServiceTest {
     @Test
     void signUpPasswordNullException() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("username", "유콩", null);
+        SignUpRequest signUpRequest = new SignUpRequest("username@woowacourse.com", "유콩", null);
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -92,7 +96,7 @@ class CustomerServiceTest {
     @DisplayName("비밀번호에 빈값을 입력하면 안된다.")
     void signUpPasswordBlankException(String password) {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("username", "유콩", password);
+        SignUpRequest signUpRequest = new SignUpRequest("username@woowacourse.com", "유콩", password);
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -104,7 +108,7 @@ class CustomerServiceTest {
     @Test
     void validateDuplicateUserId() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("puterism", "유콩", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("puterism@woowacourse.com", "유콩", "1234");
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
@@ -116,11 +120,23 @@ class CustomerServiceTest {
     @Test
     void validateDuplicateNickname() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("coobim", "nickname1", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", "nickname1", "1234");
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 존재하는 닉네임입니다.");
+    }
+
+    @DisplayName("아이디는 이메일 형식이 아니면 안된다.")
+    @Test
+    void validateUserIdFormat() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("coobim", "nickname1", "1234");
+
+        // when & then
+        assertThatThrownBy(() -> customerService.signUp(signUpRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("아이디는 이메일 형식으로 입력해주세요.");
     }
 }
