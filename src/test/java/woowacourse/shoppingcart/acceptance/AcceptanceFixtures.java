@@ -40,4 +40,14 @@ public class AcceptanceFixtures {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse<Response> 회원탈퇴(final String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/auth/customers/profile")
+                .then().log().all()
+                .extract();
+    }
 }

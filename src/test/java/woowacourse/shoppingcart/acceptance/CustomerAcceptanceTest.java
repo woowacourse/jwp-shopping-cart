@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.나의_정보조회;
 import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.로그인;
 import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.회원가입;
+import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.회원탈퇴;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -22,7 +23,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
-    void 회원가입을_한다_AND_로그인을_한다() {
+    void 회원가입을_한다_AND_로그인을_한다_AND_내_정보를_조회한다() {
         // given
         // 가입하고자 하는 회원 정보가 존재한다.
         CustomerRequest customerRequest = new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!");
@@ -37,7 +38,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .getAccessToken();
 
         // then
-        // 가입된 회원 정보가 조회된다.
+        // 가입된 회원 정보를 조회한다.
         CustomerResponse customerResponse = 나의_정보조회(accessToken).as(CustomerResponse.class);
         assertAll(
                 () -> assertThat(customerResponse.getUserId())
@@ -126,12 +127,68 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 로그인(new CustomerLoginRequest("jo@naver.com", "1234abcd@"));
 
         // then
-        // 가입된 회원 정보가 조회된다.
+        // 가입된 회원 정보를 조회된다.
         assertAll(
                 () -> assertThat(response.statusCode())
                         .isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(response.body().asString())
                         .isEqualTo("로그인 할 수 없습니다.")
+        );
+    }
+
+    @Test
+    void 회원탈퇴를_할_수_있다_AND_회원탈퇴를_했을_경우_내_정보를_조회할_수_없다() {
+        // given
+        // 회원가입을 한다.
+        CustomerRequest customerRequest = new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!");
+        회원가입(customerRequest);
+
+        // 로그인을 하여 토큰을 발급받는다.
+        String accessToken = 로그인(new CustomerLoginRequest("jo@naver.com", "1234abcd!"))
+                .as(CustomerLoginResponse.class)
+                .getAccessToken();
+
+        // when
+        // 회원 탈퇴를 한다.
+        회원탈퇴(accessToken);
+
+        // then
+        // 탈퇴한 회원 정보를 조회하면 예외를 발생시킨다.
+        ExtractableResponse<Response> response = 나의_정보조회(accessToken);
+        assertAll(
+                () -> assertThat(response.statusCode())
+                        .isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.body().asString())
+                        .isEqualTo("존재하지 않는 회원입니다.")
+        );
+    }
+
+    @Test
+    void 이미_탈퇴한_회원은_탈퇴할_수_없다() {
+        // given
+        // 회원가입을 한다.
+        CustomerRequest customerRequest = new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!");
+        회원가입(customerRequest);
+
+        // 로그인을 하여 토큰을 발급받는다.
+        String accessToken = 로그인(new CustomerLoginRequest("jo@naver.com", "1234abcd!"))
+                .as(CustomerLoginResponse.class)
+                .getAccessToken();
+
+        // 회원탈퇴를 한다.
+        회원탈퇴(accessToken);
+
+        // when
+        // 이미 탈퇴한 회원의 토큰으로 다시 탈퇴한다.
+        ExtractableResponse<Response> response = 회원탈퇴(accessToken);
+
+        // then
+        // 예외를 발생시킨다.
+        assertAll(
+                () -> assertThat(response.statusCode())
+                        .isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.body().asString())
+                        .isEqualTo("존재하지 않는 회원입니다.")
         );
     }
 }

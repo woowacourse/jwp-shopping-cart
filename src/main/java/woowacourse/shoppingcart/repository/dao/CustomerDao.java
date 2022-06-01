@@ -93,9 +93,8 @@ public class CustomerDao {
         Map<String, Object> params = new HashMap<>();
         params.put("id", newCustomer.getId());
         params.put("nickname", newCustomer.getNickname());
-        try {
-            namedParameterJdbcTemplate.update(query, params);
-        } catch (EmptyResultDataAccessException exception) {
+        int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
+        if(affectedRowCount == 0) {
             throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
         }
     }
@@ -107,9 +106,8 @@ public class CustomerDao {
         params.put("id", id);
         params.put("newPassword", newPassword);
         params.put("oldPassword", oldPassword);
-        try {
-            namedParameterJdbcTemplate.update(query, params);
-        } catch (EmptyResultDataAccessException exception) {
+        int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
+        if(affectedRowCount == 0) {
             throw new InvalidCustomerException("비밀번호가 일치하지 않습니다.");
         }
     }
@@ -118,9 +116,8 @@ public class CustomerDao {
         String query = "update customer set withdrawal = true where id = :id and exists" + REAL_CUSTOMER_QUERY;
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
-        try {
-            namedParameterJdbcTemplate.update(query, params);
-        } catch (EmptyResultDataAccessException exception) {
+        int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
+        if(affectedRowCount == 0) {
             throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
         }
     }
