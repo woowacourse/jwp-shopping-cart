@@ -34,15 +34,6 @@ public class CustomerDao {
         );
     }
 
-    public Optional<Long> findIdByUserName(final String name) {
-        final String sql = "SELECT id FROM customer WHERE name = :name";
-        final HashMap<String, Object> params = new HashMap<>();
-        params.put("name", name.toLowerCase());
-
-        List<Long> customerIds = namedJdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
-        return Optional.ofNullable(DataAccessUtils.singleResult(customerIds));
-    }
-
     public Customer save(final Customer customer) {
         final String sql = "INSERT INTO customer(name, email, password) VALUES (:name, :email, :password)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -62,6 +53,15 @@ public class CustomerDao {
         params.put("email", customer.getEmail());
 
         return Boolean.TRUE.equals(namedJdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
+
+    public Optional<Long> findIdByUserName(final String name) {
+        final String sql = "SELECT id FROM customer WHERE name = :name";
+        final HashMap<String, Object> params = new HashMap<>();
+        params.put("name", name.toLowerCase());
+
+        List<Long> customerIds = namedJdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
+        return Optional.ofNullable(DataAccessUtils.singleResult(customerIds));
     }
 
     public Optional<Customer> findByEmail(final String email) {
@@ -86,6 +86,16 @@ public class CustomerDao {
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public int updateById(final Customer customer) {
+        final String sql = "UPDATE customer SET name = :name, password = :password WHERE id = :id";
+        final HashMap<String, Object> params = new HashMap<>();
+        params.put("id", customer.getId());
+        params.put("name", customer.getName());
+        params.put("password", customer.getPassword());
+
+        return namedJdbcTemplate.update(sql, params);
     }
 
     public int deleteById(final Long id) {
