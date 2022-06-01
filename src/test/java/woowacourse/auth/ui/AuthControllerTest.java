@@ -21,12 +21,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
+import woowacourse.shoppingcart.controller.ControllerTest;
 import woowacourse.shoppingcart.dto.CustomerDto;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@AutoConfigureMockMvc
-class AuthControllerTest {
+class AuthControllerTest extends ControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,10 +38,10 @@ class AuthControllerTest {
     @Test
     @DisplayName("이메일과 패스워드를 받아 로그인한 후 accessToken과 유효시간을 반환한다.")
     void login() throws Exception {
-        CustomerDto customerDto = new CustomerDto(1L, "test@test.com", "test");
+        CustomerDto customerDto = new CustomerDto(1L, TEST_EMAIL, TEST_USERNAME);
         when(authService.login(any())).thenReturn(new TokenResponseDto("testAccessToken", 10800000L, customerDto));
 
-        final SignInDto signInDto = new SignInDto("test@test.com", "testtest");
+        final SignInDto signInDto = new SignInDto(TEST_EMAIL, TEST_PASSWORD);
 
         final MockHttpServletResponse response = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)

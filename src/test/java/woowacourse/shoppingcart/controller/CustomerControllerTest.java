@@ -13,14 +13,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.SignInDto;
@@ -32,10 +29,7 @@ import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.service.CustomerService;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@AutoConfigureMockMvc
-class CustomerControllerTest {
+class CustomerControllerTest extends ControllerTest{
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,22 +41,18 @@ class CustomerControllerTest {
     private AuthService authService;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-
-    private final long customerId = 1L;
-    private final String testEmail = "test@test.com";
-    private final String testUsername = "테스트";
     private String accessToken;
 
     @BeforeEach
     void setUp() {
-        accessToken = jwtTokenProvider.createToken(testEmail);
+        accessToken = jwtTokenProvider.createToken(TEST_EMAIL);
     }
 
     @Test
     @DisplayName("이메일, 패스워드, 유저 이름을 받아서 CREATED와 Location 헤더에 리소스 접근 URI를 반환한다.")
     void signUp() throws Exception {
-        final SignUpDto signUpDto = new SignUpDto(testEmail, "testtest", testUsername);
-        when(customerService.signUp(any(SignUpDto.class))).thenReturn(customerId);
+        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, "testtest", TEST_USERNAME);
+        when(customerService.signUp(any(SignUpDto.class))).thenReturn(CUSTOMER_ID);
 
         final MockHttpServletResponse response = mockMvc.perform(post("/api/customers")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +63,7 @@ class CustomerControllerTest {
                         .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.getHeader("Location")).isEqualTo("/api/customers/"+ customerId);
+        assertThat(response.getHeader("Location")).isEqualTo("/api/customers/"+ CUSTOMER_ID);
     }
 
     @Test
@@ -81,13 +71,13 @@ class CustomerControllerTest {
     void updateCustomer() throws Exception {
         when(authService.extractEmail(any(String.class))).thenReturn("test@test.com");
         when(customerService.findCustomerByEmail(any(String.class)))
-                .thenReturn(new CustomerDto(customerId, testEmail, testUsername));
+                .thenReturn(new CustomerDto(CUSTOMER_ID, TEST_EMAIL, TEST_USERNAME));
         when(customerService.updateCustomer(any(Long.class),any(UpdateCustomerDto.class))).thenReturn(new CustomerDto(
-                customerId, testEmail,"테스트2"));
+                CUSTOMER_ID, TEST_EMAIL,"테스트2"));
 
         UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto("테스트2");
 
-        final MockHttpServletResponse response = mockMvc.perform(put("/api/customers/" + customerId)
+        final MockHttpServletResponse response = mockMvc.perform(put("/api/customers/" + CUSTOMER_ID)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -102,13 +92,13 @@ class CustomerControllerTest {
     @Test
     @DisplayName("URI path에 id를 받아 일치하는 회원을 삭제한다.")
     void deleteCustomer() throws Exception {
-        final CustomerDto customerDto = new CustomerDto(customerId, testEmail, testUsername);
+        final CustomerDto customerDto = new CustomerDto(CUSTOMER_ID, TEST_EMAIL, TEST_USERNAME);
         when(authService.extractEmail(any(String.class))).thenReturn("test@test.com");
         when(customerService.findCustomerByEmail(any(String.class)))
                 .thenReturn(customerDto);
         when(authService.login(any(SignInDto.class))).thenReturn(new TokenResponseDto(accessToken, 1000000L, customerDto));
         DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto("testtest");
-        final MockHttpServletResponse response = mockMvc.perform(post("/api/customers/" + customerId)
+        final MockHttpServletResponse response = mockMvc.perform(post("/api/customers/" + CUSTOMER_ID)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
