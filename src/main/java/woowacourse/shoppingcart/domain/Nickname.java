@@ -5,7 +5,7 @@ import woowacourse.shoppingcart.util.StringUtil;
 public class Nickname {
 
     private static final int MIN_NICKNAME_LENGTH = 1;
-    private static final int MAX_NICKNAME_LENGTH = 20;
+    private static final int MAX_NICKNAME_LENGTH = 10;
     private final String value;
 
     public Nickname(String value) {
