@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.Fixture.페퍼;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -117,5 +117,19 @@ public class CustomerDaoTest {
                 () -> assertThat(findCustomer.getName()).isEqualTo("바꿀 이름"),
                 () -> assertThat(findCustomer.getPassword()).isEqualTo(페퍼_비밀번호)
         );
+    }
+
+    @DisplayName("회원 정보를 삭제한다.")
+    @Test
+    void delete() {
+        // given
+        customerDao.save(페퍼);
+
+        // when
+        customerDao.delete(페퍼_아이디);
+
+        // then
+        Assertions.assertThatThrownBy(() -> customerDao.findByLoginId(페퍼_아이디))
+                .isInstanceOf(InvalidCustomerException.class);
     }
 }

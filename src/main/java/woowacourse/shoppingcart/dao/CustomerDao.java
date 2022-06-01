@@ -84,4 +84,13 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
     }
+
+    public void delete(String loginId) {
+        try {
+            final String query = "DELETE FROM customer WHERE loginId = :loginId";
+            namedParameterJdbcTemplate.update(query, Map.of("loginId", loginId));
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
 }
