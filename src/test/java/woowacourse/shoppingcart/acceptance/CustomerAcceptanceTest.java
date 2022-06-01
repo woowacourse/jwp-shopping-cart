@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("회원 관련 기능")
@@ -63,11 +65,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1001);
         assertThat(response.body().jsonPath().getString("message")).isNotBlank();
-    }
-
-    @DisplayName("내 정보 조회")
-    @Test
-    void getMe() {
     }
 
     @DisplayName("내 정보 수정")

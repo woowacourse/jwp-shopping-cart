@@ -3,6 +3,7 @@ package woowacourse.auth.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
@@ -86,6 +88,46 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.jsonPath().getString("accessToken")).isNotBlank()
         );
+    }
+
+    @DisplayName("토큰이 없이 회원 정보를 조회하는 경우 401 반환")
+    @Test
+    void requestGetMeWithoutToken() {
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .when().log().all().get("/users/me")
+                .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("유효하지 않는 토큰으로 회원 정보를 조회하는 경우 401 반환")
+    @Test
+    void requestGetMeWithInvalidToken() {
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer invalidToken")
+                .when().log().all().get("/users/me")
+                .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("유효한 토큰인 경우 200을 응답")
+    @Test
+    void requestGetMeWithValidToken() {
+        회원가입_요청("email@email.com", "12345678a","tonic");
+        String accessToken = 로그인_요청("email@email.com", "12345678a")
+                .jsonPath()
+                .getString("accessToken");
+
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when().log().all().get("/users/me")
+                .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
