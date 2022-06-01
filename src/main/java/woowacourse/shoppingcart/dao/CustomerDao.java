@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -26,8 +27,8 @@ public class CustomerDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-   public Long createCustomer(final CustomerDto customerDto) {
-        final BeanPropertySqlParameterSource parameter = new BeanPropertySqlParameterSource(customerDto);
+   public Long createCustomer(final Customer customer) {
+        final BeanPropertySqlParameterSource parameter = new BeanPropertySqlParameterSource(customer);
         return simpleInsert.executeAndReturnKey(parameter).longValue();
    }
 

@@ -39,4 +39,8 @@ public class Password {
         }
         return stringBuilder.toString();
     }
+
+    public String getValue() {
+        return value;
+    }
 }

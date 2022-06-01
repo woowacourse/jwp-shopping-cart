@@ -20,4 +20,8 @@ public enum Gender {
                 .findFirst()
                 .orElse(UNDEFINED);
     }
+
+    public String getValue() {
+        return value;
+    }
 }

@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.application.dto;
 
+import woowacourse.shoppingcart.domain.address.FullAddress;
 import woowacourse.shoppingcart.dto.AddressRequest;
 
 public class AddressDto {
@@ -16,6 +17,10 @@ public class AddressDto {
 
     public static AddressDto fromAddressRequest(final AddressRequest request) {
         return new AddressDto(request.getAddress(), request.getDetailAddress(), request.getZoneCode());
+    }
+
+    public static FullAddress toFullAddress(final AddressDto request) {
+        return new FullAddress(request.getAddress(), request.getDetailAddress(), request.getZoneCode());
     }
 
     public String getAddress() {

@@ -1,5 +1,13 @@
 package woowacourse.shoppingcart.application.dto;
 
+import woowacourse.shoppingcart.domain.customer.Birthday;
+import woowacourse.shoppingcart.domain.customer.Contact;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Gender;
+import woowacourse.shoppingcart.domain.customer.Name;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.Terms;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
 public class CustomerDto {
@@ -33,6 +41,13 @@ public class CustomerDto {
                 AddressDto.fromAddressRequest(request.getAddress()), request.isTerms());
     }
 
+    public static Customer toCustomer(final CustomerDto request) {
+        return new Customer(0L, new Email(request.getEmail()), new Password(request.getPassword()),
+                request.getProfileImageUrl(), new Name(request.getName()), Gender.form(request.getGender()),
+                new Birthday(request.getBirthDay()), new Contact(request.getContact()),
+                AddressDto.toFullAddress(request.getAddressDto()), new Terms(request.isTerms()));
+    }
+
     public String getEmail() {
         return email;
     }
@@ -61,9 +76,9 @@ public class CustomerDto {
         return contact;
     }
 
-//    public AddressDto getAddress() {
-//        return address;
-//    }
+    public AddressDto getAddressDto() {
+        return address;
+    }
 
     public String getAddress() {
         return address.getAddress();

@@ -14,10 +14,11 @@ public class Customer {
     private final Birthday birthDay;
     private final Contact contact;
     private final FullAddress fullAddress;
+    private final Terms terms;
 
     public Customer(Long id, Email email, Password password, String profileImageUrl,
                     Name name, Gender gender, Birthday birthDay, Contact contact,
-                    FullAddress fullAddress) {
+                    FullAddress fullAddress, Terms terms) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -27,42 +28,59 @@ public class Customer {
         this.birthDay = birthDay;
         this.contact = contact;
         this.fullAddress = fullAddress;
+        this.terms = terms;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Email getEmail() {
-        return email;
+    public String getEmail() {
+        return email.getValue();
     }
 
-    public Password getPassword() {
-        return password;
+    public String getPassword() {
+        return password.getValue();
     }
 
     public String getProfileImageUrl() {
         return profileImageUrl;
     }
 
-    public Name getName() {
-        return name;
+    public String getName() {
+        return name.getValue();
     }
 
-    public Gender getGender() {
-        return gender;
+    public String getGender() {
+        return gender.getValue();
     }
 
-    public Birthday getBirthDay() {
-        return birthDay;
+    public String getBirthDay() {
+        return birthDay.getValue();
     }
 
-    public Contact getContact() {
-        return contact;
+    public String getContact() {
+        return contact.getValue();
     }
 
     public FullAddress getFullAddress() {
         return fullAddress;
+    }
+
+    public String getAddress() {
+        return fullAddress.getAddress();
+    }
+
+    public String getDetailAddress() {
+        return fullAddress.getDetailAddress();
+    }
+
+    public String getZoneCode() {
+        return fullAddress.getZoneCode();
+    }
+
+    public boolean getTerms() {
+        return terms.isValue();
     }
 
     @Override

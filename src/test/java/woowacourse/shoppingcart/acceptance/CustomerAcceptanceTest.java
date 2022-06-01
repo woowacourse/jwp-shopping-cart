@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -31,6 +32,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void addCustomer() {
         ExtractableResponse<Response> response = createCustomer();
         assertEquals(response.response().statusCode(), HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("로그인")
+    @Test
+    void signIn() {
+        ExtractableResponse<Response> customer = createCustomer();
+        TokenRequest request = new TokenRequest("example@example.com", "example123!");
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .post("/api/customer/authentication/sign-in")
+                .then().log().all()
+                .extract();
+
     }
 
     @DisplayName("내 정보 조회")

@@ -37,7 +37,7 @@ public class CustomerDaoTest {
     @DisplayName("전달받은 데이터로 소비자 데이터를 생성한다.")
     @Test
     void createCustomer() {
-        assertThatNoException().isThrownBy(() -> customerDao.createCustomer(CustomerFixture.tommyDto));
+        assertThatNoException().isThrownBy(() -> customerDao.createCustomer(CustomerFixture.tommy));
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")

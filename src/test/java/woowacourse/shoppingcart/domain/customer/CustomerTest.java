@@ -32,7 +32,7 @@ class CustomerTest {
                 new Customer(1L, new Email("her0807@naver.com"), new Password("qwert!1"),
                         "example.com", new Name("토미"), Gender.MALE, new Birthday("1988-08-07"),
                         new Contact("12345678910"),
-                        new FullAddress("a", "b", "12345"))
+                        new FullAddress("a", "b", "12345"), new Terms(true))
             )
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage(Password.INVALID_PASSWORD_FORMAT);
