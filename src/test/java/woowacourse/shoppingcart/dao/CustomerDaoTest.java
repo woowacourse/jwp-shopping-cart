@@ -57,7 +57,7 @@ public class CustomerDaoTest {
     @Test
     void saveCustomer() {
         Customer customer = new Customer("chleeslow", "1234abc!@", "woote@email.com", "선릉역", "010-9999-1111");
-        Long savedId = customerDao.save(customer);
+        Long savedId = customerDao.save(customer).orElseThrow();
 
         Customer foundCustomer = customerDao.findById(savedId).orElseThrow();
 

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -41,20 +42,24 @@ public class CustomerDao {
         }
     }
 
-    public Long save(final Customer customer) {
+    public Optional<Long> save(final Customer customer) {
         final String query = "INSERT INTO customer (name, password, email, address, phone_number) "
                 + "VALUES (?, ?, ?, ?, ?)";
         KeyHolder holder = new GeneratedKeyHolder();
-        jdbcTemplate.update((Connection con) -> {
-            PreparedStatement statement = con.prepareStatement(query, new String[]{"id"});
-            statement.setString(1, customer.getName());
-            statement.setString(2, customer.getPassword());
-            statement.setString(3, customer.getEmail());
-            statement.setString(4, customer.getAddress());
-            statement.setString(5, customer.getPhoneNumber());
-            return statement;
-        }, holder);
-        return Objects.requireNonNull(holder.getKey()).longValue();
+        try {
+            jdbcTemplate.update((Connection con) -> {
+                PreparedStatement statement = con.prepareStatement(query, new String[]{"id"});
+                statement.setString(1, customer.getName());
+                statement.setString(2, customer.getPassword());
+                statement.setString(3, customer.getEmail());
+                statement.setString(4, customer.getAddress());
+                statement.setString(5, customer.getPhoneNumber());
+                return statement;
+            }, holder);
+            return Optional.of(Objects.requireNonNull(holder.getKey()).longValue());
+        } catch (DuplicateKeyException | NullPointerException e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<Customer> findByName(final String name) {

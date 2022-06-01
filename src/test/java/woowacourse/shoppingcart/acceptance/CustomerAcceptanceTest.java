@@ -94,6 +94,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 SimpleRestAssured.get("/api/customers/me", new Header("Authorization", token));
 
         assertThat(deletedResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        assertThat(foundResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(foundResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 }

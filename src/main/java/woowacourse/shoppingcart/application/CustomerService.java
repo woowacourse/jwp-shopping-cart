@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.FindCustomerRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -26,7 +27,8 @@ public class CustomerService {
                 request.getAddress(),
                 request.getPhoneNumber()
         );
-        return customerDao.save(customer);
+        return customerDao.save(customer)
+                .orElseThrow(DuplicateCustomerException::new);
     }
 
     public CustomerResponse findCustomer(FindCustomerRequest findCustomerRequest) {
