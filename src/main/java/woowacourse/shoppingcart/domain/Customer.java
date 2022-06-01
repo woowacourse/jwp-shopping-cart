@@ -1,10 +1,15 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.auth.domain.Password;
 
 public class Customer {
+
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9]{4,20}$");
+    private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣a-zA-Z0-9]{1,10}$");
 
     private final String username;
     private final EncryptedPassword password;
@@ -30,20 +35,22 @@ public class Customer {
     }
 
     private void validateUsername(String username) {
-        if (username.length() < 4 || username.length() > 20) {
+        Matcher matcher = USERNAME_PATTERN.matcher(username);
+        if (!matcher.matches()) {
             throw new IllegalArgumentException("아이디는 최소 4글자, 최대 20글자여야 합니다.");
         }
     }
 
     private void validateNickname(String nickname) {
-        if (nickname.isBlank() || nickname.length() > 10) {
+        Matcher matcher = NICKNAME_PATTERN.matcher(nickname);
+        if (!matcher.matches()) {
             throw new IllegalArgumentException("닉네임은 최소 1글자, 최대 10글자여야 합니다.");
         }
     }
 
     private void validateAge(int age) {
-        if (age < 1) {
-            throw new IllegalArgumentException("나이는 최소 1살이어야 합니다.");
+        if (age < 0 || age > 200) {
+            throw new IllegalArgumentException("나이는 0~200세만 입력할 수 있습니다.");
         }
     }
 
