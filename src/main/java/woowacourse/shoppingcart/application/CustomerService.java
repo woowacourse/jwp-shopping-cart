@@ -14,11 +14,9 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 public class CustomerService {
 
     private final CustomerDao customerDao;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public CustomerService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
+    public CustomerService(CustomerDao customerDao) {
         this.customerDao = customerDao;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public void register(String email, String password, String username) {
@@ -26,7 +24,7 @@ public class CustomerService {
         if(customerDao.existsByEmail(email)){
             throw new JoinException("이미 존재하는 이메일입니다.", ErrorResponse.DUPLICATED_EMAIL);
         }
-        customerDao.save(new Customer(email, encryptedPassword.getPassword(), username));
+        customerDao.save(new Customer(email, encryptedPassword.getValue(), username));
     }
 
     public CustomerResponse showCustomer(String email) {
@@ -41,7 +39,7 @@ public class CustomerService {
             throw new AuthException("기존 비밀번호와 맞지 않습니다.", ErrorResponse.INCORRECT_PASSWORD);
         }
         final Password encryptedPassword = Password.from(newPassword);
-        customerDao.updatePassword(customer.getId(), encryptedPassword.getPassword());
+        customerDao.updatePassword(customer.getId(), encryptedPassword.getValue());
     }
 
     public CustomerResponse changeGeneralInfo(String email, String username) {
@@ -57,6 +55,5 @@ public class CustomerService {
             throw new AuthException("기존 비밀번호와 맞지 않습니다.", ErrorResponse.INCORRECT_PASSWORD);
         }
         customerDao.delete(customer.getId());
-
     }
 }

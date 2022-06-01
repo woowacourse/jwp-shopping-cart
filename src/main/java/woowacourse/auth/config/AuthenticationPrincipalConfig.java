@@ -11,11 +11,9 @@ import java.util.List;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
-    private final AuthService authService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalConfig(AuthService authService, JwtTokenProvider jwtTokenProvider) {
-        this.authService = authService;
+    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -26,6 +24,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService, jwtTokenProvider);
+        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
     }
 }

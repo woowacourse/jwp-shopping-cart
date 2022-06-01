@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.util.EncryptionUtil;
+
 public class Customer {
     private final Long id;
     private final String email;
@@ -34,6 +36,6 @@ public class Customer {
     }
 
     public boolean isDifferentPassword(String password) {
-        return !Password.isSameEncryptedPassword(this.password, password);
+        return !EncryptionUtil.isSameEncryptedPassword(this.password, password);
     }
 }

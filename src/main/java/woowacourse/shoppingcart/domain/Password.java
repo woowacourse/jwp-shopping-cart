@@ -1,57 +1,34 @@
 package woowacourse.shoppingcart.domain;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.shoppingcart.util.EncryptionUtil;
 
 public class Password {
 
-    private String password;
+    private final String value;
     private static final Pattern PATTERN = Pattern.compile("^.*(?=^.{8,12}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$");
 
-    private Password(String password) {
-        this.password = password;
+    private Password(String value) {
+        this.value = value;
     }
 
-    public static Password from(String password) {
-        validatePassword(password);
-        String encryptedPassword = encrypt(password);
+    public static Password from(String input) {
+        validateInput(input);
+        String encryptedPassword = EncryptionUtil.encrypt(input);
         return new Password(encryptedPassword);
     }
 
-    private static void validatePassword(String password) {
-        if (!PATTERN.matcher(password).matches()) {
+    private static void validateInput(String input) {
+        if (!PATTERN.matcher(input).matches()) {
             throw new LoginException("비밀번호 규약이 맞지 않습니다", ErrorResponse.INVALID_PASSWORD);
         }
     }
 
-    private static String encrypt(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(password.getBytes());
-            return bytesToHex(md.digest());
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private static String bytesToHex(byte[] bytes) {
-        StringBuilder builder = new StringBuilder();
-        for (byte b : bytes) {
-            builder.append(String.format("%02x", b));
-        }
-        return builder.toString();
-    }
-
-    public static boolean isSameEncryptedPassword(String encryptedPassword, String password) {
-        return encryptedPassword.equals(encrypt(password));
-    }
-
-    public String getPassword() {
-        return password;
+    public String getValue() {
+        return value;
     }
 
     @Override
@@ -63,11 +40,11 @@ public class Password {
             return false;
         }
         Password password1 = (Password) o;
-        return Objects.equals(password, password1.password);
+        return Objects.equals(value, password1.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(password);
+        return Objects.hash(value);
     }
 }
