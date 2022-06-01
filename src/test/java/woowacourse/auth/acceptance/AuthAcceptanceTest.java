@@ -117,9 +117,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void requestGetMeWithValidToken() {
         회원가입_요청("email@email.com", "12345678a","tonic");
-        String accessToken = 로그인_요청("email@email.com", "12345678a")
-                .jsonPath()
-                .getString("accessToken");
+        String accessToken = 토큰_요청("email@email.com", "12345678a");
 
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()

@@ -43,11 +43,14 @@ public class AcceptanceTest {
                 "password", password
         );
 
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        return RestAssured.given().log().all()
                 .body(body)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")
                 .then().log().all().extract();
-        return response;
+    }
+
+    protected String 토큰_요청(String email, String password) {
+        return 로그인_요청(email, password).jsonPath().getString("accessToken");
     }
 }

@@ -6,9 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Map;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -76,8 +74,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String password = "12345678a";
         String nickname = "tonic";
         회원가입_요청(email, password, nickname);
-        String token = 로그인_요청(email, password).jsonPath()
-                .getString("accessToken");
+        String token = 토큰_요청(email, password);
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().log().all().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).get("/users/me")
