@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart;
 
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 
