@@ -15,20 +15,20 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomerDao customerDao;
 
-    public AuthService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
+    public AuthService(final JwtTokenProvider jwtTokenProvider, final CustomerDao customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.customerDao = customerDao;
     }
 
-    public String createToken(TokenRequest tokenRequest) {
+    public String createToken(final TokenRequest tokenRequest) {
         customerDao.findByEmailAndPassword(tokenRequest.toEmail(), tokenRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다."));
 
         return jwtTokenProvider.createToken(tokenRequest.getEmail());
     }
 
-    public String getNickname(TokenRequest tokenRequest) {
-        CustomerEntity customerEntity = customerDao.findByEmailAndPassword(
+    public String getNickname(final TokenRequest tokenRequest) {
+        final CustomerEntity customerEntity = customerDao.findByEmailAndPassword(
                         tokenRequest.toEmail(),
                         tokenRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다."));

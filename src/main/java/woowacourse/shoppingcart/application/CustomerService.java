@@ -16,39 +16,39 @@ public class CustomerService {
 
     private final CustomerDao customerDao;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(final CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 
-    public boolean isDistinctEmail(String email) {
+    public boolean isDistinctEmail(final String email) {
         return !customerDao.existEmail(new Email(email));
     }
 
     @Transactional
-    public Customer signUp(CustomerRequest customerRequest) {
-        Customer customer = customerRequest.toCustomer();
+    public Customer signUp(final CustomerRequest customerRequest) {
+        final Customer customer = customerRequest.toCustomer();
 
         customerDao.save(customer);
 
         return customer;
     }
 
-    public void checkPassword(String email, PasswordRequest passwordRequest) {
+    public void checkPassword(final String email, final PasswordRequest passwordRequest) {
         customerDao.findByEmailAndPassword(new Email(email), passwordRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("비밀번호가 일치하지 않습니다."));
     }
 
-    public Customer findCustomerByEmail(String email) {
+    public Customer findCustomerByEmail(final String email) {
         return customerDao.findByEmail(new Email(email)).getCustomer();
     }
 
     @Transactional
-    public void updateInfo(String email, CustomerInfoRequest customerInfoRequest) {
+    public void updateInfo(final String email, final CustomerInfoRequest customerInfoRequest) {
         customerDao.updateInfo(new Email(email), customerInfoRequest.toNickname());
     }
 
     @Transactional
-    public void updatePassword(String email, PasswordRequest passwordRequest) {
+    public void updatePassword(final String email, final PasswordRequest passwordRequest) {
         customerDao.updatePassword(new Email(email), passwordRequest.toPassword());
     }
 }

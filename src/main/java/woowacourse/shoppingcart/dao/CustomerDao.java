@@ -29,7 +29,7 @@ public class CustomerDao {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public CustomerDao(final NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public CustomerDao(final NamedParameterJdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("customer")
@@ -39,7 +39,7 @@ public class CustomerDao {
     public Long findIdByEmail(final Email email) {
         final String query = "SELECT id FROM customer WHERE email = :email";
 
-        Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("email", email.getValue());
 
         try {
@@ -53,7 +53,7 @@ public class CustomerDao {
         final String sql = "SELECT id, email, nickname, password FROM customer "
                 + "WHERE email = :email";
 
-        Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("email", email.getValue());
 
         try {
@@ -67,7 +67,7 @@ public class CustomerDao {
         final String sql = "SELECT id, email, nickname, password FROM customer "
                 + "WHERE email = :email and password = :password";
 
-        Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("email", email.getValue());
         params.put("password", password.getValue());
 
@@ -81,7 +81,7 @@ public class CustomerDao {
     public boolean existEmail(final Email email) {
         final String sql = "select exists (select * from customer where email = :email)";
 
-        Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("email", email.getValue());
 
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
@@ -104,7 +104,7 @@ public class CustomerDao {
     public void updateInfo(final Email email, final Nickname nickname) {
         final String sql = "update customer set nickname = :nickname where email = :email";
 
-        Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("email", email.getValue());
         params.put("nickname", nickname.getValue());
 
@@ -116,7 +116,7 @@ public class CustomerDao {
     public void updatePassword(final Email email, final Password password) {
         final String sql = "update customer set password = :password where email = :email";
 
-        Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("email", email.getValue());
         params.put("password", password.getValue());
 

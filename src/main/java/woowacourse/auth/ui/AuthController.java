@@ -13,15 +13,15 @@ public class AuthController {
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(final AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody TokenRequest tokenRequest) {
-        String nickname = authService.getNickname(tokenRequest);
-        String accessToken = authService.createToken(tokenRequest);
-        TokenResponse tokenResponse = new TokenResponse(nickname, accessToken);
+    public ResponseEntity<TokenResponse> login(@RequestBody final TokenRequest tokenRequest) {
+        final String nickname = authService.getNickname(tokenRequest);
+        final String accessToken = authService.createToken(tokenRequest);
+        final TokenResponse tokenResponse = new TokenResponse(nickname, accessToken);
 
         return ResponseEntity.ok().body(tokenResponse);
     }
