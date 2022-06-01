@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.LoginRequest;
@@ -39,6 +41,14 @@ public class CustomerService {
         return CustomerResponse.from(customer);
     }
 
+    @Transactional
+    public void update(final TokenRequest tokenRequest, final CustomerUpdateRequest customerUpdateRequest) {
+        validateDuplicateNickname(customerUpdateRequest.getNickname());
+        Customer customer = findCustomerById(tokenRequest.getId());
+        Customer customerForUpdate = createCustomerForUpdate(customerUpdateRequest, customer);
+        customerDao.update(customerForUpdate.getId(), customerForUpdate.getNickname());
+    }
+
     private Customer findCustomerByUserId(final String userId) {
         return customerDao.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -70,5 +80,10 @@ public class CustomerService {
         if (!customerDao.existCustomer(userId, password)) {
             throw new IllegalArgumentException("존재하지 않는 회원입니다.");
         }
+    }
+
+    private Customer createCustomerForUpdate(final CustomerUpdateRequest customerUpdateRequest, final Customer customer) {
+        return new Customer(customer.getId(), customer.getUserId(),
+                customerUpdateRequest.getNickname(), customer.getPassword());
     }
 }

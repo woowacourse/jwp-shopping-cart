@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.LoginRequest;
@@ -236,5 +237,47 @@ class CustomerServiceTest {
                 () -> assertThat(customerResponse.getUserId()).isEqualTo("test@woowacourse.com"),
                 () -> assertThat(customerResponse.getNickname()).isEqualTo("test")
         );
+    }
+
+    @DisplayName("존재하지 않는 사용자를 수정하려고 하면 안된다.")
+    @Test
+    void update() {
+        // given
+        TokenRequest tokenRequest = new TokenRequest("-1");
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("nickname");
+
+        // when & then
+        assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 닉네임입니다.");
+    }
+
+    @DisplayName("사용자 정보 수정 시 닉네임에 null 을 입력하면 안된다.")
+    @Test
+    void updateNicknamedNullException() {
+        // given
+        Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
+        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(null);
+
+        // when & than
+        assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("닉네임을 입력해주세요.");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    @DisplayName("사용자 정보 수정 시 닉네임에 빈값을 입력하면 안된다.")
+    void updateNicknameBlankException(String nickname) {
+        // given
+        Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
+        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(nickname);
+
+        // when & than
+        assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("닉네임을 입력해주세요.");
     }
 }
