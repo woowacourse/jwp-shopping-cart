@@ -14,8 +14,12 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ori.acceptancetest.SpringBootAcceptanceTest;
+
 @DisplayName("상품 관련 기능")
-public class ProductAcceptanceTest extends AcceptanceTest {
+@SpringBootAcceptanceTest
+public class ProductAcceptanceTest {
+
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {

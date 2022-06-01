@@ -1,5 +1,6 @@
 package woowacourse.auth.dao;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.auth.domain.Customer;
+import woowacourse.auth.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
@@ -39,8 +41,12 @@ public class CustomerDao {
 	}
 
 	public Long findIdByUserName(String nickname) {
-		String sql = "select id from customer where nickname = :nickname";
-		return jdbcTemplate.queryForObject(sql, Map.of("nickname", nickname), Long.class);
+		try {
+			final String query = "SELECT id FROM customer WHERE nickname = :nickname";
+			return jdbcTemplate.queryForObject(query, Map.of("nickname", nickname), Long.class);
+		} catch (final EmptyResultDataAccessException e) {
+			throw new InvalidCustomerException();
+		}
 	}
 
 	public Optional<Customer> findByEmail(String email) {

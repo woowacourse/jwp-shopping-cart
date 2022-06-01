@@ -137,7 +137,7 @@ class CustomerDaoTest {
 	void updateException() {
 		// when
 		assertThatThrownBy(() -> customerDao.update(
-			new Customer(1L, "123@gmail.com", "b1234!", "thor")))
+			new Customer(0L, "123@gmail.com", "b1234!", "thor")))
 			.isInstanceOf(NoSuchElementException.class);
 	}
 }

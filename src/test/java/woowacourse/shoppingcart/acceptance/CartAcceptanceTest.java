@@ -8,6 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
+
+import woowacourse.auth.acceptance.RestUtils;
 import woowacourse.shoppingcart.domain.Cart;
 
 import java.util.HashMap;
@@ -18,17 +21,18 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
+import com.ori.acceptancetest.SpringBootAcceptanceTest;
+
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+@SpringBootAcceptanceTest
+public class CartAcceptanceTest {
     private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
 
-    @Override
     @BeforeEach
     public void setUp() {
-        super.setUp();
-
+        RestUtils.signUp("a@gmailcom", "!puterism1", "puterism");
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }
