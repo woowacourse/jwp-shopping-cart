@@ -32,7 +32,7 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         SignUpResponse signUpresponse = customerService.addCustomer(signUpRequest);
-        return ResponseEntity.created(URI.create("/users"))
+        return ResponseEntity.created(URI.create("/users/me"))
                 .body(signUpresponse);
     }
 
@@ -41,14 +41,14 @@ public class CustomerController {
         return ResponseEntity.ok().body(customerService.findMe(userNameByToken));
     }
 
-    @PatchMapping
+    @PatchMapping("/me")
     public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal String userNameByToken,
                                                      @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         customerService.updateMe(userNameByToken, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal String userNameByToken,
                                          @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
         customerService.deleteMe(userNameByToken, deleteCustomerRequest);

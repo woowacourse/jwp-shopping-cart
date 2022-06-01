@@ -91,7 +91,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(updatePasswordRequest)
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/users")
+                .when().patch("/users/me")
                 .then().log().all().statusCode(HttpStatus.OK.value());
     }
 
@@ -123,7 +123,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
                 .body(deleteCustomerRequest)
-                .when().delete("/users")
+                .when().delete("/users/me")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
