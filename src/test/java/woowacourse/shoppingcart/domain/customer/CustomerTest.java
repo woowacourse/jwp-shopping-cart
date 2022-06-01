@@ -26,5 +26,4 @@ class CustomerTest {
 
         assertThat(customer).isNotNull();
     }
-
 }

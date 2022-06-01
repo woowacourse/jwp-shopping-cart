@@ -33,7 +33,7 @@ class PasswordTest {
 
     @Test
     void 비밀번호가_생성될_때_암호화() {
-        String input = "dusfhrmWkd12!";
+        String input = "leoLeo84!";
         Password password = new Password(input);
 
         assertThat(password.getValue()).isNotEqualTo(input);
@@ -41,7 +41,7 @@ class PasswordTest {
 
     @Test
     void 암호화된_비밀번호_일치_여부() {
-        String input = "dusfhrmWkd12!";
+        String input = "leoLeo84!";
         Password actual = new Password(input);
         Password expected = new Password(input);
 

@@ -26,6 +26,7 @@ class AddressTest {
     @Test
     void 최대길이를_초과한_주소_생성_예외() {
         String value = "호".repeat(256);
+
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> new Address(value))
                 .withMessage(String.format("주소는 최대 255자까지 가능합니다. 입력값 : %s", value));
