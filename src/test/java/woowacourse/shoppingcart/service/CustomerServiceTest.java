@@ -83,7 +83,7 @@ class CustomerServiceTest {
         when(passwordEncoder.encrypt(any())).thenReturn("encryptedPassword");
         final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD,"테스트");
         final Long createdCustomerId = customerService.signUp(signUpDto);
-        DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto(TEST_PASSWORD);
+        final DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto(TEST_PASSWORD);
 
         customerService.deleteCustomer(createdCustomerId, deleteCustomerDto);
         assertThatThrownBy(() -> customerService.findCustomerById(createdCustomerId))

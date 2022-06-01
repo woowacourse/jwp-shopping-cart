@@ -58,7 +58,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
         final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
 
-        final String updateUsername = "updateUsername";
+        final String updateUsername = "테스트2";
         final ExtractableResponse<Response> updateResponse = put(
                 createResponse.header(HttpHeaders.LOCATION),
                 new Header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()),
