@@ -39,22 +39,9 @@ public class MemberService {
         return member.getId();
     }
 
-    public MemberInfoResponse findMemberById(long id) {
+    public MemberInfoResponse findMemberInfo(long id) {
         Member member = validateExistMember(memberDao.findMemberById(id));
         return new MemberInfoResponse(member);
-    }
-
-    public void deleteMemberById(long id, DeleteRequest request) {
-        Member member = validateExistMember(memberDao.findMemberById(id));
-        Password requestPassword = Password.withEncrypt(request.getPassword());
-        if (!member.isSamePassword(requestPassword)) {
-            throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
-        }
-
-        int deletedRowCount = memberDao.deleteById(id);
-        if (deletedRowCount == 0) {
-            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
-        }
     }
 
     public void checkDuplicateEmail(DuplicateEmailRequest request) {
@@ -80,6 +67,10 @@ public class MemberService {
         memberDao.updatePassword(id, newPassword.getValue());
     }
 
+    private Member validateExistMember(Optional<Member> member) {
+        return member.orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+    }
+
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {
         Password requestPassword = Password.withEncrypt(request.getOldPassword());
         if (!member.isSamePassword(requestPassword)) {
@@ -91,7 +82,16 @@ public class MemberService {
         }
     }
 
-    private Member validateExistMember(Optional<Member> member) {
-        return member.orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+    public void withdrawal(long id, WithdrawalRequest request) {
+        Member member = validateExistMember(memberDao.findMemberById(id));
+        Password requestPassword = Password.withEncrypt(request.getPassword());
+        if (!member.isSamePassword(requestPassword)) {
+            throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
+        }
+
+        int deletedRowCount = memberDao.deleteById(id);
+        if (deletedRowCount == 0) {
+            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
+        }
     }
 }

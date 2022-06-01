@@ -131,8 +131,8 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
                 .extract().as(LoginResponse.class).getAccessToken();
 
-        DeleteRequest deleteRequest = new DeleteRequest("Wooteco1!");
-        RestAssuredConvenienceMethod.deleteRequestWithToken(accessToken, deleteRequest, "/api/members/me")
+        WithdrawalRequest withdrawalRequest = new WithdrawalRequest("Wooteco1!");
+        RestAssuredConvenienceMethod.deleteRequestWithToken(accessToken, withdrawalRequest, "/api/members/me")
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

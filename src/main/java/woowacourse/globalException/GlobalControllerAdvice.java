@@ -14,7 +14,7 @@ import woowacourse.member.exception.MemberException;
 public class GlobalControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> parameterException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         StringBuilder message = new StringBuilder();
 
         for (FieldError error : e.getFieldErrors()) {

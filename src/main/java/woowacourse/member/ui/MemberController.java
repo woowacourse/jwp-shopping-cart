@@ -27,7 +27,7 @@ public class MemberController {
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public MemberInfoResponse findMemberInfo(@AuthenticationPrincipal Long id) {
-        return memberService.findMemberById(id);
+        return memberService.findMemberInfo(id);
     }
 
     @PostMapping("/duplicate-email")
@@ -50,7 +50,7 @@ public class MemberController {
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMember(@AuthenticationPrincipal Long id, @Valid @RequestBody DeleteRequest request) {
-        memberService.deleteMemberById(id, request);
+    public void deleteMember(@AuthenticationPrincipal Long id, @Valid @RequestBody WithdrawalRequest request) {
+        memberService.withdrawal(id, request);
     }
 }

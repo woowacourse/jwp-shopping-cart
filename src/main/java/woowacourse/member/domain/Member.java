@@ -27,22 +27,6 @@ public class Member {
         return new Member(id, email, name, Password.withoutEncrypt(password));
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password.getValue();
-    }
-
     private void validateEmailForm(String email) {
         if (!email.contains("@")) {
             throw new InvalidMemberEmailException("올바르지 못한 이메일 형식입니다.");
@@ -72,5 +56,21 @@ public class Member {
 
     public boolean isSameName(String comparison) {
         return name.equals(comparison);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password.getValue();
     }
 }

@@ -42,26 +42,26 @@ class MemberServiceTest {
                 .hasMessageContaining("중복되는 이메일이 존재합니다.");
     }
 
-    @DisplayName("올바른 데이터로 로그인에 성공한다.")
+    @DisplayName("올바른 데이터로 회원 인증에 성공한다.")
     @Test
-    void verifyValidMember() {
+    void authenticateMember() {
         assertDoesNotThrow(
                 () -> memberService.authenticate(new LoginRequest("ari@wooteco.com", "Wooteco1!"))
         );
     }
 
-    @DisplayName("존재하지 않는 이메일인 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 이메일로 회원 인증을 하는 경우 예외가 발생한다.")
     @Test
-    void verifyValidMemberWithNotExistEmail() {
+    void authenticateMemberWithNotExistEmail() {
         assertThatThrownBy(
                 () -> memberService.authenticate(new LoginRequest("pobi@wooteco.com", "Wooteco!"))
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
-    @DisplayName("잘못된 비밀번호인 경우 예외가 발생한다.")
+    @DisplayName("잘못된 비밀번호로 회원 인증을 하는 경우 예외가 발생한다.")
     @Test
-    void verifyValidMemberWithWrongPassword() {
+    void authenticateMemberWithWrongPassword() {
         assertThatThrownBy(
                 () -> memberService.authenticate(new LoginRequest("ari@wooteco.com", "Javajigi!!"))
         ).isInstanceOf(WrongPasswordException.class)
@@ -70,8 +70,8 @@ class MemberServiceTest {
 
     @DisplayName("올바른 id로 회원정보를 조회한다.")
     @Test
-    void findMemberById() {
-        MemberInfoResponse response = memberService.findMemberById(1L);
+    void findMemberInfo() {
+        MemberInfoResponse response = memberService.findMemberInfo(1L);
 
         assertAll(
                 () -> assertThat(response.getEmail()).isEqualTo("ari@wooteco.com"),
@@ -81,9 +81,9 @@ class MemberServiceTest {
 
     @DisplayName("존재하지 않는 id로 회원을 찾는 경우 예외가 발생한다.")
     @Test
-    void findMemberByIdWithNotExistId() {
+    void findMemberInfoWithNotExistId() {
         assertThatThrownBy(
-                () -> memberService.findMemberById(100L)
+                () -> memberService.findMemberInfo(100L)
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
@@ -109,7 +109,7 @@ class MemberServiceTest {
     @Test
     void updateName() {
         memberService.updateName(1L, new UpdateNameRequest("메아리"));
-        assertThat(memberService.findMemberById(1L).getName()).isEqualTo("메아리");
+        assertThat(memberService.findMemberInfo(1L).getName()).isEqualTo("메아리");
     }
 
     @DisplayName("현재이름과 같은 이름으로 변경시 예외가 발생한다.")
@@ -148,29 +148,29 @@ class MemberServiceTest {
 
     @DisplayName("올바른 id로 회원 정보를 삭제한다.")
     @Test
-    void deleteById() {
-        memberService.deleteMemberById(1L, new DeleteRequest("Wooteco1!"));
+    void withdrawal() {
+        memberService.withdrawal(1L, new WithdrawalRequest("Wooteco1!"));
 
         assertThatThrownBy(
-                () -> memberService.findMemberById(100L)
+                () -> memberService.findMemberInfo(100L)
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
     @DisplayName("존재하지 않는 id로 삭제하려는 경우 예외가 발생한다.")
     @Test
-    void deleteWithNotExistId() {
+    void withdrawalWithNotExistId() {
         assertThatThrownBy(
-                () -> memberService.deleteMemberById(100L, new DeleteRequest("Wooteco1!"))
+                () -> memberService.withdrawal(100L, new WithdrawalRequest("Wooteco1!"))
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
     @DisplayName("잘못된 비밀번호로 삭제하려는 경우 예외가 발생한다.")
     @Test
-    void deleteWithWrongPassword() {
+    void withdrawalWithWrongPassword() {
         assertThatThrownBy(
-                () -> memberService.deleteMemberById(1L, new DeleteRequest("WrongPassword1!"))
+                () -> memberService.withdrawal(1L, new WithdrawalRequest("WrongPassword1!"))
         ).isInstanceOf(InvalidPasswordException.class)
                 .hasMessageContaining("현재 비밀번호와 일치하지 않습니다.");
     }
