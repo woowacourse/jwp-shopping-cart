@@ -22,14 +22,14 @@ public class Email {
 
     private void checkNull(String value) {
         if (value == null) {
-            throw new NullPointerException("email은 필수 입력 사항입니다.");
+            throw new NullPointerException("이메일은 필수 입력 사항입니다.");
         }
     }
 
     private void checkFormat(String value) {
         Matcher matcher = EMAIL_PATTERN.matcher(value);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("email 형식이 올바르지 않습니다. (형식: example@email.com)");
+            throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다. (형식: example@email.com)");
         }
     }
 

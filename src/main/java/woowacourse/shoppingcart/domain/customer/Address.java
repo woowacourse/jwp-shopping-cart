@@ -18,13 +18,13 @@ public class Address {
 
     private void checkNull(String value) {
         if (value == null) {
-            throw new NullPointerException("address는 필수 입력 사항입니다.");
+            throw new NullPointerException("주소는 필수 입력 사항입니다.");
         }
     }
 
     private void checkLength(String value) {
         if (value.length() > 255) {
-            throw new IllegalArgumentException("address 형식이 올바르지 않습니다. (길이: 255 이하)");
+            throw new IllegalArgumentException("주소 형식이 올바르지 않습니다. (길이: 255 이하)");
         }
     }
 

@@ -16,7 +16,7 @@ class AddressTest {
     void create_error_null() {
         assertThatThrownBy(() -> new Address(null))
                 .isInstanceOf(NullPointerException.class)
-                .hasMessage("address는 필수 입력 사항입니다.");
+                .hasMessage("주소는 필수 입력 사항입니다.");
     }
 
     @DisplayName("address 형식이 맞지 않으면 예외를 던진다.")
@@ -25,7 +25,7 @@ class AddressTest {
         String address = "a";
         assertThatThrownBy(() -> new Address(address.repeat(256)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("address 형식이 올바르지 않습니다. (길이: 255 이하)");
+                .hasMessage("주소 형식이 올바르지 않습니다. (길이: 255 이하)");
     }
 
     @DisplayName("address 형식에 맞으면 address가 생성된다.")

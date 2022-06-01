@@ -22,14 +22,14 @@ public class Username {
 
     private void checkNull(String value) {
         if (value == null) {
-            throw new NullPointerException("username은 필수 입력 사항입니다.");
+            throw new NullPointerException("유저 네임은 필수 입력 사항입니다.");
         }
     }
 
     private void checkFormat(String value) {
         Matcher matcher = USERNAME_PATTERN.matcher(value);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("username 형식이 올바르지 않습니다. (영문 소문자, 숫자와 특수기호(_), (-)만 사용 가능)");
+            throw new IllegalArgumentException("유저 네임 형식이 올바르지 않습니다. (영문 소문자, 숫자와 특수기호(_), (-)만 사용 가능)");
         }
     }
 

@@ -16,7 +16,7 @@ class PhoneNumberTest {
     void create_error_null() {
         assertThatThrownBy(() -> new PhoneNumber(null))
                 .isInstanceOf(NullPointerException.class)
-                .hasMessage("phoneNumber는 필수 입력 사항압니다.");
+                .hasMessage("전화번호는 필수 입력 사항압니다.");
     }
 
     @DisplayName("phoneNumber 형식이 맞지 않으면 예외를 던진다.")

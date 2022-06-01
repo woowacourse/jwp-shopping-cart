@@ -53,7 +53,7 @@
 ### 리팩터링/고민사항
 
 - [ ] 생성자의 매개변수에 동일한 타입이 존재하는 경우 `빌더 패턴 고려 vs 원시값 포장`
-- [ ] 원시값 포장
+- [x] 원시값 포장
 - [ ] 동작하는 코드를 우선적으로 개발하기
 - [x] customer 생성 및 수정에 관한 validation 추가
 - [ ] test fixture 만들기
@@ -95,6 +95,8 @@
     - [x] dto validation 추가
 
 - 06/01
-  - [ ] 원시값 포장
-  - [ ] acceptance test 에서 중복되는 부분을 test fixture 로 만들기
-  - [ ] password 암호화
+    - [x] 원시값 포장
+    - [ ] acceptance test 에서 중복되는 부분을 test fixture 로 만들기
+    - [ ] password 검증 추가
+        - 비밀번호는 `8 ~ 16자`여야 하고 `영문자`, `숫자`, `특수문자!, @, #, $, %, ^, &, *, (, )`를 모두 사용해야 한다.
+    - [ ] password 암호화
