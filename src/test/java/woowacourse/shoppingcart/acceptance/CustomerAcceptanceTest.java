@@ -40,12 +40,24 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         String token = "Bearer " + tokenProvider.createToken("username");
 
-        ExtractableResponse<Response> extractedResponse =
-                SimpleRestAssured.get("/api/customers/me", new Header("Authorization", token));
-        CustomerResponse customerResponse =
-                SimpleRestAssured.toObject(extractedResponse, CustomerResponse.class);
+        CustomerResponse customerResponse = SimpleRestAssured.toObject(
+                SimpleRestAssured.get("/api/customers/me", new Header("Authorization", token)),
+                CustomerResponse.class
+        );
 
         assertThat(customerResponse.getName()).isEqualTo("username");
+    }
+
+    @DisplayName("존재하지 않는 회원을 조회하면 예외를 발생한다.")
+    @Test
+    void notFoundException() {
+        String token = "Bearer " + tokenProvider.createToken("invalidUser");
+
+        ExtractableResponse<Response> foundResponse =
+                SimpleRestAssured.get("/api/customers/me", new Header("Authorization", token)
+                );
+
+        assertThat(foundResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("내 정보 수정")
