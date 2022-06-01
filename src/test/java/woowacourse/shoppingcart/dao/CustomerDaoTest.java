@@ -10,6 +10,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -75,6 +76,6 @@ public class CustomerDaoTest {
 
         // then
         assertThatThrownBy(() -> customerDao.getByName("ellie"))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(NotFoundCustomerException.class);
     }
 }

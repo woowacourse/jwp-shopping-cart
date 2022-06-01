@@ -1,14 +1,12 @@
 package woowacourse.auth.application;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-@ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class AuthorizationException extends RuntimeException {
+
     public AuthorizationException() {
+        this("인증되지 않은 사용자입니다😤");
     }
 
-    public AuthorizationException(String message) {
+    public AuthorizationException(final String message) {
         super(message);
     }
 }

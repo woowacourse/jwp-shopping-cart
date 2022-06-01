@@ -7,7 +7,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.exception.DuplicateNameException;
+import woowacourse.shoppingcart.exception.duplicate.DuplicateCustomerException;
 import woowacourse.shoppingcart.support.Encryptor;
 
 @Service
@@ -24,7 +24,7 @@ public class CustomerService {
 
     public void addCustomer(final CustomerRequest customerRequest) {
         if (customerDao.existsByName(customerRequest.getName())) {
-            throw new DuplicateNameException();
+            throw new DuplicateCustomerException();
         }
         final String encryptedPassword = encryptor.encrypt(customerRequest.getPassword());
         customerDao.save(new Customer(customerRequest.getName(), encryptedPassword));
@@ -49,6 +49,6 @@ public class CustomerService {
         if (customerDao.existsByNameAndPassword(name, encryptedPassword)) {
             return;
         }
-        throw new AuthorizationException("로그인에 실패했습니다.");
+        throw new AuthorizationException("로그인에 실패했습니다😤");
     }
 }

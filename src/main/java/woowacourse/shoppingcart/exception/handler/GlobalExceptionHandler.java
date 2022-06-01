@@ -1,6 +1,7 @@
-package woowacourse.shoppingcart.ui;
+package woowacourse.shoppingcart.exception.handler;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.List;
+import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,29 +11,31 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.application.AuthorizationException;
-import woowacourse.shoppingcart.exception.*;
-
-import javax.validation.ConstraintViolationException;
-import java.util.List;
+import woowacourse.shoppingcart.exception.duplicate.DuplicateCustomerException;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 
 @RestControllerAdvice
-public class ControllerAdvice {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleUnhandledException() {
-        return ResponseEntity.internalServerError().body("Unhandled Exception");
+        return ResponseEntity.internalServerError().body("관리자에게 문의해주세요🥺");
     }
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<String> handle() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 데이터 요청입니다.");
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handleNotFoundException(final RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
-
         return ResponseEntity.badRequest().body(mainError.getDefaultMessage());
     }
 
@@ -52,15 +55,15 @@ public class ControllerAdvice {
             NotInCustomerCartItemException.class,
     })
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<String> handleUnAuthorizedAccess(final RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자입니다.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
-    @ExceptionHandler(DuplicateNameException.class)
+    @ExceptionHandler(DuplicateCustomerException.class)
     public ResponseEntity<String> handleDuplicatedName(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }

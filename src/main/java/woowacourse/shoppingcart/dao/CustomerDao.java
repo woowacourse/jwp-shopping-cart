@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import java.util.Locale;
+import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
 
 @Repository
 public class CustomerDao {
@@ -42,7 +43,7 @@ public class CustomerDao {
             final String query = "SELECT * FROM customer WHERE username = :name";
             return jdbcTemplate.queryForObject(query, Map.of("name", name), ROW_MAPPER);
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new NotFoundCustomerException();
         }
     }
 
@@ -51,7 +52,7 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE username = :name";
             return jdbcTemplate.queryForObject(query, Map.of("name", name.toLowerCase(Locale.ROOT)), Long.class);
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new NotFoundCustomerException();
         }
     }
 
