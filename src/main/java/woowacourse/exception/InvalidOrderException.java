@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.exception;
 
 public class InvalidOrderException extends RuntimeException {
     public InvalidOrderException() {

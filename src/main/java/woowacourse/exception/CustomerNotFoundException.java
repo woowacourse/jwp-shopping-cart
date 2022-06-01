@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.exception;
 
 public class CustomerNotFoundException extends IllegalArgumentException {
     private static final String DEFAULT_MESSAGE = "요청하신 회원을 찾을 수 없습니다";

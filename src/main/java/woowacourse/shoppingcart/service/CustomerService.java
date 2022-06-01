@@ -1,12 +1,12 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.shoppingcart.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import woowacourse.exception.auth.EmailDuplicateException;
-import woowacourse.exception.auth.PasswordIncorrectException;
+import woowacourse.exception.CustomerNotFoundException;
+import woowacourse.exception.EmailDuplicateException;
+import woowacourse.exception.PasswordIncorrectException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;

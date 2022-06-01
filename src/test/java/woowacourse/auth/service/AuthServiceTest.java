@@ -1,4 +1,4 @@
-package woowacourse.auth.application;
+package woowacourse.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.exception.auth.LoginFailureException;
+import woowacourse.auth.ui.dto.TokenRequest;
+import woowacourse.auth.ui.dto.TokenResponse;
+import woowacourse.exception.LoginFailureException;
 
 @SpringBootTest
 @Sql({"/truncate.sql", "/auth.sql"})

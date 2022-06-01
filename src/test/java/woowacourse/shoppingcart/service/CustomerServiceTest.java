@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.shoppingcart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -13,9 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.exception.auth.PasswordIncorrectException;
+import woowacourse.exception.CustomerNotFoundException;
+import woowacourse.exception.PasswordIncorrectException;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;

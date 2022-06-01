@@ -1,6 +1,6 @@
 package woowacourse;
 
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.ui.dto.TokenRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;

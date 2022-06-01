@@ -1,4 +1,4 @@
-package woowacourse.auth.dto;
+package woowacourse.auth.ui.dto;
 
 public class TokenResponse {
     private String accessToken;

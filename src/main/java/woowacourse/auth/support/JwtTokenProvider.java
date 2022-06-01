@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import woowacourse.exception.auth.TokenInvalidException;
+import woowacourse.exception.TokenInvalidException;
 
 @Component
 public class JwtTokenProvider {

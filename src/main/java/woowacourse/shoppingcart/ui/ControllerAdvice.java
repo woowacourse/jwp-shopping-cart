@@ -11,17 +11,17 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.exception.auth.EmailDuplicateException;
-import woowacourse.exception.auth.LoginFailureException;
-import woowacourse.exception.auth.PasswordIncorrectException;
-import woowacourse.exception.auth.TokenInvalidException;
-import woowacourse.exception.auth.UnauthorizedException;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.exception.CustomerNotFoundException;
+import woowacourse.exception.EmailDuplicateException;
+import woowacourse.exception.InvalidCartItemException;
+import woowacourse.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidOrderException;
+import woowacourse.exception.InvalidProductException;
+import woowacourse.exception.LoginFailureException;
+import woowacourse.exception.NotInCustomerCartItemException;
+import woowacourse.exception.PasswordIncorrectException;
+import woowacourse.exception.TokenInvalidException;
+import woowacourse.exception.UnauthorizedException;
 import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @RestControllerAdvice

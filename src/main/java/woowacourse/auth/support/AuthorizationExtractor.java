@@ -4,7 +4,7 @@ import java.util.Enumeration;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.context.request.NativeWebRequest;
-import woowacourse.exception.auth.UnauthorizedException;
+import woowacourse.exception.UnauthorizedException;
 
 public class AuthorizationExtractor {
     public static final String AUTHORIZATION = "Authorization";
