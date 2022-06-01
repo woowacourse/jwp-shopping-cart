@@ -33,6 +33,7 @@ public class AuthService {
                         tokenRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다."));
 
-        return customerEntity.getNickname();
+        return customerEntity.getCustomer()
+                .getNickname();
     }
 }
