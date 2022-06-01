@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.domain.Customer;
+
 public class CustomerRequest {
 
     private String userId;
@@ -13,6 +15,10 @@ public class CustomerRequest {
         this.userId = userId;
         this.nickname = nickname;
         this.password = password;
+    }
+
+    public Customer toInitCustomer() {
+        return Customer.ofNullId(userId,password,nickname,false);
     }
 
     public String getUserId() {

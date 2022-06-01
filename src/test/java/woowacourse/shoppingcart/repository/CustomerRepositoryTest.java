@@ -25,9 +25,9 @@ class CustomerRepositoryTest {
         this.customerRepository = new CustomerRepository(new CustomerDao(jdbcTemplate, namedParameterJdbcTemplate));
     }
 
-    @DisplayName("customer 를 DB 에 저장한다.")
+    @DisplayName("customer 를 DB에 저장하고 아이디로 customer 를 찾는다.")
     @Test
-    void create() {
+    void createAndFindById() {
         // given
         Customer customer = Customer.ofNullId("jo@naver.com", "abcde123!", "jojogreen", false);
 
