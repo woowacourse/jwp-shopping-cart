@@ -22,7 +22,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
-    void 회원가입을_한다() {
+    void 회원가입을_한다_AND_로그인을_한다() {
         // given
         // 가입하고자 하는 회원 정보가 존재한다.
         CustomerRequest customerRequest = new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!");
@@ -96,5 +96,42 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원가입(customerRequest);
         assertThat(response.statusCode())
                 .isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void 존재하지_않는_회원은_로그인_할_수_없다() {
+        // given when
+        // 회원가입되지 않은 username 으로 로그인을 한다.
+        ExtractableResponse<Response> response = 로그인(new CustomerLoginRequest("jo@naver.com", "1234abcd!"));
+
+        // then
+        // 예외를 발생시킨다.
+        assertAll(
+                () -> assertThat(response.statusCode())
+                        .isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(response.body().asString())
+                        .isEqualTo("로그인 할 수 없습니다.")
+        );
+    }
+
+    @Test
+    void 잘못된_비밀번호로는_로그인을_할_수_없다() {
+        // given
+        // 회원가입을 한다.
+        CustomerRequest customerRequest = new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!");
+        회원가입(customerRequest);
+
+        // when
+        // 잘못된 비밀번호로 로그인을 시도한다.
+        ExtractableResponse<Response> response = 로그인(new CustomerLoginRequest("jo@naver.com", "1234abcd@"));
+
+        // then
+        // 가입된 회원 정보가 조회된다.
+        assertAll(
+                () -> assertThat(response.statusCode())
+                        .isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(response.body().asString())
+                        .isEqualTo("로그인 할 수 없습니다.")
+        );
     }
 }
