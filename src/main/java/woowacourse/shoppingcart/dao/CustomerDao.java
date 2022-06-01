@@ -105,4 +105,10 @@ public class CustomerDao {
                 .addValue("id", customer.getId());
         template.update(query, nameParameters);
     }
+
+    public void delete(Long id) {
+        String query = "DELETE FROM customer WHERE id = :id";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource("id", id);
+        template.update(query, nameParameters);
+    }
 }

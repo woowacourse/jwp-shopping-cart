@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import javax.sql.DataSource;
@@ -85,6 +86,19 @@ public class CustomerDaoTest {
                 () -> assertThat(customerDao.existByNicknameExcludedId(1L, "rookie")).isFalse(),
                 () -> assertThat(customerDao.existByNicknameExcludedId(2L, "rookie")).isTrue()
         );
+    }
+
+    @Test
+    @DisplayName("회원을 삭제할 수 있다.")
+    void delete() {
+        // given
+        customerDao.save(new Customer("email1@email.com", "password123!A", "rookie"));
+
+        // when
+        customerDao.delete(1L);
+
+        // then
+        assertThat(customerDao.findById(1L)).isEmpty();
     }
 
 //    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")

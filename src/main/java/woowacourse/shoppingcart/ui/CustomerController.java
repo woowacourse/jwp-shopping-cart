@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +51,12 @@ public class CustomerController {
     public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer,
                                                @RequestBody @Valid CustomerChangePasswordRequest customerChangePasswordRequest) {
         customerService.updatePassword(loginCustomer.getId(), customerChangePasswordRequest.toServiceRequest());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer) {
+        customerService.delete(loginCustomer.getId());
         return ResponseEntity.noContent().build();
     }
 }

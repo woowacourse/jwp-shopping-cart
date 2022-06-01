@@ -2,8 +2,10 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.*;
+import static woowacourse.shoppingcart.acceptance.ResponseCreator.deleteCustomers;
 import static woowacourse.shoppingcart.acceptance.ResponseCreator.getCustomers;
+import static woowacourse.shoppingcart.acceptance.ResponseCreator.patchCustomers;
+import static woowacourse.shoppingcart.acceptance.ResponseCreator.patchPasswordCustomers;
 import static woowacourse.shoppingcart.acceptance.ResponseCreator.postCustomers;
 import static woowacourse.shoppingcart.acceptance.ResponseCreator.postLogin;
 
@@ -12,8 +14,8 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.application.dto.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -73,5 +75,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        // given
+        postCustomers("basic@email.com", "password123@Q", "rookie");
+        ExtractableResponse<Response> 로그인_응답됨 = postLogin("basic@email.com", "password123@Q");
+        TokenResponse tokenResponse = 로그인_응답됨.as(TokenResponse.class);
+
+        // when
+        ExtractableResponse<Response> 사용자_정보_삭제됨 = deleteCustomers(tokenResponse);
+
+        // then
+        assertThat(사용자_정보_삭제됨.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

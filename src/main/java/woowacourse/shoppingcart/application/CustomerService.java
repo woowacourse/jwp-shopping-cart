@@ -72,10 +72,15 @@ public class CustomerService {
         );
     }
 
-    private void validatePasswordUpdateNickname(CustomerUpdatePasswordRequest customerUpdatePasswordRequest,
-                                                Customer customer) {
+    private void validatePasswordUpdateNickname(CustomerUpdatePasswordRequest customerUpdatePasswordRequest, Customer customer) {
         customer.equalPrevPassword(customerUpdatePasswordRequest.getPrevPassword());
         customer.nonEqualNewPassword(customerUpdatePasswordRequest.getNewPassword());
         customer.validatePassword(customerUpdatePasswordRequest.getNewPassword());
+    }
+
+    public void delete(Long id) {
+        customerDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
+        customerDao.delete(id);
     }
 }

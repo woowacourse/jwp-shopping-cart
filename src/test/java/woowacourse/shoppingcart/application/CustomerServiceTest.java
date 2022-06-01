@@ -2,8 +2,8 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +107,7 @@ class CustomerServiceTest {
         customerService.save(request);
 
         // when & then
-        Assertions.assertDoesNotThrow(() -> customerService.updatePassword(1L, new CustomerUpdatePasswordRequest("password1234A!", "password1234A@")));
+        assertDoesNotThrow(() -> customerService.updatePassword(1L, new CustomerUpdatePasswordRequest("password1234A!", "password1234A@")));
     }
 
     @Test
@@ -115,6 +115,25 @@ class CustomerServiceTest {
     void updateByNotExistedId() {
         // given & when & then
         assertThatThrownBy(() -> customerService.update(1L, new CustomerUpdateRequest("rookie")))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("회원을 삭제할 수 있다.")
+    void delete() {
+        // given
+        CustomerSaveRequest request = new CustomerSaveRequest("email@email.com", "password1234A!", "rookie");
+        customerService.save(request);
+
+        // when & then
+        assertDoesNotThrow(() -> customerService.delete(1L));
+    }
+
+    @Test
+    @DisplayName("회원이 없는 경우 삭제시 예외가 발생한다.")
+    void deleteByNotExistedId() {
+        // when & then
+        assertThatThrownBy(() -> customerService.delete(1L))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

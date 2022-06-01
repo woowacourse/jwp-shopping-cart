@@ -62,4 +62,12 @@ public class ResponseCreator {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse<Response> deleteCustomers(TokenResponse tokenResponse) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+                .delete("/api/customers")
+                .then().log().all()
+                .extract();
+    }
 }
