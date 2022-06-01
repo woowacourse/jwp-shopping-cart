@@ -26,8 +26,6 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 class CustomerServiceTest {
     @Autowired
     private CustomerService customerService;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
     @MockBean
     private PasswordEncoder passwordEncoder;
 
@@ -35,6 +33,8 @@ class CustomerServiceTest {
     @Test
     @DisplayName("회원을 가입시킨다.")
     void signUp() {
+        when(passwordEncoder.matches(any(), any())).thenReturn(true);
+        when(passwordEncoder.encrypt(any())).thenReturn("encryptedPassword");
         final SignUpDto signUpDto = new SignUpDto("test@test.com", "testtest","테스트");
 
         final Long createdCustomerId = customerService.signUp(signUpDto);
@@ -46,6 +46,8 @@ class CustomerServiceTest {
     @Test
     @DisplayName("수정하려는 Customer 정보를 받아서 수정된 Customer 정보를 반환한다.")
     void updateCustomer() {
+        when(passwordEncoder.matches(any(), any())).thenReturn(true);
+        when(passwordEncoder.encrypt(any())).thenReturn("encryptedPassword");
         final String changedName = "바뀐이름";
         final SignUpDto signUpDto = new SignUpDto("test@test.com", "testtest","테스트");
         final Long createdCustomerId = customerService.signUp(signUpDto);
@@ -59,6 +61,8 @@ class CustomerServiceTest {
     @Test
     @DisplayName("수정하려는 Customer 정보를 받아서 중복된 이름이면 예외가 발생한다.")
     void updateCustomer_duplicateNameException() {
+        when(passwordEncoder.matches(any(), any())).thenReturn(true);
+        when(passwordEncoder.encrypt(any())).thenReturn("encryptedPassword");
         final String duplicateName = "테스트2";
         final SignUpDto signUpDto1 = new SignUpDto("test1@test.com", "testtest","테스트1");
         final SignUpDto signUpDto2 = new SignUpDto("test2@test.com", "testtest",duplicateName);
