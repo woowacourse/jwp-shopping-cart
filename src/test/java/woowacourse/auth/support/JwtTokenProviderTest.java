@@ -27,6 +27,6 @@ class JwtTokenProviderTest {
     void 토큰_유효성_검증() {
         String token = PROVIDER.createToken("하이");
 
-        assertThat(PROVIDER.validateToken(token)).isTrue();
+        PROVIDER.validateToken(token);
     }
 }

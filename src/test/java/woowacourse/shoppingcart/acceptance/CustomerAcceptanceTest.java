@@ -416,6 +416,40 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.body().jsonPath().getString("account")).isEqualTo(account);
     }
 
+    @Test
+    void 잘못된_토큰으로_회원_관련_요청() {
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+
+        회원_가입(회원_정보(account,
+                "에덴",
+                password,
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678"));
+
+        String accessToken = 토큰_발급(account, password)
+                .body()
+                .jsonPath()
+                .getString("accessToken");
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .header("Authorization", "Bearer " + accessToken + "hi")
+                .when()
+                .get("/customers")
+                .then()
+                .log().all()
+                .extract();
+
+        String errorMessage = response.body().jsonPath().getString("message");
+
+        assertThat(response.statusCode()).isEqualTo(401);
+        assertThat(errorMessage).isEqualTo("유효하지 않은 토큰입니다.");
+    }
+
+
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
