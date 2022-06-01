@@ -87,4 +87,12 @@ public class CustomerDao {
             return Optional.empty();
         }
     }
+
+    public int deleteById(final Long id) {
+        final String sql = "DELETE FROM customer WHERE id = :id";
+        final HashMap<String, Object> params = new HashMap<>();
+        params.put("id", id);
+
+        return namedJdbcTemplate.update(sql, params);
+    }
 }

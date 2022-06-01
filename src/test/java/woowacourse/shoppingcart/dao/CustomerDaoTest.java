@@ -88,7 +88,7 @@ public class CustomerDaoTest {
     }
 
     @Test
-    @DisplayName("이메일에 해당하는 회원 객체를 검색한다.")
+    @DisplayName("이메일에 해당하는 회원을 검색한다.")
     void findByEmail() {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
@@ -104,7 +104,7 @@ public class CustomerDaoTest {
     }
 
     @Test
-    @DisplayName("id로 회원 객체를 검색한다.")
+    @DisplayName("id로 회원을 검색한다.")
     void findById() {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
@@ -116,5 +116,19 @@ public class CustomerDaoTest {
         // then
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(savedCustomer);
+    }
+
+    @Test
+    @DisplayName("id로 회원을 삭제한다.")
+    void deleteById() {
+        // given
+        final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
+        final Customer savedCustomer = customerDao.save(customer);
+
+        // when
+        final int actual = customerDao.deleteById(savedCustomer.getId());
+
+        // then
+        assertThat(actual).isOne();
     }
 }
