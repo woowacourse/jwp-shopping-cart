@@ -5,12 +5,15 @@ import java.security.NoSuchAlgorithmException;
 
 public class EncryptAlgorithm {
 
+    private static final String ALGORITHM = "SHA-256";
+    private static final String FORMAT = "%02x";
+
     private EncryptAlgorithm() {
     }
 
     public static String encrypt(String password) {
         try {
-            MessageDigest digestAlgorithm = MessageDigest.getInstance("SHA-256");
+            MessageDigest digestAlgorithm = MessageDigest.getInstance(ALGORITHM);
             digestAlgorithm.update(password.getBytes());
             return bytesToHex(digestAlgorithm.digest());
         } catch (NoSuchAlgorithmException e) {
@@ -21,7 +24,7 @@ public class EncryptAlgorithm {
     private static String bytesToHex(byte[] bytes) {
         StringBuilder builder = new StringBuilder();
         for (byte it : bytes) {
-            builder.append(String.format("%02x", it));
+            builder.append(String.format(FORMAT, it));
         }
         return builder.toString();
     }

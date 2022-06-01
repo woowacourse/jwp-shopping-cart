@@ -24,6 +24,11 @@ import woowacourse.shoppingcart.entity.CustomerEntity;
 @Service
 public class CustomerService {
 
+    private static final String DUPLICATED_CUSTOMER_ERROR = "이미 존재하는 계정입니다.";
+    private static final String NO_CUSTOMER_ERROR = "존재하지 않는 사용자입니다.";
+    private static final String LOGIN_FAILED_ERROR = "로그인이 불가능합니다.";
+    private static final String MISMATCHED_PASSWORD_ERROR = "비밀번호가 일치하지 않습니다.";
+
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomerDao customerDao;
 
@@ -34,7 +39,7 @@ public class CustomerService {
 
     public void create(CustomerRequest customerRequest) {
         if (customerDao.existsByAccount(customerRequest.getAccount())) {
-            throw new BadRequestException("이미 존재하는 계정입니다.");
+            throw new BadRequestException(DUPLICATED_CUSTOMER_ERROR);
         }
         Customer customer = customerRequest.toCustomer();
         customerDao.save(CustomerEntity.from(customer));
@@ -43,10 +48,10 @@ public class CustomerService {
     public TokenResponse login(SignInRequest signinRequest) {
         String account = signinRequest.getAccount();
         CustomerEntity customerEntity = customerDao.findByAccount(account)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new NotFoundException(NO_CUSTOMER_ERROR));
 
         if (!EncryptAlgorithm.match(signinRequest.getPassword(), customerEntity.getPassword())) {
-            throw new UnauthorizedException("로그인이 불가능합니다.");
+            throw new UnauthorizedException(LOGIN_FAILED_ERROR);
         }
 
         return new TokenResponse(
@@ -61,19 +66,19 @@ public class CustomerService {
                         it.getNickname(),
                         it.getAddress(),
                         PhoneNumberResponse.from(it.getPhoneNumber())))
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new NotFoundException(NO_CUSTOMER_ERROR));
     }
 
     public void delete(Long customerId, PasswordRequest passwordRequest) {
         Optional<CustomerEntity> customerEntity = customerDao.findById(customerId);
         if (customerEntity.isEmpty()) {
-            throw new NotFoundException("존재하지 않는 사용자입니다.");
+            throw new NotFoundException(NO_CUSTOMER_ERROR);
         }
 
         String rawPassword = passwordRequest.getPassword();
         String encryptPassword = customerEntity.get().getPassword();
         if (!EncryptAlgorithm.match(rawPassword, encryptPassword)) {
-            throw new UnauthorizedException("비밀번호가 일치하지 않습니다.");
+            throw new UnauthorizedException(MISMATCHED_PASSWORD_ERROR);
         }
 
         customerDao.deleteById(customerId);
@@ -81,7 +86,7 @@ public class CustomerService {
 
     public void update(Long customerId, CustomerUpdateRequest customerUpdateRequest) {
         if (!customerDao.existsById(customerId)) {
-            throw new NotFoundException("존재하지 않는 사용자입니다.");
+            throw new NotFoundException(NO_CUSTOMER_ERROR);
         }
 
         Nickname nickname = new Nickname(customerUpdateRequest.getNickname());
