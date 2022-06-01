@@ -1,14 +1,14 @@
 package woowacourse.shoppingcart.dto;
 
-public class SigninRequest {
+public class SignInRequest {
 
     private String account;
     private String password;
 
-    private SigninRequest() {
+    private SignInRequest() {
     }
 
-    public SigninRequest(String account, String password) {
+    public SignInRequest(String account, String password) {
         this.account = account;
         this.password = password;
     }

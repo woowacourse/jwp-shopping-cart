@@ -7,8 +7,7 @@ public class CustomerResponse {
     private final String address;
     private final PhoneNumberResponse phoneNumber;
 
-    public CustomerResponse(String account, String nickname, String address,
-            PhoneNumberResponse phoneNumber) {
+    public CustomerResponse(String account, String nickname, String address, PhoneNumberResponse phoneNumber) {
         this.account = account;
         this.nickname = nickname;
         this.address = address;

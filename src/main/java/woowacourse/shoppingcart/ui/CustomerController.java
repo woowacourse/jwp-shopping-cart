@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.SigninRequest;
+import woowacourse.shoppingcart.dto.SignInRequest;
 
 @RestController
 public class CustomerController {
@@ -29,15 +29,15 @@ public class CustomerController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody CustomerRequest customerRequest) {
+    public ResponseEntity<Void> signUp(@RequestBody CustomerRequest customerRequest) {
         customerService.create(customerRequest);
         URI uri = URI.create("/signin");
         return ResponseEntity.created(uri).build();
     }
 
     @PostMapping("/signin")
-    public TokenResponse signin(@RequestBody SigninRequest signinRequest) {
-        return customerService.signin(signinRequest);
+    public TokenResponse signIn(@RequestBody SignInRequest signinRequest) {
+        return customerService.login(signinRequest);
     }
 
     @GetMapping("/customers")

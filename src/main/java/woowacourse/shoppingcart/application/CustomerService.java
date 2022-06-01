@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberResponse;
-import woowacourse.shoppingcart.dto.SigninRequest;
+import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.TokenResponse;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 
@@ -40,7 +40,7 @@ public class CustomerService {
         customerDao.save(CustomerEntity.from(customer));
     }
 
-    public TokenResponse signin(SigninRequest signinRequest) {
+    public TokenResponse login(SignInRequest signinRequest) {
         String account = signinRequest.getAccount();
         CustomerEntity customerEntity = customerDao.findByAccount(account)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));

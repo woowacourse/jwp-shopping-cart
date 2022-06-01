@@ -14,7 +14,7 @@ public class CustomerRequest {
     }
 
     public CustomerRequest(String account, String nickname, String password, String address,
-            PhoneNumberRequest phoneNumber) {
+                           PhoneNumberRequest phoneNumber) {
         this.account = account;
         this.nickname = nickname;
         this.password = password;
