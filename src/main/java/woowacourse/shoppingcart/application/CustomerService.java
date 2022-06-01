@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerIdRequest;
+import woowacourse.shoppingcart.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.LoginResponse;
@@ -34,8 +34,8 @@ public class CustomerService {
         return LoginResponse.of(token, customer);
     }
 
-    public CustomerResponse findByCustomerId(final CustomerIdRequest customerIdRequest) {
-        Customer customer = findCustomerById(customerIdRequest.getId());
+    public CustomerResponse findByCustomerId(final TokenRequest tokenRequest) {
+        Customer customer = findCustomerById(tokenRequest.getId());
         return CustomerResponse.from(customer);
     }
 

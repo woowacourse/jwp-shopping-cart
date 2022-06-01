@@ -15,4 +15,12 @@ public class AuthService {
     public String createToken(final Long customerId) {
         return jwtTokenProvider.createToken(String.valueOf(customerId));
     }
+
+    public boolean validateToken(final String token) {
+        return jwtTokenProvider.validateToken(token);
+    }
+
+    public String getPayload(final String token) {
+        return jwtTokenProvider.getPayload(token);
+    }
 }
