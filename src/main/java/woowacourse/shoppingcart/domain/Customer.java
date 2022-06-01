@@ -27,6 +27,10 @@ public class Customer {
         return new Customer(this.id, this.email, name, this.password);
     }
 
+    public Customer changePassword(String password) {
+        return new Customer(this.id, this.email, this.password, password);
+    }
+
     public Long getId() {
         return id;
     }
