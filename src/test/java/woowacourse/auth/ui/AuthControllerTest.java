@@ -34,6 +34,9 @@ public class AuthControllerTest {
     @MockBean
     private AuthenticationPrincipalConfig authenticationPrincipalConfig;
 
+    @MockBean
+    private AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;
+
     @Test
     @DisplayName("아이디, 페스워드를 통해서 로그인을 하면 토큰을 발급받는다.")
     void login() throws Exception {
