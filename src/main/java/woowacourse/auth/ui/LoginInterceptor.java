@@ -17,6 +17,13 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (request.getMethod().equals("OPTIONS")) {
+            return true;
+        }
+        if (request.getMethod().equals("POST") && request.getRequestURI().equals("/api/customers")) {
+            return true;
+        }
+
         String token = AuthorizationExtractor.extract(request);
         validateAvailableToken(token);
         validateNotToken(token);
