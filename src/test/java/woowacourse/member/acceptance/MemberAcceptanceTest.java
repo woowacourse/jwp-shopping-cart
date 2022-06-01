@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.member.dto.*;
 
 @DisplayName("회원 관련 기능")
@@ -39,21 +39,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("회원탈퇴가 성공하면 204 No Content가 반환된다.")
-    @Test
-    void deleteMember() {
-        SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
-
-        LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
-        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
-                .extract().as(TokenResponse.class).getAccessToken();
-
-        DeleteRequest deleteRequest = new DeleteRequest("Wooteco1!");
-        RestAssuredConvenienceMethod.deleteRequestWithToken(accessToken, deleteRequest, "/api/members/me")
-                .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
     @DisplayName("이메일이 중복되는 경우 400 Bad Request를 반환한다.")
     @Test
     void checkDuplicateEmailWithDuplicateEmail() {
@@ -84,7 +69,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
         String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
-                .extract().as(TokenResponse.class).getAccessToken();
+                .extract().as(LoginResponse.class).getAccessToken();
 
         UpdateNameRequest updateNameRequest = new UpdateNameRequest("자바지기");
         RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updateNameRequest, "/api/members/me/name")
@@ -99,7 +84,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
         String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
-                .extract().as(TokenResponse.class).getAccessToken();
+                .extract().as(LoginResponse.class).getAccessToken();
 
         UpdateNameRequest updateNameRequest = new UpdateNameRequest("포비");
         RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updateNameRequest, "/api/members/me/name")
@@ -114,7 +99,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
         String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
-                .extract().as(TokenResponse.class).getAccessToken();
+                .extract().as(LoginResponse.class).getAccessToken();
 
         UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("Wooteco1!", "NewPassword1!");
         RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updatePasswordRequest, "/api/members/me/password")
@@ -129,10 +114,25 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
         String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
-                .extract().as(TokenResponse.class).getAccessToken();
+                .extract().as(LoginResponse.class).getAccessToken();
 
         UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("Wooteco1!", "Wooteco1!");
         RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updatePasswordRequest, "/api/members/me/password")
                 .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("회원탈퇴가 성공하면 204 No Content가 반환된다.")
+    @Test
+    void deleteMember() {
+        SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
+        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+
+        LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
+        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+                .extract().as(LoginResponse.class).getAccessToken();
+
+        DeleteRequest deleteRequest = new DeleteRequest("Wooteco1!");
+        RestAssuredConvenienceMethod.deleteRequestWithToken(accessToken, deleteRequest, "/api/members/me")
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

@@ -1,7 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -17,8 +17,8 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public TokenResponse createToken(Long id) {
-        return new TokenResponse(jwtTokenProvider.createToken(String.valueOf(id)));
+    public LoginResponse createToken(Long id) {
+        return new LoginResponse(jwtTokenProvider.createToken(String.valueOf(id)));
     }
 
     public Long extractIdFromRequest(HttpServletRequest request) {

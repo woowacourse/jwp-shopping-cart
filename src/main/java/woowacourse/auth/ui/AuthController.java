@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.member.application.MemberService;
 
 import javax.validation.Valid;
@@ -23,7 +23,7 @@ public class AuthController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public TokenResponse login(@Valid @RequestBody LoginRequest request) {
+    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         Long id = memberService.authenticate(request);
         return authService.createToken(id);
     }

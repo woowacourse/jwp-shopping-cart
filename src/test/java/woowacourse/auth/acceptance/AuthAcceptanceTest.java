@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.member.dto.SignUpRequest;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -22,7 +22,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
         String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
-                .extract().as(TokenResponse.class).getAccessToken();
+                .extract().as(LoginResponse.class).getAccessToken();
 
         RestAssuredConvenienceMethod.getRequestWithToken(accessToken, "/api/members/me")
                 .statusCode(HttpStatus.OK.value())
@@ -50,7 +50,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
         String token = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
-                .extract().as(TokenResponse.class).getAccessToken();
+                .extract().as(LoginResponse.class).getAccessToken();
 
         token = token.toLowerCase();
         RestAssuredConvenienceMethod.getRequestWithToken(token, "/api/members/me")
