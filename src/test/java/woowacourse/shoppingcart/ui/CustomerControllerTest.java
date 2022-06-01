@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailResponse;
+import woowacourse.shoppingcart.dto.CustomerProfileUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 
@@ -96,5 +97,21 @@ class CustomerControllerTest {
         // when, then
         assertThatThrownBy(() -> customerController.delete(1L, customerDeleteRequest))
                 .isInstanceOf(PasswordNotMatchException.class);
+    }
+
+    @Test
+    @DisplayName("회원의 정보를 수정한다.")
+    void updateProfile() {
+        // given
+        final CustomerRegisterRequest registerRequest = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
+        customerController.register(registerRequest);
+
+        final CustomerProfileUpdateRequest request = new CustomerProfileUpdateRequest("포비");
+
+        // when
+        final ResponseEntity<Void> response = customerController.updateProfile(1L, request);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 }

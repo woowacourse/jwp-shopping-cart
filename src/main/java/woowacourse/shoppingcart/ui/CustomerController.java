@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailResponse;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
+import woowacourse.shoppingcart.dto.CustomerProfileUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 
 @RestController
@@ -36,6 +38,13 @@ public class CustomerController {
         final CustomerDetailServiceResponse serviceResponse = customerService.findById(id);
         final CustomerDetailResponse customerDetailResponse = CustomerDetailResponse.from(serviceResponse);
         return ResponseEntity.ok(customerDetailResponse);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal final Long id,
+                                              @RequestBody final CustomerProfileUpdateRequest request) {
+        customerService.updateName(request.toServiceRequest(id));
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
