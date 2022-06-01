@@ -27,3 +27,6 @@ values ('puterism'),
 ;
 insert into customer(email, name, password)
 values ('hi@hi.com', 'hi', '$2a$10$5P/ihXLR1ZVwaPYHriuE9OHLTrGUNlmr/VHtGYkOEa0ozSj2OI4ki');
+
+insert into customer(email, name, password)
+values ('pobi@woowahan.com', 'pobi', '$2a$10$5P/ihXLR1ZVwaPYHriuE9OHLTrGUNlmr/VHtGYkOEa0ozSj2OI4ki');
