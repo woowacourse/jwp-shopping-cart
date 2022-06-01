@@ -12,6 +12,10 @@ public class Customer {
         this(null, loginId, name, password);
     }
 
+    public Customer(Long id, Customer customer) {
+        this(id, customer.getLoginId(), customer.getName(), customer.getPassword());
+    }
+
     public Customer(Long id, String loginId, String name, String password) {
         validateLoginId(loginId);
         validatePassword(password);
@@ -33,6 +37,10 @@ public class Customer {
         if (!Pattern.matches(passwordRegex, password)) {
             throw new IllegalArgumentException("비밀번호 형식이 잘못되었습니다.");
         }
+    }
+
+    public boolean isSameLoginId(String loginId) {
+        return this.loginId.equals(loginId);
     }
 
     public boolean isSamePassword(String password) {

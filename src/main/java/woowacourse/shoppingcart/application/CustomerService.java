@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.LoginCustomer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -21,5 +22,23 @@ public class CustomerService {
 
         Customer savedCustomer = customerDao.findById(customerId);
         return CustomerResponse.of(savedCustomer);
+    }
+
+    public CustomerResponse update(LoginCustomer loginCustomer, CustomerRequest customerRequest) {
+        Customer savedCustomer = customerDao.findByLoginId(loginCustomer.getLoginId());
+        checkUpdatable(savedCustomer, customerRequest);
+
+        customerDao.update(customerRequest.toCustomer());
+        Customer updatedCustomer = customerDao.findByLoginId(loginCustomer.getLoginId());
+        return CustomerResponse.of(updatedCustomer);
+    }
+
+    private void checkUpdatable(Customer customer, CustomerRequest request) {
+        if (!customer.isSameLoginId(request.getLoginId())) {
+            throw new IllegalArgumentException("아이디는 변경할 수 없습니다.");
+        }
+        if (!customer.isSamePassword(request.getPassword())) {
+            throw new IllegalArgumentException("비밀번호는 변경할 수 없습니다.");
+        }
     }
 }

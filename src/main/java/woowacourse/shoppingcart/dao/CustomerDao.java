@@ -74,9 +74,8 @@ public class CustomerDao {
 
     public void update(Customer customer) {
         try {
-            final String query = "UPDATE customer SET loginId = :loginId, name = :name, password = :password WHERE id = :id";
+            final String query = "UPDATE customer SET name = :name, password = :password WHERE loginId = :loginId";
             Map<String, Object> params = new HashMap<>();
-            params.put("id", customer.getId());
             params.put("loginId", customer.getLoginId());
             params.put("name", customer.getName());
             params.put("password", customer.getPassword());

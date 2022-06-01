@@ -105,13 +105,13 @@ public class CustomerDaoTest {
     @Test
     void update() {
         //given
-        Long customerId = customerDao.save(페퍼);
+        customerDao.save(페퍼);
 
         //when
-        customerDao.update(new Customer(customerId, 페퍼_아이디, "바꿀 이름", 페퍼_비밀번호));
+        customerDao.update(new Customer(페퍼_아이디, "바꿀 이름", 페퍼_비밀번호));
 
         //then
-        Customer findCustomer = customerDao.findById(customerId);
+        Customer findCustomer = customerDao.findByLoginId(페퍼_아이디);
         assertAll(
                 () -> assertThat(findCustomer.getLoginId()).isEqualTo(페퍼_아이디),
                 () -> assertThat(findCustomer.getName()).isEqualTo("바꿀 이름"),
