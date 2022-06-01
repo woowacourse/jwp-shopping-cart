@@ -27,18 +27,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
         final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
         final ExtractableResponse<Response> response = get("/customers", token.getAccessToken());
         final CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
 
         // then
-        // 내 정보가 조회된다
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(customerResponse.getId()).isEqualTo(2L)

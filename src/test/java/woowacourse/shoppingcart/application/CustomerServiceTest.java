@@ -8,6 +8,7 @@ import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.PhoneNumber;
 import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Account;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
@@ -40,7 +41,7 @@ class CustomerServiceTest {
     void createCustomer() {
         // given
         given(customerDao.findByAccount(any(String.class))).willReturn(Optional.empty());
-        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "password123", "코린네", "01012345678");
+        final Customer expected = new Customer(1L, new Account("hamcheeseburger"), "corinne", "password123", "코린네", "01012345678");
         given(customerDao.save(any(Customer.class))).willReturn(expected);
 
         // when
@@ -55,7 +56,7 @@ class CustomerServiceTest {
     @DisplayName("이미 존재하는 아이디로 회원을 생성하면 예외를 발생한다.")
     void thrownWhenExistAccount() {
         // given
-        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "password123", "코린네", "01012345678");
+        final Customer expected = new Customer(1L, new Account("hamcheeseburger"), "corinne", "password123", "코린네", "01012345678");
         given(customerDao.findByAccount(any(String.class))).willReturn(Optional.of(expected));
 
         // when
@@ -71,7 +72,7 @@ class CustomerServiceTest {
     @DisplayName("사용자를 id로 조회한다.")
     void findById() {
         // given
-        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "password123", "코린네", "01012345678");
+        final Customer expected = new Customer(1L, new Account("hamcheeseburger"), "corinne", "password123", "코린네", "01012345678");
         given(customerDao.findById(any(Long.class))).willReturn(Optional.of(expected));
 
         // when
@@ -125,7 +126,7 @@ class CustomerServiceTest {
     @DisplayName("회원을 탈퇴한다.")
     void delete() {
         // given
-        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "Password123!", "코린네", "01012345678");
+        final Customer expected = new Customer(1L, new Account("hamcheeseburger"), "corinne", "Password123!", "코린네", "01012345678");
         given(customerDao.findById(1L)).willReturn(Optional.of(expected));
         given(customerDao.deleteById(1L)).willReturn(1);
 
@@ -139,7 +140,7 @@ class CustomerServiceTest {
     @DisplayName("회원을 탈퇴할 때 비밀번호가 일치하지 않으면 예외를 발생한다.")
     void throwWhenPasswordNotMatch() {
         // given
-        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "Password123!", "코린네", "01012345678");
+        final Customer expected = new Customer(1L, new Account("hamcheeseburger"), "corinne", "Password123!", "코린네", "01012345678");
         given(customerDao.findById(1L)).willReturn(Optional.of(expected));
 
         // when

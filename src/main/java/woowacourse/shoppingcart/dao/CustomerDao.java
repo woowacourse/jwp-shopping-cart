@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Account;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
@@ -21,7 +22,7 @@ public class CustomerDao {
     private final RowMapper<Customer> customerRowMapper = (rs, rowNum) ->
             new Customer(
                     rs.getLong("id"),
-                    rs.getString("account"),
+                    new Account(rs.getString("account")),
                     rs.getString("nickname"),
                     rs.getString("password"),
                     rs.getString("address"),
@@ -39,7 +40,7 @@ public class CustomerDao {
                 .usingGeneratedKeyColumns("id");
 
         final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("account", customer.getAccount());
+        parameters.put("account", customer.getAccount().getValue());
         parameters.put("nickname", customer.getNickname());
         parameters.put("password", customer.getPassword());
         parameters.put("address", customer.getAddress());

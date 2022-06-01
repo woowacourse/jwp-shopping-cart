@@ -6,14 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Account;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.DuplicatedAccountException;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
-
-import java.util.Locale;
 
 @Service
 @Transactional
@@ -29,17 +28,19 @@ public class CustomerService {
 
     public CustomerResponse create(final SignupRequest signupRequest) {
         final Customer customer = toCustomer(signupRequest);
+        validateAccountDuplicated(customer);
 
-        if (customerDao.findByAccount(customer.getAccount()).isPresent()) {
-            throw new DuplicatedAccountException();
-        }
         return CustomerResponse.of(customerDao.save(customer));
     }
 
+    private void validateAccountDuplicated(final Customer customer) {
+        if (customerDao.findByAccount(customer.getAccount().getValue()).isPresent()) {
+            throw new DuplicatedAccountException();
+        }
+    }
+
     private Customer toCustomer(final SignupRequest signupRequest) {
-        final String match = "[^\\da-zA-Z]";
-        final String processedAccount = signupRequest.getAccount().replaceAll(match, "").toLowerCase(Locale.ROOT).trim();
-        return new Customer(processedAccount,
+        return new Customer(new Account(signupRequest.getAccount()),
                 signupRequest.getNickname(),
                 passwordEncoder.encode(signupRequest.getPassword()),
                 signupRequest.getAddress(),
@@ -64,9 +65,14 @@ public class CustomerService {
 
     public int delete(final long id, final DeleteCustomerRequest deleteCustomerRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
+        validatePasswordMatch(deleteCustomerRequest, customer);
+
+        return customerDao.deleteById(id);
+    }
+
+    private void validatePasswordMatch(final DeleteCustomerRequest deleteCustomerRequest, final Customer customer) {
         if (!passwordEncoder.matches(deleteCustomerRequest.getPassword(), customer.getPassword())) {
             throw new WrongPasswordException();
         }
-        return customerDao.deleteById(id);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Account;
 import woowacourse.shoppingcart.domain.Customer;
 
 import java.util.Optional;
@@ -31,13 +32,13 @@ public class CustomerDaoTest {
     @DisplayName("회원을 저장한다.")
     void save() {
         // given
-        final Customer customer = new Customer("hamcheeseburger", "corinne", "Password123!", "address", "01012345678");
+        final Customer customer = new Customer(new Account("hamcheeseburger"), "corinne", "Password123!", "address", "01012345678");
         // when
         final Customer savedCustomer = customerDao.save(customer);
         // then
         assertAll(
                 () -> assertThat(savedCustomer.getId()).isEqualTo(2L),
-                () -> assertThat(savedCustomer.getAccount()).isEqualTo("hamcheeseburger"),
+                () -> assertThat(savedCustomer.getAccount().getValue()).isEqualTo("hamcheeseburger"),
                 () -> assertThat(savedCustomer.getNickname()).isEqualTo("corinne"),
                 () -> assertThat(savedCustomer.getPassword()).isEqualTo("Password123!"),
                 () -> assertThat(savedCustomer.getAddress()).isEqualTo("address"),
@@ -57,7 +58,7 @@ public class CustomerDaoTest {
         // then
         final Customer foundCustomer = customer.get();
         assertAll(
-                () -> assertThat(foundCustomer.getAccount()).isEqualTo("pobi"),
+                () -> assertThat(foundCustomer.getAccount().getValue()).isEqualTo("pobi"),
                 () -> assertThat(foundCustomer.getNickname()).isEqualTo("eden"),
                 () -> assertThat(foundCustomer.getPassword()).isEqualTo("Password123!"),
                 () -> assertThat(foundCustomer.getAddress()).isEqualTo("address"),
@@ -77,7 +78,7 @@ public class CustomerDaoTest {
         // then
         final Customer foundCustomer = customer.get();
         assertAll(
-                () -> assertThat(foundCustomer.getAccount()).isEqualTo("pobi"),
+                () -> assertThat(foundCustomer.getAccount().getValue()).isEqualTo("pobi"),
                 () -> assertThat(foundCustomer.getNickname()).isEqualTo("eden"),
                 () -> assertThat(foundCustomer.getPassword()).isEqualTo("Password123!"),
                 () -> assertThat(foundCustomer.getAddress()).isEqualTo("address"),

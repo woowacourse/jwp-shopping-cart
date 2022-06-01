@@ -19,10 +19,9 @@ public class CustomerResponse {
         this.phoneNumber = phoneNumber;
     }
 
-
     public static CustomerResponse of(final Customer customer) {
         final PhoneNumber phoneNumber = PhoneNumber.of(customer.getPhoneNumber());
-        return new CustomerResponse(customer.getId(), customer.getAccount(), customer.getNickname(), customer.getAddress(), phoneNumber);
+        return new CustomerResponse(customer.getId(), customer.getAccount().getValue(), customer.getNickname(), customer.getAddress(), phoneNumber);
     }
 
     public long getId() {
