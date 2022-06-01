@@ -109,4 +109,19 @@ public class CustomerServiceTest {
         assertThatThrownBy(() -> customerDao.findByUsername(name))
                 .isInstanceOf(InvalidCustomerException.class);
     }
+
+    @Test
+    @DisplayName("비밀번호가 틀리면 회원을 탈퇴할 수 없다.")
+    void deleteMeThrowException() {
+        // given
+        String name = "greenlawn";
+        String email = "green@woowa.com";
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        customerService.addCustomer(signUpRequest);
+
+        // when
+        // given
+        assertThatThrownBy(() -> customerService.deleteMe(name, new DeleteCustomerRequest("5678")))
+                .isInstanceOf(InvalidPasswordException.class);
+    }
 }
