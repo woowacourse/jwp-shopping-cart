@@ -13,22 +13,17 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateRequest;
+import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @DisplayName("회원 관련 기능")
 @Sql("/truncate.sql")
 public class CustomerAcceptanceTest extends AcceptanceTest {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @DisplayName("이름, 이메일, 비밀번호를 입력해서 회원 등록 요청한다")
     @Test
@@ -63,13 +58,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("사용자 이름 수정")
     @Test
-    void updateMe() {
+    void updateProfile() {
         // given
         final CustomerRequest 회원생성요청 = 잉_회원생성요청;
         post(CUSTOMER_URI, 회원생성요청);
-        final CustomerUpdateRequest 회원수정요청 = 잉_회원수정요청;
+        final CustomerUpdateProfileRequest 회원수정요청 = 잉_회원수정요청;
 
         // when
         final String token = getToken(잉_로그인요청);
@@ -84,7 +79,28 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("회원탈퇴")
+    @DisplayName("사용자 비밀번호 수정")
+    @Test
+    void updatePassword() {
+        // given
+        final CustomerRequest 회원생성요청 = 잉_회원생성요청;
+        post(CUSTOMER_URI, 회원생성요청);
+        final CustomerUpdateProfileRequest 회원수정요청 = 잉_회원수정요청;
+
+        // when
+        final String token = getToken(잉_로그인요청);
+        final ExtractableResponse<Response> 회원수정응답 = put(CUSTOMER_URI, 회원수정요청, token);
+        final CustomerResponse 회원조회응답 = get(CUSTOMER_URI, token).as(CustomerResponse.class);
+
+        // then
+        assertAll(
+                () -> assertThat(회원수정응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(회원조회응답.getName()).isEqualTo(회원수정요청.getName()),
+                () -> assertThat(회원조회응답.getEmail()).isEqualTo(회원조회응답.getEmail())
+        );
+    }
+
+    @DisplayName("토큰과 비밀번호 정보가 일치하면 회원탈퇴가 가능하다")
     @Test
     void deleteMe() {
         //given
@@ -95,9 +111,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         //when
         final String token = getToken(잉_로그인요청);
         final ExtractableResponse<Response> 회원탈퇴응답 = delete(CUSTOMER_URI, 회원탈퇴요청, token);
-
-        System.out.println();
-        System.out.println();
 
         //then
         assertAll(
