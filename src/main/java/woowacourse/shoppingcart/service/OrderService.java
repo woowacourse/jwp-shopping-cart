@@ -26,8 +26,11 @@ public class OrderService {
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public OrderService(final OrderDao orderDao,
+                        final OrdersDetailDao ordersDetailDao,
+                        final CartItemDao cartItemDao,
+                        final CustomerDao customerDao,
+                        final ProductDao productDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
