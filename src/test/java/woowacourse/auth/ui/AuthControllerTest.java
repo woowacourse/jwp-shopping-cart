@@ -5,25 +5,25 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static woowacourse.fixture.Fixture.CUSTOMER_ID;
+import static woowacourse.fixture.Fixture.TEST_EMAIL;
+import static woowacourse.fixture.Fixture.TEST_PASSWORD;
+import static woowacourse.fixture.Fixture.TEST_USERNAME;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.controller.ControllerTest;
 import woowacourse.shoppingcart.dto.CustomerDto;
-import static woowacourse.fixture.Fixture.*;
 
 class AuthControllerTest extends ControllerTest {
 

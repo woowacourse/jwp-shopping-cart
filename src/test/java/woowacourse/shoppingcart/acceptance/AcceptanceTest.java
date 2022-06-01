@@ -27,12 +27,12 @@ public class AcceptanceTest {
     }
 
     protected ExtractableResponse<Response> createCustomer(final SignUpDto signUpDto) {
-        return post("/api/customers", EMPTY_HEADER,  signUpDto);
+        return post("/api/customers", EMPTY_HEADER, signUpDto);
     }
 
     protected ExtractableResponse<Response> loginCustomer(final String email, final String password) {
         final SignInDto signInDto = new SignInDto(email, password);
-        return post("/api/auth/login", EMPTY_HEADER,  signInDto);
+        return post("/api/auth/login", EMPTY_HEADER, signInDto);
     }
 
     protected ExtractableResponse<Response> post(final String uri, final Header header, final Object body) {

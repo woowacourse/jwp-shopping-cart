@@ -1,7 +1,9 @@
 package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.fixture.Fixture.*;
+import static woowacourse.fixture.Fixture.TEST_EMAIL;
+import static woowacourse.fixture.Fixture.TEST_PASSWORD;
+import static woowacourse.fixture.Fixture.TEST_USERNAME;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

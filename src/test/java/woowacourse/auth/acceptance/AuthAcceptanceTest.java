@@ -1,20 +1,19 @@
 package woowacourse.auth.acceptance;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.Fixture.*;
-import io.restassured.RestAssured;
+import static woowacourse.fixture.Fixture.BEARER;
+import static woowacourse.fixture.Fixture.TEST_EMAIL;
+import static woowacourse.fixture.Fixture.TEST_PASSWORD;
+import static woowacourse.fixture.Fixture.TEST_USERNAME;
+
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerDto;
@@ -34,7 +33,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // when
         final ExtractableResponse<Response> response = get(
-                "/api/customers/"+ tokenResponseDto.getCustomer().getId(),
+                "/api/customers/" + tokenResponseDto.getCustomer().getId(),
                 new Header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
         );
 
@@ -69,7 +68,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // when
         final ExtractableResponse<Response> response = get(
-                "/api/customers/"+ tokenResponseDto.getCustomer().getId(),
+                "/api/customers/" + tokenResponseDto.getCustomer().getId(),
                 new Header(HttpHeaders.AUTHORIZATION, BEARER + "invalidToken")
         );
 
