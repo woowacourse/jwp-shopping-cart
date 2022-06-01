@@ -1,28 +1,17 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.CustomerFixtures.MAT_EMAIL;
-import static woowacourse.shoppingcart.CustomerFixtures.MAT_PASSWORD;
-import static woowacourse.shoppingcart.CustomerFixtures.MAT_SAVE_REQUEST;
-import static woowacourse.shoppingcart.CustomerFixtures.MAT_USERNAME;
-import static woowacourse.shoppingcart.CustomerFixtures.UPDATE_ADDRESS;
-import static woowacourse.shoppingcart.CustomerFixtures.UPDATE_PHONE_NUMBER;
-import static woowacourse.shoppingcart.CustomerFixtures.UPDATE_REQUEST;
-import static woowacourse.shoppingcart.CustomerFixtures.YAHO_ADDRESS;
-import static woowacourse.shoppingcart.CustomerFixtures.YAHO_EMAIL;
-import static woowacourse.shoppingcart.CustomerFixtures.YAHO_PASSWORD;
-import static woowacourse.shoppingcart.CustomerFixtures.YAHO_PHONE_NUMBER;
-import static woowacourse.shoppingcart.CustomerFixtures.YAHO_SAVE_REQUEST;
-import static woowacourse.shoppingcart.CustomerFixtures.YAHO_USERNAME;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static woowacourse.shoppingcart.CustomerFixtures.*;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
