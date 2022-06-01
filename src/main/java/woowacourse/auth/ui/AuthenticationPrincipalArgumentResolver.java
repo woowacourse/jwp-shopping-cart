@@ -7,6 +7,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.domain.User;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 
@@ -24,14 +25,13 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     }
 
     @Override
-    public Long resolveArgument(MethodParameter parameter,
+    public User resolveArgument(MethodParameter parameter,
                                 ModelAndViewContainer mavContainer,
                                 NativeWebRequest webRequest,
                                 WebDataBinderFactory binderFactory) {
-        // TODO: 유효한 로그인인 경우 로그인한 사용자 객체를 만들어서 응답하기
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
         String token = AuthorizationExtractor.extract(request);
-        return authService.findUserIdByToken(token);
+        return authService.findUserByToken(token);
     }
 }

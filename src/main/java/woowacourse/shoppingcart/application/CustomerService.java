@@ -2,10 +2,10 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.domain.Customer2;
+import woowacourse.auth.domain.User;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.response.GetMeResponse;
@@ -21,50 +21,52 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    @Transactional
-    public Long signUp(SignUpRequest request) {
-        Customer customer = new Customer(request.getUsername(),
-                request.getPassword(), request.getNickname(), request.getAge());
-        return customerDao.save(customer);
+    public GetMeResponse getCustomer(User user) {
+        return new GetMeResponse(findCustomer(user));
     }
 
-    public GetMeResponse getMe(Long id) {
-        return new GetMeResponse(findCustomer(id));
-    }
-
-    public UniqueUsernameResponse checkUniqueUsername(UniqueUsernameRequest request) {
-        String username = request.getUsername();
-        boolean isUnique =  customerDao.findByUserName(username).isEmpty();
+    public UniqueUsernameResponse checkUniqueUsername(String username) {
+        boolean isUnique = customerDao.findByUserName(username).isEmpty();
         return new UniqueUsernameResponse(isUnique);
     }
 
     @Transactional
-    public void updateMe(Long id, UpdateMeRequest request) {
-        Customer customer = findCustomer(id);
-        Customer updatedCustomer = new Customer(id, request.getUsername(),
-                customer.getPassword(), request.getNickname(), request.getAge());
-        customerDao.update(updatedCustomer);
+    public Long createCustomer(SignUpRequest request) {
+        Customer2 customer = new Customer2(request.getUsername(),
+                request.getPassword(), request.getNickname(), request.getAge());
+        return customerDao.save(customer);
     }
 
     @Transactional
-    public void updatePassword(Long id, UpdatePasswordRequest request) {
-        Customer customer = findCustomer(id);
-        if (!customer.hasSamePassword(request.getOldPassword())) {
+    public void updateNicknameAndAge(User user, UpdateMeRequest request) {
+        Customer2 customer = findCustomer(user);
+        if(!customer.hasSameUsername(request.getUsername())) {
+            throw new IllegalArgumentException("아이디는 수정할 수 없습니다.");
+        }
+        Customer2 updatedCustomer = new Customer2(customer.getUsername(),
+                customer.getPassword(), request.getNickname(), request.getAge());
+        customerDao.updateByUsername(updatedCustomer);
+    }
+
+    @Transactional
+    public void updatePassword(User user, UpdatePasswordRequest request) {
+        Customer2 customer = findCustomer(user);
+        if (!user.hasSamePassword(request.getOldPassword())) {
             throw new IllegalArgumentException("현재 비밀번호를 잘못 입력하였습니다.");
         }
-        Customer updatedCustomer = new Customer(id, customer.getUsername(),
+        Customer2 updatedCustomer = new Customer2(user.getUsername(),
                 request.getNewPassword(), customer.getNickname(), customer.getAge());
-        customerDao.update(updatedCustomer);
+        customerDao.updateByUsername(updatedCustomer);
     }
 
     @Transactional
-    public void deleteMe(Long id) {
-        Customer customer = findCustomer(id);
+    public void deleteCustomer(User user) {
+        Customer2 customer = findCustomer(user);
         customerDao.delete(customer);
     }
 
-    private Customer findCustomer(Long id) {
-        return customerDao.findById(id)
+    private Customer2 findCustomer(User user) {
+        return customerDao.findByUserName(user.getUsername())
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
     }
 }

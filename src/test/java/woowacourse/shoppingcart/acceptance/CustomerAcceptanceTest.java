@@ -65,7 +65,7 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
         @Test
         void 로그인된_경우_200() {
             SignUpRequest 고객 = new SignUpRequest("유효한_아이디", "비밀번호", "닉네임", 15);
-            UpdateMeRequest 수정된_고객 = new UpdateMeRequest("새로운_아이디", "새로운_닉네임", 20);
+            UpdateMeRequest 수정된_고객 = new UpdateMeRequest("유효한_아이디", "새로운_닉네임", 20);
             String 유효한_토큰 = 회원가입_요청_후_토큰_반환(고객);
 
             ExtractableResponse<Response> response = 내_정보_수정_요청(수정된_고객, 유효한_토큰);
@@ -98,13 +98,13 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
         }
 
         @Test
-        void 존재하지_않는_회원의_토큰으로_탈퇴하려는_경우_404() {
+        void 존재하지_않는_회원의_토큰으로_탈퇴하려는_경우_인증에_실패하므로_401() {
             String 유효한_토큰 = 회원가입_요청_후_토큰_반환(유효한_사용자);
             회원탈퇴_요청(유효한_토큰);
 
             ExtractableResponse<Response> response = 회원탈퇴_요청(유효한_토큰);
 
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
 
         private ExtractableResponse<Response> 회원탈퇴_요청(String accessToken) {

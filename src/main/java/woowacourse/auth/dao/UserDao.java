@@ -10,9 +10,8 @@ import woowacourse.auth.domain.User;
 @Repository
 public class UserDao {
 
-    static final RowMapper<User> ROW_MAPPER = (resultSet, rowNum) ->
-            new User(resultSet.getLong("id"),
-                    resultSet.getString("username"),
+    private static final RowMapper<User> ROW_MAPPER = (resultSet, rowNum) ->
+            new User(resultSet.getString("username"),
                     resultSet.getString("password"));
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -21,11 +20,11 @@ public class UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<User> findByUserName(String userName) {
-        final String sql = "SELECT id, username, password FROM customer "
+    public Optional<User> findByUserName(String username) {
+        final String sql = "SELECT username, password FROM customer "
                 + "WHERE username = :username";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("username", userName);
+        params.addValue("username", username);
 
         return jdbcTemplate.query(sql, params, ROW_MAPPER)
                 .stream()

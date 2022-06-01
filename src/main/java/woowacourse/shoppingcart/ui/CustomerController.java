@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.domain.User;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
@@ -30,40 +31,40 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Void> signUp(@RequestBody SignUpRequest request) {
-        Long customerId = customerService.signUp(request);
+        Long customerId = customerService.createCustomer(request);
         URI location = URI.create("/customers/" + customerId);
         return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<GetMeResponse> getMe(@AuthenticationPrincipal Long customerId) {
-        GetMeResponse currentCustomer = customerService.getMe(customerId);
+    public ResponseEntity<GetMeResponse> getMe(@AuthenticationPrincipal User authUser) {
+        GetMeResponse currentCustomer = customerService.getCustomer(authUser);
         return ResponseEntity.ok(currentCustomer);
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> updateMe(@RequestBody UpdateMeRequest updateMeRequest,
-                                         @AuthenticationPrincipal Long customerId) {
-        customerService.updateMe(customerId, updateMeRequest);
+    public ResponseEntity<Void> updateMe(@AuthenticationPrincipal User authUser,
+                                         @RequestBody UpdateMeRequest updateMeRequest) {
+        customerService.updateNicknameAndAge(authUser, updateMeRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal Long customerId) {
-        customerService.deleteMe(customerId);
+    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal User authUser) {
+        customerService.deleteCustomer(authUser);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me/password")
     public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest,
-                                               @AuthenticationPrincipal Long customerId) {
-        customerService.updatePassword(customerId, updatePasswordRequest);
+                                               @AuthenticationPrincipal User authUser) {
+        customerService.updatePassword(authUser, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/username/duplication")
     public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(@RequestBody UniqueUsernameRequest request) {
-        UniqueUsernameResponse response = customerService.checkUniqueUsername(request);
+        UniqueUsernameResponse response = customerService.checkUniqueUsername(request.getUsername());
         return ResponseEntity.ok(response);
     }
 }

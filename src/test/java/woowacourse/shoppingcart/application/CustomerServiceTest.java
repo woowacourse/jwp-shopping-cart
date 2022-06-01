@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import woowacourse.auth.domain.Customer2;
-import woowacourse.auth.domain.User2;
-import woowacourse.shoppingcart.dao.CustomerDao2;
+import woowacourse.auth.domain.User;
+import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.DatabaseTest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
@@ -21,19 +21,19 @@ import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
 @SuppressWarnings("NonAsciiCharacters")
-class CustomerService2Test extends DatabaseTest {
+class CustomerServiceTest extends DatabaseTest {
 
     private static final String 유효한_아이디 = "valid_username";
     private static final String 비밀번호 = "valid_pw";
     private static final String 유효한_닉네임 = "닉네임";
     private static final int 유효한_나이 = 20;
 
-    private final CustomerDao2 customerDao;
-    private final CustomerService2 customerService;
+    private final CustomerDao customerDao;
+    private final CustomerService customerService;
 
-    public CustomerService2Test(NamedParameterJdbcTemplate jdbcTemplate) {
-        customerDao = new CustomerDao2(jdbcTemplate);
-        customerService = new CustomerService2(customerDao);
+    public CustomerServiceTest(NamedParameterJdbcTemplate jdbcTemplate) {
+        customerDao = new CustomerDao(jdbcTemplate);
+        customerService = new CustomerService(customerDao);
     }
 
     @DisplayName("getCustomer 메서드는 사용자 정보에 해당되는 고객 데이터를 조회")
@@ -44,7 +44,7 @@ class CustomerService2Test extends DatabaseTest {
         void 존재하는_고객의_정보인_경우_조회결과_반환() {
             Customer2 고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
             saveFixture(고객);
-            User2 고객에_대응되는_사용자 = new User2(유효한_아이디, 비밀번호);
+            User 고객에_대응되는_사용자 = new User(유효한_아이디, 비밀번호);
 
             GetMeResponse actual = customerService.getCustomer(고객에_대응되는_사용자);
             GetMeResponse expected = new GetMeResponse(고객);
@@ -54,7 +54,7 @@ class CustomerService2Test extends DatabaseTest {
 
         @Test
         void 대응되는_고객이_존재하지_않는_경우_예외발생() {
-            User2 대응되는_고객이_없는_사용자 = new User2(유효한_아이디, 비밀번호);
+            User 대응되는_고객이_없는_사용자 = new User(유효한_아이디, 비밀번호);
 
             assertThatThrownBy(() -> customerService.getCustomer(대응되는_고객이_없는_사용자))
                     .isInstanceOf(NotFoundException.class);
@@ -160,7 +160,7 @@ class CustomerService2Test extends DatabaseTest {
     @Nested
     class UpdateNicknameAndAgeTest {
 
-        private final User2 유효한_사용자 = new User2(유효한_아이디, 비밀번호);
+        private final User 유효한_사용자 = new User(유효한_아이디, 비밀번호);
         private final Customer2 유효한_고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
         @Test
@@ -208,7 +208,7 @@ class CustomerService2Test extends DatabaseTest {
     @Nested
     class UpdatePasswordTest {
 
-        private final User2 유효한_사용자 = new User2(유효한_아이디, 비밀번호);
+        private final User 유효한_사용자 = new User(유효한_아이디, 비밀번호);
         private final Customer2 유효한_고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
         private final String 새로운_비밀번호 = "new_pw";
 
@@ -247,7 +247,7 @@ class CustomerService2Test extends DatabaseTest {
     @Nested
     class DeleteCustomerTest {
 
-        private final User2 유효한_사용자 = new User2(유효한_아이디, 비밀번호);
+        private final User 유효한_사용자 = new User(유효한_아이디, 비밀번호);
         private final Customer2 유효한_고객 = new Customer2(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
         @Test
