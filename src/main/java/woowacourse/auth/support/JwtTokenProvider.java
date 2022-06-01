@@ -5,17 +5,24 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtTokenProvider {
 
-    @Value("${security.jwt.token.secret-key}")
-    private String secretKey;
-    @Value("${security.jwt.token.expire-length}")
-    private long validityInMilliseconds;
+    private final SecretKey secretKey;
+    private final long validityInMilliseconds;
+
+    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String keyString,
+                             @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
+        this.secretKey = Keys.hmacShaKeyFor(keyString.getBytes(StandardCharsets.UTF_8));
+        this.validityInMilliseconds = validityInMilliseconds;
+    }
 
     public String createToken(String payload) {
         Date now = new Date();
@@ -25,13 +32,14 @@ public class JwtTokenProvider {
                 .claim("email", payload)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String getPayload(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .get("email", String.class);
@@ -39,8 +47,9 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser()
+            Jws<Claims> claims = Jwts.parserBuilder()
                     .setSigningKey(secretKey)
+                    .build()
                     .parseClaimsJws(token);
 
             return !claims.getBody()
