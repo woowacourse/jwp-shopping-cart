@@ -52,7 +52,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             InvalidCustomerException.class,
-            InvalidTokenException.class
+            InvalidTokenException.class,
+            InvalidTokenFormatException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidToken(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
