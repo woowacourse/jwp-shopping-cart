@@ -12,19 +12,19 @@ public class Customer {
     private static final int MAX_NICKNAME_LENGTH = 20;
 
     private final Username username;
-    private final String password;
+    private final Password password;
     private final String nickname;
     private final int age;
 
     public Customer(String username, String password, String nickname, int age) {
         validate(password, nickname, age);
         this.username = new Username(username);
-        this.password = password;
+        this.password = new Password(password);
         this.nickname = nickname;
         this.age = age;
     }
 
-    public Customer(Username username, String password, String nickname, int age) {
+    public Customer(Username username, Password password, String nickname, int age) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
@@ -68,7 +68,7 @@ public class Customer {
         return username;
     }
 
-    public String getPassword() {
+    public Password getPassword() {
         return password;
     }
 

@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
 import woowacourse.shoppingcart.dto.response.GetMeResponse;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
@@ -39,7 +41,7 @@ public class CustomerService {
     @Transactional
     public void updateMe(Long id, UpdateMeRequest request) {
         Customer customer = customerRepository.find(id);
-        Customer updatedCustomer = new Customer(request.getUsername(),
+        Customer updatedCustomer = new Customer(new Username(request.getUsername()),
                 customer.getPassword(),
                 request.getNickname(),
                 request.getAge());
@@ -53,7 +55,7 @@ public class CustomerService {
             throw new IllegalArgumentException("현재 비밀번호를 잘못 입력하였습니다.");
         }
         Customer updatedCustomer = new Customer(customer.getUsername(),
-                request.getNewPassword(),
+                new Password(request.getNewPassword()),
                 customer.getNickname(),
                 customer.getAge());
         customerRepository.update(id, updatedCustomer);
