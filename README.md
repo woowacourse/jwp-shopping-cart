@@ -1,4 +1,7 @@
 # 장바구니
+
+[프로젝트 API 문서](https://classic-gladiolus-e79.notion.site/API-adb25d83eb87447a88c6fb71ddf82641)
+
 장바구니 미션 저장소
 
 ## 기능 명세
