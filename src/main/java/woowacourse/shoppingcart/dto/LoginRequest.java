@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.customer.Customer;
-
 public class LoginRequest {
 
     private String userId;

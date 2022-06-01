@@ -12,6 +12,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dto.CustomerIdRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.LoginResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -202,6 +204,37 @@ class CustomerServiceTest {
                 () -> assertThat(loginResponse.getToken()).isNotNull(),
                 () -> assertThat(loginResponse.getUserId()).isEqualTo("puterism@woowacourse.com"),
                 () -> assertThat(loginResponse.getNickname()).isEqualTo("nickname")
+        );
+    }
+
+    @DisplayName("가입하지 않은 사용자를 조회하면 안된다.")
+    @Test
+    void findByCustomerIdException() {
+        // given
+        CustomerIdRequest customerIdRequest = new CustomerIdRequest(-1L);
+
+        // when & then
+        assertThatThrownBy(() -> customerService.findByCustomerId(customerIdRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("회원 정보를 조회한다.")
+    @Test
+    void findByCustomerId() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        CustomerIdRequest customerIdRequest = new CustomerIdRequest(customerId);
+
+        // when
+        CustomerResponse customerResponse = customerService.findByCustomerId(customerIdRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(customerResponse.getId()).isEqualTo(customerId),
+                () -> assertThat(customerResponse.getUserId()).isEqualTo("test@woowacourse.com"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("test")
         );
     }
 }

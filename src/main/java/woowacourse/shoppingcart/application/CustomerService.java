@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.CustomerIdRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.LoginResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -27,9 +29,24 @@ public class CustomerService {
 
     public LoginResponse login(final LoginRequest loginRequest) {
         validateExistingCustomer(loginRequest.getUserId(), loginRequest.getPassword());
-        Customer customer = customerDao.findByUserId(loginRequest.getUserId());
+        Customer customer = findCustomerByUserId(loginRequest.getUserId());
         String token = authService.createToken(customer.getId());
         return LoginResponse.of(token, customer);
+    }
+
+    public CustomerResponse findByCustomerId(final CustomerIdRequest customerIdRequest) {
+        Customer customer = findCustomerById(customerIdRequest.getId());
+        return CustomerResponse.from(customer);
+    }
+
+    private Customer findCustomerByUserId(final String userId) {
+        return customerDao.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
+
+    private Customer findCustomerById(final Long id) {
+        return customerDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     }
 
     private void validateCustomer(final Customer customer) {

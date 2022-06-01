@@ -57,14 +57,32 @@ public class CustomerDaoTest {
 
     @DisplayName("로그인 정보를 이용하여 사용자 정보를 조회한다,")
     @Test
-    void find() {
+    void findByUserId() {
         // when
-        Customer customer = customerDao.findByUserId("puterism@woowacourse.com");
+        Customer customer = customerDao.findByUserId("puterism@woowacourse.com").get();
 
         // then
         assertAll(
                 () -> assertThat(customer.getUserId()).isEqualTo("puterism@woowacourse.com"),
                 () -> assertThat(customer.getNickname()).isEqualTo("nickname"),
+                () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
+        );
+    }
+
+    @DisplayName("회원 정보를 조회한다.")
+    @Test
+    void findById() {
+        // given
+        Customer savedCustomer = new Customer(null, "test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerDao.save(savedCustomer);
+
+        // when
+        Customer customer = customerDao.findById(customerId).get();
+
+        // then
+        assertAll(
+                () -> assertThat(customer.getUserId()).isEqualTo("test@woowacourse.com"),
+                () -> assertThat(customer.getNickname()).isEqualTo("test"),
                 () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
         );
     }

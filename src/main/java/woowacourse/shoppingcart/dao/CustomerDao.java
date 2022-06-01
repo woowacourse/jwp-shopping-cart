@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import java.sql.PreparedStatement;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class CustomerDao {
@@ -24,6 +25,8 @@ public class CustomerDao {
                 resultSet.getString("password")
         );
     };
+
+    private static final boolean NOT_WITHDRAWAL = false;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -41,13 +44,14 @@ public class CustomerDao {
     }
 
     public Long save(final Customer customer) {
-        String query = "INSERT INTO customer (user_id, nickname, password) VALUES (?, ?, ?)";
+        String query = "INSERT INTO customer (user_id, nickname, password, withdrawal) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, customer.getUserId());
             preparedStatement.setString(2, customer.getNickname());
             preparedStatement.setString(3, customer.getPassword());
+            preparedStatement.setBoolean(4, NOT_WITHDRAWAL);
             return preparedStatement;
         }, keyHolder);
 
@@ -69,8 +73,21 @@ public class CustomerDao {
         return jdbcTemplate.queryForObject(query, Boolean.class, userId, password);
     }
 
-    public Customer findByUserId(final String userId) {
-        String query = "SELECT id, user_id, nickname, password FROM customer WHERE user_id = ?";
-        return jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, userId);
+    public Optional<Customer> findByUserId(final String userId) {
+        String query = "SELECT id, user_id, nickname, password FROM customer WHERE user_id = ? and withdrawal = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, userId, NOT_WITHDRAWAL));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Customer> findById(final Long id) {
+        String query = "SELECT id, user_id, nickname, password FROM customer WHERE id = ? and withdrawal = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, id, NOT_WITHDRAWAL));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }
