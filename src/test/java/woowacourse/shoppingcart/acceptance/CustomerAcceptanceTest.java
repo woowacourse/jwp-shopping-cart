@@ -2,12 +2,13 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-
+import static woowacourse.fixture.Fixture.*;
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.dto.CustomerDto;
@@ -25,7 +26,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
 
         assertAll(
-                () -> assertThat(response.header("Location")).isNotBlank(),
+                () -> assertThat(response.header(HttpHeaders.LOCATION)).isNotBlank(),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         );
     }
@@ -38,8 +39,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
         final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
 
-        final ExtractableResponse<Response> customerResponse = get(createResponse.header(LOCATION),
-                new Header(AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()));
+        final ExtractableResponse<Response> customerResponse = get(createResponse.header(HttpHeaders.LOCATION),
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()));
 
         final CustomerDto customerDto = customerResponse.body().as(CustomerDto.class);
 
@@ -59,8 +60,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         final String updateUsername = "updateUsername";
         final ExtractableResponse<Response> updateResponse = put(
-                createResponse.header(LOCATION),
-                new Header(AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()),
+                createResponse.header(HttpHeaders.LOCATION),
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()),
                 new UpdateCustomerDto(updateUsername)
         );
 
@@ -77,14 +78,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
 
         final ExtractableResponse<Response> deleteResponse = post(
-                createResponse.header(LOCATION),
-                new Header(AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()),
+                createResponse.header(HttpHeaders.LOCATION),
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()),
                 new DeleteCustomerDto(TEST_PASSWORD)
         );
 
         final ExtractableResponse<Response> customerResponse = get(
-                createResponse.header(LOCATION),
-                new Header(AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken())
+                createResponse.header(HttpHeaders.LOCATION),
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken())
         );
 
         assertAll(

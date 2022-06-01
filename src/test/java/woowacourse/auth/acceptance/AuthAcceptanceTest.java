@@ -2,7 +2,7 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
-
+import static woowacourse.fixture.Fixture.*;
 import io.restassured.RestAssured;
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;

@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static woowacourse.fixture.Fixture.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,7 +52,7 @@ class CustomerControllerTest extends ControllerTest{
     @Test
     @DisplayName("이메일, 패스워드, 유저 이름을 받아서 CREATED와 Location 헤더에 리소스 접근 URI를 반환한다.")
     void signUp() throws Exception {
-        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, "testtest", TEST_USERNAME);
+        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
         when(customerService.signUp(any(SignUpDto.class))).thenReturn(CUSTOMER_ID);
 
         final MockHttpServletResponse response = mockMvc.perform(post("/api/customers")
@@ -63,7 +64,7 @@ class CustomerControllerTest extends ControllerTest{
                         .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.getHeader("Location")).isEqualTo("/api/customers/"+ CUSTOMER_ID);
+        assertThat(response.getHeader(HttpHeaders.LOCATION)).isEqualTo("/api/customers/"+ CUSTOMER_ID);
     }
 
     @Test
@@ -78,7 +79,7 @@ class CustomerControllerTest extends ControllerTest{
         UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto("테스트2");
 
         final MockHttpServletResponse response = mockMvc.perform(put("/api/customers/" + CUSTOMER_ID)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(updateCustomerDto)))
@@ -93,13 +94,13 @@ class CustomerControllerTest extends ControllerTest{
     @DisplayName("URI path에 id를 받아 일치하는 회원을 삭제한다.")
     void deleteCustomer() throws Exception {
         final CustomerDto customerDto = new CustomerDto(CUSTOMER_ID, TEST_EMAIL, TEST_USERNAME);
-        when(authService.extractEmail(any(String.class))).thenReturn("test@test.com");
+        when(authService.extractEmail(any(String.class))).thenReturn(TEST_EMAIL);
         when(customerService.findCustomerByEmail(any(String.class)))
                 .thenReturn(customerDto);
         when(authService.login(any(SignInDto.class))).thenReturn(new TokenResponseDto(accessToken, 1000000L, customerDto));
-        DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto("testtest");
+        final DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto(TEST_PASSWORD);
         final MockHttpServletResponse response = mockMvc.perform(post("/api/customers/" + CUSTOMER_ID)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(deleteCustomerDto)))
