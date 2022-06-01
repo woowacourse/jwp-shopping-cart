@@ -22,7 +22,7 @@ public class Email {
 
     private void checkNull(String value) {
         if (value == null) {
-            throw new IllegalArgumentException("email은 필수 입력 사항입니다.");
+            throw new NullPointerException("email은 필수 입력 사항입니다.");
         }
     }
 

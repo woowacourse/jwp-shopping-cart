@@ -22,7 +22,7 @@ public class PhoneNumber {
 
     private void checkNull(String value) {
         if (value == null) {
-            throw new IllegalArgumentException("phoneNumber는 필수 입력 사항압니다.");
+            throw new NullPointerException("phoneNumber는 필수 입력 사항압니다.");
         }
     }
 

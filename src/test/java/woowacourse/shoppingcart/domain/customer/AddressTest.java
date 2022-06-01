@@ -15,7 +15,7 @@ class AddressTest {
     @Test
     void create_error_null() {
         assertThatThrownBy(() -> new Address(null))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NullPointerException.class)
                 .hasMessage("address는 필수 입력 사항입니다.");
     }
 

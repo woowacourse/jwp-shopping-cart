@@ -15,7 +15,7 @@ class PhoneNumberTest {
     @Test
     void create_error_null() {
         assertThatThrownBy(() -> new PhoneNumber(null))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NullPointerException.class)
                 .hasMessage("phoneNumber는 필수 입력 사항압니다.");
     }
 

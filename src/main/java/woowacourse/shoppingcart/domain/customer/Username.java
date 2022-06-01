@@ -22,7 +22,7 @@ public class Username {
 
     private void checkNull(String value) {
         if (value == null) {
-            throw new IllegalArgumentException("username은 필수 입력 사항입니다.");
+            throw new NullPointerException("username은 필수 입력 사항입니다.");
         }
     }
 

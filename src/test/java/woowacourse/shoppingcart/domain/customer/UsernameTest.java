@@ -14,7 +14,7 @@ class UsernameTest {
     @Test
     void create_error_null() {
         assertThatThrownBy(() -> new Username(null))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NullPointerException.class)
                 .hasMessage("username은 필수 입력 사항입니다.");
     }
 

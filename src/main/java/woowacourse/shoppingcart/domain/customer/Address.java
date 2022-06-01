@@ -18,7 +18,7 @@ public class Address {
 
     private void checkNull(String value) {
         if (value == null) {
-            throw new IllegalArgumentException("address는 필수 입력 사항입니다.");
+            throw new NullPointerException("address는 필수 입력 사항입니다.");
         }
     }
 
