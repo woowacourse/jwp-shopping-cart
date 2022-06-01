@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.DeleteCustomerRequest;
 import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -12,6 +13,7 @@ import woowacourse.shoppingcart.exception.DuplicatedAccountException;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
 
 @Service
+@Transactional
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -29,6 +31,7 @@ public class CustomerService {
         return CustomerDto.of(savedCustomer);
     }
 
+    @Transactional(readOnly = true)
     public CustomerDto getById(long customerId) {
         Customer customer = customerDao.findById(customerId)
                 .orElseThrow(CustomerNotFoundException::new);
