@@ -16,12 +16,6 @@ import woowacourse.auth.ui.LoginInterceptor;
 public class WebConfig implements WebMvcConfigurer {
     public static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH";
 
-    private final AuthService authService;
-
-    public WebConfig(final AuthService authService) {
-        this.authService = authService;
-    }
-
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/api/**")
