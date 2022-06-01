@@ -2,16 +2,13 @@ package woowacourse.member.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.member.domain.Name;
-import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
+import woowacourse.member.domain.Name;
 import woowacourse.member.domain.Password;
 import woowacourse.member.dto.request.*;
 import woowacourse.member.dto.response.MemberInfoResponse;
 import woowacourse.member.exception.*;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,68 +20,82 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public void signUp(SignUpRequest request) {
-        if (memberDao.existMemberByEmail(request.getEmail())) {
-            throw new InvalidMemberEmailException("중복되는 이메일이 존재합니다.");
+    public Long logIn(LoginRequest request) {
+        Member member = findMemberByEmail(request.getEmail());
+        Password requestPassword = Password.withEncrypt(request.getPassword());
+
+        if (!member.isSamePassword(requestPassword)) {
+            throw new WrongPasswordException("잘못된 비밀번호입니다.");
         }
+
+        return member.getId();
+    }
+
+    public void signUp(SignUpRequest request) {
+        validateDuplicateEmail(request.getEmail());
 
         Member member = Member.withEncrypt(request.getEmail(), request.getName(), request.getPassword());
         memberDao.save(member);
     }
 
-    public Long authenticate(LoginRequest request) {
-        Member member = validateExistMember(memberDao.findMemberByEmail(request.getEmail()));
-        Password requestPassword = Password.withEncrypt(request.getPassword());
-        if (!member.isSamePassword(requestPassword)) {
-            throw new WrongPasswordException("잘못된 비밀번호입니다.");
-        }
-        return member.getId();
+    public void checkDuplicateEmail(DuplicateEmailRequest request) {
+        validateDuplicateEmail(request.getEmail());
     }
 
-    public MemberInfoResponse findMemberById(long id) {
-        Member member = validateExistMember(memberDao.findMemberById(id));
+    public MemberInfoResponse findMemberInfoById(long id) {
+        Member member = findMemberById(id);
         return new MemberInfoResponse(member);
     }
 
-    public void deleteMemberById(long id, DeleteMemberRequest request) {
-        Member member = validateExistMember(memberDao.findMemberById(id));
-        Password requestPassword = Password.withEncrypt(request.getPassword());
-        if (!member.isSamePassword(requestPassword)) {
-            throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
-        }
-
-        int deletedRowCount = memberDao.deleteById(id);
-        if (deletedRowCount == 0) {
-            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
-        }
-    }
-
-    public void checkDuplicateEmail(DuplicateEmailRequest request) {
-        if (memberDao.existMemberByEmail(request.getEmail())) {
-            throw new DuplicateEmailException("이메일은 중복될 수 없습니다.");
-        }
-    }
-
     public void updateName(long id, UpdateNameRequest request) {
-        Member member = validateExistMember(memberDao.findMemberById(id));
+        Member member = findMemberById(id);
         Name name = new Name(request.getName());
 
         if (member.isSameName(name)) {
             throw new InvalidMemberNameException("현재 이름과 같은 이름으로 변경할 수 없습니다.");
         }
+
         memberDao.updateName(id, request.getName());
     }
 
     public void updatePassword(long id, UpdatePasswordRequest request) {
-        Member member = validateExistMember(memberDao.findMemberById(id));
+        Member member = findMemberById(id);
         validateUpdatePassword(request, member);
 
         Password newPassword = Password.withEncrypt(request.getNewPassword());
         memberDao.updatePassword(id, newPassword.getValue());
     }
 
+    public void deleteMemberById(long id, DeleteMemberRequest request) {
+        Member member = findMemberById(id);
+        Password requestPassword = Password.withEncrypt(request.getPassword());
+
+        if (!member.isSamePassword(requestPassword)) {
+            throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
+        }
+
+        memberDao.deleteById(id);
+    }
+
+    private Member findMemberByEmail(String email) {
+        return memberDao.findMemberByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException("해당 이메일로 가입된 회원은 존재하지 않습니다."));
+    }
+
+    private void validateDuplicateEmail(String email) {
+        if (memberDao.existMemberByEmail(email)) {
+            throw new DuplicateEmailException("중복되는 이메일이 존재합니다.");
+        }
+    }
+
+    private Member findMemberById(long id) {
+        return memberDao.findMemberById(id)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+    }
+
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {
         Password requestPassword = Password.withEncrypt(request.getOldPassword());
+
         if (!member.isSamePassword(requestPassword)) {
             throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
         }
@@ -92,9 +103,5 @@ public class MemberService {
         if (request.getOldPassword().equals(request.getNewPassword())) {
             throw new InvalidPasswordException("현재 비밀번호와 같은 비밀번호로 변경할 수 없습니다.");
         }
-    }
-
-    private Member validateExistMember(Optional<Member> member) {
-        return member.orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
     }
 }

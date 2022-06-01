@@ -25,15 +25,6 @@ class MemberDaoTest {
         this.memberDao = new MemberDao(dataSource);
     }
 
-    @DisplayName("회원을 저장한다.")
-    @Test
-    void save() {
-        String email = "wooteco@naver.com";
-        Member member = Member.withEncrypt(email, "wooteco", "Wooteco1!");
-        memberDao.save(member);
-        assertThat(memberDao.existMemberByEmail(email)).isTrue();
-    }
-
     @DisplayName("이메일로 회원을 찾아 반환한다.")
     @Test
     void findMemberByEmail() {
@@ -46,6 +37,27 @@ class MemberDaoTest {
     void findMemberByNotExistEmail() {
         Optional<Member> result = memberDao.findMemberByEmail("pobi@wooteco.com");
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("해당 이메일이 존재한다면 true를 반환한다.")
+    void existMemberByEmailWhenTrue() {
+        assertThat(memberDao.existMemberByEmail("ari@wooteco.com")).isTrue();
+    }
+
+    @Test
+    @DisplayName("해당 이메일이 존재하지 않는다면 false를 반환한다.")
+    void existMemberByEmailWhenFalse() {
+        assertThat(memberDao.existMemberByEmail("woni@wooteco.com")).isFalse();
+    }
+
+    @DisplayName("회원을 저장한다.")
+    @Test
+    void save() {
+        String email = "wooteco@naver.com";
+        Member member = Member.withEncrypt(email, "wooteco", "Wooteco1!");
+        memberDao.save(member);
+        assertThat(memberDao.existMemberByEmail(email)).isTrue();
     }
 
     @DisplayName("id로 회원을 찾아 반환한다.")

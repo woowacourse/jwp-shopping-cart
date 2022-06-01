@@ -27,7 +27,7 @@ public class MemberController {
     @PostMapping("/auth")
     @ResponseStatus(HttpStatus.OK)
     public TokenResponse login(@Valid @RequestBody LoginRequest request) {
-        Long id = memberService.authenticate(request);
+        Long id = memberService.logIn(request);
         return authService.createToken(id);
     }
 
@@ -46,7 +46,7 @@ public class MemberController {
     @GetMapping("/members/me")
     @ResponseStatus(HttpStatus.OK)
     public MemberInfoResponse findMemberInfo(@AuthenticationPrincipal Long id) {
-        return memberService.findMemberById(id);
+        return memberService.findMemberInfoById(id);
     }
 
     @PutMapping("/members/me/name")

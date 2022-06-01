@@ -27,15 +27,13 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public void save(Member member) {
-        SqlParameterSource namedParameterSource = new BeanPropertySqlParameterSource(member);
-        simpleJdbcInsert.execute(namedParameterSource);
-    }
-
-    public boolean existMemberByEmail(String email) {
-        String SQL = "SELECT EXISTS (SELECT * FROM MEMBER WHERE email = ?)";
-        return jdbcTemplate.queryForObject(SQL, Boolean.class, email);
-    }
+    private RowMapper<Member> rowMapper = (resultSet, rowNum) ->
+            Member.withoutEncrypt(
+                    resultSet.getLong("id"),
+                    resultSet.getString("email"),
+                    resultSet.getString("name"),
+                    resultSet.getString("password")
+            );
 
     public Optional<Member> findMemberByEmail(String email) {
         try {
@@ -45,6 +43,16 @@ public class MemberDao {
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public boolean existMemberByEmail(String email) {
+        String SQL = "SELECT EXISTS (SELECT * FROM MEMBER WHERE email = ?)";
+        return jdbcTemplate.queryForObject(SQL, Boolean.class, email);
+    }
+
+    public void save(Member member) {
+        SqlParameterSource namedParameterSource = new BeanPropertySqlParameterSource(member);
+        simpleJdbcInsert.execute(namedParameterSource);
     }
 
     public Optional<Member> findMemberById(long id) {
@@ -57,17 +65,19 @@ public class MemberDao {
         }
     }
 
-    private RowMapper<Member> rowMapper = (resultSet, rowNum) ->
-            Member.withoutEncrypt(
-                    resultSet.getLong("id"),
-                    resultSet.getString("email"),
-                    resultSet.getString("name"),
-                    resultSet.getString("password")
-            );
+    public void updateName(long id, String name) {
+        String SQL = "UPDATE member SET name = ? WHERE id = ?";
+        jdbcTemplate.update(SQL, name, id);
+    }
 
-    public int deleteById(long id) {
+    public void updatePassword(long id, String password) {
+        String SQL = "UPDATE member SET password = ? WHERE id = ?";
+        jdbcTemplate.update(SQL, password, id);
+    }
+
+    public void deleteById(long id) {
         String SQL = "DELETE FROM member WHERE id = ?";
-        return jdbcTemplate.update(SQL, id);
+        jdbcTemplate.update(SQL, id);
     }
 
     public Long findIdByUserName(final String userName) {
@@ -77,15 +87,5 @@ public class MemberDao {
         } catch (final EmptyResultDataAccessException e) {
             throw new MemberNotFoundException("존재하지 않는 회원입니다.");
         }
-    }
-
-    public void updateName(long id, String name) {
-        String SQL = "UPDATE member SET name = ? WHERE id = ?";
-        jdbcTemplate.update(SQL, name, id);
-    }
-
-    public void updatePassword(long id, String password) {
-        String SQL = "UPDATE member SET password = ? WHERE id = ?";
-        jdbcTemplate.update(SQL, password, id);
     }
 }
