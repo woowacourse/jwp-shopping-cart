@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.domain.customer;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static woowacourse.shoppingcart.CustomerFixtures.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,7 @@ class UsernameTest {
                 .hasMessage("username 형식이 올바르지 않습니다. (영문 소문자, 숫자와 특수기호(_), (-)만 사용 가능)");
     }
 
-    @DisplayName("username 형식에 맞으면 customer가 생성된다.")
+    @DisplayName("username 형식에 맞으면 username이 생성된다.")
     @ParameterizedTest
     @ValueSource(strings = {"pup-paw", "pup_paw", "123456", "a1b2c3_-"})
     void create(String username) {
