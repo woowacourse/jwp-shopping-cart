@@ -8,20 +8,22 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.domain.User;
-import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.auth.support.AuthenticatedUser;
 import woowacourse.auth.support.AuthorizationExtractor;
 
-public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
+public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final AuthService authService;
+    private final AuthorizationExtractor authExtractor;
 
-    public AuthenticationPrincipalArgumentResolver(AuthService authService) {
+    public AuthArgumentResolver(AuthService authService, AuthorizationExtractor authExtractor) {
+        this.authExtractor = authExtractor;
         this.authService = authService;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
+        return parameter.hasParameterAnnotation(AuthenticatedUser.class);
     }
 
     @Override
@@ -31,7 +33,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
                                 WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-        String token = AuthorizationExtractor.extract(request);
+        String token = authExtractor.extractBearerToken(request);
         return authService.findUserByToken(token);
     }
 }

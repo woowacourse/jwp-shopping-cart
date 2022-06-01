@@ -1,28 +1,33 @@
 package woowacourse.auth.support;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
+import org.springframework.stereotype.Component;
+import woowacourse.auth.exception.ForbiddenException;
 
+@Component
 public class AuthorizationExtractor {
-    public static final String AUTHORIZATION = "Authorization";
-    public static String BEARER_TYPE = "Bearer";
-    public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
 
-    public static String extract(HttpServletRequest request) {
-        Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
-        while (headers.hasMoreElements()) {
-            String value = headers.nextElement();
-            if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
-                String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
-                request.setAttribute(ACCESS_TOKEN_TYPE, value.substring(0, BEARER_TYPE.length()).trim());
-                int commaIndex = authHeaderValue.indexOf(',');
-                if (commaIndex > 0) {
-                    authHeaderValue = authHeaderValue.substring(0, commaIndex);
-                }
-                return authHeaderValue;
-            }
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER_TYPE = "Bearer".toLowerCase();
+
+    public String extractBearerToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        validateAuthorizationHeader(authorizationHeader);
+        return extractBearerToken(authorizationHeader);
+    }
+
+    private void validateAuthorizationHeader(String header) {
+        if (header == null || !header.toLowerCase().startsWith(BEARER_TYPE)) {
+           throw new ForbiddenException("로그인이 필요합니다.");
         }
+    }
 
-        return null;
+    private String extractBearerToken(String authorizationHeader) {
+        String bearerToken = authorizationHeader.substring(BEARER_TYPE.length()).trim();
+        int commaIndex = bearerToken.indexOf(',');
+        if (commaIndex > 0) {
+            bearerToken = bearerToken.substring(0, commaIndex);
+        }
+        return bearerToken;
     }
 }

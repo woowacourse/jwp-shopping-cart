@@ -45,7 +45,6 @@ class AuthAcceptanceTest extends AcceptanceTest2 {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
-
     @Test
     void 토큰이_유효한_경우_인가_성공() {
         String 유효한_토큰 = 유효한_로그인_요청();
@@ -62,7 +61,18 @@ class AuthAcceptanceTest extends AcceptanceTest2 {
         ExtractableResponse<Response> response = 내_정보_조회_요청(잘못된_토큰);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
 
+    @Test
+    void 토큰이_없는_경우_인증_실패() {
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/me")
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     private void 회원가입_요청() {

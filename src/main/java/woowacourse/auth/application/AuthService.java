@@ -5,7 +5,7 @@ import woowacourse.auth.dao.UserDao;
 import woowacourse.auth.domain.User;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.exception.AuthorizationException;
+import woowacourse.auth.exception.AuthenticationException;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Service
@@ -28,7 +28,7 @@ public class AuthService {
     private User findValidUser(String username, String password) {
         User user = findUser(username);
         if (!user.hasSamePassword(password)) {
-            throw new AuthorizationException();
+            throw new AuthenticationException();
         }
         return user;
     }
@@ -40,6 +40,6 @@ public class AuthService {
 
     private User findUser(String username) {
         return userDao.findByUserName(username)
-                .orElseThrow(AuthorizationException::new);
+                .orElseThrow(AuthenticationException::new);
     }
 }
