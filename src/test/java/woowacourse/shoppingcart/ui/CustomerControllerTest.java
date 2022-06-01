@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.exception.PasswordNotMatchException;
+import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailResponse;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
@@ -63,5 +65,36 @@ class CustomerControllerTest {
         // then
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(new CustomerDetailResponse(NAME, EMAIL));
+    }
+
+    @Test
+    @DisplayName("회원을 탈퇴한다.")
+    void delete() {
+        // given
+        final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
+        customerController.register(request);
+
+        final CustomerDeleteRequest customerDeleteRequest = new CustomerDeleteRequest(PASSWORD);
+
+        // when
+        final ResponseEntity<Void> response = customerController.delete(1L, customerDeleteRequest);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+
+    @Test
+    @DisplayName("회원 탈퇴시 비밀번호가 일치하지 않을 경우 예외가 발생한다.")
+    void delete_passwordNotMatch_throwsException() {
+        // given
+        final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
+        customerController.register(request);
+
+        final CustomerDeleteRequest customerDeleteRequest = new CustomerDeleteRequest("1111111111");
+
+        // when, then
+        assertThatThrownBy(() -> customerController.delete(1L, customerDeleteRequest))
+                .isInstanceOf(PasswordNotMatchException.class);
     }
 }
