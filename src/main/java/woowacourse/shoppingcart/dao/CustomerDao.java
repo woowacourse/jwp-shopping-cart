@@ -10,22 +10,26 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Age;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Nickname;
-import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.domain.Username;
+import woowacourse.shoppingcart.entity.CustomerEntity;
 
 @Repository
 public class CustomerDao {
 
-    static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) ->
+    /*static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) ->
             Customer.of(
                     resultSet.getLong("id"),
                     new Username(resultSet.getString("username")),
                     new Password(resultSet.getString("password")),
                     new Nickname(resultSet.getString("nickname")),
-                    new Age(resultSet.getInt("age")));
+                    new Age(resultSet.getInt("age")));*/
+
+    static final RowMapper<CustomerEntity> ROW_MAPPER = (resultSet, rowNum) ->
+            new CustomerEntity(
+                    resultSet.getLong("id"),
+                    resultSet.getString("username"),
+                    resultSet.getString("password"),
+                    resultSet.getString("nickname"),
+                    resultSet.getInt("age"));
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -33,7 +37,7 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<Customer> findById(Long id) {
+    public Optional<CustomerEntity> findById(Long id) {
         final String sql = "SELECT id, username, password, nickname, age FROM customer "
                 + "WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -43,7 +47,7 @@ public class CustomerDao {
                 .stream().findAny();
     }
 
-    public Optional<Customer> findByUserName(String userName) {
+    public Optional<CustomerEntity> findByUserName(String userName) {
         final String sql = "SELECT id, username, password, nickname, age FROM customer "
                 + "WHERE username = :username";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -62,7 +66,7 @@ public class CustomerDao {
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
-    public Long save(Customer customer) {
+    public Long save(CustomerEntity customer) {
         final String sql = "INSERT INTO customer(username, password, nickname, age) "
                 + "VALUES(:username, :password, :nickname, :age)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -72,7 +76,7 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void update(Customer customer) {
+    public void update(CustomerEntity customer) {
         final String sql = "UPDATE customer SET username = :username, "
                 + "password = :password, nickname = :nickname, age = :age "
                 + "WHERE id = :id";
@@ -81,15 +85,16 @@ public class CustomerDao {
         jdbcTemplate.update(sql, params);
     }
 
-    public void delete(Customer customer) {
+    public void delete(CustomerEntity customer) {
         final String sql = "DELETE FROM customer WHERE id = :id";
         SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
 
         jdbcTemplate.update(sql, params);
     }
 
-    public boolean exists(Customer customer) {
-        String sql = "select exists (select 1 from CUSTOMER where username = :username";
+    public boolean exists(CustomerEntity customer) {
+        System.out.println("@@@@@@@@@@@@@@@@in exists dao");
+        String sql = "select exists (select 1 from customer where username = :username)";
         SqlParameterSource params = new MapSqlParameterSource("username", customer.getUsername());
         return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, params, Boolean.class));
     }

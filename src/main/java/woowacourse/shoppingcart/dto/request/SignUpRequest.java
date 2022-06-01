@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto.request;
 
 import woowacourse.shoppingcart.domain.Age;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.Username;
@@ -22,20 +23,20 @@ public class SignUpRequest {
         this.age = age;
     }
 
-    public Username getUsername() {
-        return new Username(username);
+    public String getUsername() {
+        return username;
     }
 
-    public Password getPassword() {
-        return new Password(password);
+    public String getPassword() {
+        return password;
     }
 
-    public Nickname getNickname() {
-        return new Nickname(nickname);
+    public String getNickname() {
+        return nickname;
     }
 
-    public Age getAge() {
-        return new Age(age);
+    public Integer getAge() {
+        return age;
     }
 
     public void setUsername(String username) {
@@ -52,5 +53,13 @@ public class SignUpRequest {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public Customer toDomain() {
+        Username username = new Username(this.username);
+        Password password = new Password(this.password);
+        Nickname nickname = new Nickname(this.nickname);
+        Age age = new Age(this.age);
+        return new Customer(username, password, nickname, age);
     }
 }
