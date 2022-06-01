@@ -65,11 +65,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("계정은 4 ~ 15자로 생성 가능합니다")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("계정은 4 ~ 15자로 생성 가능합니다");
     }
 
     @Test
@@ -88,11 +85,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("계정은 4 ~ 15자로 생성 가능합니다")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("계정은 4 ~ 15자로 생성 가능합니다");
     }
 
     @Test
@@ -111,11 +105,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("닉네임은 2 ~ 10자로 생성 가능합니다")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
     }
 
     @Test
@@ -134,11 +125,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("닉네임은 2 ~ 10자로 생성 가능합니다")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
     }
 
     @Test
@@ -157,11 +145,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("닉네임은 2 ~ 10자로 생성 가능합니다")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
     }
 
     @Test
@@ -180,11 +165,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.");
     }
 
     @Test
@@ -203,11 +185,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("비밀번호는 8 ~ 20자로 생성 가능합니다.")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("비밀번호는 8 ~ 20자로 생성 가능합니다.");
     }
 
     @Test
@@ -226,11 +205,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("비밀번호는 8 ~ 20자로 생성 가능합니다.")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("비밀번호는 8 ~ 20자로 생성 가능합니다.");
     }
 
     @Test
@@ -249,11 +225,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.");
     }
 
     @Test
@@ -271,11 +244,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("주소는 최대 255자까지 가능합니다.")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("주소는 최대 255자까지 가능합니다.");
     }
 
     @Test
@@ -293,11 +263,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("주소는 빈 값 생성이 불가능합니다.")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("주소는 빈 값 생성이 불가능합니다.");
     }
 
     @Test
@@ -315,11 +282,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("휴대폰 번호양식이 불일치 합니다.")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("휴대폰 번호양식이 불일치 합니다.");
     }
 
     @Test
@@ -337,11 +301,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        int status = response.statusCode();
-        String errorMessage = response.body().jsonPath().getString("message");
-
-        assertThat(status).isEqualTo(400);
-        assertThat(errorMessage.contains("휴대폰 번호는 숫자만 가능합니다.")).isTrue();
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(getValue(response, "message")).contains("휴대폰 번호는 숫자만 가능합니다.");
     }
 
     @Test
@@ -349,8 +310,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String account = "leo8842";
         String password = "dpepsWkd12!";
 
-        회원_가입(
-                회원_정보(account,
+        회원_가입(회원_정보(account,
                         "에덴",
                         password,
                         "에덴 동산",
@@ -361,7 +321,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 토큰_발급(account, password);
 
         assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(response.body().jsonPath().getString("accessToken")).isNotNull();
+        assertThat(getValue(response, "accessToken")).isNotNull();
     }
 
     @Test
@@ -369,8 +329,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String account = "leo8842";
         String password = "dpepsWkd12!";
 
-        회원_가입(
-                회원_정보(account,
+        회원_가입(회원_정보(account,
                         "에덴",
                         password,
                         "에덴 동산",
@@ -381,39 +340,21 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 토큰_발급(account, "dpepsWkd");
 
         assertThat(response.statusCode()).isEqualTo(401);
-        assertThat(response.body().jsonPath().getString("message"))
+        assertThat(getValue(response, "message"))
                 .contains("로그인이 불가능합니다.");
     }
 
     @Test
-    void 내_정보_조회() {
+    void 사용자_정보_조회() {
         String account = "leo8842";
         String password = "dpepsWkd12!";
 
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
 
-        String accessToken = 토큰_발급(account, password)
-                .body()
-                .jsonPath()
-                .getString("accessToken");
-
-        ExtractableResponse<Response> response = RestAssured.given()
-                .log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .when()
-                .get("/customers")
-                .then()
-                .log().all()
-                .extract();
+        ExtractableResponse<Response> response = 회원_조회(accessToken);
 
         assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(response.body().jsonPath().getString("account")).isEqualTo(account);
+        assertThat(getValue(response, "account")).isEqualTo(account);
     }
 
     @Test
@@ -421,18 +362,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String account = "leo8842";
         String password = "dpepsWkd12!";
 
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
-
-        String accessToken = 토큰_발급(account, password)
-                .body()
-                .jsonPath()
-                .getString("accessToken");
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
 
         ExtractableResponse<Response> response = RestAssured.given()
                 .log().all()
@@ -443,7 +373,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .log().all()
                 .extract();
 
-        String errorMessage = response.body().jsonPath().getString("message");
+        String errorMessage = getValue(response, "message");
 
         assertThat(response.statusCode()).isEqualTo(401);
         assertThat(errorMessage).isEqualTo("유효하지 않은 토큰입니다.");
@@ -454,32 +384,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String account = "leo8842";
         String password = "dpepsWkd12!";
 
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
-
-        String accessToken = 토큰_발급(account, password)
-                .body()
-                .jsonPath()
-                .getString("accessToken");
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
 
         Map<String, Object> request = new HashMap<>();
         request.put("password", password);
 
-        ExtractableResponse<Response> response = RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer" + accessToken)
-                .body(request)
-                .when()
-                .delete("/customers")
-                .then()
-                .log().all()
-                .extract();
+        ExtractableResponse<Response> response = 회원_탈퇴(accessToken, request);
 
         assertThat(response.statusCode()).isEqualTo(204);
     }
@@ -489,35 +399,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String account = "leo8842";
         String password = "dpepsWkd12!";
 
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
-
-        String accessToken = 토큰_발급(account, password)
-                .body()
-                .jsonPath()
-                .getString("accessToken");
+        String accessToken = 회원_가입_후_토큰_발급(account, password);
 
         Map<String, Object> request = new HashMap<>();
         request.put("password", password + "111");
 
-        ExtractableResponse<Response> response = RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer" + accessToken)
-                .body(request)
-                .when()
-                .delete("/customers")
-                .then()
-                .log().all()
-                .extract();
+        ExtractableResponse<Response> response = 회원_탈퇴(accessToken, request);
 
         assertThat(response.statusCode()).isEqualTo(401);
-        assertThat(response.body().jsonPath().getString("message")).contains("로그인이 불가능합니다.");
+        assertThat(getValue(response, "message")).contains("로그인이 불가능합니다.");
+    }
+
+    private String getValue(ExtractableResponse<Response> response, String value) {
+        return response.body().jsonPath().getString(value);
     }
 
     private Map<String, Object> 회원_정보(String account, String nickname, String password,
@@ -562,6 +456,43 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(request)
                 .when()
                 .post("/signin")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private String 회원_가입_후_토큰_발급(String account, String password) {
+        회원_가입(회원_정보(account,
+                "에덴",
+                password,
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678"));
+
+        return getValue(토큰_발급(account, password), "accessToken");
+    }
+
+    private ExtractableResponse<Response> 회원_조회(String accessToken) {
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/customers")
+                .then()
+                .log().all()
+                .extract();
+        return response;
+    }
+
+    private ExtractableResponse<Response> 회원_탈퇴(String accessToken, Map<String, Object> request) {
+        return RestAssured.given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer" + accessToken)
+                .body(request)
+                .when()
+                .delete("/customers")
                 .then()
                 .log().all()
                 .extract();
