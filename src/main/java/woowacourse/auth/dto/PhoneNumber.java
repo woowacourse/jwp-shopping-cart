@@ -16,13 +16,13 @@ public class PhoneNumber {
     private final String end;
 
     @JsonCreator
-    public PhoneNumber(String start, String middle, String end) {
+    public PhoneNumber(final String start, final String middle, final String end) {
         this.start = start;
         this.middle = middle;
         this.end = end;
     }
 
-    public static PhoneNumber of(String phoneNumber) {
+    public static PhoneNumber of(final String phoneNumber) {
         return new PhoneNumber(phoneNumber.substring(0, 3), phoneNumber.substring(3, 7), phoneNumber.substring(7, 11));
     }
 

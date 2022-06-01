@@ -7,7 +7,7 @@ public class DeleteCustomerRequest {
     private final String password;
 
     @JsonCreator
-    public DeleteCustomerRequest(String password) {
+    public DeleteCustomerRequest(final String password) {
         this.password = password;
     }
 

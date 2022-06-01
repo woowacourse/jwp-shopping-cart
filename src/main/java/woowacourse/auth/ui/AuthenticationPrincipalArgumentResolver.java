@@ -16,18 +16,18 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalArgumentResolver(JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationPrincipalArgumentResolver(final JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
     }
 
     @Override
-    public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String token = (String) webRequest.getAttribute(ACCESS_TOKEN, NativeWebRequest.SCOPE_REQUEST);
+    public Long resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
+        final String token = (String) webRequest.getAttribute(ACCESS_TOKEN, NativeWebRequest.SCOPE_REQUEST);
         validateTokenExpired(token);
         final String payload = jwtTokenProvider.getPayload(token);
         validatePayload(payload);
@@ -35,13 +35,13 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         return Long.parseLong(payload);
     }
 
-    private void validateTokenExpired(String token) {
+    private void validateTokenExpired(final String token) {
         if (!jwtTokenProvider.validateToken(token)) {
             throw new TokenExpiredException();
         }
     }
 
-    private void validatePayload(String payload) {
+    private void validatePayload(final String payload) {
         if (payload == null) {
             throw new MalformedJwtException("잘못된 형식의 토큰입니다.");
         }

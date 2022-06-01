@@ -9,11 +9,11 @@ public class Customer {
     private final String address;
     private final String phoneNumber;
 
-    public Customer(String account, String nickname, String password, String address, String phoneNumber) {
+    public Customer(final String account, final String nickname, final String password, final String address, final String phoneNumber) {
         this(0, account, nickname, password, address, phoneNumber);
     }
 
-    public Customer(long id, String account, String nickname, String password, String address, String phoneNumber) {
+    public Customer(final long id, final String account, final String nickname, final String password, final String address, final String phoneNumber) {
         this.id = id;
         this.account = account;
         this.nickname = nickname;

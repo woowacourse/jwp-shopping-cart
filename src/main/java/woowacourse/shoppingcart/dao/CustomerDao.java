@@ -49,7 +49,7 @@ public class CustomerDao {
         return new Customer(number.longValue(), customer.getAccount(), customer.getNickname(), customer.getPassword(), customer.getAddress(), customer.getPhoneNumber());
     }
 
-    public Optional<Customer> findByAccount(String account) {
+    public Optional<Customer> findByAccount(final String account) {
         final String sql = "SELECT id, account, nickname, password, address, phone_number " +
                 "FROM CUSTOMER WHERE account=:account";
 
@@ -60,13 +60,13 @@ public class CustomerDao {
         return Optional.ofNullable(DataAccessUtils.singleResult(query));
     }
 
-    public Long getIdByAccount(String customerName) {
+    public Long getIdByAccount(final String customerName) {
         final Customer byAccount = findByAccount(customerName).orElseThrow(CustomerNotFoundException::new);
 
         return byAccount.getId();
     }
 
-    public Optional<Customer> findById(long customerId) {
+    public Optional<Customer> findById(final long customerId) {
         final String sql = "SELECT id, account, nickname, password, address, phone_number " +
                 "FROM customer WHERE id=:customerId";
 
@@ -77,7 +77,7 @@ public class CustomerDao {
         return Optional.ofNullable(DataAccessUtils.singleResult(result));
     }
 
-    public int update(long id, String nickname, String address, String phoneNumber) {
+    public int update(final long id, final String nickname, final String address, final String phoneNumber) {
         final String sql = "UPDATE customer SET nickname=:nickname, address=:address, phone_number=:phone_number " +
                 "WHERE id=:id";
 

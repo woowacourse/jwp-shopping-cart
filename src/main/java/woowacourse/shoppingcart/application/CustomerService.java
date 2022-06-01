@@ -22,12 +22,12 @@ public class CustomerService {
     private final CustomerDao customerDao;
     private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(CustomerDao customerDao, PasswordEncoder passwordEncoder) {
+    public CustomerService(final CustomerDao customerDao, final PasswordEncoder passwordEncoder) {
         this.customerDao = customerDao;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public CustomerResponse create(SignupRequest signupRequest) {
+    public CustomerResponse create(final SignupRequest signupRequest) {
         final Customer customer = toCustomer(signupRequest);
 
         if (customerDao.findByAccount(customer.getAccount()).isPresent()) {
@@ -36,7 +36,7 @@ public class CustomerService {
         return CustomerResponse.of(customerDao.save(customer));
     }
 
-    private Customer toCustomer(SignupRequest signupRequest) {
+    private Customer toCustomer(final SignupRequest signupRequest) {
         final String match = "[^\\da-zA-Z]";
         final String processedAccount = signupRequest.getAccount().replaceAll(match, "").toLowerCase(Locale.ROOT).trim();
         return new Customer(processedAccount,
@@ -47,14 +47,14 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
-    public CustomerResponse getById(long customerId) {
-        Customer customer = customerDao.findById(customerId)
+    public CustomerResponse getById(final long customerId) {
+        final Customer customer = customerDao.findById(customerId)
                 .orElseThrow(CustomerNotFoundException::new);
 
         return CustomerResponse.of(customer);
     }
 
-    public int update(long customerId, UpdateCustomerRequest updateCustomerRequest) {
+    public int update(final long customerId, final UpdateCustomerRequest updateCustomerRequest) {
         return customerDao.update(
                 customerId,
                 updateCustomerRequest.getNickname(),
@@ -62,7 +62,7 @@ public class CustomerService {
                 updateCustomerRequest.getPhoneNumber().appendNumbers());
     }
 
-    public int delete(long id, DeleteCustomerRequest deleteCustomerRequest) {
+    public int delete(final long id, final DeleteCustomerRequest deleteCustomerRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         if (!passwordEncoder.matches(deleteCustomerRequest.getPassword(), customer.getPassword())) {
             throw new WrongPasswordException();

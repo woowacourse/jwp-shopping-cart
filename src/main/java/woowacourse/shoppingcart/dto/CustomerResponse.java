@@ -11,7 +11,7 @@ public class CustomerResponse {
     private final String address;
     private final PhoneNumber phoneNumber;
 
-    public CustomerResponse(long id, String account, String nickname, String address, PhoneNumber phoneNumber) {
+    public CustomerResponse(final long id, final String account, final String nickname, final String address, final PhoneNumber phoneNumber) {
         this.id = id;
         this.account = account;
         this.nickname = nickname;
@@ -20,7 +20,7 @@ public class CustomerResponse {
     }
 
 
-    public static CustomerResponse of(Customer customer) {
+    public static CustomerResponse of(final Customer customer) {
         final PhoneNumber phoneNumber = PhoneNumber.of(customer.getPhoneNumber());
         return new CustomerResponse(customer.getId(), customer.getAccount(), customer.getNickname(), customer.getAddress(), phoneNumber);
     }

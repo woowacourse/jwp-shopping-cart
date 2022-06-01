@@ -15,7 +15,7 @@ public class UpdateCustomerRequest {
     private final PhoneNumber phoneNumber;
 
     @JsonCreator
-    public UpdateCustomerRequest(String nickname, String address, PhoneNumber phoneNumber) {
+    public UpdateCustomerRequest(final String nickname, final String address, final PhoneNumber phoneNumber) {
         this.nickname = nickname;
         this.address = address;
         this.phoneNumber = phoneNumber;

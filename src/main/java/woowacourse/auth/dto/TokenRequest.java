@@ -8,7 +8,7 @@ public class TokenRequest {
     private final String password;
 
     @JsonCreator
-    public TokenRequest(String account, String password) {
+    public TokenRequest(final String account, final String password) {
         this.account = account;
         this.password = password;
     }

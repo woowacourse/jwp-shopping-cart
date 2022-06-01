@@ -18,12 +18,12 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(final CustomerService customerService) {
         this.customerService = customerService;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody @Valid SignupRequest signupRequest) throws URISyntaxException {
+    public ResponseEntity<Void> signup(@RequestBody @Valid final SignupRequest signupRequest) throws URISyntaxException {
         customerService.create(signupRequest);
 
         return ResponseEntity.created(new URI("/signin"))
@@ -31,17 +31,17 @@ public class CustomerController {
     }
 
     @GetMapping("/customers")
-    public CustomerResponse getCustomers(@AuthenticationPrincipal long customerId) {
+    public CustomerResponse getCustomers(@AuthenticationPrincipal final long customerId) {
         return customerService.getById(customerId);
     }
 
     @PutMapping("/customers")
-    public void updateCustomer(@AuthenticationPrincipal long customerId, @RequestBody @Valid UpdateCustomerRequest updateCustomerRequest) {
+    public void updateCustomer(@AuthenticationPrincipal final long customerId, @RequestBody @Valid final UpdateCustomerRequest updateCustomerRequest) {
         customerService.update(customerId, updateCustomerRequest);
     }
 
     @DeleteMapping("/customers")
-    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal long customerId, @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal final long customerId, @RequestBody final DeleteCustomerRequest deleteCustomerRequest) {
         customerService.delete(customerId, deleteCustomerRequest);
         return ResponseEntity.noContent().build();
     }

@@ -7,7 +7,7 @@ public class TokenResponse {
     private final String accessToken;
 
     @JsonCreator
-    public TokenResponse(String accessToken) {
+    public TokenResponse(final String accessToken) {
         this.accessToken = accessToken;
     }
 

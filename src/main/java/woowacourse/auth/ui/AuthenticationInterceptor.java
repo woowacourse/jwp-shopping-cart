@@ -11,7 +11,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, Object handler) {
         final String accessToken = AuthorizationExtractor.extract(request);
         request.setAttribute(ACCESS_TOKEN, accessToken);
         return true;
