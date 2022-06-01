@@ -3,15 +3,15 @@ package woowacourse.shoppingcart.dto;
 import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.domain.Nickname;
 
-public class CustomerInfoRequest {
+public class CustomerProfileRequest {
 
     @NotBlank
     private String nickname;
 
-    private CustomerInfoRequest() {
+    private CustomerProfileRequest() {
     }
 
-    public CustomerInfoRequest(String nickname) {
+    public CustomerProfileRequest(String nickname) {
         this.nickname = nickname;
     }
 

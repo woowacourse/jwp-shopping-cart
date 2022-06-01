@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.dto.CustomerInfoRequest;
+import woowacourse.shoppingcart.dto.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -38,13 +38,13 @@ public class CustomerService {
                 .orElseThrow(() -> new InvalidCustomerException("비밀번호가 일치하지 않습니다."));
     }
 
-    public Customer findCustomerByEmail(final String email) {
+    public Customer findByEmail(final String email) {
         return customerDao.findByEmail(new Email(email)).getCustomer();
     }
 
     @Transactional
-    public void updateInfo(final String email, final CustomerInfoRequest customerInfoRequest) {
-        customerDao.updateInfo(new Email(email), customerInfoRequest.toNickname());
+    public void updateProfile(final String email, final CustomerProfileRequest customerProfileRequest) {
+        customerDao.updateProfile(new Email(email), customerProfileRequest.toNickname());
     }
 
     @Transactional

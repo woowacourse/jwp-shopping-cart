@@ -126,10 +126,10 @@ public class CustomerDaoTest {
 
     @DisplayName("회원 정보를 수정한다.")
     @Test
-    void updateInfo() {
+    void updateProfile() {
         final Nickname 파리채 = new Nickname("파리채");
 
-        customerDao.updateInfo(EMAIL, 파리채);
+        customerDao.updateProfile(EMAIL, 파리채);
 
         CustomerEntity customerEntity = customerDao.findByEmail(EMAIL);
         assertThat(customerEntity.getCustomer().getNickname()).isEqualTo(파리채.getValue());
@@ -137,10 +137,10 @@ public class CustomerDaoTest {
 
     @DisplayName("회원 정보 수정 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
     @Test
-    void updateInfoFail() {
+    void updateProfileFail() {
         final Nickname 파리채 = new Nickname("파리채");
 
-        assertThatThrownBy(() -> customerDao.updateInfo(NOT_EXISTING_EMAIL, 파리채))
+        assertThatThrownBy(() -> customerDao.updateProfile(NOT_EXISTING_EMAIL, 파리채))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }

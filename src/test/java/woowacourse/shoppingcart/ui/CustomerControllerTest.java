@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.CustomerInfoRequest;
+import woowacourse.shoppingcart.dto.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicateCheckResponse;
@@ -104,8 +104,8 @@ class CustomerControllerTest {
 
     @DisplayName("회원 정보를 조회한다.")
     @Test
-    void findCustomerInfo() {
-        final ResponseEntity<CustomerResponse> response = customerController.findCustomerInfo("email@email.com");
+    void findProfile() {
+        final ResponseEntity<CustomerResponse> response = customerController.findProfile("email@email.com");
 
         final HttpStatus statusCode = response.getStatusCode();
         final CustomerResponse actual = Objects.requireNonNull(response.getBody());
@@ -119,30 +119,30 @@ class CustomerControllerTest {
 
     @DisplayName("회원 정보를 수정한다.")
     @Test
-    void updateCustomerInfo() {
-        final CustomerInfoRequest customerInfoRequest = new CustomerInfoRequest("파리채");
+    void updateProfile() {
+        final CustomerProfileRequest customerProfileRequest = new CustomerProfileRequest("파리채");
 
-        final ResponseEntity<Void> response = customerController.updateCustomerInfo("email@email.com",
-                customerInfoRequest);
+        final ResponseEntity<Void> response = customerController.updateProfile("email@email.com",
+                customerProfileRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     @DisplayName("형식이 잘못된 닉네임으로 회원 정보를 수정하는 경우 예외가 발생한다.")
     @Test
-    void updateInvalidCustomerInfo() {
-        final CustomerInfoRequest customerInfoRequest = new CustomerInfoRequest("파리채채채채");
+    void updateInvalidProfileFormat() {
+        final CustomerProfileRequest customerProfileRequest = new CustomerProfileRequest("파리채채채채");
 
-        assertThatThrownBy(() -> customerController.updateCustomerInfo("email@email.com", customerInfoRequest))
+        assertThatThrownBy(() -> customerController.updateProfile("email@email.com", customerProfileRequest))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
     @DisplayName("비밀번호를 수정한다.")
     @Test
-    void updateCustomerPassword() {
+    void updatePassword() {
         final PasswordRequest passwordRequest = new PasswordRequest("newpassword123!");
 
-        final ResponseEntity<Void> response = customerController.updateCustomerPassword("email@email.com",
+        final ResponseEntity<Void> response = customerController.updatePassword("email@email.com",
                 passwordRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -150,10 +150,10 @@ class CustomerControllerTest {
 
     @DisplayName("형식이 잘못된 비밀번호로 수정하는 경우 예외가 발생한다.")
     @Test
-    void updateInvalidCustomerPassword() {
+    void updateInvalidPassword() {
         final PasswordRequest passwordRequest = new PasswordRequest("invalidpassword");
 
-        assertThatThrownBy(() -> customerController.updateCustomerPassword("email@email.com", passwordRequest))
+        assertThatThrownBy(() -> customerController.updatePassword("email@email.com", passwordRequest))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("잘못된 비밀번호 형식입니다.");
     }

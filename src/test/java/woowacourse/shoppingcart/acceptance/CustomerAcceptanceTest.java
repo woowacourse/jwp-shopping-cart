@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.CustomerInfoRequest;
+import woowacourse.shoppingcart.dto.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 
@@ -46,12 +46,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String accessToken = 로그인_후_토큰발급(파리채토큰);
         회원정보_조회(accessToken);
 
-        CustomerInfoRequest customerInfoRequest = new CustomerInfoRequest("수정파리채");
+        CustomerProfileRequest customerProfileRequest = new CustomerProfileRequest("수정파리채");
 
         RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .body(customerInfoRequest)
+                .body(customerProfileRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().patch("/api/members/auth/me")
                 .then().log().all()

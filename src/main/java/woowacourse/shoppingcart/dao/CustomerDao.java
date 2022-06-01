@@ -101,7 +101,7 @@ public class CustomerDao {
         }
     }
 
-    public void updateInfo(final Email email, final Nickname nickname) {
+    public void updateProfile(final Email email, final Nickname nickname) {
         final String sql = "update customer set nickname = :nickname where email = :email";
 
         final Map<String, Object> params = new HashMap<>();

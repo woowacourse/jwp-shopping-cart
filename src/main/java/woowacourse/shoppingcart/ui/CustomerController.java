@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerInfoRequest;
+import woowacourse.shoppingcart.dto.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicateCheckResponse;
@@ -52,22 +52,22 @@ public class CustomerController {
     }
 
     @GetMapping("/auth/me")
-    public ResponseEntity<CustomerResponse> findCustomerInfo(@AuthenticationPrincipal final String email) {
-        final Customer customer = customerService.findCustomerByEmail(email);
+    public ResponseEntity<CustomerResponse> findProfile(@AuthenticationPrincipal final String email) {
+        final Customer customer = customerService.findByEmail(email);
         final CustomerResponse customerResponse = new CustomerResponse(customer.getEmail(), customer.getNickname());
         return ResponseEntity.ok().body(customerResponse);
     }
 
     @PatchMapping("/auth/me")
-    public ResponseEntity<Void> updateCustomerInfo(@AuthenticationPrincipal final String email,
-                                                   @RequestBody @Valid final CustomerInfoRequest customerInfoRequest) {
-        customerService.updateInfo(email, customerInfoRequest);
+    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal final String email,
+                                              @RequestBody @Valid final CustomerProfileRequest customerProfileRequest) {
+        customerService.updateProfile(email, customerProfileRequest);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/auth/password")
-    public ResponseEntity<Void> updateCustomerPassword(@AuthenticationPrincipal final String email,
-                                                       @RequestBody @Valid final PasswordRequest passwordRequest) {
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal final String email,
+                                               @RequestBody @Valid final PasswordRequest passwordRequest) {
         customerService.updatePassword(email, passwordRequest);
         return ResponseEntity.noContent().build();
     }
