@@ -29,10 +29,14 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader("Authorization");
         String token = AuthorizationExtractor.extractFromString(authorization);
-        if (authService.validateToken(token)) {
-            String payload = authService.getPayload(token);
-            return new FindCustomerRequest(payload);
+        validateToken(token);
+        String payload = authService.getPayload(token);
+        return new FindCustomerRequest(payload);
+    }
+
+    private void validateToken(String token) {
+        if (!authService.validateToken(token)) {
+            throw new InvalidTokenException();
         }
-        throw new InvalidTokenException();
     }
 }
