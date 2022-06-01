@@ -1,20 +1,26 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
+import woowacourse.auth.domain.EncryptedPassword;
+import woowacourse.auth.domain.Password;
 
 public class Customer {
 
     private final String username;
-    private final String password;
+    private final EncryptedPassword password;
     private final String nickname;
     private final int age;
 
-    public Customer(String username, String password, String nickname, int age) {
+    public Customer(String username, EncryptedPassword password, String nickname, int age) {
         validate(username, nickname, age);
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.age = age;
+    }
+
+    public Customer(String username, Password password, String nickname, int age) {
+        this(username, password.toEncrypted(), nickname, age);
     }
 
     private void validate(String username, String nickname, int age) {
@@ -50,6 +56,10 @@ public class Customer {
     }
 
     public String getPassword() {
+        return password.getValue();
+    }
+
+    public EncryptedPassword getEncryptedPassword() {
         return password;
     }
 
@@ -79,5 +89,15 @@ public class Customer {
     @Override
     public int hashCode() {
         return Objects.hash(username, password, nickname, age);
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "username='" + username + '\'' +
+                ", password=" + password +
+                ", nickname='" + nickname + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

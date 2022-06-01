@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.shoppingcart.domain.Customer;
 
 @Repository
@@ -17,7 +18,7 @@ public class CustomerDao {
 
     private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) ->
             new Customer(resultSet.getString("username"),
-                    resultSet.getString("password"),
+                    new EncryptedPassword(resultSet.getString("password")),
                     resultSet.getString("nickname"),
                     resultSet.getInt("age"));
 

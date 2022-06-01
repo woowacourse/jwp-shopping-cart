@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.setup.DatabaseTest;
 import woowacourse.auth.domain.User;
 
@@ -31,7 +32,7 @@ class UserDaoTest extends DatabaseTest {
         @Test
         void 존재하는_사용자인_경우_값이_있는_Optional_반환() {
             String 유효한_아이디 = "valid_username";
-            String 비밀번호 = "valid_pw";
+            EncryptedPassword 비밀번호 = new EncryptedPassword("valid_pw");
             User 사용자 = new User(유효한_아이디, 비밀번호);
             사용자_저장(사용자);
 

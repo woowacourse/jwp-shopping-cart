@@ -5,9 +5,9 @@ import java.util.Objects;
 public class User {
 
     private final String username;
-    private final String password;
+    private final EncryptedPassword password;
 
-    public User(String username, String password) {
+    public User(String username, EncryptedPassword password) {
         this.username = username;
         this.password = password;
     }
@@ -16,8 +16,9 @@ public class User {
         return username;
     }
 
-    public boolean hasSamePassword(String password) {
-        return this.password.equals(password);
+    public boolean hasDifferentPassword(String password) {
+        EncryptedPassword targetPassword = new Password(password).toEncrypted();
+        return !this.password.equals(targetPassword);
     }
 
     public String getUsername() {
@@ -25,7 +26,7 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return password.getValue();
     }
 
     @Override
@@ -44,5 +45,10 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(username, password);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "username='" + username + '\'' + ", password=" + password + '}';
     }
 }

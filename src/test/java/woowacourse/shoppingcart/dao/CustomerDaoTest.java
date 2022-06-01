@@ -12,6 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.setup.DatabaseTest;
 import woowacourse.shoppingcart.domain.Customer;
 
@@ -19,7 +20,7 @@ import woowacourse.shoppingcart.domain.Customer;
 class CustomerDaoTest extends DatabaseTest {
 
     private static final String 유효한_아이디 = "valid_username";
-    private static final String 비밀번호 = "valid_password";
+    private static final EncryptedPassword 비밀번호 = new EncryptedPassword("valid_password");
     private static final String 유효한_닉네임 = "nickname";
     private static final int 유효한_나이 = 20;
 
@@ -87,7 +88,8 @@ class CustomerDaoTest extends DatabaseTest {
         @Test
         void 유효한_데이터로_수정하려는_경우_성공() {
             Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
-            Customer 수정된_고객 = new Customer(유효한_아이디, "새로운_비밀번호", "새로운_닉네임", 80);
+            EncryptedPassword 새로운_비밀번호 = new EncryptedPassword("새로운_비밀번호");
+            Customer 수정된_고객 = new Customer(유효한_아이디, 새로운_비밀번호, "새로운_닉네임", 80);
             saveFixture(고객);
 
             customerDao.updateByUsername(수정된_고객);

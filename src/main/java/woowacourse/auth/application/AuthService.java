@@ -26,7 +26,7 @@ public class AuthService {
 
     private User findValidUser(String username, String password) {
         User user = findUser(username);
-        if (!user.hasSamePassword(password)) {
+        if (user.hasDifferentPassword(password)) {
             throw new AuthenticationException();
         }
         return user;
