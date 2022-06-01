@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,5 +27,10 @@ public class CustomerService {
         customerDao.save(customer.getEmail(), customer.getNickname(), customer.getPassword());
 
         return customer;
+    }
+
+    public void checkPassword(String email, PasswordRequest passwordRequest) {
+        customerDao.findByEmailAndPassword(email, passwordRequest.getPassword())
+                .orElseThrow(() -> new InvalidCustomerException("비밀번호가 일치하지 않습니다."));
     }
 }
