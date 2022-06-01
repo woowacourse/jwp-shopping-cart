@@ -18,14 +18,13 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("Bearer Auth 로그인 성공")
     @Test
-    void myInfoWithBearerAuth() {
+    void 로그인_성공() {
         // given
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1234"))
+                .body(new CustomerRequest("ellie", "12345678"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -33,7 +32,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         String accessToken = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("test", "1234"))
+                .body(new TokenRequest("ellie", "12345678"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
@@ -48,17 +47,16 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
 
-        assertThat(response.getName()).isEqualTo("test");
+        assertThat(response.getName()).isEqualTo("ellie");
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
     @Test
-    void myInfoWithBadBearerAuth() {
+    void 비밀번호가_다른_경우_로그인_실패() {
         // given
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1234"))
+                .body(new CustomerRequest("ellie", "12345678"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -66,7 +64,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> tokenResponse = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("test", "5522"))
+                .body(new TokenRequest("ellie", "123456789"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
@@ -76,14 +74,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
-    void myInfoWithWrongBearerAuth() {
+    void 토큰이_유효하지_않은_경우_로그인_실패() {
         // given
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1234"))
+                .body(new CustomerRequest("ellie", "12345678"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();

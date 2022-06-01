@@ -15,157 +15,161 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
+
+    /*
+        Scenario: 회원 가입
+            When: 회원 가입을 요청한다.
+            Then: 201 상태, Location 헤더를 응답한다.
+    */
     @Test
     void 회원_가입() {
-        ExtractableResponse<Response> createResponse = 회원_가입("test", "1234");
+        // when
+        ExtractableResponse<Response> createResponse = 회원_가입("ellie", "12345678");
 
+        // then
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(createResponse.header("Location")).isEqualTo("/api/customers/test");
+        assertThat(createResponse.header("Location")).isEqualTo("/api/customers/ellie");
     }
 
+    /*
+        Scenario: 중복된 이름으로 회원 가입
+            Given: 회원 가입을 한다.
+            When: 같은 이름으로 회원 가입을 요청한다.
+            Then: 400 상태, 에러 메시지를 응답한다.
+    */
     @Test
     void 중복된_이름으로_회원_가입() {
-        회원_가입("test", "1234");
-        ExtractableResponse<Response> createResponse = 회원_가입("test", "1234");
+        // given
+        회원_가입("ellie", "12345678");
 
+        // when
+        ExtractableResponse<Response> createResponse = 회원_가입("ellie", "12345678");
+
+        // then
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
+    /*
+        Scenario: 누란된 정보로 회원 가입
+            When: 누란된 정보가 있는 상테에서 회원 가입을 요청한다.
+            Then: 400 상태, 에러 메시지를 응답한다.
+    */
     @Test
     void 회원가입_시_누락된_필드값_존재() {
-        ExtractableResponse<Response> createResponse = 회원_가입("test", null);
+        // when
+        ExtractableResponse<Response> createResponse = 회원_가입("ellie", null);
 
+        // given
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
+    /*
+        Scenario: 내 정보 조회
+            Given: 회원 가입을 한다.
+            And: 로그인을 해 토큰을 발급받는다.
+            When: 내 정보 조회를 요청한다.
+            Then: 200 상태, 회원 정보를 응답한다.
+    */
     @Test
     void 내_정보_조회() {
         // given
-        회원_가입("test", "1234");
-        String accessToken = 로그인_후_토큰_획득("test", "1234");
+        회원_가입("ellie", "12345678");
+        String accessToken = 로그인_및_토큰_발급("ellie", "12345678");
 
         // when
-        ExtractableResponse<Response> getResponse = RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> getResponse = 내_정보_조회(accessToken);
 
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(getResponse.body().jsonPath().getString("name")).isEqualTo("test");
+        assertThat(getResponse.body().jsonPath().getString("name")).isEqualTo("ellie");
     }
 
+    /*
+        Scenario: 유효하지 않은 토큰으로 내 정보 조회
+            When: 토큰 없이 내 정보 조회를 요청한다.
+            Then: 401 상태, 에러 메시지를 응답한다.
+    */
     @Test
-    void 토큰을_발급받지_않고_내_정보_조회() {
+    void 유효하지_않은_토큰으로_내_정보_조회() {
         // when
-        ExtractableResponse<Response> getResponse = RestAssured
-                .given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> getResponse = 내_정보_조회("invalid_token");
 
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
+    /*
+        Scenario: 내 정보 수정
+            Given: 회원 가입을 한다.
+            And: 로그인을 해 토큰을 발급받는다.
+            When: 내 정보 수정을 요청한다.
+            Then: 200 상태를 응답한다.
+    */
     @Test
     void 내_정보_수정() {
         // given
-        회원_가입("test", "1234");
-        String accessToken = 로그인_후_토큰_획득("test", "1234");
+        회원_가입("ellie", "12345678");
+        String accessToken = 로그인_및_토큰_발급("ellie", "12345678");
 
         // when
-        ExtractableResponse<Response> editResponse = RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1255"))
-                .when().put("/api/customers/me")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> editResponse = 내_정보_수정(accessToken, "ellie", "123456789");
 
         // then
-        ExtractableResponse<Response> loginResponse = RestAssured
-                .given().log().all()
-                .body(new TokenRequest("test", "1255"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login")
-                .then().log().all().extract();
+        ExtractableResponse<Response> loginResponse = 로그인("ellie", "123456789");
 
         assertThat(editResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    /*
+    Scenario: 유효하지 않은 토큰으로 내 정보 수정
+        When: 토큰 없이 내 정보 수정을 요청한다.
+        Then: 401 상태, 에러 메시지를 응답한다.
+    */
     @Test
-    void 토큰을_발급받지_않고_내_정보_수정() {
+    void 유효하지_않은_토큰으로_내_정보_수정() {
         // when
-        ExtractableResponse<Response> editResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1255"))
-                .when().put("/api/customers/me")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> editResponse = 내_정보_수정("invalid_token", "ellie", "123456789");
 
         // then
         assertThat(editResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
+    /*
+        Scenario: 회원 탈퇴
+            Given: 회원 가입을 한다.
+            And: 로그인을 해 토큰을 발급받는다.
+            When: 회원 탈퇴를 요청한다.
+            Then: 204 상태를 응답한다.
+    */
     @Test
     void 회원_탈퇴() {
         // given
-        회원_가입("test", "1234");
-        String accessToken = 로그인_후_토큰_획득("test", "1234");
+        회원_가입("ellie", "12345678");
+        String accessToken = 로그인_및_토큰_발급("ellie", "12345678");
 
         // when
-        ExtractableResponse<Response> deleteResponse = RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/me")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> deleteResponse = 회원_탈퇴(accessToken);
 
         // then
-        ExtractableResponse<Response> getResponse = RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> getResponse = 내_정보_조회(accessToken);
 
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
+    /*
+       Scenario: 유효하지 않은 토큰으로 회원 탈퇴
+           When: 토큰 없이 회원 탈퇴를 요청한다.
+           Then: 401 상태, 에러 메시지를 응답한다.
+    */
     @Test
-    void 토큰을_발급받지_않고_탈퇴() {
+    void 유효하지_않은_토큰으로_회원_탈퇴() {
         // when
-        ExtractableResponse<Response> deleteResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/me")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> deleteResponse = 회원_탈퇴("invalid_token");
 
         // then
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    private String 로그인_후_토큰_획득(String name, String password) {
-        return RestAssured
-                .given().log().all()
-                .body(new TokenRequest(name, password))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login")
-                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
     }
 
     private ExtractableResponse<Response> 회원_가입(String name, String password) {
@@ -174,6 +178,51 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new CustomerRequest(name, password))
                 .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 로그인(String name, String password) {
+        return RestAssured
+                .given().log().all()
+                .body(new TokenRequest(name, password))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/login")
+                .then().log().all().extract();
+    }
+
+    private String 로그인_및_토큰_발급(String name, String password) {
+        return 로그인(name, password).as(TokenResponse.class).getAccessToken();
+    }
+
+    private ExtractableResponse<Response> 내_정보_조회(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 내_정보_수정(String accessToken, String name, String password) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CustomerRequest(name, password))
+                .when().put("/api/customers/me")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 회원_탈퇴(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/api/customers/me")
                 .then().log().all()
                 .extract();
     }
