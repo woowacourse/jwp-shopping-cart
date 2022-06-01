@@ -8,7 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -20,6 +19,7 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Repository
 public class CustomerDao {
 
+    public static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname, withdrawal from customer where withdrawal = false) ";
     private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) -> new Customer(
             resultSet.getLong("id"),
             resultSet.getString("username"),
@@ -56,10 +56,25 @@ public class CustomerDao {
     }
 
     public Customer findById(final Long id) {
-        String query = "select id, username, password, nickname, withdrawal from customer where id = :id";
+        String query = "select id, username, password, nickname, withdrawal from"
+                + REAL_CUSTOMER_QUERY
+                + "where id = :id";
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
-        SqlParameterSource source = new MapSqlParameterSource(params);
+        try {
+            return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public Customer login(final String username, final String password) {
+        String query = "select id, username, password, nickname, withdrawal from"
+                + REAL_CUSTOMER_QUERY
+                + "where username = :username and password = :password";
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        params.put("password", password);
         try {
             return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
         } catch (EmptyResultDataAccessException exception) {

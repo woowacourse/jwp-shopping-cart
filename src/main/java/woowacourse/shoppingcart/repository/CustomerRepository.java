@@ -20,4 +20,8 @@ public class CustomerRepository {
     public Customer findById(final Long id) {
         return customerDao.findById(id);
     }
+
+    public Customer login(final String username, final String password) {
+        return customerDao.login(username, password);
+    }
 }

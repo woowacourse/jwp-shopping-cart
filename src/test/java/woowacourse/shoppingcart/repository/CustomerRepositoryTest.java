@@ -41,4 +41,21 @@ class CustomerRepositoryTest {
                 .ignoringFields("id")
                 .isEqualTo(customer);
     }
+
+    @DisplayName("입력된 비밀번호를 대조하고 로그인한 customer 를 반환한다.")
+    @Test
+    void login() {
+        // given
+        Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen", false);
+        customerRepository.create(customer);
+
+        // when
+        Customer loginCustomerResult = customerRepository.login("jo@naver.com", "1234abcd!");
+
+        // then
+        assertThat(loginCustomerResult)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(customer);
+    }
 }
