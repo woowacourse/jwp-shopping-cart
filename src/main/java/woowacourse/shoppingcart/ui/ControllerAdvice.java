@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import woowacourse.shoppingcart.dto.ExceptionResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
+import woowacourse.shoppingcart.exception.DuplicatedUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -30,6 +31,12 @@ public class ControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleUnhandledException() {
         return ResponseEntity.badRequest().body("Unhandled Exception");
+    }
+
+    @ExceptionHandler(DuplicatedUsernameException.class)
+    public ResponseEntity handleDuplicatedException(DuplicatedUsernameException exception) {
+        ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
