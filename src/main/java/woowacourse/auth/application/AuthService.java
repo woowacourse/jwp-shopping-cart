@@ -20,7 +20,7 @@ public class AuthService {
     }
 
     public TokenResponse createToken(TokenRequest tokenRequest) {
-        Customer customer = customerDao.findByUserName(tokenRequest.getUsername())
+        Customer customer = customerDao.findByName(tokenRequest.getName())
                 .orElseThrow(AuthenticationFailureException::new);
         if (!customer.isPasswordMatch(tokenRequest.getPassword())) {
             throw new AuthenticationFailureException();

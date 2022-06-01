@@ -1,10 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -27,29 +25,29 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
+    @DisplayName("name을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
-    void findIdByUserNameTest() {
+    void findIdByNameTest() {
 
         // given
-        final String userName = "puterism";
+        final String name = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByName(name);
 
         // then
         assertThat(customerId).isEqualTo(1L);
     }
 
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
+    @DisplayName("대소문자를 구별하지 않고 name을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
 
         // given
-        final String userName = "gwangyeol-iM";
+        final String name = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByName(name);
 
         // then
         assertThat(customerId).isEqualTo(16L);

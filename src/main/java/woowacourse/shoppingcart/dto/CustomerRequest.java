@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.dto;
 
 public class CustomerRequest {
 
-    private final String username;
+    private final String name;
     private final String password;
     private final String email;
     private final String address;
@@ -12,16 +12,16 @@ public class CustomerRequest {
         this(null, null, null, null, null);
     }
 
-    public CustomerRequest(String username, String password, String email, String address, String phoneNumber) {
-        this.username = username;
+    public CustomerRequest(String name, String password, String email, String address, String phoneNumber) {
+        this.name = name;
         this.password = password;
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
     public String getPassword() {

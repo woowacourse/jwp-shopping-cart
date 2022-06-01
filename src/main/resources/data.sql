@@ -1,4 +1,4 @@
-insert into customer (username, password, email, address, phone_number)
+insert into customer (name, password, email, address, phone_number)
 values ('puterism', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),
        ('tanney-102', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),
        ('jho2301', 'abcd1234!', 'woowahan@techcourse.com', 'seongdam', '010-1234-5678'),

@@ -30,13 +30,13 @@ public class CustomerService {
     }
 
     public CustomerResponse findCustomer(FindCustomerRequest findCustomerRequest) {
-        Customer customer = customerDao.findByUserName(findCustomerRequest.getName())
+        Customer customer = customerDao.findByName(findCustomerRequest.getName())
                 .orElseThrow(InvalidCustomerException::new);
         return CustomerResponse.from(customer);
     }
 
     public void updateCustomer(FindCustomerRequest findCustomerRequest, UpdateCustomerRequest updateCustomerRequest) {
-        Customer customer = customerDao.findByUserName(findCustomerRequest.getName())
+        Customer customer = customerDao.findByName(findCustomerRequest.getName())
                 .orElseThrow(InvalidCustomerException::new);
         Customer updatedCustomer = customer.update(updateCustomerRequest.getAddress(), updateCustomerRequest.getPhoneNumber());
         customerDao.update(updatedCustomer);

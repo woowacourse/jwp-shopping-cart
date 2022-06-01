@@ -20,7 +20,7 @@ public class CustomerDao {
     private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = (resultSet, rowNum) ->
             new Customer(
                     resultSet.getLong("id"),
-                    resultSet.getString("username"),
+                    resultSet.getString("name"),
                     resultSet.getString("password"),
                     resultSet.getString("email"),
                     resultSet.getString("address"),
@@ -32,17 +32,17 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByName(final String name) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            final String query = "SELECT id FROM customer WHERE name = ?";
+            return jdbcTemplate.queryForObject(query, Long.class, name.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }
 
     public Long save(final Customer customer) {
-        final String query = "INSERT INTO customer (username, password, email, address, phone_number) "
+        final String query = "INSERT INTO customer (name, password, email, address, phone_number) "
                 + "VALUES (?, ?, ?, ?, ?)";
         KeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update((Connection con) -> {
@@ -57,10 +57,10 @@ public class CustomerDao {
         return Objects.requireNonNull(holder.getKey()).longValue();
     }
 
-    public Optional<Customer> findByUserName(final String username) {
-        final String query = "SELECT * FROM customer WHERE username = ?";
+    public Optional<Customer> findByName(final String name) {
+        final String query = "SELECT * FROM customer WHERE name = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, username));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, name));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
