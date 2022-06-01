@@ -29,4 +29,4 @@ insert into customer(email, name, password)
 values ('hi@hi.com', 'hi', '$2a$10$5P/ihXLR1ZVwaPYHriuE9OHLTrGUNlmr/VHtGYkOEa0ozSj2OI4ki');
 
 insert into customer(email, name, password)
-values ('pobi@woowahan.com', 'pobi', '$2a$10$5P/ihXLR1ZVwaPYHriuE9OHLTrGUNlmr/VHtGYkOEa0ozSj2OI4ki');
+values ('pobi@woowahan.com', 'pobi', '$2a$10$TFL9.0p1YBxWJitJCxDY1ek70Y/VSajYNL3jXypeKTeDSroWJ9CEq');
