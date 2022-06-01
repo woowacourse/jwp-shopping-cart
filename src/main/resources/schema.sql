@@ -19,7 +19,9 @@ create table customer
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table customer
-    add unique key (username, nickname);
+    add unique key (username);
+alter table customer
+    add unique key (nickname);
 
 create table product
 (

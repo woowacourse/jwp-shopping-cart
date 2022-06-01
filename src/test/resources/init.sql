@@ -20,6 +20,8 @@ create table customer
 
 alter table customer
     add unique key (username);
+alter table customer
+    add unique key (nickname);
 
 create table product
 (

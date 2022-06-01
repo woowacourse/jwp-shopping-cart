@@ -32,6 +32,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void 정상적으로_토큰이_발급된다() {
         // given
         // 회원이 등록되어 있고
+        CustomerRequest customerRequest = new CustomerRequest("jo@naver.com", "jojogreen", "abcde123!");
         회원가입(new CustomerRequest("jo@naver.com", "jojogreen", "abcde123!"));
 
         // id, password 를 사용해 로그인하여 토큰을 발급받고
@@ -46,10 +47,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         // 내 정보가 조회된다.
         assertAll(
-                () -> assertThat(customerResponse.getUserId()).isEqualTo(
-                        new CustomerRequest("jo@naver.com", "jojogreen", "abcde123!").getUserId()),
-                () -> assertThat(customerResponse.getNickname()).isEqualTo(
-                        new CustomerRequest("jo@naver.com", "jojogreen", "abcde123!").getNickname())
+                () -> assertThat(customerResponse.getUserId())
+                        .isEqualTo(customerRequest.getUserId()),
+                () -> assertThat(customerResponse.getNickname())
+                        .isEqualTo(customerRequest.getNickname())
         );
     }
 
