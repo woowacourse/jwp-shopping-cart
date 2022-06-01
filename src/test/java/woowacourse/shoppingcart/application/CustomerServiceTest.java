@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -138,5 +139,18 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("아이디는 이메일 형식으로 입력해주세요.");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"a", "aaaaaaaaaaa", "!@#$"})
+    @DisplayName("닉네임이 영문, 한글, 숫자를 조합하여 2 ~ 10 자가 아니면 안된다.")
+    void validateNicknameFormat(String nickname) {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", nickname, "1234");
+
+        // when & then
+        assertThatThrownBy(() -> customerService.signUp(signUpRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("닉네임은 영문, 한글, 숫자를 조합하여 2 ~ 10 자를 입력해주세요.");
     }
 }

@@ -1,17 +1,15 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import java.util.regex.Pattern;
-
 public class Customer {
 
     private final UserId userId;
-    private final String nickname;
+    private final Nickname nickname;
     private final String password;
 
     public Customer(final String userId, final String nickname, final String password) {
         validateCustomer(userId, nickname, password);
         this.userId = new UserId(userId);
-        this.nickname = nickname;
+        this.nickname = new Nickname(nickname);
         this.password = password;
     }
 
@@ -19,15 +17,6 @@ public class Customer {
         validateNickname(nickname);
         validatePassword(password);
     }
-
-//    private void validateUserId(final String userId) {
-//        if (isEmpty(userId)) {
-//            throw new IllegalArgumentException("아이디를 입력해주세요.");
-//        }
-//        if (isNotValidFormat(userId)) {
-//            throw new IllegalArgumentException("아이디는 이메일 형식으로 입력해주세요.");
-//        }
-//    }
 
     private void validateNickname(final String nickname) {
         if (isEmpty(nickname)) {
@@ -45,15 +34,11 @@ public class Customer {
         return value == null || value.isBlank();
     }
 
-//    private boolean isNotValidFormat(final String value) {
-//        return !EMAIL_FORMAT.matcher(value).matches();
-//    }
-
     public String getUserId() {
         return userId.getValue();
     }
 
     public String getNickname() {
-        return nickname;
+        return nickname.getValue();
     }
 }
