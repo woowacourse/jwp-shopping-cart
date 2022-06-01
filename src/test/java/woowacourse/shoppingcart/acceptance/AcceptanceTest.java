@@ -21,6 +21,9 @@ public class AcceptanceTest {
     protected static final String TEST_EMAIL = "test@test.com";
     protected static final String TEST_PASSWORD = "testtest";
     protected static final String TEST_USERNAME = "test";
+    public static final String LOCATION = "Location";
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String BEARER = "Bearer ";
     public static final Header EMPTY_HEADER = new Header("", "");
     @LocalServerPort
     int port;

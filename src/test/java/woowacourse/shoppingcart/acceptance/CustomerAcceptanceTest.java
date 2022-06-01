@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
@@ -37,8 +38,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
         final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
 
-        final ExtractableResponse<Response> customerResponse = get(createResponse.header("Location"),
-                new Header("Authorization", "Bearer " + tokenResponseDto.getAccessToken()));
+        final ExtractableResponse<Response> customerResponse = get(createResponse.header(LOCATION),
+                new Header(AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()));
 
         final CustomerDto customerDto = customerResponse.body().as(CustomerDto.class);
 
@@ -58,8 +59,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         final String updateUsername = "updateUsername";
         final ExtractableResponse<Response> updateResponse = put(
-                createResponse.header("Location"),
-                new Header("Authorization", "Bearer " + tokenResponseDto.getAccessToken()),
+                createResponse.header(LOCATION),
+                new Header(AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()),
                 new UpdateCustomerDto(updateUsername)
         );
 
@@ -76,14 +77,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
 
         final ExtractableResponse<Response> deleteResponse = post(
-                createResponse.header("Location"),
-                new Header("Authorization", "Bearer " + tokenResponseDto.getAccessToken()),
+                createResponse.header(LOCATION),
+                new Header(AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()),
                 new DeleteCustomerDto(TEST_PASSWORD)
         );
 
         final ExtractableResponse<Response> customerResponse = get(
-                createResponse.header("Location"),
-                new Header("Authorization", "Bearer " + tokenResponseDto.getAccessToken())
+                createResponse.header(LOCATION),
+                new Header(AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken())
         );
 
         assertAll(
