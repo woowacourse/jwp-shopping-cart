@@ -38,7 +38,7 @@ public class CustomerDao {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
         Long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
 
-        return new Customer(id, customer);
+        return Customer.createWithEncodedPassword(id, customer);
     }
 
     public Long findIdByUsername(String username) {
@@ -64,7 +64,7 @@ public class CustomerDao {
 
     private RowMapper<Customer> generateCustomerMapper() {
         return (resultSet, rowNum) ->
-                new Customer(
+                Customer.createWithEncodedPassword(
                         resultSet.getLong("id"),
                         resultSet.getString("username"),
                         resultSet.getString("email"),

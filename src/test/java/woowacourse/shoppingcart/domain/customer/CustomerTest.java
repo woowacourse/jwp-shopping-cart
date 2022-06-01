@@ -18,14 +18,14 @@ class CustomerTest {
     @DisplayName("고객을 생성한다.")
     @Test
     void create() {
-        assertDoesNotThrow(() -> new Customer(MAT_USERNAME, MAT_EMAIL, MAT_PASSWORD, MAT_ADDRESS, MAT_PHONE_NUMBER));
+        assertDoesNotThrow(() -> Customer.createWithRawPassword(MAT_USERNAME, MAT_EMAIL, MAT_PASSWORD, MAT_ADDRESS, MAT_PHONE_NUMBER));
     }
 
     @DisplayName("고객 생성을 위해 필요한 데이터가 null인 경우 예외를 던진다.")
     @ParameterizedTest
     @MethodSource("generateInvalidCustomer")
     void create_error_null(String username, String email, String password, String address, String phoneNumber) {
-        assertThatThrownBy(() -> new Customer(username, email, password, address, phoneNumber))
+        assertThatThrownBy(() -> Customer.createWithRawPassword(username, email, password, address, phoneNumber))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -43,7 +43,7 @@ class CustomerTest {
     @ParameterizedTest
     @ValueSource(strings = {"test", "testtesttesttesttesttest", "TESTTEST", "test.test"})
     void create_error_usernameFormat(String username) {
-        assertThatThrownBy(() -> new Customer(username, MAT_EMAIL, MAT_PASSWORD, MAT_ADDRESS, MAT_PHONE_NUMBER))
+        assertThatThrownBy(() -> Customer.createWithRawPassword(username, MAT_EMAIL, MAT_PASSWORD, MAT_ADDRESS, MAT_PHONE_NUMBER))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -51,14 +51,14 @@ class CustomerTest {
     @ParameterizedTest
     @ValueSource(strings = {"pup-paw", "pup_paw", "123456", "a1b2c3_-"})
     void create_valid_username(String username) {
-        assertDoesNotThrow(() -> new Customer(username, MAT_EMAIL, MAT_PASSWORD, MAT_ADDRESS, MAT_PHONE_NUMBER));
+        assertDoesNotThrow(() -> Customer.createWithRawPassword(username, MAT_EMAIL, MAT_PASSWORD, MAT_ADDRESS, MAT_PHONE_NUMBER));
     }
 
     @DisplayName("이메일 형식이 맞지 않으면 예외를 던진다.")
     @ParameterizedTest
     @ValueSource(strings = {"@email.com", "test@", "testemail.com", "test@email", "email"})
     void create_error_emailFormat(String email) {
-        assertThatThrownBy(() -> new Customer(YAHO_USERNAME, email, YAHO_PASSWORD, YAHO_ADDRESS, YAHO_PHONE_NUMBER))
+        assertThatThrownBy(() -> Customer.createWithRawPassword(YAHO_USERNAME, email, YAHO_PASSWORD, YAHO_ADDRESS, YAHO_PHONE_NUMBER))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -66,7 +66,7 @@ class CustomerTest {
     @ParameterizedTest
     @ValueSource(strings = {"0000-0000-0000", "-0000-0000", "000-0000", "0000"})
     void create_error_phoneNumberFormat(String phoneNumber) {
-        assertThatThrownBy(() -> new Customer(MAT_USERNAME, MAT_EMAIL, MAT_PASSWORD, MAT_ADDRESS, phoneNumber))
+        assertThatThrownBy(() -> Customer.createWithRawPassword(MAT_USERNAME, MAT_EMAIL, MAT_PASSWORD, MAT_ADDRESS, phoneNumber))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

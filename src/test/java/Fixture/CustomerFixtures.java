@@ -13,7 +13,7 @@ public class CustomerFixtures {
     public static final String MAT_ADDRESS = "서울 강남구 테헤란로 411, 성담빌딩 13층 (선릉 캠퍼스)";
     public static final String MAT_PHONE_NUMBER = "010-0000-0000";
 
-    public static final Customer MAT = new Customer(
+    public static final Customer MAT = Customer.createWithRawPassword(
             MAT_USERNAME, MAT_EMAIL, MAT_PASSWORD, MAT_ADDRESS, MAT_PHONE_NUMBER);
 
     public static final CustomerSaveRequest MAT_SAVE_REQUEST = new CustomerSaveRequest(
@@ -27,7 +27,7 @@ public class CustomerFixtures {
     public static final String YAHO_ADDRESS = "서울 강남구 테헤란로 411, 성담빌딩 13층 (선릉 캠퍼스)";
     public static final String YAHO_PHONE_NUMBER = "010-0000-0000";
 
-    public static final Customer YAHO = new Customer(
+    public static final Customer YAHO = Customer.createWithRawPassword(
             YAHO_USERNAME, YAHO_EMAIL, YAHO_PASSWORD, YAHO_ADDRESS, YAHO_PHONE_NUMBER);
 
     public static final CustomerSaveRequest YAHO_SAVE_REQUEST = new CustomerSaveRequest(

@@ -14,25 +14,7 @@ public class Customer {
     private Address address;
     private PhoneNumber phoneNumber;
 
-    public Customer(Long id, Customer customer) {
-        this(id, new Username(customer.getUsername()),
-                new Email(customer.getEmail()),
-                Password.createEncoded(customer.getPassword()),
-                new Address(customer.getAddress()),
-                new PhoneNumber(customer.getPhoneNumber()));
-    }
-
-    public Customer(String username, String email, String password, String address, String phoneNumber) {
-        this(null, new Username(username), new Email(email), Password.createRaw(password), new Address(address),
-                new PhoneNumber(phoneNumber));
-    }
-
-    public Customer(Long id, String username, String email, String password, String address, String phoneNumber) {
-        this(id, new Username(username), new Email(email), Password.createEncoded(password), new Address(address),
-                new PhoneNumber(phoneNumber));
-    }
-
-    public Customer(Long id, Username username, Email email, Password password, Address address,
+    private Customer(Long id, Username username, Email email, Password password, Address address,
             PhoneNumber phoneNumber) {
         this.id = id;
         this.username = username;
@@ -40,6 +22,28 @@ public class Customer {
         this.password = password;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    public static Customer createWithRawPassword(String username, String email, String password, String address,
+            String phoneNumber) {
+        return new Customer(null, new Username(username), new Email(email), Password.createRaw(password),
+                new Address(address),
+                new PhoneNumber(phoneNumber));
+    }
+
+    public static Customer createWithEncodedPassword(Long id, Customer customer) {
+        return new Customer(id, new Username(customer.getUsername()),
+                new Email(customer.getEmail()),
+                Password.createEncoded(customer.getPassword()),
+                new Address(customer.getAddress()),
+                new PhoneNumber(customer.getPhoneNumber()));
+    }
+
+    public static Customer createWithEncodedPassword(Long id, String username, String email, String password,
+            String address, String phoneNumber) {
+        return new Customer(id, new Username(username), new Email(email), Password.createEncoded(password),
+                new Address(address),
+                new PhoneNumber(phoneNumber));
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {

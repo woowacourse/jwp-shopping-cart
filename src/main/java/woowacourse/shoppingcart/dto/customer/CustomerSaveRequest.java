@@ -42,7 +42,7 @@ public class CustomerSaveRequest {
     }
 
     public Customer toCustomer() {
-        return new Customer(username, email, password, address, phoneNumber);
+        return Customer.createWithRawPassword(username, email, password, address, phoneNumber);
     }
 
     public String getUsername() {
