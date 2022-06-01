@@ -19,13 +19,12 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Repository
 public class CustomerDao {
 
-    public static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname, withdrawal from customer where withdrawal = false) ";
+    public static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname from customer where withdrawal = false) ";
     private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) -> new Customer(
             resultSet.getLong("id"),
             resultSet.getString("username"),
             resultSet.getString("password"),
-            resultSet.getString("nickname"),
-            resultSet.getBoolean("withdrawal")
+            resultSet.getString("nickname")
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -48,7 +47,7 @@ public class CustomerDao {
 
     public Long create(final Customer customer) {
         String query = "insert into customer (username, password, nickname, withdrawal)"
-                + " values (:username, :password, :nickname, :withdrawal)";
+                + " values (:username, :password, :nickname, false)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource source = new BeanPropertySqlParameterSource(customer);
         namedParameterJdbcTemplate.update(query, source, keyHolder);
@@ -56,7 +55,7 @@ public class CustomerDao {
     }
 
     public Customer findById(final Long id) {
-        String query = "select id, username, password, nickname, withdrawal from"
+        String query = "select id, username, password, nickname from"
                 + REAL_CUSTOMER_QUERY
                 + "where id = :id";
         Map<String, Object> params = new HashMap<>();
@@ -69,7 +68,7 @@ public class CustomerDao {
     }
 
     public Customer login(final String username, final String password) {
-        String query = "select id, username, password, nickname, withdrawal from"
+        String query = "select id, username, password, nickname from"
                 + REAL_CUSTOMER_QUERY
                 + "where username = :username and password = :password";
         Map<String, Object> params = new HashMap<>();

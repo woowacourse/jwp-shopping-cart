@@ -15,13 +15,11 @@ public class Customer {
     private final String username;
     private final String password;
     private final String nickname;
-    private final boolean withdrawal;
 
     public Customer(final Long id,
                     final String username,
                     final String password,
-                    final String nickname,
-                    final boolean withdrawal) {
+                    final String nickname) {
         validateUsername(username);
         validatePassword(password);
         validateNickname(nickname);
@@ -29,14 +27,13 @@ public class Customer {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
-        this.withdrawal = withdrawal;
     }
 
     public static Customer ofNullId(final String username,
                                     final String password,
                                     final String nickname,
                                     final boolean withdrawal) {
-        return new Customer(null, username, password, nickname, withdrawal);
+        return new Customer(null, username, password, nickname);
     }
 
     private void validateUsername(final String username) {
@@ -73,7 +70,4 @@ public class Customer {
         return nickname;
     }
 
-    public boolean isWithdrawal() {
-        return withdrawal;
-    }
 }
