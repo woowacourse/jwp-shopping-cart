@@ -9,7 +9,7 @@ public class CustomerRequest {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$")
     private String password;
 
-    @Pattern(regexp = "^[가-힣A-Za-z0-9]{2,}$")
+    @Pattern(regexp = "^[가-힣A-Za-z0-9]{2,8}$")
     private String nickname;
 
     public CustomerRequest() {

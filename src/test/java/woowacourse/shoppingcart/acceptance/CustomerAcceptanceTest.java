@@ -45,7 +45,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 Arguments.of("email@email.com", "12345678", "tonic"),
                 Arguments.of("email@email.com", "1234a", "tonic"),
                 Arguments.of("email@email.com", "1".repeat(20) + "a", "tonic"),
-                Arguments.of("email@email.com", "12345678a", "t")
+                Arguments.of("email@email.com", "12345678a", "t"),
+                Arguments.of("email@email.com", "12345678a", "a".repeat(9))
         );
     }
 
