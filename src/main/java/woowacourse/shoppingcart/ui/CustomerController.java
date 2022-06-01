@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -23,7 +22,6 @@ import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 
 @RestController
 @RequestMapping("/api/customers")
-@WebFilter("/Access-Control-Allow-Origin/*")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -42,7 +40,10 @@ public class CustomerController {
     public ResponseEntity<Void> updateInfo(@RequestBody UpdateCustomerRequest updateCustomerRequest,
         HttpServletRequest request) {
         customerService.updateInfo((String)request.getAttribute("username"), updateCustomerRequest);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT.value())
+            .header("Access-Control-Allow-Origin", "*")
+            .build();
     }
 
     @PatchMapping("/password")
