@@ -13,6 +13,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenResponseDto;
@@ -27,18 +28,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
+        ExtractableResponse<Response> createResponse = createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
         final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
         final String accessToken = tokenResponseDto.getAccessToken();
 
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + accessToken)
-                .when().get("/api/customers/" + tokenResponseDto.getCustomer().getId())
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> response = get(createResponse.header(HttpHeaders.LOCATION), new Header(HttpHeaders.AUTHORIZATION, BEARER + accessToken));
 
         // then
         final CustomerDto actual = response.body().as(CustomerDto.class);
@@ -65,18 +61,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
-        createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
+        ExtractableResponse<Response> createResponse = createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
         final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
 
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(new Header(AUTHORIZATION, BEARER + "invalidToken"))
-                .when().get("/api/customers/" + tokenResponseDto.getCustomer().getId())
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> response = get(createResponse.header(HttpHeaders.LOCATION), new Header(HttpHeaders.AUTHORIZATION, "invalidToken"));
 
         // then
         // 내 정보 조회 요청이 거부된다
