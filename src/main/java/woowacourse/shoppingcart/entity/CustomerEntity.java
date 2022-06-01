@@ -33,7 +33,7 @@ public class CustomerEntity {
                 customer.getNickname().getValue(),
                 customer.getPassword().getValue(),
                 customer.getAddress().getValue(),
-                phoneNumber.getStart() + phoneNumber.getMiddle() + phoneNumber.getLast());
+                phoneNumber.getValue());
     }
 
     public Long getId() {

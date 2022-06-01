@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.application;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-import woowacourse.shoppingcart.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.common.exception.BadRequestException;
 import woowacourse.common.exception.NotFoundException;
@@ -19,6 +18,7 @@ import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberResponse;
 import woowacourse.shoppingcart.dto.SigninRequest;
+import woowacourse.shoppingcart.dto.TokenResponse;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 
 @Service
@@ -90,7 +90,7 @@ public class CustomerService {
 
         CustomerEntity updateEntity = new CustomerEntity(customerId, null, nickname.getValue(),
                 null, address.getValue(),
-                phoneNumber.getStart() + phoneNumber.getMiddle() + phoneNumber.getLast());
+                phoneNumber.getValue());
 
         customerDao.update(updateEntity);
     }

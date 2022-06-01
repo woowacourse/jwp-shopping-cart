@@ -10,15 +10,11 @@ public class PhoneNumber {
     private static final int MIDDLE_LENGTH = 4;
     private static final int LAST_LENGTH = 4;
 
-    private final String start;
-    private final String middle;
-    private final String last;
+    private final String value;
 
     public PhoneNumber(String start, String middle, String last) {
         validate(start, middle, last);
-        this.start = start;
-        this.middle = middle;
-        this.last = last;
+        this.value = start + middle + last;
     }
 
     private void validate(String start, String middle, String last) {
@@ -41,16 +37,8 @@ public class PhoneNumber {
         }
     }
 
-    public String getStart() {
-        return start;
-    }
-
-    public String getMiddle() {
-        return middle;
-    }
-
-    public String getLast() {
-        return last;
+    public String getValue() {
+        return value;
     }
 
     @Override
@@ -62,12 +50,11 @@ public class PhoneNumber {
             return false;
         }
         PhoneNumber that = (PhoneNumber) o;
-        return Objects.equals(start, that.start) && Objects
-                .equals(middle, that.middle) && Objects.equals(last, that.last);
+        return Objects.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(start, middle, last);
+        return Objects.hash(value);
     }
 }
