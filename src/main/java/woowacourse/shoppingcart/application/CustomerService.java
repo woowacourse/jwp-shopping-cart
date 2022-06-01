@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.EmptyResultException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Transactional
 @Service
@@ -22,6 +23,8 @@ public class CustomerService {
     }
 
     public Customer save(final SignupRequest signupRequest) {
+        validateDuplicateUsername(signupRequest.getUsername());
+
         final Customer customer = Customer.of(
             signupRequest.getUsername(),
             signupRequest.getPassword(),
@@ -30,6 +33,12 @@ public class CustomerService {
         );
 
         return customerDao.save(customer);
+    }
+
+    private void validateDuplicateUsername(final String username) {
+        if (customerDao.existsByUsername(username)) {
+            throw new InvalidCustomerException("이미 존재하는 username입니다.");
+        }
     }
 
     public Customer findByUsername(final String username) {

@@ -29,13 +29,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01001012323", "인천 서구 검단로");
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
+        final ExtractableResponse<Response> response = signup(signupRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -48,15 +42,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final SignupRequest signupRequest = new SignupRequest("do", "ehdgh1234", "01012123434", "인천 서구 검단로");
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
-
-        ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
+        final ExtractableResponse<Response> response = signup(signupRequest);
+        final ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
 
         // then
         assertAll(
@@ -74,21 +61,34 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final SignupRequest signupRequest = new SignupRequest("do", "a", "1", "인천 서구");
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
-
-        ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
+        final ExtractableResponse<Response> response = signup(signupRequest);
+        final ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
 
         // then
         assertAll(
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
             () -> assertThat(exceptionResponse.getMessages())
                 .hasSize(3)
+        );
+    }
+
+    @DisplayName("회원가입 시 이미 존재하는 username을 사용하면 예외를 반환해야 한다.")
+    @Test
+    void validateUniqueUsername() {
+        // given
+        final SignupRequest signupRequest = new SignupRequest("jjang9", "password1234", "01012121212", "서울시 여러분");
+        signup(signupRequest);
+
+        // when
+        final ExtractableResponse<Response> response = signup(signupRequest);
+        final ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
+
+        // then
+        assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+            () -> assertThat(exceptionResponse.getMessages())
+                .hasSize(1)
+                .containsExactly("이미 존재하는 username입니다.")
         );
     }
 
@@ -190,8 +190,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    private void signup(final SignupRequest signupRequest) {
-        RestAssured.given().log().all()
+    private ExtractableResponse<Response> signup(final SignupRequest signupRequest) {
+        return RestAssured.given().log().all()
             .body(signupRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()

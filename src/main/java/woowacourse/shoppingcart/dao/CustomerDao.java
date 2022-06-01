@@ -36,6 +36,11 @@ public class CustomerDao {
         }
     }
 
+    public boolean existsByUsername(final String username) {
+        final String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, username));
+    }
+
     public Customer save(Customer customer) {
         final SqlParameterSource params = new MapSqlParameterSource()
             .addValue("username", customer.getUsername().getValue())

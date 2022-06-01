@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -38,20 +39,20 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(LoginException.class)
-    public ResponseEntity handleLoginException(LoginException exception) {
-        ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
+    public ResponseEntity<ExceptionResponse> handleLoginException(final LoginException exception) {
+        final ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(response);
     }
 
-    @ExceptionHandler
-    public ResponseEntity handleBindingException(final BindException exception) {
-        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponse> handleBindingException(final BindException exception) {
+        final List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 
-        List<String> messages = fieldErrors.stream()
+        final List<String> messages = fieldErrors.stream()
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .collect(Collectors.toList());
 
-        ExceptionResponse response = new ExceptionResponse(messages);
+        final ExceptionResponse response = new ExceptionResponse(messages);
         return ResponseEntity.badRequest().body(response);
     }
 
@@ -70,13 +71,14 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ExceptionResponse> handleInvalidAccess(final RuntimeException e) {
+        final ExceptionResponse response = new ExceptionResponse(List.of(e.getMessage()));
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler
-    public ResponseEntity handleAuthException(final AuthorizationException e) {
-        ExceptionResponse response = new ExceptionResponse(List.of(e.getMessage()));
+    public ResponseEntity<ExceptionResponse> handleAuthException(final AuthorizationException e) {
+        final ExceptionResponse response = new ExceptionResponse(List.of(e.getMessage()));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 }

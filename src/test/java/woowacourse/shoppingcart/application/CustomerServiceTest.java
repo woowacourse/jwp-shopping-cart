@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.EmptyResultException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Transactional
 @SpringBootTest
@@ -39,6 +40,19 @@ class CustomerServiceTest {
             () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(signupRequest.getPhoneNumber()),
             () -> assertThat(customer.getAddress()).isEqualTo(signupRequest.getAddress())
         );
+    }
+
+    @DisplayName("회원 저장 시 username이 이미 존재하면 예외를 반환한다.")
+    @Test
+    void saveDuplicateUsername() {
+        // given
+        final SignupRequest signupRequest = new SignupRequest("jjang9", "password12", "01001012121", "서울시");
+        customerService.save(signupRequest);
+
+        // then
+        assertThatThrownBy(() -> customerService.save(signupRequest))
+            .isInstanceOf(InvalidCustomerException.class)
+            .hasMessage("이미 존재하는 username입니다.");
     }
 
     @DisplayName("이름으로 회원을 조회한다.")

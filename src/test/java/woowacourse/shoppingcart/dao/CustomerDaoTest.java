@@ -53,6 +53,20 @@ public class CustomerDaoTest {
         assertThat(customerId).isEqualTo(16L);
     }
 
+    @DisplayName("입력할 username이 이미 존재하면 True를 반환한다.")
+    @Test
+    void existByUsername() {
+        // given
+        final Customer customer = Customer.of("jjang9", "password1234", "01012123434", "서울시");
+        customerDao.save(customer);
+
+        // when
+        boolean actual = customerDao.existsByUsername(customer.getUsername().getValue());
+
+        // then
+        assertThat(actual).isTrue();
+    }
+
     @DisplayName("회원을 저장한다.")
     @Test
     void saveCustomer() {
