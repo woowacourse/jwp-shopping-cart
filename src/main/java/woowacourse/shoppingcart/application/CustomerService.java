@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberResponse;
 import woowacourse.shoppingcart.dto.SigninRequest;
 import woowacourse.shoppingcart.entity.CustomerEntity;
@@ -56,5 +57,20 @@ public class CustomerService {
                         it.getAddress(),
                         PhoneNumberResponse.from(it.getPhoneNumber())))
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용지입니다"));
+    }
+
+    public void delete(Long customerId, PasswordRequest passwordRequest) {
+        Optional<CustomerEntity> customerEntity = customerDao.findById(customerId);
+        if (customerEntity.isEmpty()) {
+            throw new NotFoundException("존재하지 않는 사용지입니다");
+        }
+
+        String rawPassword = passwordRequest.getPassword();
+        String encryptPassword = customerEntity.get().getPassword();
+        if (!EncryptAlgorithm.match(rawPassword, encryptPassword)) {
+            throw new UnauthorizedException("로그인이 불가능합니다.");
+        }
+
+        customerDao.deleteById(customerId);
     }
 }

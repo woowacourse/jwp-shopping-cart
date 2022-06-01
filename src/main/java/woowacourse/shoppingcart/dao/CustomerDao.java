@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -43,11 +45,13 @@ public class CustomerDao {
         }
     }
 
-    public void save(CustomerEntity customerEntity) {
+    public Long save(CustomerEntity customerEntity) {
         String sql = "INSERT INTO customer (account, nickname, password, address, phone_number) "
                 + "VALUES (:account, :nickname, :password, :address, :phoneNumber)";
         SqlParameterSource source = new BeanPropertySqlParameterSource(customerEntity);
-        jdbcTemplate.update(sql, source);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(sql, source, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public boolean existsByAccount(String account) {
@@ -66,5 +70,11 @@ public class CustomerDao {
         String sql = "SELECT * FROM customer WHERE id = :customerId";
         SqlParameterSource source = new MapSqlParameterSource("customerId", customerId);
         return Optional.ofNullable(DataAccessUtils.singleResult(jdbcTemplate.query(sql, source, ROW_MAPPER)));
+    }
+
+    public void deleteById(Long customerId) {
+        String sql = "DELETE FROM customer WHERE id  = :customerId";
+        SqlParameterSource source = new MapSqlParameterSource("customerId", customerId);
+        jdbcTemplate.update(sql, source);
     }
 }

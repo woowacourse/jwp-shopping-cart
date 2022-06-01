@@ -63,4 +63,14 @@ public class CustomerDaoTest {
 
         assertThat(result).isTrue();
     }
+
+    @Test
+    void 회원_아이디로_계정_삭제() {
+        Long id = customerDao
+                .save(new CustomerEntity("yeonlog", "연로그", "asdf1234!", "연로그네", "01050505050"));
+
+        customerDao.deleteById(id);
+
+        assertThat(customerDao.findById(id)).isEmpty();
+    }
 }

@@ -391,12 +391,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String password = "dpepsWkd12!";
 
         회원_가입(회원_정보(account,
-                        "에덴",
-                        password,
-                        "에덴 동산",
-                        "010",
-                        "1234",
-                        "5678"));
+                "에덴",
+                password,
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678"));
 
         String accessToken = 토큰_발급(account, password)
                 .body()
@@ -449,15 +449,75 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(errorMessage).isEqualTo("유효하지 않은 토큰입니다.");
     }
 
-
-    @DisplayName("내 정보 수정")
     @Test
-    void updateMe() {
+    void 회원_탈퇴() {
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+
+        회원_가입(회원_정보(account,
+                "에덴",
+                password,
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678"));
+
+        String accessToken = 토큰_발급(account, password)
+                .body()
+                .jsonPath()
+                .getString("accessToken");
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("password", password);
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer" + accessToken)
+                .body(request)
+                .when()
+                .delete("/customers")
+                .then()
+                .log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(204);
     }
 
-    @DisplayName("회원탈퇴")
     @Test
-    void deleteMe() {
+    void 비밀번호_불일치로_회원_탈퇴_실패() {
+        String account = "leo8842";
+        String password = "dpepsWkd12!";
+
+        회원_가입(회원_정보(account,
+                "에덴",
+                password,
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678"));
+
+        String accessToken = 토큰_발급(account, password)
+                .body()
+                .jsonPath()
+                .getString("accessToken");
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("password", password + "111");
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer" + accessToken)
+                .body(request)
+                .when()
+                .delete("/customers")
+                .then()
+                .log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(401);
+        assertThat(response.body().jsonPath().getString("message")).contains("로그인이 불가능합니다.");
     }
 
     private Map<String, Object> 회원_정보(String account, String nickname, String password,
