@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.Fixture.페퍼;
@@ -40,7 +41,7 @@ public class CustomerDaoTest {
         Long customerId = customerDao.save(customer);
 
         // then
-        Assertions.assertThat(customerId).isEqualTo(customerDao.findIdByUserName(페퍼_이름));
+        assertThat(customerId).isEqualTo(customerDao.findIdByUserName(페퍼_이름));
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -98,5 +99,23 @@ public class CustomerDaoTest {
 
         // then
         assertThat(customer.getName()).isEqualTo(페퍼_이름);
+    }
+
+    @DisplayName("회원 정보를 수정한다.")
+    @Test
+    void update() {
+        //given
+        Long customerId = customerDao.save(페퍼);
+
+        //when
+        customerDao.update(new Customer(customerId, 페퍼_아이디, "바꿀 이름", 페퍼_비밀번호));
+
+        //then
+        Customer findCustomer = customerDao.findById(customerId);
+        assertAll(
+                () -> assertThat(findCustomer.getLoginId()).isEqualTo(페퍼_아이디),
+                () -> assertThat(findCustomer.getName()).isEqualTo("바꿀 이름"),
+                () -> assertThat(findCustomer.getPassword()).isEqualTo(페퍼_비밀번호)
+        );
     }
 }
