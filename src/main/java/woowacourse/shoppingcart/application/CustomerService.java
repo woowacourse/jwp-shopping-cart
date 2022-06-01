@@ -8,6 +8,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
+import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.application.dto.TokenPayloadDto;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -30,14 +31,14 @@ public class CustomerService {
         return customerDao.createCustomer(customer);
     }
 
-    public TokenResponse signIn(final TokenRequest tokenRequest) {
-        final Email email = new Email(tokenRequest.getEmail());
-        final NewPassword password = new NewPassword(tokenRequest.getPassword());
+    public TokenResponse signIn(final SignInDto signInDto) {
+        final Email email = new Email(signInDto.getEmail());
+        final NewPassword password = new NewPassword(signInDto.getPassword());
         final String foundPassword = customerDao.findPasswordByEmail(email);
         verifyPassword(password, foundPassword);
         TokenPayloadDto tokenPayloadDto = customerDao.findByUserEmail(email);
         String payload = createPayload(tokenPayloadDto);
-        return new TokenResponse(provider.createToken(payload));
+        return new TokenResponse(tokenPayloadDto.getId(), provider.createToken(payload));
     }
 
     private void verifyPassword(final NewPassword password, final String hashedPassword) {

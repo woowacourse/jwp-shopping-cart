@@ -15,6 +15,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
+import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.application.dto.TokenPayloadDto;
 import woowacourse.shoppingcart.dao.CustomerFixture;
 
@@ -54,11 +55,12 @@ class CustomerServiceTest {
     void createAccessToken() throws JsonProcessingException {
         signUpCustomer();
         final String email = "her0807@naver.com";
-        final TokenResponse response = customerService.signIn(new TokenRequest(email, "password1!"));
+        final TokenResponse response = customerService.signIn(new SignInDto(email, "password1!"));
         final ObjectMapper mapper = new JsonMapper();
         TokenPayloadDto tokenPayloadDto = mapper.readValue(tokenProvider.getPayload(response.getAccessToken()),
                 TokenPayloadDto.class);
         assertThat(tokenPayloadDto.getEmail()).isEqualTo(email);
+        assertThat(response.getCustomerId()).isNotNull();
     }
 
     private Long signUpCustomer() {
