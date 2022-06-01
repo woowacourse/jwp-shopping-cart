@@ -21,17 +21,13 @@ public class AcceptanceTest {
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
+
         jdbcTemplate.update("SET FOREIGN_KEY_CHECKS=0");
-        jdbcTemplate.update("truncate from orders_detail");
-        jdbcTemplate.update("truncate from cart_item");
-        jdbcTemplate.update("truncate from orders");
-        jdbcTemplate.update("truncate from product");
-        jdbcTemplate.update("truncate from customer");
+        jdbcTemplate.update("truncate table orders_detail");
+        jdbcTemplate.update("truncate table cart_item");
+        jdbcTemplate.update("truncate table orders");
+        jdbcTemplate.update("truncate table product");
+        jdbcTemplate.update("truncate table customer");
         jdbcTemplate.update("SET FOREIGN_KEY_CHECKS=1");
-//        jdbcTemplate.update("delete from orders_detail");
-//        jdbcTemplate.update("delete from cart_item");
-//        jdbcTemplate.update("delete from product");
-//        jdbcTemplate.update("delete from orders");
-//        jdbcTemplate.update("delete from customer");
     }
 }
