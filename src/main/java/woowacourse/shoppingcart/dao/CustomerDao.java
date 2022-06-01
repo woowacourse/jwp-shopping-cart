@@ -87,4 +87,10 @@ public class CustomerDao {
 
         jdbcTemplate.update(sql, params);
     }
+
+    public boolean exists(Customer customer) {
+        String sql = "select exists (select 1 from CUSTOMER where username = :username";
+        SqlParameterSource params = new MapSqlParameterSource("username", customer.getUsername());
+        return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
 }

@@ -27,9 +27,15 @@ public class CustomerService {
 
     @Transactional
     public Long signUp(SignUpRequest request) {
-        Customer customer = Customer.ofNoId(request.getUsername(),
-                request.getPassword(), request.getNickname(), request.getAge());
+        Customer customer = request.toDomain();
+        checkAbleToSignUp(customer);
         return customerDao.save(customer);
+    }
+
+    private void checkAbleToSignUp(Customer customer) {
+        if (customerDao.exists(customer)) {
+            throw new IllegalArgumentException("중복된 아이디입니다.");
+        }
     }
 
     public GetMeResponse getMe(Long id) {
