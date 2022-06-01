@@ -7,8 +7,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.exception.TokenExpiredException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -28,11 +28,22 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     @Override
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String token = (String) webRequest.getAttribute(ACCESS_TOKEN, NativeWebRequest.SCOPE_REQUEST);
+        validateTokenExpired(token);
         final String payload = jwtTokenProvider.getPayload(token);
+        validatePayload(payload);
+
+        return Long.parseLong(payload);
+    }
+
+    private void validateTokenExpired(String token) {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new TokenExpiredException();
+        }
+    }
+
+    private void validatePayload(String payload) {
         if (payload == null) {
             throw new MalformedJwtException("잘못된 형식의 토큰입니다.");
         }
-
-        return Long.parseLong(payload);
     }
 }
