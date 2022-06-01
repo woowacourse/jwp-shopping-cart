@@ -19,7 +19,7 @@ class PhoneNumberTest {
 
     @DisplayName("PhoneNumber가 패턴에 맞지 않은경우 예외를 던져야 합니다.")
     @ParameterizedTest
-    @ValueSource(strings = {"01212341234", "01512341234", "공일공일이삼사일이삼사", "010-1234-1234", "02-123-1234"})
+    @ValueSource(strings = {"0", "0101234123", "공일공일이삼사일이삼사", "010-1234-1234", "02-123-1234"})
     void createInvalidPhoneNumber(String value) {
         assertThatThrownBy(() -> new PhoneNumber(value))
             .isInstanceOf(IllegalArgumentException.class);
