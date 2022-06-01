@@ -49,4 +49,20 @@ public class Customer {
     public boolean hasSamePassword(Password other) {
         return password.equals(other);
     }
+
+    public Customer updateUsername(Username username) {
+        return Customer.of(id.orElse(null), username, password, nickname, age);
+    }
+
+    public Customer updatePassword(Password password) {
+        return Customer.of(id.orElse(null), username, password, nickname, age);
+    }
+
+    public Customer updateNickname(Nickname nickname) {
+        return Customer.of(id.orElse(null), username, password, nickname, age);
+    }
+
+    public Customer updateAge(Age age) {
+        return Customer.of(id.orElse(null), username, password, nickname, age);
+    }
 }
