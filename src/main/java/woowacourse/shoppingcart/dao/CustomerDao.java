@@ -20,11 +20,11 @@ public class CustomerDao {
     private static final String TABLE_NAME = "customer";
     private static final String KEY_NAME = "id";
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public CustomerDao(JdbcTemplate jdbcTemplate) {
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns(KEY_NAME);
@@ -40,10 +40,20 @@ public class CustomerDao {
         try {
             String sql = "SELECT id FROM customer WHERE username = :username";
             SqlParameterSource parameterSource = new MapSqlParameterSource("username", username);
-            return namedParameterJdbcTemplate.queryForObject(sql, parameterSource, Long.class);
+            return jdbcTemplate.queryForObject(sql, parameterSource, Long.class);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
+    }
+
+    public boolean existsByUsernameAndPassword(String username, String password) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM customer WHERE username = :username AND password = :password)";
+
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("username", username)
+                .addValue("password", password);
+
+        return jdbcTemplate.queryForObject(sql, parameterSource, Boolean.class);
     }
 
     public Optional<Customer> findByUsername(String username) {
@@ -52,7 +62,7 @@ public class CustomerDao {
                     + "FROM customer WHERE username = :username";
             SqlParameterSource parameterSource = new MapSqlParameterSource("username", username);
             return Optional.ofNullable(
-                    namedParameterJdbcTemplate.queryForObject(sql, parameterSource, generateCustomerMapper()));
+                    jdbcTemplate.queryForObject(sql, parameterSource, generateCustomerMapper()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -73,12 +83,12 @@ public class CustomerDao {
     public void update(Customer customer) {
         String sql = "UPDATE customer SET address = :address, phone_number = :phoneNumber WHERE username = :username";
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
-        namedParameterJdbcTemplate.update(sql, parameterSource);
+        jdbcTemplate.update(sql, parameterSource);
     }
 
     public void delete(Customer customer) {
         String sql = "DELETE FROM customer WHERE username = :username";
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
-        namedParameterJdbcTemplate.update(sql, parameterSource);
+        jdbcTemplate.update(sql, parameterSource);
     }
 }

@@ -52,6 +52,24 @@ public class CustomerDaoTest {
         });
     }
 
+    @DisplayName("username과 password를 기반으로 customer의 존재 여부를 반환한다.")
+    @Test
+    void existsCustomer() {
+        customerDao.save(MAT);
+
+        boolean result = customerDao.existsByUsernameAndPassword(MAT_USERNAME, MAT_PASSWORD);
+
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("존재하지 않는 username이거나 password인 경우 예외를 던진다.")
+    @Test
+    void existsCustomer_error_notExists() {
+        boolean result = customerDao.existsByUsernameAndPassword(MAT_USERNAME, MAT_PASSWORD);
+
+        assertThat(result).isFalse();
+    }
+
     @DisplayName("username을 이용해 customer 를 조회한다.")
     @Test
     void findCustomerByUsername() {

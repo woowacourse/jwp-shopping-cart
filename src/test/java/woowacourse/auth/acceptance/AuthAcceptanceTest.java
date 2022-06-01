@@ -18,7 +18,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
-        // given
         String accessToken = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new TokenRequest("puterism", "1234567890"))
@@ -29,7 +28,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .as(TokenResponse.class)
                 .getAccessToken();
 
-        // when
         CustomerResponse customerResponse = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -39,7 +37,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract()
                 .as(CustomerResponse.class);
 
-        // then
         assertThat(customerResponse.getUsername()).isEqualTo("puterism");
     }
 

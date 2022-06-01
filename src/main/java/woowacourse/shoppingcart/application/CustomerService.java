@@ -31,6 +31,12 @@ public class CustomerService {
         return new CustomerResponse(customer);
     }
 
+    public void validateUsernameAndPassword(String username, String password) {
+        if (!customerDao.existsByUsernameAndPassword(username, password)) {
+            throw new InvalidCustomerException();
+        }
+    }
+
     @Transactional
     public void update(LoginCustomer loginCustomer, CustomerUpdateRequest customerUpdateRequest) {
         Customer customer = getCustomer(loginCustomer.getUsername());

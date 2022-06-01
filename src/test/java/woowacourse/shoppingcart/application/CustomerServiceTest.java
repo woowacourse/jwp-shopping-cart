@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.CustomerFixtures.MAT_ADDRESS;
 import static woowacourse.shoppingcart.CustomerFixtures.MAT_EMAIL;
+import static woowacourse.shoppingcart.CustomerFixtures.MAT_PASSWORD;
 import static woowacourse.shoppingcart.CustomerFixtures.MAT_PHONE_NUMBER;
 import static woowacourse.shoppingcart.CustomerFixtures.MAT_SAVE_REQUEST;
 import static woowacourse.shoppingcart.CustomerFixtures.MAT_USERNAME;
@@ -76,6 +77,13 @@ class CustomerServiceTest {
     @Test
     void find_error_notExist_username() {
         assertThatThrownBy(() -> customerService.find(new LoginCustomer("merong")))
+                .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @DisplayName("존재하지 않는 uesrname과 password인 경우 예외를 던진다.")
+    @Test
+    void validateUsernameAndPassword() {
+        assertThatThrownBy(() -> customerService.validateUsernameAndPassword(MAT_USERNAME, MAT_PASSWORD))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
