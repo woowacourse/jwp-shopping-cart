@@ -12,10 +12,10 @@ public class EncryptPasswordEncoder implements PasswordEncoder {
     private static final String BYTE_TO_HEX_FORMAT = "%02x";
 
     @Override
-    public String encode(final String password) {
+    public String encode(final String plainPassword) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM);
-            messageDigest.update(password.getBytes());
+            messageDigest.update(plainPassword.getBytes());
             return bytesToHex(messageDigest.digest());
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("비밀번호를 인코딩할 수 없습니다.");
@@ -31,7 +31,7 @@ public class EncryptPasswordEncoder implements PasswordEncoder {
     }
 
     @Override
-    public boolean isMatchPassword(final String encodedPassword, final String password) {
-        return encodedPassword.equals(encode(password));
+    public boolean isMatchPassword(final String encodedPassword, final String plainPassword) {
+        return encodedPassword.equals(encode(plainPassword));
     }
 }
