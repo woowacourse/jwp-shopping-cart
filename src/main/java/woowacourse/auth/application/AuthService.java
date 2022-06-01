@@ -27,4 +27,12 @@ public class AuthService {
         }
         return new TokenResponse(tokenProvider.createToken(customer.getName()));
     }
+
+    public boolean validateToken(String token) {
+        return tokenProvider.validateToken(token);
+    }
+
+    public String getPayload(String token) {
+        return tokenProvider.getPayload(token);
+    }
 }
