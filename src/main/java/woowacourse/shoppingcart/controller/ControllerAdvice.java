@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.controller;
 
+import io.jsonwebtoken.JwtException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,11 @@ import java.util.List;
 
 @RestControllerAdvice
 public class ControllerAdvice {
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<CommonExceptionDto> handleJwtException(final JwtException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new CommonExceptionDto(e.getMessage()));
+    }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ValidationExceptionDto> handleValidationException(final ValidationException e) {
