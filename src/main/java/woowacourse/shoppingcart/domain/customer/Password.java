@@ -26,7 +26,7 @@ public class Password {
 
     private void validatePattern(String value) {
         if (!PATTERN.matcher(value).find()) {
-            throw new IllegalArgumentException("username은 영어와 숫자로 이루어져야 합니다.");
+            throw new IllegalArgumentException("password는 영어와 숫자로 이루어져야 합니다.");
         }
     }
 
