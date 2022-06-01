@@ -44,7 +44,7 @@ public class CustomerService {
         return new CustomerResponse(customer.getName(), customer.getEmail());
     }
 
-    public Customer getIdByEmail(String email) {
+    public Customer getByEmail(String email) {
         return customerDao.findByEmail(email).orElseThrow(CustomerNotFoundException::new);
     }
 

@@ -48,24 +48,24 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity handle() {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    public ResponseEntity<ExceptionResponse> handle() {
+        return ResponseEntity.badRequest().body(new ExceptionResponse("존재하지 않는 데이터 요청입니다."));
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity handleInvalidRequest(final BindingResult bindingResult) {
+    public ResponseEntity<ExceptionResponse> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
-        return ResponseEntity.badRequest().body(mainError.getDefaultMessage());
+        return ResponseEntity.badRequest().body(new ExceptionResponse(mainError.getDefaultMessage()));
     }
 
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    public ResponseEntity handleInvalidRequest(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ExceptionResponse> handleInvalidRequest(final RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }
 
     @ExceptionHandler({
@@ -75,7 +75,7 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ExceptionResponse> handleInvalidAccess(final RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }
 }

@@ -1,6 +1,7 @@
 package woowacourse.auth.support;
 
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
@@ -16,12 +17,12 @@ public class JwtTokenProvider {
     @Value("${security.jwt.token.expire-length}")
     private long validityInMilliseconds;
 
-    public String createToken(Long payload) {
+    public String createToken(Map<String, Object> claims) {
         final Date now = new Date();
         final Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
-                .setClaims(Map.of("id", payload))
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -30,11 +31,15 @@ public class JwtTokenProvider {
 
     public long getPayload(String token) {
         try {
+            final JwtParser build = Jwts.parserBuilder()
+                    .setSigningKey(secretKey.getBytes())
+                    .build();
+            final Object body = build.parse(token).getBody();
+
             return Long.parseLong(String.valueOf(Jwts.parser()
                     .setSigningKey(secretKey)
                     .parseClaimsJws(token)
-                    .getBody()
-                    .get("id")));
+                    .getBody()));
         } catch (JwtException | IllegalArgumentException e) {
             throw new TokenInvalidException();
         }

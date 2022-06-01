@@ -23,7 +23,7 @@ public class AuthService {
     }
 
     public TokenResponse getToken(TokenRequest tokenRequest) {
-        final Customer customer = customerService.getIdByEmail(tokenRequest.getEmail());
+        final Customer customer = customerService.getByEmail(tokenRequest.getEmail());
         validatePassword(tokenRequest, customer);
 
         final String accessToken = jwtTokenProvider.createToken(customer.getId());
