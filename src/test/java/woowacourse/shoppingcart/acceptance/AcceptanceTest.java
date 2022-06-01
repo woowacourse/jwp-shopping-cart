@@ -31,6 +31,18 @@ public class AcceptanceTest {
                 .then().log().all().extract();
     }
 
+    protected ExtractableResponse<Response> requestPutWithTokenAndBody(final String path,
+                                                                       final String accessToken,
+                                                                       final Object requestBody) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .body(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().put(path)
+                .then().log().all().extract();
+    }
+
     protected ExtractableResponse<Response> requestDeleteWithTokenAndBody(final String path,
                                                                           final String accessToken,
                                                                           final Object requestBody) {

@@ -14,6 +14,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailResponse;
+import woowacourse.shoppingcart.dto.CustomerProfileUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 
 @DisplayName("회원 관련 기능")
@@ -61,10 +62,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMyDetail() {
         // given 회원가입 후 로그인하여 토큰을 발급받고
+        requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
+        final String accessToken = loginAndGetToken();
 
         // when 회원 정보를 수정하면
+        final ExtractableResponse<Response> response = requestPutWithTokenAndBody("/api/customer/profile",
+                accessToken, new CustomerProfileUpdateRequest("썬"));
 
         // then 성공적으로 회원 정보가 수정된다.
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("회원탈퇴")
