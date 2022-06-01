@@ -2,12 +2,10 @@ package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import woowacourse.auth.dto.PhoneNumber;
-import woowacourse.shoppingcart.domain.Customer;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Locale;
 
 public class SignupRequest {
 
@@ -51,12 +49,5 @@ public class SignupRequest {
 
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
-    }
-
-    public Customer toEntity() {
-        String match = "[^\\da-zA-Z]";
-        final String processedAccount = this.account.replaceAll(match, "").toLowerCase(Locale.ROOT).trim();
-
-        return new Customer(processedAccount, this.nickname, this.password, this.address, this.phoneNumber.appendNumbers());
     }
 }
