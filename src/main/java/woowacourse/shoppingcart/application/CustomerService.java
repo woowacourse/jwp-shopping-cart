@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
+import woowacourse.shoppingcart.dto.CustomerProfileUpdateServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -35,6 +36,12 @@ public class CustomerService {
     private Customer findCustomerById(final Long id) {
         return customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
+    }
+
+    public void updateName(final CustomerProfileUpdateServiceRequest request) {
+        final Customer customer = findCustomerById(request.getId());
+        final Customer updatedCustomer = customer.updateName(request.getName());
+        customerDao.updateById(updatedCustomer);
     }
 
     public void delete(final CustomerDeleteServiceRequest request) {
