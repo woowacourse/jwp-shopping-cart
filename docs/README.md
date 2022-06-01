@@ -93,3 +93,8 @@
             - 형식은 `010-0000-0000`이여야 한다.
             - `숫자`만 가능하다.
     - [x] dto validation 추가
+
+- 06/01
+  - [ ] 원시값 포장
+  - [ ] acceptance test 에서 중복되는 부분을 test fixture 로 만들기
+  - [ ] password 암호화
