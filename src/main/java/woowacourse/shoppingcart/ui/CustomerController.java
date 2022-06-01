@@ -4,6 +4,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,6 +69,12 @@ public class CustomerController {
     public ResponseEntity<Void> updateCustomerPassword(@AuthenticationPrincipal final String email,
                                                        @RequestBody @Valid final PasswordRequest passwordRequest) {
         customerService.updatePassword(email, passwordRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/auth/me")
+    public ResponseEntity<Void> signOut(@AuthenticationPrincipal final String email) {
+        customerService.delete(email);
         return ResponseEntity.noContent().build();
     }
 }
