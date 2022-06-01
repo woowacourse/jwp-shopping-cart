@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
+import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -49,6 +50,20 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
+        final ExtractableResponse<Response> createResponse = createCustomer(signUpDto);
+        final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
+        final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
+
+        final String updateUsername = "updateUsername";
+        final ExtractableResponse<Response> updateResponse = put(
+                createResponse.header("Location"),
+                new Header("Authorization", "Bearer " + tokenResponseDto.getAccessToken()),
+                new UpdateCustomerDto(updateUsername)
+        );
+
+        final CustomerDto updateCustomer = updateResponse.body().as(CustomerDto.class);
+        assertThat(updateCustomer.getUsername()).isEqualTo(updateUsername);
     }
 
     @DisplayName("회원탈퇴")
