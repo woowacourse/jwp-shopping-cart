@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailResponse;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
+import woowacourse.shoppingcart.dto.CustomerPasswordUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerProfileUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 
@@ -47,9 +48,16 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/password")
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal final Long id,
+                                               @RequestBody final CustomerPasswordUpdateRequest request) {
+        customerService.updatePassword(request.toServiceRequest(id));
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> delete(@AuthenticationPrincipal final Long id,
-                                       @RequestBody CustomerDeleteRequest request) {
+                                       @RequestBody final CustomerDeleteRequest request) {
         customerService.delete(request.toServiceRequest(id));
         return ResponseEntity.noContent().build();
     }

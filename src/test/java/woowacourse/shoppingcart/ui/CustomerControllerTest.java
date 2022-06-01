@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailResponse;
+import woowacourse.shoppingcart.dto.CustomerPasswordUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerProfileUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
@@ -113,5 +114,36 @@ class CustomerControllerTest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("회원의 비밀번호를 수정한다.")
+    void updatePassword() {
+        // given
+        final CustomerRegisterRequest registerRequest = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
+        customerController.register(registerRequest);
+
+        final CustomerPasswordUpdateRequest request = new CustomerPasswordUpdateRequest(PASSWORD, "newpassword123");
+
+        // when
+        final ResponseEntity<Void> response = customerController.updatePassword(1L, request);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("회원의 비밀번호 수정시 기존 비밀번호가 일치하지 않을 경우 예외가 발생한다.")
+    void updatePassword_passwordNotMatch_throwsException() {
+        // given
+        final CustomerRegisterRequest registerRequest = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
+        customerController.register(registerRequest);
+
+        final CustomerPasswordUpdateRequest request = new CustomerPasswordUpdateRequest("wrongpassword12ffd3",
+                "newpassword123");
+
+        // when, then
+        assertThatThrownBy(() -> customerController.updatePassword(1L, request))
+                .isInstanceOf(PasswordNotMatchException.class);
     }
 }
