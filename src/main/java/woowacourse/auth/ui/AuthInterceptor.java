@@ -12,30 +12,28 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private final AuthService authService;
 
-    public AuthInterceptor(AuthService authService) {
+    public AuthInterceptor(final AuthService authService) {
         this.authService = authService;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
         if (isPreflight(request)) {
             return true;
         }
-
         validateToken(request);
         return true;
     }
 
-    public boolean isPreflight(HttpServletRequest request) {
+    public boolean isPreflight(final HttpServletRequest request) {
         return request.getMethod().equals(HttpMethod.OPTIONS.toString());
     }
 
-    public void validateToken(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
+    public void validateToken(final HttpServletRequest request) {
+        final String token = AuthorizationExtractor.extract(request);
         if (token == null) {
-            throw new AuthorizationException("토큰이 없습니다.");
+            throw new AuthorizationException("토큰이 없습니다😤");
         }
-
         if (authService.isInvalidToken(token)) {
             throw new AuthorizationException();
         }

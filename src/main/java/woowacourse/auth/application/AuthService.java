@@ -10,7 +10,7 @@ public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(JwtTokenProvider jwtTokenProvider) {
+    public AuthService(final JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -19,11 +19,11 @@ public class AuthService {
         return new TokenResponse(token);
     }
 
-    public boolean isInvalidToken(String token) {
+    public boolean isInvalidToken(final String token) {
         return !jwtTokenProvider.validateToken(token);
     }
 
-    public String getNameFromToken(String token) {
+    public String getNameFromToken(final String token) {
         return jwtTokenProvider.getPayload(token);
     }
 }

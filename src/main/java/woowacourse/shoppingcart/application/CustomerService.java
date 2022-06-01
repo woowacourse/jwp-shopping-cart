@@ -40,12 +40,12 @@ public class CustomerService {
     }
 
     public void editCustomerByName(final String customerName, final CustomerRequest editRequest) {
-        String encryptedPassword = encryptor.encrypt(editRequest.getPassword());
+        final String encryptedPassword = encryptor.encrypt(editRequest.getPassword());
         customerDao.updatePasswordByName(customerName, encryptedPassword);
     }
 
     public void validateNameAndPassword(final String name, final String password) {
-        String encryptedPassword = encryptor.encrypt(password);
+        final String encryptedPassword = encryptor.encrypt(password);
         if (customerDao.existsByNameAndPassword(name, encryptedPassword)) {
             return;
         }
