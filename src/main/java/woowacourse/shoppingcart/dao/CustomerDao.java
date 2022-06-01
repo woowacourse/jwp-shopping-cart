@@ -83,4 +83,9 @@ public class CustomerDao {
         final String query = "DELETE FROM customer WHERE email = ?";
         jdbcTemplate.update(query, email);
     }
+
+    public void update(Customer customer) {
+        final String query = "UPDATE customer SET password = ?, nickname = ? WHERE id = ?";
+        jdbcTemplate.update(query, customer.getPassword(), customer.getNickname(), customer.getId());
+    }
 }

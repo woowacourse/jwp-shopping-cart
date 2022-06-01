@@ -3,15 +3,19 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -65,7 +69,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.body().jsonPath().getString("message")).isNotBlank();
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("정상적인 회원 정보 조회 시 200 응답")
     @Test
     void getMe() {
         String email = "email@email.com";
@@ -97,20 +101,94 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         회원가입_요청("email@email.com", "12345678a", "tonic");
         String token = 토큰_요청("email@email.com", "12345678a");
 
-        ExtractableResponse<Response> response = 회원탈퇴_요청(token);
+        assertThat(회원탈퇴_요청(token).statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        ExtractableResponse<Response> response = 회원정보_요청(token);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1002)
+        );
+    }
+
+    @DisplayName("잘못된 토큰으로 회원 정보 수정시 401 반환")
+    @Test
+    void updateByInvalidToken() {
+        String token = "invalidToken";
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .when().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .put("/users/me")
+                .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("잘못된 회원 정보 양식으로 수정시 400 반환")
+    @ParameterizedTest
+    @MethodSource("provideInvalidUpdateForm")
+    void updateByInvalidFormat(String password, String nickname) {
+        회원가입_요청("email@email.com", "12345678a", "tonic");
+        String token = 토큰_요청("email@email.com", "12345678a");
+
+        Map<String, String> body = Map.of("nickname", nickname, "password", password);
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .when().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(body)
+                .put("/users/me")
+                .then().log().all().extract();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1000)
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidUpdateForm() {
+        return Stream.of(
+                Arguments.of("12345678", "tonic"),
+                Arguments.of("1234a", "tonic"),
+                Arguments.of("1".repeat(20) + "a", "tonic"),
+                Arguments.of("12345678a", "t"),
+                Arguments.of("12345678a", "a".repeat(9))
+        );
+    }
+
+    @DisplayName("정상적인 회원 정보 수정 시 204 반환")
+    @Test
+    void updateCustomer() {
+        String email = "email@email.com";
+        회원가입_요청(email, "12345678a", "tonic");
+        String token = 토큰_요청(email, "12345678a");
+
+        String newNickName = "토닉";
+        String newPassword = "newpassword1";
+
+        Map<String, String> body = Map.of("nickname", newNickName, "password", newPassword);
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .when().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(body)
+                .put("/users/me")
+                .then().log().all().extract();
+
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
 
         ExtractableResponse<Response> response2 = 회원정보_요청(token);
 
         assertAll(
-                () -> assertThat(response2.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response2.body().jsonPath().getInt("errorCode")).isEqualTo(1002)
+                () -> assertThat(response2.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response2.body().jsonPath().getString("nickname")).isEqualTo(newNickName)
         );
-    }
 
-    @DisplayName("내 정보 수정")
-    @Test
-    void updateMe() {
+        assertThat(로그인_요청(email, newPassword).statusCode()).isEqualTo(HttpStatus.OK.value());
+
     }
 }

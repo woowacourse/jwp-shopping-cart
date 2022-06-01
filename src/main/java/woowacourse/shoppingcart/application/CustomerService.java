@@ -1,11 +1,10 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.Optional;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -41,5 +40,11 @@ public class CustomerService {
             throw new InvalidCustomerException();
         }
         customerDao.deleteByEmail(email);
+    }
+
+    public void updateCustomer(String email, CustomerUpdateRequest request) {
+        Customer customer = findByEmail(email);
+        customerDao.update(new Customer(customer.getId(), customer.getEmail(), request.getPassword(),
+                request.getNickname()));
     }
 }

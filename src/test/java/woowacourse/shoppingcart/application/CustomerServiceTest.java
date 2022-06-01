@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -88,5 +89,27 @@ class CustomerServiceTest {
         customerService.deleteByEmail("tonic@email.com");
 
         assertThat(customerDao.existByEmail("tonic@email.com")).isFalse();
+    }
+
+    @DisplayName("존재하지 않는 이메일로 수정 시 예외 발생")
+    @Test
+    void updateByNotExistEmail() {
+        assertThatThrownBy(() -> customerService.updateCustomer("tonic@email.com", new CustomerUpdateRequest("tonic", "12345678a")))
+                .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @DisplayName("정상적인 회원 정보 수정")
+    @Test
+    void updateCustomer() {
+        CustomerRequest request = new CustomerRequest("tonic@email.com", "12345678a", "토닉");
+        customerService.registCustomer(request);
+
+        String newNickname = "토닉2";
+        String newPassword = "newPassword1";
+        customerService.updateCustomer("tonic@email.com", new CustomerUpdateRequest(newNickname, newPassword));
+        Customer customer = customerService.findByEmail("tonic@email.com");
+
+        assertThat(customer.getPassword()).isEqualTo(newPassword);
+        assertThat(customer.getNickname()).isEqualTo(newNickname);
     }
 }
