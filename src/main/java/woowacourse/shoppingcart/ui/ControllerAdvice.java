@@ -22,10 +22,13 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler({
+            RuntimeException.class,
+            Exception.class,
+    })
     public ResponseEntity<ErrorResponse> handleUnhandledException() {
         final ErrorResponse errorResponse = new ErrorResponse("Unhandled Exception");
-        return ResponseEntity.badRequest().body(errorResponse);
+        return ResponseEntity.internalServerError().body(errorResponse);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
@@ -34,7 +37,7 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
