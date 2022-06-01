@@ -33,4 +33,8 @@ public class CustomerRepository {
     public void updatePassword(final Long id, final Password oldPassword, final Password newPassword) {
         customerDao.updatePassword(id, oldPassword.getPassword(), newPassword.getPassword());
     }
+
+    public void delete(final Long id) {
+        customerDao.delete(id);
+    }
 }

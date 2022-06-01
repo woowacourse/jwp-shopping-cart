@@ -99,7 +99,8 @@ public class CustomerDao {
     }
 
     public void updatePassword(final Long id, final String oldPassword, final String newPassword) {
-        String query = "update customer set password = :newPassword where id = :id and password = :oldPassword and exists" + REAL_CUSTOMER_QUERY;
+        String query = "update customer set password = :newPassword"
+                + " where id = :id and password = :oldPassword and exists" + REAL_CUSTOMER_QUERY;
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
         params.put("newPassword", newPassword);
@@ -108,6 +109,17 @@ public class CustomerDao {
             namedParameterJdbcTemplate.update(query, params);
         } catch (EmptyResultDataAccessException exception) {
             throw new InvalidCustomerException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    public void delete(final Long id) {
+        String query = "update customer set withdrawal = true where id = :id and exists" + REAL_CUSTOMER_QUERY;
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        try {
+            namedParameterJdbcTemplate.update(query, params);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new InvalidCustomerException("존재하지 않는 회원입니다.");
         }
     }
 }

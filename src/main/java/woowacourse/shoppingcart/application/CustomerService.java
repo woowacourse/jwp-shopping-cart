@@ -48,5 +48,6 @@ public class CustomerService {
     }
 
     public void withdraw(final TokenRequest request) {
+        customerRepository.delete(request.getId());
     }
 }

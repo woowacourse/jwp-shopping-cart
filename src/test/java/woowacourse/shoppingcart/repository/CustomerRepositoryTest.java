@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,9 +11,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
 
@@ -93,6 +96,24 @@ class CustomerRepositoryTest {
         customerRepository.updatePassword(id, oldPassword, newPassword);
 
         // then
-        assertThat(customerRepository.findById(id).getPassword()).isEqualTo(newPassword.getPassword());
+        assertThat(customerRepository.findById(id).getPassword())
+                .isEqualTo(newPassword.getPassword());
+    }
+
+    @DisplayName("해당 아이디의 비밀번호를 변경한다.")
+    @Test
+    void delete() {
+        // given
+        Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
+        Long id = customerRepository.create(customer);
+        TokenRequest tokenRequest = new TokenRequest(id);
+
+        // when
+        customerRepository.delete(tokenRequest.getId());
+
+        // then
+        assertThatThrownBy(() -> customerRepository.findById(id))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
     }
 }
