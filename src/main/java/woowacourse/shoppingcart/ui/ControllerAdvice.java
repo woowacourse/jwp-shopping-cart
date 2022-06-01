@@ -11,7 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.ShoppingCartErrorResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -25,12 +25,12 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleUnhandledException() {
-        return ResponseEntity.badRequest().body("Unhandled Exception");
+        return ResponseEntity.badRequest().body(ShoppingCartErrorResponse.from("Unhandled Exception"));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity handle() {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+        return ResponseEntity.badRequest().body(ShoppingCartErrorResponse.from("존재하지 않는 데이터 요청입니다."));
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
@@ -38,7 +38,7 @@ public class ControllerAdvice {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
-        return ResponseEntity.badRequest().body(mainError.getDefaultMessage());
+        return ResponseEntity.badRequest().body(ShoppingCartErrorResponse.from(mainError.getDefaultMessage()));
     }
 
     @ExceptionHandler({
@@ -62,12 +62,12 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ShoppingCartErrorResponse> handleAuthorizationException(AuthorizationException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ShoppingCartErrorResponse.from(exception.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException() {
-        return ResponseEntity.internalServerError().body(new ErrorResponse("서버에 에러가 발생했습니다."));
+    public ResponseEntity<ShoppingCartErrorResponse> handleException() {
+        return ResponseEntity.internalServerError().body(ShoppingCartErrorResponse.from("서버에 에러가 발생했습니다."));
     }
 }
