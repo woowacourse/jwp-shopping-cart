@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -9,16 +10,18 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final CustomerDao customerDao;
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
         this.customerDao = customerDao;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Transactional
     public TokenResponse createToken(TokenRequest tokenRequest) {
         if (!customerDao.checkValidLogin(tokenRequest.getLoginId(), tokenRequest.getPassword())) {
             throw new IllegalArgumentException("아이디나 패스워드 정보가 일치하지 않습니다.");
