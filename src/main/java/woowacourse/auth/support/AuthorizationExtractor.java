@@ -2,6 +2,8 @@ package woowacourse.auth.support;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.context.request.NativeWebRequest;
 
 public class AuthorizationExtractor {
     public static final String AUTHORIZATION = "Authorization";
@@ -22,7 +24,11 @@ public class AuthorizationExtractor {
                 return authHeaderValue;
             }
         }
-
         return null;
+    }
+
+    public static String extract(NativeWebRequest webRequest) {
+        String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        return header.substring(BEARER_TYPE.length()).trim();
     }
 }

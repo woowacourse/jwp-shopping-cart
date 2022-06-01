@@ -1,12 +1,14 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -65,6 +67,27 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1001);
         assertThat(response.body().jsonPath().getString("message")).isNotBlank();
+    }
+
+    @DisplayName("내 정보 조회")
+    @Test
+    void getMe() {
+        String email = "email@email.com";
+        String password = "12345678a";
+        String nickname = "tonic";
+        회원가입_요청(email, password, nickname);
+        String token = 로그인_요청(email, password).jsonPath()
+                .getString("accessToken");
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .when().log().all().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).get("/users/me")
+                .then().log().all().extract();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getString("email")).isEqualTo(email),
+                () -> assertThat(response.jsonPath().getString("nickname")).isEqualTo(nickname)
+        );
     }
 
     @DisplayName("내 정보 수정")

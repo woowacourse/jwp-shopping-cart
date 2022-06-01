@@ -31,8 +31,8 @@ public class CustomerService {
         return customerDao.existByEmail(request.getEmail());
     }
 
-    public Customer findById(Long customerId) {
-        return customerDao.findById(customerId)
+    public Customer findByEmail(String email) {
+        return customerDao.findByEmail(email)
                 .orElseThrow(InvalidCustomerException::new);
     }
 }
