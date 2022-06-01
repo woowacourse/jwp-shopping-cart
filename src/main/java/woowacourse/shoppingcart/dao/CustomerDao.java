@@ -24,4 +24,9 @@ public class CustomerDao {
             throw new InvalidCustomerException();
         }
     }
+
+    public Boolean existCustomerByUserId(final String userId) {
+        String query = "SELECT EXISTS (SELECT id FROM customer WHERE user_id = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, userId);
+    }
 }

@@ -1,16 +1,29 @@
 package woowacourse.shoppingcart.application;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SpringBootTest
 class CustomerServiceTest {
 
-    private final CustomerService customerService = new CustomerService();
+    @Autowired
+    private CustomerDao customerDao;
+
+    private CustomerService customerService;
+
+    @BeforeEach
+    void setUp() {
+        customerService = new CustomerService(customerDao);
+    }
 
     @DisplayName("아이디에 null 을 입력하면 안된다.")
     @Test
@@ -85,5 +98,17 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
+    }
+
+    @DisplayName("중복된 아이디로 가입할 수 없다.")
+    @Test
+    void validateDuplicateUserId() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("puterism", "유콩", "1234");
+
+        // when & then
+        assertThatThrownBy(() -> customerService.signUp(signUpRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 아이디입니다.");
     }
 }

@@ -36,4 +36,8 @@ public class Customer {
     private boolean isEmpty(final String userId) {
         return userId == null || userId.isBlank();
     }
+
+    public String getUserId() {
+        return userId;
+    }
 }

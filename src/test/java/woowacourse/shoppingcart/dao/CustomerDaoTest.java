@@ -23,31 +23,13 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
+    @DisplayName("아이디가 존재하는지 확인한다.")
     @Test
-    void findIdByUserNameTest() {
-
-        // given
-        final String userName = "puterism";
-
+    void existCustomerByUserId() {
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        boolean actual = customerDao.existCustomerByUserId("puterism");
 
         // then
-        assertThat(customerId).isEqualTo(1L);
-    }
-
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
-        // given
-        final String userName = "gwangyeol-iM";
-
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(16L);
+        assertThat(actual).isEqualTo(true);
     }
 }
