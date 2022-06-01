@@ -33,7 +33,12 @@
 
 - email 중복 체크 / 규칙 검증 `URL: “/api/members?email={email}”`
     - Method: GET
-    - 성공 시 204 No Content
+    - 성공 시 200 No Content
+  ```javascript
+    {
+        "success": "true"
+    }
+  ```
     - 실패 시 400 Bad Request
 
 ### 로그인
@@ -43,8 +48,8 @@
     - 성공 시 200 OK
       ```javascript
       {
-      nickname: "...",
-      token: "...",
+        nickname: "...",
+        token: "...",
       }
       ```
     - 실패 시 400 Bad Request
@@ -62,8 +67,9 @@
     - request: `Authorization: Bearer {token}`
     - 로그인이 안 되어있는 경우 401 Unauthorized
     - 토큰의 시간이 만료된 경우 401 Unauthorized
+    - 삭제된 회원의 토큰으로 접근하는 경우 401 Unauthorized
 
-    - 회원 정보 조회 `URL: “/api/members/me” + 토큰 정보로 식별`
+    - 회원 정보 조회 `URL: “/api/auth/members/me” + 토큰 정보로 식별`
         - Method GET
             - 성공 시 200 OK
             ```javascript
@@ -74,18 +80,18 @@
             ```
     - 회원 정보 수정
         - 성공 시 204 No Content
-        - 닉네임 수정 `URL: “/api/members/me” + 토큰 정보로 식별`
+        - 닉네임 수정 `URL: “/api/auth/members/me” + 토큰 정보로 식별`
         ```javascript
         {
           nickname: ,
         }
         ```
-        - 비밀번호 수정 `URL: “/api/members/password” + 토큰 정보로 식별`
+        - 비밀번호 수정 `URL: “/api/auth/members/password” + 토큰 정보로 식별`
         ```javascript
         {
           password: ,
         }
         ```
-    - 회원 탈퇴 `URL: “/api/members/me” + 토큰 정보로 식별`
+    - 회원 탈퇴 `URL: “/api/auth/members/me” + 토큰 정보로 식별`
         - Method DELETE
         - 성공 시 204 No Content
