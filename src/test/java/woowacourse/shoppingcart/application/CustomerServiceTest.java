@@ -85,4 +85,13 @@ class CustomerServiceTest {
 
         assertDoesNotThrow(() -> customerService.updateInfo(email, customerInfoRequest));
     }
+
+    @DisplayName("비밀번호를 수정한다.")
+    @Test
+    void updatePassword() {
+        final String email = "email@email.com";
+        final PasswordRequest passwordRequest = new PasswordRequest("newpassword123!");
+
+        assertDoesNotThrow(() -> customerService.updatePassword(email, passwordRequest));
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.CustomerInfoRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
@@ -43,5 +44,10 @@ public class CustomerService {
     public void updateInfo(String email, CustomerInfoRequest customerInfoRequest) {
         Nickname nickname = customerInfoRequest.toNickname();
         customerDao.updateInfo(email, nickname.getValue());
+    }
+
+    public void updatePassword(String email, PasswordRequest passwordRequest) {
+        Password password = passwordRequest.toPassword();
+        customerDao.updatePassword(email, password.getValue());
     }
 }
