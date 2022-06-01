@@ -134,7 +134,7 @@ public class CustomerDaoTest {
 
     @Test
     @DisplayName("id에 해당하는 회원의 이름을 수정한다.")
-    void updateNameById() {
+    void updateById_newName() {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
         final Customer savedCustomer = customerDao.save(customer);
@@ -147,5 +147,23 @@ public class CustomerDaoTest {
 
         // then
         assertThat(actual.getName()).isEqualTo(newName);
+    }
+
+    @Test
+    @DisplayName("id에 해당하는 회원의 비밀번호를 수정한다.")
+    void updateById_newPassword() {
+        // given
+        final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
+        final Customer savedCustomer = customerDao.save(customer);
+        final String newPassword = "newpassword123";
+
+        // when
+        final Customer updatedCustomer = new Customer(savedCustomer.getId(), NAME, EMAIL, newPassword);
+        customerDao.updateById(updatedCustomer);
+        final Customer actual = customerDao.findById(updatedCustomer.getId()).get();
+
+        // then
+        assertThat(actual.getPassword()).isEqualTo(newPassword);
+
     }
 }
