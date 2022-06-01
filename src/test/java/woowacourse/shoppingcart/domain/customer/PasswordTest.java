@@ -38,7 +38,7 @@ class PasswordTest {
     void construct_korean() {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> new Password("복희12345~!"))
-                .withMessageContaining("알파벳, 숫자, 일부 특수문자");
+                .withMessageContaining("알파벳, 숫자, 특수문자");
     }
 
     @DisplayName("비밀번호에 !@#$%^* 이외의 특수문자가 포함되면 예외가 발생한다")
@@ -47,14 +47,14 @@ class PasswordTest {
     void construct_character(String password) {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> new Password(password))
-                .withMessageContaining("알파벳, 숫자, 일부 특수문자");
+                .withMessageContaining("알파벳, 숫자, 특수문자");
     }
 
     @DisplayName("비밀번호 일치 여부를 확인한다.")
     @ParameterizedTest(name = "{0}")
-    @CsvSource({"kth990303, true", "forky123, false"})
+    @CsvSource({"kth@990303, true", "forky@123, false"})
     void has_same_password(String password, boolean expected) {
-        Password given = new Password("kth990303");
+        Password given = new Password("kth@990303");
         assertThat(given.hasSamePassword(password)).isEqualTo(expected);
     }
 }
