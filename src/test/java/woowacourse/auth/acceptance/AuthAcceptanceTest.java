@@ -35,8 +35,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 내 정보가 조회된다
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(customerResponse.getEmail()).isEqualTo("email@email.com"),
-                () -> assertThat(customerResponse.getNickname()).isEqualTo("파랑")
+                () -> assertThat(customerResponse.getEmail()).isEqualTo("newemail@email.com"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("파리채")
         );
     }
 

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.shoppingcart.dto.CustomerInfoRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
@@ -44,11 +45,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String accessToken = 로그인_후_토큰발급(파리채토큰);
         회원정보_조회(accessToken);
 
+        CustomerInfoRequest customerInfoRequest = new CustomerInfoRequest("수정파리채");
+
         RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/api/members/me")
+                .body(customerInfoRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("/api/members/auth/me")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -63,8 +67,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/api/members/password")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("/api/members/auth/password")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -79,7 +83,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .when().delete("/api/members/me")
+                .when().delete("/api/members/auth/me")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
