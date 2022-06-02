@@ -10,6 +10,8 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -125,5 +127,21 @@ public class CustomerDaoTest {
                 () -> assertThat(customer.getNickname()).isEqualTo("test"),
                 () -> assertThat(customer.getPassword()).isEqualTo("123dkhsd!")
         );
+    }
+
+    @DisplayName("회원정보를 지운다.")
+    @Test
+    void delete() {
+        // given
+        Customer savedCustomer = new Customer(null, "test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerDao.save(savedCustomer);
+
+        // when
+        customerDao.delete(customerId);
+
+        // then
+        Optional<Customer> customer = customerDao.findById(customerId);
+
+        assertThat(customer.isEmpty()).isTrue();
     }
 }

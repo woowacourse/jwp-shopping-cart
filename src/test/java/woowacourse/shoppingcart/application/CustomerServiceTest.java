@@ -323,4 +323,49 @@ class CustomerServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
+
+    @DisplayName("회원 탈퇴를한다.")
+    @Test
+    void withdraw() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+
+        // when
+        customerService.withdraw(tokenRequest);
+
+        // then
+        assertThatThrownBy(() -> customerService.findByCustomerId(tokenRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("존재하지 않은 회원이 탈퇴하면 예외가 발생한다.")
+    @Test
+    void withdrawNonCustomer() {
+        // given
+        TokenRequest tokenRequest = new TokenRequest("9999999");
+
+        // when & then
+        assertThatThrownBy(() -> customerService.withdraw(tokenRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("탈퇴한 회원이 다시 탈퇴하면 예외가 발생한다.")
+    @Test
+    void withdrawCustomerAgain() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+
+        customerService.withdraw(tokenRequest);
+
+        // when & then
+        assertThatThrownBy(() -> customerService.withdraw(tokenRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
 }

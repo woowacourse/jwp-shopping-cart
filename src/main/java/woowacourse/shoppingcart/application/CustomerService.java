@@ -57,6 +57,11 @@ public class CustomerService {
         customerDao.updatePassword(customerForUpdate.getId(), customerForUpdate.getPassword());
     }
 
+    public void withdraw(final TokenRequest tokenRequest) {
+        Customer customer = findCustomerById(tokenRequest.getId());
+        customerDao.delete(customer.getId());
+    }
+
     private Customer findCustomerByUserId(final String userId) {
         return customerDao.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));

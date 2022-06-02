@@ -27,6 +27,7 @@ public class CustomerDao {
     };
 
     private static final boolean NOT_WITHDRAWAL = false;
+    private static final boolean WITHDRAWAL = true;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -99,5 +100,10 @@ public class CustomerDao {
     public void updatePassword(final Long id, final String password) {
         String query = "UPDATE customer SET password = ? WHERE id = ? and withdrawal = ?";
         jdbcTemplate.update(query, password, id, NOT_WITHDRAWAL);
+    }
+
+    public void delete(final Long id) {
+        String query = "UPDATE customer SET withdrawal = ? WHERE id = ? and withdrawal = ?";
+        jdbcTemplate.update(query, WITHDRAWAL, id, NOT_WITHDRAWAL);
     }
 }
