@@ -18,7 +18,7 @@ content-type: application/json
 
 method: GET
 
-URL: “/api/members?email={email}”
+URL: “/members/check-email?email={email}”
 
 content-type: application/json
 
@@ -26,7 +26,7 @@ content-type: application/json
 
 ```
 {
-  success: "true"
+  unique: "true"
 }
 ```
 
@@ -63,18 +63,8 @@ Location 주지 않기
 ### 비밀번호 규칙
 
 ```jsx
-최소
-8
-자, 최대
-20
-자
-최소
-하나의
-문자, 하나의
-숫자
-및
-하나의
-특수문자 :
+최소 8자, 최대 20 자
+최소 하나의 문자, 하나의 숫자 및 하나의 특수문자 :
         "^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$"
 ```
 
@@ -111,10 +101,8 @@ responseBody:
 
 ```jsx
 {
-  nickname: "...",
-          token
-:
-  "..."
+  nickname: "...", 
+  token: "..."
 }
 ```
 
