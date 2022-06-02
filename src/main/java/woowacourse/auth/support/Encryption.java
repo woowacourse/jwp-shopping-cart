@@ -32,9 +32,6 @@ public class Encryption {
     }
 
     public boolean isSame(String encodedText, String plainText) {
-        if (encrypt(plainText).equals(encodedText)) {
-            return true;
-        }
-        return false;
+        return encrypt(plainText).equals(encodedText);
     }
 }
