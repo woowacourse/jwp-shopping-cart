@@ -16,6 +16,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerController {
+
     private final CustomerService customerService;
     private final AuthService authService;
 
@@ -41,6 +42,7 @@ public class CustomerController {
     @GetMapping("/me")
     public ResponseEntity<CustomerResponse> customer(HttpServletRequest request) {
         String customerName = getNameFromToken(request);
+        System.out.println(customerName);
         return ResponseEntity.ok(customerService.findCustomerByName(customerName));
     }
 

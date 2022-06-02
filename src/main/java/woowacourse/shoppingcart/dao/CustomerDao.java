@@ -20,14 +20,14 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(String customerName, String password) {
+    public void save(Customer customer) {
         final String query = "INSERT INTO customer (username, password) VALUES (?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, customerName);
-            preparedStatement.setString(2, password);
+            preparedStatement.setString(1, customer.getName());
+            preparedStatement.setString(2, customer.getPassword());
             return preparedStatement;
         }, keyHolder);
     }
@@ -61,14 +61,16 @@ public class CustomerDao {
         }
     }
 
-    public void updateByName(String customerName, String newPassword) {
+    public void updateByName(String customerName, Customer customer) {
         final String query = "UPDATE customer SET password = ? WHERE username = ?";
-        jdbcTemplate.update(query, newPassword, customerName);
+        jdbcTemplate.update(query, customer.getPassword(), customerName);
     }
 
-    public boolean existsIdByNameAndPassword(String name, String password) {
+    public boolean existsCustomer(Customer customer) {
         final String query = "SELECT EXISTS (SELECT id FROM customer where username = ? and password = ?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name, password));
+        return Boolean.TRUE.equals(
+                jdbcTemplate.queryForObject(query, Boolean.class, customer.getName(), customer.getPassword())
+        );
     }
 
     public boolean existsByName(String name) {

@@ -9,11 +9,11 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.support.Encryptor;
-import woowacourse.shoppingcart.support.SHA256Encryptor;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CustomerService {
+
     private final CustomerDao customerDao;
     private final Encryptor encryptor;
 
@@ -27,7 +27,8 @@ public class CustomerService {
             throw new DuplicateNameException();
         }
         String encryptedPassword = encryptor.encrypt(customerRequest.getPassword());
-        customerDao.save(customerRequest.getName(), encryptedPassword);
+        Customer customer = new Customer(customerRequest.getName(), encryptedPassword);
+        customerDao.save(customer);
     }
 
     public void deleteCustomerByName(final String customerName) {
@@ -39,14 +40,17 @@ public class CustomerService {
         return new CustomerResponse(customer.getName());
     }
 
-    public void editCustomerByName(final String customerName, final CustomerRequest editRequest) {
+    public void editCustomerByName(final String name, final CustomerRequest editRequest) {
+        Customer customer = customerDao.findCustomerByName(name);
         String encryptedPassword = encryptor.encrypt(editRequest.getPassword());
-        customerDao.updateByName(customerName, encryptedPassword);
+        customer.update(name, encryptedPassword);
+        customerDao.updateByName(name, customer);
     }
 
     public void validateNameAndPassword(final String name, final String password) {
         String encryptedPassword = encryptor.encrypt(password);
-        if (customerDao.existsIdByNameAndPassword(name, encryptedPassword)) {
+        Customer customer = new Customer(name, encryptedPassword);
+        if (customerDao.existsCustomer(customer)) {
             return;
         }
         throw new AuthorizationException("로그인에 실패했습니다.");
