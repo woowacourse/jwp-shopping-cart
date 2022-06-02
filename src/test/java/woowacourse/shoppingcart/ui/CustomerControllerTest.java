@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -90,17 +91,10 @@ class CustomerControllerTest extends ControllerTest {
         );
 
         final String accessToken = "fake-token";
-        given(jwtTokenProvider.validateToken(accessToken))
-                .willReturn(true);
-        given(jwtTokenProvider.getPayload(accessToken))
-                .willReturn(email);
-
-        given(customerService.getByEmail(email))
-                .willReturn(customer);
+        getLoginCustomerByToken(accessToken, customer);
 
         final CustomerResponse response = new CustomerResponse(email, nickname);
         final String expected = objectMapper.writeValueAsString(response);
-
 
         // when
         final ResultActions perform = mockMvc.perform(
@@ -120,7 +114,7 @@ class CustomerControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("로그인한 유저의 정보를 조회하는 요청에 토큰이 존재하지 않으면 401을 반환한다.")
+    @DisplayName("로그인한 Customer의 정보를 조회하는 요청에 토큰이 존재하지 않으면 401을 반환한다.")
     void getMe_notExistToken_401() throws Exception {
         // when
         final ResultActions perform = mockMvc.perform(
@@ -136,7 +130,7 @@ class CustomerControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("로그인한 유저의 정보를 조회하는 요청에 토큰이 유효하지 않으면 401을 반환한다.")
+    @DisplayName("로그인한 Customer의 정보를 조회하는 요청에 토큰이 유효하지 않으면 401을 반환한다.")
     void getMe_invalidToken_401() throws Exception {
         // given
         final String accessToken = "invalid-token";
@@ -146,8 +140,8 @@ class CustomerControllerTest extends ControllerTest {
         // when
         final ResultActions perform = mockMvc.perform(
                 get("/users/me")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.ALL)
         ).andDo(print());
 
@@ -155,5 +149,31 @@ class CustomerControllerTest extends ControllerTest {
         perform.andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("errorCode").value("998"))
                 .andExpect(jsonPath("message").value("유효하지 않은 토큰입니다."));
+    }
+
+    @Test
+    @DisplayName("로그인한 Customer를 삭제한다.")
+    void deleteMe_validToken_204() throws Exception {
+        // given
+        final Customer customer = new Customer(
+                1L,
+                "rick",
+                "email@email.com",
+                "fake-password"
+        );
+
+        final String accessToken = "fake-token";
+        getLoginCustomerByToken(accessToken, customer);
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                delete("/users/me")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andExpect(status().isNoContent());
     }
 }

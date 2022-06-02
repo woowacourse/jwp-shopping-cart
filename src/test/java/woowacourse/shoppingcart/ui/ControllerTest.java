@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
+import static org.mockito.BDDMockito.given;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -9,6 +11,7 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.ui.AuthController;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.Customer;
 
 @WebMvcTest({
         AuthController.class,
@@ -30,4 +33,14 @@ public abstract class ControllerTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    protected void getLoginCustomerByToken(final String token, final Customer customer) {
+        given(jwtTokenProvider.validateToken(token))
+                .willReturn(true);
+        given(jwtTokenProvider.getPayload(token))
+                .willReturn(customer.getEmail());
+
+        given(customerService.getByEmail(customer.getEmail()))
+                .willReturn(customer);
+    }
 }
