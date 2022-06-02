@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 
 @Repository
@@ -30,7 +31,7 @@ public class CustomerDao {
         return new Customer(
                 rs.getLong("id"),
                 rs.getString("name"),
-                rs.getString("email"),
+                new Email(rs.getString("email")),
                 Password.fromHashedValue(rs.getString("password"))
         );
     }
@@ -40,7 +41,7 @@ public class CustomerDao {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         final Map<String, Object> params = new HashMap<>();
         params.put("name", customer.getName());
-        params.put("email", customer.getEmail());
+        params.put("email", customer.getEmail().getValue());
         params.put("password", customer.getPassword().getHashedValue());
 
         namedJdbcTemplate.update(sql, new MapSqlParameterSource(params), keyHolder);
@@ -51,7 +52,7 @@ public class CustomerDao {
     public boolean existsByEmail(final Customer customer) {
         final String sql = "SELECT EXISTS (SELECT * FROM customer WHERE email = :email)";
         final Map<String, Object> params = new HashMap<>();
-        params.put("email", customer.getEmail());
+        params.put("email", customer.getEmail().getValue());
 
         return Boolean.TRUE.equals(namedJdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
@@ -65,10 +66,10 @@ public class CustomerDao {
         return Optional.ofNullable(DataAccessUtils.singleResult(customerIds));
     }
 
-    public Optional<Customer> findByEmail(final String email) {
+    public Optional<Customer> findByEmail(final Email email) {
         final String sql = "SELECT id, name, email, password FROM customer WHERE email = :email";
         final HashMap<String, Object> params = new HashMap<>();
-        params.put("email", email);
+        params.put("email", email.getValue());
 
         return findCustomer(sql, params);
     }

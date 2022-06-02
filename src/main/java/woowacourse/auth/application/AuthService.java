@@ -7,6 +7,7 @@ import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
 
 @Service
 public class AuthService {
@@ -20,7 +21,7 @@ public class AuthService {
     }
 
     public String certify(final LoginServiceRequest loginServiceRequest) {
-        final Customer customer = customerDao.findByEmail(loginServiceRequest.getEmail())
+        final Customer customer = customerDao.findByEmail(new Email(loginServiceRequest.getEmail()))
                 .orElseThrow(NoSuchEmailException::new);
         if (!customer.isSamePassword(loginServiceRequest.getPassword())) {
             throw new PasswordNotMatchException();

@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 
 @JdbcTest
@@ -20,7 +21,8 @@ import woowacourse.shoppingcart.domain.Password;
 public class CustomerDaoTest {
 
     private static final String NAME = "썬";
-    private static final String EMAIL = "sunyong@gmail.com";
+    private static final String RAW_EMAIL = "sunyong@gmail.com";
+    private static final Email EMAIL = new Email(RAW_EMAIL);
     private static final String RAW_PASSWORD = "12345678";
     private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD);
 
@@ -33,7 +35,6 @@ public class CustomerDaoTest {
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
-
         // given
         final String userName = "puterism";
 
@@ -48,7 +49,6 @@ public class CustomerDaoTest {
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
-
         // given
         final String userName = "gwangyeol-iM";
 
@@ -166,6 +166,5 @@ public class CustomerDaoTest {
 
         // then
         assertThat(actual.getPassword()).isEqualTo(newPassword);
-
     }
 }

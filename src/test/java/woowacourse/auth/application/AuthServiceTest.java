@@ -17,6 +17,7 @@ import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,8 +41,8 @@ class AuthServiceTest {
         // given
         final String token = "dsfsdfds";
         final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", RAW_PASSWORD);
-        when(customerDao.findByEmail(loginServiceRequest.getEmail()))
-                .thenReturn(Optional.of(new Customer(1L, "클레이", "clay@gmail.com", PASSWORD)));
+        when(customerDao.findByEmail(new Email(loginServiceRequest.getEmail())))
+                .thenReturn(Optional.of(new Customer(1L, "클레이", new Email("clay@gmail.com"), PASSWORD)));
         when(jwtTokenProvider.createToken(Long.toString(1L)))
                 .thenReturn(token);
 
@@ -57,7 +58,7 @@ class AuthServiceTest {
     void certify_invalidEmail_throwsException() {
         // given
         final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", RAW_PASSWORD);
-        when(customerDao.findByEmail(loginServiceRequest.getEmail()))
+        when(customerDao.findByEmail(new Email(loginServiceRequest.getEmail())))
                 .thenReturn(Optional.empty());
 
         // when, then
@@ -70,8 +71,8 @@ class AuthServiceTest {
     void certify_passwordNotMatch_throwsException() {
         // given
         final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "11111111");
-        when(customerDao.findByEmail(loginServiceRequest.getEmail()))
-                .thenReturn(Optional.of(new Customer(1L, "클레이", "klay@gmail.com", PASSWORD)));
+        when(customerDao.findByEmail(new Email(loginServiceRequest.getEmail())))
+                .thenReturn(Optional.of(new Customer(1L, "클레이", new Email("klay@gmail.com"), PASSWORD)));
 
         // when, then
         assertThatThrownBy(() -> authService.certify(loginServiceRequest))
