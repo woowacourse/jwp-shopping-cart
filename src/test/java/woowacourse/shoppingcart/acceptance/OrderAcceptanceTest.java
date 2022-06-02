@@ -1,3 +1,4 @@
+/*
 package woowacourse.shoppingcart.acceptance;
 
 import io.restassured.RestAssured;
@@ -132,3 +133,4 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(resultOrder.getId()).isEqualTo(orderId);
     }
 }
+*/

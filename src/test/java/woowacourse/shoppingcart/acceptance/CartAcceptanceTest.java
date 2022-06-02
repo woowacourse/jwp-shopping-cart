@@ -1,3 +1,4 @@
+/*
 package woowacourse.shoppingcart.acceptance;
 
 import io.restassured.RestAssured;
@@ -119,3 +120,4 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }
+*/
