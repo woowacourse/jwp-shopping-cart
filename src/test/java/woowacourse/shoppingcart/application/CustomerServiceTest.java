@@ -22,6 +22,7 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
+import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -192,7 +193,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.login(loginRequest))
-                .isInstanceOf(CustomerDataNotFoundException.class)
+                .isInstanceOf(LoginDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 

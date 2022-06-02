@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.LoginResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
+import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 @Service
@@ -66,7 +67,7 @@ public class CustomerService {
 
     private Customer findCustomerByUserId(final String userId) {
         return customerDao.findByUserId(userId)
-                .orElseThrow(() -> new CustomerDataNotFoundException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new LoginDataNotFoundException("존재하지 않는 회원입니다."));
     }
 
     private Customer findCustomerById(final Long id) {
@@ -93,7 +94,7 @@ public class CustomerService {
 
     private void validateExistingCustomer(final String userId, final String password) {
         if (!customerDao.existCustomer(userId, password)) {
-            throw new CustomerDataNotFoundException("존재하지 않는 회원입니다.");
+            throw new LoginDataNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 
