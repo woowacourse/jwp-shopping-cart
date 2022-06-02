@@ -1,4 +1,4 @@
-package woowacourse.ui;
+package woowacourse.common.ui;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.ExpiredTokenException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailedException;
-import woowacourse.dto.ErrorResponse;
+import woowacourse.common.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.DisagreeToTermsException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;

@@ -1,4 +1,4 @@
-package woowacourse.dto;
+package woowacourse.common.dto;
 
 public class ErrorResponse {
     private final String message;
