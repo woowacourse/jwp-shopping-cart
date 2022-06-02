@@ -20,7 +20,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
         String accessToken = AuthorizationExtractor.extract(request);
         validateToken(accessToken);
-        return super.preHandle(request, response, handler);
+        return true;
     }
 
     private void validateToken(final String accessToken) {

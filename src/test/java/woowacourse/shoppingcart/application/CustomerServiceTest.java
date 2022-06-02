@@ -181,7 +181,7 @@ class CustomerServiceTest {
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(CustomerDataFormatException.class)
-                .hasMessage("비밀번호는 영문, 한글, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
+                .hasMessage("비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
     }
 
     @ParameterizedTest
@@ -208,7 +208,7 @@ class CustomerServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(loginResponse.getToken()).isNotNull(),
+                () -> assertThat(loginResponse.getAccessToken()).isNotNull(),
                 () -> assertThat(loginResponse.getUserId()).isEqualTo("puterism@woowacourse.com"),
                 () -> assertThat(loginResponse.getNickname()).isEqualTo("nickname")
         );

@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.exception.dataempty.DataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.DataFormatException;
 import woowacourse.shoppingcart.exception.datanotfound.DataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
+import woowacourse.shoppingcart.exception.datanotmatch.DataNotMatchException;
 import woowacourse.shoppingcart.exception.duplicateddata.DuplicatedDataException;
 import woowacourse.shoppingcart.exception.token.InvalidTokenException;
 
@@ -28,7 +29,8 @@ public class ControllerAdvice {
     @ExceptionHandler({
             DuplicatedDataException.class,
             DataEmptyException.class,
-            DataFormatException.class
+            DataFormatException.class,
+            DataNotMatchException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidData(final RuntimeException e) {
         return ResponseEntity.badRequest().body(ErrorResponse.from(e));

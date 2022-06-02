@@ -4,7 +4,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class LoginResponse {
 
-    private String token;
+    private String accessToken;
     private Long id;
     private String userId;
     private String nickname;
@@ -12,19 +12,19 @@ public class LoginResponse {
     private LoginResponse() {
     }
 
-    private LoginResponse(final String token, final Long id, final String userId, final String nickname) {
-        this.token = token;
+    private LoginResponse(final String accessToken, final Long id, final String userId, final String nickname) {
+        this.accessToken = accessToken;
         this.id = id;
         this.userId = userId;
         this.nickname = nickname;
     }
 
-    public static LoginResponse of(final String token, final Customer customer) {
-        return new LoginResponse(token, customer.getId(), customer.getUserId(), customer.getNickname());
+    public static LoginResponse of(final String accessToken, final Customer customer) {
+        return new LoginResponse(accessToken, customer.getId(), customer.getUserId(), customer.getNickname());
     }
 
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
     }
 
     public Long getId() {

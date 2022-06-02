@@ -94,6 +94,6 @@ class CustomerTest {
         // when & then
         assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", "유콩", password))
                 .isInstanceOf(CustomerDataFormatException.class)
-                .hasMessage("비밀번호는 영문, 한글, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
+                .hasMessage("비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
     }
 }

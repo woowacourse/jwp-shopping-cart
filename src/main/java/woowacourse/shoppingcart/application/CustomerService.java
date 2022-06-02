@@ -56,6 +56,7 @@ public class CustomerService {
     @Transactional
     public void updatePassword(final TokenRequest tokenRequest, final CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         Customer customer = findCustomerById(tokenRequest.getId());
+        customer.validateMatchPassword(customerUpdatePasswordRequest.getOldPassword());
         Customer customerForUpdate = createCustomerForUpdatePassword(customerUpdatePasswordRequest, customer);
         customerDao.updatePassword(customerForUpdate.getId(), customerForUpdate.getPassword());
     }
