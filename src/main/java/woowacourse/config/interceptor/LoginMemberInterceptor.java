@@ -29,6 +29,7 @@ public class LoginMemberInterceptor implements HandlerInterceptor {
         final String token = bearerExtractor.extract(request);
         if (Objects.isNull(token) || token.isBlank()) {
             logUnauthorizedRequest(request, token);
+            response.setStatus(401);
             return false;
         }
 

@@ -28,5 +28,4 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public LoginMemberInterceptor loginMemberInterceptor() {
         return new LoginMemberInterceptor(tokenProvider, bearerExtractor);
     }
-
 }
