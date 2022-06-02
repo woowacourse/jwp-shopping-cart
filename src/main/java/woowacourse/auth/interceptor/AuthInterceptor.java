@@ -1,4 +1,4 @@
-package woowacourse.interceptor;
+package woowacourse.auth.interceptor;
 
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +10,8 @@ import woowacourse.exception.auth.UnauthorizedException;
 
 public class AuthInterceptor implements HandlerInterceptor {
 
+    public static final String TOKEN = "token";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
@@ -20,7 +22,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         final String token = AuthorizationExtractor.extract(request);
         validateTokenIsNull(token);
-        request.setAttribute("token", token);
+        request.setAttribute(TOKEN, token);
         return true;
     }
 
