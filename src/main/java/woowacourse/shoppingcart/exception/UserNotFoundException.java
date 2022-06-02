@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.exception;
 
 public class UserNotFoundException extends LoginException {
-    public UserNotFoundException(String message) {
-        super(message);
+
+    private static final String MESSAGE = "해당하는 username이 없습니다.";
+
+    public UserNotFoundException() {
+        super(MESSAGE);
     }
 }

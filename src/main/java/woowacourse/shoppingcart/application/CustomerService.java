@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.function.Supplier;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,8 +8,8 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
-import woowacourse.shoppingcart.exception.EmptyResultException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.UserNotFoundException;
 import woowacourse.shoppingcart.support.passwordencoder.PasswordEncoder;
 
 @Transactional
@@ -46,11 +44,7 @@ public class CustomerService {
 
     public Customer findByUsername(final String username) {
         return customerDao.findByUsername(username)
-            .orElseThrow(throwEmptyCustomerException());
-    }
-
-    private Supplier<EmptyResultException> throwEmptyCustomerException() {
-        return () -> new EmptyResultException("해당 username으로 customer를 찾을 수 없습니다.");
+            .orElseThrow(UserNotFoundException::new);
     }
 
     public void updateInfo(final String username, final UpdateCustomerRequest updateCustomerRequest) {

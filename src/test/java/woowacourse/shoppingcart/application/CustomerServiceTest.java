@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
-import woowacourse.shoppingcart.exception.EmptyResultException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.UserNotFoundException;
 import woowacourse.shoppingcart.support.passwordencoder.PasswordEncoder;
 
 @Transactional
@@ -132,6 +132,6 @@ class CustomerServiceTest {
 
         // then
         assertThatThrownBy(() -> customerService.findByUsername(username))
-            .isInstanceOf(EmptyResultException.class);
+            .isInstanceOf(UserNotFoundException.class);
     }
 }

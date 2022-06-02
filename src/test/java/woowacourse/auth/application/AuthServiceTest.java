@@ -50,7 +50,7 @@ class AuthServiceTest {
         Customer savedCustomer = customerService.save(signupRequest);
 
         LoginRequest loginRequest = new LoginRequest("dongho108", "password1234");
-        Customer customer = authService.findCustomerByUsername(loginRequest.getUsername());
+        Customer customer = customerService.findByUsername(loginRequest.getUsername());
 
         assertAll(
             () -> assertThat(customer.getUsername()).isEqualTo(savedCustomer.getUsername()),
