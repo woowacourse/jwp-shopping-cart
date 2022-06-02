@@ -1,4 +1,6 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.dto;
+
+import woowacourse.shoppingcart.domain.Customer;
 
 public class LoginCustomer {
 

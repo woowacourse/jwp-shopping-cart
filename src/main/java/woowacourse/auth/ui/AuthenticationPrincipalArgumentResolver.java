@@ -11,7 +11,7 @@ import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.domain.LoginCustomer;
+import woowacourse.shoppingcart.dto.LoginCustomer;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
     private JwtTokenProvider jwtTokenProvider;

@@ -17,10 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.domain.LoginCustomer;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest

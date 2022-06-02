@@ -15,8 +15,8 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.LoginCustomer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
