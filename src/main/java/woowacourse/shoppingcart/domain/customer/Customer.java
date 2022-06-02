@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
+
 public class Customer {
     private final UserName userName;
     private final Password password;
@@ -24,7 +26,7 @@ public class Customer {
 
     public void validatePassword(String password) {
         if (!this.password.hasSamePassword(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new InvalidArgumentRequestException("비밀번호가 일치하지 않습니다.");
         }
     }
 

@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
+import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,7 +46,7 @@ class CustomerServiceTest {
     @DisplayName("중복된 회원을 가입시키려할 때 예외를 발생시킨다.")
     @Test
     void addCustomer_duplicated() {
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(InvalidArgumentRequestException.class)
                 .isThrownBy(() -> customerService.addCustomer(customerRequest2))
                 .withMessageContaining("중복");
     }

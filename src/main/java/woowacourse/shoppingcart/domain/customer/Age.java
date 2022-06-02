@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
+
 public class Age {
     private final int age;
 
@@ -10,7 +12,7 @@ public class Age {
 
     private void validateAgeRange(int age) {
         if (age < 0) {
-            throw new IllegalArgumentException("나이는 0살 이상이어야 합니다.");
+            throw new InvalidArgumentRequestException("나이는 0살 이상이어야 합니다.");
         }
     }
 

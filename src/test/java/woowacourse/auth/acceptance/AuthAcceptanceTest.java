@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
+import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -66,7 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 // then
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract()
-                .as(IllegalArgumentException.class);
+                .as(InvalidArgumentRequestException.class);
     }
 
     @DisplayName("비밀번호가 일치하지 않아 로그인에 실패하는 경우는 토큰 발급 요청이 거부된다.")
@@ -82,7 +83,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 // then
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract()
-                .as(IllegalArgumentException.class);
+                .as(InvalidArgumentRequestException.class);
     }
 
     @DisplayName("유효하지 않은 토큰으로 회원 관련 기능에 접근할 경우 요청이 거부된다.")

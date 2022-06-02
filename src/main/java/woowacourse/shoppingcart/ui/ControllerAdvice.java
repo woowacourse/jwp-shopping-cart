@@ -27,7 +27,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             EmptyResultDataAccessException.class,
-            IllegalArgumentException.class,
+            InvalidArgumentRequestException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,

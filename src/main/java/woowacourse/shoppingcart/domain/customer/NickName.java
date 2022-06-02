@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
+
 public class NickName {
     private static final int MAX_NICKNAME_LENGTH = 10;
 
@@ -12,10 +14,10 @@ public class NickName {
 
     private void validateNickName(String nickName) {
         if (nickName.isBlank()) {
-            throw new IllegalArgumentException("이름은 공백일 수 없습니다.");
+            throw new InvalidArgumentRequestException("이름은 공백일 수 없습니다.");
         }
         if (nickName.length() > MAX_NICKNAME_LENGTH) {
-            throw new IllegalArgumentException("이름의 길이는 10자 이하여야 합니다.");
+            throw new InvalidArgumentRequestException("이름의 길이는 10자 이하여야 합니다.");
         }
     }
 

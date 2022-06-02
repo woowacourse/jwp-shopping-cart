@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
+import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 @Transactional
 @Service
@@ -30,7 +31,7 @@ public class CustomerService {
 
     private void validateUserName(CustomerRequest customerRequest) {
         if (isDuplicateUserName(customerRequest.getUserName())) {
-            throw new IllegalArgumentException("기존 회원 아이디와 중복되는 아이디입니다.");
+            throw new InvalidArgumentRequestException("기존 회원 아이디와 중복되는 아이디입니다.");
         }
     }
 

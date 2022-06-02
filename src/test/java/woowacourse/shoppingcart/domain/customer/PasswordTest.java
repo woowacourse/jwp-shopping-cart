@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -19,7 +20,7 @@ class PasswordTest {
     @DisplayName("비밀번호가 공백이면 예외가 발생한다")
     @Test
     void construct_blank() {
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(InvalidArgumentRequestException.class)
                 .isThrownBy(() -> new Password(" "))
                 .withMessageContaining("공백");
     }
@@ -28,7 +29,7 @@ class PasswordTest {
     @ParameterizedTest(name = "{0}")
     @ValueSource(strings = {"abcd2*g", "forkyforkyforky1234*!"})
     void construct_length(String password) {
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(InvalidArgumentRequestException.class)
                 .isThrownBy(() -> new Password(password))
                 .withMessageContaining("8자 이상 20자 이하");
     }
@@ -36,7 +37,7 @@ class PasswordTest {
     @DisplayName("비밀번호에 한글이 포함되면 예외가 발생한다")
     @Test
     void construct_korean() {
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(InvalidArgumentRequestException.class)
                 .isThrownBy(() -> new Password("복희12345~!"))
                 .withMessageContaining("알파벳, 숫자, 특수문자");
     }
@@ -45,7 +46,7 @@ class PasswordTest {
     @ParameterizedTest(name = "{0}")
     @ValueSource(strings = {"forky&forky", "kth1234`", "kei+forky", "forky=genius"})
     void construct_character(String password) {
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(InvalidArgumentRequestException.class)
                 .isThrownBy(() -> new Password(password))
                 .withMessageContaining("알파벳, 숫자, 특수문자");
     }
