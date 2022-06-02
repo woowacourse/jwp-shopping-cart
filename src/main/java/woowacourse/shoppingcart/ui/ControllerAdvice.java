@@ -50,11 +50,6 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException() {
-        return new ResponseEntity<>(new ExceptionResponse("형식에 맞지 않은 입력입니다."), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(WrongPasswordException.class)
     public ResponseEntity<ExceptionResponse> handleWrongPasswordException(final WrongPasswordException e) {
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
