@@ -13,6 +13,7 @@ import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.CustomerRemoveRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
@@ -60,7 +61,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        ExceptionResponse exceptionResponse = response.jsonPath().getObject(".", ExceptionResponse.class);
+        final ExceptionResponse exceptionResponse = response.jsonPath().getObject(".", ExceptionResponse.class);
         assertThat(exceptionResponse.getMessage()).isEqualTo(new DuplicatedCustomerEmailException().getMessage());
     }
 
@@ -128,7 +129,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 "/customers", customerUpdateRequest, tokenResponse.getAccessToken());
 
         assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-        ExceptionResponse exceptionResponse = patchResponse.jsonPath().getObject(".", ExceptionResponse.class);
+        final ExceptionResponse exceptionResponse = patchResponse.jsonPath().getObject(".", ExceptionResponse.class);
         assertThat(exceptionResponse.getMessage()).isEqualTo(new WrongPasswordException().getMessage());
     }
 
@@ -138,6 +139,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
+        CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD);
 
         // when
         final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
@@ -145,9 +147,29 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
 
         final ExtractableResponse<Response> deleteResponse = RequestHandler.deleteRequest(
-                "/customers", tokenResponse.getAccessToken());
+                "/customers", customerRemoveRequest, tokenResponse.getAccessToken());
 
         // then
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("비밀번호가 틀리면 회원을 탈퇴할 수 없다.")
+    @Test
+    void removeCustomerWithWrongPassword() {
+        // given
+        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+                CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
+        CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD+"1");
+
+        // when
+        final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
+                new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
+        final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
+
+        final ExtractableResponse<Response> deleteResponse = RequestHandler.deleteRequest(
+                "/customers", customerRemoveRequest, tokenResponse.getAccessToken());
+
+        // then
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }

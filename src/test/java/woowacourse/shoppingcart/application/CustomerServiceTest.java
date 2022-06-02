@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.CustomerRemoveRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
@@ -107,7 +108,7 @@ class CustomerServiceTest {
         final Long customerId = customerService.registerCustomer(
                 new CustomerRegisterRequest(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
-        customerService.removeCustomer(customerId);
+        customerService.removeCustomer(customerId, new CustomerRemoveRequest(CUSTOMER_PASSWORD));
 
         assertThatThrownBy(() ->customerService.findById(customerId))
                 .isInstanceOf(InvalidCustomerException.class);

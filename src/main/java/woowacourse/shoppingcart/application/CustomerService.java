@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.CustomerRemoveRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
@@ -49,15 +50,22 @@ public class CustomerService {
     public CustomerUpdateResponse updateCustomer(final Long customerId,
                                                  final CustomerUpdateRequest customerUpdateRequest) {
         final Customer customer = getById(customerId);
-        if (!customer.equalsPassword(customerUpdateRequest.getPassword())) {
-            throw new WrongPasswordException();
-        }
+        validatePassword(customer, customerUpdateRequest.getPassword());
         customer.update(customerUpdateRequest.getNickname(), customerUpdateRequest.getNewPassword());
         return new CustomerUpdateResponse(customer.getNickname());
     }
 
     @Transactional
-    public void removeCustomer(final Long customerId) {
+    public void removeCustomer(final Long customerId,
+                               final CustomerRemoveRequest customerRemoveRequest) {
+        final Customer customer = getById(customerId);
+        validatePassword(customer, customerRemoveRequest.getPassword());
         customerDao.deleteById(customerId);
+    }
+
+    private void validatePassword(Customer customer, String password) {
+        if (!customer.equalsPassword(password)) {
+            throw new WrongPasswordException();
+        }
     }
 }

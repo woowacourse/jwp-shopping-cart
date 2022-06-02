@@ -79,9 +79,10 @@ public class RequestHandler {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> deleteRequest(String url, String accessToken) {
+    public static <T> ExtractableResponse<Response> deleteRequest(String url, T requestBody, String accessToken) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
+                .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .delete(url)
