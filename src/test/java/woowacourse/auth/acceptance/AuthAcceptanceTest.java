@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.acceptance.fixture.CustomFixture;
+import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
@@ -24,17 +26,18 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         // email, password를 사용해 토큰을 발급받고
-        TokenRequest tokenRequest = new TokenRequest("puterism@naver.com", "12349053145");
+        long savedId = CustomFixture.회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
+        TokenRequest tokenRequest = new TokenRequest("philz@gmail.com", "123456789");
         String accessToken = 로그인_요청_및_토큰발급(tokenRequest);
 
         // when
         // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
-        ExtractableResponse<Response> response = 회원조회_요청(accessToken, 1L);
+        ExtractableResponse<Response> response = 회원조회_요청(accessToken, savedId);
 
         // then
         // 내 정보가 조회된다
         CustomerResponse result = response.as(CustomerResponse.class);
-        CustomerResponse expected = new CustomerResponse(1L, "puterism@naver.com", "puterism");
+        CustomerResponse expected = new CustomerResponse(savedId, "philz@gmail.com", "swcho");
         assertThat(result).usingRecursiveComparison()
                 .isEqualTo(expected);
     }

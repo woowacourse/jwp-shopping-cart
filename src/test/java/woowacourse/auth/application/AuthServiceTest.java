@@ -6,15 +6,27 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.acceptance.fixture.CustomFixture;
+import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 
 @SpringBootTest
+@Sql({"/clear-all-tables.sql", "/generate-data.sql"})
 class AuthServiceTest {
 
     @Autowired
+    private CustomerDao customerDao;
+
+    @Autowired
     private AuthService authService;
+
+    @Autowired
+    private CustomerService customerService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -23,27 +35,29 @@ class AuthServiceTest {
     @Test
     void createToken() {
         // given
-        TokenRequest request = new TokenRequest("puterism@naver.com", "12349053145");
+        customerService.save(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
+        TokenRequest request = new TokenRequest("philz@gmail.com", "123456789");
         String token = authService.createToken(request);
 
         // when
         String email = jwtTokenProvider.getPayload(token);
 
         // then
-        assertThat(email).isEqualTo("puterism@naver.com");
+        assertThat(email).isEqualTo("philz@gmail.com");
     }
 
     @DisplayName("토큰을 이용해서 Customer를 복원한다.")
     @Test
     void findCustomerByToken() {
         // given
-        TokenRequest request = new TokenRequest("puterism@naver.com", "12349053145");
+        Long savedId = customerService.save(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
+        TokenRequest request = new TokenRequest("philz@gmail.com", "123456789");
         String token = authService.createToken(request);
 
         // when
         Customer customer = authService.findCustomerByToken(token);
 
-        Customer expected = new Customer("puterism@naver.com", "puterism", "12349053145");
+        Customer expected = customerDao.findById(savedId).get();
         // then
 
         assertThat(customer).usingRecursiveComparison()

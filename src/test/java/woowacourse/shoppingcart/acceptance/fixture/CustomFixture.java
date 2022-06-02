@@ -23,7 +23,8 @@ public class CustomFixture extends Fixture {
     }
 
     public static long 회원가입_요청_및_ID_추출(CustomerCreateRequest request) {
-        return ID_추출(회원가입_요청(request));
+        long savedId = ID_추출(회원가입_요청(request));
+        return savedId;
     }
 
     public static ExtractableResponse<Response> 회원조회_요청(String token, Long id) {

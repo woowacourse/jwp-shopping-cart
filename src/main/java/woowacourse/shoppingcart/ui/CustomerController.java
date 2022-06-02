@@ -38,21 +38,15 @@ public class CustomerController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerResponse findCustomer(@PathVariable long id, @AuthenticationPrincipal Customer customer) {
-        validateAuthorizedUser(id, customer);
+        validateAuthorizedUser(customer, id);
         return new CustomerResponse(customer);
-    }
-
-    private void validateAuthorizedUser(long id, Customer customer) {
-        if (!customer.getId().equals(id)) {
-            throw new ForbiddenAccessException();
-        }
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerResponse update(@PathVariable long id, @Valid @RequestBody CustomerUpdateRequest request,
                                    @AuthenticationPrincipal Customer customer) {
-        validateAuthorizedUser(id, customer);
+        validateAuthorizedUser(customer, id);
         customerService.update(id, request);
         Customer updatedCustomer = customerService.findById(id);
 
@@ -62,7 +56,13 @@ public class CustomerController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id, @AuthenticationPrincipal Customer customer) {
-        validateAuthorizedUser(id, customer);
+        validateAuthorizedUser(customer, id);
         customerService.delete(id);
+    }
+
+    private void validateAuthorizedUser(Customer customer, long id) {
+        if (!customer.getId().equals(id)) {
+            throw new ForbiddenAccessException();
+        }
     }
 }

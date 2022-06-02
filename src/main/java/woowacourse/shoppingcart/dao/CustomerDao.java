@@ -4,7 +4,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -114,7 +113,7 @@ public class CustomerDao {
         ));
     }
 
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         String sql = "delete from customer where id = :id";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
 

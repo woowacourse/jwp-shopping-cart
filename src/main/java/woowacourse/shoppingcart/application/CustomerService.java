@@ -1,14 +1,13 @@
 package woowacourse.shoppingcart.application;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import woowacourse.auth.specification.CustomerSpecification;
+import woowacourse.auth.utils.CryptoUtils;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
-import woowacourse.shoppingcart.exception.DuplicateEmailException;
-import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -16,26 +15,20 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final CustomerSpecification customerSpec;
 
     public Long save(CustomerCreateRequest request) {
-        validateUsernameDuplication(request.getUsername());
-        validateEmailDuplication(request.getEmail());
+        customerSpec.validateUsernameDuplicate(request.getUsername());
+        customerSpec.validateEmailDuplicate(request.getEmail());
+        encryptPassword(request);
 
         return customerDao.save(request.toEntity());
     }
 
-    private void validateUsernameDuplication(String username) {
-        boolean existCustomerBySameUsername = customerDao.findByUsername(username).isPresent();
-        if (existCustomerBySameUsername) {
-            throw new DuplicateUsernameException();
-        }
-    }
-
-    private void validateEmailDuplication(String email) {
-        boolean existCustomerBySameEmail = customerDao.findByEmail(email).isPresent();
-        if (existCustomerBySameEmail) {
-            throw new DuplicateEmailException();
-        }
+    private void encryptPassword(CustomerCreateRequest request) {
+        String originPassword = request.getPassword();
+        String encryptPassword = CryptoUtils.encrypt(originPassword);
+        request.setPassword(encryptPassword);
     }
 
     public Customer findById(long id) {
@@ -57,7 +50,7 @@ public class CustomerService {
         if (isSameOriginUsername(id, request)) {
             return;
         }
-        validateUsernameDuplication(request.getUsername());
+        customerSpec.validateUsernameDuplicate(request.getUsername());
 
         customerDao.update(id, request.getUsername());
     }
@@ -68,11 +61,7 @@ public class CustomerService {
     }
 
     public void delete(Long id) {
-        validateCustomerExists(id);
-        customerDao.delete(id);
-    }
-
-    private void validateCustomerExists(Long id) {
-        findById(id);
+        customerSpec.validateCustomerExists(id);
+        customerDao.deleteById(id);
     }
 }

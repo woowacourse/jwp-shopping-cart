@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.specification.CustomerSpecification;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
@@ -32,7 +33,8 @@ public class CustomerServiceTest {
     public CustomerServiceTest(DataSource dataSource,
                                NamedParameterJdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(dataSource, jdbcTemplate);
-        customerService = new CustomerService(customerDao);
+        CustomerSpecification customerSpecification = new CustomerSpecification(customerDao);
+        customerService = new CustomerService(customerDao, customerSpecification);
     }
 
     @DisplayName("Customer 를 저장한다.")
