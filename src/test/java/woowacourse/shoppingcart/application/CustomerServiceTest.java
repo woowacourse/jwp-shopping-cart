@@ -17,7 +17,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
-import woowacourse.shoppingcart.application.dto.TokenPayloadDto;
+import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.dao.CustomerFixture;
 
 @SpringBootTest
@@ -73,8 +73,8 @@ class CustomerServiceTest {
         final String email = "her0807@naver.com";
         final TokenResponse response = customerService.signIn(new SignInDto(email, "password1!"));
         final ObjectMapper mapper = new JsonMapper();
-        TokenPayloadDto tokenPayloadDto = mapper.readValue(tokenProvider.getPayload(response.getAccessToken()),
-                TokenPayloadDto.class);
+        AddressResponse tokenPayloadDto = mapper.readValue(tokenProvider.getPayload(response.getAccessToken()),
+                AddressResponse.class);
         assertThat(tokenPayloadDto.getEmail()).isEqualTo(email);
         assertThat(response.getCustomerId()).isNotNull();
     }

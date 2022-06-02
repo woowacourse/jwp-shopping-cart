@@ -8,13 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.application.dto.CustomerDto;
-import woowacourse.shoppingcart.application.dto.TokenPayloadDto;
-import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.domain.customer.Email;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,7 +41,7 @@ public class CustomerDaoTest {
     @DisplayName("전달 받은 이메일로 사용자 정보를 반환한다.")
     @Test
     void findByUserEmail() {
-        final TokenPayloadDto tokenPayloadDto = customerDao.findByUserEmail(new Email("puterism@example.com"));
+        final AddressResponse tokenPayloadDto = customerDao.findByUserEmail(new Email("puterism@example.com"));
         assertThat(tokenPayloadDto.getId()).isNotNull();
     }
 

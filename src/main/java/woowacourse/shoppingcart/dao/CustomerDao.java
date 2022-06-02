@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.application.dto.TokenPayloadDto;
+import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -35,11 +35,11 @@ public class CustomerDao {
         return simpleInsert.executeAndReturnKey(parameter).longValue();
     }
 
-    public TokenPayloadDto findByUserEmail(final Email email) {
+    public AddressResponse findByUserEmail(final Email email) {
         final String query = "SELECT id, email, password, profileImageUrl, name, gender, birthday, contact, address, detailAddress, zoneCode FROM customer WHERE email=:email";
         final SqlParameterSource parameter = new MapSqlParameterSource(Map.of("email", email.getValue()));
         return namedJdbcTemplate.queryForObject(query, parameter, (resultSet, rowNum) -> {
-            return new TokenPayloadDto(resultSet.getLong("id"),
+            return new AddressResponse(resultSet.getLong("id"),
                     resultSet.getString("email"),
                     resultSet.getString("profileImageUrl"),
                     resultSet.getString("name"),

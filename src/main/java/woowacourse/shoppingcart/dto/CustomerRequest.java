@@ -1,40 +1,66 @@
 package woowacourse.shoppingcart.dto;
 
 public class CustomerRequest {
-
+    private Long id;
     private String email;
-    private String password;
     private String profileImageUrl;
     private String name;
     private String gender;
-    private String birthDay;
+    private String birthday;
     private String contact;
-    private AddressRequest address;
+    private AddressRequest fullAddress;
     private boolean terms;
 
     public CustomerRequest() {
     }
 
-    public CustomerRequest(String email, String password, String profileImageUrl, String name, String gender,
-                           String birthDay, String contact, String address, String detailAddress, String zoneCode,
-                           boolean terms) {
+    public CustomerRequest(Long id, String email, String profileImageUrl, String name, String gender,
+                            String birthday, String contact, String address, String detailAddress, String zoneCode) {
+        this.id = id;
         this.email = email;
-        this.password = password;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.gender = gender;
-        this.birthDay = birthDay;
+        this.birthday = birthday;
         this.contact = contact;
-        this.address = new AddressRequest(address, detailAddress, zoneCode);
-        this.terms = terms;
+        this.fullAddress = new AddressRequest(address, detailAddress, zoneCode);
+        this.terms = true;
+    }
+
+    public static class AddressRequest {
+
+        private String address;
+        private String detailAddress;
+        private String zoneCode;
+
+        public AddressRequest() {
+        }
+
+        public AddressRequest(String address, String detailAddress, String zoneCode) {
+            this.address = address;
+            this.detailAddress = detailAddress;
+            this.zoneCode = zoneCode;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public String getDetailAddress() {
+            return detailAddress;
+        }
+
+        public String getZoneCode() {
+            return zoneCode;
+        }
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getProfileImageUrl() {
@@ -49,20 +75,19 @@ public class CustomerRequest {
         return gender;
     }
 
-    public String getBirthDay() {
-        return birthDay;
+    public String getBirthday() {
+        return birthday;
     }
 
     public String getContact() {
         return contact;
     }
 
-    public AddressRequest getAddress() {
-        return address;
+    public AddressRequest getFullAddress() {
+        return fullAddress;
     }
 
     public boolean isTerms() {
         return terms;
     }
-
 }

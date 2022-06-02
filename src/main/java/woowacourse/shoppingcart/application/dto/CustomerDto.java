@@ -8,7 +8,7 @@ import woowacourse.shoppingcart.domain.customer.Gender;
 import woowacourse.shoppingcart.domain.customer.Name;
 import woowacourse.shoppingcart.domain.customer.NewPassword;
 import woowacourse.shoppingcart.domain.customer.Terms;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.SignUpRequest;
 
 public class CustomerDto {
 
@@ -17,34 +17,34 @@ public class CustomerDto {
     private final String profileImageUrl;
     private final String name;
     private final String gender;
-    private final String birthDay;
+    private final String birthday;
     private final String contact;
     private final AddressDto address;
     private final boolean terms;
 
     public CustomerDto(String email, String password, String profileImageUrl, String name, String gender,
-                       String birthDay, String contact, AddressDto address, boolean terms) {
+                       String birthday, String contact, AddressDto address, boolean terms) {
         this.email = email;
         this.password = password;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.gender = gender;
-        this.birthDay = birthDay;
+        this.birthday = birthday;
         this.contact = contact;
         this.address = address;
         this.terms = terms;
     }
 
-    public static CustomerDto fromCustomerRequest(final CustomerRequest request) {
+    public static CustomerDto fromCustomerRequest(final SignUpRequest request) {
         return new CustomerDto(request.getEmail(), request.getPassword(), request.getProfileImageUrl(),
-                request.getName(), request.getGender(), request.getBirthDay(), request.getContact(),
+                request.getName(), request.getGender(), request.getBirthday(), request.getContact(),
                 AddressDto.fromAddressRequest(request.getAddress()), request.isTerms());
     }
 
     public static Customer toCustomer(final CustomerDto request) {
         return new Customer(0L, new Email(request.getEmail()), new NewPassword(request.getPassword()),
                 request.getProfileImageUrl(), new Name(request.getName()), Gender.form(request.getGender()),
-                new Birthday(request.getBirthDay()), new Contact(request.getContact()),
+                new Birthday(request.getBirthday()), new Contact(request.getContact()),
                 AddressDto.toFullAddress(request.getAddressDto()), new Terms(request.isTerms()));
     }
 
@@ -68,8 +68,8 @@ public class CustomerDto {
         return gender;
     }
 
-    public String getBirthDay() {
-        return birthDay;
+    public String getBirthday() {
+        return birthday;
     }
 
     public String getContact() {

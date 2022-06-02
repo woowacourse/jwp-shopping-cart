@@ -11,7 +11,7 @@ public class Customer {
     private String profileImageUrl;
     private Name name;
     private Gender gender;
-    private Birthday birthDay;
+    private Birthday birthday;
     private Contact contact;
     private FullAddress fullAddress;
     private Terms terms;
@@ -20,7 +20,7 @@ public class Customer {
     }
 
     public Customer(Long id, Email email, Password password, String profileImageUrl,
-                    Name name, Gender gender, Birthday birthDay, Contact contact,
+                    Name name, Gender gender, Birthday birthday, Contact contact,
                     FullAddress fullAddress, Terms terms) {
         this.id = id;
         this.email = email;
@@ -28,16 +28,16 @@ public class Customer {
         this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.gender = gender;
-        this.birthDay = birthDay;
+        this.birthday = birthday;
         this.contact = contact;
         this.fullAddress = fullAddress;
         this.terms = terms;
     }
 
     public Customer(Long id, Email email, Password password, String profileImageUrl,
-                    Name name, Gender gender, Birthday birthDay, Contact contact,
+                    Name name, Gender gender, Birthday birthday, Contact contact,
                     FullAddress fullAddress) {
-        this(id, email, password, profileImageUrl, name, gender, birthDay, contact, fullAddress, new Terms(true));
+        this(id, email, password, profileImageUrl, name, gender, birthday, contact, fullAddress, new Terms(true));
     }
 
 
@@ -65,8 +65,8 @@ public class Customer {
         return gender.getValue();
     }
 
-    public String getBirthDay() {
-        return birthDay.getValue();
+    public String getBirthday() {
+        return birthday.getValue();
     }
 
     public String getContact() {

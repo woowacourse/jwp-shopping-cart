@@ -9,7 +9,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
-import woowacourse.shoppingcart.application.dto.TokenPayloadDto;
+import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
@@ -40,7 +40,7 @@ public class CustomerService {
         final NewPassword password = new NewPassword(signInDto.getPassword());
         final String foundPassword = customerDao.findPasswordByEmail(email);
         verifyPassword(password, foundPassword);
-        TokenPayloadDto tokenPayloadDto = customerDao.findByUserEmail(email);
+        AddressResponse tokenPayloadDto = customerDao.findByUserEmail(email);
         String payload = createPayload(tokenPayloadDto);
         return new TokenResponse(tokenPayloadDto.getId(), provider.createToken(payload));
     }
@@ -51,7 +51,7 @@ public class CustomerService {
         }
     }
 
-    private String createPayload(TokenPayloadDto tokenPayloadDto) {
+    private String createPayload(AddressResponse tokenPayloadDto) {
         try {
             ObjectMapper mapper = new JsonMapper();
             return mapper.writeValueAsString(tokenPayloadDto);

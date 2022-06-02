@@ -3,28 +3,28 @@ package woowacourse.shoppingcart.application.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TokenPayloadDto {
+public class AddressResponse {
 
     private Long id;
     private String email;
     private String profileImageUrl;
     private String name;
     private String gender;
-    private String birthDay;
+    private String birthday;
     private String contact;
     private AddressDto fullAddress;
 
-    public TokenPayloadDto() {
+    public AddressResponse() {
     }
 
-    public TokenPayloadDto(Long id, String email, String profileImageUrl, String name, String gender,
-                           String birthDay, String contact, String address, String detailAddress, String zoneCode) {
+    public AddressResponse(Long id, String email, String profileImageUrl, String name, String gender,
+                           String birthday, String contact, String address, String detailAddress, String zoneCode) {
         this.id = id;
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.gender = gender;
-        this.birthDay = birthDay;
+        this.birthday = birthday;
         this.contact = contact;
         this.fullAddress = new AddressDto(address, detailAddress, zoneCode);
     }
@@ -77,8 +77,8 @@ public class TokenPayloadDto {
         return gender;
     }
 
-    public String getBirthDay() {
-        return birthDay;
+    public String getBirthday() {
+        return birthday;
     }
 
     public String getContact() {

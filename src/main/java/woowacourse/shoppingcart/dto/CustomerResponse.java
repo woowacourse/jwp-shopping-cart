@@ -2,26 +2,73 @@ package woowacourse.shoppingcart.dto;
 
 public class CustomerResponse {
 
+    private Long id;
     private String email;
     private String profileImageUrl;
     private String name;
     private String gender;
-    private String birthDay;
+    private String birthday;
     private String contact;
     private AddressResponse fullAddress;
+    private boolean terms;
 
     public CustomerResponse() {
     }
 
-    public CustomerResponse(String email, String profileImage, String name, String gender, String birthDay,
-                            String phoneNumber, String address, String detailAddress, String zipCode) {
+    public CustomerResponse(Long id, String email, String profileImageUrl, String name, String gender,
+                           String birthday, String contact, String address, String detailAddress, String zoneCode) {
+        this.id = id;
         this.email = email;
-        this.profileImageUrl = profileImage;
+        this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.gender = gender;
-        this.birthDay = birthDay;
-        this.contact = phoneNumber;
-        this.fullAddress = new AddressResponse(address, detailAddress, zipCode);
+        this.birthday = birthday;
+        this.contact = contact;
+        this.fullAddress = new AddressResponse(address, detailAddress, zoneCode);
+        this.terms = true;
+    }
+
+    public static CustomerResponse fromCustomerRequest(final CustomerRequest request) {
+        return new CustomerResponse(request.getId(), request.getEmail(), request.getProfileImageUrl(), request.getName(),
+                request.getGender(), request.getBirthday(), request.getContact(), request.getFullAddress().getAddress(),
+                request.getFullAddress().getDetailAddress(), request.getFullAddress().getZoneCode());
+    }
+
+    public static class AddressResponse {
+
+        private String address;
+        private String detailAddress;
+        private String zoneCode;
+
+        public AddressResponse() {
+        }
+
+        public AddressResponse(String address, String detailAddress, String zoneCode) {
+            this.address = address;
+            this.detailAddress = detailAddress;
+            this.zoneCode = zoneCode;
+        }
+
+        public static AddressResponse fromAddressRequest(final CustomerRequest.AddressRequest addressRequest) {
+            return new AddressResponse(addressRequest.getAddress(), addressRequest.getDetailAddress(),
+                    addressRequest.getZoneCode());
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public String getDetailAddress() {
+            return detailAddress;
+        }
+
+        public String getZoneCode() {
+            return zoneCode;
+        }
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -40,8 +87,8 @@ public class CustomerResponse {
         return gender;
     }
 
-    public String getBirthDay() {
-        return birthDay;
+    public String getBirthday() {
+        return birthday;
     }
 
     public String getContact() {
@@ -50,5 +97,9 @@ public class CustomerResponse {
 
     public AddressResponse getFullAddress() {
         return fullAddress;
+    }
+
+    public boolean isTerms() {
+        return terms;
     }
 }
