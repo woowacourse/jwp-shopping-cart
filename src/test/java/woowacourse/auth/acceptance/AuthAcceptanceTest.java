@@ -53,9 +53,25 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("로그인에 실패하는 경우는 토큰 발급 요청이 거부된다.")
+    @DisplayName("아이디가 일치하지 않아 로그인에 실패하는 경우는 토큰 발급 요청이 거부된다.")
     @Test
-    void myInfoWithBadBearerAuth() {
+    void myInfoWithBadBearerAuthByUserName() {
+        // when
+        RestAssured.given().log().all()
+                .body(new TokenRequest("kth990303", "forky@1234"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all()
+                // then
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract()
+                .as(IllegalArgumentException.class);
+    }
+
+    @DisplayName("비밀번호가 일치하지 않아 로그인에 실패하는 경우는 토큰 발급 요청이 거부된다.")
+    @Test
+    void myInfoWithBadBearerAuthByPassword() {
         // when
         RestAssured.given().log().all()
                 .body(new TokenRequest("forky", "kth@990303"))

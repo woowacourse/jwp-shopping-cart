@@ -78,7 +78,8 @@ public class CustomerDaoTest {
         customerDao.save(given);
         customerDao.updatePassword(expected);
 
-        Customer actual = customerDao.findCustomerByUserName(userName);
+        Customer actual = customerDao.findCustomerByUserName(userName)
+                .orElseThrow(InvalidCustomerException::new);
         assertThat(actual.getPassword()).isEqualTo(expected.getPassword());
     }
 
@@ -92,7 +93,8 @@ public class CustomerDaoTest {
         customerDao.save(given);
         customerDao.updateInfo(expected);
 
-        Customer actual = customerDao.findCustomerByUserName(userName);
+        Customer actual = customerDao.findCustomerByUserName(userName)
+                .orElseThrow(InvalidCustomerException::new);
         assertAll(
                 () -> assertThat(actual.getNickName()).isEqualTo(expected.getNickName()),
                 () -> assertThat(actual.getAge()).isEqualTo(expected.getAge())
@@ -108,7 +110,7 @@ public class CustomerDaoTest {
         customerDao.delete(given);
 
         assertThatExceptionOfType(InvalidCustomerException.class)
-                .isThrownBy(() -> customerDao.findCustomerByUserName(given.getUserName()))
+                .isThrownBy(() -> customerDao.findIdByUserName(given.getUserName()))
                 .withMessageContaining("존재");
     }
 }

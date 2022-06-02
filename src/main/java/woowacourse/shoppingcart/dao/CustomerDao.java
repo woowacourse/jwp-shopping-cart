@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class CustomerDao {
@@ -59,12 +60,12 @@ public class CustomerDao {
         return jdbcTemplate.queryForList(sql, String.class);
     }
 
-    public Customer findCustomerByUserName(String userName) {
+    public Optional<Customer> findCustomerByUserName(String userName) {
+        final String sql = "SELECT username, password, nickname, age FROM customer WHERE username = ?";
         try {
-            final String sql = "SELECT username, password, nickname, age FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, userName);
+            return Optional.of(jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, userName));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            return Optional.empty();
         }
     }
 
