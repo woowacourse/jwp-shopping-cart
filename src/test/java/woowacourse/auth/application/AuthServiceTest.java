@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.acceptance.fixture.CustomFixture;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -40,7 +39,7 @@ class AuthServiceTest {
         String token = authService.createToken(request);
 
         // when
-        String email = jwtTokenProvider.getPayload(token);
+        String email = jwtTokenProvider.restorePayload(token);
 
         // then
         assertThat(email).isEqualTo("philz@gmail.com");

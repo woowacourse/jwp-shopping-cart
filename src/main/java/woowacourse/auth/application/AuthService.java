@@ -1,19 +1,13 @@
 package woowacourse.auth.application;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.exception.LoginFailException;
-import woowacourse.auth.specification.CustomerSpecification;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.utils.CryptoUtils;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
-import woowacourse.shoppingcart.exception.DuplicateEmailException;
-import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -34,7 +28,7 @@ public class AuthService {
     }
 
     public Customer findCustomerByToken(String token) {
-        String email = jwtTokenProvider.getPayload(token);
+        String email = jwtTokenProvider.restorePayload(token);
         return customerService.findByEmail(email);
     }
 
