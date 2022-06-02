@@ -6,7 +6,7 @@ public class CustomerUpdateRequest {
 
     @Pattern(regexp = "^[가-힣A-Za-z0-9]{2,8}$")
     private String nickname;
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{8,20}$")
     private String password;
 
     public CustomerUpdateRequest() {
