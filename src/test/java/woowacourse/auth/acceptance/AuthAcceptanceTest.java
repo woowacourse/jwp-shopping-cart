@@ -43,6 +43,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/customers/me")
                 .then().log().all()
+                .statusCode(HttpStatus.OK.value())
                 .extract()
                 .as(CustomerResponse.class);
         // then
@@ -63,7 +64,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .when().post("/login")
                 .then().log().all()
                 // then
-                // 토큰 발급 요청이 거부된다
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract()
                 .as(IllegalArgumentException.class);
@@ -72,12 +72,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("유효하지 않은 토큰으로 회원 관련 기능에 접근할 경우 요청이 거부된다.")
     @Test
     void myInfoWithWrongBearerAuth() {
-        // when then
+        // when
         RestAssured.given().log().all()
                 .auth().oauth2("invalidToken")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/customers/me")
                 .then().log().all()
+                // then
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .extract()
                 .as(AuthorizationException.class);
     }
