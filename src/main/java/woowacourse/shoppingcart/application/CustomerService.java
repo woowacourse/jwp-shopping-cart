@@ -54,12 +54,4 @@ public class CustomerService {
         }
         customerDao.delete(loginId);
     }
-
-    public void checkPassword(Customer customer, String password) {
-        String hashedPassword = HashTool.hashing(password);
-
-        if (!customer.isSamePassword(hashedPassword)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-    }
 }

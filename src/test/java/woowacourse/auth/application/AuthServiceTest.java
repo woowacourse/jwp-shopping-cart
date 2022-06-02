@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
@@ -13,9 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerLoginException;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
+import woowacourse.shoppingcart.util.HashTool;
 
 @SuppressWarnings("NonAsciiChracters")
 @SpringBootTest
@@ -76,6 +79,33 @@ class AuthServiceTest {
         void 토큰_정보가_올바르지_않은_경우_예외발생() {
             assertThatThrownBy(() -> authService.findCustomerByToken("InvalidToken"))
                 .isInstanceOf(InvalidTokenException.class);
+        }
+    }
+
+
+    @DisplayName("checkPassword 메서드는 회원의 비밀번호가 맞는지 확인한다.")
+    @Nested
+    class CheckPasswordTest {
+
+        @Test
+        void 회원의_비밀번호가_일치_할_경우_성공() {
+            Customer customer = new Customer("angie", "angel", "12345678aA")
+                    .ofHashPassword(HashTool::hashing);
+            String validPassword = "12345678aA";
+
+            assertThatCode(() -> authService.checkPassword(customer, validPassword))
+                    .doesNotThrowAnyException();
+        }
+
+        @Test
+        void 회원의_비밀번호가_일치하지_않을_경우_예외발생() {
+            Customer customer = new Customer("angie", "angel", "12345678aA")
+                    .ofHashPassword(HashTool::hashing);
+            String invalidPassword = "devilAngie";
+
+            assertThatThrownBy(() -> authService.checkPassword(customer, invalidPassword))
+                    .isInstanceOf(IllegalArgumentException.class);
+
         }
     }
 }

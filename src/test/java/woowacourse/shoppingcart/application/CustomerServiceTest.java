@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
@@ -15,9 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.util.HashTool;
 
 @SuppressWarnings("NonAsciiChracters")
 @SpringBootTest
@@ -104,33 +101,4 @@ class CustomerServiceTest {
         }
     }
 
-    @DisplayName("checkPassword 메서드는 회원의 비밀번호가 맞는지 확인한다.")
-    @Nested
-    class CheckPasswordTest {
-
-        @Test
-        void 회원의_비밀번호가_일치_할_경우_성공() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
-            customerService.addCustomer(customerRequest);
-
-            LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", "12345678aA!");
-
-            assertThatCode(
-                    () -> customerService.checkPassword(loginCustomer.toCustomer().ofHashPassword(HashTool::hashing),
-                            customerRequest.getPassword())).doesNotThrowAnyException();
-        }
-
-        @Test
-        void 회원의_비밀번호가_일치하지_않을_경우_예외발생() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
-            customerService.addCustomer(customerRequest);
-
-            LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", "devilAngie");
-
-            assertThatThrownBy(
-                    () -> customerService.checkPassword(loginCustomer.toCustomer(), customerRequest.getPassword()))
-                    .isInstanceOf(IllegalArgumentException.class);
-
-        }
-    }
 }

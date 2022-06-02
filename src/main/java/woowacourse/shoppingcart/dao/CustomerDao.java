@@ -65,13 +65,6 @@ public class CustomerDao {
         return new Customer(id, customer.getLoginId(), customer.getUsername(), customer.getPassword());
     }
 
-    public boolean checkValidLogin(String loginId, String password) {
-        final String query = "SELECT EXISTS (SELECT 1 FROM customer WHERE loginId = :loginId AND password = :password)";
-        MapSqlParameterSource parameters = new MapSqlParameterSource("loginId", loginId);
-        parameters.addValue("password", password);
-        return namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class) != 0;
-    }
-
     public void update(Customer customer) {
         final String query = "UPDATE customer SET username = :username WHERE loginId = :loginId";
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);

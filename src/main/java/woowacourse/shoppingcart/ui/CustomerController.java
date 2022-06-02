@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerPasswordRequest;
@@ -22,9 +23,11 @@ import woowacourse.shoppingcart.dto.LoginCustomer;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final AuthService authService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, AuthService authService) {
         this.customerService = customerService;
+        this.authService = authService;
     }
 
     @PostMapping
@@ -45,7 +48,7 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> updateMe(
         @AuthenticationPrincipal LoginCustomer loginCustomer,
         @RequestBody CustomerUpdateRequest customerUpdateRequest) {
-        customerService.checkPassword(loginCustomer.toCustomer(), customerUpdateRequest.getPassword());
+        authService.checkPassword(loginCustomer.toCustomer(), customerUpdateRequest.getPassword());
         CustomerResponse customerResponse = customerService.updateCustomer(customerUpdateRequest, loginCustomer.getLoginId());
         return ResponseEntity.ok().body(customerResponse);
     }
@@ -53,7 +56,7 @@ public class CustomerController {
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal LoginCustomer loginCustomer,
         @RequestBody CustomerPasswordRequest customerPasswordRequest) {
-        customerService.checkPassword(loginCustomer.toCustomer(), customerPasswordRequest.getPassword());
+        authService.checkPassword(loginCustomer.toCustomer(), customerPasswordRequest.getPassword());
         customerService.deleteCustomer(loginCustomer.getLoginId());
         return ResponseEntity.noContent().build();
     }
