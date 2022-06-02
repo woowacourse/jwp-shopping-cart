@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,9 +16,15 @@ import woowacourse.shoppingcart.exception.ShoppingCartException;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CustomerControllerAdvice {
 
+    private static final int INVALID_FORMAT_ERROR_CODE = 1000;
+
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ErrorResponse> handleInvalidRequest() {
-        return ResponseEntity.badRequest().body(new ErrorResponse(1000, "잘못된 형식입니다."));
+    public ResponseEntity<ErrorResponse> handleInvalidRequest(MethodArgumentNotValidException e) {
+        String message = e.getFieldErrors().stream()
+                .map(FieldError::getDefaultMessage)
+                .findAny()
+                .orElse("잘못된 형식입니다.");
+        return ResponseEntity.badRequest().body(new ErrorResponse(INVALID_FORMAT_ERROR_CODE, message));
     }
 
     @ExceptionHandler({

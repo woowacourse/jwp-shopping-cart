@@ -4,9 +4,9 @@ import javax.validation.constraints.Pattern;
 
 public class CustomerUpdateRequest {
 
-    @Pattern(regexp = "^[가-힣A-Za-z0-9]{2,8}$")
+    @Pattern(regexp = "^[가-힣A-Za-z0-9]{2,8}$", message = "잘못된 닉네임 형식입니다.")
     private String nickname;
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{8,20}$")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{8,20}$", message = "잘못된 비밀번호 형식입니다.")
     private String password;
 
     public CustomerUpdateRequest() {
