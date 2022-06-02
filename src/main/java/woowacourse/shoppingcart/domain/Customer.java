@@ -4,17 +4,17 @@ public class Customer {
 
     private final Long id;
     private final String name;
-    private final String email;
+    private final Email email;
     private final Password password;
 
-    public Customer(final Long id, final String name, final String email, final Password password) {
+    public Customer(final Long id, final String name, final Email email, final Password password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public Customer(final String name, final String email, final Password password) {
+    public Customer(final String name, final Email email, final Password password) {
         this(null, name, email, password);
     }
 
@@ -38,7 +38,7 @@ public class Customer {
         return name;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 

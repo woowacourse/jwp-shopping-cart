@@ -13,7 +13,7 @@ public class CustomerDetailServiceResponse {
     }
 
     public static CustomerDetailServiceResponse from(final Customer customer) {
-        return new CustomerDetailServiceResponse(customer.getName(), customer.getEmail());
+        return new CustomerDetailServiceResponse(customer.getName(), customer.getEmail().getValue());
     }
 
     public String getName() {

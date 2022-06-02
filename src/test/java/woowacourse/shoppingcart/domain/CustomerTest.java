@@ -10,7 +10,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 class CustomerTest {
 
     private static final String NAME = "클레이";
-    private static final String EMAIL = "clay@gmail.com";
+    private static final String RAW_EMAIL = "clay@gmail.com";
+    private static final Email EMAIL = new Email(RAW_EMAIL);
     private static final String RAW_PASSWORD = "12345678";
     private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD);
 

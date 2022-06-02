@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
@@ -25,7 +26,7 @@ public class CustomerService {
     public void save(final CustomerSaveRequest customerSaveRequest) {
         final Customer customer = new Customer(
                 customerSaveRequest.getName(),
-                customerSaveRequest.getEmail(),
+                new Email(customerSaveRequest.getEmail()),
                 Password.fromRawValue(customerSaveRequest.getPassword())
         );
 
