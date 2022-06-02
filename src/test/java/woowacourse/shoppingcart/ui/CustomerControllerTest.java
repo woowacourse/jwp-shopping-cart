@@ -5,10 +5,12 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,9 +21,22 @@ import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
 
 @DisplayName("CustomerController 단위 테스트")
 class CustomerControllerTest extends ControllerTest {
+
+    private Customer customer;
+
+    @BeforeEach
+    void setUp() {
+        customer = new Customer(
+                1L,
+                "rick",
+                "email@email.com",
+                "fake-password"
+        );
+    }
 
     @Test
     @DisplayName("유효한 양식으로 회원가입에 성공한다.")
@@ -81,19 +96,10 @@ class CustomerControllerTest extends ControllerTest {
     @DisplayName("로그인한 Customer의 정보를 반환한다.")
     void getMe_validToken_200() throws Exception {
         // given
-        final String nickname = "rick";
-        final String email = "email@email.com";
-        final Customer customer = new Customer(
-                1L,
-                nickname,
-                email,
-                "fake-password"
-        );
-
         final String accessToken = "fake-token";
         getLoginCustomerByToken(accessToken, customer);
 
-        final CustomerResponse response = new CustomerResponse(email, nickname);
+        final CustomerResponse response = new CustomerResponse(customer.getEmail(), customer.getNickname());
         final String expected = objectMapper.writeValueAsString(response);
 
         // when
@@ -155,13 +161,6 @@ class CustomerControllerTest extends ControllerTest {
     @DisplayName("로그인한 Customer를 삭제한다.")
     void deleteMe_validToken_204() throws Exception {
         // given
-        final Customer customer = new Customer(
-                1L,
-                "rick",
-                "email@email.com",
-                "fake-password"
-        );
-
         final String accessToken = "fake-token";
         getLoginCustomerByToken(accessToken, customer);
 
@@ -170,6 +169,29 @@ class CustomerControllerTest extends ControllerTest {
                 delete("/users/me")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("로그인한 Customer의 정보를 수정한다.")
+    void updateMe_validToken_204() throws Exception {
+        // given
+        final String accessToken = "fake-token";
+        getLoginCustomerByToken(accessToken, customer);
+
+        final CustomerUpdationRequest request = new CustomerUpdationRequest("kun", "kunkun1234");
+        final String json = objectMapper.writeValueAsString(request);
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                put("/users/me")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json)
                         .accept(MediaType.ALL)
         ).andDo(print());
 
