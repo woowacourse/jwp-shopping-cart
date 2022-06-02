@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -22,11 +21,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         // given
-        Customer customer = new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .body(customer)
+                .body(customerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/customers")
@@ -49,9 +48,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        Customer customer = new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+
         RestAssured.given().log().all()
-                .body(customer)
+                .body(customerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/customers")
@@ -93,9 +93,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        Customer customer = new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+
         RestAssured.given().log().all()
-                .body(customer)
+                .body(customerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/customers")

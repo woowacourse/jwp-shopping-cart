@@ -12,7 +12,7 @@ create table customer
 (
     id       bigint       not null auto_increment,
     email varchar(255),
-    password varchar(16),
+    password varchar(64),
     name varchar(255) not null,
     phone varchar(13),
     address varchar(255),

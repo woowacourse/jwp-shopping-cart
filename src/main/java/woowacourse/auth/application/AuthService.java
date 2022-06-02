@@ -7,6 +7,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -37,8 +38,9 @@ public class AuthService {
     }
 
     public Long loginCustomer(TokenRequest tokenRequest) {
+        Password encryptPassword = Password.encrypt(tokenRequest.getPassword());
         Optional<Long> idByEmailAndPassword = customerDao.findIdByEmailAndPassword(tokenRequest.getEmail(),
-                tokenRequest.getPassword());
+                encryptPassword.getPassword());
         return idByEmailAndPassword.orElseThrow(
                 () -> new InvalidCustomerException("Email 또는 Password가 일치하지 않습니다."));
     }
