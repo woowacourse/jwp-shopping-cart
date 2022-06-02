@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
@@ -32,7 +30,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerResponse> registerCustomer(
-            @RequestBody @Valid final CustomerRegisterRequest customerRegisterRequest) {
+            @RequestBody final CustomerRegisterRequest customerRegisterRequest) {
         final Long customerId = customerService.registerCustomer(customerRegisterRequest);
         final CustomerResponse customerResponse = customerService.findById(customerId);
 
@@ -40,21 +38,21 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerResponse> findCustomer(@AuthenticationPrincipal @NotNull final Long id) {
+    public ResponseEntity<CustomerResponse> findCustomer(@AuthenticationPrincipal final Long id) {
         final CustomerResponse customerResponse = customerService.findById(id);
         return ResponseEntity.ok(customerResponse);
     }
 
     @PatchMapping
     public ResponseEntity<CustomerUpdateResponse> updateCustomer(
-            @AuthenticationPrincipal @NotNull final Long id,
-            @RequestBody @Valid final CustomerUpdateRequest customerUpdateRequest) {
+            @AuthenticationPrincipal final Long id,
+            @RequestBody final CustomerUpdateRequest customerUpdateRequest) {
         final CustomerUpdateResponse customerUpdateResponse = customerService.updateCustomer(id, customerUpdateRequest);
         return ResponseEntity.ok(customerUpdateResponse);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> removeCustomer(@AuthenticationPrincipal @NotNull final Long id) {
+    public ResponseEntity<Void> removeCustomer(@AuthenticationPrincipal final Long id) {
         customerService.removeCustomer(id);
         return ResponseEntity.noContent().build();
     }

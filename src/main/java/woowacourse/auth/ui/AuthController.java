@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
@@ -24,13 +22,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody @Valid final TokenRequest tokenRequest) {
+    public ResponseEntity<TokenResponse> login(@RequestBody final TokenRequest tokenRequest) {
         final TokenResponse tokenResponse = authService.login(tokenRequest);
         return ResponseEntity.ok().body(tokenResponse);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@AuthenticationPrincipal @NotNull final Long id) {
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal final Long id) {
         // 로그아웃 기능 - 협의 중
         return ResponseEntity.noContent().build();
     }

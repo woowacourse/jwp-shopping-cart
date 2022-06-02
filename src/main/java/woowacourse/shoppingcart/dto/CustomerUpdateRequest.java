@@ -1,22 +1,9 @@
 package woowacourse.shoppingcart.dto;
 
-import org.hibernate.validator.constraints.Length;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-
 public class CustomerUpdateRequest {
 
-    @NotBlank
-    @Length(min = 2, max = 10)
     private String nickname;
-
-    @NotBlank
-    @Pattern(regexp = "(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{10,}")
     private String password;
-
-    @NotBlank
-    @Pattern(regexp = "(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{10,}")
     private String newPassword;
 
     public CustomerUpdateRequest() {
