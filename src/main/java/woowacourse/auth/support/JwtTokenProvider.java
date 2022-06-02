@@ -1,22 +1,34 @@
 package woowacourse.auth.support;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import woowacourse.auth.domain.TokenProvider;
 import woowacourse.exception.TokenInvalidException;
 
 @Component
-public class JwtTokenProvider {
-    @Value("${security.jwt.token.secret-key}")
-    private String secretKey;
-    @Value("${security.jwt.token.expire-length}")
-    private long validityInMilliseconds;
+public class JwtTokenProvider implements TokenProvider {
+    private final Key key;
+    private final long validityInMilliseconds;
 
+    public JwtTokenProvider(
+            @Value("${security.jwt.token.secret-key}") String secretKey,
+            @Value("${security.jwt.token.expire-length}") long validityInMilliseconds
+    ) {
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        this.validityInMilliseconds = validityInMilliseconds;
+    }
+
+    @Override
     public String createToken(Map<String, Object> claims) {
         final Date now = new Date();
         final Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -25,24 +37,29 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(key)
                 .compact();
     }
 
-    public long getPayload(String token) {
+    public Map<String, Object> getPayload(String token) {
         try {
-            final JwtParser build = Jwts.parserBuilder()
-                    .setSigningKey(secretKey.getBytes())
-                    .build();
-            final Object body = build.parse(token).getBody();
+            final Claims body = extractBody(token);
 
-            return Long.parseLong(String.valueOf(Jwts.parser()
-                    .setSigningKey(secretKey)
-                    .parseClaimsJws(token)
-                    .getBody()));
+            return body.keySet()
+                    .stream()
+                    .map(key -> Map.entry(key, body.get(key)))
+                    .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
         } catch (JwtException | IllegalArgumentException e) {
             throw new TokenInvalidException();
         }
+    }
+
+    private Claims extractBody(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
 
