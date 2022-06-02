@@ -39,7 +39,7 @@ class AuthServiceTest {
 
     @Test
     @DisplayName("로그인 시 패스워드 다른 경우 예외 발생")
-    void loginDismatchPassword_throwException() {
+    void loginMismatchPassword_throwException() {
         // given
         customerDao.save(customer);
 
