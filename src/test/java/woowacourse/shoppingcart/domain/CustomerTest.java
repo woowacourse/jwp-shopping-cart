@@ -3,10 +3,19 @@ package woowacourse.shoppingcart.domain;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class CustomerTest {
+
+    @DisplayName("email이 빈 값일 경우 예외를 발생한다.")
+    @Test
+    void validEmail() {
+        assertThatThrownBy(() -> new Customer("", "Abcd1234!!", "name", "010-1234-5678", "address"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("email이 빈 값일 수 없습니다.");
+    }
 
     @DisplayName("전화번호 형식이 맞지 않으면 예외가 발생한다.")
     @ParameterizedTest
@@ -36,5 +45,13 @@ class CustomerTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("비밀번호의 형식이 맞지 않습니다.");
 
+    }
+
+    @DisplayName("address가 빈 값일 경우 예외를 발생한다.")
+    @Test
+    void validAddress() {
+        assertThatThrownBy(() -> new Customer("email", "Abcd1234!!", "name", "010-1234-5678", ""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("address가 빈 값일 수 없습니다.");
     }
 }
