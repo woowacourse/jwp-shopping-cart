@@ -20,7 +20,7 @@ class PasswordTest {
     void createPassword() {
         String value = "123abcdefg!!";
 
-        assertThatCode(() -> new Password(value))
+        assertThatCode(() -> Password.fromInput(value))
                 .doesNotThrowAnyException();
     }
 
@@ -29,7 +29,7 @@ class PasswordTest {
     @DisplayName("패스워드의 길이가 올바르지 않은 경우, 예외를 발생한다.")
     void invalidLengthException(String value) {
         assertThatExceptionOfType(InvalidLengthException.class)
-                .isThrownBy(() -> new Password(value));
+                .isThrownBy(() -> Password.fromInput(value));
     }
 
     @ParameterizedTest
@@ -37,7 +37,7 @@ class PasswordTest {
     @DisplayName("패스워드의 형식이 올바르지 않은 경우, 예외를 발생한다.")
     void invalidFormException(String value) {
         assertThatExceptionOfType(InvalidFormException.class)
-                .isThrownBy(() -> new Password(value));
+                .isThrownBy(() -> Password.fromInput(value));
     }
 
 

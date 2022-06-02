@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.auth.domain.BcryptPasswordMatcher;
+
 public class Customer {
 
     private final Long id;
@@ -8,21 +10,6 @@ public class Customer {
     private final Email email;
     private final Address address;
     private final PhoneNumber phoneNumber;
-
-    public Customer(String name, String password,
-            String email, String address, String phoneNumber) {
-        this(null, name, password, email, address, phoneNumber);
-    }
-
-    public Customer(Long id, String name, String password, String email, String address, String phoneNumber) {
-        this(id,
-                new Name(name),
-                new Password(password),
-                new Email(email),
-                new Address(address),
-                new PhoneNumber(phoneNumber)
-        );
-    }
 
     public Customer(Long id, Name name, Password password, Email email, Address address,
             PhoneNumber phoneNumber) {
@@ -34,12 +21,34 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
+    private Customer(Long id, String name, Password password, String email, String address, String phoneNumber) {
+        this(id,
+            new Name(name),
+            password,
+            new Email(email),
+            new Address(address),
+            new PhoneNumber(phoneNumber)
+        );
+    }
+
+    public static Customer fromSaved(Long id, String name, String password, String email, String address, String phoneNumber) {
+        return new Customer(id, name, Password.fromEncoded(password), email, address, phoneNumber);
+    }
+
+    public static Customer fromInput(String name, String password, String email, String address, String phoneNumber) {
+        return new Customer(null, name, Password.fromInput(password), email, address, phoneNumber);
+    }
+
     public Customer update(String address, String phoneNumber) {
         return new Customer(id, name, password, email, new Address(address), new PhoneNumber(phoneNumber));
     }
 
-    public boolean isPasswordMatch(String password) {
-        return this.password.isMatch(password);
+    public Customer encryptPassword(PasswordEncryptor encryptor) {
+        return new Customer(id, name, password.encrypt(encryptor), email, address, phoneNumber);
+    }
+
+    public boolean isPasswordMatch(String password, BcryptPasswordMatcher matcher) {
+        return this.password.isMatch(password, matcher);
     }
 
     public Long getId() {

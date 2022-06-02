@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
+
+import woowacourse.auth.domain.PasswordMatcher;
 import woowacourse.shoppingcart.exception.InvalidFormException;
 import woowacourse.shoppingcart.exception.InvalidLengthException;
 
@@ -12,34 +14,46 @@ public class Password {
 
     private final String value;
 
-    public Password(String value) {
-        validate(value);
+    private Password(String value) {
         this.value = value;
     }
 
-    private void validate(String value) {
+    public static Password fromInput(String value) {
+        validate(value);
+        return new Password(value);
+    }
+
+    public static Password fromEncoded(String value) {
+        return new Password(value);
+    }
+
+    private static void validate(String value) {
         validateLength(value);
         validateForm(value);
     }
 
-    private void validateLength(String value) {
+    private static void validateLength(String value) {
         if (!isValidLength(value)) {
             throw InvalidLengthException.fromName("패스워드");
         }
     }
 
-    private boolean isValidLength(String value) {
+    private static boolean isValidLength(String value) {
         return MIN_THRESHOLD <= value.length() && value.length() <= MAX_THRESHOLD;
     }
 
-    private void validateForm(String value) {
+    private static void validateForm(String value) {
         if (!PASSWORD_PATTERN.matcher(value).matches()) {
             throw InvalidFormException.fromName("패스워드");
         }
     }
 
-    public boolean isMatch(String password) {
-        return this.value.equals(password);
+    public Password encrypt(PasswordEncryptor encryptor) {
+        return new Password(encryptor.encrypt(value));
+    }
+
+    public boolean isMatch(String password, PasswordMatcher matcher) {
+        return matcher.isMatch(password, value);
     }
 
     public String getValue() {

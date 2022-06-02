@@ -10,7 +10,7 @@ class CustomerTest {
     @Test
     @DisplayName("회원을 생성한다.")
     void createCustomer() {
-        assertThatCode(() -> new Customer("chleeslow", "1234abc!@", "woote@email.com", "선릉역", "010-9999-1111"))
+        assertThatCode(() -> Customer.fromInput("chleeslow", "1234abc!@", "woote@email.com", "선릉역", "010-9999-1111"))
                 .doesNotThrowAnyException();
     }
 }

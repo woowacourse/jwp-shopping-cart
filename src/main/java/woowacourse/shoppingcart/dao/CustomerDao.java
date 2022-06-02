@@ -19,14 +19,14 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerDao {
 
     private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = (resultSet, rowNum) ->
-            new Customer(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("password"),
-                    resultSet.getString("email"),
-                    resultSet.getString("address"),
-                    resultSet.getString("phone_number")
-            );
+        Customer.fromSaved(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getString("password"),
+                resultSet.getString("email"),
+                resultSet.getString("address"),
+                resultSet.getString("phone_number")
+        );
     private final JdbcTemplate jdbcTemplate;
 
     public CustomerDao(final JdbcTemplate jdbcTemplate) {
