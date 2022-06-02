@@ -26,6 +26,12 @@ public class CustomerController {
                 URI.create("/api/customers/" + customerRequest.getName())).build();
     }
 
+    @PostMapping("/duplication")
+    public ResponseEntity<Boolean> checkDuplicatedName(@RequestBody String customerName) {
+        boolean isExistCustomer = customerService.existsCustomer(customerName);
+        return ResponseEntity.ok(isExistCustomer);
+    }
+
     @PutMapping("/me")
     public ResponseEntity<Void> edit(HttpServletRequest request, @RequestBody @Valid CustomerRequest editRequest) {
         customerService.editCustomer(request, editRequest);

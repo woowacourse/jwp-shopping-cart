@@ -66,13 +66,13 @@ public class CustomerDao {
         jdbcTemplate.update(query, newPassword, customerName);
     }
 
-    public boolean existsIdByNameAndPassword(String name, String password) {
-        final String query = "SELECT EXISTS (SELECT id FROM customer where username = ? and password = ?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name, password));
-    }
-
     public boolean existsByName(String name) {
         final String query = "SELECT EXISTS (SELECT id FROM customer where username = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name));
+    }
+
+    public boolean existsIdByNameAndPassword(String name, String password) {
+        final String query = "SELECT EXISTS (SELECT id FROM customer where username = ? and password = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name, password));
     }
 }

@@ -64,4 +64,8 @@ public class CustomerService {
         String token = AuthorizationExtractor.extract(request);
         return jwtTokenProvider.getPayload(token);
     }
+
+    public boolean existsCustomer(String customerName) {
+        return customerDao.existsByName(customerName);
+    }
 }
