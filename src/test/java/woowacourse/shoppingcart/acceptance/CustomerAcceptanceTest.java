@@ -1,16 +1,15 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import woowacourse.acceptance.RestAssuredFixture;
+import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.auth.dto.SignInRequest;
-import woowacourse.auth.dto.SignInResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+
+import static org.hamcrest.core.Is.is;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -20,13 +19,78 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void addCustomer() {
         SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "1234");
 
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        RestAssuredFixture.post(signUpRequest, "users", 201)
+                .body("username", is("alien"))
+                .body("email", is("alien@woowa.com"));
+    }
+
+    @Test
+    @DisplayName("회원가입을 할 수 없다 - 중복된 이름 입력")
+    void addCustomerDuplicateUsernameException() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "1234");
+
+        RestAssuredFixture.post(signUpRequest, "users", 201)
+                .body("username", is("alien"))
+                .body("email", is("alien@woowa.com"));
+
+        //when & then
+        RestAssuredFixture.post(signUpRequest, "users", 400);
+    }
+
+    @Test
+    @DisplayName("회원가입을 할 수 없다 - 중복된 이메일 입력")
+    void addCustomerDuplicateEmailException() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "1234");
+
+        RestAssuredFixture.post(signUpRequest, "users", 201)
+                .body("username", is("alien"))
+                .body("email", is("alien@woowa.com"));
+
+        //when & then
+        SignUpRequest signUpRequest2 = new SignUpRequest("rennon", "alien@woowa.com", "1234");
+        RestAssuredFixture.post(signUpRequest2, "users", 400);
+    }
+
+    @Test
+    @DisplayName("로그인을 할 수 있다.")
+    void signInCustomer() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        RestAssuredFixture.post(signUpRequest, "users", 201);
+
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        String token = RestAssuredFixture.getSignInResponse(signInRequest, "/login").getToken();
+
+        //when & then
+        RestAssuredFixture.get(token, "/users/me", 200)
+                .body("username", is("rennon"))
+                .body("email", is("rennon@woowa.com"));
+    }
+
+    @Test
+    @DisplayName("로그인을 할 수 없다. - 잘못된 password")
+    void signInEmailException() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        RestAssuredFixture.post(signUpRequest, "users", 201);
+
+        //when & then
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1235");
+        RestAssuredFixture.post(signInRequest, "/login", 400);
+    }
+
+    @Test
+    @DisplayName("로그인을 할 수 없다. - 잘못된 email")
+    void signInUsernameException() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        RestAssuredFixture.post(signUpRequest, "users", 201);
+
+        //when & then
+        SignInRequest signInRequest = new SignInRequest("rennon1@woowa.com", "1234");
+        RestAssuredFixture.post(signInRequest, "/login", 400);
     }
 
     @DisplayName("내 정보 조회")
@@ -34,31 +98,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void getMe() {
         //given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        RestAssuredFixture.post(signUpRequest, "users", 201);
 
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
+        String token = RestAssuredFixture.getSignInResponse(signInRequest, "/login").getToken();
 
-        //when
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/me")
-                .then().log().all().statusCode(HttpStatus.OK.value());
+        //when & then
+        RestAssuredFixture.get(token, "/users/me", 200)
+                .body("username", is("rennon"))
+                .body("email", is("rennon@woowa.com"));
     }
 
     @DisplayName("토큰이 없으면 내 정보를 조회할 수 없다.")
@@ -66,31 +114,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void getMeException() {
         //given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        RestAssuredFixture.post(signUpRequest, "users", 201);
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
-
-        //when
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer ")
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/me")
-                .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+        //when & then
+        RestAssuredFixture.get("dummy", "/users/me", 401);
     }
 
     @DisplayName("내 정보 수정")
@@ -98,33 +125,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updateMe() {
         //given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        RestAssuredFixture.post(signUpRequest, "users", 201);
 
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
+        String token = RestAssuredFixture.getSignInResponse(signInRequest, "/login").getToken();
 
-        //when
+        //when & then
         UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("1234", "5678");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(updatePasswordRequest)
-                .header("Authorization", "Bearer " + token)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/users/me")
-                .then().log().all().statusCode(HttpStatus.OK.value());
+        RestAssuredFixture.patch(updatePasswordRequest, token, "/users/me", 200);
     }
 
     @DisplayName("토큰이 없으면 내 정보를 수정할 수 없다")
@@ -132,32 +140,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updateMeThrowException() {
         //given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        RestAssuredFixture.post(signUpRequest, "users", 201);
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
-
-        //when
+        //when & then
         UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("1234", "5678");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(updatePasswordRequest)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/users/me")
-                .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+        RestAssuredFixture.patch(updatePasswordRequest, "", "/users/me", 401);
     }
 
     @DisplayName("회원 탈퇴")
@@ -165,32 +152,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void deleteMe() {
         //given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        RestAssuredFixture.post(signUpRequest, "users", 201);
 
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
+        String token = RestAssuredFixture.getSignInResponse(signInRequest, "/login").getToken();
 
+        //when & then
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1234");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
-                .body(deleteCustomerRequest)
-                .when().delete("/users/me")
-                .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+        RestAssuredFixture.delete(deleteCustomerRequest, token, "/users/me", 204);
     }
 
     @DisplayName("회원 탈퇴 - 비밀 번호가 틀린 경우 예외")
@@ -198,32 +167,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void deleteInValidPasswordException() {
         //given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        RestAssuredFixture.post(signUpRequest, "users", 201);
 
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
+        String token = RestAssuredFixture.getSignInResponse(signInRequest, "/login").getToken();
 
+        //when & then
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1235");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
-                .body(deleteCustomerRequest)
-                .when().delete("/users/me")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+        RestAssuredFixture.delete(deleteCustomerRequest, token, "/users/me", 400);
     }
 
     @DisplayName("토큰이 없으면 탈퇴할 수 없다")
@@ -231,30 +182,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void deleteMeThrowException() {
         //given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        RestAssuredFixture.post(signUpRequest, "users", 201);
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
-
+        //when & then
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1234");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(deleteCustomerRequest)
-                .when().delete("/users/me")
-                .then().log().all()
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+        RestAssuredFixture.delete(deleteCustomerRequest, "", "/users/me", 401);
     }
 }
