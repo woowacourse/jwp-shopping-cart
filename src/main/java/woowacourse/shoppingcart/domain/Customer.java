@@ -26,17 +26,17 @@ public class Customer {
         this.address = address;
     }
 
-    private void validate(String name, String phone) {
-        validateNameLength(name);
-        validatePhoneFormat(phone);
-    }
-
     public Customer(String email, String password, String name, String phone, String address) {
         this(null, email, Password.from(password), name, phone, address);
     }
 
     public Customer(Long id, String email, String password, String name, String phone, String address) {
         this(id, email, Password.from(password), name, phone, address);
+    }
+
+    private void validate(String name, String phone) {
+        validateNameLength(name);
+        validatePhoneFormat(phone);
     }
 
     private void validateNameLength(String name) {

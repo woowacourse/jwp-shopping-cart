@@ -47,7 +47,7 @@ public class AuthService {
     public Long loginCustomer(TokenRequest tokenRequest) {
         String password = Password.from(tokenRequest.getPassword()).getPassword();
         Optional<Long> idByEmailAndPassword =
-            customerDao.findIdByEmailAndPassword(tokenRequest.getEmail(), password);
+                customerDao.findIdByEmailAndPassword(tokenRequest.getEmail(), password);
 
         return idByEmailAndPassword.orElseThrow(
                 () -> new InvalidCustomerException("Email 또는 Password가 일치하지 않습니다."));

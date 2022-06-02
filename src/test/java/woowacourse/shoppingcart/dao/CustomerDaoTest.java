@@ -32,8 +32,8 @@ public class CustomerDaoTest {
     @DisplayName("customer를 등록한다.")
     @Test
     void saveCustomer() {
-        Customer customer =
-                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Customer customer = new Customer(
+                "email", "Pw123456!", "name", "010-1234-5678", "address");
         Long customerId = customerDao.save(customer);
         assertThat(customerId).isEqualTo(1L);
     }
@@ -41,12 +41,12 @@ public class CustomerDaoTest {
     @DisplayName("email과 password가 일치하는 customer의 id를 반환한다.")
     @Test
     void findIdByEmailAndPassword() {
-        Customer customer =
-                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Customer customer = new Customer(
+                "email", "Pw123456!", "name", "010-1234-5678", "address");
         Long customerId = customerDao.save(customer);
 
         Long responseId = customerDao.findIdByEmailAndPassword(
-            "email", Password.from("Pw123456!").getPassword()).get();
+                "email", Password.from("Pw123456!").getPassword()).get();
 
         assertThat(responseId).isEqualTo(customerId);
     }
@@ -86,8 +86,8 @@ public class CustomerDaoTest {
     void existEmail() {
         //given
         String email = "email";
-        Customer customer =
-                new Customer(email, "Pw123456!", "name", "010-1234-5678", "address");
+        Customer customer = new Customer(
+                email, "Pw123456!", "name", "010-1234-5678", "address");
         customerDao.save(customer);
 
         //when
@@ -101,8 +101,8 @@ public class CustomerDaoTest {
     @Test
     void findCustomerById() {
         //given
-        Customer customer =
-                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Customer customer = new Customer(
+                "email", "Pw123456!", "name", "010-1234-5678", "address");
         Long customerId = customerDao.save(customer);
 
         //when
@@ -111,18 +111,18 @@ public class CustomerDaoTest {
         //then
         assertThat(response).extracting("email", "password", "name", "phone", "address")
                 .containsExactly(
-                    "email",
-                    Password.from("Pw123456!").getPassword(),
-                    "name", "010-1234-5678",
-                    "address");
+                        "email",
+                        Password.from("Pw123456!").getPassword(),
+                        "name", "010-1234-5678",
+                        "address");
     }
 
     @DisplayName("id가 존재하는지 확인한다.")
     @Test
     void existId() {
         //given
-        Customer customer =
-                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Customer customer = new Customer(
+                "email", "Pw123456!", "name", "010-1234-5678", "address");
         Long id = customerDao.save(customer);
 
         //when
@@ -136,29 +136,30 @@ public class CustomerDaoTest {
     @Test
     void updateCustomer() {
         //given
-        Customer customer =
-                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Customer customer = new Customer(
+                "email", "Pw123456!", "name", "010-1234-5678", "address");
         Long id = customerDao.save(customer);
 
         //when
-        Customer updateCustomer = new Customer(id, "email", "Pw123456!!", "name2", "010-1234-1234", "address2");
+        Customer updateCustomer = new Customer(
+                id, "email", "Pw123456!!", "name2", "010-1234-1234", "address2");
         customerDao.update(updateCustomer);
 
         //then
         Customer actual = customerDao.findById(id);
         assertThat(actual).extracting("email", "password", "name", "phone", "address")
                 .containsExactly(
-                    "email",
-                    Password.from("Pw123456!!").getPassword(),
-                    "name2", "010-1234-1234", "address2");
+                        "email",
+                        Password.from("Pw123456!!").getPassword(),
+                        "name2", "010-1234-1234", "address2");
     }
 
     @DisplayName("id를 이용하여 customer를 삭제한다.")
     @Test
     void delete() {
         //given
-        Customer customer =
-                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Customer customer = new Customer(
+                "email", "Pw123456!", "name", "010-1234-5678", "address");
         Long id = customerDao.save(customer);
 
         //when

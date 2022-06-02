@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -23,7 +22,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBearerAuth() {
         // given
         CustomerRequest customer = new CustomerRequest(
-            "email", "Pw123456!", "name", "010-1234-5678", "address");
+                "email", "Pw123456!", "name", "010-1234-5678", "address");
         RestAssured.given().log().all()
                 .body(customer)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -94,11 +93,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithNoBearerAuth() {
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .get("/customers")
-            .then().log().all()
-            .extract();
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/customers")
+                .then().log().all()
+                .extract();
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         assertThat(response.body().asString()).isEqualTo("토큰 정보가 존재하지 않습니다.");
