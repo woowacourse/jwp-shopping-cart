@@ -9,12 +9,15 @@ import org.springframework.http.HttpStatus;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
+import woowacourse.shoppingcart.exception.DuplicatedCustomerEmailException;
+import woowacourse.shoppingcart.exception.WrongPasswordException;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -57,6 +60,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        ExceptionResponse exceptionResponse = response.jsonPath().getObject(".", ExceptionResponse.class);
+        assertThat(exceptionResponse.getMessage()).isEqualTo(new DuplicatedCustomerEmailException().getMessage());
     }
 
     @DisplayName("개인정보를 조회한다.")
@@ -123,6 +128,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 "/customers", customerUpdateRequest, tokenResponse.getAccessToken());
 
         assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        ExceptionResponse exceptionResponse = patchResponse.jsonPath().getObject(".", ExceptionResponse.class);
+        assertThat(exceptionResponse.getMessage()).isEqualTo(new WrongPasswordException().getMessage());
     }
 
     @DisplayName("회원을 탈퇴한다.")
