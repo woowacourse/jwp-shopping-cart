@@ -19,7 +19,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(
             HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        if (isSignUpRequest(request)) {
+        if (isPreflight(request) || isSignUpRequest(request)) {
             return true;
         }
 
@@ -38,5 +38,9 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     private boolean isUnauthorizedRequest(String nickname) {
         return nickname == null || !tokenProvider.validateToken(nickname);
+    }
+
+    private boolean isPreflight(HttpServletRequest request) {
+        return request.getMethod().equals("OPTIONS");
     }
 }
