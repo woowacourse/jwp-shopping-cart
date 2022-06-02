@@ -12,7 +12,7 @@
   + 비밀번호가 일치하면 수정 할 수 있다.
   + name 수정 가능하다.
   + 비밀번호가 일치하지 않을 때 예외
-+ [ ] 탈퇴
++ [x] 탈퇴
   + 비밀번호가 일치해야 탈퇴할 수 있다.
   + 비밀번호가 틀릴경우 예외
   
@@ -32,14 +32,17 @@
 ```json
 // request
 {
-	"loginId": string, 
-	"name": string,
-	"password": string
+  "loginId": string,
+  "name": string,
+  "password": string
 }
 ```
 
 ```json
 // response
+
+// HEADER
+// Location: "/customers/me"
 
 // 201
 {
@@ -49,9 +52,7 @@
 
 // 400 Bad Request
 ```
-- 아이디 중복이거나
-- 비밀번호 조건을 충족하지 못 했거나
-    - 대문자 하나 이상, 소문자 하나 이상, 특수문자, 숫자, 8-15글자
+
 
 ### 로그인
 
@@ -79,22 +80,34 @@
 
 - id, 비밀번호 잘못되었을 때
 
+
 ### 정보 조회
 
 `GET` /customers/me
 
 ```tsx
 headers: {
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`,
 },
 ```
 
 ```json
-// response
+// 200 OK response
 
 {
 	"loginId": string, 
 	"name": string
+}
+
+//401 Unauthorized
+//토큰이 유효하지 않은 경우
+
+//404 Not Found
+//존재하지 않는 회원일 경우
+
+// 현재는 body에 String으로 오류 메세지가 response 됨
+{
+	"조회 실패!" // 2차에서는 JSON객체로 보내자
 }
 ```
 
@@ -103,11 +116,27 @@ headers: {
 
 `PUT` /customers/me
 
+```json
+// response
+
+// 200
+{
+	"name": string
+}
+
+// 400 Bad Request
+// 비밀번호 일치하지 않을때
+// 아이디가 이메일 형식이 아닐 때
+
+// 404 Not Found
+// 존재하지 않는 회원일 때
+```
+
 1. **들어가서 수정하고 비밀번호 쳐야 확정**
 
 ```json
 headers: {
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`,
 },
 ```
 
@@ -117,23 +146,9 @@ headers: {
 {
 	"loginId": string, 
 	"name": string,
-	"password": string
+	"password": string // 수정 확정용 비밀번호 
 }
 ```
-
-```json
-// response
-
-// 200
-{
-	"loginId": string, 
-	"name": string
-}
-
-// 400 Bad Request
-// 비밀번호 일치하지 않을때
-```
-
 ### 탈퇴
 
 `DELETE` /customers/me
@@ -142,7 +157,7 @@ headers: {
 
 ```json
 headers: {
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`,
 },
 ```
 
@@ -150,15 +165,20 @@ headers: {
 // request
 
 {
-	"password": string
+	"password": string,
 }
 ```
 
 ```json
 // response 
 
-// 200
+**// 204 no content**
 
 // 400 Bad Request
 // 비밀번호 일치하지 않을때
+
+// 404 Not Found
+// 존재하지 않는 회원일 경우
+
+//토큰이 존재하지 않는 경우
 ```
