@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -65,5 +66,21 @@ public class CustomerDao {
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
+    }
+
+    public int updateCustomer(final Customer customer) {
+        final String query = "UPDATE customer SET password=:password, name=:name, gender=:gender, contact=:contact, address=:address, detailAddress=:detailAddress, zoneCode=:zoneCode WHERE email=:email";
+        final Map<String, Object> parameterSource = Map.ofEntries(
+                Map.entry("password", customer.getPassword()),
+                Map.entry("name", customer.getName()),
+                Map.entry("gender", customer.getGender()),
+                Map.entry("contact", customer.getContact()),
+                Map.entry("address", customer.getAddress()),
+                Map.entry("detailAddress", customer.getDetailAddress()),
+                Map.entry("zoneCode", customer.getZoneCode()),
+                Map.entry("email", customer.getEmail())
+        );
+        final SqlParameterSource parameter = new MapSqlParameterSource(parameterSource);
+        return namedJdbcTemplate.update(query, parameter);
     }
 }

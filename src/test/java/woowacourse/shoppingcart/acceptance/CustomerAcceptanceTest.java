@@ -22,7 +22,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.ModifiedCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @DisplayName("회원 관련 기능")
@@ -100,6 +102,28 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
+        회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
+                "희봉", "male", "1998-08-07", "12345678910",
+                "address", "detailAddress", "12345", true));
+
+        TokenResponse signInResponse =
+                로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
+
+        final ModifiedCustomerRequest request = 회원_수정_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
+                "수달", "male", "1998-08-07", "12345678910",
+                "address", "detailAddress", "12345", true);
+
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .header("authorization", "Bearer " + signInResponse.getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .put("/api/customers/" + signInResponse.getCustomerId())
+                .then()
+                .log().all()
+                .extract();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("회원탈퇴")
@@ -107,31 +131,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void deleteMe() {
     }
 
-    private String findValue(ExtractableResponse<Response> response, String value) {
-        return response.body().jsonPath().getString(value);
-    }
-
-
-    private ExtractableResponse<Response> createCustomer() throws JsonProcessingException {
-        final SignUpRequest customerRequest = new SignUpRequest(
-                "example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
-                "희봉", "male", "1998-08-07", "12345678910", "address", "detailAddress", "12345", true
-        );
-        return RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(objectMapper.writeValueAsString(customerRequest))
-                .post("/api/customers")
-                .then().log().all()
-                .extract();
-    }
-
-    private String 회원_가입_후_토큰_발급(String email, String password) {
-        회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
-                "희봉", "male", "1998-08-07", "12345678910", "address", "detailAddress", "12345", true
-        ));
-
-        return findValue(로그인_후_토큰_발급(email, password), "accessToken");
-    }
 
     private SignUpRequest 회원_정보(String email, String password, String profileImageUrl, String name, String gender,
                                 String birthday, String contact, String address, String detailAddress,
@@ -141,22 +140,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 detailAddress, zoneCode, terms);
     }
 
-
-    private ExtractableResponse<Response> 로그인_후_토큰_발급(String email, String password) {
-        Map<String, Object> request = new HashMap<>();
-        request.put("email", email);
-        request.put("password", password);
-
-        return RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/api/customer/authentication/sign-in")
-                .then()
-                .log().all()
-                .extract();
+    private ModifiedCustomerRequest 회원_수정_정보(String email, String password, String profileImageUrl, String name, String gender,
+                                String birthday, String contact, String address, String detailAddress,
+                                String zoneCode,
+                                boolean terms) {
+        return new ModifiedCustomerRequest(email, password, profileImageUrl, name, gender, birthday, contact, address,
+                detailAddress, zoneCode, terms);
     }
+
 
     private ExtractableResponse<Response> 회원_가입(SignUpRequest request) {
         return RestAssured.given()
@@ -176,22 +167,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .header(AUTHORIZATION, BEARER_TYPE + accessToken)
                 .when()
                 .get("/api/customers/" + customerId)
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 토큰_발급(String email, String password) {
-        Map<String, Object> request = new HashMap<>();
-        request.put("email", email);
-        request.put("password", password);
-
-        return RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/api/customer/authentication/sign-in")
                 .then()
                 .log().all()
                 .extract();
