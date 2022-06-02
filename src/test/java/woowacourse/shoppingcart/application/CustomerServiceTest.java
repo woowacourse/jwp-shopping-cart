@@ -54,7 +54,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(CustomerDataNotFoundException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("아이디를 입력해주세요.");
     }
 
@@ -67,7 +67,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(CustomerDataNotFoundException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("아이디를 입력해주세요.");
     }
 
@@ -79,7 +79,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(CustomerDataNotFoundException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
@@ -92,7 +92,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(CustomerDataNotFoundException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
@@ -104,7 +104,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(CustomerDataNotFoundException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
 
@@ -117,7 +117,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(CustomerDataNotFoundException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
 
