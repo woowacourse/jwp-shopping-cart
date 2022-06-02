@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.util.HashTool;
 
 @Service
@@ -32,16 +33,17 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerResponse updateCustomer(CustomerRequest customerRequest) {
-        if (!customerDao.existByLoginId(customerRequest.getLoginId())) {
+    public CustomerResponse updateCustomer(CustomerUpdateRequest customerUpdateRequest, String loginId) {
+        if (!customerDao.existByLoginId(loginId)) {
             throw new IllegalArgumentException("존재하지 않는 회원입니다.");
         }
 
-        if (customerDao.existByUsername(customerRequest.getName())) {
+        if (customerDao.existByUsername(customerUpdateRequest.getName())) {
             throw new IllegalArgumentException("이미 존재하는 유저네임입니다.");
         }
-        customerDao.update(customerRequest.toCustomer());
-        return CustomerResponse.of(customerRequest);
+        Customer customer = customerUpdateRequest.toCustomer(loginId);
+        customerDao.update(customer);
+        return CustomerResponse.of(customer);
     }
 
     @Transactional

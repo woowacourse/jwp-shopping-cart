@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerPasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 
 @RestController
@@ -43,9 +44,9 @@ public class CustomerController {
     @PutMapping("/me")
     public ResponseEntity<CustomerResponse> updateMe(
         @AuthenticationPrincipal LoginCustomer loginCustomer,
-        @RequestBody CustomerRequest customerRequest) {
-        customerService.checkPassword(loginCustomer.toCustomer(), customerRequest.getPassword());
-        CustomerResponse customerResponse = customerService.updateCustomer(customerRequest);
+        @RequestBody CustomerUpdateRequest customerUpdateRequest) {
+        customerService.checkPassword(loginCustomer.toCustomer(), customerUpdateRequest.getPassword());
+        CustomerResponse customerResponse = customerService.updateCustomer(customerUpdateRequest, loginCustomer.getLoginId());
         return ResponseEntity.ok().body(customerResponse);
     }
 

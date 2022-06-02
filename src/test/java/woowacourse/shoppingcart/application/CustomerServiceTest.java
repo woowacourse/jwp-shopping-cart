@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.util.HashTool;
 
@@ -60,21 +61,21 @@ class CustomerServiceTest {
             CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
             customerService.addCustomer(customerRequest);
 
-            CustomerRequest updateCustomerRequest = new CustomerRequest("angie", "seungpapang", "12345678aA!");
+            CustomerUpdateRequest updateCustomerRequest = new CustomerUpdateRequest("seungpapang", "12345678aA!");
 
-            CustomerResponse actual = customerService.updateCustomer(updateCustomerRequest);
+            CustomerResponse actual = customerService.updateCustomer(updateCustomerRequest, "angie");
 
             assertThat(actual).extracting("loginId", "name")
-                .containsExactly("angie", "seungpapang");
+                    .containsExactly("angie", "seungpapang");
         }
 
         @Test
         void 존재하지_않는_회원일_경우_예외발생() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
+            CustomerUpdateRequest updateCustomerRequest = new CustomerUpdateRequest("angel", "12345678aA!");
 
-            assertThatThrownBy(() -> customerService.updateCustomer(customerRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("존재하지 않는 회원입니다.");
+            assertThatThrownBy(() -> customerService.updateCustomer(updateCustomerRequest, "angie"))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("존재하지 않는 회원입니다.");
         }
 
         @Test
@@ -85,7 +86,7 @@ class CustomerServiceTest {
             CustomerRequest updateCustomerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
 
             assertThatThrownBy(() -> customerService.addCustomer(updateCustomerRequest))
-                .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(IllegalArgumentException.class);
         }
     }
 
@@ -99,8 +100,8 @@ class CustomerServiceTest {
             customerService.addCustomer(customerRequest);
 
             assertThatThrownBy(() -> customerService.deleteCustomer("seungpapang"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("존재하지 않는 회원입니다.");
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("존재하지 않는 회원입니다.");
         }
     }
 
@@ -127,7 +128,8 @@ class CustomerServiceTest {
 
             LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", "devilAngie");
 
-            assertThatThrownBy(() -> customerService.checkPassword(loginCustomer.toCustomer(), customerRequest.getPassword()))
+            assertThatThrownBy(
+                    () -> customerService.checkPassword(loginCustomer.toCustomer(), customerRequest.getPassword()))
                     .isInstanceOf(IllegalArgumentException.class);
 
         }

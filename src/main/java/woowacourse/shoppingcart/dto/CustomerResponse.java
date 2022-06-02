@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.domain.Customer;
+
 public class CustomerResponse {
 
     private String loginId;
@@ -18,6 +20,10 @@ public class CustomerResponse {
 
     public static CustomerResponse of(CustomerRequest customerRequest) {
         return new CustomerResponse(customerRequest.getLoginId(), customerRequest.getName());
+    }
+
+    public static CustomerResponse of(Customer customer) {
+        return new CustomerResponse(customer.getLoginId(), customer.getUsername());
     }
 
     public String getLoginId() {

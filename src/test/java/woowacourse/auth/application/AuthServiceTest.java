@@ -34,7 +34,7 @@ class AuthServiceTest {
 
             TokenResponse token = authService.createToken(tokenRequest);
 
-            assertThat(token.getUsername()).isEqualTo("sunhpark42");
+            assertThat(token.getName()).isEqualTo("sunhpark42");
         }
 
         @Test
