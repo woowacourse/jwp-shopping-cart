@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> signUp(@RequestBody SignUpRequest request) {
+    public ResponseEntity<Void> signUp(@Validated @RequestBody SignUpRequest request) {
         Long customerId = customerService.createCustomer(request);
         URI location = URI.create("/customers/" + customerId);
         return ResponseEntity.created(location).build();
@@ -44,7 +45,7 @@ public class CustomerController {
 
     @PutMapping("/me")
     public ResponseEntity<Void> updateMe(@AuthenticatedUser User authUser,
-                                         @RequestBody UpdateMeRequest updateMeRequest) {
+                                         @Validated @RequestBody UpdateMeRequest updateMeRequest) {
         customerService.updateNicknameAndAge(authUser, updateMeRequest);
         return ResponseEntity.ok().build();
     }
@@ -56,14 +57,15 @@ public class CustomerController {
     }
 
     @PutMapping("/me/password")
-    public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest,
-                                               @AuthenticatedUser User authUser) {
+    public ResponseEntity<Void> updatePassword(@AuthenticatedUser User authUser,
+                                               @Validated @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         customerService.updatePassword(authUser, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/username/duplication")
-    public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(@RequestBody UniqueUsernameRequest request) {
+    public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(
+            @Validated @RequestBody UniqueUsernameRequest request) {
         UniqueUsernameResponse response = customerService.checkUniqueUsername(request.getUsername());
         return ResponseEntity.ok(response);
     }

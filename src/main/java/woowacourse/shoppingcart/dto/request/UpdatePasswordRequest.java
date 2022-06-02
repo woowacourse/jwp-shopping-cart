@@ -1,8 +1,12 @@
 package woowacourse.shoppingcart.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class UpdatePasswordRequest {
 
+    @NotNull
     private String oldPassword;
+    @NotNull
     private String newPassword;
 
     public UpdatePasswordRequest() {

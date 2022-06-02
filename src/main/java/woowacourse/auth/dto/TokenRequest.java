@@ -1,8 +1,12 @@
 package woowacourse.auth.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class TokenRequest {
 
+    @NotNull
     private String username;
+    @NotNull
     private String password;
 
     public TokenRequest() {

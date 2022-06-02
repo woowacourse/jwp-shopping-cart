@@ -1,15 +1,20 @@
 package woowacourse.shoppingcart.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class UpdateMeRequest {
 
+    @NotNull
     private String username;
+    @NotNull
     private String nickname;
-    private Integer age ;
+    @NotNull
+    private Integer age;
 
     public UpdateMeRequest() {
     }
 
-    public UpdateMeRequest(String username, String nickname, int age) {
+    public UpdateMeRequest(String username, String nickname, Integer age) {
         this.username = username;
         this.nickname = nickname;
         this.age = age;

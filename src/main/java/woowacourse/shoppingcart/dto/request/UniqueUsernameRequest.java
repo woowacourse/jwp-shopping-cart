@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class UniqueUsernameRequest {
 
+    @NotNull
     private String username;
 
     public UniqueUsernameRequest() {
