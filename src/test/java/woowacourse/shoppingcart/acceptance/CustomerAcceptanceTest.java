@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.response.ResponseBodyExtractionOptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -40,14 +41,36 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("닉네임이 중복될 경우, 예외 응답을 반환한다.")
+    @DisplayName("회원가입 시 이메일이 중복될 경우, 예외 응답을 반환한다.")
+    @Test
+    void errorResponseWhenDuplicateEmail() {
+        CustomerCreateRequest customerCreateRequest1 = new CustomerCreateRequest(
+                "beomWhale1@naver.com", "범고래1", "Password12345!");
+
+        CustomerCreateRequest customerCreateRequest2 = new CustomerCreateRequest(
+                "beomWhale1@naver.com", "범고래2", "Password12345!");
+
+        createCustomer(customerCreateRequest1);
+        ExtractableResponse<Response> response = createCustomer(customerCreateRequest2);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
+                        "이미 존재하는 이메일입니다.")
+        );
+    }
+
+    @DisplayName("회원가입 시 닉네임이 중복될 경우, 예외 응답을 반환한다.")
     @Test
     void duplicateCustomerNickname() {
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+        CustomerCreateRequest customerCreateRequest1 = new CustomerCreateRequest(
+                "beomWhale1@naver.com", "범고래2", "Password12345!");
+
+        CustomerCreateRequest customerCreateRequest2 = new CustomerCreateRequest(
                 "beomWhale2@naver.com", "범고래2", "Password12345!");
 
-        createCustomer(customerCreateRequest);
-        ExtractableResponse<Response> response = createCustomer(customerCreateRequest);
+        createCustomer(customerCreateRequest1);
+        ExtractableResponse<Response> response = createCustomer(customerCreateRequest2);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),

@@ -69,16 +69,26 @@ public class CustomerDaoTest {
         assertThat(customerId).isNotNull();
     }
 
-    @DisplayName("닉네임이 중복될 경우, 참을 반환한다.")
+    @DisplayName("입력받은 닉네임이 존재하는 경우, 참을 반환한다.")
     @Test
     void existsByNickname() {
-
         // given
         String nickname = "beom1234";
         customerDao.save(new Customer("beomWhale@naver.com", nickname, "Password123!"));
 
         // when && then
         assertThat(customerDao.existsByNickname(nickname)).isTrue();
+    }
+
+    @DisplayName("입력받은 이메일이 존재하는 경우, 참을 반환한다.")
+    @Test
+    void existsByEmail() {
+        // given
+        String email = "beomWhale@naver.com";
+        customerDao.save(new Customer(email, "beom1234", "Password123!"));
+
+        // when && then
+        assertThat(customerDao.existsByEmail(email)).isTrue();
     }
 
     @DisplayName("email을 통해 Customer를 찾는다.")

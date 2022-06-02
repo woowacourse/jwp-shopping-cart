@@ -54,11 +54,6 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public boolean existsByNickname(String nickname) {
-        String query = "SELECT EXISTS (SELECT * FROM customer WHERE nickname = ?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, nickname));
-    }
-
     public Optional<Customer> findIdByEmail(final String email) {
         try {
             String query = "SELECT id, email, nickname, password FROM customer WHERE email = ?";
@@ -81,5 +76,15 @@ public class CustomerDao {
     public void updateNickname(Customer customer) {
         String query = "UPDATE customer SET nickname = ? WHERE id = ?";
         jdbcTemplate.update(query, customer.getNickname(), customer.getId());
+    }
+
+    public boolean existsByNickname(String nickname) {
+        String query = "SELECT EXISTS (SELECT * FROM customer WHERE nickname = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, nickname));
+    }
+
+    public boolean existsByEmail(String email) {
+        String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, email));
     }
 }
