@@ -23,6 +23,10 @@ public class Customer {
         this.password = Password.fromPlain(password);
     }
 
+    public boolean isSamePassword(final String plainPassword) {
+        return password.isSame(plainPassword);
+    }
+
     public Long getId() {
         return id;
     }

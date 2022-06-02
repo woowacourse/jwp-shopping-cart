@@ -31,6 +31,10 @@ public class Password {
         return new Password(value);
     }
 
+    public boolean isSame(final String plainValue) {
+        return BCrypt.checkpw(plainValue, value);
+    }
+
     public String getValue() {
         return value;
     }

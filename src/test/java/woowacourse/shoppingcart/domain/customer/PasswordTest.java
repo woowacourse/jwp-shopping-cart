@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.exception.badrequest.InvalidPasswordException;
 
@@ -30,5 +32,19 @@ class PasswordTest {
         // when, then
         assertThatThrownBy(() -> Password.fromHash(value))
                 .isInstanceOf(InvalidPasswordException.class);
+    }
+
+    @ParameterizedTest
+    @DisplayName("비밀번호 일치 여부를 판단한다.")
+    @CsvSource(value = {"1q2w3e4r:true", "1q2w3e5t:false"}, delimiter = ':')
+    void isSame_plainValue_booleanReturned(final String plainValue, final boolean expected) {
+        // given
+        final Password password = Password.fromPlain("1q2w3e4r");
+
+        // when
+        final boolean actual = password.isSame(plainValue);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
     }
 }

@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -33,7 +32,8 @@ public class AuthService {
     }
 
     private void checkPassword(final LoginRequest request, final Customer customer) {
-        if (!BCrypt.checkpw(request.getPassword(), customer.getPassword())) {
+        final String plainPassword = request.getPassword();
+        if (!customer.isSamePassword(plainPassword)) {
             throw new InvalidLoginException();
         }
     }
