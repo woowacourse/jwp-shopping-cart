@@ -9,18 +9,19 @@ public class Customer {
     private final Email email;
     private final Password password;
 
-    public Customer(final Long id, final String nickname, final String email, final String password) {
+    private Customer(final Long id, final String nickname, final String email, final Password password) {
         this.id = id;
         this.nickname = new Nickname(nickname);
         this.email = new Email(email);
-        this.password = Password.fromHash(password);
+        this.password = password;
+    }
+
+    public Customer(final Long id, final String nickname, final String email, final String password) {
+        this(id, nickname, email, Password.fromHash(password));
     }
 
     public Customer(final String nickname, final String email, final String password) {
-        this.id = null;
-        this.nickname = new Nickname(nickname);
-        this.email = new Email(email);
-        this.password = Password.fromPlain(password);
+        this(null, nickname, email, Password.fromPlain(password));
     }
 
     public boolean isSamePassword(final String plainPassword) {
