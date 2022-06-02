@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
@@ -23,7 +23,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginReturnBearerToken() {
         // given
-        CustomerRequest request = new CustomerRequest("기론", basicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("기론", basicPassword);
 
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -53,7 +53,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBearerAuth() {
         // given
         // 회원이 등록되어 있고
-        CustomerRequest request = new CustomerRequest("기론", basicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("기론", basicPassword);
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

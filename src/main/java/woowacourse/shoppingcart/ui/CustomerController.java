@@ -13,7 +13,9 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DuplicateResponse;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -26,7 +28,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCustomer(@RequestBody CustomerRequest customerRequest) {
+    public ResponseEntity<Void> createCustomer(@RequestBody UserNameAndPassword customerRequest) {
         Long id = customerService.signUp(customerRequest);
 
         return ResponseEntity.created(URI.create("/api/customers/" + id)).build();
@@ -40,7 +42,7 @@ public class CustomerController {
 
     @PutMapping("/me")
     public ResponseEntity<CustomerResponse> updateCustomer(@AuthenticationPrincipal Customer customer,
-                                                           @RequestBody CustomerRequest customerRequest) {
+                                                           @RequestBody CustomerRequest.UserNameAndPassword customerRequest) {
         CustomerResponse response = customerService.updateById(customer.getId(), customerRequest);
         return ResponseEntity.ok(response);
     }
@@ -49,5 +51,12 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal Customer customer) {
         customerService.deleteById(customer.getId());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/duplication")
+    public ResponseEntity<DuplicateResponse> duplicateUserName(
+            @RequestBody CustomerRequest.UserNameOnly customerRequest) {
+        final DuplicateResponse response = customerService.isDuplicateUserName(customerRequest);
+        return ResponseEntity.ok(response);
     }
 }

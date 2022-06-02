@@ -2,22 +2,41 @@ package woowacourse.shoppingcart.dto;
 
 public class CustomerRequest {
 
-    private String userName;
-    private String password;
+    public static class UserNameAndPassword {
+        private String userName;
+        private String password;
 
-    private CustomerRequest() {
+        private UserNameAndPassword() {
+        }
+
+        public UserNameAndPassword(String userName, String password) {
+            this.userName = userName;
+            this.password = password;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public String getPassword() {
+            return password;
+        }
     }
 
-    public CustomerRequest(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-    }
 
-    public String getUserName() {
-        return userName;
-    }
+    public static class UserNameOnly {
+        private String userName;
 
-    public String getPassword() {
-        return password;
+        private UserNameOnly() {
+
+        }
+
+        public UserNameOnly(String userName) {
+            this.userName = userName;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
     }
 }

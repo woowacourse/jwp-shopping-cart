@@ -19,7 +19,9 @@ import woowacourse.fixture.PasswordFixture;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DuplicateResponse;
 import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
 import woowacourse.shoppingcart.exception.DuplicatedNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -43,7 +45,7 @@ class CustomerServiceTest {
         given(customerDao.save(userName, password)).willReturn(1L);
 
         // when
-        final CustomerRequest request = new CustomerRequest(userName, password);
+        final CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword(userName, password);
         final Long id = customerService.signUp(request);
 
         // then
@@ -63,7 +65,7 @@ class CustomerServiceTest {
         given(customerDao.existsByUserName(userName)).willReturn(true);
 
         // when
-        final CustomerRequest request = new CustomerRequest(userName, password);
+        final CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword(userName, password);
 
         // then
         assertAll(
@@ -123,7 +125,7 @@ class CustomerServiceTest {
         given(customerDao.update(id, userName, "321")).willReturn(updatedCustomer);
 
         // when
-        CustomerRequest request = new CustomerRequest("기론", "321");
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론", "321");
         CustomerResponse response = customerService.updateById(id, request);
 
         // then
@@ -142,7 +144,7 @@ class CustomerServiceTest {
         given(customerDao.findById(id)).willReturn(Optional.empty());
 
         // when
-        CustomerRequest request = new CustomerRequest("기론", "321");
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론", "321");
 
         // then
         assertAll(
@@ -164,7 +166,7 @@ class CustomerServiceTest {
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
         // when
-        CustomerRequest request = new CustomerRequest("티키", "321");
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("티키", "321");
 
         // then
         assertAll(
@@ -191,6 +193,25 @@ class CustomerServiceTest {
                 () -> assertDoesNotThrow(() -> customerService.deleteById(id)),
                 () -> verify(customerDao).findById(id),
                 () -> verify(customerDao).deleteById(id)
+        );
+    }
+
+    @DisplayName("유저의 이름이 주어졌을 때 중복이 된 이름인지 판단한다.")
+    @Test
+    void isDuplicateUserName() {
+        // given
+        final String userName = "기론";
+        given(customerDao.existsByUserName(userName))
+                .willReturn(true);
+
+        // when
+        CustomerRequest.UserNameOnly customerRequest = new UserNameOnly(userName);
+        final DuplicateResponse isDuplicateUserName = customerService.isDuplicateUserName(customerRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(isDuplicateUserName.getIsDuplicate()).isTrue(),
+                () -> verify(customerDao).existsByUserName(userName)
         );
     }
 }

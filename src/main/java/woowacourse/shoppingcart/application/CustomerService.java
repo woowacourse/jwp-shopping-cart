@@ -5,7 +5,10 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
+import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DuplicateResponse;
 import woowacourse.shoppingcart.exception.DuplicatedNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -19,7 +22,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public Long signUp(CustomerRequest customerRequest) {
+    public Long signUp(UserNameAndPassword customerRequest) {
         validateDuplicateName(customerRequest.getUserName());
         return customerDao.save(customerRequest.getUserName(), customerRequest.getPassword());
     }
@@ -37,7 +40,7 @@ public class CustomerService {
         return new CustomerResponse(customer);
     }
 
-    public CustomerResponse updateById(final Long id, final CustomerRequest customerRequest) {
+    public CustomerResponse updateById(final Long id, final CustomerRequest.UserNameAndPassword customerRequest) {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
 
@@ -53,5 +56,10 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerException::new);
 
         customerDao.deleteById(customer.getId());
+    }
+
+    public DuplicateResponse isDuplicateUserName(final UserNameOnly customerRequest) {
+        final boolean isDuplicated = customerDao.existsByUserName(customerRequest.getUserName());
+        return new DuplicateResponse(isDuplicated);
     }
 }

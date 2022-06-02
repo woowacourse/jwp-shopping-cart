@@ -16,7 +16,9 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DuplicateResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -25,7 +27,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         // given
-        CustomerRequest request = new CustomerRequest("기론", basicPassword);
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론", basicPassword);
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -89,7 +91,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract()
                 .as(TokenResponse.class);
         // when
-        CustomerRequest request = new CustomerRequest("puterism", "321");
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("puterism", "321");
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
@@ -158,5 +160,28 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
         // then
         assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("중복된 이름이 있는지 확인하여 200-OK를 반환한다.")
+    @Test
+    void isDuplicatedUserName() {
+        // given
+        CustomerRequest.UserNameOnly request = new UserNameOnly("puterism");
+        // when
+        ExtractableResponse<Response> extractableResponse = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/customers/duplication")
+                .then().log().all()
+                .extract();
+
+        final DuplicateResponse duplicateResponse = extractableResponse.as(DuplicateResponse.class);
+
+        // then
+        assertAll(
+                () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(duplicateResponse.getIsDuplicate()).isTrue()
+        );
     }
 }
