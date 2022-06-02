@@ -8,12 +8,11 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.dto.*;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -297,5 +296,37 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 내 정보 조회 요청이 거부된다
         assertAll(() -> assertThat(customerResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(customerResponse.jsonPath().getString("message")).isEqualTo("유효하지 않은 토큰입니다."));
+    }
+
+    @DisplayName("이메일 중복 확인 요청")
+    @Test
+    void checkEmailDuplication() {
+        // given
+        // 회원이 등록되어 있고
+        CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(customerRequest)
+                .when().post("/customers")
+                .then().log().all()
+                .extract();
+
+        // when
+        // 이메일 중복을 확인하면
+        ValidEmailRequest validEmailRequest = new ValidEmailRequest(EMAIL);
+
+        ExtractableResponse<Response> validEmailResponse = RestAssured
+                .given().log().all()
+                .body(validEmailRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/customers/email")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value()).extract();
+
+        // then
+        //  사용 불가능한 이메일인지 확인한다.
+        assertThat(validEmailResponse.jsonPath().getBoolean("validEmail")).isFalse();
     }
 }
