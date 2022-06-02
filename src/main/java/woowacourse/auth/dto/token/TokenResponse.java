@@ -1,4 +1,4 @@
-package woowacourse.auth.dto;
+package woowacourse.auth.dto.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class CustomerUpdateResponse {
-	private String nickname;
+public class TokenResponse {
+    private String nickname;
+    private String accessToken;
 }
