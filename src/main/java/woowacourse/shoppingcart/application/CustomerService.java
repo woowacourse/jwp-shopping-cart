@@ -15,8 +15,8 @@ import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 
 @Service
 public class CustomerService {
-    private final CustomerDao customerDao;
 
+    private final CustomerDao customerDao;
     private final PasswordEncoder passwordEncoder;
 
     public CustomerService(CustomerDao customerDao, PasswordEncoder passwordEncoder) {
@@ -27,8 +27,8 @@ public class CustomerService {
     public long create(CustomerRequest customerRequest) {
         validateDuplicateEmail(customerRequest);
 
-        final String hashpw = passwordEncoder.encode(customerRequest.getPassword());
-        final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getName(), hashpw);
+        final String hashPw = passwordEncoder.encode(customerRequest.getPassword());
+        final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getName(), hashPw);
 
         return customerDao.save(customer);
     }
