@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.shoppingcart.service;
 
 import java.time.format.DateTimeFormatter;
 import org.springframework.dao.EmptyResultDataAccessException;

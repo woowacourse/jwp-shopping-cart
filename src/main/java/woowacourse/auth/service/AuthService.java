@@ -1,4 +1,4 @@
-package woowacourse.auth.application;
+package woowacourse.auth.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

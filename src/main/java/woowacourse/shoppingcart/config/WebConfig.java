@@ -5,7 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import woowacourse.shoppingcart.ui.LoginInterceptor;
+import woowacourse.shoppingcart.controller.LoginInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

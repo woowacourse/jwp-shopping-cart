@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.ui;
+package woowacourse.shoppingcart.controller;
 
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
-import woowacourse.auth.application.AuthService;
+import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
 
 @Component
