@@ -73,6 +73,11 @@ public class CustomerDao {
         jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
     }
 
+    public Boolean isDuplicationEmail(String email) {
+        final String sql = "select exists(select * from customer where email = :email)";
+        return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email), Boolean.class);
+    }
+
     private static class CustomerMapper implements RowMapper<Customer> {
         public Customer mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             return new Customer(
