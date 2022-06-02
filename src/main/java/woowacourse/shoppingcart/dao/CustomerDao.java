@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.Locale;
 import javax.sql.DataSource;
+
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -37,13 +40,17 @@ public class CustomerDao {
         String email = customer.getEmail();
         String password = customer.getPassword();
 
-        SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("username", username.toLowerCase(Locale.ROOT))
-                .addValue("email", email)
-                .addValue("password", password);
+        try {
+            SqlParameterSource params = new MapSqlParameterSource()
+                    .addValue("username", username.toLowerCase(Locale.ROOT))
+                    .addValue("email", email)
+                    .addValue("password", password);
 
-        long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return new Customer(id, username, email, password);
+            long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+            return new Customer(id, username, email, password);
+        } catch (final DuplicateKeyException e) {
+            throw new DuplicateUsernameException();
+        }
     }
 
     public Customer findByUsername(String username) {

@@ -61,6 +61,38 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all().statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("토큰이 없으면 내 정보를 조회할 수 없다.")
+    @Test
+    void getMeException() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(signUpRequest)
+                .when().post("/users")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        String token = RestAssured
+                .given().log().all()
+                .body(signInRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract().as(SignInResponse.class).getToken();
+
+        //when
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer ")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/users/me")
+                .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
@@ -109,7 +141,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.CREATED.value());
 
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssured
+        RestAssured
                 .given().log().all()
                 .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -128,7 +160,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("회원탈퇴")
+    @DisplayName("회원 탈퇴")
     @Test
     void deleteMe() {
         //given
@@ -161,7 +193,40 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    @DisplayName("토큰이 없으면 내 정보를 탈퇴할 수 없다")
+    @DisplayName("회원 탈퇴 - 비밀 번호가 틀린 경우 예외")
+    @Test
+    void deleteInValidPasswordException() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(signUpRequest)
+                .when().post("/users")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        String token = RestAssured
+                .given().log().all()
+                .body(signInRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract().as(SignInResponse.class).getToken();
+
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1235");
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+                .body(deleteCustomerRequest)
+                .when().delete("/users/me")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("토큰이 없으면 탈퇴할 수 없다")
     @Test
     void deleteMeThrowException() {
         //given
