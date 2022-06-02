@@ -2,9 +2,6 @@ package woowacourse.shoppingcart.domain;
 
 import woowacourse.shoppingcart.domain.vo.Email;
 import woowacourse.shoppingcart.domain.vo.Username;
-import woowacourse.shoppingcart.exception.EmailValidationException;
-import woowacourse.shoppingcart.exception.UsernameValidationException;
-import woowacourse.utils.StringValidator;
 
 public class Customer {
 
