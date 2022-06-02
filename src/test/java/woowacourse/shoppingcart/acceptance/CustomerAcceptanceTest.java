@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.PasswordFixture.basicPassword;
+import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
 import static woowacourse.fixture.TokenFixture.BEARER;
 
 import io.restassured.RestAssured;
@@ -27,7 +27,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         // given
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론", basicPassword);
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론",
+                rowBasicPassword);
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -51,7 +52,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         // given
-        final TokenRequest tokenRequest = new TokenRequest("puterism", basicPassword);
+        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("기론",
+                rowBasicPassword);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signUpRequest)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+
+        final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
         final TokenResponse tokenResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +84,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.getUserName()).isEqualTo("puterism")
+                () -> assertThat(response.getUserName()).isEqualTo("기론")
         );
     }
 
@@ -81,7 +92,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        final TokenRequest tokenRequest = new TokenRequest("puterism", basicPassword);
+        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("기론",
+                rowBasicPassword);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signUpRequest)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+
+        final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
         final TokenResponse tokenResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -91,7 +112,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract()
                 .as(TokenResponse.class);
         // when
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("puterism", "321");
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론", "87654321");
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
@@ -106,7 +127,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.getUserName()).isEqualTo("puterism")
+                () -> assertThat(response.getUserName()).isEqualTo("기론")
         );
     }
 
@@ -114,7 +135,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        final TokenRequest tokenRequest = new TokenRequest("puterism", basicPassword);
+        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("기론",
+                rowBasicPassword);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signUpRequest)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+
+        final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
         final TokenResponse tokenResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -166,8 +197,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void isDuplicatedUserName() {
         // given
-        CustomerRequest.UserNameOnly request = new UserNameOnly("puterism");
+        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("기론",
+                rowBasicPassword);
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signUpRequest)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+
         // when
+        CustomerRequest.UserNameOnly request = new UserNameOnly("기론");
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -177,7 +218,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         final DuplicateResponse duplicateResponse = extractableResponse.as(DuplicateResponse.class);
-
         // then
         assertAll(
                 () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),

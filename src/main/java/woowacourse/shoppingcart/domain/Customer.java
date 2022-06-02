@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
 import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
-import woowacourse.shoppingcart.exception.NotMatchPasswordException;
 
 public class Customer {
 
@@ -19,12 +18,6 @@ public class Customer {
     public void validateUserNameChange(final String userName) {
         if (!this.userName.equals(userName)) {
             throw new CannotUpdateUserNameException();
-        }
-    }
-
-    public void validatePassword(final String password) {
-        if (!this.password.equals(password)) {
-            throw new NotMatchPasswordException();
         }
     }
 

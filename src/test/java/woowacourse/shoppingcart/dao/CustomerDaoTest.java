@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static woowacourse.fixture.PasswordFixture.basicPassword;
+import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -96,7 +96,7 @@ public class CustomerDaoTest {
         assertAll(
                 () -> assertThat(customer.getId()).isEqualTo(id),
                 () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
-                () -> assertThat(customer.getPassword()).isEqualTo(basicPassword)
+                () -> assertThat(customer.getPassword()).isEqualTo(rowBasicPassword)
         );
     }
 
@@ -106,7 +106,7 @@ public class CustomerDaoTest {
         // given
         final Long id = 1L;
         final String userName = "puterism";
-        final String password = "321";
+        final String password = "87654321";
 
         // when
         final Customer customer = customerDao.update(id, userName, password);
@@ -115,7 +115,7 @@ public class CustomerDaoTest {
         assertAll(
                 () -> assertThat(customer.getId()).isEqualTo(id),
                 () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
-                () -> assertThat(customer.getPassword()).isEqualTo("321")
+                () -> assertThat(customer.getPassword()).isEqualTo("87654321")
         );
     }
 
@@ -166,7 +166,7 @@ public class CustomerDaoTest {
         // then
         assertAll(
                 () -> assertThat(customer.getUserName()).isEqualTo(userName),
-                () -> assertThat(customer.getPassword()).isEqualTo(basicPassword)
+                () -> assertThat(customer.getPassword()).isEqualTo(rowBasicPassword)
         );
 
     }

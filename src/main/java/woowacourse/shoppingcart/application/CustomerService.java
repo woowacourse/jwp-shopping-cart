@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.application;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -17,14 +18,17 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(final CustomerDao customerDao, final PasswordEncoder passwordEncoder) {
         this.customerDao = customerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Long signUp(UserNameAndPassword customerRequest) {
         validateDuplicateName(customerRequest.getUserName());
-        return customerDao.save(customerRequest.getUserName(), customerRequest.getPassword());
+        final String encodedPassword = passwordEncoder.encode(customerRequest.getPassword());
+        return customerDao.save(customerRequest.getUserName(), encodedPassword);
     }
 
     private void validateDuplicateName(String name) {

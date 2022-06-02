@@ -1,7 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.fixture.PasswordFixture.basicPassword;
+import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
 import static woowacourse.fixture.TokenFixture.BEARER;
 
 import io.restassured.RestAssured;
@@ -23,7 +23,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginReturnBearerToken() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("기론", basicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
 
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -34,7 +34,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // when
-        final TokenRequest tokenRequest = new TokenRequest("기론", basicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -53,7 +53,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBearerAuth() {
         // given
         // 회원이 등록되어 있고
-        UserNameAndPassword request = new UserNameAndPassword("기론", basicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -63,7 +63,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // id, password를 사용해 토큰을 발급받고
-        final TokenRequest tokenRequest = new TokenRequest("기론", basicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
