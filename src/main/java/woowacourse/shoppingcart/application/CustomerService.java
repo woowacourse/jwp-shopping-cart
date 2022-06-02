@@ -21,15 +21,12 @@ public class CustomerService {
 
     @Transactional
     public Long createCustomer(CustomerCreateRequest customerCreateRequest) {
-        validateDuplicateNickname(customerCreateRequest.getNickname());
-        validateDuplicateEmail(customerCreateRequest.getEmail());
+        validateDuplication(customerCreateRequest);
         return customerDao.save(customerCreateRequest.toCustomer());
     }
 
     public CustomerResponse findCustomerByEmail(String email) {
-        Customer customer = customerDao.findIdByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        return CustomerResponse.from(customer);
+        return CustomerResponse.from(getCustomerByEmail(email));
     }
 
     @Transactional
@@ -39,20 +36,28 @@ public class CustomerService {
 
     @Transactional
     public void changePassword(String email, ChangePasswordRequest changePasswordRequest) {
-        Customer customer = customerDao.findIdByEmail(email)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Customer customer = getCustomerByEmail(email);
         customer.changePassword(changePasswordRequest.getPrevPassword(), changePasswordRequest.getNewPassword());
         customerDao.updatePassword(customer);
     }
 
     @Transactional
     public void changeNickname(String email, ChangeCustomerRequest changeCustomerRequest) {
-        Customer customer = customerDao.findIdByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        String changeNickname = changeCustomerRequest.getNickname();
-        validateDuplicateNickname(changeNickname);
-        customer.changeNickname(changeNickname);
+        Customer customer = getCustomerByEmail(email);
+        String nicknameToChange = changeCustomerRequest.getNickname();
+        validateDuplicateNickname(nicknameToChange);
+        customer.changeNickname(nicknameToChange);
         customerDao.updateNickname(customer);
+    }
+
+    private void validateDuplication(CustomerCreateRequest customerCreateRequest) {
+        validateDuplicateNickname(customerCreateRequest.getNickname());
+        validateDuplicateEmail(customerCreateRequest.getEmail());
+    }
+
+    private Customer getCustomerByEmail(String email) {
+        return customerDao.findIdByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     }
 
     private void validateDuplicateNickname(String nickname) {
