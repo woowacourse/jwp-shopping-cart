@@ -63,7 +63,7 @@ public class CustomerService {
         customerDao.deleteById(customerId);
     }
 
-    private void validatePassword(Customer customer, String password) {
+    private void validatePassword(final Customer customer, final String password) {
         if (!customer.equalsPassword(password)) {
             throw new WrongPasswordException();
         }
