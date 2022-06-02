@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.exception.CustomerNotFoundException;
 import woowacourse.exception.EmailDuplicateException;
 import woowacourse.exception.PasswordIncorrectException;
@@ -13,6 +14,7 @@ import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 
+@Transactional(readOnly = true)
 @Service
 public class CustomerService {
     private final CustomerDao customerDao;
@@ -24,6 +26,7 @@ public class CustomerService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public long create(CustomerRequest customerRequest) {
         validateDuplicateEmail(customerRequest);
 
@@ -48,6 +51,7 @@ public class CustomerService {
         return customerDao.findByEmail(email).orElseThrow(CustomerNotFoundException::new);
     }
 
+    @Transactional
     public long updateProfile(Long id, CustomerUpdateProfileRequest customerUpdateProfileRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
 
@@ -55,6 +59,7 @@ public class CustomerService {
         return id;
     }
 
+    @Transactional
     public long updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         validatePassword(customer, customerUpdatePasswordRequest.getOldPassword());
@@ -70,6 +75,7 @@ public class CustomerService {
         }
     }
 
+    @Transactional
     public long delete(long id, CustomerDeleteRequest customerDeleteRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         validatePassword(customer, customerDeleteRequest.getPassword());
