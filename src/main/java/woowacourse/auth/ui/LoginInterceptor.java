@@ -20,7 +20,6 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = AuthorizationExtractor.extract(request);
-
         try {
             String payload = jwtTokenProvider.getPayload(token);
             request.setAttribute(TokenConst.PAYLOAD, payload);
