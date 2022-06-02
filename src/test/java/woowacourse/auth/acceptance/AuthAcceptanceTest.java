@@ -33,13 +33,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("이메일, 비밀번호, 닉네임으로 회원 가입에 성공하면 201를 응답한다.")
     @Test
     void signUp_Created() {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
-                "abc@woowahan.com",
-                "1q2w3e4r!",
-                "닉네임"
-        );
-
-        ExtractableResponse<Response> response = post("/api/members", memberCreateRequest);
+        ExtractableResponse<Response> response = 회원가입을_한다("abc@woowahan.com", "1q2w3e4r!", "닉네임");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -48,9 +42,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @CsvSource({"abc,1q2w3e4r!,닉네임", "abc@woowahan.com,1q2w3e4r,닉네임", "abc@woowahan.com,1q2w3e4r!,잘못된닉네임"})
     void signUp_BadRequest(String email, String password, String nickname) {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(email, password, nickname);
-
-        ExtractableResponse<Response> response = post("/api/members", memberCreateRequest);
+        ExtractableResponse<Response> response = 회원가입을_한다(email, password, nickname);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -89,9 +81,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void login_Ok() {
         회원가입을_한다("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        LoginRequest loginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
 
-        ExtractableResponse<Response> response = post("/api/login", loginRequest);
+        ExtractableResponse<Response> response = 로그인을_한다("abc@woowahan.com", "1q2w3e4r!");
         LoginResponse loginResponse = response.as(LoginResponse.class);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -104,9 +95,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @CsvSource({"abc@naver.com, 1q2w3e4r!", "abc@woowahan.com, 1q2w3e4r@"})
     void login_BadRequest(String email, String password) {
         회원가입을_한다("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        LoginRequest loginRequest = new LoginRequest(email, password);
 
-        ExtractableResponse<Response> response = post("/api/login", loginRequest);
+        ExtractableResponse<Response> response = 로그인을_한다(email, password);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -297,9 +287,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    private void 회원가입을_한다(String email, String password, String nickname) {
+    private ExtractableResponse<Response> 회원가입을_한다(String email, String password, String nickname) {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest(email, password, nickname);
-        post("/api/members", memberCreateRequest);
+        return post("/api/members", memberCreateRequest);
     }
 
     private ExtractableResponse<Response> 로그인을_한다(String email, String password) {
