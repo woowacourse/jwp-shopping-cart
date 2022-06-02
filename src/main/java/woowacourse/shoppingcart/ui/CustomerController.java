@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @RestController
@@ -61,8 +62,8 @@ public class CustomerController {
 
     @PatchMapping("/auth/customers/profile/password")
     public ResponseEntity<Void> updatePassword(final @AuthenticationPrincipal TokenRequest tokenRequest,
-                                               final @RequestBody PasswordRequest passwordRequest) {
-        customerService.updatePassword(tokenRequest, passwordRequest);
+                                               final @RequestBody PasswordChangeRequest passwordChangeRequest) {
+        customerService.updatePassword(tokenRequest, passwordChangeRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -81,6 +82,13 @@ public class CustomerController {
     @GetMapping(value = "/auth/customers/check", params = "nickname")
     public ResponseEntity<Void> checkDuplicateNickname(final @RequestParam String nickname) {
         customerService.checkDuplicateNickname(nickname);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/auth/customers/match/password")
+    public ResponseEntity<Void> matchPassword(final @AuthenticationPrincipal TokenRequest tokenRequest,
+                                              final @RequestBody PasswordRequest passwordRequest) {
+        customerService.matchPassword(tokenRequest, passwordRequest);
         return ResponseEntity.ok().build();
     }
 }

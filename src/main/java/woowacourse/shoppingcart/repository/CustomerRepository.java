@@ -4,6 +4,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
 @Repository
@@ -46,9 +47,15 @@ public class CustomerRepository {
         }
     }
 
-    public void checkDuplicateNickname(final String nickname) {
+    public void validateDuplicateNickname(final String nickname) {
         if (customerDao.checkDuplicatedNickname(nickname)) {
             throw new DuplicateKeyException("");
+        }
+    }
+
+    public void matchPassword(final Long id, final String password) {
+        if (!customerDao.matchPassword(id, password)) {
+            throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
         }
     }
 }

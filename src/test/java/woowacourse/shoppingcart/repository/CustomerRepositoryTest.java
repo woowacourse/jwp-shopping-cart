@@ -9,13 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 import woowacourse.shoppingcart.exception.ResourceNotFoundException;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
@@ -90,9 +89,9 @@ class CustomerRepositoryTest {
         // given
         Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
         Long id = customerRepository.create(customer);
-        PasswordRequest passwordRequest = new PasswordRequest("1234abcd!", "1234abcd@");
-        Password oldPassword = new Password(passwordRequest.getOldPassword());
-        Password newPassword = new Password(passwordRequest.getNewPassword());
+        PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest("1234abcd!", "1234abcd@");
+        Password oldPassword = new Password(passwordChangeRequest.getOldPassword());
+        Password newPassword = new Password(passwordChangeRequest.getNewPassword());
 
         // when
         customerRepository.updatePassword(id, oldPassword, newPassword);

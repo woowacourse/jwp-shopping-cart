@@ -67,20 +67,6 @@ public class CustomerDao {
         }
     }
 
-    public boolean checkDuplicatedUsername(final String username) {
-        String query = "select EXISTS (select id from customer where username = :username)";
-        Map<String, Object> params = new HashMap<>();
-        params.put("username", username);
-        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
-    }
-
-    public boolean checkDuplicatedNickname(final String nickname) {
-        String query = "select EXISTS (select id from customer where nickname = :nickname)";
-        Map<String, Object> params = new HashMap<>();
-        params.put("nickname", nickname);
-        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
-    }
-
     public Customer login(final String username, final String password) {
         String query = "select id, username, password, nickname from"
                 + REAL_CUSTOMER_QUERY
@@ -127,5 +113,29 @@ public class CustomerDao {
         if (affectedRowCount == 0) {
             throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
         }
+    }
+
+    public boolean checkDuplicatedUsername(final String username) {
+        String query = "select EXISTS (select id from customer where username = :username)";
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
+    }
+
+    public boolean checkDuplicatedNickname(final String nickname) {
+        String query = "select EXISTS (select id from customer where nickname = :nickname)";
+        Map<String, Object> params = new HashMap<>();
+        params.put("nickname", nickname);
+        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
+    }
+
+    public boolean matchPassword(final Long id, final String password) {
+        String query = "select EXISTS (select id from"
+                + REAL_CUSTOMER_QUERY
+                + "where id = :id and password = :password)";
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        params.put("password", password);
+        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
     }
 }

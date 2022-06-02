@@ -19,13 +19,12 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 
 @DisplayName("회원 관련 인수테스트")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -273,7 +272,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         // 비밀번호를 변경한다.
-        비밀번호_변경(new PasswordRequest("1234abcd!", "1234abcd@"), accessToken);
+        비밀번호_변경(new PasswordChangeRequest("1234abcd!", "1234abcd@"), accessToken);
 
         // then
         // 변경된 비밀번호로 로그인을 한다.
@@ -291,7 +290,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         // 기존 비밀번호가 일치하지 않는 상황에서 비밀번호를 변경한다.
-        ExtractableResponse<Response> response = 비밀번호_변경(new PasswordRequest("1234abcd$", "1234abcd@"), accessToken);
+        ExtractableResponse<Response> response = 비밀번호_변경(new PasswordChangeRequest("1234abcd$", "1234abcd@"), accessToken);
 
         // then
         // 예외를 발생시킨다.
@@ -312,7 +311,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         // 잘못된 비밀번호 형식으로 비밀번호를 변경한다.
-        ExtractableResponse<Response> response = 비밀번호_변경(new PasswordRequest("1234abcd!", "1234"), accessToken);
+        ExtractableResponse<Response> response = 비밀번호_변경(new PasswordChangeRequest("1234abcd!", "1234"), accessToken);
 
         // then
         // 예외를 발생시킨다.
@@ -336,7 +335,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         // 존재하지 않는 회원의 비밀번호를 변경한다.
-        ExtractableResponse<Response> response = 비밀번호_변경(new PasswordRequest("1234abcd!", "1234abcd@"), accessToken);
+        ExtractableResponse<Response> response = 비밀번호_변경(new PasswordChangeRequest("1234abcd!", "1234abcd@"), accessToken);
 
         // then
         // 예외를 발생시킨다.

@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 
 @SpringBootTest
 @Sql("/init.sql")
@@ -93,14 +93,14 @@ class CustomerServiceTest {
         CustomerRequest customerRequest = new CustomerRequest("jo@naver.com", "jojogreen", "abcde1234!");
         Long id = customerService.signUp(customerRequest);
         TokenRequest tokenRequest = new TokenRequest(id);
-        PasswordRequest passwordRequest = new PasswordRequest("abcde1234!", "1234abcd@");
+        PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest("abcde1234!", "1234abcd@");
 
         // when
-        customerService.updatePassword(tokenRequest, passwordRequest);
+        customerService.updatePassword(tokenRequest, passwordChangeRequest);
 
         // then
         CustomerLoginRequest customerLoginRequest =
-                new CustomerLoginRequest(customerRequest.getUserId(), passwordRequest.getNewPassword());
+                new CustomerLoginRequest(customerRequest.getUserId(), passwordChangeRequest.getNewPassword());
         assertDoesNotThrow(() -> customerService.login(customerLoginRequest));
     }
 }

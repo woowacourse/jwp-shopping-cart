@@ -28,7 +28,7 @@ import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -134,7 +134,7 @@ class CustomerControllerTest {
     void updatePassword() throws Exception {
         // given
         TokenRequest tokenRequest = new TokenRequest(1L);
-        PasswordRequest passwordRequest = new PasswordRequest("1234", "2345");
+        PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest("1234", "2345");
 
         // then
         String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getId()));
@@ -142,7 +142,7 @@ class CustomerControllerTest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(passwordRequest))
+                        .content(objectMapper.writeValueAsString(passwordChangeRequest))
                 ).andDo(print())
                 .andExpect(status().isOk());
     }

@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.repository.CustomerRepository;
 
@@ -41,9 +42,9 @@ public class CustomerService {
         customerRepository.update(newCustomer);
     }
 
-    public void updatePassword(final TokenRequest tokenRequest, final PasswordRequest passwordRequest) {
-        Password oldPassword = new Password(passwordRequest.getOldPassword());
-        Password newPassword = new Password(passwordRequest.getNewPassword());
+    public void updatePassword(final TokenRequest tokenRequest, final PasswordChangeRequest passwordChangeRequest) {
+        Password oldPassword = new Password(passwordChangeRequest.getOldPassword());
+        Password newPassword = new Password(passwordChangeRequest.getNewPassword());
         customerRepository.updatePassword(tokenRequest.getId(), oldPassword, newPassword);
     }
 
@@ -56,6 +57,10 @@ public class CustomerService {
     }
 
     public void checkDuplicateNickname(final String nickname) {
-        customerRepository.checkDuplicateNickname(nickname);
+        customerRepository.validateDuplicateNickname(nickname);
+    }
+
+    public void matchPassword(final TokenRequest tokenRequest, final PasswordRequest passwordRequest) {
+        customerRepository.matchPassword(tokenRequest.getId(), passwordRequest.getPassword());
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 
 public class AcceptanceFixtures {
 
@@ -68,12 +68,12 @@ public class AcceptanceFixtures {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 비밀번호_변경(PasswordRequest passwordRequest, String accessToken) {
+    public static ExtractableResponse<Response> 비밀번호_변경(PasswordChangeRequest passwordChangeRequest, String accessToken) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(passwordRequest)
+                .body(passwordChangeRequest)
                 .when().patch("/auth/customers/profile/password")
                 .then().log().all()
                 .extract();
