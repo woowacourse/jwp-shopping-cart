@@ -25,7 +25,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1234"))
+                .body(new CustomerRequest("test", "12345678"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -33,7 +33,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         String accessToken = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("test", "1234"))
+                .body(new TokenRequest("test", "12345678"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
@@ -48,7 +48,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value()).extract().as(Customer.class);
 
-        assertThat(customer.getName()).isEqualTo("test");
+        assertThat(customer.getName().toString()).isEqualTo("test");
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
@@ -58,7 +58,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1234"))
+                .body(new CustomerRequest("test", "12345678"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -66,7 +66,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> tokenResponse = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("test", "5522"))
+                .body(new TokenRequest("test", "55223344"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
@@ -83,7 +83,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "1234"))
+                .body(new CustomerRequest("test", "12345678"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
