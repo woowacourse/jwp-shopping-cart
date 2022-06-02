@@ -5,19 +5,19 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.auth.utils.Fixture.email;
 import static woowacourse.auth.utils.Fixture.nickname;
 import static woowacourse.auth.utils.Fixture.password;
+import static woowacourse.auth.utils.Fixture.tokenRequest;
+import static woowacourse.utils.RestAssuredUtils.login;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.utils.AcceptanceTest;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.dto.token.TokenRequest;
+import woowacourse.utils.AcceptanceTest;
 
 public class AuthControllerTest extends AcceptanceTest {
 
@@ -26,17 +26,12 @@ public class AuthControllerTest extends AcceptanceTest {
 
     @DisplayName("로그인이 성공한다.")
     @Test
-    void login() {
+    void login_success() {
         // given
         customerService.signUp(new SignupRequest(email, password, nickname));
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(email, password))
-                .when().post("/auth/login")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> response = login("/auth/login", tokenRequest);
 
         // then
         assertAll(
@@ -53,12 +48,7 @@ public class AuthControllerTest extends AcceptanceTest {
         customerService.signUp(new SignupRequest(email, password, nickname));
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(email, "a12232134!"))
-                .when().post("/auth/login")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> response = login("/auth/login", new TokenRequest(email, "a12232134!"));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());

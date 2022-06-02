@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.auth.utils.Fixture.email;
 import static woowacourse.auth.utils.Fixture.nickname;
 import static woowacourse.auth.utils.Fixture.password;
+import static woowacourse.auth.utils.Fixture.signupRequest;
+import static woowacourse.auth.utils.Fixture.tokenRequest;
+import static woowacourse.utils.RestAssuredUtils.httpPost;
+import static woowacourse.utils.RestAssuredUtils.login;
+import static woowacourse.utils.RestAssuredUtils.signOut;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -14,8 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
-import woowacourse.auth.dto.customer.SignupRequest;
-import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.utils.AcceptanceTest;
 
 @DisplayName("회원관련 기능 인수테스트")
@@ -25,7 +28,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void signUpSuccess() {
         // given
-        ExtractableResponse<Response> response = signUp();
+        ExtractableResponse<Response> response = httpPost("/customers", signupRequest);
 
         // then
         assertAll(
@@ -39,10 +42,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void signOutNotLogin() {
         // given
-        signUp();
+        httpPost("/customers", signupRequest);
 
         // when
-        ExtractableResponse<Response> response = signOut("");
+        ExtractableResponse<Response> response = signOut("/customers", "");
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -52,12 +55,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void signOutSuccess() {
         // given
-        signUp();
-        ExtractableResponse<Response> loginResponse = login();
+        httpPost("/customers", signupRequest);
+
+        ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
         String token = loginResponse.jsonPath().getString("accessToken");
 
         // when
-        ExtractableResponse<Response> response = signOut(token);
+        ExtractableResponse<Response> response = signOut("/customers", token);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
@@ -67,8 +71,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateCustomer() {
         // given
-        signUp();
-        ExtractableResponse<Response> loginResponse = login();
+        httpPost("/customers", signupRequest);
+        ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
         String token = loginResponse.jsonPath().getString("accessToken");
 
         CustomerUpdateRequest request = new CustomerUpdateRequest("thor", password, "b1234!");
@@ -92,8 +96,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void findCustomer() {
         // given
-        signUp();
-        ExtractableResponse<Response> loginResponse = login();
+        httpPost("/customers", signupRequest);
+        ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
         String token = loginResponse.jsonPath().getString("accessToken");
 
         // when
@@ -108,31 +112,5 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.jsonPath().getString("nickname")).isEqualTo(nickname),
                 () -> assertThat(response.jsonPath().getString("email")).isEqualTo(email)
         );
-    }
-
-    private ExtractableResponse<Response> signUp() {
-        return RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new SignupRequest(email, password, nickname))
-                .when().post("/customers")
-                .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> login() {
-        return RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(email, password))
-                .when().post("/auth/login")
-                .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> signOut(String token) {
-        return RestAssured.given().log().all()
-                .auth().oauth2(token)
-                .when().delete("/customers")
-                .then().log().all()
-                .extract();
     }
 }
