@@ -17,8 +17,8 @@ public class AuthService {
         return jwtTokenProvider.createToken(tokenRequest.getUserName());
     }
 
-    public boolean isInvalidToken(String token) {
-        return !jwtTokenProvider.validateToken(token);
+    public void validateToken(String token) {
+        jwtTokenProvider.validateToken(token);
     }
 
     public String getNameFromToken(String token) {

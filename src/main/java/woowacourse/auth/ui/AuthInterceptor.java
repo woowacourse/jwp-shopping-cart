@@ -37,10 +37,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (token == null) {
             throw new AuthorizationException("토큰이 없습니다.");
         }
-
-        if (authService.isInvalidToken(token)) {
-            throw new AuthorizationException();
-        }
+        authService.validateToken(token);
     }
 
 }
