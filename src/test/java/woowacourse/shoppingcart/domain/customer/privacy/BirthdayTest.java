@@ -9,16 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class BirthDayTest {
+class BirthdayTest {
 
     @DisplayName("생년월일 문자열을 전달받아 생성된다.")
     @Test
     void constructor() {
         // given
-        String birthDay = "1998-05-13";
+        String birthday = "1998-05-13";
 
         // when
-        BirthDay actual = BirthDay.from(birthDay);
+        Birthday actual = Birthday.from(birthday);
 
         // then
         assertThat(actual).isNotNull();
@@ -29,7 +29,7 @@ class BirthDayTest {
     @ParameterizedTest
     void constructor_invalidFormat(String input) {
         // when & then
-        assertThatThrownBy(() -> BirthDay.from(input))
+        assertThatThrownBy(() -> Birthday.from(input))
                 .isInstanceOf(DateTimeParseException.class);
     }
 }

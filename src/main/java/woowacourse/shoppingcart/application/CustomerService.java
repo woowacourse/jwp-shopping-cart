@@ -110,7 +110,7 @@ public class CustomerService {
 
     private PrivacyEntity convertPrivacyToEntity(Privacy privacy) {
         return new PrivacyEntity(privacy.getName().getValue(), privacy.getGender().getValue(),
-                privacy.getBirthDay().getValue(), privacy.getContact().getValue());
+                privacy.getBirthday().getValue(), privacy.getContact().getValue());
     }
 
     private AddressEntity convertAddressToEntity(FullAddress fullAddress) {
