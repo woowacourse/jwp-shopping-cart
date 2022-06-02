@@ -4,9 +4,9 @@ import javax.validation.constraints.NotNull;
 
 public class UpdatePasswordRequest {
 
-    @NotNull
+    @NotNull(message = "기존 비밀번호 입력 필요")
     private String oldPassword;
-    @NotNull
+    @NotNull(message = "새로운 비밀번호 입력 필요")
     private String newPassword;
 
     public UpdatePasswordRequest() {

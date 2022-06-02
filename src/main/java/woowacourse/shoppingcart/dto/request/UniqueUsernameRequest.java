@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class UniqueUsernameRequest {
 
-    @NotNull
+    @NotNull(message = "아이디 입력 필요")
     private String username;
 
     public UniqueUsernameRequest() {

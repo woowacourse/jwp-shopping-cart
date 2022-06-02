@@ -4,11 +4,11 @@ import javax.validation.constraints.NotNull;
 
 public class UpdateMeRequest {
 
-    @NotNull
+    @NotNull(message = "아이디 입력 필요")
     private String username;
-    @NotNull
+    @NotNull(message = "닉네임 입력 필요")
     private String nickname;
-    @NotNull
+    @NotNull(message = "나이 입력 필요")
     private Integer age;
 
     public UpdateMeRequest() {

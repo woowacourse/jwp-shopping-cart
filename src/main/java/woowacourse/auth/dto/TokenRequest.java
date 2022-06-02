@@ -4,9 +4,9 @@ import javax.validation.constraints.NotNull;
 
 public class TokenRequest {
 
-    @NotNull
+    @NotNull(message = "아이디 입력 필요")
     private String username;
-    @NotNull
+    @NotNull(message = "비밀번호 입력 필요")
     private String password;
 
     public TokenRequest() {
