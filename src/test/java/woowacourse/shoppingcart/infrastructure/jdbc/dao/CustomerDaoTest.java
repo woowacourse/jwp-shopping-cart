@@ -10,12 +10,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
+import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
 import woowacourse.shoppingcart.domain.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Sql("classpath:init.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class CustomerDaoTest {
 
