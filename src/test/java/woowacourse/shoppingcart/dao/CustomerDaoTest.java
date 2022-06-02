@@ -1,14 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -22,13 +19,9 @@ import woowacourse.shoppingcart.domain.Customer;
 @Sql(scripts = {"classpath:schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class CustomerDaoTest {
 
-    @Autowired
-    private DataSource dataSource;
-
     private CustomerDao customerDao;
 
-    @BeforeEach
-    public void setUp() {
+    public CustomerDaoTest(DataSource dataSource) {
         this.customerDao = new CustomerDao(dataSource);
     }
 

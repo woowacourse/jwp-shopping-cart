@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.application.dto.TokenResponse;
 import woowacourse.auth.ui.dto.TokenRequest;
 
 @RestController

@@ -3,7 +3,7 @@ package woowacourse.auth.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.application.dto.TokenCreateRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.application.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
