@@ -139,7 +139,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
-        CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD);
+        final CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD);
 
         // when
         final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
@@ -159,7 +159,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
-        CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD+"1");
+        final CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD+"1");
 
         // when
         final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
