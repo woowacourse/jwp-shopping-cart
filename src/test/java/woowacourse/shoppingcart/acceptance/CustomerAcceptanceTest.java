@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,42 +63,38 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     }
 
+    @DisplayName("내 정보를 조회하려할 때")
+    @Nested
+    class findMyProfileTest {
 
-    @DisplayName("내 정보 조회")
-    @Test
-    void findMyProfile() {
-        회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
-                "희봉", "male", "1998-08-07", "12345678910",
-                "address", "detailAddress", "12345", true));
+        @DisplayName("본인이 맞으면 내 정보 조회")
+        @Test
+        void succeedTofindMyProfile() {
+            회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
+                    "희봉", "male", "1998-08-07", "12345678910",
+                    "address", "detailAddress", "12345", true));
 
-        TokenResponse signInResponse =
-                로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
+            TokenResponse signInResponse =
+                    로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
 
-        ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken());
-        final CustomerResponse customerResponse = response.body()
-                .jsonPath()
-                .getObject("", CustomerResponse.class);
+            ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(), signInResponse.getCustomerId());
+            final CustomerResponse customerResponse = response.body()
+                    .jsonPath()
+                    .getObject("", CustomerResponse.class);
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(customerResponse.getEmail()).isEqualTo("example@example.com")
-        );
-    }
+            assertAll(
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                    () -> assertThat(customerResponse.getEmail()).isEqualTo("example@example.com")
+            );
+        }
 
-    @Test
-    void 사용자_정보_조회() {
-        // given
-        String account = "leo8842";
-        String password = "leoLeo123!";
-
-        String accessToken = 회원_가입_후_토큰_발급(account, password);
-
-        // when
-        ExtractableResponse<Response> response = 회원_조회(accessToken);
-
-        // then
-        assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(findValue(response, "account")).isEqualTo(account);
+        @DisplayName("본인이 아니면 에러를 던진다.")
+        @Test
+        void failToFindMyProfile() {
+            ExtractableResponse<Response> response = 회원_조회(
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c", 1L);
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        }
     }
 
     @DisplayName("내 정보 수정")
@@ -173,12 +170,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> 회원_조회(String accessToken) {
+    private ExtractableResponse<Response> 회원_조회(String accessToken, Long customerId) {
         return RestAssured.given()
                 .log().all()
                 .header(AUTHORIZATION, BEARER_TYPE + accessToken)
                 .when()
-                .get("/api/customers")
+                .get("/api/customers/" + customerId)
                 .then()
                 .log().all()
                 .extract();
