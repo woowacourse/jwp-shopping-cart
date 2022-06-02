@@ -7,6 +7,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import woowacourse.shoppingcart.domain.Product;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
+
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
         Product productRequest = new Product(name, price, imageUrl);
 
@@ -85,6 +87,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
+    @Disabled
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
@@ -93,6 +96,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_추가됨(response);
     }
 
+    @Disabled
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
@@ -105,6 +109,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_목록_포함됨(productId1, productId2, response);
     }
 
+    @Disabled
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
@@ -116,6 +121,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_조회됨(response, productId);
     }
 
+    @Disabled
     @DisplayName("상품을 삭제한다")
     @Test
     void deleteProduct() {

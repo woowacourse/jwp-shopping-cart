@@ -2,7 +2,18 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.Fixtures.ADDRESS_VALUE_1;
+import static woowacourse.Fixtures.BIRTHDAY_FORMATTED_VALUE_1;
+import static woowacourse.Fixtures.CONTACT_VALUE_1;
+import static woowacourse.Fixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.Fixtures.DETAIL_ADDRESS_VALUE_1;
+import static woowacourse.Fixtures.EMAIL_VALUE_1;
+import static woowacourse.Fixtures.GENDER_MALE;
+import static woowacourse.Fixtures.NAME_VALUE_1;
+import static woowacourse.Fixtures.PASSWORD_VALUE_1;
+import static woowacourse.Fixtures.PROFILE_IMAGE_URL_VALUE_1;
+import static woowacourse.Fixtures.TERMS_1;
+import static woowacourse.Fixtures.ZONE_CODE_VALUE_1;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -43,10 +54,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.body().jsonPath().getObject(".", CustomerResponse.class))
                         .extracting("email", "profileImageUrl", "name", "gender", "birthday", "contact", "terms")
-                        .containsExactly(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getProfileImageUrl(),
-                                CUSTOMER_REQUEST_1.getName(), CUSTOMER_REQUEST_1.getGender(),
-                                CUSTOMER_REQUEST_1.getBirthday(), CUSTOMER_REQUEST_1.getContact(),
-                                CUSTOMER_REQUEST_1.isTerms())
+                        .containsExactly(EMAIL_VALUE_1, PROFILE_IMAGE_URL_VALUE_1, NAME_VALUE_1, GENDER_MALE,
+                                BIRTHDAY_FORMATTED_VALUE_1, CONTACT_VALUE_1, TERMS_1)
         );
     }
 
@@ -57,7 +66,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         createCustomer();
 
         // when
-        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+        TokenResponse tokenResponse = getTokenResponse(EMAIL_VALUE_1, PASSWORD_VALUE_1);
 
         //then
         assertAll(
@@ -70,15 +79,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void login_failed() {
         // given
-        // 회원이 등록되어 있고
         createCustomer();
+        String invalidPassword = "1234!@abc";
 
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
-        ExtractableResponse<Response> response = getSignInResponse(CUSTOMER_REQUEST_1.getEmail(), "1234!@abc");
+        ExtractableResponse<Response> response = getSignInResponse(EMAIL_VALUE_1, invalidPassword);
 
         // then
-        // 토큰 발급 요청이 거부된다
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(response.jsonPath().getString("message")).isEqualTo("로그인이 실패하였습니다.")
@@ -134,7 +141,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void signOut_successWithValidToken() {
         // given
         String customerId = createCustomer().header("Location").split("/")[3];
-        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+        TokenResponse tokenResponse = getTokenResponse(EMAIL_VALUE_1, PASSWORD_VALUE_1);
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -167,7 +174,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void signOut_IfIdIsDifferentBetweenTokenAndPathVariable() {
         // given
         String customerId = createCustomer().header("Location").split("/")[3];
-        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+        TokenResponse tokenResponse = getTokenResponse(EMAIL_VALUE_1, PASSWORD_VALUE_1);
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -181,17 +188,17 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     private ExtractableResponse<Response> createCustomer() {
         Map<String, Object> params = new HashMap<>();
-        params.put("email", CUSTOMER_REQUEST_1.getEmail());
-        params.put("password", CUSTOMER_REQUEST_1.getPassword());
-        params.put("profileImageUrl", CUSTOMER_REQUEST_1.getProfileImageUrl());
-        params.put("name", CUSTOMER_REQUEST_1.getName());
-        params.put("gender", CUSTOMER_REQUEST_1.getGender());
-        params.put("birthday", CUSTOMER_REQUEST_1.getBirthday());
-        params.put("contact", CUSTOMER_REQUEST_1.getContact());
-        params.put("fullAddress", Map.of("address", CUSTOMER_REQUEST_1.getFullAddress().getAddress(), "detailAddress",
-                CUSTOMER_REQUEST_1.getFullAddress().getDetailAddress(), "zoneCode",
-                CUSTOMER_REQUEST_1.getFullAddress().getZoneCode()));
-        params.put("terms", true);
+        params.put("email", EMAIL_VALUE_1);
+        params.put("password", PASSWORD_VALUE_1);
+        params.put("profileImageUrl", PROFILE_IMAGE_URL_VALUE_1);
+        params.put("name", NAME_VALUE_1);
+        params.put("gender", GENDER_MALE);
+        params.put("birthday", BIRTHDAY_FORMATTED_VALUE_1);
+        params.put("contact", CONTACT_VALUE_1);
+        params.put("fullAddress",
+                Map.of("address", ADDRESS_VALUE_1, "detailAddress", DETAIL_ADDRESS_VALUE_1, "zoneCode",
+                        ZONE_CODE_VALUE_1));
+        params.put("terms", TERMS_1);
 
         return RestAssured.given().log().all()
                 .body(params)

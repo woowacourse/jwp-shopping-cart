@@ -2,8 +2,8 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static woowacourse.shoppingcart.Fixtures.ADDRESS_ENTITY_1;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_ENTITY_1;
+import static woowacourse.Fixtures.ADDRESS_ENTITY_1;
+import static woowacourse.Fixtures.CUSTOMER_ENTITY_1;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;

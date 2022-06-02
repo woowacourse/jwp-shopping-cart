@@ -2,9 +2,17 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_INVALID_REQUEST_1;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_2;
+import static woowacourse.Fixtures.BIRTHDAY_FORMATTED_VALUE_1;
+import static woowacourse.Fixtures.CONTACT_VALUE_1;
+import static woowacourse.Fixtures.CUSTOMER_INVALID_REQUEST_1;
+import static woowacourse.Fixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.Fixtures.CUSTOMER_REQUEST_2;
+import static woowacourse.Fixtures.EMAIL_VALUE_1;
+import static woowacourse.Fixtures.GENDER_MALE;
+import static woowacourse.Fixtures.NAME_VALUE_1;
+import static woowacourse.Fixtures.PASSWORD_VALUE_1;
+import static woowacourse.Fixtures.PROFILE_IMAGE_URL_VALUE_1;
+import static woowacourse.Fixtures.TERMS_1;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -59,7 +67,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/api/validation?email=" + CUSTOMER_REQUEST_1.getEmail())
+                .get("/api/validation?email=" + EMAIL_VALUE_1)
                 .then().log().all()
                 .extract();
 
@@ -77,7 +85,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> customer = createCustomer(CUSTOMER_REQUEST_1);
         String customerUri = customer.header("Location");
-        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+        TokenResponse tokenResponse = getTokenResponse(EMAIL_VALUE_1, PASSWORD_VALUE_1);
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -90,10 +98,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.body().jsonPath().getObject(".", CustomerResponse.class))
                         .extracting("email", "profileImageUrl", "name", "gender", "birthday", "contact", "terms")
-                        .containsExactly(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getProfileImageUrl(),
-                                CUSTOMER_REQUEST_1.getName(), CUSTOMER_REQUEST_1.getGender(),
-                                CUSTOMER_REQUEST_1.getBirthday(), CUSTOMER_REQUEST_1.getContact(),
-                                CUSTOMER_REQUEST_1.isTerms())
+                        .containsExactly(EMAIL_VALUE_1, PROFILE_IMAGE_URL_VALUE_1, NAME_VALUE_1, GENDER_MALE,
+                                BIRTHDAY_FORMATTED_VALUE_1, CONTACT_VALUE_1, TERMS_1)
         );
 
     }
@@ -104,7 +110,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> customer = createCustomer(CUSTOMER_REQUEST_1);
         String customerUri = customer.header("Location");
-        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+        TokenResponse tokenResponse = getTokenResponse(EMAIL_VALUE_1, PASSWORD_VALUE_1);
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -124,7 +130,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> customer = createCustomer(CUSTOMER_REQUEST_1);
         String customerUri = customer.header("Location");
-        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+        TokenResponse tokenResponse = getTokenResponse(EMAIL_VALUE_1, PASSWORD_VALUE_1);
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
