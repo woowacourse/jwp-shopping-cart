@@ -5,7 +5,7 @@ public class LoginResponse {
     private String token;
     private String nickname;
 
-    public LoginResponse() {
+    private LoginResponse() {
     }
 
     public LoginResponse(String token, String nickname) {

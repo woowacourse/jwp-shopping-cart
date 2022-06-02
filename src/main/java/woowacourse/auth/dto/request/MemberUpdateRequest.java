@@ -7,7 +7,7 @@ public class MemberUpdateRequest {
     @Pattern(regexp = "^[가-힣]{1,5}$", message = "닉네임 형식이 올바르지 않습니다.")
     private String nickname;
 
-    public MemberUpdateRequest() {
+    private MemberUpdateRequest() {
     }
 
     public MemberUpdateRequest(String nickname) {

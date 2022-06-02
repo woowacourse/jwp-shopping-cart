@@ -4,7 +4,7 @@ public class PasswordCheckResponse {
 
     private boolean success;
 
-    public PasswordCheckResponse() {
+    private PasswordCheckResponse() {
     }
 
     public PasswordCheckResponse(boolean success) {

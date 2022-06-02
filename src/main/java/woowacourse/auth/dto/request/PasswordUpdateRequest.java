@@ -8,7 +8,7 @@ public class PasswordUpdateRequest {
             message = "비밀번호 형식이 올바르지 않습니다.")
     private String password;
 
-    public PasswordUpdateRequest() {
+    private PasswordUpdateRequest() {
     }
 
     public PasswordUpdateRequest(String password) {

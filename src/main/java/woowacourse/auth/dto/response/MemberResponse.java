@@ -7,7 +7,7 @@ public class MemberResponse {
     private String email;
     private String nickname;
 
-    public MemberResponse() {
+    private MemberResponse() {
     }
 
     public MemberResponse(Member member) {

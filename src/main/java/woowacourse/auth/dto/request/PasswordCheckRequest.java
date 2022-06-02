@@ -4,7 +4,7 @@ public class PasswordCheckRequest {
 
     private String password;
 
-    public PasswordCheckRequest() {
+    private PasswordCheckRequest() {
     }
 
     public PasswordCheckRequest(String password) {

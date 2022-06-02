@@ -13,7 +13,7 @@ public class MemberCreateRequest {
     @Pattern(regexp = "^[가-힣]{1,5}$", message = "닉네임 형식이 올바르지 않습니다.")
     private String nickname;
 
-    public MemberCreateRequest() {
+    private MemberCreateRequest() {
     }
 
     public MemberCreateRequest(String email, String password, String nickname) {

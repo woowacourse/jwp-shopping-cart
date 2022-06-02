@@ -4,7 +4,7 @@ public class EmailUniqueCheckResponse {
 
     private boolean unique;
 
-    public EmailUniqueCheckResponse() {
+    private EmailUniqueCheckResponse() {
     }
 
     public EmailUniqueCheckResponse(boolean unique) {
