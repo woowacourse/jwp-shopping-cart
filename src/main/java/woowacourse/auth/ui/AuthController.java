@@ -1,5 +1,6 @@
 package woowacourse.auth.ui;
 
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,7 @@ public class AuthController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerResponse save(@RequestBody CustomerRequest customerRequest) {
+    public CustomerResponse save(@RequestBody @Valid CustomerRequest customerRequest) {
         return authService.save(customerRequest);
     }
 
@@ -41,7 +42,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public TokenResponse login(@RequestBody TokenRequest tokenRequest) {
+    public TokenResponse login(@RequestBody @Valid TokenRequest tokenRequest) {
         Long customerId = authService.loginCustomer(tokenRequest);
         return authService.createToken(customerId);
     }
@@ -55,7 +56,7 @@ public class AuthController {
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public void updateCustomer(@AuthenticationPrincipal Long customerId,
-                               @RequestBody CustomerRequest customerRequest) {
+                               @RequestBody @Valid CustomerRequest customerRequest) {
         authService.update(customerId, customerRequest);
     }
 
