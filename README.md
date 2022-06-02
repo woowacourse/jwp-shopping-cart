@@ -14,6 +14,10 @@
 
 ---
 
+## API 명세
+
+[링크](https://phantom-lake-336.notion.site/API-25a439dc052f4d5588ae4ee8aa9da164)
+
 ## 기능 목록
 
 ### 회원
