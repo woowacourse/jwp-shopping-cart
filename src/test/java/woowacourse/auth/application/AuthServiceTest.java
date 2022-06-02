@@ -3,6 +3,7 @@ package woowacourse.auth.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,8 +57,10 @@ class AuthServiceTest {
 
         LoginServiceResponse loginServiceResponse = authService.login(loginRequest);
 
-        assertThat(loginServiceResponse.getToken()).isNotNull();
-        assertThat(loginServiceResponse.getNickname()).isEqualTo(NICKNAME);
+        assertAll(
+                () -> assertThat(loginServiceResponse.getToken()).isNotNull(),
+                () -> assertThat(loginServiceResponse.getNickname()).isEqualTo(NICKNAME)
+        );
     }
 
     @DisplayName("올바르지 않은 정보로 로그인하려고 하면 예외를 반환한다.")
@@ -128,8 +131,10 @@ class AuthServiceTest {
     void findMember() {
         MemberServiceResponse memberServiceResponse = authService.findMember(EMAIL);
 
-        assertThat(memberServiceResponse.getEmail()).isEqualTo(EMAIL);
-        assertThat(memberServiceResponse.getNickname()).isEqualTo(NICKNAME);
+        assertAll(
+                () -> assertThat(memberServiceResponse.getEmail()).isEqualTo(EMAIL),
+                () -> assertThat(memberServiceResponse.getNickname()).isEqualTo(NICKNAME)
+        );
     }
 
     @DisplayName("존재하지 않는 회원의 정보를 요청하면 예외를 반환한다.")

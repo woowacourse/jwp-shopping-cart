@@ -1,6 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.util.HttpRequestUtil.deleteWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.get;
 import static woowacourse.util.HttpRequestUtil.getWithAuthorization;
@@ -52,8 +53,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(message).contains("형식이 올바르지 않습니다.");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(message).contains("형식이 올바르지 않습니다.")
+        );
     }
 
     @DisplayName("이미 회원으로 등록된 이메일인지와 200을 응답한다.")
@@ -66,8 +69,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         boolean success = response.as(CheckResponse.class)
                 .isUnique();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(success).isEqualTo(expected);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(success).isEqualTo(expected)
+        );
     }
 
     @DisplayName("잘못된 이메일 형식으로 중복 체크를 하려하면 400을 응답한다.")
@@ -79,8 +84,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(message).isEqualTo("이메일 형식이 올바르지 않습니다.");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(message).isEqualTo("이메일 형식이 올바르지 않습니다.")
+        );
     }
 
     @DisplayName("올바른 이메일과 비밀번호로 로그인 요청을 하면 토큰과 닉네임을 반환하고 200을 응답한다.")
@@ -91,9 +98,11 @@ class AuthAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = post("/api/login", LOGIN_REQUEST);
         LoginResponse loginResponse = response.as(LoginResponse.class);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(loginResponse.getToken()).isNotNull();
-        assertThat(loginResponse.getNickname()).isEqualTo("닉네임");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(loginResponse.getToken()).isNotNull(),
+                () -> assertThat(loginResponse.getNickname()).isEqualTo("닉네임")
+        );
     }
 
     @DisplayName("올바르지 않은 이메일과 비밀번호로 로그인 요청을 하면 400을 응답한다.")
@@ -107,8 +116,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(message).isEqualTo("이메일과 비밀번호를 확인해주세요.");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(message).isEqualTo("이메일과 비밀번호를 확인해주세요.")
+        );
     }
 
     @DisplayName("토큰에 해당하는 사용자의 비밀번호가 일치하는지를 반환하고 200을 응답한다.")
@@ -127,8 +138,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         boolean success = response.as(CheckResponse.class)
                 .isUnique();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(success).isEqualTo(expected);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(success).isEqualTo(expected)
+        );
     }
 
     @DisplayName("로그인을 하지 않고(토큰이 없는 경우) 인증이 필요한 URI에 접근하면 401을 응답한다.")
@@ -139,8 +152,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-        assertThat(message).isEqualTo("로그인이 필요합니다.");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(message).isEqualTo("로그인이 필요합니다.")
+        );
     }
 
     @DisplayName("유효하지 않은 토큰으로 인증이 필요한 URI에 접근하면 401을 응답한다.")
@@ -154,8 +169,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-        assertThat(message).isEqualTo("유효하지 않은 토큰입니다.");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(message).isEqualTo("유효하지 않은 토큰입니다.")
+        );
     }
 
     @DisplayName("토큰에 해당하는 사용자의 회원 정보와 200을 응답한다.")
@@ -168,9 +185,11 @@ class AuthAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = getWithAuthorization("/api/members/auth/me", token);
         MemberResponse memberResponse = response.as(MemberResponse.class);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com");
-        assertThat(memberResponse.getNickname()).isEqualTo("닉네임");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com"),
+                () -> assertThat(memberResponse.getNickname()).isEqualTo("닉네임")
+        );
     }
 
     @DisplayName("토큰에 해당하는 사용자의 회원 정보를 수정하고 성공하면 204를 응답한다.")
@@ -186,9 +205,11 @@ class AuthAcceptanceTest extends AcceptanceTest {
         MemberResponse memberResponse = getWithAuthorization("/api/members/auth/me", token)
                 .as(MemberResponse.class);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com");
-        assertThat(memberResponse.getNickname()).isEqualTo("바뀐닉네임");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com"),
+                () -> assertThat(memberResponse.getNickname()).isEqualTo("바뀐닉네임")
+        );
     }
 
     @DisplayName("형식에 맞지 않는 회원 정보로 수정하려고 하면 400을 응답한다.")
@@ -204,8 +225,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(message).isEqualTo("닉네임 형식이 올바르지 않습니다.");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(message).isEqualTo("닉네임 형식이 올바르지 않습니다.")
+        );
     }
 
     @DisplayName("토큰에 해당하는 사용자의 비밀번호를 수정하고 성공하면 204를 응답한다.")
@@ -221,8 +244,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         LoginRequest updatedLoginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r@");
         ExtractableResponse<Response> updatedLoginResponse = post("/api/login", updatedLoginRequest);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        assertThat(updatedLoginResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(updatedLoginResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
     }
 
     @DisplayName("형식에 맞지 않는 비밀번호로 수정하려고 하면 400을 응답한다.")
@@ -238,8 +263,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(message).isEqualTo("비밀번호 형식이 올바르지 않습니다.");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(message).isEqualTo("비밀번호 형식이 올바르지 않습니다.")
+        );
     }
 
     @DisplayName("토큰에 해당하는 회원을 삭제하고 성공하면 204를 응답한다.")
@@ -252,8 +279,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = deleteWithAuthorization("/api/members/auth/me", token);
         ExtractableResponse<Response> loginResponse = post("/api/login", LOGIN_REQUEST);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+        );
     }
 
     @DisplayName("이미 삭제된 회원의 토큰으로 접근하려고 하면 401을 응답한다.")
@@ -268,7 +297,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-        assertThat(message).isEqualTo("유효하지 않은 토큰입니다.");
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(message).isEqualTo("유효하지 않은 토큰입니다.")
+        );
     }
 }

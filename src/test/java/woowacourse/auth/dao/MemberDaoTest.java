@@ -68,9 +68,9 @@ class MemberDaoTest {
         memberDao.save(member);
 
         memberDao.updateNicknameByEmail(member.getEmail(), "바꾼닉네임");
-
         Member foundMember = memberDao.findByEmail("abc@woowahan.com")
                 .orElseGet(() -> fail("실패"));
+
         assertThat(foundMember.getNickname()).isEqualTo("바꾼닉네임");
     }
 
@@ -81,9 +81,9 @@ class MemberDaoTest {
         memberDao.save(member);
 
         memberDao.updatePasswordByEmail(member.getEmail(), "1q2w3e4r@");
-
         Member foundMember = memberDao.findByEmail("abc@woowahan.com")
                 .orElseGet(() -> fail("실패"));
+
         assertThat(foundMember.getPassword()).isEqualTo("1q2w3e4r@");
     }
 
