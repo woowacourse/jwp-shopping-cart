@@ -31,6 +31,7 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
         ExtractableResponse<Response> response = 회원가입_요청(유효한_사용자);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.headers().getValue("location")).isEqualTo("/customers/me");
     }
 
     @DisplayName("GET /customers/me - 고객 본인의 정보 조회")

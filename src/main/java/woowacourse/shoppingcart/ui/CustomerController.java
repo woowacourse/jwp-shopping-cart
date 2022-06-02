@@ -34,8 +34,8 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Void> signUp(@RequestBody SignUpRequest request) {
-        Long customerId = customerService.signUp(request);
-        URI location = URI.create("/customers/" + customerId);
+        customerService.signUp(request);
+        URI location = URI.create("/customers/me");
         return ResponseEntity.created(location).build();
     }
 
