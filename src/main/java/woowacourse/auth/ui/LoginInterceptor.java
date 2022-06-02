@@ -3,6 +3,7 @@ package woowacourse.auth.ui;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import woowacourse.auth.support.AuthorizationExtractor;
@@ -19,6 +20,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (isPreflight(request)) {
+            return true;
+        }
+
         String token = AuthorizationExtractor.extract(request);
         if (!jwtTokenProvider.validateToken(token) || token == null) {
             throw new AuthorizationException();
@@ -26,5 +31,9 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         request.setAttribute("username", jwtTokenProvider.getPayload(token));
         return true;
+    }
+
+    private boolean isPreflight(HttpServletRequest request) {
+        return HttpMethod.OPTIONS.matches(request.getMethod());
     }
 }
