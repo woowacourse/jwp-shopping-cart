@@ -6,20 +6,20 @@ public class Customer {
 
     private final Long id;
     private final Nickname nickname;
-    private final String email;
+    private final Email email;
     private final Password password;
 
     public Customer(final Long id, final String nickname, final String email, final String password) {
         this.id = id;
         this.nickname = new Nickname(nickname);
-        this.email = email;
+        this.email = new Email(email);
         this.password = Password.fromHash(password);
     }
 
     public Customer(final String nickname, final String email, final String password) {
         this.id = null;
         this.nickname = new Nickname(nickname);
-        this.email = email;
+        this.email = new Email(email);
         this.password = Password.fromPlain(password);
     }
 
@@ -32,7 +32,7 @@ public class Customer {
     }
 
     public String getEmail() {
-        return email;
+        return email.getValue();
     }
 
     public String getPassword() {
@@ -60,8 +60,9 @@ public class Customer {
     public String toString() {
         return "Customer{" +
                 "id=" + id +
-                ", nickname='" + nickname + '\'' +
-                ", email='" + email + '\'' +
+                ", nickname=" + nickname +
+                ", email=" + email +
+                ", password=" + password +
                 '}';
     }
 }

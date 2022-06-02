@@ -9,6 +9,7 @@ public class Password {
 
     private static final Pattern PLAIN_PASSWORD_PATTERN = Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,20}");
     private static final Pattern HASH_PASSWORD_PATTERN = Pattern.compile("^\\$2a\\$10\\$.{22}.{31}$");
+
     private final String value;
 
     private Password(final String value) {
