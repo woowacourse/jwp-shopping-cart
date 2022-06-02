@@ -59,11 +59,6 @@ public class AuthService {
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
     }
 
-    private Member findByEmail(String email, RuntimeException exception) {
-        return memberDao.findByEmail(email)
-                .orElseThrow(() -> exception);
-    }
-
     @Transactional(readOnly = true)
     public boolean checkPassword(String email, String password) {
         Member member = memberDao.findByEmail(email)
@@ -74,7 +69,8 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public MemberServiceResponse findMember(String email) {
-        Member member = findByEmail(email, new AuthorizationException("유효하지 않은 토큰입니다."));
+        Member member = memberDao.findByEmail(email)
+                .orElseThrow(() -> new AuthorizationException("유효하지 않은 토큰입니다."));
         return new MemberServiceResponse(member);
     }
 
