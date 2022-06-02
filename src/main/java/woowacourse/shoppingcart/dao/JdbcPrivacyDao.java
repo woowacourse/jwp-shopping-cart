@@ -25,7 +25,7 @@ public class JdbcPrivacyDao implements PrivacyDao {
     public void save(int customerId, PrivacyEntity privacyEntity) {
         String sql = "INSERT INTO PRIVACY (customer_id, name, gender, birth_day, contact) VALUES(?, ?, ?, ? ,?)";
         jdbcTemplate.update(sql, customerId, privacyEntity.getName(), privacyEntity.getGender(),
-                privacyEntity.getBirthDay(), privacyEntity.getContact());
+                privacyEntity.getBirthday(), privacyEntity.getContact());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class JdbcPrivacyDao implements PrivacyDao {
     @Override
     public void update(int customerId, PrivacyEntity privacyEntity) {
         String sql = "UPDATE PRIVACY SET name = ?, gender = ?, birth_day = ?, contact = ? WHERE customer_id = ?";
-        jdbcTemplate.update(sql, privacyEntity.getName(), privacyEntity.getGender(), privacyEntity.getBirthDay(),
+        jdbcTemplate.update(sql, privacyEntity.getName(), privacyEntity.getGender(), privacyEntity.getBirthday(),
                 privacyEntity.getContact(), customerId);
     }
 

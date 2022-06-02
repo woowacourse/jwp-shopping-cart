@@ -5,7 +5,7 @@ public class CustomerResponse {
     private String profileImageUrl;
     private String name;
     private String gender;
-    private String birthDay;
+    private String birthday;
     private String contact;
     private AddressResponse fullAddress;
     private boolean terms;
@@ -13,13 +13,13 @@ public class CustomerResponse {
     public CustomerResponse() {
     }
 
-    public CustomerResponse(String email, String profileImageUrl, String name, String gender, String birthDay,
+    public CustomerResponse(String email, String profileImageUrl, String name, String gender, String birthday,
                             String contact, AddressResponse fullAddress, boolean terms) {
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.gender = gender;
-        this.birthDay = birthDay;
+        this.birthday = birthday;
         this.contact = contact;
         this.fullAddress = fullAddress;
         this.terms = terms;
@@ -41,8 +41,8 @@ public class CustomerResponse {
         return gender;
     }
 
-    public String getBirthDay() {
-        return birthDay;
+    public String getBirthday() {
+        return birthday;
     }
 
     public String getContact() {
@@ -64,7 +64,7 @@ public class CustomerResponse {
                 ", profileImageUrl='" + profileImageUrl + '\'' +
                 ", name='" + name + '\'' +
                 ", gender='" + gender + '\'' +
-                ", birthDay='" + birthDay + '\'' +
+                ", birthday='" + birthday + '\'' +
                 ", contact='" + contact + '\'' +
                 ", fullAddress=" + fullAddress +
                 ", terms=" + terms +

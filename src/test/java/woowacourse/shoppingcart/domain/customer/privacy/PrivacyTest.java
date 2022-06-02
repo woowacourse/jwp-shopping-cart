@@ -12,11 +12,11 @@ class PrivacyTest {
         // given
         String name = "조동현";
         String gender = "male";
-        String birthDay = "1998-12-21";
+        String birthday = "1998-12-21";
         String contact = "01011111111";
 
         // when
-        Privacy actual = Privacy.of(name, gender, birthDay, contact);
+        Privacy actual = Privacy.of(name, gender, birthday, contact);
 
         // then
         assertThat(actual).isNotNull();

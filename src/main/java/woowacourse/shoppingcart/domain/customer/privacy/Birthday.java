@@ -4,20 +4,20 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class BirthDay {
-    private static final BirthDay EMPTY = new BirthDay(LocalDate.MIN);
+public class Birthday {
+    private static final Birthday EMPTY = new Birthday(LocalDate.MIN);
 
     private final LocalDate value;
 
-    private BirthDay(LocalDate value) {
+    private Birthday(LocalDate value) {
         this.value = value;
     }
 
-    public static BirthDay from(String value) {
+    public static Birthday from(String value) {
         if (Objects.isNull(value) || value.isEmpty()) {
             return EMPTY;
         }
-        return new BirthDay(LocalDate.parse(value, DateTimeFormatter.ISO_DATE));
+        return new Birthday(LocalDate.parse(value, DateTimeFormatter.ISO_DATE));
     }
 
     public LocalDate getValue() {
@@ -32,8 +32,8 @@ public class BirthDay {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        BirthDay birthDay = (BirthDay) o;
-        return Objects.equals(value, birthDay.value);
+        Birthday birthday = (Birthday) o;
+        return Objects.equals(value, birthday.value);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class BirthDay {
 
     @Override
     public String toString() {
-        return "BirthDay{" +
+        return "Birthday{" +
                 "value='" + value + '\'' +
                 '}';
     }

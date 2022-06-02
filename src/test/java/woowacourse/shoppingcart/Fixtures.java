@@ -22,7 +22,7 @@ public class Fixtures {
     public static AddressEntity ADDRESS_ENTITY_1 = new AddressEntity("서울특별시 강남구 선릉역", "이디야 1층", "12345");
 
     public static Privacy PRIVACY_1 = Privacy.of(PRIVACY_ENTITY_1.getName(), PRIVACY_ENTITY_1.getGender(),
-            PRIVACY_ENTITY_1.getBirthDay().format(DateTimeFormatter.ISO_DATE), PRIVACY_ENTITY_1.getContact());
+            PRIVACY_ENTITY_1.getBirthday().format(DateTimeFormatter.ISO_DATE), PRIVACY_ENTITY_1.getContact());
     public static Email EMAIL_1 = new Email(CUSTOMER_ENTITY_1.getEmail());
     public static Password PASSWORD_1 = Password.fromPlainText(CUSTOMER_ENTITY_1.getPassword(),
             new BCryptPasswordEncoder());
