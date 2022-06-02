@@ -30,13 +30,8 @@ public class MemberService {
 
     public Long save(final MemberRegisterRequest memberRegisterRequest) {
         validateDuplicateEmail(memberRegisterRequest.getEmail());
-        Member member = memberRegisterRequest.toEntity();
-        member.encodePassword(passwordEncoder);
+        Member member = memberRegisterRequest.toEntity(passwordEncoder);
         return memberDao.save(member);
-    }
-
-    public void validateDuplicateEmail(final EmailCheckRequest emailCheckRequest) {
-        validateDuplicateEmail(emailCheckRequest.getEmail());
     }
 
     private void validateDuplicateEmail(final String email) {
@@ -45,10 +40,13 @@ public class MemberService {
         }
     }
 
+    public void validateDuplicateEmail(final EmailCheckRequest emailCheckRequest) {
+        validateDuplicateEmail(emailCheckRequest.getEmail());
+    }
+
     @Transactional(readOnly = true)
     public Member login(final TokenRequest tokenRequest) {
-        Member member = memberDao.findByEmail(tokenRequest.getEmail())
-                .orElseThrow(NoMemberException::new);
+        Member member = findByEmail(tokenRequest);
 
         String encode = passwordEncoder.encode(tokenRequest.getPassword());
         if (!member.authenticate(encode)) {
@@ -57,23 +55,25 @@ public class MemberService {
         return member;
     }
 
+    private Member findByEmail(final TokenRequest tokenRequest) {
+        return memberDao.findByEmail(tokenRequest.getEmail())
+                .orElseThrow(NoMemberException::new);
+    }
+
     @Transactional(readOnly = true)
     public MemberResponse getMemberInformation(final Long id) {
-        Member member = memberDao.findById(id)
-                .orElseThrow(NoMemberException::new);
+        Member member = findById(id);
         return MemberResponse.from(member);
     }
 
     public void updateName(final Long id, final MemberNameUpdateRequest memberNameUpdateRequest) {
-        Member member = memberDao.findById(id)
-                .orElseThrow(NoMemberException::new);
+        Member member = findById(id);
         member.updateName(memberNameUpdateRequest.getName());
         memberDao.updateName(member);
     }
 
     public void updatePassword(final Long id, final MemberPasswordUpdateRequest memberPasswordUpdateRequest) {
-        Member member = memberDao.findById(id)
-                .orElseThrow(NoMemberException::new);
+        Member member = findById(id);
         member.updatePassword(memberPasswordUpdateRequest.getOldPassword(),
                 memberPasswordUpdateRequest.getNewPassword(),
                 passwordEncoder);
@@ -81,10 +81,14 @@ public class MemberService {
     }
 
     public void deleteById(final Long id, final MemberDeleteRequest memberDeleteRequest) {
-        Member member = memberDao.findById(id)
-                .orElseThrow(NoMemberException::new);
+        Member member = findById(id);
         validateWrongPassword(memberDeleteRequest, member);
         memberDao.deleteById(id);
+    }
+
+    private Member findById(final Long id) {
+        return memberDao.findById(id)
+                .orElseThrow(NoMemberException::new);
     }
 
     private void validateWrongPassword(final MemberDeleteRequest memberDeleteRequest, final Member member) {

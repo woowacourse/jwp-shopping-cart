@@ -24,7 +24,6 @@ public class MemberTest {
     @Test
     void encodePassword() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
-        member.encodePassword(new SHA256PasswordEncoder());
 
         assertThat(member.getPassword()).isEqualTo(ENCODE_PASSWORD);
     }
@@ -34,7 +33,7 @@ public class MemberTest {
     void authenticate() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
 
-        assertThat(member.authenticate(PASSWORD)).isTrue();
+        assertThat(member.authenticate(new SHA256PasswordEncoder().encode(PASSWORD))).isTrue();
     }
 
     @DisplayName("이름을 변경한다.")
@@ -81,7 +80,6 @@ public class MemberTest {
     @Test
     void updatePassword() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
-        member.encodePassword(new SHA256PasswordEncoder());
         String originPassword = member.getPassword();
 
         member.updatePassword(PASSWORD, "Maru1234!", new SHA256PasswordEncoder());
@@ -94,7 +92,6 @@ public class MemberTest {
     @Test
     void updatePasswordNotSameOriginPassword() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
-        member.encodePassword(new SHA256PasswordEncoder());
 
         assertThatThrownBy(() ->
                 member.updatePassword("Wrong1!", "Maru1234!", new SHA256PasswordEncoder()))
@@ -105,7 +102,6 @@ public class MemberTest {
     @Test
     void updatePasswordNotRight() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
-        member.encodePassword(new SHA256PasswordEncoder());
 
         assertThatThrownBy(() ->
                 member.updatePassword(PASSWORD, "1!", new SHA256PasswordEncoder()))
@@ -116,7 +112,6 @@ public class MemberTest {
     @Test
     void updatePasswordSameWithOld() {
         Member member = createMember(EMAIL, PASSWORD, NAME);
-        member.encodePassword(new SHA256PasswordEncoder());
 
         assertThatThrownBy(() ->
                 member.updatePassword(PASSWORD, PASSWORD, new SHA256PasswordEncoder()))

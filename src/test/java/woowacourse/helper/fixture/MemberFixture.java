@@ -2,6 +2,7 @@ package woowacourse.helper.fixture;
 
 import woowacourse.member.domain.Member;
 import woowacourse.member.dto.MemberRegisterRequest;
+import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 
 public class MemberFixture {
 
@@ -13,7 +14,7 @@ public class MemberFixture {
     public static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjUzODIwOTg2LCJleHAiOjE2NTM4MjQ1ODZ9.le7-3iZnWEAn1OwoMnIJl8UXfg1t5Tnpog58kV89f1c";
 
     public static Member createMember(String email, String password, String name) {
-        return new Member(email, password, name);
+        return new Member(email, password, name, new SHA256PasswordEncoder());
     }
 
     public static MemberRegisterRequest createMemberRegisterRequest(String email, String password, String name) {

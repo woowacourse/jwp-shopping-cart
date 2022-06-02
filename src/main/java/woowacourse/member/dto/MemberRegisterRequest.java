@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import woowacourse.member.domain.Member;
+import woowacourse.member.infrastructure.PasswordEncoder;
 
 public class MemberRegisterRequest {
 
@@ -31,8 +32,8 @@ public class MemberRegisterRequest {
         this.name = name;
     }
 
-    public Member toEntity() {
-        return new Member(email, password, name);
+    public Member toEntity(PasswordEncoder passwordEncoder) {
+        return new Member(email, password, name, passwordEncoder);
     }
 
     public String getEmail() {

@@ -26,9 +26,13 @@ public class Member {
         this.name = name;
     }
 
-    public Member(String email, String password, String name) {
-        this(null, email, password, name);
+    public Member(String email, String password, String name, PasswordEncoder passwordEncoder) {
+        validateRightEmail(email);
         validateRightPassword(password);
+        validateRightName(name);
+        this.email = email;
+        this.password = passwordEncoder.encode(password);
+        this.name = name;
     }
 
     private void validateRightEmail(final String email) {
@@ -49,10 +53,6 @@ public class Member {
         }
     }
 
-    public void encodePassword(final PasswordEncoder passwordEncoder) {
-        password = passwordEncoder.encode(password);
-    }
-
     public boolean authenticate(final String password) {
         return password.equals(this.password);
     }
@@ -65,21 +65,21 @@ public class Member {
     public void updatePassword(final String oldPassword,
                                final String newPassword,
                                final PasswordEncoder passwordEncoder) {
-        validatePassword(oldPassword, passwordEncoder);
+        validatePassword(passwordEncoder.encode(oldPassword));
         validateRightPassword(newPassword);
-        String encodeNewPassword = passwordEncoder.encode(newPassword);
-        validateSamePassword(password, encodeNewPassword);
-        password = encodeNewPassword;
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        validateSamePassword(encodedNewPassword);
+        password = encodedNewPassword;
     }
 
-    private void validateSamePassword(final String oldPassword, final String newPassword) {
-        if (oldPassword.equals(newPassword)) {
+    private void validatePassword(final String encodedOldPassword) {
+        if (!authenticate(encodedOldPassword)) {
             throw new PasswordChangeException();
         }
     }
 
-    private void validatePassword(final String oldPassword, final PasswordEncoder passwordEncoder) {
-        if(!authenticate(passwordEncoder.encode(oldPassword))) {
+    private void validateSamePassword(final String newPassword) {
+        if (password.equals(newPassword)) {
             throw new PasswordChangeException();
         }
     }
