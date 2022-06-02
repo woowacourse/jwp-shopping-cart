@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
+
 public class CustomerDeleteRequest {
 
     private String password;

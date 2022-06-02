@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
+
 public class CustomerDetailResponse {
 
     private String name;

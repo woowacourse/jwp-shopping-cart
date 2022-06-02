@@ -1,12 +1,12 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.application.dto;
 
-public class CustomerSaveRequest {
+public class CustomerSaveServiceRequest {
 
     private final String name;
     private final String email;
     private final String password;
 
-    public CustomerSaveRequest(final String name, final String email, final String password) {
+    public CustomerSaveServiceRequest(final String name, final String email, final String password) {
         this.name = name;
         this.email = email;
         this.password = password;

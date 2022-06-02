@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequest;
+
 public class CustomerProfileUpdateRequest {
 
     private String name;
