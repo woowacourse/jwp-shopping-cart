@@ -20,7 +20,7 @@ public class CustomerService {
     }
 
     public Long createCustomer(CreateCustomerRequest customerCreateRequest) {
-        validateDuplication(customerCreateRequest);
+//        validateDuplication(customerCreateRequest);
         return customerDao.save(customerCreateRequest.toCustomer());
     }
 
