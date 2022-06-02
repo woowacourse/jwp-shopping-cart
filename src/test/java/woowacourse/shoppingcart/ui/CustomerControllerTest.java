@@ -21,13 +21,18 @@ import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 public class CustomerControllerTest extends ControllerTest {
     private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MjcsImlhdCI6MTY1NDA2NjczOCwiZXhwIjoxNjU0MDcwMzM4fQ.AvAJuT4YmyL-hAU2WrukGMT1Tt3k-J92DED9rGyDl38";
 
-    @DisplayName("회원 생성 시도 시, 입력한 이메일이 이미 존재할 경우 400을 응답한다")
+    //    @DisplayName("회원 생성 시도 시, 입력한 이메일이 이미 존재할 경우 400을 응답한다")
+    @DisplayName("회원 생성 시도 중 예외가 발생하면  400을 응답한다")
     @Test
     void createCustomerWithAlreadyExistEmailShouldFail() throws Exception {
-        doThrow(new EmailDuplicateException()).when(customerService).create(any(CustomerRequest.class));
+        doThrow(new EmailDuplicateException())
+                .when(customerService)
+                .create(any(CustomerRequest.class));
 
         // when then
-        mockMvc.perform(postWithBody("/api/customer", 잉_회원생성요청)).andDo(print()).andExpect(status().isBadRequest());
+        mockMvc.perform(postWithBody("/api/customer", 잉_회원생성요청))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @DisplayName("회원 생성 시도 시, 입력된 비밀번호가 8자 미만이면 400을 응답한다")
@@ -99,7 +104,7 @@ public class CustomerControllerTest extends ControllerTest {
         // given
         final String token = TOKEN;
 
-        when(jwtTokenProvider.getPayload(token)).thenReturn(101L);
+        when(jwtTokenProvider.getPayload(token)).thenReturn(Map.of("id", 101L));
         when(customerService.findById(101L)).thenThrow(new CustomerNotFoundException());
 
         // when then
