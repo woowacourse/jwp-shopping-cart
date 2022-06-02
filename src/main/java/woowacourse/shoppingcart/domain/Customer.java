@@ -6,13 +6,13 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 public class Customer {
 
     private final Long id;
-    private final String nickname;
+    private final Nickname nickname;
     private final String email;
     private final String password;
 
     public Customer(final Long id, final String nickname, final String email, final String password) {
         this.id = id;
-        this.nickname = nickname;
+        this.nickname = new Nickname(nickname);
         this.email = email;
         this.password = password;
     }
@@ -30,7 +30,7 @@ public class Customer {
     }
 
     public String getNickname() {
-        return nickname;
+        return nickname.getValue();
     }
 
     public String getEmail() {

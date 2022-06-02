@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dao;
+package woowacourse.shoppingcart.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
