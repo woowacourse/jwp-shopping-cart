@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.exception.LoginException;
+import woowacourse.exception.InputFormatException;
 import woowacourse.exception.dto.ErrorResponse;
 
 public class Password {
@@ -24,7 +24,7 @@ public class Password {
 
     private static void validatePassword(String password) {
         if (!PATTERN.matcher(password).matches()) {
-            throw new LoginException("비밀번호 규약이 맞지 않습니다", ErrorResponse.INVALID_PASSWORD);
+            throw new InputFormatException("비밀번호 규약이 맞지 않습니다", ErrorResponse.INVALID_PASSWORD);
         }
     }
 
