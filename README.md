@@ -4,6 +4,9 @@
 ## ✏️ Code Review Process
 [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
 
+## API 명세
+[API 명세](https://www.notion.so/1-055b3cdd5c3c410ea4a64c36ee9bca8c)
+
 ## 1단계 기능 목록
 - [x] 회원 가입
     - [x] [ERROR] email 중복 예외 처리
