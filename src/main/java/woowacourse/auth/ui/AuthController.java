@@ -53,20 +53,20 @@ public class AuthController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @PostMapping("/members/auth/password-check")
+    @PostMapping("/members/password-check")
     public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal String payload,
                                                          @RequestBody PasswordCheckRequest passwordCheckRequest) {
         boolean actual = authService.checkPassword(payload, passwordCheckRequest.getPassword());
         return ResponseEntity.ok(new CheckResponse(actual));
     }
 
-    @GetMapping("/members/auth/me")
+    @GetMapping("/members/me")
     public ResponseEntity<MemberResponse> showMember(@AuthenticationPrincipal String payload) {
         MemberServiceResponse memberServiceResponse = authService.findMember(payload);
         return ResponseEntity.ok(new MemberResponse(memberServiceResponse));
     }
 
-    @PatchMapping("/members/auth/me")
+    @PatchMapping("/members/me")
     public ResponseEntity<Void> updateMember(@AuthenticationPrincipal String payload,
                                              @RequestBody @Valid MemberUpdateRequest memberUpdateRequest) {
         authService.updateMember(payload, memberUpdateRequest.toServiceDto());
@@ -74,7 +74,7 @@ public class AuthController {
                 .build();
     }
 
-    @PatchMapping("/members/auth/password")
+    @PatchMapping("/members/password")
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal String payload,
                                                @RequestBody @Valid PasswordUpdateRequest passwordUpdateRequest) {
         authService.updatePassword(payload, passwordUpdateRequest.getPassword());
@@ -82,7 +82,7 @@ public class AuthController {
                 .build();
     }
 
-    @DeleteMapping("/members/auth/me")
+    @DeleteMapping("/members/me")
     public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal String payload) {
         authService.delete(payload);
         return ResponseEntity.noContent()

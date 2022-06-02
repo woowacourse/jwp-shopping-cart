@@ -145,7 +145,7 @@ Authorization: Bearer {token}
 
 method: POST
 
-URL: “/api/members/auth/password-check”
+URL: “/api/members/password-check”
 
 응답 코드: 200 OK
 
@@ -159,7 +159,7 @@ URL: “/api/members/auth/password-check”
 
 method: GET
 
-URL: “/api/members/auth/me” + 토큰 정보로 식별
+URL: “/api/members/me” + 토큰 정보로 식별
 
 응답 코드: 200 OK
 
@@ -176,7 +176,7 @@ response body
 
 method: PATCH
 
-(닉네임 + @) URL: “/api/members/auth/me” + 토큰 정보로 식별
+(닉네임 + @) URL: “/api/members/me” + 토큰 정보로 식별
 
 request body
 
@@ -186,7 +186,7 @@ request body
 }
 ```
 
-(비밀번호) URL: “/api/members/auth/password” + 토큰 정보로 식별
+(비밀번호) URL: “/api/members/password” + 토큰 정보로 식별
 
 request body
 
@@ -202,6 +202,6 @@ request body
 
 method: DELETE
 
-URL: “/api/members/auth/me” + 토큰 정보로 식별
+URL: “/api/members/me” + 토큰 정보로 식별
 
 응답 코드: 204 No Content

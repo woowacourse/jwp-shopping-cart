@@ -45,7 +45,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("규칙에 맞지 않는 정보로 회원 가입을 시도하면 400을 응답한다.")
     @ParameterizedTest
-    @CsvSource({"abc,1q2w3e4r!,닉네임", "abc@woowahan.com,1q2w3e4r,닉네임", "abc@woowahan.com,1q2w3e4r!,잘못된닉네임"})
+    @CsvSource({"abc, 1q2w3e4r!, 닉네임", "abc@woowahan.com, 1q2w3e4r, 닉네임", "abc@woowahan.com, 1q2w3e4r!, 잘못된닉네임"})
     void signUp_BadRequest(String email, String password, String nickname) {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest(email, password, nickname);
 
@@ -131,7 +131,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .getToken();
 
         ExtractableResponse<Response> response = postWithAuthorization(
-                "/api/members/auth/password-check",
+                "/api/members/password-check",
                 token,
                 new PasswordCheckRequest(password)
         );
@@ -148,7 +148,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void requestWithUnauthorized_Unauthorized() {
         ExtractableResponse<Response> response =
-                post("/api/members/auth/password-check", new PasswordCheckRequest("1q2w3e4r!"));
+                post("/api/members/password-check", new PasswordCheckRequest("1q2w3e4r!"));
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -162,7 +162,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void requestWithInvalidToken_Unauthorized() {
         ExtractableResponse<Response> response = postWithAuthorization(
-                "/api/members/auth/password-check",
+                "/api/members/password-check",
                 "abc",
                 new PasswordCheckRequest("1q2w3e4r!")
         );
@@ -182,7 +182,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
 
-        ExtractableResponse<Response> response = getWithAuthorization("/api/members/auth/me", token);
+        ExtractableResponse<Response> response = getWithAuthorization("/api/members/me", token);
         MemberResponse memberResponse = response.as(MemberResponse.class);
 
         assertAll(
@@ -201,8 +201,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
         MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("바뀐닉네임");
 
         ExtractableResponse<Response> response =
-                patchWithAuthorization("/api/members/auth/me", token, memberUpdateRequest);
-        MemberResponse memberResponse = getWithAuthorization("/api/members/auth/me", token)
+                patchWithAuthorization("/api/members/me", token, memberUpdateRequest);
+        MemberResponse memberResponse = getWithAuthorization("/api/members/me", token)
                 .as(MemberResponse.class);
 
         assertAll(
@@ -221,7 +221,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("잘못된닉네임");
 
         ExtractableResponse<Response> response =
-                patchWithAuthorization("/api/members/auth/me", token, memberUpdateRequest);
+                patchWithAuthorization("/api/members/me", token, memberUpdateRequest);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -240,7 +240,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         PasswordUpdateRequest passwordUpdateRequest = new PasswordUpdateRequest("1q2w3e4r@");
 
         ExtractableResponse<Response> response =
-                patchWithAuthorization("/api/members/auth/password", token, passwordUpdateRequest);
+                patchWithAuthorization("/api/members/password", token, passwordUpdateRequest);
         LoginRequest updatedLoginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r@");
         ExtractableResponse<Response> updatedLoginResponse = post("/api/login", updatedLoginRequest);
 
@@ -259,7 +259,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         PasswordUpdateRequest passwordUpdateRequest = new PasswordUpdateRequest("1q2w3e4r");
 
         ExtractableResponse<Response> response =
-                patchWithAuthorization("/api/members/auth/password", token, passwordUpdateRequest);
+                patchWithAuthorization("/api/members/password", token, passwordUpdateRequest);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -276,7 +276,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
 
-        ExtractableResponse<Response> response = deleteWithAuthorization("/api/members/auth/me", token);
+        ExtractableResponse<Response> response = deleteWithAuthorization("/api/members/me", token);
         ExtractableResponse<Response> loginResponse = post("/api/login", LOGIN_REQUEST);
 
         assertAll(
@@ -291,9 +291,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
         post("/api/members", MEMBER_CREATE_REQUEST);
         String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
-        deleteWithAuthorization("/api/members/auth/me", token);
+        deleteWithAuthorization("/api/members/me", token);
 
-        ExtractableResponse<Response> response = deleteWithAuthorization("/api/members/auth/me", token);
+        ExtractableResponse<Response> response = deleteWithAuthorization("/api/members/me", token);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
