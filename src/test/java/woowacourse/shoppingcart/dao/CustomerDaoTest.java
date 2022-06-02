@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.sql.DataSource;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ public class CustomerDaoTest {
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
+    @Disabled
     void findIdByUserNameTest() {
 
         // given
@@ -64,6 +66,7 @@ public class CustomerDaoTest {
 
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
+    @Disabled
     void findIdByUserNameTestIgnoreUpperLowerCase() {
 
         // given
