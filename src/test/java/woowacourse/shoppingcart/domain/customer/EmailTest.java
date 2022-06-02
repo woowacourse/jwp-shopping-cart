@@ -10,7 +10,8 @@ class EmailTest {
 
     @ParameterizedTest
     @DisplayName("이메일이 유효하지 않으면 예외를 던진다.")
-    @ValueSource(strings = {"rick#gmail.com", "rick@gmail", "rick.gmail.com", "rick@gmail.c", "@gmail.com", "rick@gmail.orggg"})
+    @ValueSource(strings = {"rick#gmail.com", "rick@gmail", "rick.gmail.com", "rick@gmail.c", "@gmail.com",
+            "rick@gmail.orggg"})
     void newEmail_invalidValue_exceptionThrown(final String value) {
         // when, then
         Assertions.assertThatThrownBy(() -> new Email(value))

@@ -13,9 +13,10 @@ CREATE TABLE customer
     id       BIGINT       NOT NULL AUTO_INCREMENT,
     nickname VARCHAR(255) NOT NULL,
     email    VARCHAR(255) NOT NULL,
-    password VARCHAR(60) NOT NULL,
+    password VARCHAR(60)  NOT NULL,
     PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 ALTER TABLE customer
     ADD UNIQUE KEY (nickname);
@@ -27,7 +28,8 @@ CREATE TABLE product
     price     INTEGER      NOT NULL,
     image_url VARCHAR(255),
     PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE cart_item
 (
@@ -35,7 +37,8 @@ CREATE TABLE cart_item
     customer_id BIGINT NOT NULL,
     product_id  BIGINT NOT NULL,
     PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 ALTER TABLE cart_item
     ADD CONSTRAINT fk_cart_item_to_customer
@@ -50,7 +53,8 @@ CREATE TABLE orders
     id          BIGINT NOT NULL AUTO_INCREMENT,
     customer_id BIGINT NOT NULL,
     PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 ALTER TABLE orders
     ADD CONSTRAINT fk_orders_to_customer
@@ -63,7 +67,8 @@ CREATE TABLE orders_detail
     product_id BIGINT  NOT NULL,
     quantity   INTEGER NOT NULL,
     PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 ALTER TABLE orders_detail
     ADD CONSTRAINT fk_orders_detail_to_orders
