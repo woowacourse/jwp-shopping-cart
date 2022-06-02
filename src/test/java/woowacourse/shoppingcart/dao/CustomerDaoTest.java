@@ -135,16 +135,6 @@ public class CustomerDaoTest {
         assertThat(customerEntity.getCustomer().getNickname()).isEqualTo(파리채.getValue());
     }
 
-    @DisplayName("회원 정보 수정 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
-    @Test
-    void updateProfileFail() {
-        final Nickname 파리채 = new Nickname("파리채");
-
-        assertThatThrownBy(() -> customerDao.updateProfile(NOT_EXISTING_EMAIL, 파리채))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("존재하지 않는 유저입니다.");
-    }
-
     @DisplayName("비밀번호를 수정한다.")
     @Test
     void updatePassword() {
@@ -156,30 +146,12 @@ public class CustomerDaoTest {
         assertThat(customerEntity.getCustomer().getPassword()).isEqualTo(password.getValue());
     }
 
-    @DisplayName("비밀번호 수정 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
-    @Test
-    void updatePasswordFail() {
-        final Password password = new Password("newpassword123!");
-
-        assertThatThrownBy(() -> customerDao.updatePassword(NOT_EXISTING_EMAIL, password))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("존재하지 않는 유저입니다.");
-    }
-
     @DisplayName("회원을 삭제한다.")
     @Test
     void delete() {
         customerDao.delete(EMAIL);
 
         assertThatThrownBy(() -> customerDao.findByEmail(EMAIL))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("존재하지 않는 유저입니다.");
-    }
-
-    @DisplayName("회원 삭제 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
-    @Test
-    void deleteFail() {
-        assertThatThrownBy(() -> customerDao.delete(NOT_EXISTING_EMAIL))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }

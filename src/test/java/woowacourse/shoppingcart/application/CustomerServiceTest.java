@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.exception.AuthException;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -86,6 +87,17 @@ class CustomerServiceTest {
         assertDoesNotThrow(() -> customerService.updateProfile(email, customerProfileRequest));
     }
 
+    @DisplayName("회원 정보 수정 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
+    @Test
+    void updateProfileFail() {
+        final String email = "notexistingemail@email.com";
+        final CustomerProfileRequest customerProfileRequest = new CustomerProfileRequest("파리채");
+
+        assertThatThrownBy(() -> customerService.updateProfile(email, customerProfileRequest))
+                .isInstanceOf(AuthException.class)
+                .hasMessage("유효하지 않은 인증입니다.");
+    }
+
     @DisplayName("비밀번호를 수정한다.")
     @Test
     void updatePassword() {
@@ -95,11 +107,32 @@ class CustomerServiceTest {
         assertDoesNotThrow(() -> customerService.updatePassword(email, passwordRequest));
     }
 
+    @DisplayName("비밀번호 수정 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
+    @Test
+    void updatePasswordFail() {
+        final String email = "notexistingemail@email.com";
+        final PasswordRequest passwordRequest = new PasswordRequest("newpassword123!");
+
+        assertThatThrownBy(() -> customerService.updatePassword(email, passwordRequest))
+                .isInstanceOf(AuthException.class)
+                .hasMessage("유효하지 않은 인증입니다.");
+    }
+
     @DisplayName("회원을 삭제한다.")
     @Test
     void delete() {
         final String email = "email@email.com";
 
         assertDoesNotThrow(() -> customerService.delete(email));
+    }
+
+    @DisplayName("회원 삭제 시 존재하지 않는 이메일이 들어온 경우 예외가 발생한다.")
+    @Test
+    void deleteFail() {
+        final String email = "notexistingemail@email.com";
+
+        assertThatThrownBy(() -> customerService.delete(email))
+                .isInstanceOf(AuthException.class)
+                .hasMessage("유효하지 않은 인증입니다.");
     }
 }

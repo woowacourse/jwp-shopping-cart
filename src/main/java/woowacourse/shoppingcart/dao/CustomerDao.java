@@ -108,9 +108,7 @@ public class CustomerDao {
         params.put("email", email.getValue());
         params.put("nickname", nickname.getValue());
 
-        if (jdbcTemplate.update(sql, params) == 0) {
-            throw new InvalidCustomerException();
-        }
+        jdbcTemplate.update(sql, params);
     }
 
     public void updatePassword(final Email email, final Password password) {
@@ -120,9 +118,7 @@ public class CustomerDao {
         params.put("email", email.getValue());
         params.put("password", password.getValue());
 
-        if (jdbcTemplate.update(sql, params) == 0) {
-            throw new InvalidCustomerException();
-        }
+        jdbcTemplate.update(sql, params);
     }
 
     public void delete(final Email email) {
@@ -131,8 +127,6 @@ public class CustomerDao {
         final Map<String, Object> params = new HashMap<>();
         params.put("email", email.getValue());
 
-        if (jdbcTemplate.update(sql, params) == 0) {
-            throw new InvalidCustomerException();
-        }
+        jdbcTemplate.update(sql, params);
     }
 }
