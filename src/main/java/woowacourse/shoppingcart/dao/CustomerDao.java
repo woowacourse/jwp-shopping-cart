@@ -9,7 +9,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Customer.Customer;
+import woowacourse.shoppingcart.domain.Customer.Email;
+import woowacourse.shoppingcart.domain.Customer.Username;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -18,9 +20,9 @@ public class CustomerDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Customer> memberRowMapper = (rs, rn) -> new Customer(
             rs.getLong("id"),
-            rs.getString("email"),
+            new Email(rs.getString("email")),
             rs.getString("password"),
-            rs.getString("username")
+            new Username(rs.getString("username"))
     );
 
 
@@ -102,4 +104,3 @@ public class CustomerDao {
         }
     }
 }
-

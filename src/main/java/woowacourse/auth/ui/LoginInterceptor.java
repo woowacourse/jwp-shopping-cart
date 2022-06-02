@@ -22,7 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         final String requestURI = request.getRequestURI();
         final RequestEndPoint requestEndPoint = new RequestEndPoint(requestMethod, requestURI);
 
-        if (excludedEndPoint.contains(requestEndPoint)) {
+        if (excludedEndPoint.contains(requestEndPoint) || requestMethod.equals("OPTIONS")) {
             return true;
         }
 

@@ -31,7 +31,6 @@ class StringValidatorTest {
     @MethodSource("blankStrings")
     @DisplayName("공백이거나 null일 경우 예외를 발생시킨다.")
     void validateNullOrBlank(String containEmptyString) {
-        System.out.println(containEmptyString);
         assertThatThrownBy(() -> {
             StringValidator.validateNullOrBlank(containEmptyString, new UsernameValidationException("정해진 길이보다 깁니다."));
         })
