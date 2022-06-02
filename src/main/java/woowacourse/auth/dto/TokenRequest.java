@@ -1,5 +1,6 @@
 package woowacourse.auth.dto;
 
+import java.util.Objects;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
@@ -25,5 +26,22 @@ public class TokenRequest {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TokenRequest that = (TokenRequest) o;
+        return Objects.equals(email, that.email) && Objects.equals(password, that.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, password);
     }
 }
