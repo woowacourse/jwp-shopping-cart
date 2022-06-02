@@ -10,7 +10,6 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
-import woowacourse.shoppingcart.exception.InvalidTokenException;
 import woowacourse.shoppingcart.exception.EmptyAuthorizationHeaderException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
@@ -37,9 +36,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         }
 
         String accessToken = AuthorizationExtractor.extract(authorizationHeader);
-        if (!jwtTokenProvider.validateToken(accessToken)) {
-            throw new InvalidTokenException();
-        }
+        jwtTokenProvider.validateToken(accessToken);
 
         return new LoginCustomer(jwtTokenProvider.getPayload(accessToken));
     }
