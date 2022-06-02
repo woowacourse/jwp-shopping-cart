@@ -1,5 +1,6 @@
 package woowacourse.auth.ui;
 
+import java.util.Objects;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -10,6 +11,7 @@ import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
+import woowacourse.shoppingcart.exception.EmptyAuthorizationHeaderException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -30,13 +32,15 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorizationHeader = webRequest.getHeader(AUTHORIZATION_HEADER_NAME);
-        String accessToken = AuthorizationExtractor.extract(authorizationHeader);
+        if (Objects.isNull(authorizationHeader)) {
+            throw new EmptyAuthorizationHeaderException();
+        }
 
+        String accessToken = AuthorizationExtractor.extract(authorizationHeader);
         if (!jwtTokenProvider.validateToken(accessToken)) {
             throw new InvalidTokenException();
         }
 
-        String username = jwtTokenProvider.getPayload(accessToken);
-        return new LoginCustomer(username);
+        return new LoginCustomer(jwtTokenProvider.getPayload(accessToken));
     }
 }

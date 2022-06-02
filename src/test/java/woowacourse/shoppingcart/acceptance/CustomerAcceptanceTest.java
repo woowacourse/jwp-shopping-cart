@@ -56,7 +56,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String accessToken = generateToken(new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD));
 
         CustomerResponse customerResponse = findCustomer(accessToken);
-
         assertAll(() -> {
             assertThat(customerResponse.getId()).isNotNull();
             assertThat(customerResponse.getUsername()).isEqualTo(YAHO_USERNAME);
@@ -73,6 +72,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract();
+    }
+
+    @DisplayName("토큰 헤더 없이 내 정보 조회 시 401 상태코드를 반환한다.")
+    @Test
+    void getMe_error_emptyAuthorizationHeader() {
+        RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/customers/me")
                 .then().log().all()
