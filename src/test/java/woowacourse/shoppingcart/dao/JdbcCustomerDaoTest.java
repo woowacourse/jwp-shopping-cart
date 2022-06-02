@@ -71,9 +71,9 @@ class JdbcCustomerDaoTest {
         // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encryptedNewPassword = passwordEncoder.encode("newpassword1!");
+        String cipherNewPassword = passwordEncoder.encode("newpassword1!");
         CustomerEntity newCustomerEntity = new CustomerEntity(customerId, CUSTOMER_ENTITY_1.getEmail(),
-                encryptedNewPassword,
+                cipherNewPassword,
                 "http://gravatar.com/avatar/2?d=identicon", true);
 
         // when

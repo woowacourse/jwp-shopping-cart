@@ -54,8 +54,8 @@ class PasswordTest {
     void matches() {
         // given
         String originalPassword = "a1!12345";
-        String encryptedTextFromDatabase = passwordEncoder.encode(originalPassword);
-        Password passwordFromDatabase = new Password(encryptedTextFromDatabase, passwordEncoder);
+        String cipherTextFromDatabase = passwordEncoder.encode(originalPassword);
+        Password passwordFromDatabase = new Password(cipherTextFromDatabase, passwordEncoder);
         String passwordFromRequest = "a1!12345";
 
         // when
