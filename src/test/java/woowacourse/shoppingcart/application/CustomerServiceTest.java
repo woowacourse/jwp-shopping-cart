@@ -29,17 +29,20 @@ class CustomerServiceTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final String username = "username";
+    private final String password = "password";
+    private final String phoneNumber = "01011112222";
+    private final String address = "서울시 여러분";
+    private final SignupRequest signupRequest = new SignupRequest(username, password, phoneNumber, address);
+
     @BeforeEach
     void setUp() {
-        customerService.deleteByUsername("dongho108");
+        customerService.deleteByUsername(username);
     }
 
     @DisplayName("회원을 저장한다.")
     @Test
     void saveCustomer() {
-        // given
-        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022223333", "인천 서구 검단로");
-
         // when
         final Customer customer = customerService.save(signupRequest);
 
@@ -47,7 +50,7 @@ class CustomerServiceTest {
         assertAll(
             () -> assertThat(customer.getId()).isNotNull(),
             () -> assertThat(customer.getUsername().getValue()).isEqualTo(signupRequest.getUsername()),
-            () -> assertDoesNotThrow(() -> customer.getPassword().matches(passwordEncoder, "ehdgh1234")),
+            () -> assertDoesNotThrow(() -> customer.getPassword().matches(passwordEncoder, password)),
             () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(signupRequest.getPhoneNumber()),
             () -> assertThat(customer.getAddress()).isEqualTo(signupRequest.getAddress())
         );
@@ -57,7 +60,6 @@ class CustomerServiceTest {
     @Test
     void saveDuplicateUsername() {
         // given
-        final SignupRequest signupRequest = new SignupRequest("jjang9", "password12", "01001012121", "서울시");
         customerService.save(signupRequest);
 
         // then
@@ -70,11 +72,10 @@ class CustomerServiceTest {
     @Test
     void findByUsername() {
         // given
-        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
-        Customer savedCustomer = customerService.save(signupRequest);
+        final Customer savedCustomer = customerService.save(signupRequest);
 
         // when
-        Customer findCustomer = customerService.findByUsername(signupRequest.getUsername());
+        final Customer findCustomer = customerService.findByUsername(username);
 
         // given
         assertAll(
@@ -90,13 +91,12 @@ class CustomerServiceTest {
     @Test
     void updateCustomer() {
         // given
-        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
         customerService.save(signupRequest);
 
-        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01012123434", "서울시 여러분");
-        customerService.updateInfo("dongho108", updateCustomerRequest);
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01012123434", "서울시 여러분");
+        customerService.updateInfo(username, updateCustomerRequest);
 
-        Customer customer = customerService.findByUsername("dongho108");
+        final Customer customer = customerService.findByUsername(username);
 
         assertAll(
             () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
@@ -108,13 +108,12 @@ class CustomerServiceTest {
     @Test
     void updatePassword() {
         // given
-        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
         customerService.save(signupRequest);
 
-        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("ehdgh1111");
-        customerService.updatePassword("dongho108", updateCustomerRequest);
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("ehdgh1111");
+        customerService.updatePassword(username, updateCustomerRequest);
 
-        Customer customer = customerService.findByUsername("dongho108");
+        final Customer customer = customerService.findByUsername(username);
 
         assertDoesNotThrow(() -> customer.getPassword().matches(passwordEncoder, "ehdgh1111"));
     }
@@ -123,8 +122,6 @@ class CustomerServiceTest {
     @Test
     void delete() {
         // given
-        String username = "dongho108";
-        SignupRequest signupRequest = new SignupRequest(username, "ehdgh1234", "01022728572", "인천 서구 검단로");
         customerService.save(signupRequest);
 
         // when

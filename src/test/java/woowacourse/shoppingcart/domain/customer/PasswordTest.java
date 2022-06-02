@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,17 +13,16 @@ class PasswordTest {
     @ParameterizedTest
     @ValueSource(strings = {"abcd1234", "abcdabcd123412341234"})
     void createPassword(final String value) {
-        final Password password = new Password(value);
-
-        assertThat(password.getValue()).isEqualTo(value);
+        assertDoesNotThrow(() -> new Password(value));
     }
 
     @DisplayName("길이가 맞지 않는 password를 생성한다.")
     @ParameterizedTest
-    @ValueSource(strings = {"abcd123", "abcdefghijklmnop12345"})
+    @ValueSource(strings = {"7length", "20lengthover20lengthover"})
     void createInvalidLengthUsername(final String value) {
         assertThatThrownBy(() -> new Password(value))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("비밀번호의 길이는 8자 이상 20자 이하여야 합니다.");
     }
 
     @DisplayName("패턴이 맞지 않는 password을 생성한다.")
@@ -31,6 +30,7 @@ class PasswordTest {
     @ValueSource(strings = {"한글비밀번호에요", "@!&@#&!@"})
     void createInvalidPatternUsername(final String value) {
         assertThatThrownBy(() -> new Password(value))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("password는 영어와 숫자로 이루어져야 합니다.");
     }
 }

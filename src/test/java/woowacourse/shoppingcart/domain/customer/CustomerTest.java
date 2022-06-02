@@ -19,20 +19,20 @@ class CustomerTest {
         passwordEncoder = new SimplePasswordEncoder();
     }
 
-    private final String username = "dongho108";
-    private final String password = "password1234";
+    private final String username = "username";
+    private final String password = "password";
     private final String phoneNumber = "01012341234";
     private final String address = "인천 서구 검단로";
 
     @DisplayName("Customer를 생성해야합니다.")
     @Test
     void createCustomer() {
-        final String password = passwordEncoder.encode(this.password);
-        final Customer customer = Customer.of(username, password, phoneNumber, address);
+        final String encodedPassword = passwordEncoder.encode(password);
+        final Customer customer = Customer.of(username, encodedPassword, phoneNumber, address);
 
         assertAll(
             () -> assertThat(customer.getUsername()).isEqualTo(new Username(username)),
-            () -> assertThat(passwordEncoder.matches(this.password, customer.getPassword().getValue())).isTrue(),
+            () -> assertThat(passwordEncoder.matches(password, customer.getPassword().getValue())).isTrue(),
             () -> assertThat(customer.getPhoneNumber()).isEqualTo(new PhoneNumber(phoneNumber)),
             () -> assertThat(customer.getAddress()).isEqualTo(address)
         );

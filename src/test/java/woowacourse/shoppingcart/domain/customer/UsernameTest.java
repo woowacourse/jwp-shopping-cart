@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,19 +11,18 @@ class UsernameTest {
 
     @DisplayName("username을 생성한다.")
     @ParameterizedTest
-    @ValueSource(strings = {"abc", "abcdefghijklmno"})
+    @ValueSource(strings = {"abc", "15lengthgoooood"})
     void createUsername(final String value) {
-        final Username username = new Username(value);
-
-        assertThat(username.getValue()).isEqualTo(value);
+        assertDoesNotThrow(() -> new Username(value));
     }
 
     @DisplayName("길이가 맞지 않는 username을 생성한다.")
     @ParameterizedTest
-    @ValueSource(strings = {"ab", "abcdefghijklmnop"})
+    @ValueSource(strings = {"ab", "16length16length"})
     void createInvalidLengthUsername(final String value) {
         assertThatThrownBy(() -> new Username(value))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("이름의 길이는 3자 이상 15자 이하여야 합니다.");
     }
 
     @DisplayName("패턴이 맞지 않는 username을 생성한다.")
@@ -31,6 +30,7 @@ class UsernameTest {
     @ValueSource(strings = {"한글입니다", "@!&@#&!"})
     void createInvalidPatternUsername(final String value) {
         assertThatThrownBy(() -> new Username(value))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("username은 영어와 숫자로 이루어져야 합니다.");
     }
 }
