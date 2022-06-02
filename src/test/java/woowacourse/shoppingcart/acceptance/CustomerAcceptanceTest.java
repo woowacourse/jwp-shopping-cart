@@ -18,6 +18,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.LoginRequest;
 
+@SuppressWarnings("NonAsciiChracters")
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 

@@ -22,18 +22,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
         사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
         LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
         ExtractableResponse<Response> response = 로그인_요청(loginRequest);
         TokenResponse tokenResponse = response.as(TokenResponse.class);
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
         CustomerResponse expected = 내_정보_조회_요청(tokenResponse).as(CustomerResponse.class);
         // then
-        // 내 정보가 조회된다
         assertAll(() -> {
             assertThat(expected).extracting("loginId", "name")
                     .containsExactly("loginId", "seungpapang");
@@ -46,16 +42,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBadBearerAuth() {
         // given
-        // 회원이 등록되어 있고
         사용자_생성_요청("loginId@gmail.com", "seungpapang", "12345678aA!");
 
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
         LoginRequest loginRequest = new LoginRequest("invalidLoginId@gmail.com", "12345678aA!");
         ExtractableResponse<Response> response = 로그인_요청(loginRequest);
 
         // then
-        // 토큰 발급 요청이 거부된다
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
@@ -63,12 +56,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         TokenResponse badTokenResponse = new TokenResponse("invalidToken", "name");
         ExtractableResponse<Response> response = 내_정보_조회_요청(badTokenResponse);
 
         // then
-        // 내 정보 조회 요청이 거부된다
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
