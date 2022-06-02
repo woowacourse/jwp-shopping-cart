@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -13,6 +14,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@Transactional
 public class AuthService {
 
     private final CustomerDao customerDao;
@@ -21,6 +23,11 @@ public class AuthService {
     public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
         this.customerDao = customerDao;
         this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isExistEmail(String email) {
+        return customerDao.existByEmail(email);
     }
 
     public CustomerResponse save(CustomerRequest customerRequest) {
@@ -36,10 +43,7 @@ public class AuthService {
         }
     }
 
-    public boolean isExistEmail(String email) {
-        return customerDao.existByEmail(email);
-    }
-
+    @Transactional(readOnly = true)
     public Long loginCustomer(TokenRequest tokenRequest) {
         String password = Password.from(tokenRequest.getPassword()).getPassword();
         Optional<Long> idByEmailAndPassword =
@@ -54,6 +58,7 @@ public class AuthService {
         return new TokenResponse(accessToken);
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse find(Long customerId) {
         checkExistById(customerId);
         Customer customer = customerDao.findById(customerId);

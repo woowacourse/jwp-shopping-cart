@@ -28,16 +28,16 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CustomerResponse save(@RequestBody @Valid CustomerRequest customerRequest) {
-        return authService.save(customerRequest);
-    }
-
     @GetMapping("/email")
     @ResponseStatus(HttpStatus.OK)
     public boolean checkEmailExistence(@RequestParam String email) {
         return authService.isExistEmail(email);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerResponse save(@RequestBody @Valid CustomerRequest customerRequest) {
+        return authService.save(customerRequest);
     }
 
     @PostMapping("/login")
