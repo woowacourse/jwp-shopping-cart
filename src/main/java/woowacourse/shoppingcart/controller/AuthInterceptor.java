@@ -10,11 +10,10 @@ import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
 
 @Component
-public class LoginInterceptor implements HandlerInterceptor {
-
+public class AuthInterceptor implements HandlerInterceptor {
     private final AuthService authService;
 
-    public LoginInterceptor(AuthService authService) {
+    public AuthInterceptor(AuthService authService) {
         this.authService = authService;
     }
 
