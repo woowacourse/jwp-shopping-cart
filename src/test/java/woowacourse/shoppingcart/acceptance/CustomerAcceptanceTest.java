@@ -158,7 +158,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
-    private String 로그인_후_토큰_획득(String name, String password) {
+    public static String 로그인_후_토큰_획득(String name, String password) {
         return RestAssured
                 .given().log().all()
                 .body(new TokenRequest(name, password))
@@ -168,7 +168,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all().extract().as(TokenResponse.class).getAccessToken();
     }
 
-    private ExtractableResponse<Response> 회원_가입(String name, String password) {
+    public static ExtractableResponse<Response> 회원_가입(String name, String password) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -3,10 +3,10 @@ package woowacourse.auth.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.dao.CustomerDao;
 
 @Service
 public class AuthService {
-
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthService(JwtTokenProvider jwtTokenProvider) {

@@ -9,7 +9,6 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.support.Encryptor;
-import woowacourse.shoppingcart.support.SHA256Encryptor;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
