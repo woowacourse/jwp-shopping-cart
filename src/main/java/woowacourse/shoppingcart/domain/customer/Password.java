@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
+import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
+
 import java.util.regex.Pattern;
 
 public class Password {
@@ -15,10 +18,10 @@ public class Password {
 
     private void validatePassword(final String value) {
         if (isEmpty(value)) {
-            throw new IllegalArgumentException("비밀번호를 입력해주세요.");
+            throw new CustomerDataEmptyException("비밀번호를 입력해주세요.");
         }
         if (isNotValidFormat(value)) {
-            throw new IllegalArgumentException("비밀번호는 영문, 한글, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
+            throw new CustomerDataFormatException("비밀번호는 영문, 한글, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
         }
     }
 

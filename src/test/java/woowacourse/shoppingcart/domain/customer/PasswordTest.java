@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
+import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -14,7 +16,7 @@ public class PasswordTest {
     void passwordNullException() {
         // when & then
         assertThatThrownBy(() -> new Password(null))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
 
@@ -24,7 +26,7 @@ public class PasswordTest {
     void passwordBlankException(String password) {
         // when & then
         assertThatThrownBy(() -> new Password(password))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
 
@@ -34,7 +36,7 @@ public class PasswordTest {
     void passwordFormatException(String password) {
         // when & then
         assertThatThrownBy(() -> new Password(password))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("비밀번호는 영문, 한글, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
     }
 }

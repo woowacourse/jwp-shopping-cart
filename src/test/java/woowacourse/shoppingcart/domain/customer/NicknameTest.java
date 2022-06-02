@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
+import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -14,7 +16,7 @@ class NicknameTest {
     void nicknameNullException() {
         // when & then
         assertThatThrownBy(() -> new Nickname(null))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
@@ -24,7 +26,7 @@ class NicknameTest {
     void nicknameBlankException(String nickname) {
         // when & then
         assertThatThrownBy(() -> new Nickname(nickname))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
@@ -34,7 +36,7 @@ class NicknameTest {
     void nicknameFormatException(String nickname) {
         // when & then
         assertThatThrownBy(() -> new Nickname(nickname))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("닉네임은 영문, 한글, 숫자를 조합하여 2 ~ 10 자를 입력해주세요.");
     }
 }

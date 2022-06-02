@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
+import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
+
 import java.util.regex.Pattern;
 
 public class Nickname {
@@ -15,10 +18,10 @@ public class Nickname {
 
     private void validateNickname(final String value) {
         if (isEmpty(value)) {
-            throw new IllegalArgumentException("닉네임을 입력해주세요.");
+            throw new CustomerDataEmptyException("닉네임을 입력해주세요.");
         }
         if (isNotValidFormat(value)) {
-            throw new IllegalArgumentException("닉네임은 영문, 한글, 숫자를 조합하여 2 ~ 10 자를 입력해주세요.");
+            throw new CustomerDataFormatException("닉네임은 영문, 한글, 숫자를 조합하여 2 ~ 10 자를 입력해주세요.");
         }
     }
 

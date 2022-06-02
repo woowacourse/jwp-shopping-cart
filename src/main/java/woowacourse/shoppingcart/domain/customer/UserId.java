@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
+import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
+
 import java.util.regex.Pattern;
 
 public class UserId {
@@ -15,10 +18,10 @@ public class UserId {
 
     private void validateUserId(final String value) {
         if (isEmpty(value)) {
-            throw new IllegalArgumentException("아이디를 입력해주세요.");
+            throw new CustomerDataEmptyException("아이디를 입력해주세요.");
         }
         if (isNotValidFormat(value)) {
-            throw new IllegalArgumentException("아이디는 이메일 형식으로 입력해주세요.");
+            throw new CustomerDataFormatException("아이디는 이메일 형식으로 입력해주세요.");
         }
     }
 

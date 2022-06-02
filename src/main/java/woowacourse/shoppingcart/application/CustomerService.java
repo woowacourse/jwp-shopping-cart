@@ -12,6 +12,8 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.LoginResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
+import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 @Service
 public class CustomerService {
@@ -64,12 +66,12 @@ public class CustomerService {
 
     private Customer findCustomerByUserId(final String userId) {
         return customerDao.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new CustomerDataNotFoundException("존재하지 않는 회원입니다."));
     }
 
     private Customer findCustomerById(final Long id) {
         return customerDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new CustomerDataNotFoundException("존재하지 않는 회원입니다."));
     }
 
     private void validateCustomer(final Customer customer) {
@@ -79,19 +81,19 @@ public class CustomerService {
 
     private void validateDuplicateUserId(final String userId) {
         if (customerDao.existCustomerByUserId(userId)) {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+            throw new CustomerDuplicatedDataException("이미 존재하는 아이디입니다.");
         }
     }
 
     private void validateDuplicateNickname(final String nickname) {
         if (customerDao.existCustomerByNickname(nickname)) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+            throw new CustomerDuplicatedDataException("이미 존재하는 닉네임입니다.");
         }
     }
 
     private void validateExistingCustomer(final String userId, final String password) {
         if (!customerDao.existCustomer(userId, password)) {
-            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+            throw new CustomerDataNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 

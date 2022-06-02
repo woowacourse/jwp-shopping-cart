@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
+import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -14,7 +16,7 @@ class UserIdTest {
     void userIdNullException() {
         // when & then
         assertThatThrownBy(() -> new UserId(null))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("아이디를 입력해주세요.");
     }
 
@@ -24,7 +26,7 @@ class UserIdTest {
     void userIdBlankException(String userId) {
         // when & then
         assertThatThrownBy(() -> new UserId(userId))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("아이디를 입력해주세요.");
     }
 
@@ -33,7 +35,7 @@ class UserIdTest {
     void userIdFormatException() {
         // when & then
         assertThatThrownBy(() -> new UserId("userId"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("아이디는 이메일 형식으로 입력해주세요.");
     }
 }

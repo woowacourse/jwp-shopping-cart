@@ -3,6 +3,7 @@ package woowacourse.auth.ui;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.shoppingcart.exception.token.InvalidTokenException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +25,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     private void validateToken(final String accessToken) {
         if (accessToken == null || !authService.validateToken(accessToken)) {
-            throw new IllegalArgumentException("로그인을 해주세요.");
+            throw new InvalidTokenException("로그인을 해주세요.");
         }
     }
 }

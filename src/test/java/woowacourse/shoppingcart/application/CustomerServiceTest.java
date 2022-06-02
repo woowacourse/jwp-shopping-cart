@@ -19,6 +19,10 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.LoginResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
+import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
+import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
+import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -50,7 +54,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("아이디를 입력해주세요.");
     }
 
@@ -63,7 +67,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("아이디를 입력해주세요.");
     }
 
@@ -75,7 +79,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
@@ -88,7 +92,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
@@ -100,7 +104,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
 
@@ -113,7 +117,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
 
@@ -125,7 +129,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDuplicatedDataException.class)
                 .hasMessage("이미 존재하는 아이디입니다.");
     }
 
@@ -137,7 +141,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDuplicatedDataException.class)
                 .hasMessage("이미 존재하는 닉네임입니다.");
     }
 
@@ -149,7 +153,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("아이디는 이메일 형식으로 입력해주세요.");
     }
 
@@ -162,7 +166,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("닉네임은 영문, 한글, 숫자를 조합하여 2 ~ 10 자를 입력해주세요.");
     }
 
@@ -175,7 +179,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("비밀번호는 영문, 한글, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
     }
 
@@ -188,7 +192,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.login(loginRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
@@ -217,7 +221,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.findByCustomerId(tokenRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
@@ -232,7 +236,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.findByCustomerId(tokenRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
@@ -264,7 +268,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDuplicatedDataException.class)
                 .hasMessage("이미 존재하는 닉네임입니다.");
     }
 
@@ -280,7 +284,7 @@ class CustomerServiceTest {
         // when & then
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("test2");
         assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
@@ -294,7 +298,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
@@ -309,7 +313,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
@@ -322,7 +326,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
@@ -338,7 +342,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
@@ -352,7 +356,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
 
@@ -367,7 +371,7 @@ class CustomerServiceTest {
 
         // when & than
         assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
 
@@ -384,7 +388,7 @@ class CustomerServiceTest {
 
         // then
         assertThatThrownBy(() -> customerService.findByCustomerId(tokenRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
@@ -396,7 +400,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.withdraw(tokenRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
@@ -412,7 +416,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.withdraw(tokenRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 }
