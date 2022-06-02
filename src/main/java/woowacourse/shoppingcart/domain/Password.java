@@ -1,13 +1,14 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import woowacourse.shoppingcart.exception.badrequest.InvalidPasswordException;
 
 public class Password {
 
-    private static final String PLAIN_PASSWORD_PATTERN = "^(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,20}";
-    private static final String HASH_PASSWORD_PATTERN = "^\\$2a\\$10\\$.{22}.{31}$";
+    private static final Pattern PLAIN_PASSWORD_PATTERN = Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,20}");
+    private static final Pattern HASH_PASSWORD_PATTERN = Pattern.compile("^\\$2a\\$10\\$.{22}.{31}$");
     private final String value;
 
     private Password(final String value) {
@@ -15,7 +16,7 @@ public class Password {
     }
 
     public static Password fromPlain(final String value) {
-        if (!value.matches(PLAIN_PASSWORD_PATTERN)) {
+        if (!PLAIN_PASSWORD_PATTERN.matcher(value).matches()) {
             throw new InvalidPasswordException();
         }
         final String hashValue = BCrypt.hashpw(value, BCrypt.gensalt());
@@ -23,7 +24,7 @@ public class Password {
     }
 
     public static Password fromHash(final String value) {
-        if (!value.matches(HASH_PASSWORD_PATTERN)) {
+        if (!HASH_PASSWORD_PATTERN.matcher(value).matches()) {
             throw new InvalidPasswordException();
         }
         return new Password(value);
