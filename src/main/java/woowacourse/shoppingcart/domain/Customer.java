@@ -34,6 +34,6 @@ public class Customer {
     }
 
     public boolean isDifferentPassword(String password) {
-        return !Password.isSameEncryptedPassword(this.password, password);
+        return !PasswordEncryptUtil.isSameEncryptedPassword(this.password, password);
     }
 }
