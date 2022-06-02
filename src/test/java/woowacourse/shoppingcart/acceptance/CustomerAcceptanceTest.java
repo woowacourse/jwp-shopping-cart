@@ -92,7 +92,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                         .extracting("email", "profileImageUrl", "name", "gender", "birthDay", "contact", "terms")
                         .containsExactly(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getProfileImageUrl(),
                                 CUSTOMER_REQUEST_1.getName(), CUSTOMER_REQUEST_1.getGender(),
-                                CUSTOMER_REQUEST_1.getBirthDay(), CUSTOMER_REQUEST_1.getContact(),
+                                CUSTOMER_REQUEST_1.getBirthday(), CUSTOMER_REQUEST_1.getContact(),
                                 CUSTOMER_REQUEST_1.isTerms())
         );
 
@@ -143,7 +143,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         params.put("profileImageUrl", customerRequest.getProfileImageUrl());
         params.put("name", customerRequest.getName());
         params.put("gender", customerRequest.getGender());
-        params.put("birthDay", customerRequest.getBirthDay());
+        params.put("birthDay", customerRequest.getBirthday());
         params.put("contact", customerRequest.getContact());
         params.put("fullAddress", Map.of("address", customerRequest.getFullAddress().getAddress(), "detailAddress",
                 customerRequest.getFullAddress().getDetailAddress(), "zoneCode",
@@ -170,13 +170,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         params.put("email", email);
         params.put("password", password);
 
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        return RestAssured.given().log().all()
                 .body(params)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/api/customer/authentication/sign-in")
                 .then().log().all()
                 .extract();
-        return response;
     }
 }

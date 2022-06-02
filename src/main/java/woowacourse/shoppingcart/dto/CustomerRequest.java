@@ -6,7 +6,7 @@ public class CustomerRequest {
     private String profileImageUrl;
     private String name;
     private String gender;
-    private String birthDay;
+    private String birthday;
     private String contact;
     private AddressRequest fullAddress;
     private boolean terms;
@@ -15,13 +15,13 @@ public class CustomerRequest {
     }
 
     public CustomerRequest(String email, String password, String profileImageUrl, String name, String gender,
-                           String birthDay, String contact, AddressRequest fullAddress, boolean terms) {
+                           String birthday, String contact, AddressRequest fullAddress, boolean terms) {
         this.email = email;
         this.password = password;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.gender = gender;
-        this.birthDay = birthDay;
+        this.birthday = birthday;
         this.contact = contact;
         this.fullAddress = fullAddress;
         this.terms = terms;
@@ -47,8 +47,8 @@ public class CustomerRequest {
         return gender;
     }
 
-    public String getBirthDay() {
-        return birthDay;
+    public String getBirthday() {
+        return birthday;
     }
 
     public String getContact() {
@@ -71,7 +71,7 @@ public class CustomerRequest {
                 ", profileImageUrl='" + profileImageUrl + '\'' +
                 ", name='" + name + '\'' +
                 ", gender='" + gender + '\'' +
-                ", birthDay='" + birthDay + '\'' +
+                ", birthday='" + birthday + '\'' +
                 ", contact='" + contact + '\'' +
                 ", fullAddress=" + fullAddress +
                 ", terms=" + terms +

@@ -95,7 +95,7 @@ public class CustomerService {
 
     private Customer convertRequestToCustomer(CustomerRequest customerRequest) {
         Privacy privacy = Privacy.of(customerRequest.getName(), customerRequest.getGender(),
-                customerRequest.getBirthDay(), customerRequest.getContact());
+                customerRequest.getBirthday(), customerRequest.getContact());
         FullAddress fullAddress = FullAddress.of(customerRequest.getFullAddress().getAddress(),
                 customerRequest.getFullAddress().getDetailAddress(), customerRequest.getFullAddress().getZoneCode());
 
