@@ -1,30 +1,24 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static woowacourse.auth.support.AuthorizationExtractor.AUTHORIZATION;
 import static woowacourse.auth.support.AuthorizationExtractor.BEARER_TYPE;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.ModifiedCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -54,7 +48,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void signIn() {
         회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
-                        "희봉", "male", "1998-08-07", "12345678910",
+                "희봉", "male", "1998-08-07", "12345678910",
                 "address", "detailAddress", "12345", true));
 
         TokenResponse response =
@@ -81,7 +75,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             TokenResponse signInResponse =
                     로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
 
-            ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(), signInResponse.getCustomerId());
+            ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(),
+                    signInResponse.getCustomerId());
             final CustomerResponse customerResponse = response.body()
                     .jsonPath()
                     .getObject("", CustomerResponse.class);
@@ -96,7 +91,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @Test
         void failToFindMyProfile() {
             ExtractableResponse<Response> response = 회원_조회(
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c", 1L);
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                    1L);
             assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         }
     }
@@ -111,7 +107,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         TokenResponse signInResponse =
                 로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
 
-        final ModifiedCustomerRequest request = 회원_수정_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
+        final ModifiedCustomerRequest request = 회원_수정_정보("example@example.com", "example123!",
+                "http://gravatar.com/avatar/1?d=identicon",
                 "수달", "male", "1998-08-07", "12345678910",
                 "address", "detailAddress", "12345", true);
 
@@ -170,10 +167,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 detailAddress, zoneCode, terms);
     }
 
-    private ModifiedCustomerRequest 회원_수정_정보(String email, String password, String profileImageUrl, String name, String gender,
-                                String birthday, String contact, String address, String detailAddress,
-                                String zoneCode,
-                                boolean terms) {
+    private ModifiedCustomerRequest 회원_수정_정보(String email, String password, String profileImageUrl, String name,
+                                             String gender,
+                                             String birthday, String contact, String address, String detailAddress,
+                                             String zoneCode,
+                                             boolean terms) {
         return new ModifiedCustomerRequest(email, password, profileImageUrl, name, gender, birthday, contact, address,
                 detailAddress, zoneCode, terms);
     }

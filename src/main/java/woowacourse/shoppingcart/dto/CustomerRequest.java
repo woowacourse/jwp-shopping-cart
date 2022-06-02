@@ -15,7 +15,7 @@ public class CustomerRequest {
     }
 
     public CustomerRequest(Long id, String email, String profileImageUrl, String name, String gender,
-                            String birthday, String contact, String address, String detailAddress, String zoneCode) {
+                           String birthday, String contact, String address, String detailAddress, String zoneCode) {
         this.id = id;
         this.email = email;
         this.profileImageUrl = profileImageUrl;

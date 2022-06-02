@@ -18,11 +18,9 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
-import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.ModifiedCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @RestController
 @RequestMapping("/api")
@@ -57,8 +55,8 @@ public class CustomerController {
     public ResponseEntity<Void> updateCustomerInformation(@AuthenticationPrincipal final EmailDto emailDto,
                                                           @PathVariable Long customerId,
                                                           @RequestBody final ModifiedCustomerRequest request) {
-       customerService.updateCustomer(ModifiedCustomerDto.fromModifiedCustomerRequest(request));
-       return ResponseEntity.noContent().build();
+        customerService.updateCustomer(ModifiedCustomerDto.fromModifiedCustomerRequest(request));
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/customers/{customerId}")

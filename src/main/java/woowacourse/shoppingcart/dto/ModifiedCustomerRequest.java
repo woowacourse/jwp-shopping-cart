@@ -16,8 +16,9 @@ public class ModifiedCustomerRequest {
     }
 
     public ModifiedCustomerRequest(String email, String password, String profileImageUrl, String name, String gender,
-                         String birthday, String contact, String address, String detailAddress, String zoneCode,
-                         boolean terms) {
+                                   String birthday, String contact, String address, String detailAddress,
+                                   String zoneCode,
+                                   boolean terms) {
         this.email = email;
         this.password = password;
         this.profileImageUrl = profileImageUrl;

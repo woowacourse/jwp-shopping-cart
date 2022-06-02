@@ -20,12 +20,14 @@ public class CustomerFixture {
             "12345678910",
             new AddressDto("a", "b", "12345"), true);
 
-    public static final Customer updatedTommyDto = new Customer(1L, new Email("her0807@naver.com"), new NewPassword("password1!"),
+    public static final Customer updatedTommyDto = new Customer(1L, new Email("her0807@naver.com"),
+            new NewPassword("password1!"),
             "example.com", new Name("토미"), Gender.MALE, new Birthday("1988-08-07"),
             new Contact("01987654321"),
             new FullAddress("d", "e", "54321"), new Terms(true));
 
-    public static final Supplier<Customer> tommyCreator = () -> new Customer(1L, new Email("her0807@naver.com"), new NewPassword("password1!"),
+    public static final Supplier<Customer> tommyCreator = () -> new Customer(1L, new Email("her0807@naver.com"),
+            new NewPassword("password1!"),
             "example.com", new Name("토미"), Gender.MALE, new Birthday("1988-08-07"),
             new Contact("12345678910"),
             new FullAddress("a", "b", "12345"), new Terms(true));

@@ -43,10 +43,13 @@ public class ModifiedCustomerDto {
     }
 
     public static Customer toModifiedCustomerDto(final ModifiedCustomerDto modifiedCustomerDto) {
-        return new Customer(new Email(modifiedCustomerDto.getEmail()), new NewPassword(modifiedCustomerDto.getPassword()),
-                modifiedCustomerDto.getProfileImageUrl(), new Name(modifiedCustomerDto.getName()), Gender.form(modifiedCustomerDto.getGender()),
+        return new Customer(new Email(modifiedCustomerDto.getEmail()),
+                new NewPassword(modifiedCustomerDto.getPassword()),
+                modifiedCustomerDto.getProfileImageUrl(), new Name(modifiedCustomerDto.getName()),
+                Gender.form(modifiedCustomerDto.getGender()),
                 new Birthday(modifiedCustomerDto.getBirthday()), new Contact(modifiedCustomerDto.getContact()),
-                new FullAddress(modifiedCustomerDto.getAddress().getAddress(), modifiedCustomerDto.getAddress().getDetailAddress(),
+                new FullAddress(modifiedCustomerDto.getAddress().getAddress(),
+                        modifiedCustomerDto.getAddress().getDetailAddress(),
                         modifiedCustomerDto.getAddress().getZoneCode()));
     }
 

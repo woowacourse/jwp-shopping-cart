@@ -16,7 +16,7 @@ public class CustomerResponse {
     }
 
     public CustomerResponse(Long id, String email, String profileImageUrl, String name, String gender,
-                           String birthday, String contact, String address, String detailAddress, String zoneCode) {
+                            String birthday, String contact, String address, String detailAddress, String zoneCode) {
         this.id = id;
         this.email = email;
         this.profileImageUrl = profileImageUrl;
@@ -29,7 +29,8 @@ public class CustomerResponse {
     }
 
     public static CustomerResponse fromCustomerRequest(final CustomerRequest request) {
-        return new CustomerResponse(request.getId(), request.getEmail(), request.getProfileImageUrl(), request.getName(),
+        return new CustomerResponse(request.getId(), request.getEmail(), request.getProfileImageUrl(),
+                request.getName(),
                 request.getGender(), request.getBirthday(), request.getContact(), request.getFullAddress().getAddress(),
                 request.getFullAddress().getDetailAddress(), request.getFullAddress().getZoneCode());
     }

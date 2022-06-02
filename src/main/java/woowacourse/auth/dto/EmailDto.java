@@ -4,7 +4,8 @@ public class EmailDto {
 
     private String email;
 
-    public EmailDto() {}
+    public EmailDto() {
+    }
 
     public EmailDto(String email) {
         this.email = email;

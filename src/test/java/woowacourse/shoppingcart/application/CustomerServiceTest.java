@@ -16,19 +16,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
-import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.dao.CustomerFixture;
-import woowacourse.shoppingcart.domain.address.FullAddress;
-import woowacourse.shoppingcart.domain.customer.Birthday;
-import woowacourse.shoppingcart.domain.customer.Contact;
-import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.domain.customer.Gender;
-import woowacourse.shoppingcart.domain.customer.Name;
-import woowacourse.shoppingcart.domain.customer.NewPassword;
-import woowacourse.shoppingcart.domain.customer.Terms;
 import woowacourse.shoppingcart.dto.AddressRequest;
 
 @SpringBootTest
