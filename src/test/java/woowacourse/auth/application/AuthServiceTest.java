@@ -42,10 +42,22 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("로그인에 실패한다.")
-    void signInFail() {
+    @DisplayName("회원이 존재하지 않으면 로그인에 실패한다.")
+    void signInFailThrowNoCustomerException() {
         assertThatThrownBy(() -> authService.signIn(new SignInRequest("rennon@woowa.com", "1234")))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("로그인 실패");
+    }
+
+    @Test
+    @DisplayName("비빌번호가 일치하지 않으면 로그인에 실패한다.")
+    void signInFailThrowNotMatchPasswordException() {
+        // given
+        customerService.addCustomer(new SignUpRequest("레넌", "rennon@woowa.com", "1234"));
+
+        // when & then
+        assertThatThrownBy(() -> authService.signIn(new SignInRequest("rennon@woowa.com", "1235")))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("로그인 실패");
     }
 }
