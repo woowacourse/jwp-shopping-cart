@@ -11,7 +11,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.CreateCustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +24,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         ExtractableResponse<Response> response = sendCreateCustomerRequest(
-                new CustomerCreateRequest("beomWhale1@naver.com", "범고래1", "Password12345!"));
+                new CreateCustomerRequest("beomWhale1@naver.com", "범고래1", "Password12345!"));
 
         assertAll(
                 () -> assertThat(response.header("Location")).isNotEmpty(),
@@ -37,11 +37,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void errorResponseWhenDuplicateEmail() {
         // given: 회원이 등록되어 있다.
         String email = "beomWhale1@naver.com";
-        createCustomer(new CustomerCreateRequest(email, "범고래1", "Password12345!"));
+        createCustomer(new CreateCustomerRequest(email, "범고래1", "Password12345!"));
 
         // when: 이미 등록되어 있는 이메일로 회원 생성을 시도하면
         ExtractableResponse<Response> response = createCustomer(
-                new CustomerCreateRequest(email, "범고래2", "Password12345!"));
+                new CreateCustomerRequest(email, "범고래2", "Password12345!"));
 
         // then: 예외 응답을 반환한다.
         assertAll(
@@ -56,11 +56,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void duplicateCustomerNickname() {
         // given: 회원이 등록되어 있다.
         String nickname = "범고래1";
-        createCustomer(new CustomerCreateRequest("beomWhale1@naver.com", nickname, "Password12345!"));
+        createCustomer(new CreateCustomerRequest("beomWhale1@naver.com", nickname, "Password12345!"));
 
         // when: 이미 등록되어 있는 닉네임으로 회원 생성을 시도하면
         ExtractableResponse<Response> response = createCustomer(
-                new CustomerCreateRequest("beomWhale2@naver.com", nickname, "Password12345!"));
+                new CreateCustomerRequest("beomWhale2@naver.com", nickname, "Password12345!"));
 
         // then: 예외 응답을 반환한다.
         assertAll(
@@ -76,7 +76,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given: 등록된 회원으로 로그인한다.
         String email = "beomWhale1@naver.com";
         String password = "Password12345!";
-        createCustomer(new CustomerCreateRequest(email, "범고래1", password));
+        createCustomer(new CreateCustomerRequest(email, "범고래1", password));
 
         String accessToken = loginAndGetAccessToken(new TokenRequest(email, password));
 
@@ -104,7 +104,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given: 등록된 회원으로 로그인한다.
         String email = "beomWhale1@naver.com";
         String password = "Password12345!";
-        createCustomer(new CustomerCreateRequest(email, "범고래1", password));
+        createCustomer(new CreateCustomerRequest(email, "범고래1", password));
         String accessToken = loginAndGetAccessToken(new TokenRequest(email, password));
 
         // when: 패스워드 변경 요청을 보내고, 변경된 패스워드로 로그인하면
@@ -125,7 +125,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given: 등록된 회원으로 로그인한다.
         String email = "beomWhale1@naver.com";
         String password = "Password12345!";
-        createCustomer(new CustomerCreateRequest(email, "범고래1", password));
+        createCustomer(new CreateCustomerRequest(email, "범고래1", password));
         String accessToken = loginAndGetAccessToken(new TokenRequest(email, password));
 
         // when: 닉네임 변경 요청을 보내고 회원정보를 조회하면
@@ -153,8 +153,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String email = "beomWhale2@naver.com";
         String nickname = "범고래1";
         String password = "Password12345!";
-        createCustomer(new CustomerCreateRequest("beomWhale1@naver.com", nickname, "Password12345!"));
-        createCustomer(new CustomerCreateRequest(email, "범고래2", password));
+        createCustomer(new CreateCustomerRequest("beomWhale1@naver.com", nickname, "Password12345!"));
+        createCustomer(new CreateCustomerRequest(email, "범고래2", password));
 
         String accessToken = loginAndGetAccessToken(new TokenRequest(email, password));
 
@@ -208,7 +208,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> sendCreateCustomerRequest(CustomerCreateRequest customerCreateRequest) {
+    private ExtractableResponse<Response> sendCreateCustomerRequest(CreateCustomerRequest customerCreateRequest) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(customerCreateRequest)
@@ -219,7 +219,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     private ExtractableResponse<Response> createCustomer(
-            CustomerCreateRequest customerCreateRequest) {
+            CreateCustomerRequest customerCreateRequest) {
         return RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(customerCreateRequest)

@@ -12,7 +12,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.CreateCustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +38,7 @@ public class CustomerServiceTest {
     @Test
     void createCustomer() {
         // given
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+        CreateCustomerRequest customerCreateRequest = new CreateCustomerRequest(
                 "beomWhale@naver.com", "범고래", "Password12345!");
 
         // when
@@ -53,7 +53,7 @@ public class CustomerServiceTest {
     void validateDuplicationNickname() {
         // given
         customerDao.save(new Customer("awesomeo@naver.com", "범고래", "Password12345!"));
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+        CreateCustomerRequest customerCreateRequest = new CreateCustomerRequest(
                 "beomWhale@naver.com", "범고래", "Password12345!");
 
         // when && then

@@ -4,12 +4,12 @@ import woowacourse.shoppingcart.domain.Customer;
 
 import java.util.Objects;
 
-public class CustomerCreateRequest {
+public class CreateCustomerRequest {
     private final String email;
     private final String nickname;
     private final String password;
 
-    public CustomerCreateRequest(String email, String nickname, String password) {
+    public CreateCustomerRequest(String email, String nickname, String password) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
@@ -35,7 +35,7 @@ public class CustomerCreateRequest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CustomerCreateRequest that = (CustomerCreateRequest) o;
+        CreateCustomerRequest that = (CreateCustomerRequest) o;
         return Objects.equals(email, that.email) && Objects.equals(nickname, that.nickname) && Objects.equals(password, that.password);
     }
 

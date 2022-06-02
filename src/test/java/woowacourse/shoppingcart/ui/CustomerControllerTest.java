@@ -10,7 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.CreateCustomerRequest;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -36,7 +36,7 @@ class CustomerControllerTest {
     @Test
     void createCustomer() throws Exception {
         // given
-        CustomerCreateRequest requestDto = new CustomerCreateRequest("test@email.com", "test123", "Password123!");
+        CreateCustomerRequest requestDto = new CreateCustomerRequest("test@email.com", "test123", "Password123!");
 
         Long expectedId = 1L;
         when(customerService.createCustomer(any()))

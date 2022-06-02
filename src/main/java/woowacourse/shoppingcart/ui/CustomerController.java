@@ -6,7 +6,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.CreateCustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import java.net.URI;
@@ -22,7 +22,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCustomer(@RequestBody CustomerCreateRequest request) {
+    public ResponseEntity<Void> createCustomer(@RequestBody CreateCustomerRequest request) {
         Long customerId = customerService.createCustomer(request);
         return ResponseEntity.created(URI.create("/api/customers/" + customerId)).build();
     }

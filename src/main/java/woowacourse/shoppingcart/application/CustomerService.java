@@ -6,7 +6,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.CreateCustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
@@ -19,7 +19,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public Long createCustomer(CustomerCreateRequest customerCreateRequest) {
+    public Long createCustomer(CreateCustomerRequest customerCreateRequest) {
         validateDuplication(customerCreateRequest);
         return customerDao.save(customerCreateRequest.toCustomer());
     }
@@ -64,7 +64,7 @@ public class CustomerService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     }
 
-    private void validateDuplication(CustomerCreateRequest customerCreateRequest) {
+    private void validateDuplication(CreateCustomerRequest customerCreateRequest) {
         validateDuplicateNickname(customerCreateRequest.getNickname());
         validateDuplicateEmail(customerCreateRequest.getEmail());
     }

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.CreateCustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -116,10 +116,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     private void createCustomer(String email, String nickname, String password) {
-        sendCreateCustomerRequest(new CustomerCreateRequest(email, nickname, password));
+        sendCreateCustomerRequest(new CreateCustomerRequest(email, nickname, password));
     }
 
-    private ExtractableResponse<Response> sendCreateCustomerRequest(CustomerCreateRequest customerCreateRequest) {
+    private ExtractableResponse<Response> sendCreateCustomerRequest(CreateCustomerRequest customerCreateRequest) {
         return RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(customerCreateRequest)
