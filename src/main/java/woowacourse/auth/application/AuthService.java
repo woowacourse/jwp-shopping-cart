@@ -61,10 +61,8 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public boolean checkPassword(String email, String password) {
-        Member member = memberDao.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
-        return member.getPassword()
-                .equals(password);
+        return memberDao.findByEmailAndPassword(email, password)
+                .isPresent();
     }
 
     @Transactional(readOnly = true)
