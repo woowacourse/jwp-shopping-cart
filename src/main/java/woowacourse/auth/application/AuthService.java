@@ -36,7 +36,7 @@ public class AuthService {
     }
 
     public boolean isValid(String token) {
-        return tokenProvider.validateToken(token);
+        return tokenProvider.isValid(token);
     }
 
     public String getPayload(String token) {

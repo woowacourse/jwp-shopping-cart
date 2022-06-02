@@ -44,7 +44,7 @@ public class JwtTokenProvider {
             .parseClaimsJws(token).getBody().getSubject();
     }
 
-    public boolean validateToken(String token) {
+    public boolean isValid(String token) {
         try {
             final Jws<Claims> claims = parseClaims(token);
             return !claims.getBody().getExpiration().before(new Date());
