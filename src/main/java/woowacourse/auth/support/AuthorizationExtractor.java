@@ -2,17 +2,11 @@ package woowacourse.auth.support;
 
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.web.context.request.NativeWebRequest;
 
 public class AuthorizationExtractor {
     public static final String AUTHORIZATION = "Authorization";
     public static String BEARER_TYPE = "Bearer";
     public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
-
-    public static String extract(NativeWebRequest request) {
-        final String header = request.getHeader(AUTHORIZATION);
-        return header.replace(BEARER_TYPE, "").trim();
-    }
 
     public static String extract(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
