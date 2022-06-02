@@ -1,27 +1,32 @@
 package woowacourse.config;
 
-import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import woowacourse.config.interceptor.LoginMemberArgumentResolver;
+import woowacourse.auth.domain.BearerExtractor;
+import woowacourse.auth.domain.TokenProvider;
+import woowacourse.config.interceptor.LoginMemberInterceptor;
 
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
+    private final TokenProvider tokenProvider;
+    private final BearerExtractor bearerExtractor;
+
+    public InterceptorConfig(TokenProvider tokenProvider, BearerExtractor bearerExtractor) {
+        this.tokenProvider = tokenProvider;
+        this.bearerExtractor = bearerExtractor;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor()
+        registry.addInterceptor(loginMemberInterceptor())
+                .addPathPatterns("/api/customer/**");
     }
 
     @Bean
-    public LoginMemberArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new LoginMemberArgumentResolver();
+    public LoginMemberInterceptor loginMemberInterceptor() {
+        return new LoginMemberInterceptor(tokenProvider, bearerExtractor);
     }
+
 }
