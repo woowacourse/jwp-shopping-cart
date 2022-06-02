@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.exception.LoginFailedException;
+import woowacourse.auth.exception.authentication.LoginFailedException;
 import woowacourse.shoppingcart.service.CustomerService;
 
 // TODO: SpringBootTest 대신 적용할 수 있는 방법 공부하기

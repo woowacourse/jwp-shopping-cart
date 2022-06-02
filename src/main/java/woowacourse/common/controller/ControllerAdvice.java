@@ -11,10 +11,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.auth.exception.ExpiredTokenException;
-import woowacourse.auth.exception.ForbiddenException;
-import woowacourse.auth.exception.InvalidTokenException;
-import woowacourse.auth.exception.LoginFailedException;
+import woowacourse.auth.exception.authentication.AuthenticationException;
+import woowacourse.auth.exception.authorization.AuthorizationException;
 import woowacourse.common.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.DisagreeToTermsException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
@@ -27,14 +25,14 @@ import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-    @ExceptionHandler({LoginFailedException.class, InvalidTokenException.class})
-    public ResponseEntity<ErrorResponse> handleLoginFailed(RuntimeException e) {
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
-    @ExceptionHandler({ForbiddenException.class, ExpiredTokenException.class})
-    public ResponseEntity<ErrorResponse> handleExpiredToken(RuntimeException e) {
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }

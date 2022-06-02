@@ -8,8 +8,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import woowacourse.auth.exception.ExpiredTokenException;
-import woowacourse.auth.exception.InvalidTokenException;
+import woowacourse.auth.exception.authentication.InvalidTokenException;
+import woowacourse.auth.exception.authorization.ExpiredTokenException;
 
 @Component
 public class JwtTokenProvider {

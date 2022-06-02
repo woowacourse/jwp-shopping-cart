@@ -88,7 +88,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("로그인이 실패하였습니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("이메일 혹은 패스워드가 잘못되어 로그인에 실패하였습니다.")
         );
     }
 
