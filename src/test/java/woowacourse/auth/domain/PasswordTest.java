@@ -81,11 +81,11 @@ class PasswordTest {
     @Test
     void toEncrypted_메서드는_같은_비밀번호_값에_대해서도_임의의_솔트를_생성하여_암호화_수행() {
         String 유효한_비밀번호 = "password!1";
-        Password2 비밀번호 = new Password2(유효한_비밀번호);
-        Password2 같은_비밀번호 = new Password2(유효한_비밀번호);
+        Password 비밀번호 = new Password(유효한_비밀번호);
+        Password 같은_비밀번호 = new Password(유효한_비밀번호);
 
-        EncryptedPassword2 actual = 비밀번호.toEncrypted();
-        EncryptedPassword2 expected = 같은_비밀번호.toEncrypted();
+        EncryptedPassword actual = 비밀번호.toEncrypted();
+        EncryptedPassword expected = 같은_비밀번호.toEncrypted();
 
         assertThat(actual).isNotEqualTo(expected);
     }

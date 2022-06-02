@@ -1,6 +1,7 @@
 package woowacourse.auth.domain;
 
 import java.util.Objects;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class EncryptedPassword {
 
@@ -8,6 +9,14 @@ public class EncryptedPassword {
 
     public EncryptedPassword(String value) {
         this.value = value;
+    }
+
+    public boolean hasSamePassword(String password) {
+        try {
+            return BCrypt.checkpw(password, value);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("비밀번호가 제대로 암호화되지 않았습니다.");
+        }
     }
 
     public String getValue() {

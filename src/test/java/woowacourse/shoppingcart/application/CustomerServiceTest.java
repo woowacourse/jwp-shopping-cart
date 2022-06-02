@@ -99,10 +99,12 @@ class CustomerServiceTest extends DatabaseTest {
             SignUpRequest 회원가입_정보 = new SignUpRequest(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
             customerService.createCustomer(회원가입_정보);
-            Customer actual = findCustomer(유효한_아이디);
-            Customer expected = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer createdCustomer = findCustomer(유효한_아이디);
 
-            assertThat(actual).isEqualTo(expected);
+            assertThat(createdCustomer.getUsername()).isEqualTo(유효한_아이디);
+            assertThat(createdCustomer.getEncryptedPassword().hasSamePassword(비밀번호)).isTrue();
+            assertThat(createdCustomer.getNickname()).isEqualTo(유효한_닉네임);
+            assertThat(createdCustomer.getAge()).isEqualTo(유효한_나이);
         }
 
         @Test
@@ -214,7 +216,6 @@ class CustomerServiceTest extends DatabaseTest {
         private final User 유효한_사용자 = new User(유효한_아이디, 암호화된_비밀번호);
         private final Customer 유효한_고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
         private final String 새로운_비밀번호 = "newpw123@#";
-        private final EncryptedPassword 새로운_임호화된_비밀번호 = new Password(새로운_비밀번호).toEncrypted();
 
         @Test
         void 기존_비밀번호를_맞추면_비밀번호_수정_성공() {
@@ -222,10 +223,9 @@ class CustomerServiceTest extends DatabaseTest {
             UpdatePasswordRequest 비밀번호_수정_정보 = new UpdatePasswordRequest(비밀번호, 새로운_비밀번호);
 
             customerService.updatePassword(유효한_사용자, 비밀번호_수정_정보);
-            Customer actual = findCustomer(유효한_아이디);
-            Customer expected = new Customer(유효한_아이디, 새로운_임호화된_비밀번호, 유효한_닉네임, 유효한_나이);
+            EncryptedPassword actual = findCustomer(유효한_아이디).getEncryptedPassword();
 
-            assertThat(actual).isEqualTo(expected);
+            assertThat(actual.hasSamePassword(새로운_비밀번호)).isTrue();
         }
 
         @Test

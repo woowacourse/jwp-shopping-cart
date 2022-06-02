@@ -17,8 +17,7 @@ public class User {
     }
 
     public boolean hasDifferentPassword(String password) {
-        EncryptedPassword targetPassword = new Password(password).toEncrypted();
-        return !this.password.equals(targetPassword);
+        return !this.password.hasSamePassword(password);
     }
 
     public String getUsername() {
