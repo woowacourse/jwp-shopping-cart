@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.application.dto.CustomerUpdatePasswordRequest;
@@ -8,6 +9,7 @@ import woowacourse.shoppingcart.application.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 
+@Transactional(readOnly = true)
 @Service
 public class CustomerService {
 
@@ -17,6 +19,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
+    @Transactional
     public Long save(CustomerSaveRequest request) {
         validateCustomerRequest(request);
         return customerDao.save(request.toEntity());
@@ -37,7 +40,7 @@ public class CustomerService {
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
         return new CustomerResponse(customer);
     }
-
+    
     public void update(Long id, CustomerUpdateRequest customerUpdateRequest) {
         Customer saveCustomer = customerDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
@@ -59,6 +62,7 @@ public class CustomerService {
         }
     }
 
+    @Transactional
     public void updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         Customer saveCustomer = customerDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
@@ -78,6 +82,7 @@ public class CustomerService {
         customer.validatePassword(customerUpdatePasswordRequest.getNewPassword());
     }
 
+    @Transactional
     public void delete(Long id) {
         customerDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
