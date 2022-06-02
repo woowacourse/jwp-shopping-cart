@@ -28,8 +28,7 @@ public class CustomerDao {
             resultSet.getString("address")
     );
 
-    public CustomerDao(final JdbcTemplate jdbcTemplate,
-                       final DataSource dataSource) {
+    public CustomerDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("CUSTOMER")
@@ -41,7 +40,7 @@ public class CustomerDao {
         return simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
     }
 
-    public Long findIdByName(final String name) {
+    public Long findIdByName(String name) {
         try {
             final String query = "SELECT id FROM CUSTOMER WHERE name = ?";
             return jdbcTemplate.queryForObject(query, Long.class, name.toLowerCase(Locale.ROOT));
@@ -50,7 +49,7 @@ public class CustomerDao {
         }
     }
 
-    public boolean existByEmail(final String email) {
+    public boolean existByEmail(String email) {
         final String query = "SELECT EXISTS (SELECT * FROM CUSTOMER WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);
     }

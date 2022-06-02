@@ -31,7 +31,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<String> handleInvalidRequest(final BindingResult bindingResult) {
+    public ResponseEntity<String> handleInvalidRequest(BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
@@ -42,7 +42,7 @@ public class ControllerAdvice {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    public ResponseEntity<String> handleInvalidRequest(final RuntimeException e) {
+    public ResponseEntity<String> handleInvalidRequest(RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
@@ -54,7 +54,7 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
+    public ResponseEntity<String> handleInvalidAccess(RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
