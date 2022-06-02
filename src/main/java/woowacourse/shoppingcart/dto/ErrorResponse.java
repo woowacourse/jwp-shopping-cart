@@ -1,10 +1,10 @@
-package woowacourse.auth.dto;
+package woowacourse.shoppingcart.dto;
 
 public class ErrorResponse {
 
     private String message;
 
-    public ErrorResponse() {
+    private ErrorResponse() {
     }
 
     public ErrorResponse(final String message) {

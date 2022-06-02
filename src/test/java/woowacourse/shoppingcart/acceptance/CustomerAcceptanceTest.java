@@ -23,7 +23,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     private static final String NAME = "클레이";
     private static final String EMAIL = "djwhy5510@naver.com";
-    private static final String PASSWORD = "12345678";
+    private static final String PASSWORD = "1234567891";
 
     @DisplayName("회원가입")
     @Test

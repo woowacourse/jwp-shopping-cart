@@ -7,7 +7,7 @@ public class CustomerDetailResponse {
     private String name;
     private String email;
 
-    public CustomerDetailResponse() {
+    private CustomerDetailResponse() {
     }
 
     public CustomerDetailResponse(final String name, final String email) {

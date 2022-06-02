@@ -25,6 +25,7 @@ class CustomerControllerTest {
     private static final String NAME = "클레이";
     private static final String EMAIL = "djwhy5510@naver.com";
     private static final String PASSWORD = "12345678";
+
     @Autowired
     private CustomerController customerController;
 
