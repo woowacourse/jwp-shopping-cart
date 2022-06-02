@@ -2,6 +2,8 @@ package woowacourse.auth.support;
 
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
+import woowacourse.auth.exception.InvalidTokenException;
+import woowacourse.auth.exception.NotAuthorizationException;
 
 public class AuthorizationExtractor {
 
@@ -10,6 +12,7 @@ public class AuthorizationExtractor {
     public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
 
     public static String extract(final HttpServletRequest request) {
+        validateExistHeaders(request);
         final Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
             final String value = headers.nextElement();
@@ -23,6 +26,12 @@ public class AuthorizationExtractor {
                 return authHeaderValue;
             }
         }
-        return null;
+        throw new InvalidTokenException();
+    }
+
+    private static void validateExistHeaders(final HttpServletRequest request) {
+        if (!request.getHeaders(AUTHORIZATION).hasMoreElements()) {
+            throw new NotAuthorizationException();
+        }
     }
 }

@@ -232,4 +232,22 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호는 빈칸일 수 없습니다.")
         );
     }
+
+    @DisplayName("인증이 필요할 때, Authorization 헤더가 없다면, 401-UNAUTHORIZED를 반환한다.")
+    @Test
+    void withoutAuthorizationHeader() {
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .extract();
+        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("로그인이 필요합니다.")
+        );
+    }
 }
