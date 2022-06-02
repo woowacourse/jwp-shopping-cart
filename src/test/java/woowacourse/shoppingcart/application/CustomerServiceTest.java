@@ -79,12 +79,12 @@ class CustomerServiceTest {
         final Long customerId = customerService.registerCustomer(
                 new CustomerRegisterRequest(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
-        final String newUserName = "Guest123123";
+        final String newNickname = "Guest123123";
         final String newPassword = "qwer1234!@#$";
         final CustomerUpdateResponse actual = customerService.updateCustomer(customerId,
-                new CustomerUpdateRequest(newUserName, CUSTOMER_PASSWORD, newPassword));
+                new CustomerUpdateRequest(newNickname, CUSTOMER_PASSWORD, newPassword));
 
-        assertThat(actual.getNickname()).isEqualTo(newUserName);
+        assertThat(actual.getNickname()).isEqualTo(newNickname);
     }
 
     @DisplayName("기존 비밀번호가 일치하지 않으면 회원 정보를 수정할 수 없다.")
@@ -93,11 +93,11 @@ class CustomerServiceTest {
         final Long customerId = customerService.registerCustomer(
                 new CustomerRegisterRequest(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
-        final String newUserName = "Guest123123";
+        final String newNickname = "Guest123123";
         final String newPassword = "anotherqwer1234!@#$";
 
         assertThatThrownBy(() ->customerService.updateCustomer(customerId,
-                new CustomerUpdateRequest(newUserName, newPassword, newPassword)))
+                new CustomerUpdateRequest(newNickname, newPassword, newPassword)))
                 .isInstanceOf(WrongPasswordException.class);
     }
 

@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
@@ -37,7 +37,7 @@ public class CustomerService {
 
     public CustomerResponse findById(final Long customerId) {
         final Customer customer = getById(customerId);
-        return new CustomerResponse(customer.getEmail(), customer.getUserName());
+        return new CustomerResponse(customer.getEmail(), customer.getNickname());
     }
 
     private Customer getById(final Long customerId) {
@@ -53,7 +53,7 @@ public class CustomerService {
             throw new WrongPasswordException();
         }
         customer.update(customerUpdateRequest.getNickname(), customerUpdateRequest.getNewPassword());
-        return new CustomerUpdateResponse(customer.getUserName());
+        return new CustomerUpdateResponse(customer.getNickname());
     }
 
     @Transactional

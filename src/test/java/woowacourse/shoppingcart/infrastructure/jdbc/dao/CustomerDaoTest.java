@@ -13,7 +13,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -92,18 +92,18 @@ class CustomerDaoTest {
         final Customer oldCustomer = new Customer(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD);
         final Long customerId = customerDao.save(oldCustomer);
         final Customer customer = new Customer(customerId, oldCustomer.getEmail(),
-                oldCustomer.getUserName(), oldCustomer.getPassword());
+                oldCustomer.getNickname(), oldCustomer.getPassword());
 
-        final String newUserName = "Guest1234";
+        final String newNickname = "Guest1234";
         final String newPassword = "qwer1234!@#$";
-        customer.update(newUserName, newPassword);
+        customer.update(newNickname, newPassword);
 
         customerDao.update(customer);
 
         Optional<Customer> actual = customerDao.findById(customer.getId());
 
         assertThat(actual).isPresent();
-        assertThat(actual.get()).extracting("userName", "password")
-                .containsExactly(newUserName, newPassword);
+        assertThat(actual.get()).extracting("nickname", "password")
+                .containsExactly(newNickname, newPassword);
     }
 }

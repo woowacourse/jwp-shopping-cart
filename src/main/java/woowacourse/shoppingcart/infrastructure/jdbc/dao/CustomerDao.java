@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -23,7 +23,7 @@ public class CustomerDao {
             (resultSet, rowNum) -> new Customer(
                     resultSet.getLong("id"),
                     resultSet.getString("email"),
-                    resultSet.getString("userName"),
+                    resultSet.getString("nickname"),
                     resultSet.getString("password")
             );
 
@@ -45,7 +45,7 @@ public class CustomerDao {
 
     public Optional<Customer> findById(final long id) {
         try {
-            final String query = "SELECT id, email, userName, password FROM customer WHERE id = (:id)";
+            final String query = "SELECT id, email, nickname, password FROM customer WHERE id = (:id)";
             final SqlParameterSource parameters = new MapSqlParameterSource("id", id);
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, parameters, ROW_MAPPER));
         } catch (final EmptyResultDataAccessException e) {
@@ -55,7 +55,7 @@ public class CustomerDao {
 
     public Optional<Customer> findByEmail(final String customerEmail) {
         try {
-            final String query = "SELECT id, email, userName, password FROM customer WHERE email = (:email)";
+            final String query = "SELECT id, email, nickname, password FROM customer WHERE email = (:email)";
             final SqlParameterSource parameters = new MapSqlParameterSource("email", customerEmail);
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, parameters, ROW_MAPPER));
         } catch (final EmptyResultDataAccessException e) {
@@ -63,11 +63,11 @@ public class CustomerDao {
         }
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByNickname(final String nickname) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = (:userName)";
-            final SqlParameterSource parameters = new MapSqlParameterSource("userName",
-                    userName.toLowerCase(Locale.ROOT));
+            final String query = "SELECT id FROM customer WHERE username = (:nickname)";
+            final SqlParameterSource parameters = new MapSqlParameterSource("nickname",
+                    nickname.toLowerCase(Locale.ROOT));
             return jdbcTemplate.queryForObject(query, parameters,
                     (resultSet, rowNum) -> resultSet.getLong("id"));
         } catch (final EmptyResultDataAccessException e) {
@@ -89,9 +89,9 @@ public class CustomerDao {
     }
 
     public void update(final Customer customer) {
-        final String query = "UPDATE customer SET username=(:username), password=(:password) WHERE id=(:id)";
+        final String query = "UPDATE customer SET nickname=(:nickname), password=(:password) WHERE id=(:id)";
         final SqlParameterSource parameters = new MapSqlParameterSource("id", customer.getId())
-                .addValue("username", customer.getUserName())
+                .addValue("nickname", customer.getNickname())
                 .addValue("password", customer.getPassword());
         jdbcTemplate.update(query, parameters);
     }

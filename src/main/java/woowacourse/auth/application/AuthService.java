@@ -7,7 +7,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.CustomerDao;
 
@@ -30,7 +30,7 @@ public class AuthService {
         }
 
         final String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
-        return new TokenResponse(customer.getUserName(), token);
+        return new TokenResponse(customer.getNickname(), token);
     }
 
     public Long extractIdFromToken(final String token) {

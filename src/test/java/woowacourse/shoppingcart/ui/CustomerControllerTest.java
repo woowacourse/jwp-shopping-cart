@@ -35,12 +35,12 @@ public class CustomerControllerTest {
         validateRequest(email, NORMAL_NAME, NORMAL_PASSWORD);
     }
 
-    @DisplayName("UserName을 검증한다.")
+    @DisplayName("Nickname을 검증한다.")
     @ParameterizedTest
     @NullSource
     @ValueSource(strings = {"a", "12345678901"})
-    void validateUserName(final String userName) throws Exception{
-        validateRequest(NORMAL_EMAIL, userName, NORMAL_PASSWORD);
+    void validateNickname(final String nickname) throws Exception{
+        validateRequest(NORMAL_EMAIL, nickname, NORMAL_PASSWORD);
     }
 
     @DisplayName("Password를 검증한다.")
@@ -51,11 +51,11 @@ public class CustomerControllerTest {
         validateRequest(NORMAL_EMAIL, NORMAL_NAME, password);
     }
 
-    private void validateRequest(final String email, final String userName, final String password) throws Exception {
+    private void validateRequest(final String email, final String nickname, final String password) throws Exception {
         mockMvc.perform(post("/customers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
-                        .content(String.valueOf(new CustomerRegisterRequest(email, userName, password)))
+                        .content(String.valueOf(new CustomerRegisterRequest(email, nickname, password)))
                 ).andDo(print())
                 .andExpect(status().isBadRequest());
     }
