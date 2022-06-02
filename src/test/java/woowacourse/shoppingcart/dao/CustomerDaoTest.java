@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -44,7 +45,8 @@ public class CustomerDaoTest {
                 new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
         Long customerId = customerDao.save(customer);
 
-        Long responseId = customerDao.findIdByEmailAndPassword("email", "Pw123456!").get();
+        Long responseId = customerDao.findIdByEmailAndPassword(
+            "email", Password.from("Pw123456!").getPassword()).get();
 
         assertThat(responseId).isEqualTo(customerId);
     }
@@ -108,7 +110,11 @@ public class CustomerDaoTest {
 
         //then
         assertThat(response).extracting("email", "password", "name", "phone", "address")
-                .containsExactly("email", "Pw123456!", "name", "010-1234-5678", "address");
+                .containsExactly(
+                    "email",
+                    Password.from("Pw123456!").getPassword(),
+                    "name", "010-1234-5678",
+                    "address");
     }
 
     @DisplayName("id가 존재하는지 확인한다.")
@@ -141,7 +147,10 @@ public class CustomerDaoTest {
         //then
         Customer actual = customerDao.findById(id);
         assertThat(actual).extracting("email", "password", "name", "phone", "address")
-                .containsExactly("email", "Pw123456!!", "name2", "010-1234-1234", "address2");
+                .containsExactly(
+                    "email",
+                    Password.from("Pw123456!!").getPassword(),
+                    "name2", "010-1234-1234", "address2");
     }
 
     @DisplayName("id를 이용하여 customer를 삭제한다.")

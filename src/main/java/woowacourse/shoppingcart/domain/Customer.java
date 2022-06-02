@@ -7,18 +7,17 @@ public class Customer {
     private static final int MINIMUM_NAME_LENGTH = 1;
     private static final int MAXIMUM_NAME_LENGTH = 30;
     private static final String PHONE_REGEX = "^010-\\d{4}-\\d{4}$";
-    private static final String PASSWORD_REGEX =
-            "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$";
 
     private final Long id;
     private final String email;
-    private final String password;
+    private final Password password;
     private final String name;
     private final String phone;
     private final String address;
 
-    public Customer(Long id, String email, String password, String name, String phone, String address) {
-        validate(password, name, phone);
+    public Customer(Long id, String email, Password password, String name, String phone, String address) {
+        validate(name, phone);
+
         this.id = id;
         this.email = email;
         this.password = password;
@@ -27,14 +26,17 @@ public class Customer {
         this.address = address;
     }
 
-    private void validate(String password, String name, String phone) {
+    private void validate(String name, String phone) {
         validateNameLength(name);
         validatePhoneFormat(phone);
-        validatePasswordFormat(password);
     }
 
     public Customer(String email, String password, String name, String phone, String address) {
-        this(null, email, password, name, phone, address);
+        this(null, email, Password.from(password), name, phone, address);
+    }
+
+    public Customer(Long id, String email, String password, String name, String phone, String address) {
+        this(id, email, Password.from(password), name, phone, address);
     }
 
     private void validateNameLength(String name) {
@@ -49,12 +51,6 @@ public class Customer {
         }
     }
 
-    private void validatePasswordFormat(String password) {
-        if (!Pattern.matches(PASSWORD_REGEX, password)) {
-            throw new IllegalArgumentException("비밀번호의 형식이 맞지 않습니다.");
-        }
-    }
-
     public Long getId() {
         return id;
     }
@@ -64,7 +60,7 @@ public class Customer {
     }
 
     public String getPassword() {
-        return password;
+        return password.getPassword();
     }
 
     public String getName() {
