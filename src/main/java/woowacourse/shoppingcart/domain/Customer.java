@@ -1,28 +1,26 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class Customer {
 
     private final Long id;
     private final Nickname nickname;
     private final String email;
-    private final String password;
+    private final Password password;
 
     public Customer(final Long id, final String nickname, final String email, final String password) {
         this.id = id;
         this.nickname = new Nickname(nickname);
         this.email = email;
-        this.password = password;
+        this.password = Password.fromHash(password);
     }
 
     public Customer(final String nickname, final String email, final String password) {
-        this(null, nickname, email, hash(password));
-    }
-
-    private static String hash(final String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
+        this.id = null;
+        this.nickname = new Nickname(nickname);
+        this.email = email;
+        this.password = Password.fromPlain(password);
     }
 
     public Long getId() {
@@ -38,7 +36,7 @@ public class Customer {
     }
 
     public String getPassword() {
-        return password;
+        return password.getValue();
     }
 
     @Override

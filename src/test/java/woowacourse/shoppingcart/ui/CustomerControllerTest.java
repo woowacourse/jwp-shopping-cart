@@ -34,7 +34,7 @@ class CustomerControllerTest extends ControllerTest {
                 1L,
                 "rick",
                 "email@email.com",
-                "fake-password"
+                HASH
         );
     }
 

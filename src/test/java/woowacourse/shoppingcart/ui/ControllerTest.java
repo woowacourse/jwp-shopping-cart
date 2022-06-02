@@ -18,6 +18,8 @@ import woowacourse.shoppingcart.support.JwtTokenProvider;
 })
 abstract class ControllerTest {
 
+    protected static final String HASH = "$2a$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
     @MockBean
     protected AuthService authService;
 

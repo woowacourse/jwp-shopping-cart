@@ -95,8 +95,7 @@ class CustomerServiceTest extends ServiceMockTest {
     void update_customer_void() {
         // given
         final String email = "kun@email.com";
-        final String password = "qwerasdf321";
-        final Customer customer = new Customer(1L, "kun", email, password);
+        final Customer customer = new Customer(1L, "kun", email, HASH);
 
         final CustomerUpdationRequest request = new CustomerUpdationRequest("rick", "qwerasdf123");
 
@@ -109,7 +108,7 @@ class CustomerServiceTest extends ServiceMockTest {
     @DisplayName("Customer를 삭제한다.")
     void delete_customer_void() {
         // given
-        final Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
+        final Customer customer = new Customer(1L, "kun", "kun@email.com", HASH);
 
         // when, then
         assertThatCode(() -> customerService.delete(customer))

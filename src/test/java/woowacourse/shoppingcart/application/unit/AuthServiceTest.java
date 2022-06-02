@@ -58,7 +58,7 @@ class AuthServiceTest extends ServiceMockTest {
         final String password = "qwerasdf123";
         final LoginRequest request = new LoginRequest(email, password);
 
-        final Customer customer = new Customer(1L, "kun", email, password);
+        final Customer customer = new Customer(1L, "kun", email, HASH);
         given(customerService.getByEmail(email))
                 .willReturn(customer);
 

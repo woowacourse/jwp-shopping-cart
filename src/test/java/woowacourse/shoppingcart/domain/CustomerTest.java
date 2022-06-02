@@ -10,7 +10,7 @@ class CustomerTest {
     @Test
     void hashPassword() {
         //given
-        final String password = "qwer123";
+        final String password = "qwer1234";
 
         //when
         final Customer customer = new Customer("kun", "kun@email.com", password);

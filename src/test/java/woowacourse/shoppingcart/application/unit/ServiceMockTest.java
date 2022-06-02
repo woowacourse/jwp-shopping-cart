@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.support.JwtTokenProvider;
 @ExtendWith(MockitoExtension.class)
 abstract class ServiceMockTest {
 
+    protected static final String HASH = "$2a$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     protected static MockedStatic<BCrypt> bcrypt;
 
     @Mock
