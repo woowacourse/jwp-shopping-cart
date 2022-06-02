@@ -6,7 +6,7 @@ import woowacourse.shoppingcart.util.PasswordEncryptor;
 
 public class Password {
 
-    private static final int MIN_RAW_VALUE_LENGTH = 8;
+    public static final int MIN_RAW_VALUE_LENGTH = 8;
 
     private final String hashedValue;
 

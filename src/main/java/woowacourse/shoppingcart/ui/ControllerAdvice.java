@@ -1,7 +1,9 @@
 package woowacourse.shoppingcart.ui;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +13,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.auth.dto.ErrorResponse;
 import woowacourse.auth.exception.AuthorizationFailureException;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
+import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -37,9 +39,11 @@ public class ControllerAdvice {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        final FieldError mainError = fieldErrors.get(0);
+        final String errorMessage = fieldErrors.stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(" "));
 
-        return ResponseEntity.badRequest().body(new ErrorResponse(mainError.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
     }
 
     @ExceptionHandler({

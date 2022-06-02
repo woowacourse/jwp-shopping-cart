@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +30,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> register(@RequestBody final CustomerRegisterRequest request) {
+    public ResponseEntity<Void> register(@RequestBody @Valid final CustomerRegisterRequest request) {
         customerService.save(request.toServiceDto());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -43,21 +44,21 @@ public class CustomerController {
 
     @PutMapping("/profile")
     public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal final Long id,
-                                              @RequestBody final CustomerProfileUpdateRequest request) {
+                                              @RequestBody @Valid final CustomerProfileUpdateRequest request) {
         customerService.updateName(request.toServiceRequest(id));
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal final Long id,
-                                               @RequestBody final CustomerPasswordUpdateRequest request) {
+                                               @RequestBody @Valid final CustomerPasswordUpdateRequest request) {
         customerService.updatePassword(request.toServiceRequest(id));
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@AuthenticationPrincipal final Long id,
-                                       @RequestBody final CustomerDeleteRequest request) {
+                                       @RequestBody @Valid final CustomerDeleteRequest request) {
         customerService.delete(request.toServiceRequest(id));
         return ResponseEntity.noContent().build();
     }
