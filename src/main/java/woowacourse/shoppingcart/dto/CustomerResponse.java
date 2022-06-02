@@ -2,8 +2,11 @@ package woowacourse.shoppingcart.dto;
 
 public class CustomerResponse {
 
-    private final String email;
-    private final String username;
+    private String email;
+    private String username;
+
+    public CustomerResponse() {
+    }
 
     public CustomerResponse(String email, String username) {
         this.email = email;
