@@ -56,7 +56,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         // 토큰 발급 요청이 거부된다
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
@@ -69,7 +69,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         // 내 정보 조회 요청이 거부된다
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     public static ExtractableResponse<Response> 로그인_요청(LoginRequest loginRequest) {

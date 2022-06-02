@@ -8,6 +8,8 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.exception.InvalidCustomerLoginException;
+import woowacourse.shoppingcart.exception.InvalidTokenException;
 import woowacourse.shoppingcart.util.HashTool;
 
 @Service
@@ -25,7 +27,7 @@ public class AuthService {
     @Transactional
     public TokenResponse createToken(TokenRequest tokenRequest) {
         if (!customerDao.checkValidLogin(tokenRequest.getLoginId(), HashTool.hashing(tokenRequest.getPassword()))) {
-            throw new IllegalArgumentException("아이디나 패스워드 정보가 일치하지 않습니다.");
+            throw new InvalidCustomerLoginException();
         }
 
         String token = jwtTokenProvider.createToken(tokenRequest.getLoginId());
@@ -35,7 +37,7 @@ public class AuthService {
 
     public LoginCustomer findCustomerByToken(String token) {
         if (!jwtTokenProvider.validateToken(token)) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+            throw new InvalidTokenException();
         }
         String payload = jwtTokenProvider.getPayload(token);
 

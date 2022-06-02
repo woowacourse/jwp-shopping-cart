@@ -14,6 +14,8 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.exception.InvalidCustomerLoginException;
+import woowacourse.shoppingcart.exception.InvalidTokenException;
 
 @SuppressWarnings("NonAsciiChracters")
 @SpringBootTest
@@ -42,7 +44,7 @@ class AuthServiceTest {
             TokenRequest tokenRequest = new TokenRequest("invalidId@gmail.com", "12345678aA!");
 
             assertThatThrownBy(() -> authService.createToken(tokenRequest))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidCustomerLoginException.class);
         }
 
         @Test
@@ -50,7 +52,7 @@ class AuthServiceTest {
             TokenRequest tokenRequest = new TokenRequest("sunhpark42@gmail.com", "invalidPassword");
 
             assertThatThrownBy(() -> authService.createToken(tokenRequest))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidCustomerLoginException.class);
         }
     }
 
@@ -73,7 +75,7 @@ class AuthServiceTest {
         @Test
         void 토큰_정보가_올바르지_않은_경우_예외발생() {
             assertThatThrownBy(() -> authService.findCustomerByToken("InvalidToken"))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidTokenException.class);
         }
     }
 }
