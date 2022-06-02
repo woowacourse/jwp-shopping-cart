@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
+import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -16,6 +18,7 @@ import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.NewPassword;
 
 @Service
+@Transactional
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -58,6 +61,13 @@ public class CustomerService {
         } catch (JsonProcessingException e) {
             throw new UnsupportedOperationException(e.getMessage());
         }
+    }
 
+    public void updateCustomer(ModifiedCustomerDto modifiedCustomerDto) {
+        final Customer modifiedCustomer = ModifiedCustomerDto.toModifiedCustomerDto(modifiedCustomerDto);
+        final int affectedRows = customerDao.updateCustomer(modifiedCustomer);
+        if (affectedRows != 1) {
+            throw new IllegalArgumentException("업데이트가 되지 않았습니다.");
+        }
     }
 }

@@ -40,6 +40,11 @@ public class Customer {
         this(id, email, password, profileImageUrl, name, gender, birthday, contact, fullAddress, new Terms(true));
     }
 
+    public Customer(Email email, Password password, String profileImageUrl,
+                    Name name, Gender gender, Birthday birthday, Contact contact,
+                    FullAddress fullAddress) {
+        this(null, email, password, profileImageUrl, name, gender, birthday, contact, fullAddress, new Terms(true));
+    }
 
     public Long getId() {
         return id;

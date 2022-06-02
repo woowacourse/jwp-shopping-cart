@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,9 +17,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
+import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.dao.CustomerFixture;
+import woowacourse.shoppingcart.domain.address.FullAddress;
+import woowacourse.shoppingcart.domain.customer.Birthday;
+import woowacourse.shoppingcart.domain.customer.Contact;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Gender;
+import woowacourse.shoppingcart.domain.customer.Name;
+import woowacourse.shoppingcart.domain.customer.NewPassword;
+import woowacourse.shoppingcart.domain.customer.Terms;
+import woowacourse.shoppingcart.dto.AddressRequest;
 
 @SpringBootTest
 @DisplayName("CustomerService 는")
@@ -65,7 +76,6 @@ class CustomerServiceTest {
         }
     }
 
-
     @Test
     @DisplayName("로그인이 되면 토큰이 정상적으로 발급된다.")
     void createAccessToken() throws JsonProcessingException {
@@ -83,5 +93,16 @@ class CustomerServiceTest {
         CustomerDto newCustomer = CustomerFixture.tommyDto;
         final Long customerId = customerService.createCustomer(newCustomer);
         return customerId;
+    }
+
+    @DisplayName("사용자 정보를 업데이트 한다.")
+    @Test
+    void updateCustomer() {
+        signUpCustomer();
+        ModifiedCustomerDto modifiedCustomerDto = new ModifiedCustomerDto("her0807@naver.com", "password1!",
+                "example.com", "토미", "male", "1988-08-07",
+                "01987654321",
+                new AddressRequest("d", "e", "54321"), true);
+        assertThatNoException().isThrownBy(() -> customerService.updateCustomer(modifiedCustomerDto));
     }
 }
