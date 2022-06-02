@@ -24,11 +24,14 @@ import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 class CustomerAcceptanceTest extends AcceptanceTest2 {
 
     private static final String 유효한_아이디 = "유효한_아이디";
-    private static final SignUpRequest 유효한_사용자 = new SignUpRequest(유효한_아이디, "password1@", "닉네임", 15);
+    private static final String 유효한_비밀번호 = "password1@";
+    private static final String 유효하지_않은_비밀번호 = "password1!";
+    private static final SignUpRequest 유효한_회원가입_요청 = new SignUpRequest(유효한_아이디, 유효한_비밀번호, "닉네임", 15);
+    private static final TokenRequest 유효한_로그인_요청 = new TokenRequest(유효한_아이디, 유효한_비밀번호);
 
     @Test
     void 회원가입() {
-        ExtractableResponse<Response> response = 회원가입_요청(유효한_사용자);
+        ExtractableResponse<Response> response = 회원가입_요청(유효한_회원가입_요청);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.headers().getValue("location")).isEqualTo("/customers/me");
@@ -40,7 +43,8 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
 
         @Test
         void 로그인된_경우_200() {
-            String 유효한_토큰 = 회원가입_요청_후_토큰_반환(유효한_사용자);
+            회원가입_요청(유효한_회원가입_요청);
+            String 유효한_토큰 = 로그인_성공_시_토큰_반환(유효한_로그인_요청);
 
             ExtractableResponse<Response> response = 내_정보_조회_요청(유효한_토큰);
             GetMeResponse actualBody = response.body().jsonPath().getObject(".", GetMeResponse.class);
@@ -65,9 +69,9 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
 
         @Test
         void 로그인된_경우_200() {
-            SignUpRequest 고객 = new SignUpRequest("유효한_아이디", "password1@", "닉네임", 15);
+            회원가입_요청(유효한_회원가입_요청);
+            String 유효한_토큰 = 로그인_성공_시_토큰_반환(유효한_로그인_요청);
             UpdateMeRequest 수정된_고객 = new UpdateMeRequest("새로운_아이디", "새로운_닉네임", 20);
-            String 유효한_토큰 = 회원가입_요청_후_토큰_반환(고객);
 
             ExtractableResponse<Response> response = 내_정보_수정_요청(수정된_고객, 유효한_토큰);
 
@@ -91,7 +95,8 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
 
         @Test
         void 로그인되었고_회원탈퇴_성공시_204() {
-            String 유효한_토큰 = 회원가입_요청_후_토큰_반환(유효한_사용자);
+            회원가입_요청(유효한_회원가입_요청);
+            String 유효한_토큰 = 로그인_성공_시_토큰_반환(유효한_로그인_요청);
 
             ExtractableResponse<Response> response = 회원탈퇴_요청(유효한_토큰);
 
@@ -100,7 +105,8 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
 
         @Test
         void 존재하지_않는_회원의_토큰으로_탈퇴하려는_경우_404() {
-            String 유효한_토큰 = 회원가입_요청_후_토큰_반환(유효한_사용자);
+            회원가입_요청(유효한_회원가입_요청);
+            String 유효한_토큰 = 로그인_성공_시_토큰_반환(유효한_로그인_요청);
             회원탈퇴_요청(유효한_토큰);
 
             ExtractableResponse<Response> response = 회원탈퇴_요청(유효한_토큰);
@@ -123,10 +129,9 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
 
         @Test
         void 로그인되었고_현재_비밀번호를_제대로_입력한_경우_200() {
-            String 기존_비밀번호 = "password1@";
-            SignUpRequest customer = new SignUpRequest("유효한_아이디", 기존_비밀번호, "닉네임", 15);
-            UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(기존_비밀번호, "password!1");
-            String 유효한_토큰 = 회원가입_요청_후_토큰_반환(customer);
+            회원가입_요청(유효한_회원가입_요청);
+            String 유효한_토큰 = 로그인_성공_시_토큰_반환(유효한_로그인_요청);
+            UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(유효한_비밀번호, "password!1");
 
             ExtractableResponse<Response> response = 내_비밀번호_수정_요청(updatePasswordRequest, 유효한_토큰);
 
@@ -135,11 +140,9 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
 
         @Test
         void 로그인되었으나_현재_비밀번호를_잘못_입력한_경우_400() {
-            String 기존_비밀번호 = "password1@";
-            String 틀린_비밀번호 = "password1!";
-            SignUpRequest customer = new SignUpRequest("유효한_아이디", 기존_비밀번호, "닉네임", 15);
-            UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(틀린_비밀번호, "새로운_비밀번호");
-            String 유효한_토큰 = 회원가입_요청_후_토큰_반환(customer);
+            회원가입_요청(유효한_회원가입_요청);
+            String 유효한_토큰 = 로그인_성공_시_토큰_반환(유효한_로그인_요청);
+            UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(유효하지_않은_비밀번호, "새로운_비밀번호");
 
             ExtractableResponse<Response> response = 내_비밀번호_수정_요청(updatePasswordRequest, 유효한_토큰);
 
@@ -175,7 +178,7 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
 
         @Test
         void 이미_존재하는_아이디인_경우_거짓_200() {
-            회원가입_요청(유효한_사용자);
+            회원가입_요청(유효한_회원가입_요청);
             UniqueUsernameRequest 이미_저장된_아이디 = new UniqueUsernameRequest(유효한_아이디);
 
             ExtractableResponse<Response> response = 아이디_중복_조회_요청(이미_저장된_아이디);
@@ -205,10 +208,7 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
                 .extract();
     }
 
-    private String 회원가입_요청_후_토큰_반환(SignUpRequest signupRequest) {
-        회원가입_요청(signupRequest);
-        TokenRequest tokenRequest = new TokenRequest(signupRequest.getUsername()
-                , signupRequest.getPassword());
+    private String 로그인_성공_시_토큰_반환(TokenRequest tokenRequest) {
         return RestAssured.given().log().all()
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
