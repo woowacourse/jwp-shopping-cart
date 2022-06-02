@@ -37,7 +37,7 @@ public class CustomerController {
         return ResponseEntity.ok(customerResponse);
     }
 
-    @PostMapping("/validation")
+    @GetMapping("/validation")
     public ResponseEntity<EmailDuplicationResponse> checkEmailDuplication(@RequestParam String email) {
         EmailDuplicationResponse response = customerService.isDuplicatedEmail(email);
         return ResponseEntity.ok(response);
