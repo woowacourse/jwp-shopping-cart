@@ -1,100 +1,67 @@
 package woowacourse.auth.ui;
 
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.eq;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.auth.utils.Fixture.email;
 import static woowacourse.auth.utils.Fixture.nickname;
 import static woowacourse.auth.utils.Fixture.password;
+import static woowacourse.auth.utils.Fixture.signupRequest;
+import static woowacourse.auth.utils.Fixture.tokenRequest;
+import static woowacourse.utils.RestAssuredUtils.deleteWithToken;
+import static woowacourse.utils.RestAssuredUtils.getWithToken;
+import static woowacourse.utils.RestAssuredUtils.httpPost;
+import static woowacourse.utils.RestAssuredUtils.login;
+import static woowacourse.utils.RestAssuredUtils.patchWithToken;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.auth.application.AuthService;
-import woowacourse.auth.application.CustomerService;
-import woowacourse.auth.domain.Customer;
+import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
-import woowacourse.auth.dto.customer.CustomerUpdateResponse;
+import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.auth.dto.customer.SignupRequest;
-import woowacourse.auth.dto.customer.SignupResponse;
-import woowacourse.auth.exception.InvalidAuthException;
-import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
-@WebMvcTest({CustomerController.class, AuthService.class})
-class CustomerControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private CustomerService customerService;
-    @MockBean
-    private JwtTokenProvider tokenProvider;
+class CustomerControllerTest extends AcceptanceTest {
 
     @DisplayName("회원가입을 한다.")
     @Test
-    void signUp() throws Exception {
+    void signUp() {
         // given
-        SignupRequest request = new SignupRequest(email, password, nickname);
-        String requestJson = objectMapper.writeValueAsString(request);
-        given(customerService.signUp(any(SignupRequest.class)))
-                .willReturn(new Customer(1L, email, password, nickname));
+        ExtractableResponse<Response> response = httpPost("/customers", signupRequest);
 
-        // when
-        mockMvc.perform(post("/customers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isCreated())
-                .andExpect(content().json(objectMapper.writeValueAsString(
-                        new SignupResponse(email, nickname)))
-                );
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                () -> assertThat(response.jsonPath().getString("email")).isEqualTo(email),
+                () -> assertThat(response.jsonPath().getString("nickname")).isEqualTo(nickname)
+        );
     }
 
     @DisplayName("중복된 이메일이 있으면 가입하지 못한다.")
     @Test
     void signUpDuplicatedEmail() throws Exception {
         // given
-        SignupRequest request = new SignupRequest(email, password, nickname);
-        String requestJson = objectMapper.writeValueAsString(request);
-        given(customerService.signUp(any(SignupRequest.class)))
-                .willThrow(IllegalArgumentException.class);
+        ExtractableResponse<Response> firstResponse = httpPost("/customers", signupRequest);
 
-        // when
-        mockMvc.perform(post("/customers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isBadRequest());
+        // given
+        ExtractableResponse<Response> secondResponse = httpPost("/customers", signupRequest);
+
+        assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("이메일의 형식이 올바르지 못하면 400 반환")
+    @DisplayName("이메일의 공백이면 400 반환")
     @ParameterizedTest
-    @ValueSource(strings = {"123gmail.com", "123@gmailcom", "123gamilcom"})
+    @ValueSource(strings = {"", " "})
     void emailFormatException(String email) throws Exception {
         // given
-        SignupRequest request = new SignupRequest(email, password, nickname);
-        String requestJson = objectMapper.writeValueAsString(request);
-        given(customerService.signUp(any(SignupRequest.class)))
-                .willThrow(IllegalArgumentException.class);
+        ExtractableResponse<Response> response = httpPost("/customers", new SignupRequest(email, password, nickname));
 
-        // when
-        mockMvc.perform(post("/customers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isBadRequest());
+        // when && then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("닉네임의 형식이 올바르지 못하면 400 반환")
@@ -102,16 +69,10 @@ class CustomerControllerTest {
     @ValueSource(strings = {"1", "12345678901"})
     void nicknameFormatException(String nickname) throws Exception {
         // given
-        SignupRequest request = new SignupRequest(email, password, nickname);
-        String requestJson = objectMapper.writeValueAsString(request);
-        given(customerService.signUp(any(SignupRequest.class)))
-                .willThrow(IllegalArgumentException.class);
+        ExtractableResponse<Response> response = httpPost("/customers", new SignupRequest(email, password, nickname));
 
-        // when
-        mockMvc.perform(post("/customers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isBadRequest());
+        // when && then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("비밀번호의 형식이 올바르지 못하면 400 반환")
@@ -119,121 +80,115 @@ class CustomerControllerTest {
     @ValueSource(strings = {"1234", "abasdas", "!@#!@#", "123d213", "asdasd!@#@", "123!@@##!1"})
     void passwordFormatException(String password) throws Exception {
         // given
-        SignupRequest request = new SignupRequest(email, password, nickname);
-        String requestJson = objectMapper.writeValueAsString(request);
-        given(customerService.signUp(any(SignupRequest.class)))
-                .willThrow(IllegalArgumentException.class);
+        ExtractableResponse<Response> response = httpPost("/customers", new SignupRequest(email, password, nickname));
 
-        // when
-        mockMvc.perform(post("/customers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isBadRequest());
+        // when && then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("토큰이 없을 때 탈퇴를 하려고 하면 401 반환")
     @Test
     void signOutNotLogin() throws Exception {
         // when
-        mockMvc.perform(delete("/customers"))
-                .andExpect(status().isUnauthorized());
+        SignoutRequest signoutRequest = new SignoutRequest(password);
+        ExtractableResponse<Response> response = deleteWithToken("/customers", "noToken", signoutRequest);
+
+        // when && then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("토큰이 있을 때 회원 탈퇴를 한다.")
+    @DisplayName("토큰이 있고 비밀번호가 일치할 때 회원 탈퇴를 한다.")
     @Test
-    void signOutwithToken() throws Exception {
+    void signOutwithToken_correct_password() {
         // given
-        String token = "access-token";
-        loginCheck(token);
+        httpPost("/customers", signupRequest);
+        ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
+
+        String token = loginResponse.jsonPath().getString("accessToken");
 
         // when
-        mockMvc.perform(delete("/customers")
-                .header("Authorization", "Bearer " + token))
-                .andExpect(status().isNoContent());
+        SignoutRequest signoutRequest = new SignoutRequest(password);
+        ExtractableResponse<Response> response = deleteWithToken("/customers", token, signoutRequest);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
+
+    @DisplayName("토큰이 있고 비밀번호가 일치할 때 회원 탈퇴를 한다.")
+    @Test
+    void signOutwithToken_incorrect_password() {
+        // given
+        httpPost("/customers", signupRequest);
+        ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
+
+        String token = loginResponse.jsonPath().getString("accessToken");
+
+        // when
+        SignoutRequest signoutRequest = new SignoutRequest("incorrect!1");
+        ExtractableResponse<Response> response = deleteWithToken("/customers", token, signoutRequest);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
 
     @DisplayName("토큰이 있을 때 회원정보 수정을 한다.")
     @Test
-    void updateCustomer() throws Exception {
+    void updateCustomer() {
         // given
-        String token = "access-token";
-        Customer loginCustomer = loginCheck(token);
-        given(customerService.update(eq(loginCustomer), any(CustomerUpdateRequest.class)))
-                .willReturn(new Customer(1L, email, "b1234", "thor"));
+        httpPost("/customers", signupRequest);
+        ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
+
+        String token = loginResponse.jsonPath().getString("accessToken");
 
         // when
         CustomerUpdateRequest request = new CustomerUpdateRequest(
                 "thor", "a1234!", "b1234!"
         );
-        CustomerUpdateResponse response = new CustomerUpdateResponse("thor");
 
-        mockMvc.perform(patch("/customers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + token)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(content().json(objectMapper.writeValueAsString(response)))
-                .andExpect(status().isOk());
+        ExtractableResponse<Response> response = patchWithToken("/customers", token, request);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("토큰이 없을 때 회원 정보 수정을 하면 401 반환")
     @Test
-    void updateCustomerNotToken() throws Exception {
+    void updateCustomerNotToken() {
         // given
+        httpPost("/customers", signupRequest);
+
+        // when
         CustomerUpdateRequest request = new CustomerUpdateRequest(
                 "thor", "a1234!", "b1234!"
         );
 
-        // when
-        mockMvc.perform(patch("/customers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isUnauthorized());
-    }
-
-    private Customer loginCheck(String token) {
-        given(tokenProvider.getPayload(token))
-                .willReturn(email);
-        given(tokenProvider.validateToken(token))
-                .willReturn(true);
-        Customer loginCustomer = new Customer(1L, email, password, nickname);
-        given(customerService.findByEmail(email))
-                .willReturn(loginCustomer);
-        return loginCustomer;
+        ExtractableResponse<Response> response = patchWithToken("/customers", "noToken", request);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("기존 비밀번호가 다르면 정보를 수정할 수 없다.")
     @Test
-    void updateCustomerNotSamePassword() throws Exception {
+    void updateCustomerNotSamePassword() {
         // given
-        String token = "access-token";
-        Customer loginCustomer = loginCheck(token);
-        given(customerService.update(eq(loginCustomer), any(CustomerUpdateRequest.class)))
-                .willThrow(new InvalidAuthException());
+        httpPost("/customers", signupRequest);
+        ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
 
-        CustomerUpdateRequest request = new CustomerUpdateRequest(
-                "thor", "a1234!", "b1234!"
-        );
+        String token = loginResponse.jsonPath().getString("accessToken");
 
         // when
-        mockMvc.perform(patch("/customers")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isUnauthorized());
+        CustomerUpdateRequest request = new CustomerUpdateRequest(
+                "thor", "different!1", "b1234!"
+        );
+
+        ExtractableResponse<Response> response = patchWithToken("/customers", token, request);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("회원정보를 조회할 수 있다.")
     @Test
-    void findCustomer() throws Exception {
+    void findCustomer() {
         // given
-        String token = "access-token";
-        Customer loginCustomer = loginCheck(token);
+        httpPost("/customers", signupRequest);
+        ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
 
-        // when
-        mockMvc.perform(get("/customers")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SignupResponse(loginCustomer))))
-                .andExpect(status().isOk());
+        String token = loginResponse.jsonPath().getString("accessToken");
+
+        ExtractableResponse<Response> response = getWithToken("/customers", token);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

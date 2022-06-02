@@ -34,8 +34,10 @@ public class RestAssuredUtils {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> deleteWithToken(String path, String token) {
+    public static ExtractableResponse<Response> deleteWithToken(String path, String token, Object object) {
         return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(object)
                 .auth().oauth2(token)
                 .when().delete(path)
                 .then().log().all().extract();

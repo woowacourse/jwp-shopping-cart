@@ -15,6 +15,7 @@ import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateResponse;
+import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.dto.customer.SignupResponse;
 import woowacourse.auth.support.Login;
@@ -37,8 +38,8 @@ public class CustomerController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> signOut(@Login Customer customer) {
-        customerService.delete(customer);
+    public ResponseEntity<Void> signOut(@Login Customer customer, @RequestBody @Valid SignoutRequest request) {
+        customerService.delete(customer, request);
         return ResponseEntity.noContent().build();
     }
 
