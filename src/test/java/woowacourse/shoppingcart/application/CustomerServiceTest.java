@@ -87,6 +87,14 @@ class CustomerServiceTest {
         );
     }
 
+    @DisplayName("비밀번호가 일치하는지 확인한다.")
+    @Test
+    void confirmPassword() {
+        final Customer savedCustomer = customerService.save(signupRequest);
+
+        assertDoesNotThrow(() -> customerService.confirmPassword(savedCustomer.getUsername().getValue(), password));
+    }
+
     @DisplayName("phoneNumber와 address를 수정한다.")
     @Test
     void updateCustomer() {

@@ -15,6 +15,7 @@ import io.restassured.response.ValidatableResponse;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.ConfirmPasswordRequest;
 import woowacourse.shoppingcart.dto.ExceptionResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
@@ -22,11 +23,14 @@ import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
+    private final String username = "username";
+    private final String password = "password1234";
+
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
         // given
-        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01001012323", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest(username, password, "01001012323", "인천 서구 검단로");
 
         // when
         final ExtractableResponse<Response> response = signup(signupRequest);
@@ -39,7 +43,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void validateUsernameLength() {
         // given
-        final SignupRequest signupRequest = new SignupRequest("do", "ehdgh1234", "01012123434", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest("do", password, "01012123434", "인천 서구 검단로");
 
         // when
         final ExtractableResponse<Response> response = signup(signupRequest);
@@ -96,10 +100,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         // given
-        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest(username, password, "01022728572", "인천 서구 검단로");
         signup(signupRequest);
 
-        final LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        final LoginRequest loginRequest = new LoginRequest(username, password);
         final String accessToken = login(loginRequest);
 
         // when
@@ -113,14 +117,34 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("비밀밀호가 일치하는지 확인한다.")
+    @Test
+    void confirmPassword() {
+        final SignupRequest signupRequest = new SignupRequest(username, password, "01022728572", "인천 서구 검단로");
+        signup(signupRequest);
+
+        final LoginRequest loginRequest = new LoginRequest(username, password);
+        final String accessToken = login(loginRequest);
+
+        final ConfirmPasswordRequest confirmPasswordRequest = new ConfirmPasswordRequest(password);
+        RestAssured.given().log().all()
+            .auth().oauth2(accessToken)
+            .body(confirmPasswordRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/api/customers/password")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value());
+    }
+
     @DisplayName("phoneNumber, address 수정")
     @Test
     void updateMe() {
         // given
-        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest(username, password, "01022728572", "인천 서구 검단로");
         signup(signupRequest);
 
-        final LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        final LoginRequest loginRequest = new LoginRequest(username, password);
         final String accessToken = login(loginRequest);
 
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01011112222", "서울시 강남구");
@@ -146,10 +170,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updatePassword() {
         // given
-        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest(username, password, "01022728572", "인천 서구 검단로");
         signup(signupRequest);
 
-        final LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        final LoginRequest loginRequest = new LoginRequest(username, password);
         final String accessToken = login(loginRequest);
 
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("password1234");
@@ -167,10 +191,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        final SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        final SignupRequest signupRequest = new SignupRequest(username, password, "01022728572", "인천 서구 검단로");
         signup(signupRequest);
 
-        final LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        final LoginRequest loginRequest = new LoginRequest(username, password);
         final String accessToken = login(loginRequest);
 
         RestAssured.given().log().all()
@@ -183,7 +207,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         RestAssured
             .given().log().all()
-            .body(new LoginRequest("dongho108", "ehdgh1234"))
+            .body(new LoginRequest(username, password))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when().post("/api/customers/login")

@@ -54,6 +54,11 @@ public class CustomerService {
         customerDao.update(customer);
     }
 
+    public void confirmPassword(final String username, final String password) {
+        final Customer customer = findByUsername(username);
+        customer.getPassword().matches(passwordEncoder, password);
+    }
+
     public void updatePassword(final String username, final UpdateCustomerRequest updateCustomerRequest) {
         final Customer customer = findByUsername(username);
         final Password password = new Password(updateCustomerRequest.getPassword());

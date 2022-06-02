@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.ConfirmPasswordRequest;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 
@@ -49,6 +50,15 @@ public class CustomerController {
     ) {
         customerService.updateInfo((String)request.getAttribute("username"), updateCustomerRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
+    }
+
+    @PostMapping("/password")
+    public ResponseEntity<Void> confirmPassword(
+        @RequestBody final ConfirmPasswordRequest confirmPasswordRequest,
+        final HttpServletRequest request
+    ) {
+        customerService.confirmPassword((String)request.getAttribute("username"), confirmPasswordRequest.getPassword());
+        return ResponseEntity.status(HttpStatus.OK.value()).build();
     }
 
     @PatchMapping("/password")
