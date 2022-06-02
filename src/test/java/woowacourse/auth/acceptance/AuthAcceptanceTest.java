@@ -6,6 +6,7 @@ import static woowacourse.Fixtures.BIRTHDAY_FORMATTED_VALUE_1;
 import static woowacourse.Fixtures.CONTACT_VALUE_1;
 import static woowacourse.Fixtures.CUSTOMER_REQUEST_1;
 import static woowacourse.Fixtures.EMAIL_VALUE_1;
+import static woowacourse.Fixtures.EXPIRED_TOKEN;
 import static woowacourse.Fixtures.GENDER_MALE;
 import static woowacourse.Fixtures.NAME_VALUE_1;
 import static woowacourse.Fixtures.PASSWORD_VALUE_1;
@@ -28,7 +29,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
-@DisplayName("인증 관련 기능")
+@DisplayName("인증 기능 인수테스트")
 public class AuthAcceptanceTest extends AcceptanceTest {
     private int 생성된_사용자_ID;
 
@@ -101,11 +102,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 만료된 토큰")
     @Test
     void expiredToken() {
-        // given
-        String 만료된_토큰 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU0MDExOTk1LCJleHAiOjE2NTQwMTE5OTV9.L5pnN2Dorp20abb75HFXbYTLxhfFqP4pSfUFu5Rqyzs";
-
         // when
-        ExtractableResponse<Response> response = 사용자_정보_조회_요청(생성된_사용자_ID, 만료된_토큰);
+        ExtractableResponse<Response> response = 사용자_정보_조회_요청(생성된_사용자_ID, EXPIRED_TOKEN);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());

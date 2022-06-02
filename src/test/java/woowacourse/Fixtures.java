@@ -48,24 +48,27 @@ public class Fixtures {
     // requests
     public static final AddressRequest ADDRESS_REQUEST_1 = new AddressRequest(ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
             ZONE_CODE_VALUE_1);
-    public static CustomerRequest CUSTOMER_REQUEST_1 = new CustomerRequest(EMAIL_VALUE_1, PASSWORD_VALUE_1,
+    public static final CustomerRequest CUSTOMER_REQUEST_1 = new CustomerRequest(EMAIL_VALUE_1, PASSWORD_VALUE_1,
             PROFILE_IMAGE_URL_VALUE_1, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_FORMATTED_VALUE_1, CONTACT_VALUE_1,
             ADDRESS_REQUEST_1, true);
     public static final AddressRequest ADDRESS_REQUEST_2 = new AddressRequest(ADDRESS_VALUE_2, DETAIL_ADDRESS_VALUE_2,
             ZONE_CODE_VALUE_2);
-    public static CustomerRequest CUSTOMER_REQUEST_2 = new CustomerRequest(EMAIL_VALUE_2, PASSWORD_VALUE_2,
+    public static final CustomerRequest CUSTOMER_REQUEST_2 = new CustomerRequest(EMAIL_VALUE_2, PASSWORD_VALUE_2,
             PROFILE_IMAGE_URL_VALUE_2, NAME_VALUE_2, GENDER_MALE, BIRTHDAY_FORMATTED_VALUE_2, CONTACT_VALUE_2,
             ADDRESS_REQUEST_2, true);
-    public static TokenRequest TOKEN_REQUEST_1 = new TokenRequest(EMAIL_VALUE_1, PASSWORD_VALUE_1);
-    public static TokenRequest TOKEN_REQUEST_2 = new TokenRequest(EMAIL_VALUE_2, PASSWORD_VALUE_2);
+    public static final TokenRequest TOKEN_REQUEST_1 = new TokenRequest(EMAIL_VALUE_1, PASSWORD_VALUE_1);
+    public static final TokenRequest TOKEN_REQUEST_2 = new TokenRequest(EMAIL_VALUE_2, PASSWORD_VALUE_2);
 
     // entities
-    public static CustomerEntity CUSTOMER_ENTITY_1 = new CustomerEntity(EMAIL_VALUE_1, PASSWORD_VALUE_1,
+    public static final CustomerEntity CUSTOMER_ENTITY_1 = new CustomerEntity(EMAIL_VALUE_1, PASSWORD_VALUE_1,
             PROFILE_IMAGE_URL_VALUE_1, true);
-    public static PrivacyEntity PRIVACY_ENTITY_1 = new PrivacyEntity(NAME_VALUE_2, GENDER_MALE, BIRTHDAY_VALUE_1,
+    public static final PrivacyEntity PRIVACY_ENTITY_1 = new PrivacyEntity(NAME_VALUE_2, GENDER_MALE, BIRTHDAY_VALUE_1,
             CONTACT_VALUE_1);
-    public static AddressEntity ADDRESS_ENTITY_1 = new AddressEntity(ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
+    public static final AddressEntity ADDRESS_ENTITY_1 = new AddressEntity(ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
             ZONE_CODE_VALUE_1);
+
+    // etc
+    public static final String EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU0MDExOTk1LCJleHAiOjE2NTQwMTE5OTV9.L5pnN2Dorp20abb75HFXbYTLxhfFqP4pSfUFu5Rqyzs";
 
     // invalid fixtures
     public static CustomerRequest CUSTOMER_INVALID_REQUEST_1 = new CustomerRequest("seongwoo0513", "string&123",
