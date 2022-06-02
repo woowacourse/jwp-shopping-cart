@@ -1,11 +1,6 @@
 package woowacourse;
 
-import static woowacourse.auth.acceptance.AuthAcceptanceTest.로그인_요청;
-
 import io.micrometer.core.instrument.util.IOUtils;
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -27,8 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.auth.support.JwtTokenProvider;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -39,10 +32,6 @@ import woowacourse.shoppingcart.dto.LoginRequest;
 public class TestSupport {
 
     protected static String accessToken;
-    protected static final LoginRequest loginRequest = new LoginRequest("sunhpark42@gmail.com", "12345678aA!");
-
-    @LocalServerPort
-    int port;
 
     @Autowired
     protected MockMvc mockMvc;
@@ -53,30 +42,25 @@ public class TestSupport {
     @Autowired
     private ResourceLoader resourceLoader;
 
+    @Autowired
+    protected JwtTokenProvider jwtTokenProvider;
+
     @BeforeEach
     void setUp(
         final WebApplicationContext context,
         final RestDocumentationContextProvider provider
     ) {
-        RestAssured.port = port;
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
             .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
             .alwaysDo(MockMvcResultHandlers.print())
             .alwaysDo(restDocs)
             .build();
 
-        accessToken = getToken();
+        accessToken = jwtTokenProvider.createToken("sunhpark42@gmail.com");
     }
 
     protected String readJson(final String path) throws IOException {
         return IOUtils.toString(resourceLoader.getResource("classpath:" + path).getInputStream(),
             StandardCharsets.UTF_8);
-    }
-
-    private String getToken() {
-        ExtractableResponse<Response> loginResponse = 로그인_요청(loginRequest);
-
-        TokenResponse responseBody = loginResponse.body().as(TokenResponse.class);
-        return responseBody.getAccessToken();
     }
 }

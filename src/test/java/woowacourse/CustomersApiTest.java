@@ -16,8 +16,6 @@ import org.springframework.http.MediaType;
 
 class CustomersApiTest extends TestSupport {
 
-    private static final String JWT_TOKEN = "Bearer " + accessToken;
-
     @Test
     void addCustomers_test() throws Exception {
         mockMvc.perform(
@@ -45,7 +43,7 @@ class CustomersApiTest extends TestSupport {
     void getMe_test() throws Exception {
         mockMvc.perform(
                 get("/customers/me")
-                    .header("Authorization", JWT_TOKEN)
+                    .header("Authorization", "Bearer " + accessToken)
             )
             .andExpect(status().isOk())
             .andDo(
@@ -65,7 +63,7 @@ class CustomersApiTest extends TestSupport {
     void updateMe_test() throws Exception {
         mockMvc.perform(
                 put("/customers/me")
-                    .header("Authorization", JWT_TOKEN)
+                    .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(readJson("/json/customers/customers-update.json"))
             )
@@ -94,7 +92,7 @@ class CustomersApiTest extends TestSupport {
         mockMvc.perform(
                 delete("/customers/me")
                     .header("Authorization",
-                        JWT_TOKEN)
+                        "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(readJson("/json/customers/customers-delete.json"))
             )
