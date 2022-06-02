@@ -21,7 +21,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void createToken() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -31,7 +31,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.CREATED.value());
 
         // when
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
         String token = RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -48,7 +48,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -57,7 +57,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
         String token = RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -86,7 +86,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBadBearerAuth() {
         // given
         // 회원이 등록되어 있고
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -113,7 +113,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)

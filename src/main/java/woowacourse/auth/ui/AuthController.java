@@ -1,5 +1,6 @@
 package woowacourse.auth.ui;
 
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
+    public ResponseEntity<SignInResponse> signIn(@RequestBody @Valid SignInRequest signInRequest) {
         SignInResponse signInResponse = authService.signIn(signInRequest);
         return ResponseEntity.ok(signInResponse);
     }

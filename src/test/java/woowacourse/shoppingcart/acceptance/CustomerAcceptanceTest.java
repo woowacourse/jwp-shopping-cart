@@ -19,7 +19,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입을 할 수 있다.")
     void addCustomer() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -34,7 +34,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -43,7 +43,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
         String token = RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -66,7 +66,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMeThrowException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -75,7 +75,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -97,7 +97,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -106,7 +106,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
         String token = RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -116,7 +116,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
         //when & then
-        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("1234", "5678");
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("123456", "567890");
         RestAssured
                 .given().log().all()
                 .body(updatePasswordRequest)
@@ -131,7 +131,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMeThrowException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -140,7 +140,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -150,7 +150,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
         //when & then
-        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("1234", "5678");
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("123456", "5678");
         RestAssured
                 .given().log().all()
                 .body(updatePasswordRequest)
@@ -164,7 +164,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -173,7 +173,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
         String token = RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -183,7 +183,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
         // when & then
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1234");
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("123456");
         RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
@@ -198,7 +198,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMeThrowException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -207,7 +207,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
         RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -217,7 +217,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
         // when & then
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1234");
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("123456");
         RestAssured
                 .given().log().all()
                 .body(deleteCustomerRequest)
