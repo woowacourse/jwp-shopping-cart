@@ -2,63 +2,43 @@ package woowacourse.auth.application;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import woowacourse.auth.exception.AuthenticationException;
-import woowacourse.auth.exception.ForbiddenException;
+import woowacourse.auth.domain.Token;
 
 @Component
 public class JwtTokenService {
 
     private final SecretKey secretKey;
-
-    private final long validityInMilliseconds;
+    private final long validity;
 
     public JwtTokenService(@Value("${security.jwt.token.secret-key}") String secretKey,
                            @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
         this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-        this.validityInMilliseconds = validityInMilliseconds;
+        this.validity = validityInMilliseconds;
     }
 
-    public String createToken(String payload) {
+    public Token generateToken(String payload) {
         Claims claims = Jwts.claims().setSubject(payload);
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
-        return Jwts.builder()
+        String tokenValue = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(validity)
+                .setExpiration(getExpiration(now))
                 .signWith(secretKey)
                 .compact();
+        return new Token(tokenValue);
     }
 
-    public String getPayload(String token) {
-        try {
-            Claims claims = extractClaims(token);
-            validateExpiration(claims);
-            return claims.getSubject();
-        } catch (DecodingException e) {
-            throw new ForbiddenException("권한이 없습니다.");
-        }
+    private Date getExpiration(Date now) {
+        return new Date(now.getTime() + validity);
     }
 
-    private Claims extractClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    private void validateExpiration(Claims claims) {
-        Date now = new Date();
-        if (claims.getExpiration().before(now)) {
-            throw new AuthenticationException("다시 로그인해주세요.");
-        }
+    public String extractPayload(Token token) {
+        return token.getPayload(secretKey);
     }
 }

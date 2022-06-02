@@ -7,37 +7,18 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import woowacourse.auth.exception.AuthenticationException;
 import woowacourse.auth.exception.ForbiddenException;
-import woowacourse.auth.support.JwtPropertySource;
 
 public class Token {
 
-    private final SecretKey tokenKey;
     private final String value;
 
-    public Token(String value, SecretKey tokenKey) {
-        this.tokenKey = tokenKey;
+    public Token(String value) {
         this.value = value;
     }
 
-    public static Token of(String payload, JwtPropertySource propertySource) {
-        String accessToken = buildAccessToken(payload, propertySource);
-        return new Token(accessToken, propertySource.getSecretKey());
-    }
-
-    private static String buildAccessToken(String payload, JwtPropertySource jwtPropertySource) {
-        Claims claims = Jwts.claims().setSubject(payload);
-        Date now = new Date();
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(jwtPropertySource.getExpiration(now))
-                .signWith(jwtPropertySource.getSecretKey())
-                .compact();
-    }
-
-    public String extractPayload() {
+    public String getPayload(SecretKey tokenKey) {
         try {
-            Claims claims = extractClaims(value);
+            Claims claims = extractClaims(tokenKey);
             validateExpiration(claims);
             return claims.getSubject();
         } catch (DecodingException e) {
@@ -45,11 +26,11 @@ public class Token {
         }
     }
 
-    private Claims extractClaims(String token) {
+    private Claims extractClaims(SecretKey tokenKey) {
         return Jwts.parserBuilder()
                 .setSigningKey(tokenKey)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(value)
                 .getBody();
     }
 
