@@ -45,7 +45,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         Long id = Long.parseLong(response.header("Location").split("/")[3]);
-
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
                 () -> assertThat(id).isNotNull()
@@ -75,6 +74,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract()
                 .as(TokenResponse.class);
+
         // when
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
@@ -82,7 +82,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().get("/api/customers/me")
                 .then().log().all()
                 .extract();
-
         final CustomerResponse response = extractableResponse.as(CustomerResponse.class);
 
         // then
@@ -115,6 +114,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract()
                 .as(TokenResponse.class);
+
         // when
         CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론", "87654321");
         ExtractableResponse<Response> extractableResponse = RestAssured
@@ -125,7 +125,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().put("/api/customers/me")
                 .then().log().all()
                 .extract();
-
         final CustomerResponse response = extractableResponse.as(CustomerResponse.class);
 
         // then
@@ -186,6 +185,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void getMeWithInvalidToken() {
         // given
         final String invalidToken = "invalidToken";
+
         // when
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
@@ -193,6 +193,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().get("/api/customers/me")
                 .then().log().all()
                 .extract();
+
         // then
         assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -220,8 +221,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/customers/duplication")
                 .then().log().all()
                 .extract();
-
         final DuplicateResponse duplicateResponse = extractableResponse.as(DuplicateResponse.class);
+
         // then
         assertAll(
                 () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
@@ -236,6 +237,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         CustomerRequest.UserNameAndPassword signUpRequest =
                 new CustomerRequest.UserNameAndPassword("기론", password);
+
         // when
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -244,8 +246,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
-
         final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -260,7 +262,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void signUpWithWrongUserName(String userName) {
         // given
         CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword(userName, "12345678");
+                new CustomerRequest.UserNameAndPassword(userName, rowBasicPassword);
+
         // when
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -269,8 +272,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
-
         final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),

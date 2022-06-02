@@ -21,10 +21,10 @@ public class JwtTokenProvider {
         this.secretKeyProvider = secretKeyProvider;
     }
 
-    public String createToken(String payload) {
-        Claims claims = Jwts.claims().setSubject(payload);
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
+    public String createToken(final String payload) {
+        final Claims claims = Jwts.claims().setSubject(payload);
+        final Date now = new Date();
+        final Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -34,16 +34,16 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getPayload(String token) {
+    public String getPayload(final String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKeyProvider.generateKey())
                 .build()
                 .parseClaimsJws(token).getBody().getSubject();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(final String token) {
         try {
-            Jws<Claims> claims = Jwts.parserBuilder()
+            final Jws<Claims> claims = Jwts.parserBuilder()
                     .setSigningKey(secretKeyProvider.generateKey())
                     .build()
                     .parseClaimsJws(token);

@@ -25,13 +25,13 @@ public class CustomerService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Long signUp(UserNameAndPassword customerRequest) {
+    public Long signUp(final UserNameAndPassword customerRequest) {
         validateDuplicateName(customerRequest.getUserName());
         final String encodedPassword = passwordEncoder.encode(customerRequest.getPassword());
         return customerDao.save(customerRequest.getUserName(), encodedPassword);
     }
 
-    private void validateDuplicateName(String name) {
+    private void validateDuplicateName(final String name) {
         if (customerDao.existsByUserName(name)) {
             throw new DuplicatedNameException();
         }

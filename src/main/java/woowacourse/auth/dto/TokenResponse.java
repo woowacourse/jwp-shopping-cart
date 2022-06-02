@@ -1,12 +1,13 @@
 package woowacourse.auth.dto;
 
 public class TokenResponse {
+
     private String accessToken;
 
-    public TokenResponse() {
+    private TokenResponse() {
     }
 
-    public TokenResponse(String accessToken) {
+    public TokenResponse(final String accessToken) {
         this.accessToken = accessToken;
     }
 

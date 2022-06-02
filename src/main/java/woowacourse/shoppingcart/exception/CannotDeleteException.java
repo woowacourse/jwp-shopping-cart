@@ -8,7 +8,7 @@ public final class CannotDeleteException extends ShoppingCartException {
         this("해당 데이터 삭제에 실패했습니다.");
     }
 
-    public CannotDeleteException(String message) {
+    public CannotDeleteException(final String message) {
         super(message, HttpStatus.BAD_REQUEST);
     }
 }

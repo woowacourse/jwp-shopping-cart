@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SecretKeyProvider {
+    
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
 

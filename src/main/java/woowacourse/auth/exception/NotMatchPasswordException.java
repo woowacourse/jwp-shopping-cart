@@ -8,7 +8,7 @@ public final class NotMatchPasswordException extends AuthException {
         this("비밀번호가 일치하지 않습니다.");
     }
 
-    public NotMatchPasswordException(String message) {
+    public NotMatchPasswordException(final String message) {
         super(message, HttpStatus.BAD_REQUEST);
     }
 }

@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.exception;
 import org.springframework.http.HttpStatus;
 
 public final class InvalidCartItemException extends ShoppingCartException {
+
     public InvalidCartItemException() {
         this("유효하지 않은 장바구니입니다.");
     }

@@ -58,7 +58,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
         UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
         RestAssured
                 .given().log().all()
@@ -68,7 +67,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        // id, password를 사용해 토큰을 발급받고
         final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -80,7 +78,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final TokenResponse tokenResponse = extract.as(TokenResponse.class);
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
         final ExtractableResponse<Response> responseMe = RestAssured
                 .given().log().all()
                 .header("Authorization", BEARER + tokenResponse.getAccessToken())
@@ -88,8 +85,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
         final CustomerResponse customerResponse = responseMe.as(CustomerResponse.class);
+
         // then
-        // 내 정보가 조회된다
         assertThat(customerResponse.getUserName()).isEqualTo("기론");
     }
 
@@ -97,7 +94,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginFailureWithWrongUserName() {
         // given
-        // 회원이 등록되어 있고
         UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
         RestAssured
                 .given().log().all()
@@ -106,8 +102,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
+
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
         final TokenRequest tokenRequest = new TokenRequest("티키", rowBasicPassword);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -116,10 +112,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/login")
                 .then().log().all()
                 .extract();
-
         final ErrorResponse errorResponse = extract.as(ErrorResponse.class);
+
         // then
-        // 토큰 발급 요청이 거부된다
         assertAll(
                 () -> assertThat(extract.header(HttpHeaders.AUTHORIZATION)).isNull(),
                 () -> assertThat(extract.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
@@ -131,7 +126,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginFailureWithWrongPassword() {
         // given
-        // 회원이 등록되어 있고
         UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
         RestAssured
                 .given().log().all()
@@ -140,8 +134,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
+
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
         final TokenRequest tokenRequest = new TokenRequest("기론", "wrongPassword");
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -151,8 +145,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
         final ErrorResponse errorResponse = extract.as(ErrorResponse.class);
+
         // then
-        // 토큰 발급 요청이 거부된다
         assertAll(
                 () -> assertThat(extract.header(HttpHeaders.AUTHORIZATION)).isNull(),
                 () -> assertThat(extract.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -164,7 +158,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // given
-        // 회원이 등록되어 있고
         UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
         RestAssured
                 .given().log().all()
@@ -175,7 +168,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         final ExtractableResponse<Response> responseMe = RestAssured
                 .given().log().all()
                 .header("Authorization", BEARER + "wrongAccessToken")
@@ -185,7 +177,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final ErrorResponse errorResponse = responseMe.as(ErrorResponse.class);
 
         // then
-        // 내 정보 조회 요청이 거부된다
         assertAll(
                 () -> assertThat(responseMe.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(errorResponse.getMessage()).isEqualTo("유효하지 않은 토큰입니다.")
@@ -198,7 +189,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @NullSource
     void loginWithWrongUserName(String userName) {
         // given
-        TokenRequest tokenRequest = new TokenRequest(userName, "12345678");
+        TokenRequest tokenRequest = new TokenRequest(userName, rowBasicPassword);
+
         // when
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -207,8 +199,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/login")
                 .then().log().all()
                 .extract();
-
         final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -223,6 +215,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void loginWithWrongPassword(String password) {
         // given
         TokenRequest tokenRequest = new TokenRequest("기론", password);
+
         // when
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -231,8 +224,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/login")
                 .then().log().all()
                 .extract();
-
         final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),

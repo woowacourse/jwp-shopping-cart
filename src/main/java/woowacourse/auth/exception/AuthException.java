@@ -6,7 +6,7 @@ public abstract class AuthException extends RuntimeException {
 
     private final HttpStatus httpStatus;
 
-    public AuthException(String message, HttpStatus httpStatus) {
+    public AuthException(final String message, final HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
     }

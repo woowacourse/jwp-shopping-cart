@@ -94,13 +94,11 @@ class AuthServiceTest {
     @Test
     void getAuthenticatedCustomerFailure() {
         // given
-        String userName = "기론";
         String token = "accessToken";
-        Customer customer = new Customer(1L, userName, encryptedBasicPassword);
         given(jwtTokenProvider.validateToken(token))
                 .willReturn(false);
 
-        // then
+        // when // then
         assertAll(
                 () -> assertThatThrownBy(() -> authService.getAuthenticatedCustomer(token))
                         .isExactlyInstanceOf(InvalidTokenException.class)

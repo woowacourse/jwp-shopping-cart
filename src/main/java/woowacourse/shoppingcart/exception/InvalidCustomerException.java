@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.exception;
 import org.springframework.http.HttpStatus;
 
 public final class InvalidCustomerException extends ShoppingCartException {
+
     public InvalidCustomerException() {
         this("존재하지 않는 유저입니다.");
     }

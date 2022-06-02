@@ -7,7 +7,7 @@ public class OrderDetail {
     private String name;
     private String imageUrl;
 
-    public OrderDetail() {
+    private OrderDetail() {
     }
 
     public OrderDetail(final Long productId, final int quantity) {

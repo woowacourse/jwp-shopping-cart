@@ -127,7 +127,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
         final String password = "321";
 
-        // then
+        // when // then
         assertThatThrownBy(() -> customerDao.update(id, userName, password))
                 .isExactlyInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("존재하지 않는 유저입니다.");
@@ -139,7 +139,7 @@ public class CustomerDaoTest {
         // given
         final Long id = 1L;
 
-        // then
+        // when // then
         assertDoesNotThrow(() -> customerDao.deleteById(id));
     }
 
@@ -149,7 +149,7 @@ public class CustomerDaoTest {
         // given
         final Long id = 0L;
 
-        // then
+        // when // then
         assertThatThrownBy(() -> customerDao.deleteById(id))
                 .isExactlyInstanceOf(CannotDeleteException.class)
                 .hasMessageContaining("해당 데이터 삭제에 실패했습니다.");
@@ -163,11 +163,11 @@ public class CustomerDaoTest {
 
         //when
         final Customer customer = customerDao.findByUserName(userName).get();
+
         // then
         assertAll(
                 () -> assertThat(customer.getUserName()).isEqualTo(userName),
                 () -> assertThat(customer.getPassword()).isEqualTo(rowBasicPassword)
         );
-
     }
 }

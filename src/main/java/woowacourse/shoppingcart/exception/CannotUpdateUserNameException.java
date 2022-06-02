@@ -8,7 +8,7 @@ public final class CannotUpdateUserNameException extends ShoppingCartException {
         this("유저 이름을 변경할 수 없습니다.");
     }
 
-    public CannotUpdateUserNameException(String message) {
+    public CannotUpdateUserNameException(final String message) {
         super(message, HttpStatus.BAD_REQUEST);
     }
 }

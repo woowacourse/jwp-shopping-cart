@@ -6,7 +6,7 @@ public abstract class ShoppingCartException extends RuntimeException {
 
     private final HttpStatus httpStatus;
 
-    public ShoppingCartException(String message, HttpStatus httpStatus) {
+    public ShoppingCartException(final String message, final HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
     }
