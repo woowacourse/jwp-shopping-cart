@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Optional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -45,12 +46,13 @@ public class CustomerDao {
         }
     }
 
-    public Customer findByEmail(final String email) {
+    public Optional<Customer> findByEmail(final String email) {
         final String sql = "select * from customer where email = :email";
         try {
-            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email), new CustomerMapper());
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email), new CustomerMapper()));
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException("존재하지 않는 이메일 입니다.");
+            return Optional.empty();
         }
     }
 

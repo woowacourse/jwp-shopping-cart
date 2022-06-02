@@ -38,7 +38,6 @@ public class CustomerDaoTest {
 
     @BeforeEach
     void setUp() {
-
         customer = new Customer(EMAIL, NAME, PHONE, ADDRESS, PASSWORD);
     }
 
@@ -70,7 +69,7 @@ public class CustomerDaoTest {
         final String sql = "insert into customer(email, name, phone, address, password) values (:email, :name, :phone, :address, :password)";
         jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer));
 
-        final Customer result = customerDao.findByEmail(customer.getEmail());
+        final Customer result = customerDao.findByEmail(customer.getEmail()).get();
 
         assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getEmail()).isEqualTo(EMAIL);

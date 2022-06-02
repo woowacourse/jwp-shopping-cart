@@ -1,5 +1,6 @@
 package woowacourse.auth.application;
 
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
@@ -33,7 +34,8 @@ public class AuthService {
     }
 
     public TokenResponse login(TokenRequest tokenRequest) {
-        Customer customer = customerDao.findByEmail(tokenRequest.getEmail());
+        Customer customer = customerDao.findByEmail(tokenRequest.getEmail())
+                .orElseThrow(() -> new InvalidCustomerException("존재하지 않는 이메일 입니다."));
         if (!customer.checkPassword(Encryptor.encrypt(tokenRequest.getPassword()))) {
             throw new InvalidCustomerException("비밀번호가 일치하지 않습니다.");
         }
@@ -60,6 +62,10 @@ public class AuthService {
         validateToken(token);
         final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
         customerDao.delete(id);
+    }
+
+    public boolean validateEmail(String email) {
+        return customerDao.findByEmail(email).isPresent();
     }
 
     private void validateToken(String token) {

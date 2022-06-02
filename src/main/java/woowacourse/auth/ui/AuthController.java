@@ -1,16 +1,21 @@
 package woowacourse.auth.ui;
 
+import java.net.URI;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.AuthorizationExtractor;
-
-import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/customers")
@@ -53,5 +58,11 @@ public class AuthController {
         String token = AuthorizationExtractor.extract(request);
         authService.delete(token);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/email")
+    public ResponseEntity<Boolean> checkEmail(String email){
+        boolean isValidEmail = authService.validateEmail(email);
+        return ResponseEntity.ok().body(isValidEmail);
     }
 }

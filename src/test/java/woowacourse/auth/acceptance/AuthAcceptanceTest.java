@@ -50,10 +50,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(customerResponse.getAddress()).isEqualTo(ADDRESS)
         );
         assertThat(registerCustomerResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-
-
     }
-
 
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
