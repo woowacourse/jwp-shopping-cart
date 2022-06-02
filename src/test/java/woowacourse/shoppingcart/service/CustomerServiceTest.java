@@ -68,7 +68,7 @@ public class CustomerServiceTest {
     @Test
     void 비밀번호를_수정하는_경우() {
         String username = "puterism";
-        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("a123", "a1234");
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("a12345", "a1234");
 
         customerService.changePassword(username, changePasswordRequest);
 
@@ -99,7 +99,7 @@ public class CustomerServiceTest {
     void 회원탈퇴() {
         String username = "puterism";
 
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("a123");
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("a12345");
 
         customerService.deleteUser(username, deleteCustomerRequest);
 

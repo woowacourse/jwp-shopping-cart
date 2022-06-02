@@ -21,7 +21,7 @@ public class AuthServiceTest {
 
     @Test
     void 로그인_성공() {
-        var signInRequest = new SignInRequest("crew01@naver.com", "a123");
+        var signInRequest = new SignInRequest("crew01@naver.com", "a12345");
 
         var signInResponse = authService.signIn(signInRequest);
 
