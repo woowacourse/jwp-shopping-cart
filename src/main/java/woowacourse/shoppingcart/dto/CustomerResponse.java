@@ -1,15 +1,23 @@
 package woowacourse.shoppingcart.dto;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerResponse {
 
     private final String email;
     private final String nickname;
 
-    public CustomerResponse(final String email, final String nickname) {
+    private CustomerResponse(final String email, final String nickname) {
         this.email = email;
         this.nickname = nickname;
+    }
+
+    public static CustomerResponse from(final Customer customer) {
+        return new CustomerResponse(
+                customer.getEmail(),
+                customer.getNickname()
+        );
     }
 
     public String getEmail() {

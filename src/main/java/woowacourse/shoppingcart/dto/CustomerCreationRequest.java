@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerCreationRequest {
 
@@ -21,6 +22,14 @@ public class CustomerCreationRequest {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+    }
+
+    public Customer toCustomer() {
+        return new Customer(
+                nickname,
+                email,
+                password
+        );
     }
 
     public String getEmail() {

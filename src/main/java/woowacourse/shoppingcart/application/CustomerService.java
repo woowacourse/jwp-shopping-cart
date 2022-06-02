@@ -23,7 +23,7 @@ public class CustomerService {
         if (existEmail) {
             throw new DuplicateEmailException();
         }
-        final Customer customer = new Customer(request.getNickname(), request.getEmail(), request.getPassword());
+        final Customer customer = request.toCustomer();
         return customerDao.save(customer);
     }
 

@@ -35,10 +35,7 @@ public class CustomerController {
 
     @GetMapping("/me")
     public ResponseEntity<CustomerResponse> getMe(@Login final Customer customer) {
-        final CustomerResponse response = new CustomerResponse(
-                customer.getEmail(),
-                customer.getNickname()
-        );
+        final CustomerResponse response = CustomerResponse.from(customer);
         return ResponseEntity.ok(response);
     }
 

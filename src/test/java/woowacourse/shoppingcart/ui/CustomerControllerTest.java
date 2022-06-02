@@ -99,7 +99,7 @@ class CustomerControllerTest extends ControllerTest {
         final String accessToken = "fake-token";
         getLoginCustomerByToken(accessToken, customer);
 
-        final CustomerResponse response = new CustomerResponse(customer.getEmail(), customer.getNickname());
+        final CustomerResponse response = CustomerResponse.from(customer);
         final String expected = objectMapper.writeValueAsString(response);
 
         // when
