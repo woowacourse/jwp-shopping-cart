@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import woowacourse.auth.domain.BcryptPasswordMatcher;
+import woowacourse.auth.domain.PasswordMatcher;
 
 public class Customer {
 
@@ -48,7 +49,7 @@ public class Customer {
         return new Customer(id, name, password.encrypt(encryptor), email, address, phoneNumber);
     }
 
-    public boolean isPasswordMatch(String password, BcryptPasswordMatcher matcher) {
+    public boolean isPasswordMatch(String password, PasswordMatcher matcher) {
         return this.password.isMatch(password, matcher);
     }
 
