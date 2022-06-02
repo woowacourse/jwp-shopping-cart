@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,15 +48,23 @@ public class CustomerController {
 
     @GetMapping("/customers/{customerId}")
     public ResponseEntity<CustomerResponse> findCustomerInformation(
-            @AuthenticationPrincipal final EmailDto email, @PathVariable String customerId) {
+            @AuthenticationPrincipal final EmailDto email, @PathVariable Long customerId) {
         CustomerResponse response = customerService.findCustomerByEmail(email);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/customers/{customerId}")
     public ResponseEntity<Void> updateCustomerInformation(@AuthenticationPrincipal final EmailDto emailDto,
+                                                          @PathVariable Long customerId,
                                                           @RequestBody final ModifiedCustomerRequest request) {
        customerService.updateCustomer(ModifiedCustomerDto.fromModifiedCustomerRequest(request));
        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/customers/{customerId}")
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal final EmailDto emailDto,
+                                               @PathVariable Long customerId) {
+        customerService.deleteCustomer(emailDto);
+        return ResponseEntity.noContent().build();
     }
 }

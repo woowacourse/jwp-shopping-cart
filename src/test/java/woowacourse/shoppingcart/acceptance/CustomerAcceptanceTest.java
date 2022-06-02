@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static woowacourse.auth.support.AuthorizationExtractor.AUTHORIZATION;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
@@ -137,6 +139,26 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
+        회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
+                "희봉", "male", "1998-08-07", "12345678910",
+                "address", "detailAddress", "12345", true));
+
+        TokenResponse signInResponse =
+                로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
+        회원_탈퇴(signInResponse.getAccessToken(), signInResponse.getCustomerId());
+        ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(), signInResponse.getCustomerId());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    private ExtractableResponse<Response> 회원_탈퇴(final String accessToken, final Long customerId) {
+        return RestAssured.given()
+                .log().all()
+                .header(AUTHORIZATION, BEARER_TYPE + accessToken)
+                .when()
+                .delete("/api/customers/" + customerId)
+                .then()
+                .log().all()
+                .extract();
     }
 
 

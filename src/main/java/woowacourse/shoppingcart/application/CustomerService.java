@@ -76,4 +76,11 @@ public class CustomerService {
     public CustomerResponse findCustomerByEmail(EmailDto email) {
         return customerDao.findByUserEmail(new Email(email.getEmail()));
     }
+
+    public void deleteCustomer(final EmailDto emailDto) {
+        final int affectedRows = customerDao.deleteCustomer(new Email(emailDto.getEmail()));
+        if (affectedRows != 1) {
+            throw new IllegalArgumentException("삭제가 되지 않았습니다.");
+        }
+    }
 }

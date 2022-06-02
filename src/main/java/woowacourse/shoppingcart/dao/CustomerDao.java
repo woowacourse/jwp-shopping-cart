@@ -84,4 +84,10 @@ public class CustomerDao {
         final SqlParameterSource parameter = new MapSqlParameterSource(parameterSource);
         return namedJdbcTemplate.update(query, parameter);
     }
+
+    public int deleteCustomer(final Email email) {
+        final String query = "DELETE FROM customer WHERE email=:email";
+        final SqlParameterSource parameter = new MapSqlParameterSource(Map.of("email", email.getValue()));
+        return namedJdbcTemplate.update(query, parameter);
+    }
 }
