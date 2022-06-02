@@ -28,7 +28,6 @@ import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @DisplayName("회원 관련 인수테스트")
-@Sql("/init.sql")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test

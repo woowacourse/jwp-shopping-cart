@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
@@ -21,13 +22,14 @@ import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Sql("/init.sql")
 class CustomerRepositoryTest {
 
     private final CustomerRepository customerRepository;
 
     @Autowired
-    public CustomerRepositoryTest(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.customerRepository = new CustomerRepository(new CustomerDao(jdbcTemplate, namedParameterJdbcTemplate));
+    public CustomerRepositoryTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.customerRepository = new CustomerRepository(new CustomerDao(namedParameterJdbcTemplate));
     }
 
     @DisplayName("customer 를 DB에 저장하고 아이디로 customer 를 찾는다.")

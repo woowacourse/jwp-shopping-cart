@@ -50,4 +50,12 @@ public class CustomerService {
     public void withdraw(final TokenRequest request) {
         customerRepository.delete(request.getId());
     }
+
+    public void checkDuplicateUsername(final String username) {
+        customerRepository.validateDuplicateUsername(username);
+    }
+
+    public void checkDuplicateNickname(final String nickname) {
+        customerRepository.checkDuplicateNickname(nickname);
+    }
 }

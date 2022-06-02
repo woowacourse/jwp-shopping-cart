@@ -1,11 +1,9 @@
 package woowacourse.shoppingcart.repository.dao;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -30,19 +28,18 @@ public class CustomerDao {
             resultSet.getString("nickname")
     );
 
-    private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CustomerDao(final JdbcTemplate jdbcTemplate,
-                       final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public CustomerDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByUserName(final String username) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            final String query = "SELECT id FROM customer WHERE username = :username";
+            Map<String, Object> params = new HashMap<>();
+            params.put("username", username);
+            return namedParameterJdbcTemplate.queryForObject(query, params, Long.class);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException("존재하지 않는 유저입니다.");
         }
@@ -68,6 +65,20 @@ public class CustomerDao {
         } catch (EmptyResultDataAccessException exception) {
             throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
         }
+    }
+
+    public boolean checkDuplicatedUsername(final String username) {
+        String query = "select EXISTS (select id from customer where username = :username)";
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
+    }
+
+    public boolean checkDuplicatedNickname(final String nickname) {
+        String query = "select EXISTS (select id from customer where nickname = :nickname)";
+        Map<String, Object> params = new HashMap<>();
+        params.put("nickname", nickname);
+        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
     }
 
     public Customer login(final String username, final String password) {

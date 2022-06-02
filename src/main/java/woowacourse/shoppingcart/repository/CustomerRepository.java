@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.repository;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
@@ -37,5 +38,17 @@ public class CustomerRepository {
 
     public void delete(final Long id) {
         customerDao.delete(id);
+    }
+
+    public void validateDuplicateUsername(final String username) {
+        if (customerDao.checkDuplicatedUsername(username)) {
+            throw new DuplicateKeyException("");
+        }
+    }
+
+    public void checkDuplicateNickname(final String nickname) {
+        if (customerDao.checkDuplicatedNickname(nickname)) {
+            throw new DuplicateKeyException("");
+        }
     }
 }
