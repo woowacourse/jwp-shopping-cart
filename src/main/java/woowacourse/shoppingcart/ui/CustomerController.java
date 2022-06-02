@@ -44,35 +44,35 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerResponse);
     }
 
-    @PostMapping("/auth/password-check")
+    @PostMapping("/password-check")
     public ResponseEntity<Void> checkPassword(@AuthenticationPrincipal final String email,
                                               @RequestBody @Valid final PasswordRequest passwordRequest) {
         customerService.checkPassword(email, passwordRequest);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/auth/me")
+    @GetMapping("/me")
     public ResponseEntity<CustomerResponse> findProfile(@AuthenticationPrincipal final String email) {
         final Customer customer = customerService.findByEmail(email);
         final CustomerResponse customerResponse = new CustomerResponse(customer.getEmail(), customer.getNickname());
         return ResponseEntity.ok().body(customerResponse);
     }
 
-    @PatchMapping("/auth/me")
+    @PatchMapping("/me")
     public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal final String email,
                                               @RequestBody @Valid final CustomerProfileRequest customerProfileRequest) {
         customerService.updateProfile(email, customerProfileRequest);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/auth/password")
+    @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal final String email,
                                                @RequestBody @Valid final PasswordRequest passwordRequest) {
         customerService.updatePassword(email, passwordRequest);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/auth/me")
+    @DeleteMapping("/me")
     public ResponseEntity<Void> signOut(@AuthenticationPrincipal final String email) {
         customerService.delete(email);
         return ResponseEntity.noContent().build();

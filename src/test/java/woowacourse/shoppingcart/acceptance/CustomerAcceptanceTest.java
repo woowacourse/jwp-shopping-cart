@@ -53,7 +53,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .body(customerProfileRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/api/members/auth/me")
+                .when().patch("/api/members/me")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -72,7 +72,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .body(passwordRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/api/members/auth/password")
+                .when().patch("/api/members/password")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -87,7 +87,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .when().delete("/api/members/auth/me")
+                .when().delete("/api/members/me")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
