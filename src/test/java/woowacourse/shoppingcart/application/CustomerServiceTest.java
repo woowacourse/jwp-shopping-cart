@@ -221,6 +221,21 @@ class CustomerServiceTest {
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
+    @DisplayName("탈퇴한 사용자를 조회하려고 하면 안된다.")
+    @Test
+    void findByCustomerIdWithdrawalCustomer() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        customerService.withdraw(tokenRequest);
+
+        // when & then
+        assertThatThrownBy(() -> customerService.findByCustomerId(tokenRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
+
     @DisplayName("회원 정보를 조회한다.")
     @Test
     void findByCustomerId() {
@@ -253,6 +268,22 @@ class CustomerServiceTest {
                 .hasMessage("이미 존재하는 닉네임입니다.");
     }
 
+    @DisplayName("탈퇴한 사용자를 수정하려고 하면 안된다.")
+    @Test
+    void updateWithdrawalCustomer() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        customerService.withdraw(tokenRequest);
+
+        // when & then
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("test2");
+        assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
+
     @DisplayName("사용자 정보 수정 시 닉네임에 null 을 입력하면 안된다.")
     @Test
     void updateNicknamedNullException() {
@@ -282,12 +313,28 @@ class CustomerServiceTest {
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
-    @DisplayName("존재하지 않는 사용자를 수정하려고 하면 안된다.")
+    @DisplayName("존재하지 않는 사용자 비밀번호를 수정하려고 하면 안된다.")
     @Test
     void updatePassword() {
         // given
         TokenRequest tokenRequest = new TokenRequest("-1");
         CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234(dddd", "47374*ffff");
+
+        // when & then
+        assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("탈퇴한 사용자 비밀번호를 수정하려고 하면 안된다.")
+    @Test
+    void updatePasswordWithdrawalCustomer() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        customerService.withdraw(tokenRequest);
+        CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234asdf!", "47374*ffff");
 
         // when & then
         assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
