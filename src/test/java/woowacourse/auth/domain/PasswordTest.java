@@ -84,8 +84,8 @@ class PasswordTest {
         Password2 비밀번호 = new Password2(유효한_비밀번호);
         Password2 같은_비밀번호 = new Password2(유효한_비밀번호);
 
-        EncryptedPassword actual = 비밀번호.toEncrypted();
-        EncryptedPassword expected = 같은_비밀번호.toEncrypted();
+        EncryptedPassword2 actual = 비밀번호.toEncrypted();
+        EncryptedPassword2 expected = 같은_비밀번호.toEncrypted();
 
         assertThat(actual).isNotEqualTo(expected);
     }

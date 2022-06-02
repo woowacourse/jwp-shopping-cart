@@ -24,9 +24,9 @@ public class Password2 {
         }
     }
 
-    public EncryptedPassword toEncrypted() {
+    public EncryptedPassword2 toEncrypted() {
         String randomlyHashedPassword = BCrypt.hashpw(value, BCrypt.gensalt());
-        return new EncryptedPassword(randomlyHashedPassword);
+        return new EncryptedPassword2(randomlyHashedPassword);
     }
 
     @Override
