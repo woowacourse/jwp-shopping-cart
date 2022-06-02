@@ -1,4 +1,4 @@
-package woowacourse.auth.dto;
+package woowacourse.auth.dto.token;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

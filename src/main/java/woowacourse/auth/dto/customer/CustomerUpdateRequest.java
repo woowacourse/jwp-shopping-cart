@@ -1,4 +1,4 @@
-package woowacourse.auth.dto;
+package woowacourse.auth.dto.customer;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

@@ -5,9 +5,10 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.CustomerUpdateRequest;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.customer.CustomerDeleteRequest;
+import woowacourse.auth.dto.customer.CustomerRequest;
+import woowacourse.auth.dto.customer.CustomerUpdateRequest;
+import woowacourse.auth.dto.token.TokenRequest;
 
 public class RestUtils {
 
@@ -29,9 +30,11 @@ public class RestUtils {
 			.extract();
 	}
 
-	public static ExtractableResponse<Response> signOut(String token) {
+	public static ExtractableResponse<Response> signOut(String token, String password) {
 		return RestAssured.given().log().all()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.auth().oauth2(token)
+			.body(new CustomerDeleteRequest(password))
 			.when().delete("/customers")
 			.then().log().all()
 			.extract();

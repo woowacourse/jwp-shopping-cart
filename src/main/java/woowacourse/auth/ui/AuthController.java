@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.token.TokenRequest;
+import woowacourse.auth.dto.token.TokenResponse;
 
 @RestController
 @RequestMapping("/auth")

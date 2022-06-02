@@ -17,10 +17,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import lombok.RequiredArgsConstructor;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.dto.CustomerUpdateRequest;
-import woowacourse.auth.dto.CustomerUpdateResponse;
+import woowacourse.auth.dto.customer.CustomerDeleteRequest;
+import woowacourse.auth.dto.customer.CustomerRequest;
+import woowacourse.auth.dto.customer.CustomerResponse;
+import woowacourse.auth.dto.customer.CustomerUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerUpdateResponse;
 import woowacourse.auth.support.Login;
 
 @RestController
@@ -45,8 +46,9 @@ public class CustomerController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Void> signOut(@Login Customer customer) {
-		customerService.delete(customer);
+	public ResponseEntity<Void> signOut(@Login Customer customer,
+		@RequestBody @Valid CustomerDeleteRequest request) {
+		customerService.delete(customer, request);
 		return ResponseEntity.noContent().build();
 	}
 

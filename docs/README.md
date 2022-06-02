@@ -57,6 +57,11 @@ Location: /customers/100
 DELETE /customers
 Authorization : ????
 ```
+```json
+{
+  "password": "1234"
+}
+```
 
 ### Response
 

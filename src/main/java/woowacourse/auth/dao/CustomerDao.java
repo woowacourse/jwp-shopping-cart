@@ -1,6 +1,5 @@
 package woowacourse.auth.dao;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;

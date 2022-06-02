@@ -1,4 +1,4 @@
-package woowacourse.auth.dto;
+package woowacourse.auth.dto.customer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

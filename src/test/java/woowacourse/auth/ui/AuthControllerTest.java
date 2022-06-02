@@ -9,13 +9,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import woowacourse.auth.application.CustomerService;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.customer.CustomerRequest;
+import woowacourse.auth.dto.token.TokenRequest;
+import woowacourse.auth.dto.token.TokenResponse;
 
 public class AuthControllerTest extends ControllerTest {
 

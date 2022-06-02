@@ -13,12 +13,13 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.application.CustomerService;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.dto.CustomerUpdateRequest;
-import woowacourse.auth.dto.CustomerUpdateResponse;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.customer.CustomerDeleteRequest;
+import woowacourse.auth.dto.customer.CustomerRequest;
+import woowacourse.auth.dto.customer.CustomerResponse;
+import woowacourse.auth.dto.customer.CustomerUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerUpdateResponse;
+import woowacourse.auth.dto.token.TokenRequest;
+import woowacourse.auth.dto.token.TokenResponse;
 
 class CustomerControllerTest extends ControllerTest{
 
@@ -122,11 +123,13 @@ class CustomerControllerTest extends ControllerTest{
 		customerService.signUp(request);
 
 		// when
-		mockMvc.perform(delete("/customers"))
+		mockMvc.perform(delete("/customers")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(new CustomerDeleteRequest(password))))
 			.andExpect(status().isUnauthorized());
 	}
 
-	@DisplayName("토큰이 있을 때 회원 탈퇴를 한다.")
+	@DisplayName("토큰이 있을 때 회원 탈퇴를 하면 204 반환")
 	@Test
 	void signOutwithToken() throws Exception {
 		// given
@@ -136,13 +139,33 @@ class CustomerControllerTest extends ControllerTest{
 
 		// when
 		ResultActions result = mockMvc.perform(delete("/customers")
-			.header("Authorization", "Bearer " + token.getAccessToken()));
+			.header("Authorization", "Bearer " + token.getAccessToken())
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(new CustomerDeleteRequest(password))));
 
 		// then
 		result.andExpect(status().isNoContent());
 	}
 
-	@DisplayName("토큰이 있을 때 회원정보 수정을 한다.")
+	@DisplayName("토큰이 있을 때 틀린 비밀번호로 회원 탈퇴를 하면 401 반환")
+	@Test
+	void signOutwithTokenNotMatchPassword() throws Exception {
+		// given
+		CustomerRequest request = new CustomerRequest(email, password, nickname);
+		customerService.signUp(request);
+		TokenResponse token = authService.login(new TokenRequest(email, password));
+
+		// when
+		ResultActions result = mockMvc.perform(delete("/customers")
+			.header("Authorization", "Bearer " + token.getAccessToken())
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(new CustomerDeleteRequest("b1234!"))));
+
+		// then
+		result.andExpect(status().isUnauthorized());
+	}
+
+	@DisplayName("토큰이 있을 때 회원정보 수정을 하면 200 반환")
 	@Test
 	void updateCustomer() throws Exception {
 		// given

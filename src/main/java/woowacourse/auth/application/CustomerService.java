@@ -6,10 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
+import woowacourse.auth.dto.customer.CustomerDeleteRequest;
 import woowacourse.auth.support.EncryptionStrategy;
 import woowacourse.auth.domain.Password;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.CustomerUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerRequest;
+import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 
@@ -40,12 +41,13 @@ public class CustomerService {
 			.orElseThrow(() -> new InvalidCustomerException("이메일에 해당하는 회원이 존재하지 않습니다"));
 	}
 
-	public void delete(Customer customer) {
+	public void delete(Customer customer, CustomerDeleteRequest request) {
+		validatePassword(customer, new Password(request.getPassword()));
 		customerDao.delete(customer.getId());
 	}
 
 	public Customer update(Customer customer, CustomerUpdateRequest request) {
-		validatePassword(customer, request);
+		validatePassword(customer, new Password(request.getPassword()));
 		Customer updatedCustomer = new Customer(customer.getId(),
 			customer.getEmail(),
 			encryptionStrategy.encode(new Password(request.getNewPassword())),
@@ -55,8 +57,8 @@ public class CustomerService {
 		return updatedCustomer;
 	}
 
-	private void validatePassword(Customer customer, CustomerUpdateRequest request) {
-		String encrypted = encryptionStrategy.encode(new Password(request.getPassword()));
+	private void validatePassword(Customer customer, Password password) {
+		String encrypted = encryptionStrategy.encode(password);
 		if (customer.isInvalidPassword(encrypted)) {
 			throw new InvalidAuthException("비밀번호가 달라서 수정할 수 없습니다.");
 		}

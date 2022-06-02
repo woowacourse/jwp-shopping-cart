@@ -44,25 +44,42 @@ public class CustomerAcceptanceTest {
 		RestUtils.signUp(email, password, nickname);
 
 		// when
-		ExtractableResponse<Response> response = RestUtils.signOut("");
+		ExtractableResponse<Response> response = RestUtils.signOut("", password);
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 	}
 
-	@DisplayName("회원 탈퇴를 진행한다.")
+	@DisplayName("회원 탈퇴를 정상적으로 진행한다.")
 	@Test
 	void signOutSuccess() {
 		// given
 		RestUtils.signUp(email, password, nickname);
-		ExtractableResponse<Response> loginResponse = RestUtils.login(email, password);
-		String token = loginResponse.jsonPath().getString("accessToken");
+		String token = RestUtils.login(email, password)
+			.jsonPath()
+			.getString("accessToken");
 
 		// when
-		ExtractableResponse<Response> response = RestUtils.signOut(token);
+		ExtractableResponse<Response> response = RestUtils.signOut(token, password);
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+	}
+
+	@DisplayName("비밀번호가 다르면 회원 탈퇴를 하지 못한다.")
+	@Test
+	void signOutFail() {
+		// given
+		RestUtils.signUp(email, password, nickname);
+		String token = RestUtils.login(email, password)
+			.jsonPath()
+			.getString("accessToken");
+
+		// when
+		ExtractableResponse<Response> response = RestUtils.signOut(token, "b123!");
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 	}
 
 	@DisplayName("회원 정보를 수정한다.")

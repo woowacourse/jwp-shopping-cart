@@ -17,8 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.domain.Password;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.CustomerUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerDeleteRequest;
+import woowacourse.auth.dto.customer.CustomerRequest;
+import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 import woowacourse.auth.support.EncryptionStrategy;
@@ -135,5 +136,39 @@ class CustomerServiceTest {
 				.isInstanceOf(InvalidAuthException.class),
 			() -> verify(customerDao, never()).update(any())
 		);
+	}
+
+	@DisplayName("회원 탈퇴를 진행한다.")
+	@Test
+	void signOutSuccess() {
+		// given
+		Customer customer = new Customer(1L, email, password, nickname);
+		CustomerDeleteRequest request = new CustomerDeleteRequest(password);
+		given(encryptionStrategy.encode(new Password(password)))
+			.willReturn(password);
+
+		// when
+		customerService.delete(customer, request);
+
+		// then
+		verify(encryptionStrategy).encode(new Password(password));
+	}
+
+	@DisplayName("비밀번호가 다르면 회원 탈퇴를 못한다.")
+	@Test
+	void signOutFail() {
+		// given
+		String misMatchPassword = "b1234!";
+		Customer customer = new Customer(1L, email, password, nickname);
+		CustomerDeleteRequest request = new CustomerDeleteRequest(misMatchPassword);
+		given(encryptionStrategy.encode(new Password(misMatchPassword)))
+			.willReturn(misMatchPassword);
+
+		// when
+		assertThatThrownBy(() -> customerService.delete(customer, request))
+			.isInstanceOf(InvalidAuthException.class);
+
+		// then
+		verify(encryptionStrategy).encode(new Password(misMatchPassword));
 	}
 }
