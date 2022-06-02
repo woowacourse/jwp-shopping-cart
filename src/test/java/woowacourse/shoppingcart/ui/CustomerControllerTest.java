@@ -103,25 +103,6 @@ class CustomerControllerTest {
     @Nested
     @DisplayName("update 메서드는")
     class update {
-        @ParameterizedTest
-        @ValueSource(strings = {"testwoowacoursecom", "test@woowacoursecom", "testwoowacourse.com", "@", ".", "@.",
-                ".@wo.com", "test.woowacourse@com", "", " "})
-        @DisplayName("로그인 아이디가 이메일 형식이 아니면, Bad Request를 던진다")
-        void loginId_notEmail(String loginId) throws Exception {
-            // given
-            CustomerRequest request = new CustomerRequest(loginId, 페퍼_이름, 페퍼_비밀번호);
-            String requestContent = objectMapper.writeValueAsString(request);
-
-            // when
-            final ResultActions response = mockMvc.perform(put("/customers/me")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtTokenProvider.createToken(페퍼_아이디))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
-
-            // then
-            response.andExpect(status().isBadRequest());
-        }
 
         @ParameterizedTest
         @ValueSource(strings = {"", " "})

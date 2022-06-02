@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.domain.LoginCustomer;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @Service
 public class CustomerService {
@@ -30,19 +31,16 @@ public class CustomerService {
         return CustomerResponse.of(customer);
     }
 
-    public CustomerResponse update(LoginCustomer loginCustomer, CustomerRequest customerRequest) {
+    public CustomerResponse update(LoginCustomer loginCustomer, CustomerUpdateRequest request) {
         Customer savedCustomer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        checkUpdatable(savedCustomer, customerRequest);
+        checkUpdatable(savedCustomer, request);
 
-        customerDao.update(customerRequest.toCustomer());
+        customerDao.update(new Customer(loginCustomer.getLoginId(), request.getName(), request.getPassword()));
         Customer updatedCustomer = customerDao.findByLoginId(loginCustomer.getLoginId());
         return CustomerResponse.of(updatedCustomer);
     }
 
-    private void checkUpdatable(Customer customer, CustomerRequest request) {
-        if (!customer.isSameLoginId(request.getLoginId())) {
-            throw new IllegalArgumentException("아이디는 변경할 수 없습니다.");
-        }
+    private void checkUpdatable(Customer customer, CustomerUpdateRequest request) {
         if (!customer.isSamePassword(request.getPassword())) {
             throw new IllegalArgumentException("비밀번호는 변경할 수 없습니다.");
         }
