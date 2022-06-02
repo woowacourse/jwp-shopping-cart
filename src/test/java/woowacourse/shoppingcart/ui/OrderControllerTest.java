@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -52,20 +51,20 @@ public class OrderControllerTest {
         final int quantity = 5;
         final Long cartId2 = 1L;
         final int quantity2 = 5;
-        final String customerName = "pobi";
+        final String customerName = "puterism";
         final String password = "1234";
         final List<OrderRequest> requestDtos =
                 Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(customerName)))
+        when(orderService.addOrder(any(), any()))
                 .thenReturn(expectedOrderId);
 
         String accessToken = authService.createToken(new TokenRequest(customerName, password));
 
         // when // then
         mockMvc.perform(post("/api/customers/me/orders")
-                        .header("Authorization", "Bearer" + accessToken)
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(requestDtos))
@@ -81,19 +80,19 @@ public class OrderControllerTest {
     void findOrder() throws Exception {
 
         // given
-        final String customerName = "pobi";
+        final String customerName = "puterism";
         final String password = "1234";
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
 
-        when(orderService.findOrderById(customerName, orderId))
+        when(orderService.findOrderById(any(), any()))
                 .thenReturn(expected);
 
         String accessToken = authService.createToken(new TokenRequest(customerName, password));
         // when // then
         mockMvc.perform(get("/api/customers/me/orders/" + orderId)
-                        .header("Authorization", "Bearer" + accessToken)
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andDo(print())
                 .andExpect(status().isOk())
@@ -109,7 +108,7 @@ public class OrderControllerTest {
     @Test
     void findOrders() throws Exception {
         // given
-        final String customerName = "pobi";
+        final String customerName = "puterism";
         final String password = "1234";
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
@@ -118,14 +117,14 @@ public class OrderControllerTest {
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
-        when(orderService.findOrdersByCustomerName(customerName))
+        when(orderService.findOrders(any()))
                 .thenReturn(expected);
 
         String accessToken = authService.createToken(new TokenRequest(customerName, password));
 
         // when // then
         mockMvc.perform(get("/api/customers/me/orders/")
-                        .header("Authorization", "Bearer" + accessToken)
+                        .header("Authorization", "Bearer " + accessToken)
                 ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))

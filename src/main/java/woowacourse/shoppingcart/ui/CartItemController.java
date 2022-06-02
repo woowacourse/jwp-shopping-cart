@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
@@ -19,24 +18,20 @@ import java.util.List;
 @RequestMapping("/api/customers/me/carts")
 public class CartItemController {
     private final CartService cartService;
-    private final AuthService authService;
 
-    public CartItemController(final CartService cartService, final AuthService authService) {
+    public CartItemController(final CartService cartService) {
         this.cartService = cartService;
-        this.authService = authService;
     }
 
     @GetMapping
     public ResponseEntity<List<Cart>> getCartItems(HttpServletRequest request) {
-        String customerName = getNameFromToken(request);
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+        return ResponseEntity.ok().body(cartService.findCarts(request));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(HttpServletRequest request,
                                             @Validated(Request.id.class) @RequestBody final Product product) {
-        String customerName = getNameFromToken(request);
-        final Long cartId = cartService.addCart(product.getId(), customerName);
+        final Long cartId = cartService.addCart(request, product.getId());
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
@@ -48,13 +43,7 @@ public class CartItemController {
     @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteCartItem(HttpServletRequest request,
                                          @PathVariable final Long cartId) {
-        String customerName = getNameFromToken(request);
-        cartService.deleteCart(customerName, cartId);
+        cartService.deleteCart(request, cartId);
         return ResponseEntity.noContent().build();
-    }
-
-    private String getNameFromToken(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        return authService.getNameFromToken(token);
     }
 }

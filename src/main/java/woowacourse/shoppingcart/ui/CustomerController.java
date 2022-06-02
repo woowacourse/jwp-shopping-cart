@@ -2,10 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import woowacourse.auth.application.AuthService;
-import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -17,11 +14,9 @@ import java.net.URI;
 @RequestMapping("/api/customers")
 public class CustomerController {
     private final CustomerService customerService;
-    private final AuthService authService;
 
-    public CustomerController(CustomerService customerService, AuthService authService) {
+    public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
-        this.authService = authService;
     }
 
     @PostMapping
@@ -33,26 +28,18 @@ public class CustomerController {
 
     @PutMapping("/me")
     public ResponseEntity<Void> edit(HttpServletRequest request, @RequestBody @Valid CustomerRequest editRequest) {
-        String customerName = getNameFromToken(request);
-        customerService.editCustomerByName(customerName, editRequest);
+        customerService.editCustomer(request, editRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
     public ResponseEntity<CustomerResponse> customer(HttpServletRequest request) {
-        String customerName = getNameFromToken(request);
-        return ResponseEntity.ok(customerService.findCustomerByName(customerName));
+        return ResponseEntity.ok(customerService.findCustomer(request));
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> withDraw(HttpServletRequest request) {
-        String customerName = getNameFromToken(request);
-        customerService.deleteCustomerByName(customerName);
+        customerService.deleteCustomer(request);
         return ResponseEntity.noContent().build();
-    }
-
-    private String getNameFromToken(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        return authService.getNameFromToken(token);
     }
 }
