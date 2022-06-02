@@ -9,6 +9,7 @@ import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
+
     private final AuthInterceptor authInterceptor;
     private final AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;
 
