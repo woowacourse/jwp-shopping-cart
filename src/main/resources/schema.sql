@@ -13,7 +13,7 @@ CREATE TABLE customer
     id       BIGINT       NOT NULL AUTO_INCREMENT,
     nickname VARCHAR(255) NOT NULL,
     email    VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(60) NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
