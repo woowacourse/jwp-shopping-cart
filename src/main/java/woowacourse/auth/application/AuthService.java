@@ -33,8 +33,7 @@ public class AuthService {
     public void save(MemberCreateRequest memberCreateRequest) {
         validateUniqueEmail(memberCreateRequest);
         Member member = new Member(memberCreateRequest.getEmail(), memberCreateRequest.getPassword(),
-                memberCreateRequest
-                        .getNickname());
+                memberCreateRequest.getNickname());
         memberDao.save(member);
     }
 
