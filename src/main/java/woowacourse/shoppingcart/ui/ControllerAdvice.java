@@ -40,14 +40,20 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            NoSuchCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler({
+            NoSuchCustomerException.class,
+            NotInCustomerCartItemException.class,
+    })
+    public ResponseEntity<ErrorResponse> handleNoSuchException(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler({
