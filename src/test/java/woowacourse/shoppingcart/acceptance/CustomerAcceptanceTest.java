@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -37,11 +38,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(customerResponse).extracting("email", "name", "phone", "address")
                 .containsExactly("email", "name", "010-1234-5678", "address");
-    }
-
-    @DisplayName("내 정보 조회")
-    @Test
-    void getMe() {
     }
 
     @DisplayName("내 정보 수정")
@@ -119,15 +115,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .extract();
         //then
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        ExceptionResponse response = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/customers")
                 .then().log().all()
-                .extract();
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract().as(ExceptionResponse.class);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.body().asString()).isEqualTo("존재하지 않는 유저입니다.");
+        assertThat(response.getMessage()).isEqualTo("존재하지 않는 유저입니다.");
     }
 }
