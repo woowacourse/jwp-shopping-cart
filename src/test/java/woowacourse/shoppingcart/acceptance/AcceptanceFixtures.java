@@ -102,11 +102,4 @@ public class AcceptanceFixtures {
     public static void 예외메세지_검증(final ExtractableResponse<Response> response, final String message) {
         assertThat(response.body().asString()).isEqualTo(message);
     }
-
-    public static void 성공_값_비교(final ExtractableResponse<Response> response, final Object expected) {
-        assertThat(response.body().as(Object.class))
-                .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(expected);
-    }
 }

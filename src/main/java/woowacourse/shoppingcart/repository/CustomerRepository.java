@@ -31,6 +31,7 @@ public class CustomerRepository {
     }
 
     public void updatePassword(final Long id, final Password oldPassword, final Password newPassword) {
+        customerDao.findById(id);
         customerDao.updatePassword(id, oldPassword.getPassword(), newPassword.getPassword());
     }
 
