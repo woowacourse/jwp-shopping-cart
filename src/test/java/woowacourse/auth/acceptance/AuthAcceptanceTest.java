@@ -56,7 +56,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void checkDuplicatedEmail_OK(String email, boolean expected) {
         회원가입을_한다("abc@woowahan.com", "1q2w3e4r!", "닉네임");
 
-        ExtractableResponse<Response> response = get("/api/members?email=" + email);
+        ExtractableResponse<Response> response = get("/api/members/check-email?email=" + email);
         boolean success = response.as(CheckResponse.class)
                 .isSuccess();
 
@@ -69,7 +69,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void checkDuplicatedEmail_BadRequest() {
         String invalid = "abc";
 
-        ExtractableResponse<Response> response = get("/api/members?email=" + invalid);
+        ExtractableResponse<Response> response = get("/api/members/check-email?email=" + invalid);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 

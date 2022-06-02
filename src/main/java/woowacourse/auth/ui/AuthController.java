@@ -39,7 +39,7 @@ public class AuthController {
                 .build();
     }
 
-    @GetMapping("/members")
+    @GetMapping("/members/check-email")
     public ResponseEntity<CheckResponse> checkDuplicatedEmail(@RequestParam String email) {
         CheckResponse checkResponse = new CheckResponse(!authService.existsEmail(email));
         return ResponseEntity.ok(checkResponse);

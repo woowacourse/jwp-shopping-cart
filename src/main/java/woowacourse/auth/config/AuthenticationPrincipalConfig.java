@@ -27,6 +27,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(interceptor)
                 .addPathPatterns("/api/members/**")
+                .excludePathPatterns("/api/members/check-email")
                 .excludePathPatterns("/api/members");
     }
 }
