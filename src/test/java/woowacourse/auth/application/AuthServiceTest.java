@@ -2,7 +2,6 @@ package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.Fixture.페퍼_비밀번호;
 import static woowacourse.Fixture.페퍼_아이디;
 import static woowacourse.Fixture.페퍼_이름;
@@ -54,7 +53,7 @@ class AuthServiceTest {
         // given
         customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
         TokenRequest tokenRequest = new TokenRequest(페퍼_아이디, "Fake1234!");
-        String expectToken = jwtTokenProvider.createToken(페퍼_아이디);
+
 
         // when & then
         assertThatThrownBy(() -> authService.login(tokenRequest))
