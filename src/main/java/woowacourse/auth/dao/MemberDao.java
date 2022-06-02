@@ -1,6 +1,7 @@
 package woowacourse.auth.dao;
 
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -44,18 +45,22 @@ public class MemberDao {
     public Optional<Member> findByEmail(String email) {
         String sql = "SELECT email, password, nickname FROM MEMBER WHERE email = :email";
         SqlParameterSource params = new MapSqlParameterSource("email", email);
-        return namedParameterJdbcTemplate.query(sql, params, MEMBER_MAPPER)
-                .stream()
-                .findAny();
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, params, MEMBER_MAPPER));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<Member> findByEmailAndPassword(String email, String password) {
         String sql = "SELECT email, password, nickname FROM MEMBER WHERE email = :email AND password = :password";
         SqlParameterSource params = new MapSqlParameterSource("email", email)
                 .addValue("password", password);
-        return namedParameterJdbcTemplate.query(sql, params, MEMBER_MAPPER)
-                .stream()
-                .findAny();
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, params, MEMBER_MAPPER));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void updateNicknameByEmail(String email, String nickname) {
