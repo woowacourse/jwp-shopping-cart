@@ -16,6 +16,11 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql("/init.sql")
 @ActiveProfiles("test")
 public class AcceptanceTest {
+
+    protected static final int INVALID_FORMAT_ERROR_CODE = 1000;
+    protected static final int DUPLICATE_EMAIL_ERROR_CODE = 1001;
+    protected static final int INVALID_LOGIN_ERROR_CODE = 1002;
+
     @LocalServerPort
     int port;
 

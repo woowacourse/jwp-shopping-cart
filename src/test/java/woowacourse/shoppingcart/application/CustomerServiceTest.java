@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +21,30 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Transactional
 class CustomerServiceTest {
 
+    private static final String EMAIL = "tonic@email.com";
+    private static final String PASSWORD = "12345678a";
+    private static final String NICKNAME = "토닉";
+    private static final String NOT_FOUND_EMAIL = "notFoundEmail@email.com";
+
     @Autowired
     private CustomerService customerService;
     @Autowired
     private CustomerDao customerDao;
 
+    @BeforeEach
+    void setUp() {
+        SignUpRequest request = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
+        customerService.registerCustomer(request);
+    }
+
     @DisplayName("정상적으로 회원 등록")
     @Test
     void addCustomer() {
-        SignUpRequest request = new SignUpRequest("tonic@email.com", "12345678a", "토닉");
-        customerService.registerCustomer(request);
-
-        Customer customer = customerService.findByEmail("tonic@email.com");
+        Customer customer = customerService.findByEmail(EMAIL);
         assertAll(
-                () -> assertThat(customer.getEmail()).isEqualTo("tonic@email.com"),
-                () -> assertThat(customer.getPassword()).isEqualTo("12345678a"),
-                () -> assertThat(customer.getNickname()).isEqualTo("토닉"),
+                () -> assertThat(customer.getEmail()).isEqualTo(EMAIL),
+                () -> assertThat(customer.getPassword()).isEqualTo(PASSWORD),
+                () -> assertThat(customer.getNickname()).isEqualTo(NICKNAME),
                 () -> assertThat(customer.getId()).isNotNull()
         );
     }
@@ -43,9 +52,7 @@ class CustomerServiceTest {
     @DisplayName("중복된 email로 회원 등록")
     @Test
     void duplicatedEmailCustomer() {
-        SignUpRequest request = new SignUpRequest("tonic@email.com", "12345678a", "토닉");
-        customerService.registerCustomer(request);
-
+        SignUpRequest request = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
         assertThatThrownBy(() -> customerService.registerCustomer(request))
                 .isInstanceOf(DuplicateCustomerException.class);
     }
@@ -53,60 +60,52 @@ class CustomerServiceTest {
     @DisplayName("email로 회원 조회")
     @Test
     void findByEmail() {
-        SignUpRequest request = new SignUpRequest("tonic@email.com", "12345678a", "토닉");
-        customerService.registerCustomer(request);
-
-        Customer customer = customerService.findByEmail("tonic@email.com");
+        Customer customer = customerService.findByEmail(EMAIL);
 
         assertAll(
-                () -> assertThat(customer.getEmail()).isEqualTo("tonic@email.com"),
-                () -> assertThat(customer.getNickname()).isEqualTo("토닉"),
-                () -> assertThat(customer.getPassword()).isEqualTo("12345678a")
+                () -> assertThat(customer.getEmail()).isEqualTo(EMAIL),
+                () -> assertThat(customer.getNickname()).isEqualTo(NICKNAME),
+                () -> assertThat(customer.getPassword()).isEqualTo(PASSWORD)
         );
     }
 
     @DisplayName("가입하지 않은 email로 회원 조회 시 예외 발생")
     @Test
     void notFoundCustomerByEmailThrowException() {
-        assertThatThrownBy(() -> customerService.findByEmail("tonic@email.com"))
+        assertThatThrownBy(() -> customerService.findByEmail(NOT_FOUND_EMAIL))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
     @DisplayName("존재하지 않는 이메일로 탈퇴 시 예외 발생")
     @Test
     void deleteByNotExistEmail() {
-        assertThatThrownBy(() -> customerService.deleteByEmail("notExists@email.com"))
+        assertThatThrownBy(() -> customerService.deleteByEmail(NOT_FOUND_EMAIL))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
     @DisplayName("이메일로 회원 탈퇴")
     @Test
     void deleteByEmail() {
-        SignUpRequest request = new SignUpRequest("tonic@email.com", "12345678a", "토닉");
-        customerService.registerCustomer(request);
+        customerService.deleteByEmail(EMAIL);
 
-        customerService.deleteByEmail("tonic@email.com");
-
-        assertThat(customerDao.existByEmail("tonic@email.com")).isFalse();
+        assertThat(customerDao.existByEmail(EMAIL)).isFalse();
     }
 
     @DisplayName("존재하지 않는 이메일로 수정 시 예외 발생")
     @Test
     void updateByNotExistEmail() {
-        assertThatThrownBy(() -> customerService.updateCustomer("tonic@email.com", new CustomerUpdateRequest("tonic", "12345678a")))
+        assertThatThrownBy(() -> customerService.updateCustomer(NOT_FOUND_EMAIL,
+                new CustomerUpdateRequest(NICKNAME, PASSWORD)))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
     @DisplayName("정상적인 회원 정보 수정")
     @Test
     void updateCustomer() {
-        SignUpRequest request = new SignUpRequest("tonic@email.com", "12345678a", "토닉");
-        customerService.registerCustomer(request);
-
         String newNickname = "토닉2";
         String newPassword = "newPassword1";
-        customerService.updateCustomer("tonic@email.com", new CustomerUpdateRequest(newNickname, newPassword));
-        Customer customer = customerService.findByEmail("tonic@email.com");
+        customerService.updateCustomer(EMAIL, new CustomerUpdateRequest(newNickname, newPassword));
+        Customer customer = customerService.findByEmail(EMAIL);
 
         assertThat(customer.getPassword()).isEqualTo(newPassword);
         assertThat(customer.getNickname()).isEqualTo(newNickname);

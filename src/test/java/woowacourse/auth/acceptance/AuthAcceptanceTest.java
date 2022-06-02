@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
@@ -29,7 +27,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1000),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(INVALID_FORMAT_ERROR_CODE),
                 () -> assertThat(response.jsonPath().getString("message")).isNotBlank()
         );
     }
@@ -50,7 +48,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1002),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(INVALID_LOGIN_ERROR_CODE),
                 () -> assertThat(response.jsonPath().getString("message")).isNotBlank()
         );
     }
@@ -67,7 +65,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1002),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(INVALID_LOGIN_ERROR_CODE),
                 () -> assertThat(response.jsonPath().getString("message")).isNotBlank()
         );
     }

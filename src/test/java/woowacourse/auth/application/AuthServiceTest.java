@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Transactional
 public class AuthServiceTest {
 
+    private static final String EMAIL = "email@email.com";
+    private static final String PASSWORD = "12345678a";
+    private static final String NICKNAME = "tonic";
+
     @Autowired
     private AuthService authService;
 
@@ -29,34 +34,38 @@ public class AuthServiceTest {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @BeforeEach
+    void setUp() {
+        SignUpRequest signUpRequest = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
+        customerService.registerCustomer(signUpRequest);
+    }
+
     @DisplayName("존재하지 않는 로그인 정보일 경우에 예외를 발생")
     @Test
     void notFoundCustomerException() {
+        String notFoundEmail = "notFoundEmail@email.com";
         assertThatThrownBy(() ->
-                authService.createToken(new TokenRequest("email@email.com", "12345678a"))
+                authService.createToken(new TokenRequest(notFoundEmail, PASSWORD))
         ).isInstanceOf(InvalidCustomerException.class);
     }
 
     @DisplayName("존재하는 로그인 정보일 경우 토큰 반환")
     @Test
     void createValidCustomerToken() {
-        SignUpRequest signUpRequest = new SignUpRequest("email@email.com", "12345678a", "tonic");
-        customerService.registerCustomer(signUpRequest);
-        TokenRequest tokenRequest = new TokenRequest("email@email.com", "12345678a");
+        TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
         String token = authService.createToken(tokenRequest);
         Assertions.assertAll(
                 () -> assertThat(token).isNotBlank(),
                 () -> assertThat(jwtTokenProvider.validateToken(token)).isTrue(),
-                () -> assertThat(jwtTokenProvider.getPayload(token)).isEqualTo("email@email.com")
+                () -> assertThat(jwtTokenProvider.getPayload(token)).isEqualTo(EMAIL)
         );
     }
 
     @DisplayName("잘못된 비밀번호일 경우 예외 발생")
     @Test
     void invalidPasswordThrowException() {
-        SignUpRequest signUpRequest = new SignUpRequest("email@email.com", "12345678a", "tonic");
-        customerService.registerCustomer(signUpRequest);
-        TokenRequest tokenRequest = new TokenRequest("email@email.com", "12345678b");
+        String invalidPassword = "12345678b";
+        TokenRequest tokenRequest = new TokenRequest(EMAIL, invalidPassword);
 
         assertThatThrownBy(() -> authService.createToken(tokenRequest))
                 .isInstanceOf(InvalidLoginFormException.class);
