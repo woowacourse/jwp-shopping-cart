@@ -1,25 +1,22 @@
 package woowacourse.auth.application;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.exception.auth.LoginFailureException;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.application.PasswordEncoderAdapter;
 import woowacourse.shoppingcart.domain.Customer;
 
 @Service
 public class AuthService {
     private final CustomerService customerService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(CustomerService customerService, JwtTokenProvider jwtTokenProvider,
-                       PasswordEncoder passwordEncoder) {
+    public AuthService(CustomerService customerService, JwtTokenProvider jwtTokenProvider) {
         this.customerService = customerService;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public TokenResponse getToken(TokenRequest tokenRequest) {
@@ -31,7 +28,7 @@ public class AuthService {
     }
 
     private void validatePassword(TokenRequest tokenRequest, Customer customer) {
-        if (!customer.validatePassword(tokenRequest.getPassword(), passwordEncoder)) {
+        if (!customer.validatePassword(tokenRequest.getPassword(), new PasswordEncoderAdapter())) {
             throw new LoginFailureException();
         }
     }

@@ -1,11 +1,11 @@
 package woowacourse.shoppingcart.application;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import woowacourse.exception.auth.EmailDuplicateException;
 import woowacourse.exception.auth.PasswordIncorrectException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Encoder;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
@@ -17,17 +17,17 @@ import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 public class CustomerService {
 
     private final CustomerDao customerDao;
-    private final PasswordEncoder passwordEncoder;
+    private final Encoder encoder;
 
-    public CustomerService(CustomerDao customerDao, PasswordEncoder passwordEncoder) {
+    public CustomerService(CustomerDao customerDao) {
         this.customerDao = customerDao;
-        this.passwordEncoder = passwordEncoder;
+        this.encoder = new PasswordEncoderAdapter();
     }
 
     public long create(CustomerRequest customerRequest) {
         validateDuplicateEmail(customerRequest);
 
-        final String hashPw = passwordEncoder.encode(customerRequest.getPassword());
+        final String hashPw = encoder.encode(customerRequest.getPassword());
         final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getName(), hashPw);
 
         return customerDao.save(customer);
@@ -60,12 +60,12 @@ public class CustomerService {
         validatePassword(customer, customerUpdatePasswordRequest.getOldPassword());
 
         customerDao.updatePassword(
-                customer.changePassword(passwordEncoder.encode(customerUpdatePasswordRequest.getNewPassword())));
+                customer.changePassword(encoder.encode(customerUpdatePasswordRequest.getNewPassword())));
         return id;
     }
 
     private void validatePassword(Customer customer, String inputPassword) {
-        if (!customer.validatePassword(inputPassword, passwordEncoder)) {
+        if (!customer.validatePassword(inputPassword, encoder)) {
             throw new PasswordIncorrectException();
         }
     }

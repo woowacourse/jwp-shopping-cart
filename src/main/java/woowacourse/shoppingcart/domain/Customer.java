@@ -19,7 +19,7 @@ public class Customer {
         this(null, email, name, password);
     }
 
-    public boolean validatePassword(String inputPassword, PasswordEncoder passwordEncoder) {
+    public boolean validatePassword(String inputPassword, Encoder passwordEncoder) {
         return passwordEncoder.matches(inputPassword, this.password);
     }
 

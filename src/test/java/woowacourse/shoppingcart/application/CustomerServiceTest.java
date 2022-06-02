@@ -11,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
@@ -33,7 +32,7 @@ class CustomerServiceTest {
     public final CustomerService customerService;
 
     public CustomerServiceTest(JdbcTemplate jdbcTemplate) {
-        this.customerService = new CustomerService(new CustomerDao(jdbcTemplate), new BCryptPasswordEncoder());
+        this.customerService = new CustomerService(new CustomerDao(jdbcTemplate));
     }
 
     @DisplayName("회원가입을 할 수 있다.")
