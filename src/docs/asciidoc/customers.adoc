@@ -17,4 +17,4 @@ operation::customers-api-test/get-me_test[snippets='http-request,http-response,r
 operation::customers-api-test/update-me_test[snippets='http-request,http-response,response-fields']
 
 === Customer 삭제
-operation::customers-api-test/delete-me_test[snippets='http-request,http-response,response-fields']
+operation::customers-api-test/delete-me_test[snippets='http-request,http-response']

@@ -7,6 +7,6 @@ Andy Wilkinson;
 :toclevels: 2
 :sectlinks:
 
-include::auth.adoc[]
+include::./auth.adoc[]
 
-include::customers.adoc[]
+include::./customers.adoc[]
