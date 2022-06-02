@@ -18,6 +18,47 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
+    @DisplayName("이메일 중복 확인할 때, 중복인 경우 true를 반환한다.")
+    @Test
+    void isDuplicationEmail() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+
+        // when
+        RestAssured.given().log().all()
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/customers")
+                .then().log().all()
+                .extract();
+
+        Boolean isDuplicationEmail = RestAssured.given().log().all()
+                .param("email", "email")
+                .when()
+                .post("/customers/email")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(Boolean.class);
+
+        assertThat(isDuplicationEmail).isTrue();
+    }
+
+    @DisplayName("이메일 중복 확인할 때, 중복인 경우 false를 반환한다.")
+    @Test
+    void isNotDuplicationEmail() {
+        //then
+        Boolean isDuplicationEmail = RestAssured.given().log().all()
+                .param("email", "email")
+                .when()
+                .post("/customers/email")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(Boolean.class);
+
+        assertThat(isDuplicationEmail).isFalse();
+    }
+
     @DisplayName("회원가입")
     @Test
     void addCustomer() {

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
@@ -24,6 +25,12 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @PostMapping("/email")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean checkEmail(@RequestParam String email) {
+        return authService.isDuplicationEmail(email);
     }
 
     @PostMapping

@@ -14,8 +14,8 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 public class AuthService {
-
     private final CustomerDao customerDao;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
@@ -23,6 +23,9 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    public boolean isDuplicationEmail(String email) {
+        return customerDao.existByEmail(email);
+    }
 
     public CustomerResponse save(CustomerRequest customerRequest) {
         validateDuplicationEmail(customerRequest);
