@@ -14,6 +14,7 @@ import woowacourse.auth.domain.Customer;
 @Getter
 public class SignupRequest {
 
+    @NotBlank
     @Email
     private String email;
     @NotBlank
