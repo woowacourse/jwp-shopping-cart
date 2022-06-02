@@ -2,7 +2,9 @@ package woowacourse.auth.support;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.web.servlet.HandlerInterceptor;
+
 import woowacourse.auth.exception.InvalidTokenException;
 
 public class LoginInterceptor implements HandlerInterceptor {

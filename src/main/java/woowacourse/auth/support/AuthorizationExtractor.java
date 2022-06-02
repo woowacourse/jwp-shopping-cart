@@ -1,6 +1,7 @@
 package woowacourse.auth.support;
 
 import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class AuthorizationExtractor {

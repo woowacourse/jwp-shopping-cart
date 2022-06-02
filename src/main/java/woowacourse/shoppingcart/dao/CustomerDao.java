@@ -3,13 +3,16 @@ package woowacourse.shoppingcart.dao;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+
 import javax.sql.DataSource;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -20,11 +23,11 @@ public class CustomerDao {
     private final SimpleJdbcInsert insertActor;
 
     public CustomerDao(DataSource dataSource,
-                       NamedParameterJdbcTemplate jdbcTemplate) {
+        NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(dataSource)
-                .withTableName("customer")
-                .usingGeneratedKeyColumns("id");
+            .withTableName("customer")
+            .usingGeneratedKeyColumns("id");
     }
 
     public Long findIdByUserName(final String userName) {
@@ -89,27 +92,27 @@ public class CustomerDao {
 
     public Long save(final Customer customer) {
         return insertActor.executeAndReturnKey(new MapSqlParameterSource()
-                .addValue("email", customer.getEmail())
-                .addValue("username", customer.getUsername())
-                .addValue("password", customer.getPassword())
+            .addValue("email", customer.getEmail())
+            .addValue("username", customer.getUsername())
+            .addValue("password", customer.getPassword())
         ).longValue();
     }
 
     public void update(Long id, String username) {
         String sql = "update customer set username = :username "
-                + "where id = :id";
+            + "where id = :id";
         jdbcTemplate.update(sql, new MapSqlParameterSource()
-                .addValue("id", id)
-                .addValue("username", username)
+            .addValue("id", id)
+            .addValue("username", username)
         );
     }
 
     private RowMapper<Customer> rowMapper() {
         return ((rs, rowNum) -> new Customer(
-                rs.getLong("id"),
-                rs.getString("email"),
-                rs.getString("username"),
-                rs.getString("password")
+            rs.getLong("id"),
+            rs.getString("email"),
+            rs.getString("username"),
+            rs.getString("password")
         ));
     }
 

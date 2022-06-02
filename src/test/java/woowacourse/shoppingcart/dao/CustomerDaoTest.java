@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Optional;
+
 import javax.sql.DataSource;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+
 import woowacourse.shoppingcart.domain.Customer;
 
 @JdbcTest
@@ -23,7 +26,7 @@ public class CustomerDaoTest {
     private final CustomerDao customerDao;
 
     public CustomerDaoTest(DataSource dataSource,
-                           NamedParameterJdbcTemplate jdbcTemplate) {
+        NamedParameterJdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(dataSource, jdbcTemplate);
     }
 
@@ -77,7 +80,7 @@ public class CustomerDaoTest {
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
 
         assertThat(customer).usingRecursiveComparison()
-                .isEqualTo(expected);
+            .isEqualTo(expected);
     }
 
     @DisplayName("email로 Customer를 조회한다.")
@@ -90,7 +93,7 @@ public class CustomerDaoTest {
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
 
         assertThat(customer).usingRecursiveComparison()
-                .isEqualTo(expected);
+            .isEqualTo(expected);
     }
 
     @DisplayName("email과 password로 Customer를 조회한다.")
@@ -103,9 +106,8 @@ public class CustomerDaoTest {
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
 
         assertThat(customer).usingRecursiveComparison()
-                .isEqualTo(expected);
+            .isEqualTo(expected);
     }
-
 
     @DisplayName("Customer 를 수정한다.")
     @Test
