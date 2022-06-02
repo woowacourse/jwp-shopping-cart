@@ -1,9 +1,16 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class UpdateCustomerRequest {
 
+    @NotNull
     private String password;
+
+    @NotNull
     private String phoneNumber;
+
+    @NotNull
     private String address;
 
     private UpdateCustomerRequest() {
