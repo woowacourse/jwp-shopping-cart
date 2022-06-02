@@ -8,19 +8,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @SpringBootTest
-@Transactional
+@Sql(scripts = {"classpath:schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class CustomerServiceTest {
     @Autowired
     private CustomerService customerService;
@@ -110,5 +111,23 @@ public class CustomerServiceTest {
         // given
         assertThatThrownBy(() -> customerDao.findByUsername("greenlawn"))
                 .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @Test
+    @DisplayName("이메일이 같으면 회원정보를 저장할 수 없다.")
+    void addCustomerThrowDuplicateEmailException() {
+        // given
+        String name1 = "greenlawn";
+        String email1 = "green@woowa.com";
+        SignUpRequest signUpRequest1 = new SignUpRequest(name1, email1, "1234");
+        customerService.addCustomer(signUpRequest1);
+
+        // when & then
+        String name2 = "rennon";
+        String email2 = "green@woowa.com";
+        SignUpRequest signUpRequest2 = new SignUpRequest(name2, email2, "1234");
+        assertThatThrownBy(() -> customerService.addCustomer(signUpRequest2))
+                .isInstanceOf(DuplicateEmailException.class)
+                .hasMessage("중복된 이메일입니다.");
     }
 }

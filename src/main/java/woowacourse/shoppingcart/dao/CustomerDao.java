@@ -40,17 +40,13 @@ public class CustomerDao {
         String email = customer.getEmail();
         String password = customer.getPassword();
 
-        try {
-            SqlParameterSource params = new MapSqlParameterSource()
+        SqlParameterSource params = new MapSqlParameterSource()
                     .addValue("username", username.toLowerCase(Locale.ROOT))
                     .addValue("email", email)
                     .addValue("password", password);
 
-            long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-            return new Customer(id, username, email, password);
-        } catch (final DuplicateKeyException e) {
-            throw new DuplicateUsernameException();
-        }
+        long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        return new Customer(id, username, email, password);
     }
 
     public Customer findByUsername(String username) {
@@ -66,6 +62,15 @@ public class CustomerDao {
         try {
             String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
             return jdbcTemplate.queryForObject(query, Boolean.class, username);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public boolean existByEmail(String email) {
+        try {
+            String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ?)";
+            return jdbcTemplate.queryForObject(query, Boolean.class, email);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
