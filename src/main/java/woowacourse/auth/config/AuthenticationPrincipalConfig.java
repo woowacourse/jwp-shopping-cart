@@ -12,12 +12,9 @@ import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthService authService;
 
-    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider,
-                                         AuthService authService) {
+    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.authService = authService;
     }
 
     @Override
@@ -27,6 +24,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider, authService);
+        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
     }
 }
