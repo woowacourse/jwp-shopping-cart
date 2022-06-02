@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.exception.auth.EmailDuplicateException;
 import woowacourse.exception.auth.PasswordIncorrectException;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -24,6 +25,7 @@ public class CustomerService {
         this.encoder = new PasswordEncoderAdapter();
     }
 
+    @Transactional
     public long create(CustomerRequest customerRequest) {
         validateDuplicateEmail(customerRequest);
 
@@ -39,6 +41,7 @@ public class CustomerService {
         }
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse findById(Long id) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         return new CustomerResponse(customer.getName(), customer.getEmail());
@@ -48,6 +51,7 @@ public class CustomerService {
         return customerDao.findByEmail(email).orElseThrow(CustomerNotFoundException::new);
     }
 
+    @Transactional
     public long updateProfile(Long id, CustomerUpdateProfileRequest customerUpdateProfileRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
 
@@ -55,6 +59,7 @@ public class CustomerService {
         return id;
     }
 
+    @Transactional
     public long updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         validatePassword(customer, customerUpdatePasswordRequest.getOldPassword());
