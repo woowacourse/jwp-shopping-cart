@@ -9,6 +9,8 @@ import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.exception.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
@@ -24,8 +26,22 @@ public class CustomerService {
 
     @Transactional
     public SignUpResponse addCustomer(SignUpRequest signUpRequest) {
+        validateDuplicateUsername(signUpRequest.getUsername());
+        validateDuplicateEmail(signUpRequest.getEmail());
         Customer customer = customerDao.save(signUpRequest.toCustomer());
         return SignUpResponse.fromCustomer(customer);
+    }
+
+    private void validateDuplicateUsername(String username) {
+        if (customerDao.existByUsername(username)) {
+            throw new DuplicateUsernameException();
+        }
+    }
+
+    private void validateDuplicateEmail(String email) {
+        if (customerDao.existByEmail(email)) {
+            throw new DuplicateEmailException();
+        }
     }
 
     public CustomerResponse findMe(String username) {

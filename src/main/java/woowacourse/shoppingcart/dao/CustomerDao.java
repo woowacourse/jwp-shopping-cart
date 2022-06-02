@@ -73,6 +73,15 @@ public class CustomerDao {
         }
     }
 
+    public boolean existByEmail(String email) {
+        try {
+            String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ?)";
+            return jdbcTemplate.queryForObject(query, Boolean.class, email);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
     public boolean isValidPasswordByUsername(String username, String password) {
         try {
             final String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ? AND password = ?)";

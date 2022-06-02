@@ -82,6 +82,20 @@ public class CustomerDaoTest {
     }
 
     @Test
+    @DisplayName("이메일이 존재하는지 확인할 수 있다.")
+    void existByEmail() {
+        // given
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
+        customerDao.save(레넌);
+
+        // when
+        boolean result = customerDao.existByEmail("rennon@woowa.com");
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
     @DisplayName("회원 이름에 따른 회원의 비밀번호가 일치한다.")
     void isValidPasswordByUsername() {
         // given
