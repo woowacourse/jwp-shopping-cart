@@ -1,38 +1,32 @@
 package woowacourse.auth.config;
 
 import java.util.List;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
-import woowacourse.auth.ui.LoginInterceptor;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final HandlerInterceptor interceptor;
+    private final HandlerMethodArgumentResolver argumentResolver;
 
-    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthenticationPrincipalConfig(HandlerInterceptor interceptor, HandlerMethodArgumentResolver argumentResolver) {
+        this.interceptor = interceptor;
+        this.argumentResolver = argumentResolver;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
+        argumentResolvers.add(argumentResolver);
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor(jwtTokenProvider))
+        registry.addInterceptor(interceptor)
                 .addPathPatterns("/api/members/**")
                 .excludePathPatterns("/api/members");
-    }
-
-    @Bean
-    public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
     }
 }
