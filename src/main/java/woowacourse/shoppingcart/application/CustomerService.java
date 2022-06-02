@@ -33,7 +33,8 @@ public class CustomerService {
     }
 
     public void update(final Customer customer, final CustomerUpdationRequest request) {
-        final Customer updatedCustomer = new Customer(request.getNickname(), customer.getEmail(), request.getPassword());
+        final Customer updatedCustomer = new Customer(request.getNickname(), customer.getEmail(),
+                request.getPassword());
         customerDao.updateById(customer.getId(), updatedCustomer);
     }
 

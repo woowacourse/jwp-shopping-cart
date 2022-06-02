@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.exception.badrequest;
 
-import woowacourse.shoppingcart.exception.badrequest.BadRequestException;
-
 public class InvalidCustomerException extends BadRequestException {
 
     public InvalidCustomerException() {

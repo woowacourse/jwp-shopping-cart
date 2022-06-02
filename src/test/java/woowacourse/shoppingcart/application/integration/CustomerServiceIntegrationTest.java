@@ -1,34 +1,48 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.shoppingcart.application.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
 
-class CustomerServiceTest extends ServiceMockTest {
+@SpringBootTest
+@Transactional
+class CustomerServiceIntegrationTest {
 
-    @InjectMocks
+    @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private CustomerDao customerDao;
+
+    private Customer customer;
+    private Long id;
+
+    @BeforeEach
+    void setUp() {
+        customer = new Customer("kun", "kun@email.com", "qwerasdf123");
+        id = customerDao.save(customer);
+    }
 
     @Test
     @DisplayName("이미 가입 이메일로 회원가입을 하면 예외를 던진다.")
     void create_alreadyExistEmail_exceptionThrown() {
         // given
-        final String email = "kun@naver.com";
-        final CustomerCreationRequest request = new CustomerCreationRequest(email, "1q2w3e4r", "kun");
-
-        given(customerDao.existEmail(email))
-                .willReturn(true);
+        final CustomerCreationRequest request = new CustomerCreationRequest(customer.getEmail(), "1q2w3e4r", "kun");
 
         // when, then
         Assertions.assertThatThrownBy(() -> customerService.create(request))
@@ -40,23 +54,15 @@ class CustomerServiceTest extends ServiceMockTest {
     void create() {
         // given
         final String email = "kun@naver.com";
-        final String nickname = "kun";
+        final String nickname = "kun2";
         final String password = "qwerasdf123";
         final CustomerCreationRequest request = new CustomerCreationRequest(email, password, nickname);
-
-        given(customerDao.existEmail(email))
-                .willReturn(false);
-
-        final long expected = 1L;
-        final Customer customer = new Customer(nickname, email, password);
-        given(customerDao.save(customer))
-                .willReturn(expected);
 
         // when
         final Long actual = customerService.create(request);
 
         // then
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isNotNull();
     }
 
     @Test
@@ -64,9 +70,6 @@ class CustomerServiceTest extends ServiceMockTest {
     void getByEmail_notExistEmail_exceptionThrown() {
         // given
         final String email = "asdf@email.com";
-
-        given(customerDao.findByEmail(email))
-                .willThrow(NotFoundCustomerException.class);
 
         // when, then
         assertThatThrownBy(() -> customerService.getByEmail(email))
@@ -76,31 +79,24 @@ class CustomerServiceTest extends ServiceMockTest {
     @Test
     @DisplayName("이메일이 존재하는 경우에, Customer를 반환한다.")
     void getByEmail_existEmail_customerReturned() {
-        // given
-        final String email = "email@email.com";
-        final Customer expected = new Customer("kun", email, "qwerasdf123");
-        given(customerDao.findByEmail(email))
-                .willReturn(expected);
-
         // when
-        final Customer actual = customerService.getByEmail(email);
+        final Customer actual = customerService.getByEmail(customer.getEmail());
 
         // then
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualTo(customer);
     }
 
     @Test
     @DisplayName("Customer를 수정한다.")
     void update_customer_void() {
         // given
-        final String email = "kun@email.com";
-        final String password = "qwerasdf321";
-        final Customer customer = new Customer(1L, "kun", email, password);
+        final Customer loginCustomer = new Customer(id, customer.getNickname(), customer.getEmail(),
+                customer.getPassword());
 
         final CustomerUpdationRequest request = new CustomerUpdationRequest("rick", "qwerasdf123");
 
         // when, then
-        assertThatCode(() -> customerService.update(customer, request))
+        assertThatCode(() -> customerService.update(loginCustomer, request))
                 .doesNotThrowAnyException();
     }
 
@@ -108,10 +104,11 @@ class CustomerServiceTest extends ServiceMockTest {
     @DisplayName("Customer를 삭제한다.")
     void delete_customer_void() {
         // given
-        final Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
+        final Customer loginCustomer = new Customer(id, customer.getNickname(), customer.getEmail(),
+                customer.getPassword());
 
         // when, then
-        assertThatCode(() -> customerService.delete(customer))
+        assertThatCode(() -> customerService.delete(loginCustomer))
                 .doesNotThrowAnyException();
     }
 }

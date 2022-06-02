@@ -7,11 +7,11 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedTokenException;
 import woowacourse.shoppingcart.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
 import woowacourse.shoppingcart.support.Login;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedTokenException;
 
 @Component
 public class LoginCustomerResolver implements HandlerMethodArgumentResolver {

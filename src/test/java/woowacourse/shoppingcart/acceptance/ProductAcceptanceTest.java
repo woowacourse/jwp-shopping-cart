@@ -68,7 +68,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    public static void 상품_목록_포함됨(final Long productId1, final Long productId2, final ExtractableResponse<Response> response) {
+    public static void 상품_목록_포함됨(final Long productId1, final Long productId2,
+                                 final ExtractableResponse<Response> response) {
         final List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
                 .map(Product::getId)
                 .collect(Collectors.toList());
