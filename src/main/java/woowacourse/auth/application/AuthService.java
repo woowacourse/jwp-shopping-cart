@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -19,6 +20,7 @@ public class AuthService {
         this.customerDao = customerDao;
     }
 
+    @Transactional(readOnly = true)
     public SignInResponse signIn(SignInRequest signInRequest) {
         if (!customerDao.isValidPasswordByEmail(signInRequest.getEmail(), signInRequest.getPassword())) {
             throw new InvalidCustomerException("로그인 실패");
