@@ -30,4 +30,4 @@ public class AuthControllerAdvice {
     public ResponseEntity<Void> handle() {
         return ResponseEntity.badRequest().build();
     }
- }
+}

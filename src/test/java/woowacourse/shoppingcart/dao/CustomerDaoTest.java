@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,14 +13,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -71,11 +70,13 @@ public class CustomerDaoTest {
 
         final Customer result = customerDao.findByEmail(customer.getEmail()).get();
 
-        assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getEmail()).isEqualTo(EMAIL);
-        assertThat(result.getName()).isEqualTo(NAME);
-        assertThat(result.getPhone()).isEqualTo(PHONE);
-        assertThat(result.getAddress()).isEqualTo(ADDRESS);
+        assertAll(
+                () -> assertThat(result.getId()).isEqualTo(1L),
+                () -> assertThat(result.getEmail()).isEqualTo(EMAIL),
+                () -> assertThat(result.getName()).isEqualTo(NAME),
+                () -> assertThat(result.getPhone()).isEqualTo(PHONE),
+                () -> assertThat(result.getAddress()).isEqualTo(ADDRESS)
+        );
     }
 
     @DisplayName("Customer Id로 Customer를 조회한다.")
