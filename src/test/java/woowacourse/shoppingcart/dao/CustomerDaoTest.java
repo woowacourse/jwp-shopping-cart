@@ -33,7 +33,7 @@ public class CustomerDaoTest {
 
         // when
         final Customer actual = customerDao.findCustomerByUserName(userName);
-        Customer expected = new Customer("puterism", "crew01@naver.com", "a123");
+        Customer expected = new Customer("puterism", "crew01@naver.com", "a12345");
 
         // then
         assertThat(actual.equals(expected)).isTrue();
