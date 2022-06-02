@@ -1,17 +1,18 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
@@ -43,12 +44,27 @@ class CustomerServiceTest {
         jdbcTemplate.update("SET FOREIGN_KEY_CHECKS=1");
     }
 
-    @Test
-    @DisplayName("회원가입을 할때 회원가입이 정상적으로 이뤄진다.")
-    void createCustomer() {
-        final Long customerId = signUpCustomer();
-        assertThat(customerId).isGreaterThanOrEqualTo(1);
+    @DisplayName("회원가입을 할 때")
+    @Nested
+    class SignInTest {
+
+        @Test
+        @DisplayName("첫 회원가입이면 회원가입이 정상적으로 이뤄진다.")
+        void createCustomer() {
+            final Long customerId = signUpCustomer();
+            assertThat(customerId).isGreaterThanOrEqualTo(1);
+        }
+
+        @Test
+        @DisplayName("이미 가입된 회원이면 에러를 던진다.")
+        void duplicatedCustomer() {
+            signUpCustomer();
+            assertThatThrownBy(CustomerServiceTest.this::signUpCustomer)
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("이미 가입한 사용자입니다.");
+        }
     }
+
 
     @Test
     @DisplayName("로그인이 되면 토큰이 정상적으로 발급된다.")

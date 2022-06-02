@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -27,7 +28,11 @@ public class CustomerService {
 
     public Long createCustomer(final CustomerDto newCustomer) {
         final Customer customer = CustomerDto.toCustomer(newCustomer);
-        return customerDao.createCustomer(customer);
+        try {
+            return customerDao.createCustomer(customer);
+        } catch (DuplicateKeyException e) {
+            throw new IllegalArgumentException("이미 가입한 사용자입니다.");
+        }
     }
 
     public TokenResponse signIn(final SignInDto signInDto) {
