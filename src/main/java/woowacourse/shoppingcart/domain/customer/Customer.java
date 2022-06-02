@@ -4,10 +4,10 @@ public class Customer {
 
     private final Long id;
     private final Email email;
-    private String nickname;
+    private Nickname nickname;
     private String password;
 
-    public Customer(final Long id, final Email email, final String nickname, final String password) {
+    public Customer(final Long id, final Email email, final Nickname nickname, final String password) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -15,7 +15,7 @@ public class Customer {
     }
 
     public Customer(final Long id, final String email, final String nickname, final String password) {
-        this(id, new Email(email), nickname, password);
+        this(id, new Email(email), new Nickname(nickname), password);
     }
 
     public Customer(final String email, final String nickname, final String password) {
@@ -23,7 +23,7 @@ public class Customer {
     }
 
     public void update(final String nickname, final String password) {
-        this.nickname = nickname;
+        this.nickname = new Nickname(nickname);
         this.password = password;
     }
 
@@ -40,7 +40,7 @@ public class Customer {
     }
 
     public String getNickname() {
-        return nickname;
+        return nickname.getNickname();
     }
 
     public String getPassword() {
