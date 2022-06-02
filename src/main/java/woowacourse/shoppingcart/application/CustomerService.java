@@ -45,6 +45,7 @@ public class CustomerService {
         return customerId;
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse getCustomerById(int id) {
         try {
             CustomerEntity customerEntity = customerDao.findById(id);
@@ -77,10 +78,6 @@ public class CustomerService {
         customerDao.delete(customerId);
     }
 
-    public EmailDuplicationResponse isDuplicatedEmail(String email) {
-        return new EmailDuplicationResponse(customerDao.hasEmail(email));
-    }
-
     private void validateExists(int customerId) {
         try {
             customerDao.findById(customerId);
@@ -89,6 +86,11 @@ public class CustomerService {
         } catch (EmptyResultDataAccessException e) {
             throw new CustomerNotFoundException();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public EmailDuplicationResponse isDuplicatedEmail(String email) {
+        return new EmailDuplicationResponse(customerDao.hasEmail(email));
     }
 
     private Customer convertRequestToCustomer(CustomerRequest customerRequest) {
