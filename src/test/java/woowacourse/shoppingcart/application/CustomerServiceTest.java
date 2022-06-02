@@ -79,7 +79,7 @@ class CustomerServiceTest {
         final Long customerId = customerService.registerCustomer(
                 new CustomerRegisterRequest(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
-        final String newNickname = "Guest123123";
+        final String newNickname = "Guest123";
         final String newPassword = "qwer1234!@#$";
         final CustomerUpdateResponse actual = customerService.updateCustomer(customerId,
                 new CustomerUpdateRequest(newNickname, CUSTOMER_PASSWORD, newPassword));

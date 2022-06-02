@@ -5,9 +5,9 @@ public class Customer {
     private final Long id;
     private final Email email;
     private Nickname nickname;
-    private String password;
+    private Password password;
 
-    public Customer(final Long id, final Email email, final Nickname nickname, final String password) {
+    public Customer(final Long id, final Email email, final Nickname nickname, final Password password) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -15,7 +15,7 @@ public class Customer {
     }
 
     public Customer(final Long id, final String email, final String nickname, final String password) {
-        this(id, new Email(email), new Nickname(nickname), password);
+        this(id, new Email(email), new Nickname(nickname), new Password(password));
     }
 
     public Customer(final String email, final String nickname, final String password) {
@@ -24,11 +24,12 @@ public class Customer {
 
     public void update(final String nickname, final String password) {
         this.nickname = new Nickname(nickname);
-        this.password = password;
+        this.password = new Password(password);
     }
 
     public boolean equalsPassword(final String password) {
-        return password.equals(this.password);
+        final Password other = new Password(password);
+        return other.equals(this.password);
     }
 
     public Long getId() {
@@ -44,6 +45,6 @@ public class Customer {
     }
 
     public String getPassword() {
-        return password;
+        return password.getPassword();
     }
 }

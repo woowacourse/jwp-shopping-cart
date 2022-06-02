@@ -13,7 +13,7 @@ class CustomerTest {
 
     @DisplayName("비밀번호를 비교한다.")
     @ParameterizedTest
-    @CsvSource(value = {"123,123,true", "qwe,123,false"})
+    @CsvSource(value = {"1234567890a!,1234567890a!,true", "1234567890a!,1234567890f^,false"})
     void equalsPassword(final String source, final String target, final boolean expected) {
         final Customer customer = new Customer(CUSTOMER_EMAIL, CUSTOMER_NAME, source);
 
