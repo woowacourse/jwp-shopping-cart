@@ -2,7 +2,7 @@ security:
   jwt:
     token:
       expire-length: 3600000
-      secret-key: efdsfasdfdsfdsafdsfsdafdsfdsafsdfddddfdfdfdfdfdfd
+      secret-key: c2VjcmV0LXJpY2hhcmQ=c2VjcmV0LXJpY2hhcmQ=c2VjcmV0LXJpY2hhcmQ=
 
 spring:
   datasource:
