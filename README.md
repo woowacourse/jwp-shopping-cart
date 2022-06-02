@@ -23,10 +23,10 @@
     - [x] newPassword 암호화
     - [x] password 수정
 
-- [ ] delete /api/members/me
-    - [ ] header token, body password
-    - [ ] password가 일치하는 지 확인
-    - [ ] 삭제
+- [x] delete /api/members/me
+    - [x] header token, body password
+    - [x] password가 일치하는 지 확인
+    - [x] 삭제
 
 
 ## interceptor
