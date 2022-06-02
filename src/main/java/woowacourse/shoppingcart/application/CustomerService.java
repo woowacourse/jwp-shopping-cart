@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
@@ -21,8 +22,9 @@ public class CustomerService {
         if (customerDao.existByEmail(request.getEmail())) {
             throw new DuplicateCustomerException();
         }
-        Customer customer = customerDao.save(new Customer(request.getEmail(), request.getPassword(),
-                request.getNickname()));
+        String encryptPassword = PasswordEncoder.encrypt(request.getPassword());
+        Customer customer = customerDao.save(
+                new Customer(request.getEmail(), encryptPassword, request.getNickname()));
         return customer.getId();
     }
 
@@ -40,7 +42,8 @@ public class CustomerService {
 
     public void updateCustomer(String email, CustomerUpdateRequest request) {
         Customer customer = findByEmail(email);
-        customerDao.update(new Customer(customer.getId(), customer.getEmail(), request.getPassword(),
+        String encryptPassword = PasswordEncoder.encrypt(request.getPassword());
+        customerDao.update(new Customer(customer.getId(), customer.getEmail(), encryptPassword,
                 request.getNickname()));
     }
 }

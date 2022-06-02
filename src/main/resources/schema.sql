@@ -13,7 +13,7 @@ create table customer
     id       bigint       not null auto_increment,
     username varchar(255),
     email varchar(255),
-    password varchar(20),
+    password varchar(128),
     nickname varchar(255),
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;

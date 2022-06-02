@@ -6,6 +6,7 @@ import woowacourse.auth.exception.InvalidLoginFormException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -23,7 +24,8 @@ public class AuthService {
         Customer customer = customerDao.findByEmail(tokenRequest.getEmail())
                 .orElseThrow(InvalidCustomerException::new);
 
-        if (!customer.isValidPassword(tokenRequest.getPassword())) {
+        String encryptPassword = PasswordEncoder.encrypt(tokenRequest.getPassword());
+        if (!customer.isValidPassword(encryptPassword)) {
             throw new InvalidLoginFormException();
         }
 
