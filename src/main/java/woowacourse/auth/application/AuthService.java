@@ -31,9 +31,13 @@ public class AuthService {
     }
 
     private void validateDuplicationEmail(CustomerRequest customerRequest) {
-        if (customerDao.existByEmail(customerRequest.getEmail())) {
+        if (isExistEmail(customerRequest.getEmail())) {
             throw new IllegalArgumentException("중복된 email 입니다.");
         }
+    }
+
+    public boolean isExistEmail(String email) {
+        return customerDao.existByEmail(email);
     }
 
     public Long loginCustomer(TokenRequest tokenRequest) {

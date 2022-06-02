@@ -32,6 +32,12 @@ public class AuthController {
         return authService.save(customerRequest);
     }
 
+    @PostMapping("/email")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean checkEmailExistence(@RequestBody String email) {
+        return authService.isExistEmail(email);
+    }
+
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public TokenResponse login(@RequestBody TokenRequest tokenRequest) {
