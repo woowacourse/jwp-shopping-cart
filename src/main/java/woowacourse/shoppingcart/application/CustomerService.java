@@ -10,7 +10,7 @@ import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -19,29 +19,26 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    @Transactional
     public Long createCustomer(CustomerCreateRequest customerCreateRequest) {
         validateDuplication(customerCreateRequest);
         return customerDao.save(customerCreateRequest.toCustomer());
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse findCustomerByEmail(String email) {
         return CustomerResponse.from(getCustomerByEmail(email));
     }
 
-    @Transactional
     public void deleteCustomer(String email) {
         customerDao.deleteByEmail(email);
     }
 
-    @Transactional
     public void changePassword(String email, ChangePasswordRequest changePasswordRequest) {
         Customer customer = getCustomerByEmail(email);
         customer.changePassword(changePasswordRequest.getPrevPassword(), changePasswordRequest.getNewPassword());
         customerDao.updatePassword(customer);
     }
 
-    @Transactional
     public void changeNickname(String email, ChangeCustomerRequest changeCustomerRequest) {
         Customer customer = getCustomerByEmail(email);
         String nicknameToChange = changeCustomerRequest.getNickname();
