@@ -1,9 +1,9 @@
-package woowacourse.auth.support;
+package woowacourse.auth.domain;
 
 import java.util.Map;
 
 public interface TokenProvider {
     String createToken(Map<String, Object> claims);
 
-    long getPayload(String token);
+    Map<String, Object> getPayload(String token);
 }

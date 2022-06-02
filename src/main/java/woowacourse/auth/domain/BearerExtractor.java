@@ -1,7 +1,7 @@
-package woowacourse.auth.support;
+package woowacourse.auth.domain;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface AuthHeaderExtractor {
+public interface BearerExtractor {
     String extract(HttpServletRequest httpServletRequest);
 }
