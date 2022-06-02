@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -42,6 +43,7 @@ class OrdersDetailDaoTest {
         productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
     }
 
+    @Disabled
     @DisplayName("OrderDatail을 추가하는 기능")
     @Test
     void addOrdersDetail() {
@@ -56,6 +58,7 @@ class OrdersDetailDaoTest {
         assertThat(orderDetailId).isEqualTo(1L);
     }
 
+    @Disabled
     @DisplayName("OrderId로 OrderDetails 조회하는 기능")
     @Test
     void findOrdersDetailsByOrderId() {

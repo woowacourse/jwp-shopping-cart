@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -89,6 +90,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }
 
+    @Disabled
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
@@ -97,6 +99,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_추가됨(response);
     }
 
+    @Disabled
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
@@ -109,6 +112,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
+    @Disabled
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {

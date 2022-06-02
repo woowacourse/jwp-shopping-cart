@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class OrderControllerTest {
     @MockBean
     private OrderService orderService;
 
+    @Disabled
     @DisplayName("CREATED와 Location을 반환한다.")
     @Test
     void addOrder() throws Exception {
@@ -68,6 +70,7 @@ public class OrderControllerTest {
                         "/api/" + customerName + "/orders/" + expectedOrderId));
     }
 
+    @Disabled
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
     @Test
     void findOrder() throws Exception {
@@ -93,6 +96,7 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("orderDetails[0].quantity").value(2));
     }
 
+    @Disabled
     @DisplayName("사용자 이름을 통해 주문 내역 목록을 조회하면, 주문 내역 목록을 받는다.")
     @Test
     void findOrders() throws Exception {

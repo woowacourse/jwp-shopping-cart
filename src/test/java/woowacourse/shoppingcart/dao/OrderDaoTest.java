@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -26,6 +27,7 @@ class OrderDaoTest {
         this.orderDao = new OrderDao(jdbcTemplate);
     }
 
+    @Disabled
     @DisplayName("Order를 추가하는 기능")
     @Test
     void addOrders() {
@@ -39,6 +41,7 @@ class OrderDaoTest {
         assertThat(orderId).isNotNull();
     }
 
+    @Disabled
     @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
     @Test
     void findOrderIdsByCustomerId() {
