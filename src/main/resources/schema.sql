@@ -12,14 +12,11 @@ create table customer
 (
     id       bigint       not null auto_increment,
     email    varchar(255) not null,
-    username varchar(255) not null,
+    username varchar(255) not null unique,
     password varchar(255) not null,
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
-
-alter table customer
-    add unique key (username);
 
 create table product
 (
@@ -40,14 +37,6 @@ create table cart_item
 ) engine = InnoDB
   default charset = utf8mb4;
 
-alter table cart_item
-    add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references customer (id);
-
-alter table cart_item
-    add constraint fk_cart_item_to_product
-        foreign key (product_id) references product (id);
-
 create table orders
 (
     id          bigint not null auto_increment,
@@ -55,10 +44,6 @@ create table orders
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
-
-alter table orders
-    add constraint fk_orders_to_customer
-        foreign key (customer_id) references customer (id);
 
 create table orders_detail
 (
@@ -69,11 +54,3 @@ create table orders_detail
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
-
-alter table orders_detail
-    add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id);
-
-alter table orders_detail
-    add constraint fk_orders_detail_to_product
-        foreign key (product_id) references product (id);
