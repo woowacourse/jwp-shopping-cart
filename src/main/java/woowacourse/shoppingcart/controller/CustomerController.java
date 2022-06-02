@@ -1,11 +1,10 @@
-package woowacourse.shoppingcart.ui;
+package woowacourse.shoppingcart.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import woowacourse.auth.application.AuthService;
+import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.service.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 

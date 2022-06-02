@@ -10,13 +10,13 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.auth.application.AuthorizationException;
-import woowacourse.shoppingcart.exception.duplicate.DuplicateCustomerException;
+import woowacourse.shoppingcart.exception.auth.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.duplicate.DuplicateException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 
 @RestControllerAdvice
@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
-    @ExceptionHandler(DuplicateCustomerException.class)
+    @ExceptionHandler(DuplicateException.class)
     public ResponseEntity<String> handleDuplicatedName(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }

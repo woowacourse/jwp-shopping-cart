@@ -1,3 +1,3 @@
 insert into customer (username, password)
-values ('puterism', '03AC674216F3E15C761EE1A5E255F067953623C8B388B4459E13F978D7C846F4')
+values ('puterism', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f')
 ;

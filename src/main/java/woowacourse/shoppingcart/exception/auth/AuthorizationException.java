@@ -1,4 +1,4 @@
-package woowacourse.auth.application;
+package woowacourse.shoppingcart.exception.auth;
 
 public class AuthorizationException extends RuntimeException {
 

@@ -1,8 +1,8 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.application.AuthorizationException;
+import woowacourse.shoppingcart.exception.auth.AuthorizationException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;

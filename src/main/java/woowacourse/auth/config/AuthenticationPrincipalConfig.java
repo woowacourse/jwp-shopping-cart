@@ -1,8 +1,8 @@
 package woowacourse.auth.config;
 
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import woowacourse.auth.ui.AuthInterceptor;
-import woowacourse.auth.application.AuthService;
+import woowacourse.auth.controller.AuthInterceptor;
+import woowacourse.auth.service.AuthService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -16,7 +16,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(new AuthInterceptor(authService))
                 .addPathPatterns("/api/customers/me");
     }

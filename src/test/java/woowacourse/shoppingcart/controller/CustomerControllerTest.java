@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.ui;
+package woowacourse.shoppingcart.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,8 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.auth.application.AuthService;
-import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.auth.service.AuthService;
+import woowacourse.shoppingcart.service.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
 @WebMvcTest(CustomerController.class)
