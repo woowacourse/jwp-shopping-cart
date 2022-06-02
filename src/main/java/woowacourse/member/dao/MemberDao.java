@@ -1,6 +1,5 @@
 package woowacourse.member.dao;
 
-import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -68,7 +67,7 @@ public class MemberDao {
             String email = rs.getString("email");
             String password = rs.getString("password");
             String name = rs.getString("name");
-            return new Member(id, email, password, name);
+            return Member.fromPersist(id, email, password, name);
         };
     }
 

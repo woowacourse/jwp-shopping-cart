@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 import woowacourse.member.exception.EmailNotValidException;
 import woowacourse.member.exception.NameNotValidException;
 import woowacourse.member.exception.PasswordChangeException;
-import woowacourse.member.exception.PasswordNotValidException;
 import woowacourse.member.exception.WrongPasswordException;
 import woowacourse.member.infrastructure.PasswordEncoder;
 
@@ -18,7 +17,7 @@ public class Member {
     private String password;
     private String name;
 
-    public Member(Long id, String email, String password, String name) {
+    private Member(Long id, String email, String password, String name) {
         validateRightEmail(email);
         validateRightName(name);
         this.id = id;
@@ -27,7 +26,14 @@ public class Member {
         this.name = name;
     }
 
-    public static Member from(String email, String password, String name, PasswordEncoder passwordEncoder) {
+    public static Member fromPersist(Long id, String email, String password, String name) {
+        return new Member(id, email, password, name);
+    }
+
+    public static Member createMemberWithPasswordEncode(String email,
+                                                        String password,
+                                                        String name,
+                                                        PasswordEncoder passwordEncoder) {
         return new Member(null, email, passwordEncoder.encode(password), name);
     }
 

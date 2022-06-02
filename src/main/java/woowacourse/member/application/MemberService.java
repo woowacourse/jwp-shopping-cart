@@ -29,7 +29,7 @@ public class MemberService {
 
     public Long save(final MemberRegisterRequest memberRegisterRequest) {
         validateDuplicateEmail(memberRegisterRequest.getEmail());
-        Member member = Member.from(memberRegisterRequest.getEmail(),
+        Member member = Member.createMemberWithPasswordEncode(memberRegisterRequest.getEmail(),
                 memberRegisterRequest.getPassword(),
                 memberRegisterRequest.getName(),
                 passwordEncoder);

@@ -87,7 +87,7 @@ public class MemberDaoTest {
     @Test
     void updateName() {
         Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
-        memberDao.updateName(new Member(id, EMAIL, PASSWORD, "MARU"));
+        memberDao.updateName(Member.fromPersist(id, EMAIL, PASSWORD, "MARU"));
         Member member = memberDao.findById(id).get();
 
         assertThat(member.getName()).isEqualTo("MARU");
@@ -97,7 +97,7 @@ public class MemberDaoTest {
     @Test
     void updatePassword() {
         Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
-        memberDao.updatePassword(new Member(id, EMAIL, "Maru1234!", NAME));
+        memberDao.updatePassword(Member.fromPersist(id, EMAIL, "Maru1234!", NAME));
         Member member = memberDao.findById(id).get();
 
         assertThat(member.getPassword()).isEqualTo("Maru1234!");

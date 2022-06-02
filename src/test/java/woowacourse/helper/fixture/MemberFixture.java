@@ -17,7 +17,7 @@ public class MemberFixture {
     public static final String UNAUTHORIZED_MESSAGE = "[ERROR] 인증이 되지 않은 유저입니다.";
 
     public static Member createMember(String email, String password, String name) {
-        return Member.from(email, password, name, passwordEncoder());
+        return Member.createMemberWithPasswordEncode(email, password, name, passwordEncoder());
     }
 
     public static MemberRegisterRequest createMemberRegisterRequest(String email, String password, String name) {
