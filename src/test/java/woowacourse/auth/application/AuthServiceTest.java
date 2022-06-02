@@ -1,7 +1,5 @@
 package woowacourse.auth.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +9,8 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class AuthServiceTest {
@@ -32,7 +31,6 @@ public class AuthServiceTest {
     @DisplayName("이메일과 비밀번호를 입력 받아 토큰을 발급 받는다.")
     @Test
     void login() {
-
         // given
         String email = "beomWhale@naver.com";
         String password = "Password1234!";

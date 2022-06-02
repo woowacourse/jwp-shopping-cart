@@ -1,9 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,6 +8,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+
+import java.sql.PreparedStatement;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class CustomerDao {
