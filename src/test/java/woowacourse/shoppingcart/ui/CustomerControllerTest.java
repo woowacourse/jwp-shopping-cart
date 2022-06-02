@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.EmailDuplicateCheckResponse;
+import woowacourse.shoppingcart.dto.EmailUniqueCheckResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -36,14 +36,14 @@ class CustomerControllerTest {
     @ParameterizedTest
     @CsvSource(value = {"email@email.com, false", "distinctemail@email.com, true"})
     void checkDuplicateEmail(final String email, final boolean expected) {
-        final ResponseEntity<EmailDuplicateCheckResponse> response = customerController.checkDuplicateEmail(email);
+        final ResponseEntity<EmailUniqueCheckResponse> response = customerController.checkDuplicateEmail(email);
 
         final HttpStatus statusCode = response.getStatusCode();
-        final EmailDuplicateCheckResponse actual = Objects.requireNonNull(response.getBody());
+        final EmailUniqueCheckResponse actual = Objects.requireNonNull(response.getBody());
 
         assertAll(
                 () -> assertThat(statusCode).isEqualTo(HttpStatus.OK),
-                () -> assertThat(actual.getSuccess()).isEqualTo(expected)
+                () -> assertThat(actual.getUnique()).isEqualTo(expected)
         );
     }
 

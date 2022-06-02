@@ -33,7 +33,7 @@ public class AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/members?email=" + email)
+                .when().post("/api/members/email-check?email=" + email)
                 .then().log().all()
                 .extract();
     }

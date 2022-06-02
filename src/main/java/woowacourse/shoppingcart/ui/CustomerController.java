@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.EmailDuplicateCheckResponse;
+import woowacourse.shoppingcart.dto.EmailUniqueCheckResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @Controller
@@ -30,10 +30,10 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping
-    public ResponseEntity<EmailDuplicateCheckResponse> checkDuplicateEmail(@RequestParam final String email) {
-        final EmailDuplicateCheckResponse emailDuplicateCheckResponse =
-                new EmailDuplicateCheckResponse(customerService.isDistinctEmail(email));
+    @GetMapping("/check-email")
+    public ResponseEntity<EmailUniqueCheckResponse> checkDuplicateEmail(@RequestParam final String email) {
+        final EmailUniqueCheckResponse emailDuplicateCheckResponse =
+                new EmailUniqueCheckResponse(customerService.isDistinctEmail(email));
         return ResponseEntity.ok().body(emailDuplicateCheckResponse);
     }
 
