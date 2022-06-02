@@ -7,6 +7,18 @@ Andy Wilkinson;
 :toclevels: 2
 :sectlinks:
 
-include::./auth.adoc[]
+=== auth 로그인
+operation::auth-api-test/login_customer_test[snippets='http-request,http-response,response-fields']
 
-include::./customers.adoc[]
+=== Customer 회원가입
+operation::customers-api-test/add-customers_test[snippets='http-request,http-response,response-fields']
+
+=== Customer 조회
+operation::customers-api-test/get-me_test[snippets='http-request,http-response,response-fields']
+
+=== Customer 수정
+operation::customers-api-test/update-me_test[snippets='http-request,http-response,response-fields']
+
+=== Customer 삭제
+operation::customers-api-test/delete-me_test[snippets='http-request,http-response']
+
