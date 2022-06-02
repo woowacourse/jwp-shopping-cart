@@ -6,7 +6,8 @@ public class SecurityManager {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    private SecurityManager() {}
+    private SecurityManager() {
+    }
 
     public static String generateEncodedPassword(String rawPassword) {
         return encoder.encode(rawPassword);

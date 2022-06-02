@@ -1,6 +1,7 @@
 package woowacourse.auth.ui;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -12,7 +13,6 @@ import woowacourse.auth.support.AuthorizationExtractor;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
     private AuthService authService;
-
     public AuthenticationPrincipalArgumentResolver(AuthService authService) {
         this.authService = authService;
     }
