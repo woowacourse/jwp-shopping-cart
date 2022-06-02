@@ -63,7 +63,7 @@
     Content-Length:47
 
     {
-    "accessToken":"대충 토큰"
+    "accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdqZHVkZG5zQGdtYWlsLmNvbSJ9.XsJFHuJAdFPEto1WF__QGZoAOIIX2eJSn6xu0iJCGIQ"
     }
 ```
 
