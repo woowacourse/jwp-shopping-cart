@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -46,7 +47,8 @@ class CustomerControllerTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"testwoowacoursecom", "test@woowacoursecom", "testwoowacourse.com", "@", ".", "@.",
-                ".@wo.com", "test.woowacourse@com", "", " "})
+                ".@wo.com", "test.woowacourse@com"})
+        @NullAndEmptySource
         @DisplayName("로그인 아이디가 이메일 형식이 아니면, Bad Request를 던진다")
         void loginId_notEmail(String loginId) throws Exception {
             // given
@@ -64,7 +66,7 @@ class CustomerControllerTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = {"", " "})
+        @NullAndEmptySource
         @DisplayName("이름이 공백이면, Bad Request를 던진다.")
         void name_blank(String name) throws Exception {
             // given
@@ -105,7 +107,7 @@ class CustomerControllerTest {
     class update {
 
         @ParameterizedTest
-        @ValueSource(strings = {"", " "})
+        @NullAndEmptySource
         @DisplayName("이름이 공백이면, Bad Request를 던진다.")
         void name_blank(String name) throws Exception {
             // given
@@ -124,7 +126,7 @@ class CustomerControllerTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = {"", " "})
+        @NullAndEmptySource
         @DisplayName("비밀번호가 공백이면, Bad Request를 던진다.")
         void password_blank(String password) throws Exception {
             // given
@@ -148,7 +150,7 @@ class CustomerControllerTest {
     class delete {
 
         @ParameterizedTest
-        @ValueSource(strings = {"", " "})
+        @NullAndEmptySource
         @DisplayName("비밀번호가 공백이면, Bad Request를 던진다.")
         void password_blank(String password) throws Exception {
             // given

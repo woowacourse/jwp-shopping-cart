@@ -12,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @Nested
@@ -31,7 +33,8 @@ class CustomerTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"testwoowacoursecom", "test@woowacoursecom", "testwoowacourse.com", "@", ".", "@.",
-                ".@wo.com", "test.woowacourse@com", "", " "})
+                ".@wo.com", "test.woowacourse@com"})
+        @EmptySource
         @DisplayName("아이디가 형식에 맞지 않을 경우 예외를 던진다.")
         void customer_LoginFail(String loginId) {
             assertThatThrownBy(() -> new Customer(loginId, 페퍼_이름, 페퍼_비밀번호))
@@ -40,7 +43,8 @@ class CustomerTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = {"qwer1234!", "QWER1234!", "Qwer1234", "Qwerasdf!", "Qwer12!", "Qwer1234567890!@", "", " "})
+        @ValueSource(strings = {"qwer1234!", "QWER1234!", "Qwer1234", "Qwerasdf!", "Qwer12!", "Qwer1234567890!@"})
+        @EmptySource
         @DisplayName("비밀번호가 형식에 맞지 않을 경우 예외를 던진다")
         void customer_PasswordFail(String password) {
             assertThatThrownBy(() -> new Customer(페퍼_아이디, 페퍼_이름, password))
