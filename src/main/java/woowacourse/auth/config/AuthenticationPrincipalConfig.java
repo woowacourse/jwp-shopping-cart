@@ -1,12 +1,10 @@
 package woowacourse.auth.config;
 
-import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import woowacourse.auth.ui.AuthInterceptor;
 import woowacourse.auth.application.AuthService;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
@@ -17,12 +15,9 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addArgumentResolvers(List argumentResolvers) {
-        argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
-    }
-
-    @Bean
-    public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService);
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AuthInterceptor(authService))
+                .addPathPatterns("/api/customers/me/**")
+                .excludePathPatterns("/api/login/token");
     }
 }

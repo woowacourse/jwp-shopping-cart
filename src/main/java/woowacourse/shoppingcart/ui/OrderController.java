@@ -7,13 +7,14 @@ import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.application.OrderService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/api/customers/{customerName}/orders")
+@RequestMapping("/api/customers/me/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -22,23 +23,24 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@PathVariable final String customerName,
-                                   @RequestBody @Valid final List<OrderRequest> orderDetails) {
-        final Long orderId = orderService.addOrder(orderDetails, customerName);
+    public ResponseEntity<Void> addOrder(HttpServletRequest request,
+                                         @RequestBody @Valid final List<OrderRequest> orderDetails) {
+        final Long orderId = orderService.addOrder(request, orderDetails);
         return ResponseEntity.created(
-                URI.create("/api/" + customerName + "/orders/" + orderId)).build();
+                URI.create("/api/me/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
+    public ResponseEntity<Orders> findOrder(HttpServletRequest request,
                                             @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customerName, orderId);
+
+        final Orders order = orderService.findOrderById(request, orderId);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
+    public ResponseEntity<List<Orders>> findOrders(HttpServletRequest request) {
+        final List<Orders> orders = orderService.findOrders(request);
         return ResponseEntity.ok(orders);
     }
 }

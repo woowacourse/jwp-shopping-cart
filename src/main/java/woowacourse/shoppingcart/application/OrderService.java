@@ -2,13 +2,16 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,17 +25,20 @@ public class OrderService {
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao, JwtTokenProvider jwtTokenProvider) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
+    public Long addOrder(final HttpServletRequest request, final List<OrderRequest> orderDetailRequests) {
+        String customerName = getNameFromToken(request);
         final Long customerId = customerDao.findIdByUserName(customerName);
         final Long ordersId = orderDao.addOrders(customerId);
 
@@ -48,7 +54,8 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
+    public Orders findOrderById(final HttpServletRequest request, final Long orderId) {
+        String customerName = getNameFromToken(request);
         validateOrderIdByCustomerName(customerName, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
@@ -61,12 +68,13 @@ public class OrderService {
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
+    public List<Orders> findOrders(final HttpServletRequest request) {
+        String customerName = getNameFromToken(request);
         final Long customerId = customerDao.findIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+                .map(this::findOrderResponseDtoByOrderId)
                 .collect(Collectors.toList());
     }
 
@@ -79,5 +87,10 @@ public class OrderService {
         }
 
         return new Orders(orderId, ordersDetails);
+    }
+
+    private String getNameFromToken(HttpServletRequest request) {
+        String token = AuthorizationExtractor.extract(request);
+        return jwtTokenProvider.getPayload(token);
     }
 }
