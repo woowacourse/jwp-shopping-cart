@@ -7,14 +7,6 @@ import org.springframework.http.MediaType;
 
 public class AcceptanceTestFixture {
 
-    public static ExtractableResponse<Response> getMethodRequest(String path) {
-        return RestAssured.given().log().all()
-                .when()
-                .get(path)
-                .then().log().all()
-                .extract();
-    }
-
     public static ExtractableResponse<Response> getMethodRequestWithBearerAuth(String token, String path) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + token)
