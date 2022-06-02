@@ -33,6 +33,6 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     private boolean isExclude(final String method) {
-        return HttpMethod.POST.name().equals(method);
+        return HttpMethod.POST.name().equals(method) || HttpMethod.OPTIONS.name().equals(method);
     }
 }
