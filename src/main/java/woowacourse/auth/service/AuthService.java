@@ -1,5 +1,6 @@
 package woowacourse.auth.service;
 
+import java.util.Map;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -26,7 +27,7 @@ public class AuthService {
         final Customer customer = customerService.getByEmail(tokenRequest.getEmail());
         validatePassword(tokenRequest, customer);
 
-        final String accessToken = jwtTokenProvider.createToken(customer.getId());
+        final String accessToken = jwtTokenProvider.createToken(Map.of("id", customer.getId()));
         return new TokenResponse(accessToken);
     }
 
