@@ -130,4 +130,15 @@ public class CustomerDaoTest {
                 () -> customerDao.delete(1L)
         );
     }
+
+    @DisplayName("email이 존재하는지 확인한다.")
+    @Test
+    void isDuplicationEmail() {
+        customerDao = new CustomerDao(jdbcTemplate);
+        final String sql = "insert into customer(email, name, phone, address, password) values (:email, :name, :phone, :address, :password)";
+        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer));
+        final Boolean result = customerDao.isDuplicationEmail(EMAIL);
+
+        assertThat(result).isTrue();
+    }
 }

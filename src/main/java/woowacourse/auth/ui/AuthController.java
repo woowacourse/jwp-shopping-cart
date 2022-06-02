@@ -3,10 +3,7 @@ package woowacourse.auth.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.*;
 import woowacourse.auth.support.AuthorizationExtractor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +36,11 @@ public class AuthController {
         String token = AuthorizationExtractor.extract(request);
         CustomerResponse customerResponse = authService.findCustomerByToken(token);
         return ResponseEntity.ok().body(customerResponse);
+    }
+
+    @PostMapping("/email")
+    public ResponseEntity<ValidEmailResponse> checkValidEmail(@RequestBody ValidEmailRequest validEmailRequest) {
+        return ResponseEntity.ok().body(authService.isValidEmail(validEmailRequest));
     }
 
     @PutMapping

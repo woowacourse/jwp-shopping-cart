@@ -1,10 +1,8 @@
 package woowacourse.auth.application;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.*;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.utils.Encryptor;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -46,6 +44,10 @@ public class AuthService {
         final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
         final Customer customer = customerDao.findById(id);
         return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getName(), customer.getPhone(), customer.getAddress());
+    }
+
+    public ValidEmailResponse isValidEmail(ValidEmailRequest validEmailRequest) {
+        return new ValidEmailResponse(!customerDao.isDuplicationEmail(validEmailRequest.getEmail()));
     }
 
     public void edit(String token, CustomerRequest customerRequest) {
