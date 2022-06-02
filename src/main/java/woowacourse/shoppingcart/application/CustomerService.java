@@ -9,8 +9,10 @@ import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 
 @Service
 public class CustomerService {
@@ -23,6 +25,9 @@ public class CustomerService {
 
     @Transactional
     public SignUpResponse addCustomer(SignUpRequest signUpRequest) {
+        validateDuplicateUsername(signUpRequest.getUsername());
+        validateDuplicateEmail(signUpRequest.getEmail());
+
         Customer customer = customerDao.save(signUpRequest.toCustomer());
         return SignUpResponse.fromCustomer(customer);
     }
@@ -35,23 +40,42 @@ public class CustomerService {
 
     @Transactional
     public void updateMe(String username, UpdatePasswordRequest updatePasswordRequest) {
+        validateExistUsername(username);
+        validatePassword(username, updatePasswordRequest.getPassword());
+
         Customer customer = customerDao.findByUsername(username);
-
-        if (!customerDao.isValidPasswordByUsername(username, updatePasswordRequest.getPassword())) {
-            throw new InvalidPasswordException();
-        }
-
         customerDao.updatePassword(customer.getId(), updatePasswordRequest.getNewPassword());
     }
 
     @Transactional
     public void deleteMe(String username, DeleteCustomerRequest deleteCustomerRequest) {
-        if (!customerDao.existByUsername(username)) {
-            throw new InvalidCustomerException();
+        validateExistUsername(username);
+        validatePassword(username, deleteCustomerRequest.getPassword());
+
+        customerDao.deleteByUsername(username);
+    }
+
+    private void validateDuplicateUsername(String username) {
+        if (customerDao.existByUsername(username)) {
+            throw new DuplicateUsernameException();
         }
-        if (!customerDao.isValidPasswordByUsername(username, deleteCustomerRequest.getPassword())) {
+    }
+
+    private void validateDuplicateEmail(String email) {
+        if (customerDao.existByEmail(email)) {
+            throw new DuplicateEmailException();
+        }
+    }
+
+    private void validateExistUsername(String username) {
+        if (!customerDao.existByUsername(username)) {
+            throw new NoSuchCustomerException();
+        }
+    }
+
+    private void validatePassword(String username, String password) {
+        if (!customerDao.isValidPasswordByUsername(username, password)) {
             throw new InvalidPasswordException();
         }
-        customerDao.deleteByUsername(username);
     }
 }

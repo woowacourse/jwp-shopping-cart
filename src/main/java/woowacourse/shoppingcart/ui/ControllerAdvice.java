@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
+import woowacourse.shoppingcart.exception.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -46,6 +48,14 @@ public class ControllerAdvice {
             ConstraintViolationException.class,
     })
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler({
+            DuplicateUsernameException.class,
+            DuplicateEmailException.class
+    })
+    public ResponseEntity<ErrorResponse> handleDuplicateException(final RuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 

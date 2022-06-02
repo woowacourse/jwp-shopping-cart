@@ -8,18 +8,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.exception.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @SpringBootTest
-@Transactional
+@Sql(value = "/sql/ClearTableCustomer.sql")
 public class CustomerServiceTest {
     @Autowired
     private CustomerService customerService;
@@ -43,6 +45,44 @@ public class CustomerServiceTest {
                 () -> assertThat(signUpResponse.getUsername()).isEqualTo(name),
                 () -> assertThat(signUpResponse.getEmail()).isEqualTo(email)
         );
+    }
+
+    @Test
+    @DisplayName("중복된 username으로 회원 등록을 할 수 없다.")
+    void addCustomerDuplicateUsername() {
+        String name = "greenlawn";
+        String email1 = "green@woowa.com";
+        String email2 = "rennon@woowa.com";
+        SignUpRequest signUpRequest1 = new SignUpRequest(name, email1, "1234");
+        SignUpRequest signUpRequest2 = new SignUpRequest(name, email2, "1234");
+        customerService.addCustomer(signUpRequest1);
+
+        // when
+        // then
+        assertThatThrownBy(() -> customerService.addCustomer(signUpRequest2))
+                .isInstanceOf(DuplicateUsernameException.class)
+                .hasMessageContaining("같은 username이 이미 있습니다.");
+    }
+
+    @Test
+    @DisplayName("중복된 email으로 회원 등록을 할 수 없다.")
+    void addCustomerDuplicateEmail() {
+        // given
+        String name1 = "greenlawn";
+        String name2 = "rennon";
+        String email = "green@woowa.com";
+        SignUpRequest signUpRequest1 = new SignUpRequest(name1, email, "1234");
+        SignUpRequest signUpRequest2 = new SignUpRequest(name2, email, "1234");
+        customerService.addCustomer(signUpRequest1);
+
+        boolean b1 = customerDao.existByUsername(name1);
+        boolean b2 = customerDao.existByUsername(name2);
+
+        // when
+        // then
+        assertThatThrownBy(() -> customerService.addCustomer(signUpRequest2))
+                .isInstanceOf(DuplicateEmailException.class)
+                .hasMessageContaining("같은 Email이 이미 있습니다.");
     }
 
     @Test
