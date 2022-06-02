@@ -50,7 +50,7 @@ public class ControllerAdvice {
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
-            InvalidTokenException.class,
+            InvalidTokenException.class, // TODO : 401 상태코드 반환
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
