@@ -2,10 +2,7 @@ package woowacourse.auth.dto;
 
 public class ValidEmailRequest {
 
-    private String email;
-
-    public ValidEmailRequest() {
-    }
+    private final String email;
 
     public ValidEmailRequest(String email) {
         this.email = email;

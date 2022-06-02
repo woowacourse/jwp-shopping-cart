@@ -39,8 +39,9 @@ public class AuthController {
     }
 
     @PostMapping("/email")
-    public ResponseEntity<ValidEmailResponse> checkValidEmail(@RequestBody ValidEmailRequest validEmailRequest) {
-        return ResponseEntity.ok().body(authService.isValidEmail(validEmailRequest));
+    public ResponseEntity<ValidEmailResponse> checkDuplicationOfEmail(@RequestBody ValidEmailRequest validEmailRequest) {
+        final ValidEmailResponse validEmailResponse = authService.isValidEmail(validEmailRequest);
+        return ResponseEntity.ok().body(validEmailResponse);
     }
 
     @PutMapping

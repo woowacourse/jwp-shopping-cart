@@ -74,7 +74,7 @@ public class CustomerDao {
     }
 
     public Boolean isDuplicationEmail(String email) {
-        final String sql = "select exists(select email from customer where email = :email)";
+        final String sql = "select exists(select * from customer where email = :email)";
         return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email), Boolean.class);
     }
 

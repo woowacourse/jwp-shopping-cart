@@ -318,15 +318,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> validEmailResponse = RestAssured
                 .given().log().all()
-                .body(validEmailRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
+                .body(validEmailRequest)
                 .when().post("/customers/email")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value()).extract();
 
         // then
-        //  사용 불가능한 이메일인지 확인한다.
-        assertThat(validEmailResponse.jsonPath().getBoolean("validEmail")).isFalse();
+        //  사용 가능한 이메일을 확인한다.
+        assertThat(validEmailResponse.jsonPath().getBoolean("isValidEmail")).isFalse();
     }
 }
