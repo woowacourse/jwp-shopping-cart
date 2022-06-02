@@ -6,9 +6,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.ui.AuthController;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.config.LoginCustomerResolver;
 
 @WebMvcTest({
         AuthController.class,
@@ -23,7 +23,7 @@ public abstract class ControllerTest {
     protected CustomerService customerService;
 
     @MockBean
-    private LoginCustomerResolver resolver;
+    protected JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     protected MockMvc mockMvc;
