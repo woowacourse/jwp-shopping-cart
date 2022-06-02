@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.InvalidTokenException;
+import woowacourse.auth.exception.NotMatchPasswordException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -45,6 +46,7 @@ public class ControllerAdvice {
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
+            NotMatchPasswordException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final RuntimeException e) {
         final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
