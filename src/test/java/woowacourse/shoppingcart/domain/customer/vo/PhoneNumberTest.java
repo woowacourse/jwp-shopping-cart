@@ -18,7 +18,7 @@ class PhoneNumberTest {
     void 올바르지_않은_글자수_휴대폰_번호_생성_예외(String start, String middle, String last) {
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> new PhoneNumber(start, middle, last))
-                .withMessage(String.format("휴대폰 번호양식이 불일치 합니다. %s-%s-%s", start, middle, last));
+                .withMessageContaining("휴대폰 번호양식이 불일치 합니다.");
     }
 
     @ParameterizedTest(name = "휴대폰 번호 : {0}-{1}-{2}")
@@ -26,6 +26,6 @@ class PhoneNumberTest {
     void 숫자가_아닌_휴대폰_번호_생성_예외(String start, String middle, String last) {
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> new PhoneNumber(start, middle, last))
-                .withMessage(String.format("휴대폰 번호는 숫자만 가능합니다. %s-%s-%s", start, middle, last));
+                .withMessageContaining("휴대폰 번호는 숫자만 가능합니다.");
     }
 }

@@ -89,8 +89,7 @@ public class CustomerService {
         PhoneNumber phoneNumber = customerUpdateRequest.getPhoneNumber().toPhoneNumber();
 
         CustomerEntity updateEntity = new CustomerEntity(customerId, null, nickname.getValue(),
-                null, address.getValue(),
-                phoneNumber.getStart() + phoneNumber.getMiddle() + phoneNumber.getLast());
+                null, address.getValue(), phoneNumber.getValue());
 
         customerDao.update(updateEntity);
     }
