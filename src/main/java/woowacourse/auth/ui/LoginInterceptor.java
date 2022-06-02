@@ -1,5 +1,7 @@
 package woowacourse.auth.ui;
 
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -17,7 +19,11 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = AuthorizationExtractor.extract(request);
-        return isValid(token);
+        if (isValid(token)) {
+            return true;
+        }
+        response.setStatus(UNAUTHORIZED.value());
+        return false;
     }
 
     private boolean isValid(String token) {
