@@ -20,14 +20,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 회원_가입_정상_요청() {
-        ExtractableResponse<Response> response = 회원_가입(
-                회원_정보("loe0842",
-                        "에덴",
-                        "dpepsWkd12!",
-                        "에덴 동산",
-                        "010",
-                        "1234",
-                        "5678"));
+        ExtractableResponse<Response> response = 회원이_저장되어_있음("loe0842", "dpepsWkd12!");
 
         assertThat(response.statusCode()).isEqualTo(201);
         assertThat(response.header("Location")).isEqualTo("/signin");
@@ -35,7 +28,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 중복된_아이디로_회원가입() {
-        Map<String, Object> request = 회원_정보("loe0842",
+        Map<String, Object> request = 회원_정보(
+                "loe0842",
                 "에덴",
                 "dpepsWkd12!",
                 "에덴 동산",
@@ -43,26 +37,26 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 "1234",
                 "5678");
 
-        회원_가입(request);
+        회원_가입_요청(request);
 
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
         assertThat(response.statusCode()).isEqualTo(400);
     }
 
     @Test
     void 아이디_글자수_초과해_실패() {
         // given
-        Map<String, Object> request = 회원_정보("1234567890123456",
+        Map<String, Object> request = 회원_정보(
+                "1234567890123456",
                 "에덴",
                 "dpepsWkd12!",
                 "에덴 동산",
                 "010",
                 "1234",
                 "5678");
-        회원_가입(request);
 
         // when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -72,17 +66,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 아이디_글자수_부족으로_실패() {
         // given
-        Map<String, Object> request = 회원_정보("123",
+        Map<String, Object> request = 회원_정보(
+                "123",
                 "에덴",
                 "dpepsWkd12!",
                 "에덴 동산",
                 "010",
                 "1234",
                 "5678");
-        회원_가입(request);
 
         //when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -92,17 +86,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 닉네임_글자수_초과해_실패() {
         // given
-        Map<String, Object> request = 회원_정보("leo123",
+        Map<String, Object> request = 회원_정보(
+                "leo123",
                 "에덴에덴에덴에덴에덴에",
                 "dpepsWkd12!",
                 "에덴 동산",
                 "010",
                 "1234",
                 "5678");
-        회원_가입(request);
 
         // when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -112,17 +106,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 닉네임_글자수_부족으로_실패() {
         // given
-        Map<String, Object> request = 회원_정보("leo123",
+        Map<String, Object> request = 회원_정보(
+                "leo123",
                 "에",
                 "dpepsWkd12!",
                 "에덴 동산",
                 "010",
                 "1234",
                 "5678");
-        회원_가입(request);
 
         //when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -132,17 +126,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 닉네임_빈값으로_실패() {
         // given
-        Map<String, Object> request = 회원_정보("leo123",
+        Map<String, Object> request = 회원_정보(
+                "leo123",
                 "     ",
                 "dpepsWkd12!",
                 "에덴 동산",
                 "010",
                 "1234",
                 "5678");
-        회원_가입(request);
 
         //when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -152,37 +146,38 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 비밀번호_규정_실패() {
         // given
-        Map<String, Object> request = 회원_정보("leo123",
+        Map<String, Object> request = 회원_정보(
+                "leo123",
                 "에덴",
                 "dpeps123",
                 "에덴 동산",
                 "010",
                 "1234",
                 "5678");
-        회원_가입(request);
 
         // when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
-        assertThat(getValue(response, "message")).contains("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.");
+        assertThat(getValue(response, "message"))
+                .contains("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.");
     }
 
     @Test
     void 비밀번호_글자수_초과해_실패() {
         // given
-        Map<String, Object> request = 회원_정보("leo123",
+        Map<String, Object> request = 회원_정보(
+                "leo123",
                 "에덴",
                 "aA345678901234567890!",
                 "에덴 동산",
                 "010",
                 "1234",
                 "5678");
-        회원_가입(request);
 
         // when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -192,17 +187,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 비밀번호_글자수_부족으로_실패() {
         // given
-        Map<String, Object> request = 회원_정보("leo123",
+        Map<String, Object> request = 회원_정보(
+                "leo123",
                 "에덴",
                 "aaAA11!",
                 "에덴 동산",
                 "010",
                 "1234",
                 "5678");
-        회원_가입(request);
 
         // when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -212,17 +207,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 비밀번호_빈값으로_실패() {
         // given
-        Map<String, Object> request = 회원_정보("leo123",
+        Map<String, Object> request = 회원_정보(
+                "leo123",
                 "에덴",
                 "        ",
                 "에덴 동산",
                 "010",
                 "1234",
                 "5678");
-        회원_가입(request);
 
         // when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -232,7 +227,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 주소_글자수_초과_실패() {
         // given
-        Map<String, Object> request = 회원_정보("loe0842",
+        Map<String, Object> request = 회원_정보(
+                "loe0842",
                 "에덴",
                 "dpepsWkd12!",
                 "에".repeat(256),
@@ -241,7 +237,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 "5678");
 
         // when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -251,7 +247,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 주소_글자수_빈값_실패() {
         // given
-        Map<String, Object> request = 회원_정보("loe0842",
+        Map<String, Object> request = 회원_정보(
+                "loe0842",
                 "에덴",
                 "dpepsWkd12!",
                 "  ",
@@ -260,7 +257,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 "5678");
 
         // when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -279,7 +276,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 "5678");
 
         // when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -289,7 +286,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 핸드폰_번호_양식_실패() {
         // given
-        Map<String, Object> request = 회원_정보("loe0842",
+        Map<String, Object> request = 회원_정보(
+                "loe0842",
                 "에덴",
                 "dpepsWkd12!",
                 "에덴 동산",
@@ -298,7 +296,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 "5678");
 
         // when
-        ExtractableResponse<Response> response = 회원_가입(request);
+        ExtractableResponse<Response> response = 회원_가입_요청(request);
 
         // then
         assertThat(response.statusCode()).isEqualTo(400);
@@ -310,13 +308,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String account = "leo8842";
         String password = "dpepsWkd12!";
 
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
+        회원이_저장되어_있음(account, password);
 
         ExtractableResponse<Response> response = 토큰_발급(account, password);
 
@@ -329,19 +321,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String account = "leo8842";
         String password = "dpepsWkd12!";
 
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
+        회원이_저장되어_있음(account, password);
 
         ExtractableResponse<Response> response = 토큰_발급(account, "dpepsWkd");
 
         assertThat(response.statusCode()).isEqualTo(401);
-        assertThat(getValue(response, "message"))
-                .contains("로그인이 불가능합니다.");
+        assertThat(getValue(response, "message")).contains("로그인이 불가능합니다.");
     }
 
     @Test
@@ -629,7 +614,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         return phoneNumber;
     }
 
-    private ExtractableResponse<Response> 회원_가입(Map<String, Object> request) {
+    private ExtractableResponse<Response> 회원_가입_요청(Map<String, Object> request) {
         return RestAssured.given()
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -658,13 +643,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     private String 회원_가입_후_토큰_발급(String account, String password) {
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
+        회원이_저장되어_있음(account, password);
 
         return getValue(토큰_발급(account, password), "accessToken");
     }
@@ -679,6 +658,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .log().all()
                 .extract();
         return response;
+    }
+
+    private ExtractableResponse<Response> 회원이_저장되어_있음(String account, String password) {
+        return 회원_가입_요청(회원_정보(account,
+                "에덴",
+                password,
+                "에덴 동산",
+                "010",
+                "1234",
+                "5678"));
     }
 
     private ExtractableResponse<Response> 회원_탈퇴(String accessToken, String password) {
