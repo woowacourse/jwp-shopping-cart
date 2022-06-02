@@ -4,6 +4,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -38,6 +39,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
+            IllegalArgumentException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
@@ -46,6 +48,11 @@ public class ControllerAdvice {
     })
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException() {
+        return new ResponseEntity<>(new ExceptionResponse("형식에 맞지 않은 입력입니다."), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(WrongPasswordException.class)
