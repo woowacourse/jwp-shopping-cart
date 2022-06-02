@@ -89,7 +89,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.body().jsonPath().getObject(".", CustomerResponse.class))
-                        .extracting("email", "profileImageUrl", "name", "gender", "birthDay", "contact", "terms")
+                        .extracting("email", "profileImageUrl", "name", "gender", "birthday", "contact", "terms")
                         .containsExactly(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getProfileImageUrl(),
                                 CUSTOMER_REQUEST_1.getName(), CUSTOMER_REQUEST_1.getGender(),
                                 CUSTOMER_REQUEST_1.getBirthday(), CUSTOMER_REQUEST_1.getContact(),
@@ -143,7 +143,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         params.put("profileImageUrl", customerRequest.getProfileImageUrl());
         params.put("name", customerRequest.getName());
         params.put("gender", customerRequest.getGender());
-        params.put("birthDay", customerRequest.getBirthday());
+        params.put("birthday", customerRequest.getBirthday());
         params.put("contact", customerRequest.getContact());
         params.put("fullAddress", Map.of("address", customerRequest.getFullAddress().getAddress(), "detailAddress",
                 customerRequest.getFullAddress().getDetailAddress(), "zoneCode",

@@ -125,7 +125,7 @@ public class CustomerService {
 
         return new CustomerResponse(customerEntity.getEmail(), customerEntity.getProfileImageUrl(),
                 privacyEntity.getName(), privacyEntity.getGender(),
-                privacyEntity.getBirthDay().format(DateTimeFormatter.ISO_DATE), privacyEntity.getContact(),
+                privacyEntity.getBirthday().format(DateTimeFormatter.ISO_DATE), privacyEntity.getContact(),
                 addressResponse, customerEntity.isTerms());
     }
 }

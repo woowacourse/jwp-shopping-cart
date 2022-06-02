@@ -6,19 +6,19 @@ public class PrivacyEntity {
     private final Integer customerId;
     private final String name;
     private final String gender;
-    private final LocalDate birthDay;
+    private final LocalDate birthday;
     private final String contact;
 
-    public PrivacyEntity(Integer customerId, String name, String gender, LocalDate birthDay, String contact) {
+    public PrivacyEntity(Integer customerId, String name, String gender, LocalDate birthday, String contact) {
         this.customerId = customerId;
         this.name = name;
         this.gender = gender;
-        this.birthDay = birthDay;
+        this.birthday = birthday;
         this.contact = contact;
     }
 
-    public PrivacyEntity(String name, String gender, LocalDate birthDay, String contact) {
-        this(null, name, gender, birthDay, contact);
+    public PrivacyEntity(String name, String gender, LocalDate birthday, String contact) {
+        this(null, name, gender, birthday, contact);
     }
 
     public Integer getCustomerId() {
@@ -33,8 +33,8 @@ public class PrivacyEntity {
         return gender;
     }
 
-    public LocalDate getBirthDay() {
-        return birthDay;
+    public LocalDate getBirthday() {
+        return birthday;
     }
 
     public String getContact() {
@@ -47,7 +47,7 @@ public class PrivacyEntity {
                 "customerId=" + customerId +
                 ", name='" + name + '\'' +
                 ", gender='" + gender + '\'' +
-                ", birthDay=" + birthDay +
+                ", birthday=" + birthday +
                 ", contact='" + contact + '\'' +
                 '}';
     }
