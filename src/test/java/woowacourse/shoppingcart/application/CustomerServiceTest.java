@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.util.HashTool;
 
 @SuppressWarnings("NonAsciiChracters")
@@ -74,8 +75,7 @@ class CustomerServiceTest {
             CustomerUpdateRequest updateCustomerRequest = new CustomerUpdateRequest("angel", "12345678aA!");
 
             assertThatThrownBy(() -> customerService.updateCustomer(updateCustomerRequest, "angie"))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("존재하지 않는 회원입니다.");
+                .isInstanceOf(InvalidCustomerException.class);
         }
 
         @Test
@@ -100,8 +100,7 @@ class CustomerServiceTest {
             customerService.addCustomer(customerRequest);
 
             assertThatThrownBy(() -> customerService.deleteCustomer("seungpapang"))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("존재하지 않는 회원입니다.");
+                    .isInstanceOf(InvalidCustomerException.class);
         }
     }
 

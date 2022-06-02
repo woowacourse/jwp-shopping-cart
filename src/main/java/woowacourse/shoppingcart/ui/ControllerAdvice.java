@@ -44,7 +44,6 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
@@ -59,7 +58,12 @@ public class ControllerAdvice {
         InvalidCustomerLoginException.class,
         InvalidTokenException.class
     })
-    public ResponseEntity hadleInvalidLogin(final RuntimeException e) {
+    public ResponseEntity handleInvalidLogin(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCustomerException.class)
+    public ResponseEntity handleCustomerNotFound(final RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }

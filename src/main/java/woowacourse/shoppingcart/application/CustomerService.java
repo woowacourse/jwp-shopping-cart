@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.util.HashTool;
 
 @Service
@@ -35,7 +36,7 @@ public class CustomerService {
     @Transactional
     public CustomerResponse updateCustomer(CustomerUpdateRequest customerUpdateRequest, String loginId) {
         if (!customerDao.existByLoginId(loginId)) {
-            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+            throw new InvalidCustomerException();
         }
 
         if (customerDao.existByUsername(customerUpdateRequest.getName())) {
@@ -49,7 +50,7 @@ public class CustomerService {
     @Transactional
     public void deleteCustomer(String loginId) {
         if (!customerDao.existByLoginId(loginId)) {
-            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+            throw new InvalidCustomerException();
         }
         customerDao.delete(loginId);
     }
