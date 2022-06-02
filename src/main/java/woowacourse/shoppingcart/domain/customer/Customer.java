@@ -4,11 +4,11 @@ public class Customer {
 
     private final Long id;
     private final Username username;
-    private Password password;
+    private EncodedPassword password;
     private PhoneNumber phoneNumber;
     private String address;
 
-    public Customer(final Long id, final Username username, final Password password, final PhoneNumber phoneNumber, final String address) {
+    public Customer(final Long id, final Username username, final EncodedPassword password, final PhoneNumber phoneNumber, final String address) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -20,7 +20,7 @@ public class Customer {
         return new Customer(
             null,
             new Username(username),
-            new Password(password),
+            new EncodedPassword(password),
             new PhoneNumber(phoneNumber),
             address);
     }
@@ -29,14 +29,10 @@ public class Customer {
         return new Customer(
             id,
             new Username(username),
-            new Password(password),
+            new EncodedPassword(password),
             new PhoneNumber(phoneNumber),
             address
         );
-    }
-
-    public void matchPassword(final String password) {
-        this.password.match(password);
     }
 
     public void updatePhoneNumber(final String phoneNumber) {
@@ -59,7 +55,7 @@ public class Customer {
         return username;
     }
 
-    public Password getPassword() {
+    public EncodedPassword getPassword() {
         return password;
     }
 

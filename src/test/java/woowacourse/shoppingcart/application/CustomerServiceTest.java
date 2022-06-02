@@ -3,7 +3,9 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.EmptyResultException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.support.passwordencoder.PasswordEncoder;
 
 @Transactional
 @SpringBootTest
@@ -22,6 +25,14 @@ class CustomerServiceTest {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    void setUp() {
+        customerService.deleteByUsername("dongho108");
+    }
 
     @DisplayName("회원을 저장한다.")
     @Test
@@ -36,7 +47,7 @@ class CustomerServiceTest {
         assertAll(
             () -> assertThat(customer.getId()).isNotNull(),
             () -> assertThat(customer.getUsername().getValue()).isEqualTo(signupRequest.getUsername()),
-            () -> assertThat(customer.getPassword().getValue()).isEqualTo(signupRequest.getPassword()),
+            () -> assertDoesNotThrow(() -> customer.getPassword().matches(passwordEncoder, "ehdgh1234")),
             () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(signupRequest.getPhoneNumber()),
             () -> assertThat(customer.getAddress()).isEqualTo(signupRequest.getAddress())
         );
@@ -105,7 +116,7 @@ class CustomerServiceTest {
 
         Customer customer = customerService.findByUsername("dongho108");
 
-        assertThat(customer.getPassword().getValue()).isEqualTo(updateCustomerRequest.getPassword());
+        assertDoesNotThrow(() -> customer.getPassword().matches(passwordEncoder, "ehdgh1111"));
     }
 
     @DisplayName("회원을 삭제한다.")

@@ -34,6 +34,9 @@ class AuthServiceTest {
     @DisplayName("토큰을 생성한다.")
     @Test
     void createToken() {
+        SignupRequest signupRequest = new SignupRequest("dongho108", "password1234", "01012341234", "인천시 서구");
+        customerService.save(signupRequest);
+
         LoginRequest loginRequest = new LoginRequest("dongho108", "password1234");
         TokenResponse token = authService.createToken(loginRequest);
 
@@ -68,7 +71,7 @@ class AuthServiceTest {
         LoginRequest loginRequest = new LoginRequest("dongho109", "password1234");
 
         // then
-        assertThatThrownBy(() -> authService.validateLogin(loginRequest))
+        assertThatThrownBy(() -> authService.createToken(loginRequest))
             .isInstanceOf(UserNotFoundException.class);
     }
 
@@ -83,7 +86,7 @@ class AuthServiceTest {
         LoginRequest loginRequest = new LoginRequest("dongho108", "password");
 
         // then
-        assertThatThrownBy(() -> authService.validateLogin(loginRequest))
+        assertThatThrownBy(() -> authService.createToken(loginRequest))
             .isInstanceOf(PasswordMisMatchException.class);
     }
 }

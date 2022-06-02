@@ -58,7 +58,7 @@ public class CustomerDao {
         );
     }
 
-    public Optional<Customer> findByUsername(String username) {
+    public Optional<Customer> findByUsername(final String username) {
         final String query = "SELECT id, username, password, phoneNumber, address FROM customer WHERE username = ?";
 
         try {
@@ -88,7 +88,7 @@ public class CustomerDao {
         );
     }
 
-    public void deleteByUsername(String username) {
+    public void deleteByUsername(final String username) {
         final String query = "DELETE FROM customer WHERE username = ?";
         jdbcTemplate.update(query, username);
     }

@@ -4,6 +4,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import woowacourse.shoppingcart.domain.customer.Customer;
+
 public class SignupRequest {
 
     @NotNull
@@ -31,6 +33,10 @@ public class SignupRequest {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
+    }
+
+    public Customer toCustomer(final String password) {
+        return Customer.of(username, password, phoneNumber, address);
     }
 
     public String getUsername() {

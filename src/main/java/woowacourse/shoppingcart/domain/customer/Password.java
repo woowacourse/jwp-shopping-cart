@@ -2,8 +2,6 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.regex.Pattern;
 
-import woowacourse.shoppingcart.exception.PasswordMisMatchException;
-
 public class Password {
 
     private static final int MIN_LENGTH = 8;
@@ -31,34 +29,7 @@ public class Password {
         }
     }
 
-    public void match(final String password) {
-        if (!value.equals(password)) {
-            throw new PasswordMisMatchException();
-        }
-    }
-
-    public Password update(final String password) {
-        return new Password(password);
-    }
-
     public String getValue() {
         return value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-
-        Password password = (Password)o;
-
-        return getValue() != null ? getValue().equals(password.getValue()) : password.getValue() == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return getValue() != null ? getValue().hashCode() : 0;
     }
 }

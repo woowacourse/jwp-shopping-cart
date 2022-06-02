@@ -9,35 +9,43 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.EmptyResultException;
 import woowacourse.shoppingcart.exception.UserNotFoundException;
+import woowacourse.shoppingcart.support.passwordencoder.PasswordEncoder;
 
 @Service
 public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomerService customerService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(JwtTokenProvider jwtTokenProvider, CustomerService customerService) {
+    public AuthService(
+        final JwtTokenProvider jwtTokenProvider,
+        final CustomerService customerService,
+        final PasswordEncoder passwordEncoder
+    ) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.customerService = customerService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public TokenResponse createToken(LoginRequest loginRequest) {
+        validateLogin(loginRequest);
         String accessToken = jwtTokenProvider.createToken(loginRequest.getUsername());
         return new TokenResponse(accessToken);
     }
 
-    public Customer findCustomerByUsername(String username) {
+    private void validateLogin(final LoginRequest loginRequest) {
         try {
-            return customerService.findByUsername(username);
+            final Customer customer = customerService.findByUsername(loginRequest.getUsername());
+            customer.getPassword().matches(passwordEncoder, loginRequest.getPassword());
         } catch (EmptyResultException exception) {
             throw new UserNotFoundException("해당하는 username이 없습니다.");
         }
     }
 
-    public void validateLogin(LoginRequest loginRequest) {
+    public Customer findCustomerByUsername(String username) {
         try {
-            Customer customer = customerService.findByUsername(loginRequest.getUsername());
-            customer.matchPassword(loginRequest.getPassword());
+            return customerService.findByUsername(username);
         } catch (EmptyResultException exception) {
             throw new UserNotFoundException("해당하는 username이 없습니다.");
         }

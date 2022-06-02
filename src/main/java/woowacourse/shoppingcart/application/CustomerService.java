@@ -7,30 +7,33 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.EmptyResultException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.support.passwordencoder.PasswordEncoder;
 
 @Transactional
 @Service
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(final CustomerDao customerDao) {
+    public CustomerService(
+        final CustomerDao customerDao,
+        final PasswordEncoder passwordEncoder
+    ) {
         this.customerDao = customerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Customer save(final SignupRequest signupRequest) {
         validateDuplicateUsername(signupRequest.getUsername());
 
-        final Customer customer = Customer.of(
-            signupRequest.getUsername(),
-            signupRequest.getPassword(),
-            signupRequest.getPhoneNumber(),
-            signupRequest.getAddress()
-        );
+        final Password rawPassword = new Password(signupRequest.getPassword());
+        final Customer customer = signupRequest.toCustomer(passwordEncoder.encode(rawPassword.getValue()));
 
         return customerDao.save(customer);
     }
@@ -59,7 +62,8 @@ public class CustomerService {
 
     public void updatePassword(final String username, final UpdateCustomerRequest updateCustomerRequest) {
         final Customer customer = findByUsername(username);
-        customer.updatePassword(updateCustomerRequest.getPassword());
+        final Password password = new Password(updateCustomerRequest.getPassword());
+        customer.updatePassword(passwordEncoder.encode(password.getValue()));
         customerDao.update(customer);
     }
 

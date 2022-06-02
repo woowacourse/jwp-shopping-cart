@@ -13,6 +13,8 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.support.passwordencoder.PasswordEncoder;
+import woowacourse.shoppingcart.support.passwordencoder.SimplePasswordEncoder;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -20,11 +22,17 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 
+    private PasswordEncoder passwordEncoder;
+
     private final CustomerDao customerDao;
-    private final Customer customer = Customer.of("dongho108", "ehdgh1234", "01012123232", "인천 서구 검단로");
+    private final String password;
+    private final Customer customer;
 
     public CustomerDaoTest(final JdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(jdbcTemplate);
+        passwordEncoder = new SimplePasswordEncoder();
+        password = passwordEncoder.encode("ehdgh1234");
+        customer = Customer.of("dongho108", password, "01012123232", "인천 서구 검단로");
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -99,7 +107,7 @@ public class CustomerDaoTest {
         assertAll(
             () -> assertThat(findCustomer.getId()).isNotNull(),
             () -> assertThat(findCustomer.getUsername()).isEqualTo(savedCustomer.getUsername()),
-            () -> assertThat(findCustomer.getPassword()).isEqualTo(savedCustomer.getPassword()),
+            () -> assertThat(passwordEncoder.matches("ehdgh1234", findCustomer.getPassword().getValue())).isTrue(),
             () -> assertThat(findCustomer.getPhoneNumber()).isEqualTo(savedCustomer.getPhoneNumber()),
             () -> assertThat(findCustomer.getAddress()).isEqualTo(savedCustomer.getAddress())
         );

@@ -1,16 +1,23 @@
 package woowacourse.shoppingcart.domain.customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import woowacourse.shoppingcart.exception.PasswordMisMatchException;
+import woowacourse.shoppingcart.support.passwordencoder.PasswordEncoder;
+import woowacourse.shoppingcart.support.passwordencoder.SimplePasswordEncoder;
 
 class CustomerTest {
+
+    private PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    void setUp() {
+        passwordEncoder = new SimplePasswordEncoder();
+    }
 
     private final String username = "dongho108";
     private final String password = "password1234";
@@ -20,32 +27,15 @@ class CustomerTest {
     @DisplayName("Customer를 생성해야합니다.")
     @Test
     void createCustomer() {
+        final String password = passwordEncoder.encode(this.password);
         final Customer customer = Customer.of(username, password, phoneNumber, address);
 
         assertAll(
             () -> assertThat(customer.getUsername()).isEqualTo(new Username(username)),
-            () -> assertThat(customer.getPassword()).isEqualTo(new Password(password)),
+            () -> assertThat(passwordEncoder.matches(this.password, customer.getPassword().getValue())).isTrue(),
             () -> assertThat(customer.getPhoneNumber()).isEqualTo(new PhoneNumber(phoneNumber)),
             () -> assertThat(customer.getAddress()).isEqualTo(address)
         );
-    }
-
-    @DisplayName("비밀번호가 일치하면 예외를 반환하지 않아야 한다.")
-    @Test
-    void matchPassword() {
-        final Customer customer = Customer.of(username, password, phoneNumber, address);
-
-        assertDoesNotThrow(() -> customer.matchPassword("password1234"));
-    }
-
-    @DisplayName("비밀번호가 일치하지 않으면 예외를 반환해야 한다.")
-    @Test
-    void matchWrongPassword() {
-        final Customer customer = Customer.of(username, password, phoneNumber, address);
-
-        assertThatThrownBy(() -> customer.matchPassword("1234pass"))
-            .hasMessage("비밀번호가 일치하지 않습니다.")
-            .isInstanceOf(PasswordMisMatchException.class);
     }
 
     @DisplayName("phoneNumber를 수정한다.")
