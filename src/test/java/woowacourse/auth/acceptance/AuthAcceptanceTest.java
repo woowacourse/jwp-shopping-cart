@@ -3,7 +3,6 @@ package woowacourse.auth.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,54 +19,35 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("이메일과 패스워드로 로그인한다.")
+    @DisplayName("이메일과 패스워드로 로그인하여 엑세스 토큰을 발급받는다.")
     @Test
     void login() {
-        // given
+        // given: 회원이 생성되어 있다.
         String email = "beomWhale1@naver.com";
         String nickname = "범고래1";
         String password = "Password12345!";
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-                email, nickname, password);
-        createCustomer(customerCreateRequest);
+        createCustomer(email, nickname, password);
 
+        // when: 생성된 회원의 이메일과 비밀번호로 로그인 요청을 보내면
+        String accessToken = loginAndGetAccessToken(new TokenRequest(email, password));
 
-        // when
-        TokenRequest tokenRequest = new TokenRequest(email, password);
-        ExtractableResponse<Response> loginResponse = RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .post("/api/login")
-                .then().extract();
-
-        // then
-        assertThat(loginResponse.body().jsonPath().getString("accessToken")).isNotNull();
+        // then: 엑세스 토큰이 발급된다.
+        assertThat(accessToken).isNotNull();
     }
 
 
-    @DisplayName("로그인 후 정보를 조회한다.")
+    @DisplayName("로그인 후 회원정보를 조회한다.")
     @Test
     void myInfoWithBearerAuth() {
-        // given
+        // given: 생성된 회원정보로 로그인한다.
         String email = "beomWhale1@naver.com";
         String nickname = "범고래1";
         String password = "Password12345!";
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-                email, nickname, password);
-        createCustomer(customerCreateRequest);
+        createCustomer(email, nickname, password);
 
-        TokenRequest tokenRequest = new TokenRequest(email, password);
+        String accessToken  = loginAndGetAccessToken(new TokenRequest(email, password));
 
-        ExtractableResponse<Response> loginResponse = RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .post("/api/login")
-                .then().extract();
-
-
-        // when
-        String accessToken = loginResponse.body().jsonPath().getString("accessToken");
-
+        // when: 회원정보를 조회하면
         CustomerResponse customerResponse = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when().log().all()
@@ -75,31 +55,72 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract().as(CustomerResponse.class);
 
-        // then
+        // then: 회원정보를 응답한다.
         assertAll(
                 () -> assertThat(customerResponse.getEmail()).isEqualTo(email),
                 () -> assertThat(customerResponse.getNickname()).isEqualTo(nickname)
         );
     }
 
-    @DisplayName("로그인 하지 않고, 정보 조회 시 예외가 발생한다.")
+    @DisplayName("로그인 하지 않고 정보 조회 시 예외가 발생한다.")
     @Test
     void findCustomerInfoNotLogin() {
-        // given && when
+        // given && when: 로그인하지 않고 회원정보 조회를 시도하면
         ExtractableResponse<Response> response = RestAssured.given().log().all()
             .when().log().all()
             .get("/api/customers/me")
             .then().log().all()
             .extract();
 
-        // then
+        // then: 미인증 예외를 응답받는다.
         assertAll(
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
             () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("인증되지 않은 사용자입니다.")
         );
     }
 
-    private ExtractableResponse<Response> createCustomer(CustomerCreateRequest customerCreateRequest) {
+    @DisplayName("잘못된 password로 로그인 시도시 예외가 발생한다.")
+    @Test
+    void myInfoWithBadBearerAuth() {
+        // given: 회원이 등록되어 있다.
+        String email = "beomWhale1@naver.com";
+        String nickname = "범고래1";
+        String password = "Password12345!";
+        createCustomer(email, nickname, password);
+
+        // when: 잘못된 password로 로그인 요청을 보내면
+        TokenRequest tokenRequest = new TokenRequest(email, password+"1");
+        ExtractableResponse<Response> response = sendLoginRequest(tokenRequest);
+
+        // then: 토큰 발급 요청이 거부된다
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("비밀번호가 일치하지 않습니다.")
+        );
+    }
+
+    private ExtractableResponse<Response> sendLoginRequest(TokenRequest tokenRequest) {
+        return RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .post("/api/login")
+                .then().extract();
+    }
+
+    private String loginAndGetAccessToken(TokenRequest tokenRequest) {
+        return RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .post("/api/login")
+                .then().extract()
+                .body().jsonPath().getString("accessToken");
+    }
+
+    private void createCustomer(String email, String nickname, String password) {
+        sendCreateCustomerRequest(new CustomerCreateRequest(email, nickname, password));
+    }
+
+    private ExtractableResponse<Response> sendCreateCustomerRequest(CustomerCreateRequest customerCreateRequest) {
         return RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(customerCreateRequest)
@@ -107,46 +128,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .post("/api/customers")
                 .then()
                 .extract();
-    }
-
-    @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-        String email = "beomWhale1@naver.com";
-        String nickname = "범고래1";
-        String password = "Password12345!";
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-                email, nickname, password);
-        createCustomer(customerCreateRequest);
-
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
-        TokenRequest tokenRequest = new TokenRequest(email, password+"1");
-
-
-        ExtractableResponse<Response> response = RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .post("/api/login")
-                .then().extract();
-
-        // then
-        // 토큰 발급 요청이 거부된다
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("비밀번호가 일치하지 않습니다.")
-        );
-    }
-
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보 조회 요청이 거부된다
     }
 }
