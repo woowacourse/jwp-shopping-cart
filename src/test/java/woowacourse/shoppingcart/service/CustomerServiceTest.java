@@ -37,10 +37,10 @@ class CustomerServiceTest {
     @DisplayName("customer를 생성한다.")
     @Test
     void create() {
-        //given
+        // given
         int id = customerService.create(CUSTOMER_REQUEST_1);
 
-        //when & then
+        // when & then
         assertThat(id).isNotNull();
     }
 
@@ -50,10 +50,10 @@ class CustomerServiceTest {
         // given
         customerService.create(CUSTOMER_REQUEST_1);
 
-        //when
+        // when
         EmailDuplicationResponse response = customerService.isDuplicatedEmail(CUSTOMER_REQUEST_1.getEmail());
 
-        //then
+        // then
         assertThat(response.getIsDuplicated()).isTrue();
     }
 

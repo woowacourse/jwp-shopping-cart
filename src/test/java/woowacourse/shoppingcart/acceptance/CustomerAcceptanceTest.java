@@ -37,7 +37,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> response = createCustomer(CUSTOMER_REQUEST_1);
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
                 () -> assertThat(response.header("location")).isNotNull()
@@ -50,7 +50,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> response = createCustomer(CUSTOMER_INVALID_REQUEST_1);
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(response.jsonPath().getString("message")).isNotNull()
@@ -63,7 +63,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         createCustomer(CUSTOMER_REQUEST_1);
 
-        //when
+        // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -71,7 +71,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(
@@ -156,7 +156,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 customerRequest.getFullAddress().getZoneCode()));
         params.put("terms", true);
 
-        //when
+        // when
         return RestAssured.given().log().all()
                 .body(params)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

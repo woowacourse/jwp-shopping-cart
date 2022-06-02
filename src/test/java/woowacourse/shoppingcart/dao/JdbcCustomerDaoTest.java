@@ -38,7 +38,7 @@ class JdbcCustomerDaoTest {
     @DisplayName("Customer id를 전달받아 해당하는 Customer 객체를 조회한다.")
     @Test
     void findById() {
-        //given
+        // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
 
         // when
@@ -53,7 +53,7 @@ class JdbcCustomerDaoTest {
     @DisplayName("Customer email을 전달받아 해당하는 Customer 객체를 조회한다.")
     @Test
     void findByEmail() {
-        //given
+        // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
 
         // when

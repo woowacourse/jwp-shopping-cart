@@ -47,14 +47,14 @@ class OrdersDetailDaoTest {
     @DisplayName("OrderDatail을 추가하는 기능")
     @Test
     void addOrdersDetail() {
-        //given
+        // given
         int quantity = 5;
 
-        //when
+        // when
         Long orderDetailId = ordersDetailDao
                 .addOrdersDetail(ordersId, productId, quantity);
 
-        //then
+        // then
         assertThat(orderDetailId).isEqualTo(1L);
     }
 
@@ -62,7 +62,7 @@ class OrdersDetailDaoTest {
     @DisplayName("OrderId로 OrderDetails 조회하는 기능")
     @Test
     void findOrdersDetailsByOrderId() {
-        //given
+        // given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
             jdbcTemplate
@@ -70,11 +70,11 @@ class OrdersDetailDaoTest {
                             ordersId, productId, 3);
         }
 
-        //when
+        // when
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
                 .findOrdersDetailsByOrderId(ordersId);
 
-        //then
+        // then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);
     }
 }

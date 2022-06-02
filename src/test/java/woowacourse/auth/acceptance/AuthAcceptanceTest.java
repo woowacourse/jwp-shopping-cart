@@ -62,13 +62,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인 성공 시 토큰을 발급한다.")
     @Test
     void login() {
-        //given
+        // given
         createCustomer();
 
         // when
         TokenResponse tokenResponse = getTokenResponse(EMAIL_VALUE_1, PASSWORD_VALUE_1);
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(tokenResponse.getAccessToken()).isNotBlank(),
                 () -> assertThat(tokenResponse.getCustomerId()).isPositive()

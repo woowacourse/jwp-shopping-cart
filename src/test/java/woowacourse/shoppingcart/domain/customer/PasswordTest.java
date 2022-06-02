@@ -17,13 +17,13 @@ class PasswordTest {
     @DisplayName("평문을 전달받아 생성한다.")
     @Test
     void fromPlainText() {
-        //given
+        // given
         String password = "a1@12345";
 
-        //when
+        // when
         Password actual = Password.fromPlainText(password, passwordEncoder);
 
-        //then
+        // then
         assertThat(actual).isNotNull();
     }
 
