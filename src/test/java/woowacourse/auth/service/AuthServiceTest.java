@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.ui.dto.TokenRequest;
 import woowacourse.auth.ui.dto.TokenResponse;
 import woowacourse.exception.LoginFailureException;
@@ -20,9 +19,6 @@ class AuthServiceTest {
 
     @Autowired
     private AuthService authService;
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
 
     @DisplayName("로그인 성공시 토큰을 발급한다.")
     @Test
