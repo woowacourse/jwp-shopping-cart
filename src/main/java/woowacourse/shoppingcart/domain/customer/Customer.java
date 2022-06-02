@@ -10,7 +10,8 @@ public class Customer {
     private final PhoneNumber phoneNumber;
     private final Address address;
 
-    public Customer(final Long id, final Username username, final EncryptedPassword password, final PhoneNumber phoneNumber,
+    public Customer(final Long id, final Username username, final EncryptedPassword password,
+                    final PhoneNumber phoneNumber,
                     final Address address) {
         this.id = id;
         this.username = username;
@@ -50,6 +51,7 @@ public class Customer {
         private EncryptedPassword plainPassword;
         private PhoneNumber phoneNumber;
         private Address address;
+
         private Builder() {
         }
 

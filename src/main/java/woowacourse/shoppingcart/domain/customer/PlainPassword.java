@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.auth.exception.InvalidAuthException;
 
 public class PlainPassword {
 

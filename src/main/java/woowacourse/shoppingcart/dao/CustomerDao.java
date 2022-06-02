@@ -10,7 +10,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.EncryptedPassword;
-import woowacourse.shoppingcart.domain.customer.PlainPassword;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -72,7 +71,8 @@ public class CustomerDao {
 
     public int update(final Customer customer) {
         final String query = "UPDATE customer SET phone_number = ?, address = ? WHERE username = ?";
-        int rowCount = jdbcTemplate.update(query, customer.getPhoneNumber(), customer.getAddress(), customer.getUsername());
+        int rowCount = jdbcTemplate.update(query, customer.getPhoneNumber(), customer.getAddress(),
+                customer.getUsername());
         if (rowCount == 0) {
             throw new InvalidCustomerException();
         }

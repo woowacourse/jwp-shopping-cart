@@ -29,6 +29,7 @@ class CustomerTest {
         // then
         assertThat(customer)
                 .usingRecursiveComparison()
-                .isEqualTo(new Customer(id, new Username(username), new EncryptedPassword(password), new PhoneNumber(phoneNumber), new Address(address)));
+                .isEqualTo(new Customer(id, new Username(username), new EncryptedPassword(password),
+                        new PhoneNumber(phoneNumber), new Address(address)));
     }
 }

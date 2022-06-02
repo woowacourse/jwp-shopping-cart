@@ -123,7 +123,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 회원_비밀번호_수정_요청(final String accessToken,
-                                                            final CustomerUpdatePasswordRequest request) {
+                                                              final CustomerUpdatePasswordRequest request) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
