@@ -47,16 +47,6 @@ public class CustomerService {
         customerDao.updateNickname(customer);
     }
 
-    private void validateDuplication(CustomerCreateRequest customerCreateRequest) {
-        validateDuplicateNickname(customerCreateRequest.getNickname());
-        validateDuplicateEmail(customerCreateRequest.getEmail());
-    }
-
-    private Customer getCustomerByEmail(String email) {
-        return customerDao.findIdByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-    }
-
     private void validateDuplicateNickname(String nickname) {
         if (customerDao.existsByNickname(nickname)) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
@@ -67,5 +57,15 @@ public class CustomerService {
         if (customerDao.existsByEmail(email)) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
+    }
+
+    private Customer getCustomerByEmail(String email) {
+        return customerDao.findIdByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
+
+    private void validateDuplication(CustomerCreateRequest customerCreateRequest) {
+        validateDuplicateNickname(customerCreateRequest.getNickname());
+        validateDuplicateEmail(customerCreateRequest.getEmail());
     }
 }

@@ -37,10 +37,24 @@ public class Customer {
         return this.password.equals(password);
     }
 
-    private void validateEmailFormat(String email) {
-        Matcher matcher = EMAIL_PATTERN.matcher(email);
-        if (!matcher.matches()) {
-            throw new IllegalArgumentException("이메일 형식이 맞지 않습니다.");
+    public void changePassword(String prevPassword, String newPassword) {
+        validatePasswordFormat(newPassword);
+        if (!password.equals(prevPassword)) {
+            throw new IllegalArgumentException("이전 패스워드가 틀렸습니다.");
+        }
+        password = newPassword;
+    }
+
+    public void changeNickname(String nickname) {
+        validateNicknameFormat(nickname);
+        this.nickname = nickname;
+    }
+
+    private void validateNicknameFormat(String nickname) {
+        Matcher nicknameMatcher = NICKNAME_PATTERN.matcher(nickname);
+
+        if (!nicknameMatcher.matches()) {
+            throw new IllegalArgumentException("닉네임 형식이 맞지 않습니다.");
         }
     }
 
@@ -51,18 +65,19 @@ public class Customer {
         Matcher numbersMatcher = NUMBERS_PATTERN.matcher(password);
         Matcher sizeMatcher = SIZE_PATTERN.matcher(password);
 
-        if (!(lowerCaseMatcher.matches() && upperCaseMatcher.matches()
-            && specialCharactersMatcher.matches() &&
-            numbersMatcher.matches() && sizeMatcher.matches())) {
+        if (!(lowerCaseMatcher.matches() &&
+                upperCaseMatcher.matches() &&
+                specialCharactersMatcher.matches() &&
+                numbersMatcher.matches() &&
+                sizeMatcher.matches())) {
             throw new IllegalArgumentException("패스워드 형식이 맞지 않습니다.");
         }
     }
 
-    private void validateNicknameFormat(String nickname) {
-        Matcher nicknameMatcher = NICKNAME_PATTERN.matcher(nickname);
-
-        if (!nicknameMatcher.matches()) {
-            throw new IllegalArgumentException("닉네임 형식이 맞지 않습니다.");
+    private void validateEmailFormat(String email) {
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("이메일 형식이 맞지 않습니다.");
         }
     }
 
@@ -97,18 +112,5 @@ public class Customer {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public void changePassword(String prevPassword, String newPassword) {
-        validatePasswordFormat(newPassword);
-        if (!password.equals(prevPassword)) {
-            throw new IllegalArgumentException("이전 패스워드가 틀렸습니다.");
-        }
-        password = newPassword;
-    }
-
-    public void changeNickname(String nickname) {
-        validateNicknameFormat(nickname);
-        this.nickname = nickname;
     }
 }
