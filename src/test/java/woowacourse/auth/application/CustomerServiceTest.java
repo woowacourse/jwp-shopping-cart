@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;

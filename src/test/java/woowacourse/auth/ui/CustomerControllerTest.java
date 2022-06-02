@@ -26,10 +26,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.dto.customer.SignupRequest;
-import woowacourse.auth.dto.customer.SignupResponse;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateResponse;
+import woowacourse.auth.dto.customer.SignupRequest;
+import woowacourse.auth.dto.customer.SignupResponse;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.support.JwtTokenProvider;
 

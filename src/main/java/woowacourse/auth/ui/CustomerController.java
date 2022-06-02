@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.dto.customer.SignupRequest;
-import woowacourse.auth.dto.customer.SignupResponse;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateResponse;
+import woowacourse.auth.dto.customer.SignupRequest;
+import woowacourse.auth.dto.customer.SignupResponse;
 import woowacourse.auth.support.Login;
 
 @RestController

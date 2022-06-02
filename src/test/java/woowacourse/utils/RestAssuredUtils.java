@@ -1,14 +1,10 @@
 package woowacourse.utils;
 
-import static woowacourse.auth.utils.Fixture.email;
-import static woowacourse.auth.utils.Fixture.password;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.token.TokenRequest;
 
 public class RestAssuredUtils {
 
