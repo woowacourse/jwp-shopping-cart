@@ -1,11 +1,12 @@
 package woowacourse.auth.config;
 
 import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import woowacourse.auth.application.AuthService;
+
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.ui.AuthenticationInterceptor;
@@ -31,7 +32,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthenticationInterceptor(jwtTokenProvider, extractor))
-                .addPathPatterns("/api/customers/me");
+            .addPathPatterns("/api/customers/me");
     }
 
     @Bean

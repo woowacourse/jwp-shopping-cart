@@ -21,7 +21,7 @@ public class OrderDetail {
     }
 
     public OrderDetail(final Long productId, final int price, final String name,
-            final String imageUrl, final int quantity) {
+        final String imageUrl, final int quantity) {
         this.productId = productId;
         this.price = price;
         this.name = name;

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -20,12 +22,12 @@ public class CustomerDao {
 
     private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = (resultSet, rowNum) ->
         Customer.fromSaved(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("password"),
-                resultSet.getString("email"),
-                resultSet.getString("address"),
-                resultSet.getString("phone_number")
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getString("password"),
+            resultSet.getString("email"),
+            resultSet.getString("address"),
+            resultSet.getString("phone_number")
         );
     private final JdbcTemplate jdbcTemplate;
 
@@ -44,11 +46,11 @@ public class CustomerDao {
 
     public Optional<Long> save(final Customer customer) {
         final String query = "INSERT INTO customer (name, password, email, address, phone_number) "
-                + "VALUES (?, ?, ?, ?, ?)";
+            + "VALUES (?, ?, ?, ?, ?)";
         KeyHolder holder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update((Connection con) -> {
-                PreparedStatement statement = con.prepareStatement(query, new String[]{"id"});
+                PreparedStatement statement = con.prepareStatement(query, new String[] {"id"});
                 statement.setString(1, customer.getName());
                 statement.setString(2, customer.getPassword());
                 statement.setString(3, customer.getEmail());
@@ -82,7 +84,8 @@ public class CustomerDao {
 
     public boolean update(Customer customer) {
         final String query = "UPDATE customer SET address = ?, phone_number = ? WHERE id = ?";
-        return isUpdated(jdbcTemplate.update(query, customer.getAddress(), customer.getPhoneNumber(), customer.getId()));
+        return isUpdated(
+            jdbcTemplate.update(query, customer.getAddress(), customer.getPhoneNumber(), customer.getId()));
     }
 
     private boolean isUpdated(int updatedCount) {

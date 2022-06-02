@@ -1,13 +1,14 @@
 package woowacourse.auth.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
@@ -26,15 +27,15 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         TokenRequest request = new TokenRequest("username", "password12!@");
 
         TokenResponse tokenResponse = SimpleRestAssured.toObject(
-                SimpleRestAssured.post("/api/auth/token", request),
-                TokenResponse.class
+            SimpleRestAssured.post("/api/auth/token", request),
+            TokenResponse.class
         );
 
         // when
         String accessToken = "Bearer " + tokenResponse.getAccessToken();
         CustomerResponse customerResponse = SimpleRestAssured.toObject(
-                SimpleRestAssured.get("/api/customers/me", new Header("Authorization", accessToken)),
-                CustomerResponse.class
+            SimpleRestAssured.get("/api/customers/me", new Header("Authorization", accessToken)),
+            CustomerResponse.class
         );
 
         // then
@@ -50,7 +51,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         TokenRequest request = new TokenRequest("username", "wrongPassword12@");
         ExtractableResponse<Response> tokenResponse =
-                SimpleRestAssured.post("/api/auth/token", request);
+            SimpleRestAssured.post("/api/auth/token", request);
 
         // then
         assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -65,7 +66,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         String invalidToken = "Bearer aaaaaa.bbbbbb.ccccc";
         ExtractableResponse<Response> authResponse =
-                SimpleRestAssured.get("/api/customers/me", new Header("Authorization", invalidToken));
+            SimpleRestAssured.get("/api/customers/me", new Header("Authorization", invalidToken));
 
         // then
         assertThat(authResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());

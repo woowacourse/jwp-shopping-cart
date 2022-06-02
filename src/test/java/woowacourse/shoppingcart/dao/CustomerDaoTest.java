@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+
 import woowacourse.shoppingcart.domain.Customer;
 
 @JdbcTest
@@ -62,8 +63,8 @@ public class CustomerDaoTest {
         Customer foundCustomer = customerDao.findById(savedId).orElseThrow();
 
         assertAll(
-                () -> assertThat(foundCustomer.getId()).isEqualTo(savedId),
-                () -> assertThat(customer.getName()).isEqualTo(foundCustomer.getName())
+            () -> assertThat(foundCustomer.getId()).isEqualTo(savedId),
+            () -> assertThat(customer.getName()).isEqualTo(foundCustomer.getName())
         );
     }
 
@@ -78,8 +79,8 @@ public class CustomerDaoTest {
         Customer updatedCustomer = customerDao.findById(id).orElseThrow();
 
         assertAll(
-                () -> assertThat(updatedCustomer.getAddress()).isEqualTo("some-address"),
-                () -> assertThat(updatedCustomer.getPhoneNumber()).isEqualTo("010-9999-9999")
+            () -> assertThat(updatedCustomer.getAddress()).isEqualTo("some-address"),
+            () -> assertThat(updatedCustomer.getPhoneNumber()).isEqualTo("010-9999-9999")
         );
     }
 

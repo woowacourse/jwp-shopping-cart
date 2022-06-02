@@ -4,7 +4,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import woowacourse.auth.domain.BcryptPasswordMatcher;
-import woowacourse.auth.domain.PasswordMatcher;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.AuthenticationFailureException;
@@ -28,7 +27,7 @@ public class AuthService {
 
     public TokenResponse createToken(TokenRequest tokenRequest) {
         Customer customer = customerDao.findByName(tokenRequest.getName())
-                .orElseThrow(AuthenticationFailureException::new);
+            .orElseThrow(AuthenticationFailureException::new);
         if (!customer.isPasswordMatch(tokenRequest.getPassword(), new BcryptPasswordMatcher(passwordEncoder))) {
             throw new AuthenticationFailureException();
         }

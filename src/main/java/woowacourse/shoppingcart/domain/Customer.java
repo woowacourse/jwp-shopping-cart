@@ -12,7 +12,7 @@ public class Customer {
     private final PhoneNumber phoneNumber;
 
     public Customer(Long id, Name name, Password password, Email email, Address address,
-            PhoneNumber phoneNumber) {
+        PhoneNumber phoneNumber) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -31,7 +31,8 @@ public class Customer {
         );
     }
 
-    public static Customer fromSaved(Long id, String name, String password, String email, String address, String phoneNumber) {
+    public static Customer fromSaved(Long id, String name, String password, String email, String address,
+        String phoneNumber) {
         return new Customer(id, name, Password.fromEncoded(password), email, address, phoneNumber);
     }
 

@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.BcryptPasswordEncryptor;
 import woowacourse.shoppingcart.domain.Customer;
@@ -25,28 +26,28 @@ public class CustomerService {
 
     public Long createCustomer(CustomerRequest request) {
         Customer customer = Customer.fromInput(
-                request.getName(),
-                request.getPassword(),
-                request.getEmail(),
-                request.getAddress(),
-                request.getPhoneNumber()
+            request.getName(),
+            request.getPassword(),
+            request.getEmail(),
+            request.getAddress(),
+            request.getPhoneNumber()
         ).encryptPassword(new BcryptPasswordEncryptor(encoder));
 
         return customerDao.save(customer)
-                .orElseThrow(DuplicateCustomerException::new);
+            .orElseThrow(DuplicateCustomerException::new);
     }
 
     public CustomerResponse findCustomer(FindCustomerRequest findCustomerRequest) {
         Customer customer = customerDao.findByName(findCustomerRequest.getName())
-                .orElseThrow(InvalidCustomerException::new);
+            .orElseThrow(InvalidCustomerException::new);
         return CustomerResponse.from(customer);
     }
 
     public void updateCustomer(FindCustomerRequest findCustomerRequest, UpdateCustomerRequest updateCustomerRequest) {
         Customer customer = customerDao.findByName(findCustomerRequest.getName())
-                .orElseThrow(InvalidCustomerException::new);
+            .orElseThrow(InvalidCustomerException::new);
         Customer updatedCustomer = customer.update(updateCustomerRequest.getAddress(),
-                updateCustomerRequest.getPhoneNumber());
+            updateCustomerRequest.getPhoneNumber());
         customerDao.update(updatedCustomer);
     }
 

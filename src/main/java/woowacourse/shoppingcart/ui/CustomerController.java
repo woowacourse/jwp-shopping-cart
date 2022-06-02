@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -34,14 +36,14 @@ public class CustomerController {
 
     @GetMapping("/me")
     public ResponseEntity<CustomerResponse> showCustomer(
-            @AuthenticationPrincipal FindCustomerRequest findCustomerRequest) {
+        @AuthenticationPrincipal FindCustomerRequest findCustomerRequest) {
         return ResponseEntity.ok(service.findCustomer(findCustomerRequest));
     }
 
     @PutMapping("/me")
     public ResponseEntity<Void> updateCustomer(
-            @AuthenticationPrincipal FindCustomerRequest findCustomerRequest,
-            @RequestBody UpdateCustomerRequest updateCustomerRequest) {
+        @AuthenticationPrincipal FindCustomerRequest findCustomerRequest,
+        @RequestBody UpdateCustomerRequest updateCustomerRequest) {
         service.updateCustomer(findCustomerRequest, updateCustomerRequest);
         return ResponseEntity.noContent().build();
     }

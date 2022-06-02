@@ -7,7 +7,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import woowacourse.auth.application.AuthService;
+
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -18,7 +18,8 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     private final JwtTokenProvider tokenProvider;
     private final AuthorizationExtractor authorizationExtractor;
 
-    public AuthenticationPrincipalArgumentResolver(JwtTokenProvider tokenProvider, AuthorizationExtractor authorizationExtractor) {
+    public AuthenticationPrincipalArgumentResolver(JwtTokenProvider tokenProvider,
+        AuthorizationExtractor authorizationExtractor) {
         this.tokenProvider = tokenProvider;
         this.authorizationExtractor = authorizationExtractor;
     }
@@ -30,7 +31,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String token = authorizationExtractor.extract((HttpServletRequest)webRequest.getNativeRequest());
         String payload = tokenProvider.getPayload(token);
         return new FindCustomerRequest(payload);

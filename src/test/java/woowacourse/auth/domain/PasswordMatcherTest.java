@@ -25,5 +25,4 @@ class PasswordMatcherTest {
         assertThat(isMatch).isTrue();
     }
 
-
 }

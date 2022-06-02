@@ -1,7 +1,5 @@
 package woowacourse.auth.support;
 
-import java.util.Enumeration;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;

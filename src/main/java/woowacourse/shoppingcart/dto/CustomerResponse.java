@@ -22,10 +22,10 @@ public class CustomerResponse {
 
     public static CustomerResponse from(Customer customer) {
         return new CustomerResponse(
-                customer.getName(),
-                customer.getEmail(),
-                customer.getAddress(),
-                customer.getPhoneNumber());
+            customer.getName(),
+            customer.getEmail(),
+            customer.getAddress(),
+            customer.getPhoneNumber());
     }
 
     public String getName() {

@@ -9,11 +9,11 @@ public class CustomerAcceptanceFixture {
 
     public static ExtractableResponse<Response> saveCustomer() {
         CustomerRequest request = new CustomerRequest(
-                "username",
-                "password12!@",
-                "example@example.com",
-                "some-address",
-                "010-0000-0001"
+            "username",
+            "password12!@",
+            "example@example.com",
+            "some-address",
+            "010-0000-0001"
         );
         return SimpleRestAssured.post("/api/customers", request);
     }

@@ -3,10 +3,12 @@ package woowacourse.shoppingcart.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
@@ -24,7 +26,7 @@ public class ProductDao {
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
+                connection.prepareStatement(query, new String[] {"id"});
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
             preparedStatement.setString(3, product.getImageUrl());
@@ -38,11 +40,11 @@ public class ProductDao {
         try {
             final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
+                new Product(
+                    productId,
+                    resultSet.getString("name"), resultSet.getInt("price"),
+                    resultSet.getString("image_url")
+                ), productId
             );
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
@@ -52,13 +54,13 @@ public class ProductDao {
     public List<Product> findProducts() {
         final String query = "SELECT id, name, price, image_url FROM product";
         return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
-                        ));
+            (resultSet, rowNumber) ->
+                new Product(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getInt("price"),
+                    resultSet.getString("image_url")
+                ));
     }
 
     public void delete(final Long productId) {
