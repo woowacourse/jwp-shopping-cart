@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.exception.notfound;
 
-import woowacourse.shoppingcart.exception.badrequest.NotFoundException;
+import woowacourse.shoppingcart.exception.badrequest.BadRequestException;
 
-public class InvalidOrderException extends NotFoundException {
+public class InvalidOrderException extends BadRequestException {
 
     public InvalidOrderException(final String message) {
         super("1004", message);
