@@ -7,7 +7,7 @@ public class Customer {
     private static final Pattern usernamePattern =
             Pattern.compile("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
     private static final Pattern nicknamePattern =
-            Pattern.compile("^(?=.*[a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ])[a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{2,10}$");
+            Pattern.compile("^[a-zA-Z가-힣0-9]{2,10}$");
 
     private final Long id;
     private final String username;

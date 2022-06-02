@@ -93,9 +93,13 @@ public class CustomerDao {
         Map<String, Object> params = new HashMap<>();
         params.put("id", newCustomer.getId());
         params.put("nickname", newCustomer.getNickname());
-        int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
-        if(affectedRowCount == 0) {
-            throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
+        try {
+            int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
+            if (affectedRowCount == 0) {
+                throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
+            }
+        } catch (DuplicateKeyException exception) {
+            throw new InvalidCustomerException("중복된 값이 존재합니다.");
         }
     }
 
@@ -107,7 +111,7 @@ public class CustomerDao {
         params.put("newPassword", newPassword);
         params.put("oldPassword", oldPassword);
         int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
-        if(affectedRowCount == 0) {
+        if (affectedRowCount == 0) {
             throw new InvalidCustomerException("비밀번호가 일치하지 않습니다.");
         }
     }
@@ -117,7 +121,7 @@ public class CustomerDao {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
         int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
-        if(affectedRowCount == 0) {
+        if (affectedRowCount == 0) {
             throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
         }
     }
