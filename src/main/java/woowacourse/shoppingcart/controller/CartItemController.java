@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.controller;
 
-import java.net.URI;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +8,9 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.service.CartService;
+
+import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers/{customerName}/carts")

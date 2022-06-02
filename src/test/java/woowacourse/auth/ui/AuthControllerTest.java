@@ -1,15 +1,5 @@
 package woowacourse.auth.ui;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static woowacourse.fixture.Fixture.CUSTOMER_ID;
-import static woowacourse.fixture.Fixture.TEST_EMAIL;
-import static woowacourse.fixture.Fixture.TEST_PASSWORD;
-import static woowacourse.fixture.Fixture.TEST_USERNAME;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +14,13 @@ import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.controller.ControllerTest;
 import woowacourse.shoppingcart.dto.CustomerDto;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static woowacourse.fixture.Fixture.*;
 
 class AuthControllerTest extends ControllerTest {
 
@@ -45,9 +42,9 @@ class AuthControllerTest extends ControllerTest {
         final SignInDto signInDto = new SignInDto(TEST_EMAIL, TEST_PASSWORD);
 
         final MockHttpServletResponse response = mockMvc.perform(post("/api/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(signInDto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(signInDto)))
                 .andDo(print())
                 .andReturn()
                 .getResponse();
@@ -55,4 +52,3 @@ class AuthControllerTest extends ControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 }
-

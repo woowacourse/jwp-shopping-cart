@@ -1,13 +1,6 @@
 package woowacourse.shoppingcart.service;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static woowacourse.fixture.Fixture.TEST_EMAIL;
-import static woowacourse.fixture.Fixture.TEST_PASSWORD;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +14,13 @@ import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static woowacourse.fixture.Fixture.TEST_EMAIL;
+import static woowacourse.fixture.Fixture.TEST_PASSWORD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)

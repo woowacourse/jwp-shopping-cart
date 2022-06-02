@@ -1,12 +1,5 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.Fixture.BEARER;
-import static woowacourse.fixture.Fixture.TEST_EMAIL;
-import static woowacourse.fixture.Fixture.TEST_PASSWORD;
-import static woowacourse.fixture.Fixture.TEST_USERNAME;
-
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -19,6 +12,10 @@ import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.fixture.Fixture.*;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {

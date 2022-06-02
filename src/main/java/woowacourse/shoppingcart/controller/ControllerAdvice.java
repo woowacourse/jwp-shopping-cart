@@ -1,8 +1,6 @@
 package woowacourse.shoppingcart.controller;
 
 import io.jsonwebtoken.JwtException;
-import java.util.List;
-import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +12,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.CommonExceptionDto;
 import woowacourse.shoppingcart.dto.ValidationExceptionDto;
-import woowacourse.shoppingcart.exception.CartException;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import woowacourse.shoppingcart.exception.ValidationException;
+import woowacourse.shoppingcart.exception.*;
+
+import javax.validation.ConstraintViolationException;
+import java.util.List;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -52,7 +48,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<CommonExceptionDto> handleInvalidRequest(final BindingResult bindingResult,
-                                               final MethodArgumentNotValidException e) {
+                                                                   final MethodArgumentNotValidException e) {
         e.printStackTrace();
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);

@@ -1,8 +1,9 @@
 package woowacourse.auth.support;
 
+import org.springframework.stereotype.Component;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import org.springframework.stereotype.Component;
 
 @Component
 public class PasswordEncoder {

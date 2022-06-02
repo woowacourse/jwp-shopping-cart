@@ -1,19 +1,6 @@
 package woowacourse.shoppingcart.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +11,18 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.service.OrderService;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class OrderControllerTest extends ControllerTest {
 
@@ -54,10 +53,10 @@ public class OrderControllerTest extends ControllerTest {
 
         // when // then
         mockMvc.perform(post("/api/customers/" + customerName + "/orders")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(requestDtos))
-                ).andDo(print())
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(requestDtos))
+        ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
@@ -79,7 +78,7 @@ public class OrderControllerTest extends ControllerTest {
 
         // when // then
         mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
-                ).andDo(print())
+        ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
                 .andExpect(jsonPath("orderDetails[0].productId").value(2L))
@@ -106,7 +105,7 @@ public class OrderControllerTest extends ControllerTest {
 
         // when // then
         mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
-                ).andDo(print())
+        ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))

@@ -1,17 +1,5 @@
 package woowacourse.shoppingcart.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static woowacourse.fixture.Fixture.BEARER;
-import static woowacourse.fixture.Fixture.CUSTOMER_ID;
-import static woowacourse.fixture.Fixture.TEST_EMAIL;
-import static woowacourse.fixture.Fixture.TEST_PASSWORD;
-import static woowacourse.fixture.Fixture.TEST_USERNAME;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +20,14 @@ import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.service.CustomerService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static woowacourse.fixture.Fixture.*;
 
 class CustomerControllerTest extends ControllerTest {
 
@@ -59,9 +55,9 @@ class CustomerControllerTest extends ControllerTest {
         when(customerService.signUp(any(SignUpDto.class))).thenReturn(CUSTOMER_ID);
 
         final MockHttpServletResponse response = mockMvc.perform(post("/api/customers")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(signUpDto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(signUpDto)))
                 .andDo(print())
                 .andReturn()
                 .getResponse();
@@ -82,10 +78,10 @@ class CustomerControllerTest extends ControllerTest {
         UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto("테스트2");
 
         final MockHttpServletResponse response = mockMvc.perform(put("/api/customers/" + CUSTOMER_ID)
-                        .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(updateCustomerDto)))
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(updateCustomerDto)))
                 .andDo(print())
                 .andReturn()
                 .getResponse();
@@ -104,10 +100,10 @@ class CustomerControllerTest extends ControllerTest {
                 new TokenResponseDto(accessToken, 1000000L, customerDto));
         final DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto(TEST_PASSWORD);
         final MockHttpServletResponse response = mockMvc.perform(post("/api/customers/" + CUSTOMER_ID)
-                        .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(deleteCustomerDto)))
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(deleteCustomerDto)))
                 .andDo(print())
                 .andReturn()
                 .getResponse();

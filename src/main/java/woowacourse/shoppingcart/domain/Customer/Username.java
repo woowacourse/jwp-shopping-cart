@@ -10,7 +10,7 @@ public class Username {
 
     private final String value;
 
-    private Username(){
+    private Username() {
         this.value = null;
     }
 
@@ -19,7 +19,7 @@ public class Username {
         validateUsername(value);
     }
 
-    public static Username empty(){
+    public static Username empty() {
         return new Username();
     }
 
