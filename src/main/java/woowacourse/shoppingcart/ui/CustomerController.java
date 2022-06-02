@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<SignUpResponse> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
         SignUpResponse signUpresponse = customerService.addCustomer(signUpRequest);
         return ResponseEntity.created(URI.create("/users/me"))
                 .body(signUpresponse);
