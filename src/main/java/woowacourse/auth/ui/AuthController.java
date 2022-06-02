@@ -41,8 +41,7 @@ public class AuthController {
 
     @GetMapping("/members")
     public ResponseEntity<CheckResponse> checkDuplicatedEmail(@RequestParam String email) {
-        CheckResponse checkResponse =
-                new CheckResponse(!authService.existsEmail(email));
+        CheckResponse checkResponse = new CheckResponse(!authService.existsEmail(email));
         return ResponseEntity.ok(checkResponse);
     }
 
@@ -51,18 +50,18 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
-    @PostMapping("/members/auth/password-check")
+    @PostMapping("/members/password-check")
     public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal String payload,
                                                          @RequestBody PasswordCheckRequest passwordCheckRequest) {
         return ResponseEntity.ok(authService.checkPassword(payload, passwordCheckRequest));
     }
 
-    @GetMapping("/members/auth/me")
+    @GetMapping("/members/me")
     public ResponseEntity<MemberResponse> showMember(@AuthenticationPrincipal String payload) {
         return ResponseEntity.ok(authService.findMember(payload));
     }
 
-    @PatchMapping("/members/auth/me")
+    @PatchMapping("/members/me")
     public ResponseEntity<Void> updateMember(@AuthenticationPrincipal String payload,
                                              @RequestBody @Valid MemberUpdateRequest memberUpdateRequest) {
         authService.updateMember(payload, memberUpdateRequest);
@@ -70,7 +69,7 @@ public class AuthController {
                 .build();
     }
 
-    @PatchMapping("/members/auth/password")
+    @PatchMapping("/members/password")
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal String payload,
                                                @RequestBody @Valid PasswordUpdateRequest passwordUpdateRequest) {
         authService.updatePassword(payload, passwordUpdateRequest);
@@ -78,7 +77,7 @@ public class AuthController {
                 .build();
     }
 
-    @DeleteMapping("/members/auth/me")
+    @DeleteMapping("/members/me")
     public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal String payload) {
         authService.delete(payload);
         return ResponseEntity.noContent()

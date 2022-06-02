@@ -16,7 +16,7 @@ content-type: application/json
 
 method: GET
 
-URL: “/api/members?email={email}”
+URL: “/api/members/check-email?email=${email}”
 
 content-type: application/json
 
@@ -24,7 +24,7 @@ content-type: application/json
 
 ```
 {
-  "success: "true"
+  "unique: "true"
 }
 ```
 
@@ -136,9 +136,9 @@ Authorization: Bearer {token}
 
 - 403은 생략
 
-### 다른 회원 정보에 접근하려고 하면
+  ### 다른 회원 정보에 접근하려고 하면
 
-응답 코드: 403 Forbidden
+  응답 코드: 403 Forbidden
 
 # 회원 정보 페이지
 
@@ -146,7 +146,7 @@ Authorization: Bearer {token}
 
 method: POST
 
-URL: “/api/members/auth/password-check”
+URL: “/api/members/password-check”
 
 응답 코드: 200 OK
 
@@ -160,7 +160,7 @@ URL: “/api/members/auth/password-check”
 
 method: GET
 
-URL: “/api/members/auth/me” + 토큰 정보로 식별
+URL: “/api/members/me” + 토큰 정보로 식별
 
 응답 코드: 200 OK
 
@@ -177,7 +177,7 @@ response body
 
 method: PATCH
 
-(닉네임 + @) URL: “/api/members/auth/me” + 토큰 정보로 식별
+(닉네임 + @) URL: “/api/members/me” + 토큰 정보로 식별
 
 request body
 
@@ -187,7 +187,7 @@ request body
 }
 ```
 
-(비밀번호) URL: “/api/members/auth/password” + 토큰 정보로 식별
+(비밀번호) URL: “/api/members/password” + 토큰 정보로 식별
 
 request body
 
@@ -203,6 +203,6 @@ request body
 
 method: DELETE
 
-URL: “/api/members/auth/me” + 토큰 정보로 식별
+URL: “/api/members/me” + 토큰 정보로 식별
 
 응답 코드: 204 No Content
