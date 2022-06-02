@@ -54,6 +54,6 @@ public class CustomerController {
         @RequestBody CustomerPasswordRequest customerPasswordRequest) {
         customerService.checkPassword(loginCustomer.toCustomer(), customerPasswordRequest.getPassword());
         customerService.deleteCustomer(loginCustomer.getLoginId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

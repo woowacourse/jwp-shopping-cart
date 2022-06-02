@@ -76,7 +76,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> deletedResponse = 회원_탈퇴_요청(tokenResponse.getAccessToken(), "12345678aA!");
 
-        assertThat(deletedResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(deletedResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     private ExtractableResponse<Response> 회원_탈퇴_요청(String accessToken, String password) {
