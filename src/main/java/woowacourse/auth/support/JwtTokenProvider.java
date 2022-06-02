@@ -1,17 +1,25 @@
 package woowacourse.auth.support;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component
 public class JwtTokenProvider {
-    @Value("${security.jwt.token.secret-key}")
-    private String secretKey;
+
     @Value("${security.jwt.token.expire-length}")
     private long validityInMilliseconds;
+
+    private final SecretKeyProvider secretKeyProvider;
+
+    public JwtTokenProvider(final SecretKeyProvider secretKeyProvider) {
+        this.secretKeyProvider = secretKeyProvider;
+    }
 
     public String createToken(String payload) {
         Claims claims = Jwts.claims().setSubject(payload);
@@ -22,18 +30,23 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKeyProvider.generateKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String getPayload(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKeyProvider.generateKey())
+                .build()
+                .parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-
+            Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKeyProvider.generateKey())
+                    .build()
+                    .parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             return false;
