@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.password.SHA256Encoder;
+import woowacourse.shoppingcart.domain.customer.password.PasswordEncoder;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
@@ -15,14 +15,17 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(CustomerDao customerDao,
+            PasswordEncoder passwordEncoder) {
         this.customerDao = customerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public CustomerResponse save(CustomerSaveRequest customerSaveRequest) {
         Customer customer = customerSaveRequest.toCustomer();
-        customer.encodePassword(new SHA256Encoder());
+        customer.encodePassword(passwordEncoder);
 
         Customer savedCustomer = customerDao.save(customerSaveRequest.toCustomer());
         return new CustomerResponse(savedCustomer);
