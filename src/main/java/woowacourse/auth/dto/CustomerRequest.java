@@ -2,11 +2,14 @@ package woowacourse.auth.dto;
 
 public class CustomerRequest {
 
-    private final String email;
-    private final String password;
-    private final String name;
-    private final String phone;
-    private final String address;
+    private String email;
+    private String password;
+    private String name;
+    private String phone;
+    private String address;
+
+    public CustomerRequest() {
+    }
 
     public CustomerRequest(final String email, final String password, final String name, final String phone, final String address) {
         this.email = email;

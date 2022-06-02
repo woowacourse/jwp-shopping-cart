@@ -2,11 +2,14 @@ package woowacourse.auth.dto;
 
 public class CustomerResponse {
 
-    private final Long id;
-    private final String email;
-    private final String name;
-    private final String phone;
-    private final String address;
+    private Long id;
+    private String email;
+    private String name;
+    private String phone;
+    private String address;
+
+    public CustomerResponse() {
+    }
 
     public CustomerResponse(Long id, String email, String name, String phone, String address) {
         this.id = id;

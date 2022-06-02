@@ -18,7 +18,7 @@ public class AuthService {
 
     private final CustomerDao customerDao;
 
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
         this.customerDao = customerDao;
