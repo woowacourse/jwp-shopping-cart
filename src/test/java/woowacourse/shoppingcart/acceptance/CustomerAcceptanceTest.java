@@ -46,7 +46,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().get("/customers/username/duplication")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("unique", equalTo(true));
+                .body("isUnique", equalTo(true));
     }
 
     @DisplayName("아이디가 중복될 때, 아이디 중복 여부를 검사한다.")
@@ -61,7 +61,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().get("/customers/username/duplication")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("unique", equalTo(false));
+                .body("isUnique", equalTo(false));
     }
 
     @DisplayName("로그인한 회원이 자신의 정보를 조회한다.")

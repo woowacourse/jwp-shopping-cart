@@ -56,7 +56,7 @@ class CustomerServiceTest {
         customerService.addCustomer(customerRequest1);
         UserNameDuplicationRequest request = new UserNameDuplicationRequest(userName);
         UserNameDuplicationResponse response = customerService.checkDuplication(request);
-        assertThat(response.isUnique()).isEqualTo(expected);
+        assertThat(response.getIsUnique()).isEqualTo(expected);
     }
 
     @DisplayName("비밀번호를 성공적으로 변경한다.")
