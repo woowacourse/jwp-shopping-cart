@@ -112,7 +112,7 @@ class CustomerControllerTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    @DisplayName("토큰이 있고 비밀번호가 일치할 때 회원 탈퇴를 한다.")
+    @DisplayName("토큰이 있고 비밀번호가 일치하지 않을 때 회원 탈퇴를 하지 못한다.")
     @Test
     void signOutwithToken_incorrect_password() {
         // given

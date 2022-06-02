@@ -7,6 +7,7 @@ import static woowacourse.auth.utils.Fixture.nickname;
 import static woowacourse.auth.utils.Fixture.password;
 import static woowacourse.auth.utils.Fixture.signupRequest;
 import static woowacourse.auth.utils.Fixture.tokenRequest;
+import static woowacourse.utils.RestAssuredUtils.deleteWithToken;
 import static woowacourse.utils.RestAssuredUtils.httpPost;
 import static woowacourse.utils.RestAssuredUtils.login;
 import static woowacourse.utils.RestAssuredUtils.signOut;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
+import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.utils.AcceptanceTest;
 
 @DisplayName("회원관련 기능 인수테스트")
@@ -61,7 +63,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String token = loginResponse.jsonPath().getString("accessToken");
 
         // when
-        ExtractableResponse<Response> response = signOut("/customers", token);
+        SignoutRequest signoutRequest = new SignoutRequest(password);
+        ExtractableResponse<Response> response = deleteWithToken("/customers", token, signoutRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
