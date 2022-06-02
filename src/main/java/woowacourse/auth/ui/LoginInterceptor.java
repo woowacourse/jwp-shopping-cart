@@ -2,6 +2,7 @@ package woowacourse.auth.ui;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.exception.InvalidAuthException;
@@ -23,6 +24,9 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
                              final Object handler) {
+        if (isPreflight(request)) {
+            return true;
+        }
         String accessToken = AuthorizationExtractor.extract(request);
         if (jwtTokenProvider.validateToken(accessToken)) {
             String payload = jwtTokenProvider.getPayload(accessToken);
@@ -30,5 +34,9 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
         throw new InvalidAuthException("인증되지 않은 토큰입니다.");
+    }
+
+    private boolean isPreflight(HttpServletRequest request) {
+        return HttpMethod.OPTIONS.matches(request.getMethod());
     }
 }
