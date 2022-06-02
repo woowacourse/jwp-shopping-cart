@@ -10,6 +10,9 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +22,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
+import woowacourse.shoppingcart.dto.ErrorResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -222,6 +226,55 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(duplicateResponse.getIsDuplicate()).isTrue()
+        );
+    }
+
+    @DisplayName("회원 가입할 때 패스워드가 잘못된 경우 400-BAD_REQUEST를 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"1234567", "", "1"})
+    void signUpWithShortPassword(String password) {
+        // given
+        CustomerRequest.UserNameAndPassword signUpRequest =
+                new CustomerRequest.UserNameAndPassword("기론", password);
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signUpRequest)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+
+        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호는 8자리 이상이어야 합니다.")
+        );
+    }
+
+    @DisplayName("회원 가입할 때 유저 이름이 잘못된 경우 400-BAD_REQUEST를 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    @NullSource
+    void signUpWithWrongUserName(String userName) {
+        // given
+        CustomerRequest.UserNameAndPassword signUpRequest =
+                new CustomerRequest.UserNameAndPassword(userName, "12345678");
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signUpRequest)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+
+        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름은 빈칸일 수 없습니다.")
         );
     }
 }

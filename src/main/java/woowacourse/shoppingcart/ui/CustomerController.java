@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,6 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
 
@@ -28,7 +28,8 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCustomer(@RequestBody UserNameAndPassword customerRequest) {
+    public ResponseEntity<Void> createCustomer(
+            @Valid @RequestBody CustomerRequest.UserNameAndPassword customerRequest) {
         Long id = customerService.signUp(customerRequest);
 
         return ResponseEntity.created(URI.create("/api/customers/" + id)).build();
@@ -42,7 +43,7 @@ public class CustomerController {
 
     @PutMapping("/me")
     public ResponseEntity<CustomerResponse> updateCustomer(@AuthenticationPrincipal Customer customer,
-                                                           @RequestBody CustomerRequest.UserNameAndPassword customerRequest) {
+                                                           @Valid @RequestBody CustomerRequest.UserNameAndPassword customerRequest) {
         CustomerResponse response = customerService.updateById(customer.getId(), customerRequest);
         return ResponseEntity.ok(response);
     }
@@ -55,7 +56,7 @@ public class CustomerController {
 
     @PostMapping("/duplication")
     public ResponseEntity<DuplicateResponse> duplicateUserName(
-            @RequestBody CustomerRequest.UserNameOnly customerRequest) {
+            @Valid @RequestBody CustomerRequest.UserNameOnly customerRequest) {
         final DuplicateResponse response = customerService.isDuplicateUserName(customerRequest);
         return ResponseEntity.ok(response);
     }

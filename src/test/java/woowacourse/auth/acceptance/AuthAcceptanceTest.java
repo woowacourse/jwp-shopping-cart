@@ -10,6 +10,9 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -186,6 +189,54 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(responseMe.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(errorResponse.getMessage()).isEqualTo("유효하지 않은 토큰입니다.")
+        );
+    }
+
+    @DisplayName("로그인할 때 유저 이름이 잘못된 경우 400-BAD_REQUEST를 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    @NullSource
+    void loginWithWrongUserName(String userName) {
+        // given
+        TokenRequest tokenRequest = new TokenRequest(userName, "12345678");
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .when().post("/api/login")
+                .then().log().all()
+                .extract();
+
+        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름은 빈칸일 수 없습니다.")
+        );
+    }
+
+    @DisplayName("로그인할 때 바밀번호가 잘못된 경우 400-BAD_REQUEST를 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    @NullSource
+    void loginWithWrongPassword(String password) {
+        // given
+        TokenRequest tokenRequest = new TokenRequest("기론", password);
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .when().post("/api/login")
+                .then().log().all()
+                .extract();
+
+        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호는 빈칸일 수 없습니다.")
         );
     }
 }
