@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception.notfound;
+package woowacourse.shoppingcart.exception.badrequest;
 
 import woowacourse.shoppingcart.exception.badrequest.BadRequestException;
 

@@ -9,8 +9,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.notfound.InvalidProductException;
-import woowacourse.shoppingcart.exception.notfound.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidProductException;
+import woowacourse.shoppingcart.exception.badrequest.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)

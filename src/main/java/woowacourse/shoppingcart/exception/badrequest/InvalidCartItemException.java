@@ -1,6 +1,4 @@
-package woowacourse.shoppingcart.exception.notfound;
-
-import woowacourse.shoppingcart.exception.badrequest.BadRequestException;
+package woowacourse.shoppingcart.exception.badrequest;
 
 public class InvalidCartItemException extends BadRequestException {
 

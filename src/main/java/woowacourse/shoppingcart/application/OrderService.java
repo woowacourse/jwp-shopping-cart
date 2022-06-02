@@ -14,7 +14,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.exception.notfound.InvalidOrderException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidOrderException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
