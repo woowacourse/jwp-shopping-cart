@@ -49,21 +49,19 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public LoginServiceResponse login(LoginServiceRequest loginServiceRequest) {
-        Member member = findByEmail(loginServiceRequest.getEmail(), new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
-        validatePassword(member.getPassword(), loginServiceRequest.getPassword());
+        Member member = findByEmailAndPassword(loginServiceRequest);
         String token = tokenManager.createToken(member.getEmail());
         return new LoginServiceResponse(token, member.getNickname());
+    }
+
+    private Member findByEmailAndPassword(LoginServiceRequest loginServiceRequest) {
+        return memberDao.findByEmailAndPassword(loginServiceRequest.getEmail(), loginServiceRequest.getPassword())
+                .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
     }
 
     private Member findByEmail(String email, RuntimeException exception) {
         return memberDao.findByEmail(email)
                 .orElseThrow(() -> exception);
-    }
-
-    private void validatePassword(String input, String saved) {
-        if (!input.equals(saved)) {
-            throw new IllegalArgumentException("이메일과 비밀번호를 확인해주세요.");
-        }
     }
 
     @Transactional(readOnly = true)

@@ -3,6 +3,7 @@ package woowacourse.auth.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,6 +60,43 @@ class MemberDaoTest {
                 .orElseGet(() -> fail("실패"));
 
         assertThat(foundMember).isEqualTo(member);
+    }
+
+    @DisplayName("이메일에 해당하는 회원정보가 없을 경우 empty인 Optional을 반환한다.")
+    @Test
+    void findByEmail_Null() {
+        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        memberDao.save(member);
+
+        Optional<Member> foundMember = memberDao.findByEmail("abc@naver.com");
+        boolean actual = foundMember.isEmpty();
+
+        assertThat(actual).isTrue();
+    }
+
+    @DisplayName("이메일과 비밀번호로 회원정보를 조회한다.")
+    @Test
+    void findByEmailAndPassword() {
+        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        memberDao.save(member);
+
+        Member foundMember = memberDao.findByEmail("abc@woowahan.com")
+                .orElseGet(() -> fail("실패"));
+
+        assertThat(foundMember).isEqualTo(member);
+    }
+
+    @DisplayName("이메일과 비밀번호에 해당하는 회원정보가 없을 경우 empty인 Optional을 반환한다.")
+    @ParameterizedTest
+    @CsvSource({"abc@woowahan.com, 1q2w3e4r@", "abc@naver.com, 1q2w3e4r!", "abc@naver.com, 1q2w3e4r@"})
+    void findByEmailAndPassword_Null(String email, String password) {
+        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        memberDao.save(member);
+
+        Optional<Member> foundMember = memberDao.findByEmailAndPassword(email, password);
+        boolean actual = foundMember.isEmpty();
+
+        assertThat(actual).isTrue();
     }
 
     @DisplayName("회원의 닉네임을 변경한다.")

@@ -49,6 +49,15 @@ public class MemberDao {
                 .findAny();
     }
 
+    public Optional<Member> findByEmailAndPassword(String email, String password) {
+        String sql = "SELECT email, password, nickname FROM MEMBER WHERE email = :email AND password = :password";
+        SqlParameterSource params = new MapSqlParameterSource("email", email)
+                .addValue("password", password);
+        return namedParameterJdbcTemplate.query(sql, params, MEMBER_MAPPER)
+                .stream()
+                .findAny();
+    }
+
     public void updateNicknameByEmail(String email, String nickname) {
         String sql = "UPDATE MEMBER SET nickname = :nickname WHERE email = :email";
         SqlParameterSource params = new MapSqlParameterSource("email", email)
