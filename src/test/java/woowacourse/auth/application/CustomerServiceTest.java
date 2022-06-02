@@ -4,6 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static woowacourse.auth.utils.Fixture.email;
+import static woowacourse.auth.utils.Fixture.nickname;
+import static woowacourse.auth.utils.Fixture.password;
+import static woowacourse.auth.utils.Fixture.signupRequest;
 
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.dto.customer.CustomerRequest;
+import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
@@ -31,13 +35,12 @@ class CustomerServiceTest {
     @Test
     void sighUp() {
         // given
-        CustomerRequest request = new CustomerRequest("123@gmail.com", "!234", "does");
-        Customer customer = new Customer(1L, "123@gmail.com", "!234", "does");
+        Customer customer = new Customer(1L, email, password, nickname);
         given(customerDao.save(any(Customer.class)))
                 .willReturn(customer);
 
         // when
-        Customer saved = customerService.signUp(request);
+        Customer saved = customerService.signUp(signupRequest);
 
         // then
         assertThat(saved).isEqualTo(customer);
@@ -47,12 +50,11 @@ class CustomerServiceTest {
     @Test
     void emailDuplicate() {
         // given
-        CustomerRequest request = new CustomerRequest("123@gmail.com", "!234", "does");
-        given(customerDao.existByEmail("123@gmail.com"))
+        given(customerDao.existByEmail(email))
                 .willReturn(true);
 
         // then
-        assertThatThrownBy(() -> customerService.signUp(request))
+        assertThatThrownBy(() -> customerService.signUp(signupRequest))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
@@ -60,23 +62,23 @@ class CustomerServiceTest {
     @Test
     void findByEmail() {
         // given
-        Customer customer = new Customer(1L, "123@gmail.com", "!234", "does");
-        given(customerDao.findByEmail("123@gmail.com"))
+        Customer customer = new Customer(1L, email, password, nickname);
+        given(customerDao.findByEmail(email))
                 .willReturn(Optional.of(customer));
 
         // then
-        assertThat(customerService.findByEmail("123@gmail.com")).isEqualTo(customer);
+        assertThat(customerService.findByEmail(email)).isEqualTo(customer);
     }
 
     @DisplayName("이메일로 회원을 조회한다.")
     @Test
     void findByEmail_failByCustomer() {
         // given
-        given(customerDao.findByEmail("123@gmail.com"))
+        given(customerDao.findByEmail(email))
                 .willReturn(Optional.empty());
 
         // then
-        assertThatThrownBy(() -> customerService.findByEmail("123@gmail.com"))
+        assertThatThrownBy(() -> customerService.findByEmail(email))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
@@ -84,8 +86,8 @@ class CustomerServiceTest {
     @Test
     void updateCustomer() {
         // given
-        CustomerUpdateRequest request = new CustomerUpdateRequest("thor", "a1234!", "b1234!");
-        Customer customer = new Customer(1L, "does", "a1234!", "b1234!");
+        CustomerUpdateRequest request = new CustomerUpdateRequest("thor", password, "b1234!");
+        Customer customer = new Customer(1L, nickname, password, nickname);
 
         // when
         Customer update = customerService.update(customer, request);
@@ -98,8 +100,8 @@ class CustomerServiceTest {
     @Test
     void updateCustomerPasswordFail() {
         // given
-        CustomerUpdateRequest request = new CustomerUpdateRequest("thor", "a1234!", "b1234!");
-        Customer customer = new Customer(1L, "does", "a123456!", "b1234!");
+        CustomerUpdateRequest request = new CustomerUpdateRequest("thor", password, "b1234!");
+        Customer customer = new Customer(1L, nickname, "a123456!", nickname);
 
         // when
         assertThatThrownBy(() -> customerService.update(customer, request))

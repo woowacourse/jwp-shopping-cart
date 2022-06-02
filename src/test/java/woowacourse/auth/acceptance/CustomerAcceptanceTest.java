@@ -2,6 +2,9 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.auth.utils.Fixture.email;
+import static woowacourse.auth.utils.Fixture.nickname;
+import static woowacourse.auth.utils.Fixture.password;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -10,31 +13,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.customer.CustomerRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
+import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.dto.token.TokenRequest;
+import woowacourse.utils.AcceptanceTest;
 
 @DisplayName("회원관련 기능 인수테스트")
 public class CustomerAcceptanceTest extends AcceptanceTest {
-
-    private final String email = "123@gmail.com";
-    private final String password = "a1234!";
 
     @DisplayName("회원가입을 한다.")
     @Test
     void signUpSuccess() {
         // given
-        // when
         ExtractableResponse<Response> response = signUp();
-
-        String email = response.jsonPath().getString("email");
-        String nickname = response.jsonPath().getString("nickname");
 
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(email).isEqualTo("123@gmail.com"),
-                () -> assertThat(nickname).isEqualTo("does")
+                () -> assertThat(response.jsonPath().getString("email")).isEqualTo(email),
+                () -> assertThat(response.jsonPath().getString("nickname")).isEqualTo(nickname)
         );
     }
 
@@ -108,16 +105,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getString("nickname")).isEqualTo("does"),
+                () -> assertThat(response.jsonPath().getString("nickname")).isEqualTo(nickname),
                 () -> assertThat(response.jsonPath().getString("email")).isEqualTo(email)
         );
     }
 
     private ExtractableResponse<Response> signUp() {
-        String nickname = "does";
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest(email, password, nickname))
+                .body(new SignupRequest(email, password, nickname))
                 .when().post("/customers")
                 .then().log().all()
                 .extract();

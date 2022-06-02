@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.dto.customer.CustomerRequest;
-import woowacourse.auth.dto.customer.CustomerResponse;
+import woowacourse.auth.dto.customer.SignupRequest;
+import woowacourse.auth.dto.customer.SignupResponse;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateResponse;
 import woowacourse.auth.support.Login;
@@ -30,10 +30,10 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerResponse> signUp(@RequestBody @Valid CustomerRequest customerRequest) {
-        Customer customer = customerService.signUp(customerRequest);
+    public ResponseEntity<SignupResponse> signUp(@RequestBody @Valid SignupRequest signupRequest) {
+        Customer customer = customerService.signUp(signupRequest);
         URI uri = createUri(customer.getId());
-        return ResponseEntity.created(uri).body(new CustomerResponse(customer));
+        return ResponseEntity.created(uri).body(new SignupResponse(customer));
     }
 
     @DeleteMapping
@@ -50,8 +50,8 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerResponse> find(@Login Customer customer) {
-        return ResponseEntity.ok(new CustomerResponse(customer));
+    public ResponseEntity<SignupResponse> find(@Login Customer customer) {
+        return ResponseEntity.ok(new SignupResponse(customer));
     }
 
     private URI createUri(Long id) {

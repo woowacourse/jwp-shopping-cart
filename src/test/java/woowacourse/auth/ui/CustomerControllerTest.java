@@ -9,6 +9,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static woowacourse.auth.utils.Fixture.email;
+import static woowacourse.auth.utils.Fixture.nickname;
+import static woowacourse.auth.utils.Fixture.password;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -23,8 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.dto.customer.CustomerRequest;
-import woowacourse.auth.dto.customer.CustomerResponse;
+import woowacourse.auth.dto.customer.SignupRequest;
+import woowacourse.auth.dto.customer.SignupResponse;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateResponse;
 import woowacourse.auth.exception.InvalidAuthException;
@@ -32,10 +35,6 @@ import woowacourse.auth.support.JwtTokenProvider;
 
 @WebMvcTest({CustomerController.class, AuthService.class})
 class CustomerControllerTest {
-
-    private final String email = "123@gmail.com";
-    private final String password = "a1234!";
-    private final String nickname = "does";
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,9 +49,9 @@ class CustomerControllerTest {
     @Test
     void signUp() throws Exception {
         // given
-        CustomerRequest request = new CustomerRequest(email, password, nickname);
+        SignupRequest request = new SignupRequest(email, password, nickname);
         String requestJson = objectMapper.writeValueAsString(request);
-        given(customerService.signUp(any(CustomerRequest.class)))
+        given(customerService.signUp(any(SignupRequest.class)))
                 .willReturn(new Customer(1L, email, password, nickname));
 
         // when
@@ -61,7 +60,7 @@ class CustomerControllerTest {
                 .content(requestJson))
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(
-                        new CustomerResponse(email, nickname)))
+                        new SignupResponse(email, nickname)))
                 );
     }
 
@@ -69,9 +68,9 @@ class CustomerControllerTest {
     @Test
     void signUpDuplicatedEmail() throws Exception {
         // given
-        CustomerRequest request = new CustomerRequest(email, password, nickname);
+        SignupRequest request = new SignupRequest(email, password, nickname);
         String requestJson = objectMapper.writeValueAsString(request);
-        given(customerService.signUp(any(CustomerRequest.class)))
+        given(customerService.signUp(any(SignupRequest.class)))
                 .willThrow(IllegalArgumentException.class);
 
         // when
@@ -86,9 +85,9 @@ class CustomerControllerTest {
     @ValueSource(strings = {"123gmail.com", "123@gmailcom", "123gamilcom"})
     void emailFormatException(String email) throws Exception {
         // given
-        CustomerRequest request = new CustomerRequest(email, password, nickname);
+        SignupRequest request = new SignupRequest(email, password, nickname);
         String requestJson = objectMapper.writeValueAsString(request);
-        given(customerService.signUp(any(CustomerRequest.class)))
+        given(customerService.signUp(any(SignupRequest.class)))
                 .willThrow(IllegalArgumentException.class);
 
         // when
@@ -103,9 +102,9 @@ class CustomerControllerTest {
     @ValueSource(strings = {"1", "12345678901"})
     void nicknameFormatException(String nickname) throws Exception {
         // given
-        CustomerRequest request = new CustomerRequest(email, password, nickname);
+        SignupRequest request = new SignupRequest(email, password, nickname);
         String requestJson = objectMapper.writeValueAsString(request);
-        given(customerService.signUp(any(CustomerRequest.class)))
+        given(customerService.signUp(any(SignupRequest.class)))
                 .willThrow(IllegalArgumentException.class);
 
         // when
@@ -120,9 +119,9 @@ class CustomerControllerTest {
     @ValueSource(strings = {"1234", "abasdas", "!@#!@#", "123d213", "asdasd!@#@", "123!@@##!1"})
     void passwordFormatException(String password) throws Exception {
         // given
-        CustomerRequest request = new CustomerRequest(email, password, nickname);
+        SignupRequest request = new SignupRequest(email, password, nickname);
         String requestJson = objectMapper.writeValueAsString(request);
-        given(customerService.signUp(any(CustomerRequest.class)))
+        given(customerService.signUp(any(SignupRequest.class)))
                 .willThrow(IllegalArgumentException.class);
 
         // when
@@ -234,8 +233,7 @@ class CustomerControllerTest {
         mockMvc.perform(get("/customers")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new CustomerResponse(loginCustomer))))
+                .content(objectMapper.writeValueAsString(new SignupResponse(loginCustomer))))
                 .andExpect(status().isOk());
     }
-
 }

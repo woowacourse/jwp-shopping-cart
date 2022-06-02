@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
+import static woowacourse.auth.utils.Fixture.email;
+import static woowacourse.auth.utils.Fixture.nickname;
+import static woowacourse.auth.utils.Fixture.password;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,17 +35,17 @@ class AuthServiceTest {
     @Test
     void login() {
         // given
-        given(customerService.findByEmail("123@gmail.com"))
-                .willReturn(new Customer(1L, "123@gmail.com", "a1234!", "does"));
-        given(tokenProvider.createToken("123@gmail.com"))
+        given(customerService.findByEmail(email))
+                .willReturn(new Customer(1L, email, password, nickname));
+        given(tokenProvider.createToken(email))
                 .willReturn("access-token");
 
         // when
-        TokenResponse response = authService.login(new TokenRequest("123@gmail.com", "a1234!"));
+        TokenResponse response = authService.login(new TokenRequest(email, password));
 
         // then
         assertAll(
-                () -> assertThat(response.getNickname()).isEqualTo("does"),
+                () -> assertThat(response.getNickname()).isEqualTo(nickname),
                 () -> assertThat(response.getAccessToken()).isEqualTo("access-token")
         );
     }
@@ -51,11 +54,11 @@ class AuthServiceTest {
     @Test
     void loginFailByEmail() {
         // given
-        given(customerService.findByEmail("123@gmail.com"))
+        given(customerService.findByEmail(email))
                 .willThrow(InvalidCustomerException.class);
 
         // when
-        assertThatThrownBy(() -> authService.login(new TokenRequest("123@gmail.com", "a1234!")))
+        assertThatThrownBy(() -> authService.login(new TokenRequest(email, password)))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
@@ -63,11 +66,11 @@ class AuthServiceTest {
     @Test
     void loginFailByPassword() {
         // given
-        given(customerService.findByEmail("123@gmail.com"))
-                .willReturn(new Customer(1L, "123@gmail.com", "a1234!", "does"));
+        given(customerService.findByEmail(email))
+                .willReturn(new Customer(1L, email, password, nickname));
 
         // when
-        assertThatThrownBy(() -> authService.login(new TokenRequest("123@gmail.com", "a1234!!!")))
+        assertThatThrownBy(() -> authService.login(new TokenRequest(email, "a1234!!!")))
                 .isInstanceOf(InvalidAuthException.class);
     }
 }

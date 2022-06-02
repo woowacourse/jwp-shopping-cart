@@ -3,6 +3,9 @@ package woowacourse.auth.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.auth.utils.Fixture.email;
+import static woowacourse.auth.utils.Fixture.nickname;
+import static woowacourse.auth.utils.Fixture.password;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -26,11 +29,11 @@ class CustomerDaoTest {
         customerDao = new CustomerDao(dataSource);
     }
 
-    @DisplayName("Member를 저장한다.")
+    @DisplayName("Customer를 저장한다.")
     @Test
     void save() {
         // given
-        Customer customer = new Customer("123@gmail.com", "!234", "does");
+        Customer customer = new Customer(email, password, nickname);
 
         // when
         Customer saved = customerDao.save(customer);
@@ -43,7 +46,7 @@ class CustomerDaoTest {
     @Test
     void existByName() {
         // given
-        Customer customer = new Customer("123@gmail.com", "!234", "does");
+        Customer customer = new Customer(email, password, nickname);
         customerDao.save(customer);
 
         // when
@@ -57,7 +60,7 @@ class CustomerDaoTest {
     @Test
     void existByNameFalse() {
         // given
-        Customer customer = new Customer("123@gmail.com", "!234", "does");
+        Customer customer = new Customer(email, password, nickname);
 
         // when
         boolean result = customerDao.existByEmail(customer.getEmail());
@@ -70,7 +73,7 @@ class CustomerDaoTest {
     @Test
     void findByEmail() {
         // given
-        Customer customer = new Customer("123@gmail.com", "!234", "does");
+        Customer customer = new Customer(email, password, nickname);
         customerDao.save(customer);
 
         // when
@@ -80,14 +83,14 @@ class CustomerDaoTest {
         assertThat(byEmail)
                 .map(Customer::getEmail)
                 .get()
-                .isEqualTo("123@gmail.com");
+                .isEqualTo(email);
     }
 
     @DisplayName("이메일에 맞는 회원이 없으면 empty 반환")
     @Test
     void findByEmailException() {
         // when
-        Optional<Customer> byEmail = customerDao.findByEmail("123@gmail.com");
+        Optional<Customer> byEmail = customerDao.findByEmail(email);
 
         // then
         assertThat(byEmail).isEmpty();
@@ -96,7 +99,7 @@ class CustomerDaoTest {
     @DisplayName("회원을 삭제한다")
     @Test
     void delete() {
-        Customer save = customerDao.save(new Customer("123@gmail.com", "a1234!", "does"));
+        Customer save = customerDao.save(new Customer(email, password, nickname));
         customerDao.delete(save.getId());
 
         assertThat(customerDao.findByEmail(save.getEmail()))
@@ -107,7 +110,7 @@ class CustomerDaoTest {
     @Test
     void update() {
         // given
-        Customer save = customerDao.save(new Customer("123@gmail.com", "a1234!", "does"));
+        Customer save = customerDao.save(new Customer(email, password, nickname));
 
         // when
         customerDao.update(new Customer(save.getId(), save.getEmail(), "b1234!", "thor"));

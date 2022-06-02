@@ -8,12 +8,12 @@ import woowacourse.auth.domain.Customer;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class CustomerResponse {
+public class SignupResponse {
 
     private String email;
     private String nickname;
 
-    public CustomerResponse(Customer customer) {
+    public SignupResponse(Customer customer) {
         this.email = customer.getEmail();
         this.nickname = customer.getNickname();
     }

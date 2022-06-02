@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.dto.customer.CustomerRequest;
+import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
@@ -18,7 +18,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public Customer signUp(CustomerRequest request) {
+    public Customer signUp(SignupRequest request) {
         Customer customer = request.toEntity();
         validateEmailDuplicated(customer);
         return customerDao.save(customer);

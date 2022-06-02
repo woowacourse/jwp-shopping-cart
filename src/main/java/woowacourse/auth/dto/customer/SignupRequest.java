@@ -12,7 +12,7 @@ import woowacourse.auth.domain.Customer;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class CustomerRequest {
+public class SignupRequest {
 
     @Email
     private String email;

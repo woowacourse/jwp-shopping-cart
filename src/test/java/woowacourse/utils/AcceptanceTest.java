@@ -1,4 +1,4 @@
-package woowacourse.auth.acceptance;
+package woowacourse.utils;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
