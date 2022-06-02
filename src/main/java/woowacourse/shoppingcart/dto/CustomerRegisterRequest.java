@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
+
 public class CustomerRegisterRequest {
 
     private String name;
@@ -15,8 +17,8 @@ public class CustomerRegisterRequest {
         this.password = password;
     }
 
-    public CustomerSaveRequest toServiceDto() {
-        return new CustomerSaveRequest(name, email, password);
+    public CustomerSaveServiceRequest toServiceDto() {
+        return new CustomerSaveServiceRequest(name, email, password);
     }
 
     public String getName() {

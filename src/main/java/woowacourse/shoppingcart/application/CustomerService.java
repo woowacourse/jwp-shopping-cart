@@ -2,15 +2,15 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import woowacourse.auth.exception.PasswordNotMatchException;
+import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
+import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
+import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
+import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequest;
+import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
-import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
-import woowacourse.shoppingcart.dto.CustomerPasswordUpdateServiceRequest;
-import woowacourse.shoppingcart.dto.CustomerProfileUpdateServiceRequest;
-import woowacourse.shoppingcart.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -23,11 +23,11 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public void save(final CustomerSaveRequest customerSaveRequest) {
+    public void save(final CustomerSaveServiceRequest customerSaveServiceRequest) {
         final Customer customer = new Customer(
-                customerSaveRequest.getName(),
-                new Email(customerSaveRequest.getEmail()),
-                Password.fromRawValue(customerSaveRequest.getPassword())
+                customerSaveServiceRequest.getName(),
+                new Email(customerSaveServiceRequest.getEmail()),
+                Password.fromRawValue(customerSaveServiceRequest.getPassword())
         );
 
         validateDuplicatedEmail(customer);

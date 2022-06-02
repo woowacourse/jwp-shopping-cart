@@ -14,15 +14,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.exception.PasswordNotMatchException;
+import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
+import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
+import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
+import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequest;
+import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.dto.CustomerDeleteServiceRequest;
-import woowacourse.shoppingcart.dto.CustomerDetailServiceResponse;
-import woowacourse.shoppingcart.dto.CustomerPasswordUpdateServiceRequest;
-import woowacourse.shoppingcart.dto.CustomerProfileUpdateServiceRequest;
-import woowacourse.shoppingcart.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,15 +42,16 @@ class CustomerServiceTest {
     @DisplayName("회원을 등록한다.")
     void save() {
         // given
-        final CustomerSaveRequest customerSaveRequest = new CustomerSaveRequest(NAME, EMAIL, PASSWORD);
-        final Customer customer = new Customer(1L, customerSaveRequest.getName(),
-                new Email(customerSaveRequest.getEmail()),
-                Password.fromRawValue(customerSaveRequest.getPassword()));
+        final CustomerSaveServiceRequest customerSaveServiceRequest = new CustomerSaveServiceRequest(NAME, EMAIL,
+                PASSWORD);
+        final Customer customer = new Customer(1L, customerSaveServiceRequest.getName(),
+                new Email(customerSaveServiceRequest.getEmail()),
+                Password.fromRawValue(customerSaveServiceRequest.getPassword()));
         when(customerDao.save(any(Customer.class)))
                 .thenReturn(customer);
 
         // when, then
-        assertThatCode(() -> customerService.save(customerSaveRequest))
+        assertThatCode(() -> customerService.save(customerSaveServiceRequest))
                 .doesNotThrowAnyException();
     }
 
@@ -58,12 +59,13 @@ class CustomerServiceTest {
     @DisplayName("중복된 이메일로 회원 등록 시 예외가 발생한다.")
     void save_duplicatedEmail_throwsException() {
         // given
-        final CustomerSaveRequest customerSaveRequest = new CustomerSaveRequest(NAME, EMAIL, PASSWORD);
+        final CustomerSaveServiceRequest customerSaveServiceRequest = new CustomerSaveServiceRequest(NAME, EMAIL,
+                PASSWORD);
         when(customerDao.existsByEmail(any(Customer.class)))
                 .thenReturn(true);
 
         // when, then
-        assertThatThrownBy(() -> customerService.save(customerSaveRequest))
+        assertThatThrownBy(() -> customerService.save(customerSaveServiceRequest))
                 .isInstanceOf(DuplicatedEmailException.class);
     }
 
@@ -72,10 +74,11 @@ class CustomerServiceTest {
     void findById() {
         // given
         final long id = 1L;
-        final CustomerSaveRequest customerSaveRequest = new CustomerSaveRequest(NAME, EMAIL, PASSWORD);
-        final Customer customer = new Customer(id, customerSaveRequest.getName(),
-                new Email(customerSaveRequest.getEmail()),
-                Password.fromRawValue(customerSaveRequest.getPassword()));
+        final CustomerSaveServiceRequest customerSaveServiceRequest = new CustomerSaveServiceRequest(NAME, EMAIL,
+                PASSWORD);
+        final Customer customer = new Customer(id, customerSaveServiceRequest.getName(),
+                new Email(customerSaveServiceRequest.getEmail()),
+                Password.fromRawValue(customerSaveServiceRequest.getPassword()));
         when(customerDao.findById(any(Long.class)))
                 .thenReturn(Optional.of(customer));
 

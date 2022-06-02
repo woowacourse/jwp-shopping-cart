@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
+
 public class CustomerPasswordUpdateRequest {
 
     private String oldPassword;
