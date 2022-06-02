@@ -4,6 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import woowacourse.shoppingcart.domain.customer.values.password.EncryptedPassword;
+import woowacourse.shoppingcart.domain.customer.values.Address;
+import woowacourse.shoppingcart.domain.customer.values.PhoneNumber;
+import woowacourse.shoppingcart.domain.customer.values.Username;
 
 class CustomerTest {
 

@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.EncryptedPassword;
+import woowacourse.shoppingcart.domain.customer.values.password.EncryptedPassword;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository

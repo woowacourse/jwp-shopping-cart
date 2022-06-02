@@ -3,8 +3,8 @@ package woowacourse.auth.support;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.springframework.stereotype.Component;
-import woowacourse.shoppingcart.domain.customer.EncryptedPassword;
-import woowacourse.shoppingcart.domain.customer.PlainPassword;
+import woowacourse.shoppingcart.domain.customer.values.password.EncryptedPassword;
+import woowacourse.shoppingcart.domain.customer.values.password.PlainPassword;
 
 @Component
 public class Encryption {

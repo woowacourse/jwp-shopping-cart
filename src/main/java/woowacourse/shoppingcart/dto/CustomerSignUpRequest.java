@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.EncryptedPassword;
+import woowacourse.shoppingcart.domain.customer.values.password.EncryptedPassword;
 
 public class CustomerSignUpRequest {
 
