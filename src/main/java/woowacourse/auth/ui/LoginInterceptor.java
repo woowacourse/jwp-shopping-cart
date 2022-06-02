@@ -17,8 +17,11 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler)
             throws Exception {
-
         final String requestMethod = request.getMethod();
+        if (requestMethod.equals("OPTIONS")) {
+            return true;
+        }
+
         final String requestURI = request.getRequestURI();
         final RequestEndPoint requestEndPoint = new RequestEndPoint(requestMethod, requestURI);
 
