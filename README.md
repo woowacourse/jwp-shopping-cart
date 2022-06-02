@@ -31,7 +31,7 @@
         - nickname
         - password
 
-- email 중복 체크 / 규칙 검증 `URL: “/api/members?email={email}”`
+- email 중복 체크 / 규칙 검증 `URL: “/api/members/check-email?email={email}”`
     - Method: GET
     - 성공 시 200 No Content
   ```javascript
