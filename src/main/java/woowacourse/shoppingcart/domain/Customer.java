@@ -18,7 +18,6 @@ public class Customer {
 
     public Customer(Long id, String loginId, String name, String password) {
         validateLoginId(loginId);
-        validatePassword(password);
         this.id = id;
         this.loginId = loginId;
         this.name = name;
@@ -29,13 +28,6 @@ public class Customer {
         String emailRegex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
         if (!Pattern.matches(emailRegex, loginId)) {
             throw new IllegalArgumentException("아이디 형식이 잘못되었습니다.");
-        }
-    }
-
-    private void validatePassword(String password) {
-        String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,15}$";
-        if (!Pattern.matches(passwordRegex, password)) {
-            throw new IllegalArgumentException("비밀번호 형식이 잘못되었습니다.");
         }
     }
 

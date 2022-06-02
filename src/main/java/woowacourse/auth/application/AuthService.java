@@ -3,6 +3,7 @@ package woowacourse.auth.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.CryptoUtils;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -21,7 +22,9 @@ public class AuthService {
 
     public TokenResponse login(TokenRequest tokenRequest) {
         Customer customer = customerDao.findByLoginId(tokenRequest.getEmail());
-        if (!customer.isSamePassword(tokenRequest.getPassword())) {
+        String encryptedPassword = CryptoUtils.encrypt(tokenRequest.getPassword());
+
+        if (!customer.isSamePassword(encryptedPassword)) {
             throw new InvalidCustomerException();
         }
         String token = tokenProvider.createToken(tokenRequest.getEmail());

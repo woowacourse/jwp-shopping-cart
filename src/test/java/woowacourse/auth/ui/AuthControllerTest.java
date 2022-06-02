@@ -51,6 +51,7 @@ class AuthControllerTest {
 
         TokenRequest request = new TokenRequest(페퍼_아이디, 페퍼_비밀번호);
         String requestContent = objectMapper.writeValueAsString(request);
+
         String token = jwtTokenProvider.createToken(페퍼_아이디);
 
         // when
