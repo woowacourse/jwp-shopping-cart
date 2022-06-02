@@ -3,15 +3,19 @@ package woowacourse.shoppingcart.domain.customer;
 public class Customer {
 
     private final Long id;
-    private final String email;
+    private final Email email;
     private String nickname;
     private String password;
 
-    public Customer(final Long id, final String email, final String nickname, final String password) {
+    public Customer(final Long id, final Email email, final String nickname, final String password) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+    }
+
+    public Customer(final Long id, final String email, final String nickname, final String password) {
+        this(id, new Email(email), nickname, password);
     }
 
     public Customer(final String email, final String nickname, final String password) {
@@ -32,7 +36,7 @@ public class Customer {
     }
 
     public String getEmail() {
-        return email;
+        return email.getEmail();
     }
 
     public String getNickname() {
