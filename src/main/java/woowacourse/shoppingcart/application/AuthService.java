@@ -1,11 +1,10 @@
-package woowacourse.auth.application;
+package woowacourse.shoppingcart.application;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.shoppingcart.support.JwtTokenProvider;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.badrequest.InvalidLoginException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;

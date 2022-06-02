@@ -7,9 +7,9 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.support.Login;
+import woowacourse.shoppingcart.support.AuthorizationExtractor;
+import woowacourse.shoppingcart.support.JwtTokenProvider;
+import woowacourse.shoppingcart.support.Login;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedTokenException;
 

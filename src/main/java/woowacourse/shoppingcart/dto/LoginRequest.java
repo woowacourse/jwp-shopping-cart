@@ -1,4 +1,4 @@
-package woowacourse.auth.dto;
+package woowacourse.shoppingcart.dto;
 
 import java.util.Objects;
 import javax.validation.constraints.Email;

@@ -9,11 +9,11 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 
 @ExtendWith(MockitoExtension.class)
-public abstract class ServiceMockTest {
+abstract class ServiceMockTest {
 
     protected static MockedStatic<BCrypt> bcrypt;
 

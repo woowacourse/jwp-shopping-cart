@@ -1,4 +1,4 @@
-package woowacourse.auth.application;
+package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.LoginRequest;
+import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.shoppingcart.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.badrequest.InvalidLoginException;

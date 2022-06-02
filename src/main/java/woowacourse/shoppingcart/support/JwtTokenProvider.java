@@ -1,4 +1,4 @@
-package woowacourse.auth.support;
+package woowacourse.shoppingcart.support;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

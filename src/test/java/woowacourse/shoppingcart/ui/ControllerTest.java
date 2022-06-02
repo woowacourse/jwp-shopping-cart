@@ -7,9 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.auth.application.AuthService;
-import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.ui.AuthController;
+import woowacourse.shoppingcart.application.AuthService;
+import woowacourse.shoppingcart.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
 
@@ -17,7 +16,7 @@ import woowacourse.shoppingcart.domain.Customer;
         AuthController.class,
         CustomerController.class
 })
-public abstract class ControllerTest {
+abstract class ControllerTest {
 
     @MockBean
     protected AuthService authService;

@@ -1,4 +1,4 @@
-package woowacourse.auth.acceptance;
+package woowacourse.shoppingcart.acceptance;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -9,9 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.LoginRequest;
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
+import woowacourse.shoppingcart.dto.LoginRequest;
 
 @DisplayName("인증 관련 기능")
 class AuthAcceptanceTest extends AcceptanceTest {

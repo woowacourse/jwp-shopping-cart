@@ -1,4 +1,4 @@
-package woowacourse.auth.ui;
+package woowacourse.shoppingcart.ui;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,10 +12,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.LoginResponse;
+import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.shoppingcart.dto.LoginResponse;
 import woowacourse.shoppingcart.exception.badrequest.InvalidLoginException;
-import woowacourse.shoppingcart.ui.ControllerTest;
 
 @DisplayName("AuthController 단위 테스트")
 class AuthControllerTest extends ControllerTest {
