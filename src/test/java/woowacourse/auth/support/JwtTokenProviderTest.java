@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import woowacourse.auth.exception.AuthException;
@@ -46,7 +48,7 @@ class JwtTokenProviderTest {
         String token = Jwts.builder()
                 .setSubject(payload)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
                 .compact();
 
         assertThatThrownBy(() -> jwtTokenProvider.validateToken(token))
