@@ -46,8 +46,8 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ExceptionResponse> handleInvalidAccess(final RuntimeException e) {
+        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(WrongPasswordException.class)
