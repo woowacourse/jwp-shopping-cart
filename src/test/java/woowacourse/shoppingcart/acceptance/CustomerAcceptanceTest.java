@@ -123,7 +123,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then()
                 .log().all()
                 .extract();
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+
+        ExtractableResponse<Response> updatedCustomerInformation = 회원_조회(signInResponse.getAccessToken(),
+                signInResponse.getCustomerId());
+        final CustomerResponse customerResponse = updatedCustomerInformation.body()
+                .jsonPath()
+                .getObject("", CustomerResponse.class);
+
+        assertThat(customerResponse.getName()).isEqualTo(request.getName());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("회원탈퇴")

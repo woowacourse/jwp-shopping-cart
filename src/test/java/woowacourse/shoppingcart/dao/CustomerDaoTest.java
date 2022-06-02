@@ -12,6 +12,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -41,7 +42,7 @@ public class CustomerDaoTest {
     @DisplayName("전달 받은 이메일로 사용자 정보를 반환한다.")
     @Test
     void findByUserEmail() {
-        final AddressResponse tokenPayloadDto = customerDao.findByUserEmail(new Email("puterism@example.com"));
+        final CustomerResponse tokenPayloadDto = customerDao.findByUserEmail(new Email("puterism@example.com"));
         assertThat(tokenPayloadDto.getId()).isNotNull();
     }
 
@@ -50,7 +51,7 @@ public class CustomerDaoTest {
     void updateCustomer() {
         customerDao.createCustomer(CustomerFixture.tommy);
         customerDao.updateCustomer(CustomerFixture.updatedTommyDto);
-        AddressResponse updatedCustomer = customerDao.findByUserEmail(new Email(CustomerFixture.tommy.getEmail()));
+        CustomerResponse updatedCustomer = customerDao.findByUserEmail(new Email(CustomerFixture.tommy.getEmail()));
         assertThat(updatedCustomer.getContact())
                 .isEqualTo(CustomerFixture.updatedTommyDto.getContact());
     }

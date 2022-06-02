@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.dto.EmailDto;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
@@ -16,6 +17,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.NewPassword;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
 @Transactional
@@ -43,8 +45,8 @@ public class CustomerService {
         final NewPassword password = new NewPassword(signInDto.getPassword());
         final String foundPassword = customerDao.findPasswordByEmail(email);
         verifyPassword(password, foundPassword);
-        AddressResponse tokenPayloadDto = customerDao.findByUserEmail(email);
-        String payload = createPayload(tokenPayloadDto);
+        CustomerResponse tokenPayloadDto = customerDao.findByUserEmail(email);
+        String payload = createPayload(new EmailDto(email.getValue()));
         return new TokenResponse(tokenPayloadDto.getId(), provider.createToken(payload));
     }
 
@@ -54,10 +56,10 @@ public class CustomerService {
         }
     }
 
-    private String createPayload(AddressResponse tokenPayloadDto) {
+    private String createPayload(final EmailDto email) {
         try {
             ObjectMapper mapper = new JsonMapper();
-            return mapper.writeValueAsString(tokenPayloadDto);
+            return mapper.writeValueAsString(email);
         } catch (JsonProcessingException e) {
             throw new UnsupportedOperationException(e.getMessage());
         }
@@ -69,5 +71,9 @@ public class CustomerService {
         if (affectedRows != 1) {
             throw new IllegalArgumentException("업데이트가 되지 않았습니다.");
         }
+    }
+
+    public CustomerResponse findCustomerByEmail(EmailDto email) {
+        return customerDao.findByUserEmail(new Email(email.getEmail()));
     }
 }

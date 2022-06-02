@@ -36,6 +36,12 @@ public class ModifiedCustomerDto {
         this.terms = terms;
     }
 
+    public static ModifiedCustomerDto fromModifiedCustomerRequest(final ModifiedCustomerRequest request) {
+        return new ModifiedCustomerDto(request.getEmail(), request.getPassword(), request.getProfileImageUrl(),
+                request.getName(), request.getGender(), request.getBirthday(), request.getContact(),
+                request.getAddress(), request.isTerms());
+    }
+
     public static Customer toModifiedCustomerDto(final ModifiedCustomerDto modifiedCustomerDto) {
         return new Customer(new Email(modifiedCustomerDto.getEmail()), new NewPassword(modifiedCustomerDto.getPassword()),
                 modifiedCustomerDto.getProfileImageUrl(), new Name(modifiedCustomerDto.getName()), Gender.form(modifiedCustomerDto.getGender()),

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -36,11 +37,11 @@ public class CustomerDao {
         return simpleInsert.executeAndReturnKey(parameter).longValue();
     }
 
-    public AddressResponse findByUserEmail(final Email email) {
+    public CustomerResponse findByUserEmail(final Email email) {
         final String query = "SELECT id, email, password, profileImageUrl, name, gender, birthday, contact, address, detailAddress, zoneCode FROM customer WHERE email=:email";
         final SqlParameterSource parameter = new MapSqlParameterSource(Map.of("email", email.getValue()));
         return namedJdbcTemplate.queryForObject(query, parameter, (resultSet, rowNum) -> {
-            return new AddressResponse(resultSet.getLong("id"),
+            return new CustomerResponse(resultSet.getLong("id"),
                     resultSet.getString("email"),
                     resultSet.getString("profileImageUrl"),
                     resultSet.getString("name"),
