@@ -10,15 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.ui.dto.TokenRequest;
-import woowacourse.auth.ui.dto.TokenResponse;
 import woowacourse.exception.LoginFailureException;
 
 @SpringBootTest
 @Sql({"/truncate.sql", "/auth.sql"})
-class AuthServiceTest {
+class AuthenticationServiceTest {
 
     @Autowired
-    private AuthService authService;
+    private AuthenticationService authenticationService;
 
     @DisplayName("로그인 성공시 토큰을 발급한다.")
     @Test
@@ -27,10 +26,10 @@ class AuthServiceTest {
         final TokenRequest 로그인요청 = 잉_로그인요청;
 
         // when
-        final TokenResponse 발급된토큰 = authService.getToken(로그인요청);
+        final String 발급된토큰 = authenticationService.getToken(로그인요청);
 
         // then
-        assertThat(발급된토큰.getAccessToken()).isNotBlank();
+        assertThat(발급된토큰).isNotBlank();
     }
 
     @DisplayName("로그인시 비밀번호가 일치하지 않으면 예외를 발생한다.")
@@ -40,7 +39,7 @@ class AuthServiceTest {
         final TokenRequest 로그인요청 = new TokenRequest(잉_로그인요청.getEmail(), 잉_로그인요청.getPassword() + "stranger");
 
         // when then
-        assertThatThrownBy(() -> authService.getToken(로그인요청))
+        assertThatThrownBy(() -> authenticationService.getToken(로그인요청))
                 .isInstanceOf(LoginFailureException.class);
     }
 }

@@ -3,32 +3,31 @@ package woowacourse.auth.service;
 import java.util.Map;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.domain.TokenProvider;
 import woowacourse.auth.ui.dto.TokenRequest;
-import woowacourse.auth.ui.dto.TokenResponse;
 import woowacourse.exception.LoginFailureException;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.service.CustomerService;
 
 @Service
-public class AuthService {
+public class AuthService implements AuthenticationService {
     private final CustomerService customerService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(CustomerService customerService, JwtTokenProvider jwtTokenProvider,
+    public AuthService(CustomerService customerService, TokenProvider tokenProvider,
                        PasswordEncoder passwordEncoder) {
         this.customerService = customerService;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public TokenResponse getToken(TokenRequest tokenRequest) {
+    @Override
+    public String getToken(TokenRequest tokenRequest) {
         final Customer customer = customerService.getByEmail(tokenRequest.getEmail());
         validatePassword(tokenRequest, customer);
 
-        final String accessToken = jwtTokenProvider.createToken(Map.of("id", customer.getId()));
-        return new TokenResponse(accessToken);
+        return tokenProvider.createToken(Map.of("id", customer.getId()));
     }
 
     private void validatePassword(TokenRequest tokenRequest, Customer customer) {
