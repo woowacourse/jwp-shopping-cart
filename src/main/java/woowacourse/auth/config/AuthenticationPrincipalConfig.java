@@ -19,7 +19,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthenticationPrincipalArgumentResolver(jwtTokenProvider));
+        resolvers.add(new AuthenticationPrincipalArgumentResolver());
     }
 
     @Override

@@ -15,7 +15,6 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.LoginCustomer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -54,7 +53,6 @@ class AuthServiceTest {
         customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
         TokenRequest tokenRequest = new TokenRequest(페퍼_아이디, "Fake1234!");
 
-
         // when & then
         assertThatThrownBy(() -> authService.login(tokenRequest))
                 .isInstanceOf(InvalidCustomerException.class)
@@ -71,19 +69,5 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.login(tokenRequest))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("유효하지 않은 고객입니다");
-    }
-
-    @Test
-    @DisplayName("토큰을 통해 회원정보를 불러올 수 있다.")
-    void getCustomerByToken() {
-        //given
-        customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
-        String token = jwtTokenProvider.createToken(페퍼_아이디);
-
-        //when
-        LoginCustomer customer = authService.getCustomerByToken(token);
-
-        //then
-        assertThat(customer.getLoginId()).isEqualTo(페퍼_아이디);
     }
 }

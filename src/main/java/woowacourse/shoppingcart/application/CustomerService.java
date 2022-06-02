@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.LoginCustomer;
@@ -10,6 +11,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @Service
+@Transactional
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -26,6 +28,7 @@ public class CustomerService {
         return CustomerResponse.of(savedCustomer);
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse findByLoginId(LoginCustomer loginCustomer) {
         Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         return CustomerResponse.of(customer);
