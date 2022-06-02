@@ -1,6 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.RequestFixture.로그인_요청;
 import static woowacourse.fixture.RequestFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.RequestFixture.회원조회_요청;
@@ -11,12 +12,32 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
+    @DisplayName("로그인에 성공하면 토큰, 만료시간, 고객에 대한 정보를 전달해준다.")
+    @Test
+    void login() {
+        // given
+        TokenRequest tokenRequest = new TokenRequest("puterism@naver.com", "12349053145");
+
+        // when
+        ExtractableResponse<Response> loginResponse = 로그인_요청(tokenRequest);
+        TokenResponse result = loginResponse.body().as(TokenResponse.class);
+
+        // then
+        CustomerResponse expectedCustomerResponse = new CustomerResponse(1L, "puterism@naver.com", "puterism");
+        assertAll(
+                () -> assertThat(result.getAccessToken()).isNotNull(),
+                () -> assertThat(result.getExpirationTime()).isEqualTo(10800000),
+                () -> assertThat(result.getCustomer()).usingRecursiveComparison()
+                        .isEqualTo(expectedCustomerResponse)
+        );
+    }
 
     @DisplayName("Bearer Auth 로그인 성공")
     @Test

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.domain.Customer;
@@ -28,10 +29,10 @@ class AuthServiceTest {
     void createToken() {
         // given
         TokenRequest request = new TokenRequest("puterism@naver.com", "12349053145");
-        String token = authService.createToken(request);
+        TokenResponse tokenResponse = authService.createToken(request);
 
         // when
-        String email = jwtTokenProvider.getPayload(token);
+        String email = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
 
         // then
         assertThat(email).isEqualTo("puterism@naver.com");
@@ -42,10 +43,10 @@ class AuthServiceTest {
     void findCustomerByToken() {
         // given
         TokenRequest request = new TokenRequest("puterism@naver.com", "12349053145");
-        String token = authService.createToken(request);
+        TokenResponse tokenResponse = authService.createToken(request);
 
         // when
-        Customer customer = authService.findCustomerByToken(token);
+        Customer customer = authService.findCustomerByToken(tokenResponse.getAccessToken());
 
         Customer expected = new Customer("puterism@naver.com", "puterism",
                 passwordEncoder.encode(request.getPassword()));

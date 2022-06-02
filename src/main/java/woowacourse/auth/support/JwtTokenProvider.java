@@ -19,7 +19,7 @@ public class JwtTokenProvider {
     private final long validityInMilliseconds;
 
     public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String keyString,
-                             @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
+                            @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
         this.secretKey = Keys.hmacShaKeyFor(keyString.getBytes(StandardCharsets.UTF_8));
         this.validityInMilliseconds = validityInMilliseconds;
     }
@@ -58,6 +58,10 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public long getValidityInMilliseconds() {
+        return this.validityInMilliseconds;
     }
 }
 
