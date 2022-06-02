@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,8 +10,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.auth.support.EncryptPasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.PlainPassword;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -17,10 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 
+    private static final PlainPassword PLAIN_PASSWORD = new PlainPassword("password123");
+
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
     public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(jdbcTemplate);
+        passwordEncoder = new EncryptPasswordEncoder();
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -49,5 +58,127 @@ public class CustomerDaoTest {
 
         // then
         assertThat(customerId).isEqualTo(16L);
+    }
+
+    @Test
+    @DisplayName("customer를 이름으로 검색할 수 있다.")
+    void findByUsername() {
+        // given
+        Customer customer = Customer.builder()
+                .username("username")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+        customerDao.save(customer);
+
+        // when
+        Customer findCustomer = customerDao.findByUsername("username");
+
+        // then
+        assertThat(findCustomer)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(customer);
+    }
+
+    @Test
+    @DisplayName("customner를 저장하면 아이디를 반환한다.")
+    void save() {
+        // given
+        Customer customer = Customer.builder()
+                .username("username")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+
+        // when
+        Long customerId = customerDao.save(customer);
+
+        // then
+        assertThat(customerId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("username이 이미 존재하는지 확인한다.")
+    void existUsername() {
+        // given
+        Customer customer = Customer.builder()
+                .username("username")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+
+        // when
+        customerDao.save(customer);
+
+        // then
+        assertThat(customerDao.existCustomerByUsername("username")).isTrue();
+    }
+
+    @Test
+    @DisplayName("유저 정보를 수정한다.")
+    void update() {
+        // given
+        Customer customer = Customer.builder()
+                .username("username")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+        customerDao.save(customer);
+        Customer changedCustomer = Customer.builder()
+                .username("username")
+                .phoneNumber("01087654321")
+                .address("루터회관")
+                .build();
+
+        // when
+        customerDao.update(changedCustomer);
+
+        // then
+        assertThat(customerDao.findByUsername("username"))
+                .usingRecursiveComparison()
+                .ignoringFields("id", "password")
+                .isEqualTo(changedCustomer);
+    }
+
+    @Test
+    @DisplayName("유저 비밀번호를 수정한다.")
+    void updatePassword() {
+        // given
+        Customer customer = Customer.builder()
+                .username("username")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+        customerDao.save(customer);
+        Password changedPassword = passwordEncoder.encode(new PlainPassword("password321"));
+
+        // when
+        customerDao.updatePassword("username", changedPassword);
+
+        // then
+        assertThat(customerDao.findByUsername("username").getPassword())
+                .isEqualTo(changedPassword.getPassword());
+    }
+
+    @Test
+    @DisplayName("유저를 유저 이름으로 찾아 삭제한다.")
+    void deleteByUsername() {
+        // given
+        Customer customer = Customer.builder()
+                .username("username")
+                .password(passwordEncoder.encode(PLAIN_PASSWORD))
+                .phoneNumber("01012345678")
+                .address("성담빌딩")
+                .build();
+        customerDao.save(customer);
+
+        // when & then
+        assertThat(customerDao.deleteByUsername("username")).isEqualTo(1);
     }
 }

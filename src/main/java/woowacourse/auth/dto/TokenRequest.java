@@ -1,19 +1,23 @@
 package woowacourse.auth.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class TokenRequest {
-    private String email;
+    @NotBlank
+    private String username;
+    @NotBlank
     private String password;
 
-    public TokenRequest() {
+    private TokenRequest() {
     }
 
-    public TokenRequest(String email, String password) {
-        this.email = email;
+    public TokenRequest(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
