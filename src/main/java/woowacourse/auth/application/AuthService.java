@@ -1,7 +1,9 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.LoginFailException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
@@ -15,15 +17,17 @@ public class AuthService {
     private final CustomerService customerService;
 
     public AuthService(JwtTokenProvider jwtTokenProvider,
-                       CustomerService customerService) {
+        CustomerService customerService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.customerService = customerService;
     }
 
-    public String createToken(TokenRequest request) {
+    public TokenResponse createToken(TokenRequest request) {
         try {
             Customer loginCustomer = customerService.findByEmailAndPassword(request.getEmail(), request.getPassword());
-            return jwtTokenProvider.createToken(loginCustomer.getEmail());
+            String token = jwtTokenProvider.createToken(loginCustomer.getEmail());
+            return new TokenResponse(token, jwtTokenProvider.getValidityInMilliseconds(),
+                loginCustomer);
         } catch (InvalidCustomerException exception) {
             throw new LoginFailException();
         }

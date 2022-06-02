@@ -3,9 +3,9 @@ package woowacourse.shoppingcart.domain;
 public class Customer {
 
     private Long id;
-    private final String email;
-    private final String username;
-    private final String password;
+    private String email;
+    private String username;
+    private String password;
 
     public Customer(String email, String username, String password) {
         this(null, email, username, password);
@@ -16,6 +16,9 @@ public class Customer {
         this.email = email;
         this.username = username;
         this.password = password;
+    }
+
+    public Customer() {
     }
 
     public Long getId() {

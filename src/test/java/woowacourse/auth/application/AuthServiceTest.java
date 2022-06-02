@@ -1,11 +1,12 @@
 package woowacourse.auth.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.domain.Customer;
@@ -24,7 +25,7 @@ class AuthServiceTest {
     void createToken() {
         // given
         TokenRequest request = new TokenRequest("puterism@naver.com", "12349053145");
-        String token = authService.createToken(request);
+        String token = authService.createToken(request).getAccessToken();
 
         // when
         String email = jwtTokenProvider.getPayload(token);
@@ -38,7 +39,7 @@ class AuthServiceTest {
     void findCustomerByToken() {
         // given
         TokenRequest request = new TokenRequest("puterism@naver.com", "12349053145");
-        String token = authService.createToken(request);
+        String token = authService.createToken(request).getAccessToken();
 
         // when
         Customer customer = authService.findCustomerByToken(token);
@@ -47,7 +48,7 @@ class AuthServiceTest {
         // then
 
         assertThat(customer).usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(expected);
+            .ignoringFields("id")
+            .isEqualTo(expected);
     }
 }

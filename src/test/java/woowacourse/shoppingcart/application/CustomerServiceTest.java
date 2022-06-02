@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.sql.DataSource;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
@@ -30,7 +31,7 @@ public class CustomerServiceTest {
     private final CustomerService customerService;
 
     public CustomerServiceTest(DataSource dataSource,
-                               NamedParameterJdbcTemplate jdbcTemplate) {
+        NamedParameterJdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(dataSource, jdbcTemplate);
         customerService = new CustomerService(customerDao);
     }
@@ -47,8 +48,8 @@ public class CustomerServiceTest {
 
         // then
         assertThat(customer).usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(createRequest.toEntity());
+            .ignoringFields("id")
+            .isEqualTo(createRequest.toEntity());
     }
 
     @DisplayName("id로 Customer를 조회한다.")
@@ -61,7 +62,7 @@ public class CustomerServiceTest {
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
 
         assertThat(customer).usingRecursiveComparison()
-                .isEqualTo(expected);
+            .isEqualTo(expected);
     }
 
     @DisplayName("email로 Customer를 조회한다.")
@@ -74,7 +75,7 @@ public class CustomerServiceTest {
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
 
         assertThat(customer).usingRecursiveComparison()
-                .isEqualTo(expected);
+            .isEqualTo(expected);
     }
 
     @DisplayName("email, password로 Customer를 조회한다.")
@@ -87,7 +88,7 @@ public class CustomerServiceTest {
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
 
         assertThat(customer).usingRecursiveComparison()
-                .isEqualTo(expected);
+            .isEqualTo(expected);
     }
 
     @DisplayName("존재하지 않는 id로 Customer를 조회하면 예외를 발생시킨다.")
@@ -95,8 +96,8 @@ public class CustomerServiceTest {
     void findById_throwNotExistId() {
         // when then
         assertThatThrownBy(() -> customerService.findById(100L))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("존재하지 않는 유저입니다.");
+            .isInstanceOf(InvalidCustomerException.class)
+            .hasMessage("존재하지 않는 유저입니다.");
     }
 
     @DisplayName("존재하지 않는 email로 Customer를 조회하면 예외를 발생시킨다.")
@@ -104,21 +105,21 @@ public class CustomerServiceTest {
     void findByEmail_throwNotExistId() {
         // when then
         assertThatThrownBy(() -> customerService.findByEmail("rorororo@naver.com"))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("존재하지 않는 유저입니다.");
+            .isInstanceOf(InvalidCustomerException.class)
+            .hasMessage("존재하지 않는 유저입니다.");
     }
 
     @DisplayName("존재하지 않는 email 혹은 password로 Customer를 조회하면 예외를 발생시킨다.")
     @ParameterizedTest
     @CsvSource(value = {
-            "failemail@naver.com:12349053145",
-            "puterism@naver.com:failpassword",
-            "failemail@naver.com:failpassword"}, delimiter = ':')
+        "failemail@naver.com:12349053145",
+        "puterism@naver.com:failpassword",
+        "failemail@naver.com:failpassword"}, delimiter = ':')
     void findByEmailAndPassword_throwNotExistId(String email, String password) {
         // when then
         assertThatThrownBy(() -> customerService.findByEmailAndPassword(email, password))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("존재하지 않는 유저입니다.");
+            .isInstanceOf(InvalidCustomerException.class)
+            .hasMessage("존재하지 않는 유저입니다.");
     }
 
     @DisplayName("Customer 를 수정한다.")
@@ -148,7 +149,7 @@ public class CustomerServiceTest {
 
         // then
         assertThatThrownBy(() -> customerService.findById(savedId))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("존재하지 않는 유저입니다.");
+            .isInstanceOf(InvalidCustomerException.class)
+            .hasMessage("존재하지 않는 유저입니다.");
     }
 }

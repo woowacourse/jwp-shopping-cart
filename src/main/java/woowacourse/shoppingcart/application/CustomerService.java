@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
@@ -41,17 +42,17 @@ public class CustomerService {
 
     public Customer findById(long id) {
         return customerDao.findById(id)
-                .orElseThrow(InvalidCustomerException::new);
+            .orElseThrow(InvalidCustomerException::new);
     }
 
     public Customer findByEmail(String email) {
         return customerDao.findByEmail(email)
-                .orElseThrow(InvalidCustomerException::new);
+            .orElseThrow(InvalidCustomerException::new);
     }
 
     public Customer findByEmailAndPassword(String email, String password) {
         return customerDao.findByEmailAndPassword(email, password)
-                .orElseThrow(InvalidCustomerException::new);
+            .orElseThrow(InvalidCustomerException::new);
     }
 
     public void update(Long id, CustomerUpdateRequest request) {

@@ -1,14 +1,15 @@
 package woowacourse.auth.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
@@ -16,7 +17,6 @@ import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
-
 
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
@@ -36,7 +36,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         CustomerResponse result = response.as(CustomerResponse.class);
         CustomerResponse expected = new CustomerResponse(1L, "puterism@naver.com", "puterism");
         assertThat(result).usingRecursiveComparison()
-                .isEqualTo(expected);
+            .isEqualTo(expected);
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
@@ -66,22 +66,22 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     private ExtractableResponse<Response> 로그인_요청(TokenRequest request) {
         return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/auth/login")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(request)
+            .when().post("/api/auth/login")
+            .then().log().all()
+            .extract();
     }
 
     public String 로그인_요청_및_토큰발급(TokenRequest request) {
         ExtractableResponse<Response> loginResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/auth/login")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(request)
+            .when().post("/api/auth/login")
+            .then().log().all()
+            .extract();
 
         TokenResponse tokenResponse = loginResponse.body().as(TokenResponse.class);
         return tokenResponse.getAccessToken();
@@ -89,10 +89,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     public ExtractableResponse<Response> 회원조회_요청(String token, Long id) {
         return RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .when().get("/api/customers/" + id)
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .header("Authorization", "Bearer " + token)
+            .when().get("/api/customers/" + id)
+            .then().log().all()
+            .extract();
     }
 }
