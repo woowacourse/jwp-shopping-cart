@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("회원 관련 기능")
@@ -37,6 +38,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
             () -> assertThat(response.header("Location")).isNotEmpty(),
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        );
+    }
+
+    @DisplayName("이메일, 패스워드, 닉네임을 입력 받아 회원가입을 한다.")
+    @Test
+    void throwExceptionWhenDuplicateEmail() {
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+            "beomWhale1@naver.com", "범고래1", "Password12345!");
+
+        createCustomer(customerCreateRequest);
+        CustomerCreateRequest duplicationEmailCreateRequest = new CustomerCreateRequest(
+            "beomWhale1@naver.com", "범고래2", "Password123456!");
+        ExtractableResponse<Response> response = createCustomer(duplicationEmailCreateRequest);
+
+        assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+            () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("이미 존재하는 이메일입니다.")
         );
     }
 

@@ -39,7 +39,7 @@ public class CustomerServiceTest {
     void createCustomer() {
         // given
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-                "beomWhale@naver.com", "범고래", "Password12345!");
+            "beomWhale@naver.com", "범고래", "Password12345!");
 
         // when
         Long savedId = customerService.createCustomer(customerCreateRequest);
@@ -54,13 +54,13 @@ public class CustomerServiceTest {
         // given
         customerDao.save(new Customer("awesomeo@naver.com", "범고래", "Password12345!"));
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-                "beomWhale@naver.com", "범고래", "Password12345!");
+            "beomWhale@naver.com", "범고래", "Password12345!");
 
         // when && then
         assertThatThrownBy(
-                () -> customerService.createCustomer(customerCreateRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 존재하는 닉네임입니다.");
+            () -> customerService.createCustomer(customerCreateRequest))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("이미 존재하는 닉네임입니다.");
     }
 
     @DisplayName("이메일을 입력 받아 정보를 조회한다.")
@@ -92,7 +92,8 @@ public class CustomerServiceTest {
 
         // when
         String newPassword = "Password1234!";
-        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(prevPassword, newPassword);
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(prevPassword,
+            newPassword);
         customerService.changePassword(email, changePasswordRequest);
         Customer findCustomer = customerDao.findIdByEmail(email).get();
 
@@ -131,9 +132,27 @@ public class CustomerServiceTest {
         Customer customer = new Customer(email, "awesome", "Password123!");
         customerDao.save(customer);
 
-        assertThatThrownBy(() -> customerService.changeNickname(email, new ChangeCustomerRequest(nickname)))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 존재하는 닉네임입니다.");
+        assertThatThrownBy(
+            () -> customerService.changeNickname(email, new ChangeCustomerRequest(nickname)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("이미 존재하는 닉네임입니다.");
     }
 
+    @DisplayName("회원가입 시 기존에 존재하는 닉네임과 중복될 경우 예외가 발생한다.")
+    @Test
+    void throwExceptionWhenDuplicateEmail() {
+        // given
+        String email = "beomWhale@naver.com";
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, "beomWhale",
+            "Password123!");
+        CustomerCreateRequest duplicationCustomerCreateRequest = new CustomerCreateRequest(email,
+            "awesome",
+            "Password123!");
+        customerService.createCustomer(customerCreateRequest);
+
+        // when && then
+        assertThatThrownBy(() -> customerService.createCustomer(duplicationCustomerCreateRequest))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("이미 존재하는 이메일입니다.");
+    }
 }

@@ -81,6 +81,18 @@ public class CustomerDaoTest {
         assertThat(customerDao.existsByNickname(nickname)).isTrue();
     }
 
+    @DisplayName("이메일이 중복될 경우, 참을 반환한다.")
+    @Test
+    void existsByEmail() {
+
+        // given
+        String email = "beomWhale@naver.com";
+        customerDao.save(new Customer(email, "beom1234", "Password123!"));
+
+        // when && then
+        assertThat(customerDao.existsByEmail(email)).isTrue();
+    }
+
     @DisplayName("email을 통해 Customer를 찾는다.")
     @Test
     void findIdByEmail() {

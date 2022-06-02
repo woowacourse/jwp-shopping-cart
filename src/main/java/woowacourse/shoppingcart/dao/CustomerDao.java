@@ -82,4 +82,9 @@ public class CustomerDao {
         String query = "UPDATE customer SET nickname = ? WHERE id = ?";
         jdbcTemplate.update(query, customer.getNickname(), customer.getId());
     }
+
+    public boolean existsByEmail(String email) {
+        String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, email));
+    }
 }

@@ -22,6 +22,7 @@ public class CustomerService {
     @Transactional
     public Long createCustomer(CustomerCreateRequest customerCreateRequest) {
         validateDuplicateNickname(customerCreateRequest.getNickname());
+        validateDuplicateEmail(customerCreateRequest.getEmail());
         return customerDao.save(customerCreateRequest.toCustomer());
     }
 
@@ -57,6 +58,12 @@ public class CustomerService {
     private void validateDuplicateNickname(String nickname) {
         if (customerDao.existsByNickname(nickname)) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+        }
+    }
+
+    private void validateDuplicateEmail(String email) {
+        if (customerDao.existsByEmail(email)) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
     }
 }
