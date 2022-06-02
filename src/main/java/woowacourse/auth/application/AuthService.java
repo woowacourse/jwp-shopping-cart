@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.SecurityManager;
 import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.SignInResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -34,7 +35,7 @@ public class AuthService {
     }
 
     private void validateSamePassword(SignInRequest signInRequest, Customer customer) {
-        if (!customer.isSamePassword(signInRequest.getPassword())) {
+        if (!SecurityManager.isSamePassword(signInRequest.getPassword(), customer.getPassword())) {
             throw new InvalidCustomerException(DIFFERENT_PASSWORD);
         }
     }

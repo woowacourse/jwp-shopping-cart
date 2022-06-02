@@ -1,8 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -11,7 +8,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.SecurityManager;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -25,18 +27,21 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
+
     @Test
     void 사용자의_이름으로_조회할_경우_객체를_리턴하는지_확인() {
 
         // given
-        final String userName = "puterism";
+        String userName = "puterism";
+        String email = "crew01@naver.com";
+        String pw = "a12345";
 
         // when
         final Customer actual = customerDao.findCustomerByUserName(userName);
-        Customer expected = new Customer("puterism", "crew01@naver.com", "a12345");
 
-        // then
-        assertThat(actual.equals(expected)).isTrue();
+        assertAll(() -> assertThat(actual.getUsername()).isEqualTo(userName),
+                () -> assertThat(actual.getEmail()).isEqualTo(email),
+                () -> assertThat(SecurityManager.isSamePassword(pw, actual.getPassword())).isTrue());
     }
 
     @Test
@@ -59,15 +64,15 @@ public class CustomerDaoTest {
     void 비밀번호_수정() {
         //given
         final String name = "puterism";
-        final String newPassword = "a12345";
+        final String newPassword = "a123456";
 
         //when
-        customerDao.updatePassword(name, newPassword);
+        customerDao.updatePassword(name, SecurityManager.generateEncodedPassword(newPassword));
 
         //then
         var actual = customerDao.findCustomerByUserName(name);
 
-        assertThat(actual.isSamePassword(newPassword)).isTrue();
+        assertThat(SecurityManager.isSamePassword(newPassword, actual.getPassword())).isTrue();
     }
 
     @Test
@@ -83,7 +88,7 @@ public class CustomerDaoTest {
     void 회원을_저장하는_경우() {
         final String name = "alpha";
         final String email = "bcc101106@gmail.com";
-        final String password = "123";
+        final String password = "123456";
 
         customerDao.saveCustomer(name, email, password);
 

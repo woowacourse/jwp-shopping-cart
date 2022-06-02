@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.service;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.SecurityManager;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
@@ -31,7 +32,8 @@ public class CustomerService {
 
         validatedDuplicatedEmail(email);
 
-        customerDao.saveCustomer(name, email, password);
+        String encodedPassword = SecurityManager.generateEncodedPassword(password);
+        customerDao.saveCustomer(name, email, encodedPassword);
 
         return new SignUpResponse(name, email);
     }
@@ -58,11 +60,12 @@ public class CustomerService {
         Customer customer = customerDao.findCustomerByUserName(username);
         String password = changePasswordRequest.getOldPassword();
         validateSamePassword(password, customer);
-        customerDao.updatePassword(username, changePasswordRequest.getNewPassword());
+        String newEncodedPassword = SecurityManager.generateEncodedPassword(changePasswordRequest.getNewPassword());
+        customerDao.updatePassword(username, newEncodedPassword);
     }
 
     private void validateSamePassword(String password, Customer customer) {
-        if (!customer.isSamePassword(password)) {
+        if (!SecurityManager.isSamePassword(password, customer.getPassword())) {
             throw new InvalidCustomerException(NOT_MATCH_PASSWORD);
         }
     }

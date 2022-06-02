@@ -1,19 +1,20 @@
 package woowacourse.shoppingcart.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.SecurityManager;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -24,6 +25,7 @@ public class CustomerServiceTest {
 
     @Autowired
     private CustomerDao customerDao;
+
 
     @Test
     void 회원가입() {
@@ -74,7 +76,7 @@ public class CustomerServiceTest {
 
         Customer customer = customerDao.findCustomerByUserName(username);
 
-        assertThat(customer.isSamePassword("a123456")).isTrue();
+        assertThat(SecurityManager.isSamePassword("a123456", customer.getPassword())).isTrue();
     }
 
     @Test
