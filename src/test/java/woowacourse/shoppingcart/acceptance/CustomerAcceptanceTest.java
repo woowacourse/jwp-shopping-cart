@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -41,9 +43,29 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .containsExactly("email", "name", "010-1234-5678", "address");
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("이메일 중복 여부 조회")
     @Test
-    void getMe() {
+    void emailDuplication() {
+        // given
+        CustomerRequest customer = new CustomerRequest(
+            "email@naver.com", "Pw123456!", "name", "010-1234-5678", "address");
+        RestAssured.given().log().all()
+            .body(customer)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/customers")
+            .then().log().all()
+            .extract();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .when()
+            .get("/customers/email?email=email@naver.com")
+            .then().log().all()
+            .extract();
+
+        // then
+        assertThat(response.body().asString()).isEqualTo("true");
     }
 
     @DisplayName("내 정보 수정")
