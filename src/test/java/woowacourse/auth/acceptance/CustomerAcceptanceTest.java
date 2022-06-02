@@ -13,12 +13,13 @@ import com.ori.acceptancetest.SpringBootAcceptanceTest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerUpdateRequest;
 import woowacourse.auth.dto.TokenRequest;
 
-@SpringBootAcceptanceTest
-public class CustomerAcceptanceTest {
+@DisplayName("회원관련 기능 인수테스트")
+public class CustomerAcceptanceTest extends AcceptanceTest{
 
 	private final String email = "123@gmail.com";
 	private final String password = "a1234!";

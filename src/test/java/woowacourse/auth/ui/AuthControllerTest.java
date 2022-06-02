@@ -14,12 +14,12 @@ import com.ori.acceptancetest.SpringBootAcceptanceTest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.auth.acceptance.AcceptanceTest;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.application.CustomerService;
 
-@SpringBootAcceptanceTest
-public class AuthControllerTest {
+public class AuthControllerTest extends AcceptanceTest {
 
 	@Autowired
 	private CustomerService customerService;
