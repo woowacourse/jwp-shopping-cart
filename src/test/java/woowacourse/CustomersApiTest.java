@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 
 class CustomersApiTest extends TestSupport {
 
-    private static final String JWT_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdW5ocGFyazQyQGdtYWlsLmNvbSIsImlhdCI6MTY1NDEzNDc0NiwiZXhwIjoxNjU0MTM4MzQ2fQ.qo0oGpQNQQ1to3Jun9RbvH6jnNau2KWZp0V4kYU6FLo";
+    private static final String JWT_TOKEN = "Bearer " + accessToken;
 
     @Test
     void addCustomers_test() throws Exception {
@@ -94,7 +94,7 @@ class CustomersApiTest extends TestSupport {
         mockMvc.perform(
                 delete("/customers/me")
                     .header("Authorization",
-                        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdW5ocGFyazQyQGdtYWlsLmNvbSIsImlhdCI6MTY1NDEzNDc0NiwiZXhwIjoxNjU0MTM4MzQ2fQ.qo0oGpQNQQ1to3Jun9RbvH6jnNau2KWZp0V4kYU6FLo")
+                        JWT_TOKEN)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(readJson("/json/customers/customers-delete.json"))
             )
