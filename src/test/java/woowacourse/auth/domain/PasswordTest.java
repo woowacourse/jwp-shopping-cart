@@ -79,14 +79,14 @@ class PasswordTest {
     }
 
     @Test
-    void toEncrypted_메서드는_같은_값의_비밀번호에_대해_언제나_동일한_결과를_반환() {
+    void toEncrypted_메서드는_같은_비밀번호_값에_대해서도_임의의_솔트를_생성하여_암호화_수행() {
         String 유효한_비밀번호 = "password!1";
-        Password 비밀번호 = new Password(유효한_비밀번호);
-        Password 같은_비밀번호 = new Password(유효한_비밀번호);
+        Password2 비밀번호 = new Password2(유효한_비밀번호);
+        Password2 같은_비밀번호 = new Password2(유효한_비밀번호);
 
         EncryptedPassword actual = 비밀번호.toEncrypted();
         EncryptedPassword expected = 같은_비밀번호.toEncrypted();
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isNotEqualTo(expected);
     }
 }
