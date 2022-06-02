@@ -64,8 +64,7 @@ public class CustomerController {
     }
 
     @GetMapping("/username/duplication")
-    public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(
-            @Validated @RequestBody UniqueUsernameRequest request) {
+    public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(@Validated @RequestBody UniqueUsernameRequest request) {
         UniqueUsernameResponse response = customerService.checkUniqueUsername(request.getUsername());
         return ResponseEntity.ok(response);
     }

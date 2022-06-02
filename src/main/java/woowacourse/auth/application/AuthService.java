@@ -26,20 +26,17 @@ public class AuthService {
     }
 
     private User findValidUser(String username, String password) {
-        User user = findUser(username);
+        User user = userDao.findByUserName(username)
+                .orElseThrow(AuthenticationException::ofLoginFailure);
         if (user.hasDifferentPassword(password)) {
-            throw new AuthenticationException();
+            throw AuthenticationException.ofLoginFailure();
         }
         return user;
     }
 
     public User findUserByToken(String token) {
         String username = tokenService.extractPayload(new Token(token));
-        return findUser(username);
-    }
-
-    private User findUser(String username) {
         return userDao.findByUserName(username)
-                .orElseThrow(AuthenticationException::new);
+                .orElseThrow(AuthenticationException::ofInvalidToken);
     }
 }

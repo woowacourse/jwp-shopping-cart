@@ -20,7 +20,7 @@ public class Token {
         try {
             return extractClaims(tokenKey).getSubject();
         } catch (ExpiredJwtException e) {
-            throw new AuthenticationException("다시 로그인해주세요.");
+            throw AuthenticationException.ofInvalidToken();
         } catch (JwtException | IllegalArgumentException e) {
             throw new ForbiddenException("로그인이 필요합니다.");
         }
