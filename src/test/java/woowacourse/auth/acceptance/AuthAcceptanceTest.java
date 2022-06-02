@@ -8,6 +8,7 @@ import static woowacourse.util.HttpRequestUtil.patchWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.post;
 import static woowacourse.util.HttpRequestUtil.postWithAuthorization;
 
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -282,6 +283,18 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         assertThat(message).isEqualTo("유효하지 않은 토큰입니다.");
+    }
+
+    @DisplayName("preflight 요청에 대해서는 인증 정보를 확인하지 않는다.")
+    @Test
+    void preflight() {
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .when()
+                .options("/api/members/me")
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     private void 회원가입을_한다(String email, String password, String nickname) {
