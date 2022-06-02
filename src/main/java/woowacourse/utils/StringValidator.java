@@ -14,10 +14,16 @@ public class StringValidator {
         }
     }
 
-    public static void validateNullOrBlank(final String target, final ValidationException e) {
-        if (target == null || target.isBlank()) {
+    public static void validateNullOrHasSpace(final String target, final ValidationException e) {
+        if (target == null || target.isBlank() || hasSpace(target)) {
             throw e;
         }
+    }
+
+    private static boolean hasSpace(final String target) {
+        final int spaceDeletedSize = target.replaceAll("\\s+", "").length();
+
+        return spaceDeletedSize != target.length();
     }
 
     public static void validateRegex(final String target, final String regex, final ValidationException e) {

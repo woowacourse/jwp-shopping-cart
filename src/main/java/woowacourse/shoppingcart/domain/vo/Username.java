@@ -24,7 +24,7 @@ public class Username {
     }
 
     private static void validateUsername(final String username) {
-        StringValidator.validateNullOrBlank(username, new UsernameValidationException("닉네임에는 공백이 들어가면 안됩니다."));
+        StringValidator.validateNullOrHasSpace(username, new UsernameValidationException("닉네임에는 공백이 들어가면 안됩니다."));
         StringValidator.validateLength(USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH, username,
                 new UsernameValidationException("닉네임은 1자 이상 10자 이하여야합니다."));
     }

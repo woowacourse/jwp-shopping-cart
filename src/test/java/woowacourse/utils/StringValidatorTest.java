@@ -32,7 +32,7 @@ class StringValidatorTest {
     @DisplayName("입력받은 문자열이 null 혹은 빈 문자열 혹은 공백만 존재하는 문자열일 경우 예외를 발생시킨다.")
     void validateNullOrBlank(final String target) {
         assertThatThrownBy(
-                () -> StringValidator.validateNullOrBlank(target, new TestValidationException())
+                () -> StringValidator.validateNullOrHasSpace(target, new TestValidationException())
         ).isInstanceOf(ValidationException.class);
     }
 

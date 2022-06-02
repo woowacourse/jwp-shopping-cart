@@ -26,7 +26,7 @@ public class Email {
     }
 
     private static void validateEmail(final String email) {
-        StringValidator.validateNullOrBlank(email, new EmailValidationException("이메일에는 공백이 들어가면 안됩니다."));
+        StringValidator.validateNullOrHasSpace(email, new EmailValidationException("이메일에는 공백이 들어가면 안됩니다."));
         StringValidator.validateLength(
                 EMAIL_MIN_LENGTH,
                 EMAIL_MAX_LENGTH,
