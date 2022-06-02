@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -27,6 +28,7 @@ public class AuthService {
         return customerDao.existByEmail(email);
     }
 
+    @Transactional
     public CustomerResponse save(CustomerRequest customerRequest) {
         validateDuplicationEmail(customerRequest);
         Customer customer = customerRequest.createCustomer();
@@ -65,12 +67,14 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public void update(Long customerId, CustomerRequest customerRequest) {
         checkExistById(customerId);
         Customer customer = customerRequest.createCustomer(customerId);
         customerDao.update(customer);
     }
 
+    @Transactional
     public void delete(Long customerId) {
         checkExistById(customerId);
         customerDao.deleteById(customerId);
