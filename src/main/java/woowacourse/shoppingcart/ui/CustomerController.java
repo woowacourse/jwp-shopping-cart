@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.ui;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.ConfirmPasswordRequest;
@@ -38,41 +38,41 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerResponse> findCustomerInfo(final HttpServletRequest request) {
-        Customer customer = customerService.findByUsername((String)request.getAttribute("username"));
+    public ResponseEntity<CustomerResponse> findCustomerInfo(@AuthenticationPrincipal final String username) {
+        Customer customer = customerService.findByUsername(username);
         return ResponseEntity.ok().body(CustomerResponse.from(customer));
     }
 
     @PutMapping
     public ResponseEntity<Void> updateInfo(
-        @RequestBody final UpdateCustomerRequest updateCustomerRequest,
-        final HttpServletRequest request
+        @RequestBody final UpdateCustomerRequest request,
+        @AuthenticationPrincipal final String username
     ) {
-        customerService.updateInfo((String)request.getAttribute("username"), updateCustomerRequest);
+        customerService.updateInfo(username, request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 
     @PostMapping("/password")
     public ResponseEntity<Void> confirmPassword(
         @RequestBody final ConfirmPasswordRequest confirmPasswordRequest,
-        final HttpServletRequest request
+        @AuthenticationPrincipal final String username
     ) {
-        customerService.confirmPassword((String)request.getAttribute("username"), confirmPasswordRequest.getPassword());
+        customerService.confirmPassword(username, confirmPasswordRequest.getPassword());
         return ResponseEntity.status(HttpStatus.OK.value()).build();
     }
 
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(
         @RequestBody final UpdateCustomerRequest updateCustomerRequest,
-        final HttpServletRequest request
+        @AuthenticationPrincipal final String username
     ) {
-        customerService.updatePassword((String)request.getAttribute("username"), updateCustomerRequest);
+        customerService.updatePassword(username, updateCustomerRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCustomer(final HttpServletRequest request) {
-        customerService.deleteByUsername((String)request.getAttribute("username"));
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal final String username) {
+        customerService.deleteByUsername(username);
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 }

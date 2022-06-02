@@ -30,7 +30,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService);
+        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
     }
 
     @Override

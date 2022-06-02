@@ -28,8 +28,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (!jwtTokenProvider.validateToken(token) || token == null) {
             throw new AuthorizationException();
         }
-
-        request.setAttribute("username", jwtTokenProvider.getPayload(token));
         return true;
     }
 
