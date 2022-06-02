@@ -71,7 +71,7 @@ class PasswordTest {
 
         @Test
         void 한글이_포함된_경우_예외발생() {
-            String 한글_포함_비밀번호 = "비밀번호!@#12345";
+            String 한글_포함_비밀번호 = "ㅁㄴㅇabc!@#12";
 
             assertThatThrownBy(() -> new Password(한글_포함_비밀번호))
                     .isInstanceOf(IllegalArgumentException.class);

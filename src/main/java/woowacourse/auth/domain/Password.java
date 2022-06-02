@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class Password {
 
-    private static final String REGEX = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^*])(?!.*[\\s]).{8,20}$";
+    private static final String REGEX = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^*])[a-zA-Z0-9!@#$%^*]{8,20}$";
     private static final Pattern PATTERN = Pattern.compile(REGEX);
 
     private final String value;
