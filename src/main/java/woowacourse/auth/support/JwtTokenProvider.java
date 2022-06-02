@@ -10,7 +10,6 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import woowacourse.auth.exception.AuthorizationException;
-import woowacourse.auth.exception.ForbiddenException;
 
 @Component
 public class JwtTokenProvider {
@@ -41,7 +40,7 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token).getBody();
         } catch (DecodingException e) {
-            throw new ForbiddenException("권한이 없습니다.");
+            throw new AuthorizationException("권한이 없습니다.");
         }
         validateExpiration(claims);
         return claims.getSubject();
