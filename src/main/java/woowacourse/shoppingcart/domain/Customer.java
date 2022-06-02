@@ -1,5 +1,10 @@
 package woowacourse.shoppingcart.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class Customer {
 
     private Long id;
@@ -9,28 +14,5 @@ public class Customer {
 
     public Customer(String email, String username, String password) {
         this(null, email, username, password);
-    }
-
-    public Customer(Long id, String email, String username, String password) {
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }

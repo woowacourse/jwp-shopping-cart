@@ -1,5 +1,13 @@
 package woowacourse.shoppingcart.domain;
 
+import javax.validation.constraints.NegativeOrZero.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class Cart {
 
     private Long id;
@@ -8,38 +16,7 @@ public class Cart {
     private int price;
     private String imageUrl;
 
-    public Cart() {
-    }
-
     public Cart(final Long id, final Product product) {
         this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-    }
-
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
     }
 }

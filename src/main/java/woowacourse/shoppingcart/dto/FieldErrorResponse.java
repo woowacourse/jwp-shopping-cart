@@ -1,23 +1,15 @@
 package woowacourse.shoppingcart.dto;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@Getter
 public class FieldErrorResponse {
 
     private String field;
     private String message;
-
-    private FieldErrorResponse() {
-    }
-
-    public FieldErrorResponse(String field, String message) {
-        this.field = field;
-        this.message = message;
-    }
-
-    public String getField() {
-        return field;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }

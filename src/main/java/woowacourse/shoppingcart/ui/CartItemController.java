@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,13 +21,10 @@ import woowacourse.shoppingcart.dto.Request;
 
 @RestController
 @RequestMapping("/api/customers/{customerName}/carts")
+@RequiredArgsConstructor
 public class CartItemController {
 
     private final CartService cartService;
-
-    public CartItemController(final CartService cartService) {
-        this.cartService = cartService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {

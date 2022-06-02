@@ -3,8 +3,15 @@ package woowacourse.shoppingcart.dto.customer;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import woowacourse.shoppingcart.domain.Customer;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@Getter
 public class CustomerCreateRequest {
 
     @Email(message = "이메일 형식을 지켜야합니다.")
@@ -20,28 +27,7 @@ public class CustomerCreateRequest {
     @Pattern(regexp = "\\S*", message = "비밀번호에는 공백이 들어가면 안됩니다.")
     private String password;
 
-    private CustomerCreateRequest() {
-    }
-
-    public CustomerCreateRequest(String email, String username, String password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-    }
-
     public Customer toEntity() {
         return new Customer(email, username, password);
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }

@@ -1,5 +1,7 @@
 package woowacourse.auth.application;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.exception.LoginFailException;
@@ -9,16 +11,11 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomerService customerService;
-
-    public AuthService(JwtTokenProvider jwtTokenProvider,
-                       CustomerService customerService) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.customerService = customerService;
-    }
 
     public String createToken(TokenRequest request) {
         try {

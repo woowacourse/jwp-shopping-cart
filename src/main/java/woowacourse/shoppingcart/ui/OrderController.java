@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +19,10 @@ import woowacourse.shoppingcart.dto.OrderRequest;
 @Validated
 @RestController
 @RequestMapping("/api/customers/{customerName}/orders")
+@RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
-
-    public OrderController(final OrderService orderService) {
-        this.orderService = orderService;
-    }
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@PathVariable final String customerName,

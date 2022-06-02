@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.application;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -10,13 +12,10 @@ import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
 
     private final CustomerDao customerDao;
-
-    public CustomerService(CustomerDao customerDao) {
-        this.customerDao = customerDao;
-    }
 
     public Long save(CustomerCreateRequest request) {
         validateUsernameDuplication(request.getUsername());

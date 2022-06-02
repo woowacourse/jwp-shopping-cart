@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,13 +11,10 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
+@RequiredArgsConstructor
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";

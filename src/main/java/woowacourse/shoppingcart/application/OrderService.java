@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
@@ -18,6 +19,7 @@ import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
+@RequiredArgsConstructor
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -25,15 +27,6 @@ public class OrderService {
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
-
-    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
-        this.orderDao = orderDao;
-        this.ordersDetailDao = ordersDetailDao;
-        this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
-    }
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);

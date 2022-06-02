@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -9,13 +10,10 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
 
 @Repository
+@RequiredArgsConstructor
 public class OrdersDetailDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public Long addOrdersDetail(final Long ordersId, final Long productId, final int quantity) {
         final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)";
