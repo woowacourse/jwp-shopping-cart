@@ -9,15 +9,13 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.domain.User;
 import woowacourse.auth.support.AuthenticatedUser;
-import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.support.HttpHeaderUtil;
 
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final AuthService authService;
-    private final AuthorizationExtractor authExtractor;
 
-    public AuthArgumentResolver(AuthService authService, AuthorizationExtractor authExtractor) {
-        this.authExtractor = authExtractor;
+    public AuthArgumentResolver(AuthService authService) {
         this.authService = authService;
     }
 
@@ -33,7 +31,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
                                 WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-        String token = authExtractor.extractBearerToken(request);
+        String token = HttpHeaderUtil.extractBearerToken(request);
         return authService.findUserByToken(token);
     }
 }
