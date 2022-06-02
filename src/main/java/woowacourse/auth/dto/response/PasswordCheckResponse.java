@@ -1,13 +1,13 @@
 package woowacourse.auth.dto.response;
 
-public class CheckResponse {
+public class PasswordCheckResponse {
 
     private boolean success;
 
-    public CheckResponse() {
+    public PasswordCheckResponse() {
     }
 
-    public CheckResponse(boolean success) {
+    public PasswordCheckResponse(boolean success) {
         this.success = success;
     }
 

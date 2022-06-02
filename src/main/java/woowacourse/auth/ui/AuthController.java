@@ -17,7 +17,8 @@ import woowacourse.auth.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.request.PasswordUpdateRequest;
-import woowacourse.auth.dto.response.CheckResponse;
+import woowacourse.auth.dto.response.EmailUniqueCheckResponse;
+import woowacourse.auth.dto.response.PasswordCheckResponse;
 import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.dto.response.MemberResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
@@ -40,9 +41,9 @@ public class AuthController {
     }
 
     @GetMapping("/members/check-email")
-    public ResponseEntity<CheckResponse> checkDuplicatedEmail(@RequestParam String email) {
-        CheckResponse checkResponse = new CheckResponse(!authService.existsEmail(email));
-        return ResponseEntity.ok(checkResponse);
+    public ResponseEntity<EmailUniqueCheckResponse> checkUniqueEmail(@RequestParam String email) {
+        EmailUniqueCheckResponse emailUniqueCheckResponse = new EmailUniqueCheckResponse(!authService.existsEmail(email));
+        return ResponseEntity.ok(emailUniqueCheckResponse);
     }
 
     @PostMapping("/login")
@@ -51,8 +52,8 @@ public class AuthController {
     }
 
     @PostMapping("/members/password-check")
-    public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal String payload,
-                                                         @RequestBody PasswordCheckRequest passwordCheckRequest) {
+    public ResponseEntity<PasswordCheckResponse> confirmPassword(@AuthenticationPrincipal String payload,
+                                                                 @RequestBody PasswordCheckRequest passwordCheckRequest) {
         return ResponseEntity.ok(authService.checkPassword(payload, passwordCheckRequest));
     }
 

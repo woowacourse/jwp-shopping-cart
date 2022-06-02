@@ -21,10 +21,11 @@ import woowacourse.auth.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.request.PasswordUpdateRequest;
-import woowacourse.auth.dto.response.CheckResponse;
+import woowacourse.auth.dto.response.EmailUniqueCheckResponse;
 import woowacourse.auth.dto.response.ErrorResponse;
 import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.dto.response.MemberResponse;
+import woowacourse.auth.dto.response.PasswordCheckResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
@@ -57,11 +58,11 @@ class AuthAcceptanceTest extends AcceptanceTest {
         회원가입을_한다("abc@woowahan.com", "1q2w3e4r!", "닉네임");
 
         ExtractableResponse<Response> response = get("/api/members/check-email?email=" + email);
-        boolean success = response.as(CheckResponse.class)
-                .isSuccess();
+        boolean unique = response.as(EmailUniqueCheckResponse.class)
+                .isUnique();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(success).isEqualTo(expected);
+        assertThat(unique).isEqualTo(expected);
     }
 
     @DisplayName("잘못된 이메일 형식으로 중복 체크를 하려하면 400을 응답한다.")
@@ -118,7 +119,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 token,
                 new PasswordCheckRequest(password)
         );
-        boolean success = response.as(CheckResponse.class)
+        boolean success = response.as(PasswordCheckResponse.class)
                 .isSuccess();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());

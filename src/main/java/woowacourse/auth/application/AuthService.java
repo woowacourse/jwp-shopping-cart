@@ -12,7 +12,7 @@ import woowacourse.auth.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.request.PasswordUpdateRequest;
-import woowacourse.auth.dto.response.CheckResponse;
+import woowacourse.auth.dto.response.PasswordCheckResponse;
 import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.dto.response.MemberResponse;
 import woowacourse.auth.exception.AuthorizationException;
@@ -69,12 +69,12 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public CheckResponse checkPassword(String email, PasswordCheckRequest passwordCheckRequest) {
+    public PasswordCheckResponse checkPassword(String email, PasswordCheckRequest passwordCheckRequest) {
         Member member = memberDao.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
         boolean result = member.getPassword()
                 .equals(passwordCheckRequest.getPassword());
-        return new CheckResponse(result);
+        return new PasswordCheckResponse(result);
     }
 
     public MemberResponse findMember(String email) {
