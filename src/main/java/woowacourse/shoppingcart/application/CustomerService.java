@@ -14,7 +14,6 @@ import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.response.GetMeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
-import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
 @Service
@@ -30,18 +29,17 @@ public class CustomerService {
     public Long signUp(SignUpRequest request) {
         Customer customer = request.toDomain();
         checkDuplicateCondition(customer);
-        return customerDao.save(toEntity(customer));
+        return customerDao.save(customer);
     }
 
     private void checkDuplicateCondition(Customer customer) {
-        if (customerDao.exists(toEntity(customer))) {
+        if (customerDao.exists(customer)) {
             throw new IllegalArgumentException("중복된 아이디입니다.");
         }
     }
 
     public GetMeResponse getMe(Long id) {
-        Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."))
-                .toDomain();
+        Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
         return new GetMeResponse(customer);
     }
 
@@ -52,35 +50,28 @@ public class CustomerService {
 
     @Transactional
     public void updateMe(Long id, UpdateMeRequest request) {
-        Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."))
-                .toDomain();
+        Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
         customer = customer.updateUsername(new Username(request.getUsername()))
                 .updateNickname(new Nickname(request.getNickname()))
                 .updateAge(new Age(request.getAge()));
         checkDuplicateCondition(customer);
-        customerDao.update(toEntity(customer));
+        customerDao.update(customer);
     }
 
     @Transactional
     public void updatePassword(Long id, UpdatePasswordRequest request) {
-        Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."))
-                .toDomain();
+        Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
         Password oldPassword = new Password(request.getOldPassword());
         if (!customer.hasSamePassword(oldPassword)) {
             throw new IllegalArgumentException("현재 비밀번호를 잘못 입력하였습니다.");
         }
         customer = customer.updatePassword(new Password(request.getNewPassword()));
-        customerDao.update(toEntity(customer));
+        customerDao.update(customer);
     }
 
     @Transactional
     public void deleteMe(Long id) {
-        CustomerEntity customerEntity = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
-        customerDao.delete(customerEntity);
-    }
-
-    private CustomerEntity toEntity(Customer customer) {
-        return new CustomerEntity(null, customer.getUsername().getValue(), customer.getPassword().getValue()
-        , customer.getNickname().getValue(), customer.getAge().getValue());
+        Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
+        customerDao.delete(customer);
     }
 }

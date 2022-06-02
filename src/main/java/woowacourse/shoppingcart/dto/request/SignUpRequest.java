@@ -60,6 +60,6 @@ public class SignUpRequest {
         Password password = new Password(this.password);
         Nickname nickname = new Nickname(this.nickname);
         Age age = new Age(this.age);
-        return new Customer(username, password, nickname, age);
+        return Customer.ofNoId(username, password, nickname, age);
     }
 }

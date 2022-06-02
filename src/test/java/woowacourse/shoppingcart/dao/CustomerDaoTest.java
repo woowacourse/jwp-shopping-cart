@@ -12,10 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Age;
@@ -23,7 +20,6 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.Username;
-import woowacourse.shoppingcart.entity.CustomerEntity;
 
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
@@ -52,13 +48,12 @@ class CustomerDaoTest {
 
         @Test
         void 존재하는_고객인_경우_값이_있는_Optional_반환() {
-            long 식별자 = 1L;
-            Customer 고객 = new Customer(아이디, 비밀번호, 닉네임, 열다섯);
-            saveFixture(toEntityFixture(null, 고객));
+            Customer 고객 = Customer.ofNoId(아이디, 비밀번호, 닉네임, 열다섯);
+            Long 식별자 = customerDao.save(고객);
 
-            Customer actual = customerDao.findById(식별자).get().toDomain();
+            Customer actual = customerDao.findById(식별자).get();
 
-            assertThat(actual).isEqualTo(고객);
+            assertThat(actual).isEqualTo(고객.updateId(식별자));
         }
 
         @Test
@@ -77,9 +72,9 @@ class CustomerDaoTest {
 
         @Test
         void 유효한_데이터를_저장하려는_경우_성공() {
-            Customer 신규_고객 = new Customer(아이디, 비밀번호, 닉네임, 열다섯);
+            Customer 신규_고객 = Customer.ofNoId(아이디, 비밀번호, 닉네임, 열다섯);
 
-            Long actual = customerDao.save(toEntityFixture(null, 신규_고객));
+            Long actual = customerDao.save(신규_고객);
             Long expected = 1L;
 
             assertThat(actual).isEqualTo(expected);
@@ -87,10 +82,10 @@ class CustomerDaoTest {
 
         @Test
         void 중복되는_아이디로_데이터를_저장하려는_경우_예외발생() {
-            Customer 고객 = new Customer(아이디, 비밀번호, 닉네임, 열다섯);
-            saveFixture(toEntityFixture(null, 고객));
+            Customer 고객 = Customer.ofNoId(아이디, 비밀번호, 닉네임, 열다섯);
+            customerDao.save(고객);
 
-            assertThatThrownBy(() -> customerDao.save(toEntityFixture(null, 고객)))
+            assertThatThrownBy(() -> customerDao.save(고객))
                     .isInstanceOf(DataAccessException.class);
         }
     }
@@ -101,37 +96,40 @@ class CustomerDaoTest {
 
         @Test
         void 유효한_데이터로_수정하려는_경우_성공() {
-            long 식별자 = 1L;
-            Customer 고객 = new Customer(아이디, 비밀번호, 닉네임, 열다섯);
-            Customer 수정된_고객 = new Customer(new Username("아이디2")
+            Customer 고객 = Customer.ofNoId(아이디, 비밀번호, 닉네임, 열다섯);
+            Customer 수정된_고객 = Customer.ofNoId(new Username("아이디2")
                     , new Password("password1!"), new Nickname("닉네임2"), new Age(80));
-            saveFixture(toEntityFixture(null, 고객));
+            Long 고객_식별자 = customerDao.save(고객);
+            수정된_고객 = 수정된_고객.updateId(고객_식별자);
 
-            customerDao.update(toEntityFixture(식별자, 수정된_고객));
-            Customer actual = findById(식별자).toDomain();
-            System.out.println(actual);
-            System.out.println(수정된_고객);
+            customerDao.update(수정된_고객);
+            Customer actual = customerDao.findById(고객_식별자).get();
             assertThat(actual).isEqualTo(수정된_고객);
         }
 
         @Test
         void 중복되는_아이디로_데이터를_수정하려는_경우_예외발생() {
             Username 조시 = new Username("조시조시");
-            Username 정 = new Username("정정정정");
-            saveFixture(toEntityFixture(null, new Customer(조시, 비밀번호, 닉네임, 열다섯)));
-            saveFixture(toEntityFixture(null, new Customer(정, 비밀번호, 닉네임, 열다섯)));
-            Customer 조시가_되고_싶은_정 = new Customer(조시, 비밀번호, 닉네임, 열다섯);
+            Customer 고객_조시 = Customer.ofNoId(조시, 비밀번호, 닉네임, 열다섯);
+            customerDao.save(고객_조시);
 
-            assertThatThrownBy(() -> customerDao.update(toEntityFixture(2L, 조시가_되고_싶은_정)))
+            Username 정 = new Username("정정정정");
+            Customer 고객_정 = Customer.ofNoId(정, 비밀번호, 닉네임, 열다섯);
+            Long 다른고객_식별자 = customerDao.save(고객_정);
+
+            Customer 중복된_유저네임_고객 = Customer.of(다른고객_식별자, 조시, 비밀번호, 닉네임, 열다섯);
+
+            assertThatThrownBy(() -> customerDao.update(중복된_유저네임_고객))
                     .isInstanceOf(DataAccessException.class);
         }
 
         @Test
-        void 존재하지_않는_데이터를_수장하려는_경우_예외_미발생() {
-            Customer 고객 = new Customer(아이디, 비밀번호, 닉네임, 열다섯);
+        void 존재하지_않는_데이터를_수정하려는_경우_예외_미발생() {
+            Long 없는_식별자 = 0L;
+            Customer 고객 = Customer.of(없는_식별자, 아이디, 비밀번호, 닉네임, 열다섯);
 
             assertThatNoException()
-                    .isThrownBy(() -> customerDao.update(toEntityFixture(없는_식별자, 고객)));
+                    .isThrownBy(() -> customerDao.update(고객));
         }
     }
 
@@ -141,44 +139,22 @@ class CustomerDaoTest {
 
         @Test
         void 제거_성공() {
-            long 식별자 = 1L;
-            Customer 고객 = new Customer(아이디, 비밀번호, 닉네임, 열다섯);
-            saveFixture(toEntityFixture(null, 고객));
+            Customer 고객 = Customer.ofNoId(아이디, 비밀번호, 닉네임, 열다섯);
+            Long 식별자 = customerDao.save(고객);
+            고객 = 고객.updateId(식별자);
 
-            customerDao.delete(toEntityFixture(식별자, 고객));
+            customerDao.delete(고객);
 
-            assertThatThrownBy(() -> findById(식별자))
-                    .isInstanceOf(DataAccessException.class);
+            assertThat(customerDao.findById(식별자)).isEmpty();
         }
 
         @Test
         void 존재하지_않는_데이터를_제거하려는_경우_예외_미발생() {
-            Customer 고객 = new Customer(아이디, 비밀번호, 닉네임, 열다섯);
+            Long 없는_식별자 = 0L;
+            Customer 고객 = Customer.of(없는_식별자, 아이디, 비밀번호, 닉네임, 열다섯);
 
             assertThatNoException()
-                    .isThrownBy(() -> customerDao.delete(toEntityFixture(100L, 고객)));
+                    .isThrownBy(() -> customerDao.delete(고객));
         }
-    }
-
-    private CustomerEntity findById(Long customerId) {
-        final String sql = "SELECT id, username, password, nickname, age FROM customer " +
-                "WHERE id = :id";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", customerId);
-
-        return jdbcTemplate.queryForObject(sql, params, CustomerDao.ROW_MAPPER);
-    }
-
-    private void saveFixture(CustomerEntity customer) {
-        final String sql = "INSERT INTO customer(id, username, password, nickname, age) "
-                + "VALUES(:id, :username, :password, :nickname, :age)";
-        SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
-
-        jdbcTemplate.update(sql, params);
-    }
-
-    private CustomerEntity toEntityFixture(Long id, Customer customer) {
-        return new CustomerEntity(id, customer.getUsername().getValue(), customer.getPassword().getValue()
-                , customer.getNickname().getValue(), customer.getAge().getValue());
     }
 }
