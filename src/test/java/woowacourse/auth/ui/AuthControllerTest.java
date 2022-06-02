@@ -4,6 +4,7 @@ package woowacourse.auth.ui;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +36,8 @@ class AuthControllerTest extends ControllerTest {
         final ResultActions perform = mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(json)
-                .accept(MediaType.ALL));
+                .accept(MediaType.ALL)
+        ).andDo(print());
 
         // then
         final String body = perform

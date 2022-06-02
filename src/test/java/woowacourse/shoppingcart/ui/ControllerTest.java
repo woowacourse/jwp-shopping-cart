@@ -7,13 +7,20 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.ui.AuthController;
+import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.config.LoginCustomerResolver;
 
-@WebMvcTest(AuthController.class)
+@WebMvcTest({
+        AuthController.class,
+        CustomerController.class
+})
 public abstract class ControllerTest {
 
     @MockBean
     protected AuthService authService;
+
+    @MockBean
+    protected CustomerService customerService;
 
     @MockBean
     private LoginCustomerResolver resolver;
