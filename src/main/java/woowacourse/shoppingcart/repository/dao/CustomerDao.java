@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidLoginException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.ResourceNotFoundException;
 
 @Repository
@@ -53,11 +53,7 @@ public class CustomerDao {
                 + " values (:username, :password, :nickname, false)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource source = new BeanPropertySqlParameterSource(customer);
-        try {
-            namedParameterJdbcTemplate.update(query, source, keyHolder);
-        } catch (DuplicateKeyException exception) {
-            throw new InvalidCustomerException("중복된 값이 존재합니다.");
-        }
+        namedParameterJdbcTemplate.update(query, source, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
@@ -93,13 +89,9 @@ public class CustomerDao {
         Map<String, Object> params = new HashMap<>();
         params.put("id", newCustomer.getId());
         params.put("nickname", newCustomer.getNickname());
-        try {
-            int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
-            if (affectedRowCount == 0) {
-                throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
-            }
-        } catch (DuplicateKeyException exception) {
-            throw new InvalidCustomerException("중복된 값이 존재합니다.");
+        int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
+        if (affectedRowCount == 0) {
+            throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 
@@ -112,7 +104,7 @@ public class CustomerDao {
         params.put("oldPassword", oldPassword);
         int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
         if (affectedRowCount == 0) {
-            throw new InvalidCustomerException("비밀번호가 일치하지 않습니다.");
+            throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
         }
     }
 

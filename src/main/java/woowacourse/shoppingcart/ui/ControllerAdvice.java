@@ -2,7 +2,9 @@ package woowacourse.shoppingcart.ui;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -16,6 +18,7 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidInputException;
 import woowacourse.shoppingcart.exception.InvalidLoginException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.ResourceNotFoundException;
@@ -52,6 +55,16 @@ public class ControllerAdvice {
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity duplicateKeyException(final DuplicateKeyException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복된 값이 존재합니다.");
+    }
+
+    @ExceptionHandler
+    public ResponseEntity invalidPasswordException(final InvalidPasswordException exception) {
+        return ResponseEntity.status(InvalidPasswordException.STATUS_CODE).body(exception.getMessage());
     }
 
     @ExceptionHandler
