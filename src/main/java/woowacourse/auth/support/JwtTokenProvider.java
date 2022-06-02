@@ -41,7 +41,6 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             throw new ExpiredTokenException();
         } catch (JwtException | IllegalArgumentException e) {
-            e.printStackTrace();
             throw new InvalidTokenException();
         }
     }

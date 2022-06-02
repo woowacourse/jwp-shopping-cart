@@ -87,9 +87,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @ValueSource(strings = {"", "abcd"})
-    @ParameterizedTest
-    void invalidToken(String token) {
+    @Test
+    void invalidToken() {
         // given
         // 회원이 등록되어 있고
         ExtractableResponse<Response> customerResponse = createCustomer();
@@ -98,7 +97,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .header("Authorization", token)
+                .header("Authorization", "invalidToken")
                 .when().get(customerUri)
                 .then().log().all()
                 .extract();
@@ -129,6 +128,66 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 내 정보 조회 요청이 거부된다
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
+
+    @DisplayName("로그아웃 성공")
+    @Test
+    void logOut() {
+        //given
+        ExtractableResponse<Response> customerResponse = createCustomer();
+        String customerUri = customerResponse.header("Location");
+
+        // when
+        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+                .when().post(customerUri + "/authentication/sign-out")
+                .then().log().all()
+                .extract();
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("로그아웃 실패 - 만료된 토큰")
+    @Test
+    void logOutFailedByExpiredToken() {
+        //given
+        ExtractableResponse<Response> customerResponse = createCustomer();
+        String customerUri = customerResponse.header("Location");
+
+        // when
+        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header("Authorization",
+                        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU0MDExOTk1LCJleHAiOjE2NTQwMTE5OTV9.L5pnN2Dorp20abb75HFXbYTLxhfFqP4pSfUFu5Rqyzs")
+                .when().post(customerUri + "/authentication/sign-out")
+                .then().log().all()
+                .extract();
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
+    @DisplayName("로그아웃 실패 - 유효하지 않은 토큰")
+    @Test
+    void logOutFailedByInvalidToken() {
+        //given
+        ExtractableResponse<Response> customerResponse = createCustomer();
+        String customerUri = customerResponse.header("Location");
+
+        // when
+        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header("Authorization", "invalidToken")
+                .when().post(customerUri + "/authentication/sign-out")
+                .then().log().all()
+                .extract();
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+
 
     private ExtractableResponse<Response> createCustomer() {
         Map<String, Object> params = new HashMap<>();
