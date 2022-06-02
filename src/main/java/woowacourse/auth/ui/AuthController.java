@@ -1,6 +1,8 @@
 package woowacourse.auth.ui;
 
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,8 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.AuthorizationExtractor;
 
-@RequestMapping("/api/customer/authentication/sign-in")
+@RequestMapping("/api")
 @RestController
 public class AuthController {
     private final AuthService authService;
@@ -18,9 +21,16 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping
+    @PostMapping("/customer/authentication/sign-in")
     public ResponseEntity<TokenResponse> signIn(@RequestBody TokenRequest tokenRequest) {
         TokenResponse tokenResponse = authService.generateToken(tokenRequest);
         return ResponseEntity.ok(tokenResponse);
+    }
+
+    @PostMapping("/customers/{customerId}/authentication/sign-out")
+    public ResponseEntity<Void> signOut(HttpServletRequest request, @PathVariable String customerId) {
+        String accessToken = AuthorizationExtractor.extract(request);
+        authService.validateToken(accessToken, customerId);
+        return ResponseEntity.noContent().build();
     }
 }

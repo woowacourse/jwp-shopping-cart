@@ -21,10 +21,6 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
-
-    private static final String HUDI_GMAIL_COM = "hudi@gmail.com";
-    private static final String HUDI_PASSWORD = "a1@12345";
-
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
@@ -130,6 +126,56 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         // 내 정보 조회 요청이 거부된다
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
+    @DisplayName("로그아웃 성공")
+    @Test
+    void signOut_successWithValidToken() {
+        // given
+        String customerId = createCustomer().header("Location").split("/")[3];
+        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+                .when().post("/api/customers/" + customerId + "/authentication/sign-out")
+                .then().log().all().extract();
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("유효하지 않은 토큰으로 인한 로그아웃 실패")
+    @Test
+    void signOut_failWithMalformedToken() {
+        // given
+        String customerId = createCustomer().header("Location").split("/")[3];
+        String malformedToken = "abcd";
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + malformedToken)
+                .when().post("/api/customers/" + customerId + "/authentication/sign-out")
+                .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("토큰에 명시된 ID와 URI에 명시된 ID가 다를때 로그아웃 실패")
+    @Test
+    void signOut_IfIdIsDifferentBetweenTokenAndPathVariable() {
+        // given
+        String customerId = createCustomer().header("Location").split("/")[3];
+        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+                .when().post("/api/customers/" + (customerId + 1) + "/authentication/sign-out")
+                .then().log().all().extract();
+
+        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.ExpiredTokenException;
+import woowacourse.auth.exception.ForbiddenException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailedException;
 import woowacourse.common.dto.ErrorResponse;
@@ -32,8 +33,8 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
-    @ExceptionHandler(ExpiredTokenException.class)
-    public ResponseEntity<ErrorResponse> handleExpiredToken(ExpiredTokenException e) {
+    @ExceptionHandler({ForbiddenException.class, ExpiredTokenException.class})
+    public ResponseEntity<ErrorResponse> handleExpiredToken(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
@@ -83,7 +84,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException() {
+    public ResponseEntity handleUnhandledException(RuntimeException e) {
+        System.out.println(e);
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 }
