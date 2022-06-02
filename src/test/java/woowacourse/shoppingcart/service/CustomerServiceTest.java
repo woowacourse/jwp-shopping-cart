@@ -68,13 +68,13 @@ public class CustomerServiceTest {
     @Test
     void 비밀번호를_수정하는_경우() {
         String username = "puterism";
-        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("a123", "a1234");
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("a12345", "a123456");
 
         customerService.changePassword(username, changePasswordRequest);
 
         Customer customer = customerDao.findCustomerByUserName(username);
 
-        assertThat(customer.isSamePassword("a1234")).isTrue();
+        assertThat(customer.isSamePassword("a123456")).isTrue();
     }
 
     @Test
@@ -99,7 +99,7 @@ public class CustomerServiceTest {
     void 회원탈퇴() {
         String username = "puterism";
 
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("a123");
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("a12345");
 
         customerService.deleteUser(username, deleteCustomerRequest);
 

@@ -34,6 +34,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity handleUnexpected(Exception e) {
+        System.out.println("=====" + e.getClass().getName() + "$$$$" + e.getMessage());
         return ResponseEntity.badRequest().body(new ErrorResponse(UNEXPECTED));
     }
 }
