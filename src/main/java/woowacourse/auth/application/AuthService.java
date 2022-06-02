@@ -26,7 +26,7 @@ public class AuthService {
         this.tokenManager = tokenManager;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void save(MemberCreateServiceRequest memberCreateServiceRequest) {
         validateUniqueEmail(memberCreateServiceRequest);
         Member member = new Member(memberCreateServiceRequest.getEmail(), memberCreateServiceRequest.getPassword(),
@@ -41,13 +41,13 @@ public class AuthService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean existsEmail(String email) {
         String validatedEmail = new Email(email).getValue();
         return memberDao.existsEmail(validatedEmail);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public LoginServiceResponse login(LoginServiceRequest loginServiceRequest) {
         Member member = findByEmail(loginServiceRequest.getEmail(), new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
         validatePassword(member.getPassword(), loginServiceRequest.getPassword());
@@ -66,7 +66,7 @@ public class AuthService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean checkPassword(String email, String password) {
         Member member = memberDao.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
@@ -74,13 +74,13 @@ public class AuthService {
                 .equals(password);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public MemberServiceResponse findMember(String email) {
         Member member = findByEmail(email, new AuthorizationException("유효하지 않은 토큰입니다."));
         return new MemberServiceResponse(member);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void updateMember(String email, MemberUpdateServiceRequest memberUpdateServiceRequest) {
         validateExists(email);
         String nickname = new Nickname(memberUpdateServiceRequest.getNickname())
@@ -94,14 +94,14 @@ public class AuthService {
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void updatePassword(String email, String newPassword) {
         validateExists(email);
         String password = new Password(newPassword).getValue();
         memberDao.updatePasswordByEmail(email, password);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void delete(String email) {
         validateExists(email);
         memberDao.deleteByEmail(email);
