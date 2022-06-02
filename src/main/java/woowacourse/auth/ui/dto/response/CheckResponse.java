@@ -2,16 +2,16 @@ package woowacourse.auth.ui.dto.response;
 
 public class CheckResponse {
 
-    private boolean success;
+    private boolean unique;
 
     public CheckResponse() {
     }
 
-    public CheckResponse(boolean success) {
-        this.success = success;
+    public CheckResponse(boolean unique) {
+        this.unique = unique;
     }
 
-    public boolean isSuccess() {
-        return success;
+    public boolean isUnique() {
+        return unique;
     }
 }

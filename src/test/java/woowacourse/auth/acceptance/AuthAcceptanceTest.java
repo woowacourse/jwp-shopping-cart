@@ -62,9 +62,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void checkDuplicatedEmail_OK(String email, boolean expected) {
         post("/api/members", MEMBER_CREATE_REQUEST);
 
-        ExtractableResponse<Response> response = get("/api/members?email=" + email);
+        ExtractableResponse<Response> response = get("/api/members/check-email?email=" + email);
         boolean success = response.as(CheckResponse.class)
-                .isSuccess();
+                .isUnique();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(success).isEqualTo(expected);
@@ -75,7 +75,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void checkDuplicatedEmail_BadRequest() {
         String invalidEmail = "abc";
 
-        ExtractableResponse<Response> response = get("/api/members?email=" + invalidEmail);
+        ExtractableResponse<Response> response = get("/api/members/check-email?email=" + invalidEmail);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -125,7 +125,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 new PasswordCheckRequest(password)
         );
         boolean success = response.as(CheckResponse.class)
-                .isSuccess();
+                .isUnique();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(success).isEqualTo(expected);
