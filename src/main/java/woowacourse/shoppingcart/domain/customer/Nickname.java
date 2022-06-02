@@ -13,7 +13,7 @@ public class Nickname {
     }
 
     private void validate(final String value) {
-        if (!value.matches("[a-zA-Z0-9가-힣]{2,}")) {
+        if (!value.matches("[a-zA-Z0-9가-힣]{2,8}")) {
             throw new InvalidNicknameException();
         }
     }

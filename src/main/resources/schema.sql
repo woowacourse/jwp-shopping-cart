@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS customer;
 CREATE TABLE customer
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT,
-    nickname VARCHAR(255) NOT NULL,
+    nickname VARCHAR(8) NOT NULL,
     email    VARCHAR(255) NOT NULL,
     password VARCHAR(60)  NOT NULL,
     PRIMARY KEY (id)
