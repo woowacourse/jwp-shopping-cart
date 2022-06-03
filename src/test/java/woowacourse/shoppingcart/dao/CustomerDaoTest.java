@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,12 +12,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.customer.Customer;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import woowacourse.shoppingcart.entity.Customer;
+import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -47,21 +47,11 @@ public class CustomerDaoTest {
         assertThat(actual).isEqualTo(true);
     }
 
-    @DisplayName("로그인 정보가 존재하는지 확인한다.")
-    @Test
-    void existCustomer() {
-        // when
-        boolean actual = customerDao.existCustomer("puterism@woowacourse.com", "1234asdf!");
-
-        // then
-        assertThat(actual).isEqualTo(true);
-    }
-
     @DisplayName("로그인 정보를 이용하여 사용자 정보를 조회한다,")
     @Test
     void findByUserId() {
         // when
-        Customer customer = customerDao.findByUserId("puterism@woowacourse.com").get();
+        Customer customer = customerDao.findByUserId("puterism@woowacourse.com");
 
         // then
         assertAll(
@@ -79,7 +69,7 @@ public class CustomerDaoTest {
         Long customerId = customerDao.save(savedCustomer);
 
         // when
-        Customer customer = customerDao.findById(customerId).get();
+        Customer customer = customerDao.findById(customerId);
 
         // then
         assertAll(
@@ -100,7 +90,7 @@ public class CustomerDaoTest {
         customerDao.update(customerId, "test2");
 
         // then
-        Customer customer = customerDao.findById(customerId).get();
+        Customer customer = customerDao.findById(customerId);
         assertAll(
                 () -> assertThat(customer.getId()).isEqualTo(customerId),
                 () -> assertThat(customer.getUserId()).isEqualTo("test@woowacourse.com"),
@@ -120,7 +110,7 @@ public class CustomerDaoTest {
         customerDao.updatePassword(customerId, "123dkhsd!");
 
         // then
-        Customer customer = customerDao.findById(customerId).get();
+        Customer customer = customerDao.findById(customerId);
         assertAll(
                 () -> assertThat(customer.getId()).isEqualTo(customerId),
                 () -> assertThat(customer.getUserId()).isEqualTo("test@woowacourse.com"),
@@ -140,8 +130,8 @@ public class CustomerDaoTest {
         customerDao.delete(customerId);
 
         // then
-        Optional<Customer> customer = customerDao.findById(customerId);
-
-        assertThat(customer.isEmpty()).isTrue();
+        assertThatThrownBy(() -> customerDao.findById(customerId))
+                .isInstanceOf(CustomerDataNotFoundException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
     }
 }

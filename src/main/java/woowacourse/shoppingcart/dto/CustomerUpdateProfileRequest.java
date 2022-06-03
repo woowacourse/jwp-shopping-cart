@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.dto;
 
-public class CustomerUpdateRequest {
+public class CustomerUpdateProfileRequest {
 
     private String nickname;
 
-    private CustomerUpdateRequest() {
+    private CustomerUpdateProfileRequest() {
     }
 
-    public CustomerUpdateRequest(final String nickname) {
+    public CustomerUpdateProfileRequest(final String nickname) {
         this.nickname = nickname;
     }
 

@@ -11,7 +11,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateProfileRequest;
 import woowacourse.shoppingcart.dto.TokenRequest;
 
 @RestController
@@ -26,7 +26,7 @@ public class AuthController {
 
     @GetMapping
     public ResponseEntity<CustomerResponse> findByCustomerId(@AuthenticationPrincipal TokenRequest tokenRequest) {
-        CustomerResponse customerResponse = customerService.findByCustomerId(tokenRequest);
+        CustomerResponse customerResponse = customerService.findProfile(tokenRequest);
         return ResponseEntity.ok().body(customerResponse);
     }
 
@@ -38,14 +38,14 @@ public class AuthController {
 
     @PatchMapping
     public ResponseEntity<CustomerResponse> update(@AuthenticationPrincipal TokenRequest tokenRequest,
-                                                   @RequestBody CustomerUpdateRequest customerUpdateRequest) {
-        customerService.update(tokenRequest, customerUpdateRequest);
+                                                   @RequestBody CustomerUpdateProfileRequest customerUpdateProfileRequest) {
+        customerService.updateProfile(tokenRequest, customerUpdateProfileRequest);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/password")
     public ResponseEntity<CustomerResponse> updatePassword(@AuthenticationPrincipal TokenRequest tokenRequest,
-                                                   @RequestBody CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
+                                                           @RequestBody CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest);
         return ResponseEntity.ok().build();
     }

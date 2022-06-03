@@ -1,18 +1,18 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.Locale;
+import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.entity.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-
-import java.sql.PreparedStatement;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
+import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
+import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
 
 @Repository
 public class CustomerDao {
@@ -59,36 +59,21 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Boolean existCustomerByUserId(final String userId) {
-        String query = "SELECT EXISTS (SELECT id FROM customer WHERE user_id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, userId);
-    }
-
-    public Boolean existCustomerByNickname(final String nickname) {
-        String query = "SELECT EXISTS (SELECT id FROM customer WHERE nickname = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, nickname);
-    }
-
-    public Boolean existCustomer(final String userId, final String password) {
-        String query = "SELECT EXISTS (SELECT id FROM customer WHERE user_id = ? and password = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, userId, password);
-    }
-
-    public Optional<Customer> findByUserId(final String userId) {
+    public Customer findByUserId(final String userId) {
         String query = "SELECT id, user_id, nickname, password FROM customer WHERE user_id = ? and withdrawal = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, userId, NOT_WITHDRAWAL));
+            return jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, userId, NOT_WITHDRAWAL);
         } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
+            throw new LoginDataNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 
-    public Optional<Customer> findById(final Long id) {
+    public Customer findById(final Long id) {
         String query = "SELECT id, user_id, nickname, password FROM customer WHERE id = ? and withdrawal = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, id, NOT_WITHDRAWAL));
+            return jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, id, NOT_WITHDRAWAL);
         } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
+            throw new CustomerDataNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 
@@ -97,13 +82,23 @@ public class CustomerDao {
         jdbcTemplate.update(query, nickname, id, NOT_WITHDRAWAL);
     }
 
-    public void updatePassword(final Long id, final String password) {
+    public void updatePassword(final Long id, final String newPassword) {
         String query = "UPDATE customer SET password = ? WHERE id = ? and withdrawal = ?";
-        jdbcTemplate.update(query, password, id, NOT_WITHDRAWAL);
+        jdbcTemplate.update(query, newPassword, id, NOT_WITHDRAWAL);
     }
 
     public void delete(final Long id) {
         String query = "UPDATE customer SET withdrawal = ? WHERE id = ? and withdrawal = ?";
         jdbcTemplate.update(query, WITHDRAWAL, id, NOT_WITHDRAWAL);
+    }
+
+    public Boolean existCustomerByUserId(final String userId) {
+        String query = "SELECT EXISTS (SELECT id FROM customer WHERE user_id = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, userId);
+    }
+
+    public Boolean existCustomerByNickname(final String nickname) {
+        String query = "SELECT EXISTS (SELECT id FROM customer WHERE nickname = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, nickname);
     }
 }

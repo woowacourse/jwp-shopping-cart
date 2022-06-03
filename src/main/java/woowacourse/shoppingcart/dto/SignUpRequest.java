@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.entity.Customer;
 
 public class SignUpRequest {
 
