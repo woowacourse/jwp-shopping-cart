@@ -31,20 +31,20 @@ public class AuthController {
     }
 
     @DeleteMapping
-    public ResponseEntity<CustomerResponse> withdraw(@AuthenticationPrincipal TokenRequest tokenRequest) {
+    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal TokenRequest tokenRequest) {
         customerService.withdraw(tokenRequest);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping
-    public ResponseEntity<CustomerResponse> update(@AuthenticationPrincipal TokenRequest tokenRequest,
+    public ResponseEntity<Void> update(@AuthenticationPrincipal TokenRequest tokenRequest,
                                                    @RequestBody CustomerUpdateRequest customerUpdateRequest) {
         customerService.update(tokenRequest, customerUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<CustomerResponse> updatePassword(@AuthenticationPrincipal TokenRequest tokenRequest,
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal TokenRequest tokenRequest,
                                                    @RequestBody CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest);
         return ResponseEntity.ok().build();
