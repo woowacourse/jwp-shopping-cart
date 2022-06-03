@@ -40,9 +40,9 @@ public class CustomerDaoTest {
 
     @DisplayName("전달 받은 이메일로 사용자 정보를 반환한다.")
     @Test
-    void findByUserEmail() {
-        final CustomerResponse tokenPayloadDto = customerDao.findByUserEmail(new Email("puterism@example.com"));
-        assertThat(tokenPayloadDto.getId()).isNotNull();
+    void findIdByUserEmail() {
+        final Long customerId = customerDao.findIdByEmail(new Email("puterism@example.com"));
+        assertThat(customerId).isNotNull();
     }
 
     @DisplayName("전달받은 데이터를 소비자 데이터를 업데이트한다.")

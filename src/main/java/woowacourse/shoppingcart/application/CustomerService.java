@@ -44,9 +44,9 @@ public class CustomerService {
         final NewPassword password = new NewPassword(signInDto.getPassword());
         final String foundPassword = customerDao.findPasswordByEmail(email);
         verifyPassword(password, foundPassword);
-        CustomerResponse tokenPayloadDto = customerDao.findByUserEmail(email);
+        Long customerId = customerDao.findIdByEmail(email);
         String payload = createPayload(new EmailDto(email.getValue()));
-        return new TokenResponse(tokenPayloadDto.getId(), provider.createToken(payload));
+        return new TokenResponse(customerId, provider.createToken(payload));
     }
 
     private void verifyPassword(final NewPassword password, final String hashedPassword) {

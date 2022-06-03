@@ -53,6 +53,11 @@ public class CustomerDao {
         });
     }
 
+    public Long findIdByEmail(final Email email) {
+        final String query = "SELECT id FROM customer WHERE email = ?";
+        return jdbcTemplate.queryForObject(query, Long.class, email.getValue());
+    }
+
     public String findPasswordByEmail(final Email email) {
         final String query = "SELECT password FROM customer WHERE email = ?";
         return jdbcTemplate.queryForObject(query, String.class, email.getValue());
