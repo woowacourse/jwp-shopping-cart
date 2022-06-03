@@ -82,7 +82,7 @@ public class MemberService {
         }
     }
 
-    public void withdrawal(long id, WithdrawalRequest request) {
+    public void withdraw(long id, WithdrawalRequest request) {
         Member member = validateExistMember(memberDao.findMemberById(id));
         Password requestPassword = Password.withEncrypt(request.getPassword());
         if (!member.isSamePassword(requestPassword)) {
