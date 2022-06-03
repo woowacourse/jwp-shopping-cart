@@ -11,9 +11,9 @@ public class SHA256Encryptor implements Encryptor{
     @Override
     public String encrypt(String plainText){
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(plainText.getBytes());
-            return bytesToHex(md.digest());
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(plainText.getBytes());
+            return bytesToHex(messageDigest.digest());
         } catch(NoSuchAlgorithmException e){
             throw new RuntimeException();
         }
