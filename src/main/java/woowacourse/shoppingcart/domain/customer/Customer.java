@@ -4,34 +4,34 @@ import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 public class Customer {
     private final UserName userName;
-    private final Password password;
+    private final EncodePassword password;
     private final NickName nickName;
     private final Age age;
 
-    public Customer(UserName userName, Password password, NickName nickName, Age age) {
+    public Customer(UserName userName, EncodePassword password, NickName nickName, Age age) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
         this.age = age;
     }
 
-    public static Customer of(String userName, String password, String nickName, int age) {
+    public static Customer of(String userName, EncodePassword password, String nickName, int age) {
         return new Customer(
                 new UserName(userName),
-                new Password(password),
+                password,
                 new NickName(nickName),
                 new Age(age)
         );
     }
 
-    public void validatePassword(String password) {
+    public void validatePassword(EncodePassword password) {
         if (!this.password.hasSamePassword(password)) {
             throw new InvalidArgumentRequestException("비밀번호가 일치하지 않습니다.");
         }
     }
 
-    public Customer updatePassword(String newPassword) {
-        return new Customer(userName, new Password(newPassword), nickName, age);
+    public Customer updatePassword(EncodePassword newPassword) {
+        return new Customer(userName, newPassword, nickName, age);
     }
 
     public Customer updateInfo(String nickName, int age) {

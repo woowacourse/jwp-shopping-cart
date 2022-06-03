@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.HashPasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.EncodePassword;
+import woowacourse.shoppingcart.domain.customer.RawPassword;
+import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
@@ -150,10 +154,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(customerResponse.getUserName()).isEqualTo(userName),
-                () -> assertThat(customerResponse.getPassword()).isEqualTo(password),
+                () -> assertThat(customerResponse.getPassword()).isEqualTo(encode(password).getPassword()),
                 () -> assertThat(customerResponse.getNickName()).isEqualTo(nickName),
                 () -> assertThat(customerResponse.getAge()).isEqualTo(age)
         );
+    }
+
+    private EncodePassword encode(String rawPassword) {
+        RawPassword password = new RawPassword(rawPassword);
+        PasswordEncoder passwordEncoder = new HashPasswordEncoder();
+        return passwordEncoder.encode(password);
     }
 
     @DisplayName("회원탈퇴를 성공적으로 진행한다.")
@@ -172,15 +182,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertInvalidCustomer(accessToken);
     }
 
-    private void assertInvalidCustomer(String accessToken) {
+    private void signUpCustomer() {
+        CustomerRequest customerRequest =
+                new CustomerRequest("forky", "forky@1234", "복희", 26);
         RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/customers/me")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .extract()
-                .as(InvalidCustomerException.class);
+                .when().post("/customers")
+                .then().log().all();
     }
 
     private String getTokenByLogin() {
@@ -195,14 +205,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .getAccessToken();
     }
 
-    private void signUpCustomer() {
-        CustomerRequest customerRequest =
-                new CustomerRequest("forky", "forky@1234", "복희", 26);
+    private void assertInvalidCustomer(String accessToken) {
         RestAssured.given().log().all()
-                .body(customerRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers")
-                .then().log().all();
+                .when().get("/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract()
+                .as(InvalidCustomerException.class);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncodePassword;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import java.sql.PreparedStatement;
@@ -19,7 +20,7 @@ import java.util.Optional;
 public class CustomerDao {
     private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = (resultSet, rowNum) -> Customer.of(
             resultSet.getString("username"),
-            resultSet.getString("password"),
+            new EncodePassword(resultSet.getString("password")),
             resultSet.getString("nickname"),
             resultSet.getInt("age")
     );

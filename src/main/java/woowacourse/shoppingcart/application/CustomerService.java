@@ -3,8 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.UserNames;
+import woowacourse.shoppingcart.domain.customer.*;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
@@ -15,15 +14,18 @@ import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 @Service
 public class CustomerService {
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(CustomerDao customerDao, PasswordEncoder passwordEncoder) {
         this.customerDao = customerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void addCustomer(CustomerRequest customerRequest) {
         validateUserName(customerRequest);
+        RawPassword rawPassword = new RawPassword(customerRequest.getPassword());
         Customer customer = Customer.of(
-                customerRequest.getUserName(), customerRequest.getPassword(),
+                customerRequest.getUserName(), passwordEncoder.encode(rawPassword),
                 customerRequest.getNickName(), customerRequest.getAge()
         );
         customerDao.save(customer);
@@ -46,8 +48,8 @@ public class CustomerService {
     }
 
     public void updatePassword(Customer customer, PasswordRequest passwordRequest) {
-        customer.validatePassword(passwordRequest.getOldPassword());
-        Customer updateCustomer = customer.updatePassword(passwordRequest.getNewPassword());
+        EncodePassword encodePassword = passwordEncoder.encode(new RawPassword(passwordRequest.getNewPassword()));
+        Customer updateCustomer = customer.updatePassword(encodePassword);
         customerDao.updatePassword(updateCustomer);
     }
 
