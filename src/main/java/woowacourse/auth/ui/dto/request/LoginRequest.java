@@ -5,9 +5,9 @@ import woowacourse.auth.application.dto.request.LoginServiceRequest;
 
 public class LoginRequest {
 
-    @NotBlank(message = "이메일을 입력해주세요.")
+    @NotBlank
     private String email;
-    @NotBlank(message = "비밀번호를 입력해주세요.")
+    @NotBlank
     private String password;
 
     public LoginRequest() {

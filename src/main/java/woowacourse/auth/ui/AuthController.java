@@ -1,8 +1,10 @@
 package woowacourse.auth.ui;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,13 +19,13 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.ui.dto.request.LoginRequest;
 import woowacourse.auth.ui.dto.request.MemberCreateRequest;
 import woowacourse.auth.ui.dto.request.MemberUpdateRequest;
-import woowacourse.auth.ui.dto.request.PasswordCheckRequest;
-import woowacourse.auth.ui.dto.request.PasswordUpdateRequest;
+import woowacourse.auth.ui.dto.request.PasswordRequest;
 import woowacourse.auth.ui.dto.response.CheckResponse;
 import woowacourse.auth.ui.dto.response.LoginResponse;
 import woowacourse.auth.ui.dto.response.MemberResponse;
 
 @RestController
+@Validated
 @RequestMapping("/api")
 public class AuthController {
 
@@ -41,7 +43,7 @@ public class AuthController {
     }
 
     @GetMapping("/members/check-email")
-    public ResponseEntity<CheckResponse> checkDuplicatedEmail(@RequestParam String email) {
+    public ResponseEntity<CheckResponse> checkDuplicatedEmail(@RequestParam @NotBlank String email) {
         CheckResponse checkResponse =
                 new CheckResponse(!authService.existsEmail(email));
         return ResponseEntity.ok(checkResponse);
@@ -55,8 +57,8 @@ public class AuthController {
 
     @PostMapping("/members/password-check")
     public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal String payload,
-                                                         @RequestBody PasswordCheckRequest passwordCheckRequest) {
-        boolean actual = authService.checkPassword(payload, passwordCheckRequest.getPassword());
+                                                         @RequestBody PasswordRequest passwordRequest) {
+        boolean actual = authService.checkPassword(payload, passwordRequest.getPassword());
         return ResponseEntity.ok(new CheckResponse(actual));
     }
 
@@ -76,8 +78,8 @@ public class AuthController {
 
     @PatchMapping("/members/password")
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal String payload,
-                                               @RequestBody @Valid PasswordUpdateRequest passwordUpdateRequest) {
-        authService.updatePassword(payload, passwordUpdateRequest.getPassword());
+                                               @RequestBody @Valid PasswordRequest passwordRequest) {
+        authService.updatePassword(payload, passwordRequest.getPassword());
         return ResponseEntity.noContent()
                 .build();
     }

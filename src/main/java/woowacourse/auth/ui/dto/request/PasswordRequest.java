@@ -1,13 +1,16 @@
 package woowacourse.auth.ui.dto.request;
 
-public class PasswordCheckRequest {
+import javax.validation.constraints.NotBlank;
 
+public class PasswordRequest {
+
+    @NotBlank
     private String password;
 
-    public PasswordCheckRequest() {
+    public PasswordRequest() {
     }
 
-    public PasswordCheckRequest(String password) {
+    public PasswordRequest(String password) {
         this.password = password;
     }
 

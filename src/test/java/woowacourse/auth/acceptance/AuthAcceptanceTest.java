@@ -11,16 +11,18 @@ import static woowacourse.util.HttpRequestUtil.postWithAuthorization;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.ui.dto.request.LoginRequest;
 import woowacourse.auth.ui.dto.request.MemberCreateRequest;
 import woowacourse.auth.ui.dto.request.MemberUpdateRequest;
-import woowacourse.auth.ui.dto.request.PasswordCheckRequest;
-import woowacourse.auth.ui.dto.request.PasswordUpdateRequest;
+import woowacourse.auth.ui.dto.request.PasswordRequest;
 import woowacourse.auth.ui.dto.response.CheckResponse;
 import woowacourse.auth.ui.dto.response.ErrorResponse;
 import woowacourse.auth.ui.dto.response.LoginResponse;
@@ -33,11 +35,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
     private static final MemberCreateRequest MEMBER_CREATE_REQUEST =
             new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
     private static final LoginRequest VALID_LOGIN_REQUEST = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-    private static final PasswordCheckRequest VALID_PASSWORD_CHECK_REQUEST = new PasswordCheckRequest("1q2w3e4r!");
-    private static final PasswordUpdateRequest INVALID_PASSWORD_UPDATE_REQUEST = new PasswordUpdateRequest("1q2w3e4r");
-    private static final PasswordUpdateRequest VALID_PASSWORD_UPDATE_REQUEST = new PasswordUpdateRequest("1q2w3e4r@");
-    private static final MemberUpdateRequest INVALID_NICKNAME_UPDATE_REQUEST = new MemberUpdateRequest("잘못된닉네임");
+    private static final PasswordRequest VALID_PASSWORD_CHECK_REQUEST = new PasswordRequest("1q2w3e4r!");
+    private static final PasswordRequest VALID_PASSWORD_UPDATE_REQUEST = new PasswordRequest("1q2w3e4r@");
     private static final MemberUpdateRequest VALID_NICKNAME_UPDATE_REQUEST = new MemberUpdateRequest("바뀐닉네임");
+    private static final String DATA_EMPTY_EXCEPTION_MESSAGE = "입력하지 않은 정보가 있습니다.";
 
     private static final String LOGIN_URI = "/api/login";
     private static final String SIGN_UP_URI = "/api/members";
@@ -56,8 +57,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("규칙에 맞지 않는 정보로 회원 가입을 시도하면 400을 응답한다.")
     @ParameterizedTest
-    @CsvSource({"abc, 1q2w3e4r!, 닉네임", "abc@woowahan.com, 1q2w3e4r, 닉네임", "abc@woowahan.com, 1q2w3e4r!, 잘못된닉네임"})
-    void signUp_BadRequest(String email, String password, String nickname) {
+    @MethodSource("provideInvalidMemberCreateRequestAndExpectedMessage")
+    void signUp_BadRequest(String email, String password, String nickname, String expectedMessage) {
         MemberCreateRequest invalidMemberCreateRequest = new MemberCreateRequest(email, password, nickname);
 
         ExtractableResponse<Response> response = post(SIGN_UP_URI, invalidMemberCreateRequest);
@@ -66,7 +67,21 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(message).contains("형식이 올바르지 않습니다.")
+                () -> assertThat(message).contains(expectedMessage)
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidMemberCreateRequestAndExpectedMessage() {
+        return Stream.of(
+                Arguments.of("abc", "1q2w3e4r!", "닉네임", "형식이 올바르지 않습니다."),
+                Arguments.of("abc@woowahan.com", "1q2w3e4r", "닉네임", "형식이 올바르지 않습니다."),
+                Arguments.of("abc@woowahan.com", "1q2w3e4r!", "잘못된닉네임", "형식이 올바르지 않습니다."),
+                Arguments.of(null, "1q2w3e4r!", "닉네임", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("", "1q2w3e4r!", "닉네임", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("abc@woowahan.com", null, "닉네임", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("abc@woowahan.com", "", "닉네임", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("abc@woowahan.com", "1q2w3e4r!", null, DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("abc@woowahan.com", "1q2w3e4r!", "", DATA_EMPTY_EXCEPTION_MESSAGE)
         );
     }
 
@@ -87,17 +102,25 @@ class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("잘못된 이메일 형식으로 중복 체크를 하려하면 400을 응답한다.")
-    @Test
-    void checkDuplicatedEmail_BadRequest() {
-        String invalidEmail = "abc";
+    @ParameterizedTest
+    @MethodSource("provideInvalidEmailAndExpectedMessage")
+    void checkDuplicatedEmail_BadRequest(String invalidEmailCheckRequestUri, String expectedMessage) {
 
-        ExtractableResponse<Response> response = get(EMAIL_DUPLICATION_CHECK_URI + invalidEmail);
+        ExtractableResponse<Response> response = get(invalidEmailCheckRequestUri);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(message).isEqualTo("이메일 형식이 올바르지 않습니다.")
+                () -> assertThat(message).isEqualTo(expectedMessage)
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidEmailAndExpectedMessage() {
+        return Stream.of(
+                Arguments.of("/api/members/check-email?email=", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("/api/members/check-email?email= ", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("/api/members/check-email?email=abc", "이메일 형식이 올바르지 않습니다.")
         );
     }
 
@@ -118,18 +141,29 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("올바르지 않은 이메일과 비밀번호로 로그인 요청을 하면 400을 응답한다.")
     @ParameterizedTest
-    @CsvSource({"abc@naver.com, 1q2w3e4r!", "abc@woowahan.com, 1q2w3e4r@"})
-    void login_BadRequest(String email, String password) {
+    @MethodSource("provideInvalidEmailAndPasswordAndExpectedMessage")
+    void login_BadRequest(String email, String password, String expectedMessage) {
         post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
-        LoginRequest loginRequest = new LoginRequest(email, password);
+        LoginRequest invalidLoginRequest = new LoginRequest(email, password);
 
-        ExtractableResponse<Response> response = post(LOGIN_URI, loginRequest);
+        ExtractableResponse<Response> response = post(LOGIN_URI, invalidLoginRequest);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(message).isEqualTo("이메일과 비밀번호를 확인해주세요.")
+                () -> assertThat(message).isEqualTo(expectedMessage)
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidEmailAndPasswordAndExpectedMessage() {
+        return Stream.of(
+                Arguments.of(null, "1q2w3e4r!", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("", "1q2w3e4r!", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("abc@naver.com", null, DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("abc@naver.com", "", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("abc@naver.com", "1q2w3e4r!", "이메일과 비밀번호를 확인해주세요."),
+                Arguments.of("abc@woowahan.com", "1q2w3e4r@", "이메일과 비밀번호를 확인해주세요.")
         );
     }
 
@@ -142,7 +176,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .getToken();
 
         ExtractableResponse<Response> response =
-                postWithAuthorization(PASSWORD_CHECK_URI, token, new PasswordCheckRequest(password)
+                postWithAuthorization(PASSWORD_CHECK_URI, token, new PasswordRequest(password)
                 );
         boolean success = response.as(CheckResponse.class)
                 .isUnique();
@@ -219,20 +253,29 @@ class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("형식에 맞지 않는 회원 정보로 수정하려고 하면 400을 응답한다.")
-    @Test
-    void updateMember_BadRequest() {
+    @ParameterizedTest
+    @MethodSource("provideInvalidNicknameAndExpectedMessage")
+    void updateMember_BadRequest(String invalidNickname, String expectedMessage) {
         post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
         String token = post(LOGIN_URI, VALID_LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
 
         ExtractableResponse<Response> response =
-                patchWithAuthorization(MEMBERS_URI, token, INVALID_NICKNAME_UPDATE_REQUEST);
+                patchWithAuthorization(MEMBERS_URI, token, new MemberUpdateRequest(invalidNickname));
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(message).isEqualTo("닉네임 형식이 올바르지 않습니다.")
+                () -> assertThat(message).isEqualTo(expectedMessage)
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidNicknameAndExpectedMessage() {
+        return Stream.of(
+                Arguments.of("잘못된닉네임", "닉네임 형식이 올바르지 않습니다."),
+                Arguments.of(null, DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("", DATA_EMPTY_EXCEPTION_MESSAGE)
         );
     }
 
@@ -256,20 +299,29 @@ class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("형식에 맞지 않는 비밀번호로 수정하려고 하면 400을 응답한다.")
-    @Test
-    void updatePassword_BadRequest() {
+    @ParameterizedTest
+    @MethodSource("provideInvalidPasswordAndExpectedMessage")
+    void updatePassword_BadRequest(String invalidPassword, String expectedMessage) {
         post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
         String token = post(LOGIN_URI, VALID_LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
 
         ExtractableResponse<Response> response =
-                patchWithAuthorization(PASSWORD_UPDATE_URI, token, INVALID_PASSWORD_UPDATE_REQUEST);
+                patchWithAuthorization(PASSWORD_UPDATE_URI, token, new PasswordRequest(invalidPassword));
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(message).isEqualTo("비밀번호 형식이 올바르지 않습니다.")
+                () -> assertThat(message).isEqualTo(expectedMessage)
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidPasswordAndExpectedMessage() {
+        return Stream.of(
+                Arguments.of("1q2w3e4r", "비밀번호 형식이 올바르지 않습니다."),
+                Arguments.of(null, DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("", DATA_EMPTY_EXCEPTION_MESSAGE)
         );
     }
 
