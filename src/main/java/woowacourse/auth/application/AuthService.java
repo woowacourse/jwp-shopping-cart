@@ -19,7 +19,7 @@ public class AuthService {
     }
 
     public TokenResponse login(String email, String password) {
-        final Customer customer = customerDao.findByEmail(email);
+        final Customer customer = customerDao.getByEmail(email);
         if (customer.isDifferentPassword(password)) {
             throw new LoginException("패스워드가 일치하지 않습니다.", ErrorResponse.LOGIN_FAIL);
         }

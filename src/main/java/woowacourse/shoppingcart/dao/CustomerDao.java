@@ -29,7 +29,7 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long getIdByUsername(final String userName) {
         try {
             final String query = "SELECT id FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
@@ -51,7 +51,7 @@ public class CustomerDao {
         simpleJdbcInsert.execute(params);
     }
 
-    public Customer findByEmail(String email) {
+    public Customer getByEmail(String email) {
         final String sql = "SELECT id, email, password, username FROM customer WHERE email = ?";
         try {
             return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, email);
