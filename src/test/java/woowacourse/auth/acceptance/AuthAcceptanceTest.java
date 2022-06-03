@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
-import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.member.dto.request.SignUpRequest;
 
 import static org.hamcrest.Matchers.equalTo;
