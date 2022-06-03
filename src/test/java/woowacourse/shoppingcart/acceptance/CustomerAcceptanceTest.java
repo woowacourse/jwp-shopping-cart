@@ -70,21 +70,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"YEONLOG,yeonlog", "aa_01,aa01"})
-    @DisplayName("회원가입 시 아이디가 대문자이면 소문자로 변경하고 특수문자가 들어가면 제거한다.")
-    void changeAccountPattern(String account, String expectedAccount) {
-        // given
-        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumber("010", "1234", "5678"));
-        post("/signup", signupRequest);
-
+    @CsvSource(value = {"YEONLOG", "aa_01"})
+    @DisplayName("회원가입 시 아이디가 소문자 혹은 숫자 조합을 만족하지 않으면 상태코드 400을 반환한다.")
+    void changeAccountPattern(String account) {
         // when
-        final SignupRequest duplicatedAccountSignupRequest = new SignupRequest(expectedAccount, "eden", "Password123!", "address", new PhoneNumber("010", "1234", "5678"));
-        final ExtractableResponse<Response> response = post("/signup", duplicatedAccountSignupRequest);
+        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumber("010", "1234", "5678"));
+        final ExtractableResponse<Response> response = post("/signup", signupRequest);
 
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("이미 존재하는 아이디입니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("아이디는 영어 혹은 숫자의 조합으로 이루어져야 합니다.")
         );
     }
 
