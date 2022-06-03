@@ -22,10 +22,10 @@
 
 ```json
 {
-	"username" : "myUsername123",
-	"password" : "myPassword1234",
-	"phoneNumber" : "01012345678",
-	"address" : "성담빌딩"
+  "username" : "myUsername123",
+  "password" : "myPassword1234",
+  "phoneNumber" : "01012345678",
+  "address" : "성담빌딩"
 }
 ```
 
@@ -44,8 +44,8 @@ empty body
 
 ```json
 {
-	"username" : "myUsername123",
-	"password" : "myPassword1234"
+  "username" : "myUsername123",
+  "password" : "myPassword1234"
 }
 ```
 
@@ -54,7 +54,7 @@ empty body
 ```json
 200 ok
 {
-	"accessToken" : "jwt.token.here"
+  "accessToken" : "jwt.token.here"
 }
 ```
 
@@ -67,11 +67,11 @@ empty body
 ```json
 200 ok
 {
-	"customer" : {
-		"username" : "myUsername123",
-		"phoneNumber" : "01012345678",
-		"address" : "성담빌딩"
-	}
+  "customer" : {
+    "username" : "myUsername123",
+    "phoneNumber" : "01012345678",
+    "address" : "성담빌딩"
+  }
 }
 ```
 
@@ -83,8 +83,8 @@ empty body
 
 ```json
 {
-	"phoneNumber" : "01087654321",
-	"address" : "루터회관"
+  "phoneNumber" : "01087654321",
+  "address" : "루터회관"
 }
 ```
 
@@ -103,7 +103,7 @@ empty body
 
 ```json
 {
-	"password" : "changePassword123"
+  "password" : "changePassword123"
 }
 ```
 
@@ -124,15 +124,283 @@ empty body
 204 no-content
 empty body
 ```
+## Cart
+
+### 카트 전체 아이템조회
+
+- `GET /api/cartItems`
+- required authorization
+- http response
+
+```json
+200 ok
+{
+  "cartItems" : [
+    {
+      "id" : 1,
+      "productId" : 5,
+      "name" : "음식1",
+      "price" : 1000,
+      "quantitiy" : 2,
+      "imageURL" : "http:..."
+    },
+    {
+      "id" : 2,
+      "productId" : 7,
+      "name" : "음식2",
+      "price" : 1000,
+      "quantitiy" : 3,
+      "imageURL" : "http:..."
+    }
+  ]
+}
+```
+
+### 카트에 아이템 추가
+
+- `POST /api/cartItems`
+- required authorization
+- http request
+
+```json
+{
+  "productId" : 1,
+  "quantitiy" : 2
+}
+```
+
+- http response
+
+```json
+201 created
+empty body
+```
+
+### 카트에 아이템 수량 수정
+
+- `PATCH /api/cartItems/{cartItemId}?quantity=2`
+- required authorization
+- http response
+
+```json
+200 ok
+empty body
+```
+
+### 카트에 아이템 삭제
+
+- `DELETE /api/cartItems/{cartItemId}`
+- required authoziation
+- http response
+
+```json
+204 noContent
+empty body
+```
+
+## Order
+
+### 주문 추가
+
+- `POST /api/orders`
+- required authoziation
+- http request
+
+```json
+{
+  "orders" : [
+    {
+      "cartItemId" : 1
+    },
+    {
+      "cartItemId" : 2
+    }
+  ]
+}
+```
+
+- http response
+
+```json
+201 created
+Location : /api/orders/{orderId}
+```
+
+### 주문 전체 확인
+
+- `GET /api/orders`
+- required authoziation
+- http response
+
+```json
+200 ok
+{
+  "orders" : [
+    { 
+      "id" : 1,
+      "orderDetails" : [
+        {
+          "id" : 1,
+          "productId" : 6,
+          "name" : "음식1",
+          "price" : 1000,
+          "quantitiy" : 2,
+          "imageURL" : "http:..."
+        },
+        {
+          "id" : 2,
+          "productId" : 7,
+          "name" : "음식2",
+          "price" : 1000,
+          "quantitiy" : 3,
+          "imageURL" : "http:..."
+        }
+      ]
+    },
+    {
+      "id" : 2,
+      "orderDetails" : [
+        {
+          "id" : 1,
+          "productId" : 6,
+          "name" : "음식1",
+          "price" : 1000,
+          "quantitiy" : 2,
+          "imageURL" : "http:..."
+        },
+        {
+          "id" : 2,
+          "productId" : 7,
+          "name" : "음식2",
+          "price" : 1000,
+          "quantitiy" : 3,
+          "imageURL" : "http:..."
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 주문 상세 확인
+
+- `GET /api/orders/{orderId}`
+- required authoziation
+- http response
+
+```json
+200 ok
+{
+  "order" : { 
+    "id" : 1,
+    "orderDetails" : [
+      {
+        "id" : 1,
+        "productId" : 6,
+        "name" : "음식1",
+        "price" : 1000,
+        "quantitiy" : 2,
+        "imageURL" : "http:..."
+      },
+      {
+        "id" : 2,
+        "productId" : 7,
+        "name" : "음식2",
+        "price" : 1000,
+        "quantitiy" : 3,
+        "imageURL" : "http:..."
+      }
+    ]
+  }
+}
+```
+
+## Product - 단순
+
+### 상품 전체 조회
+
+- `GET /api/products`
+- http response
+
+```json
+200 ok
+{
+  "products" : [
+    {
+      "id" : 1,
+      "name" : "과자",
+      "price" : 1000,
+      "stock" : 20,
+      "imageURL" : "http...."
+    },
+    {
+      "id" : 2,
+      "name" : "소주",
+      "price" : 2000,
+      "stock" : 15,
+      "imageURL" : "http...."
+    }
+  ]
+}
+```
+
+### 상품 단일 조회
+
+- `GET /api/products/{productId}`
+- http response
+
+```json
+200 ok
+{
+  "product" : {
+    "id" : 1,
+    "name" : "과자",
+    "price" : 1000,
+    "stock" : 20,
+    "imageURL" : "http...."
+  }
+}
+```
+
+### 상품 추가
+
+- `POST /api/products/{productId}`
+- http request
+
+```json
+{
+  "name" : "과자",
+  "price" : 1000,
+  "stock" : 20,
+  "imageURL" : "http..."
+}
+```
+
+- http response
+
+```json
+201 created
+Location : "/api/products/{productId}"
+```
+
+### 상품 삭제
+
+- `DELETE /api/products/{productId}`
+- http response
+
+```json
+204 non content
+empty body
+```
 
 ## Error Response
 
 ```json
 {
-	"error" : {
-		"messages" : [
-			"error1", "error2"
-		]
+  "error" : {
+    "messages" : [
+      "error1", "error2"
+    ]
 }
 ```
 
