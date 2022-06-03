@@ -1,11 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -14,9 +8,15 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.application.exception.CannotDeleteException;
 import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.domain.Customer;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

@@ -1,5 +1,24 @@
 package woowacourse.shoppingcart.application;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import woowacourse.shoppingcart.application.exception.CannotUpdateUserNameException;
+import woowacourse.shoppingcart.application.exception.DuplicatedNameException;
+import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DuplicateResponse;
+
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -9,24 +28,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
 import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
-
-import java.util.Optional;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.DuplicateResponse;
-import woowacourse.shoppingcart.application.exception.CannotUpdateUserNameException;
-import woowacourse.shoppingcart.application.exception.DuplicatedNameException;
-import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {

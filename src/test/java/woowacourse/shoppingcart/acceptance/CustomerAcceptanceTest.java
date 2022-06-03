@@ -1,10 +1,5 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
-import static woowacourse.fixture.TokenFixture.BEARER;
-
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -24,24 +19,19 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
+import static woowacourse.fixture.TokenFixture.BEARER;
+
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("회원가입 성공하면 201 CREATED를 반환한다.")
     @Test
     void addCustomer() {
-        // given
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론",
-                rowBasicPassword);
-
         // when
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> response = 회원가입을_한다("기론", rowBasicPassword);
 
         // then
         Long id = Long.parseLong(response.header("Location").split("/")[3]);
@@ -56,15 +46,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("기론",
-                rowBasicPassword);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpRequest)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+
+        회원가입을_한다("기론", rowBasicPassword);
 
         final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
         final TokenResponse tokenResponse = RestAssured

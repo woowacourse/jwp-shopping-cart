@@ -1,14 +1,5 @@
 package woowacourse.auth.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
-import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
-
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,12 +7,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import woowacourse.auth.application.exception.InvalidTokenException;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.application.exception.InvalidTokenException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
+import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {

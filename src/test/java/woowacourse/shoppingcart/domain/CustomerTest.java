@@ -1,11 +1,11 @@
 package woowacourse.shoppingcart.domain;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.shoppingcart.application.exception.CannotUpdateUserNameException;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
 
 class CustomerTest {
 
