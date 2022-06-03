@@ -1,13 +1,14 @@
-package woowacourse.auth.ui;
+package woowacourse.config.interceptor;
+
+import static woowacourse.auth.support.TokenConst.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.auth.exception.InvalidTokenException;
+import woowacourse.exception.auth.InvalidTokenException;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.support.TokenConst;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
@@ -21,8 +22,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = AuthorizationExtractor.extract(request);
         try {
-            String payload = jwtTokenProvider.getPayload(token);
-            request.setAttribute(TokenConst.PAYLOAD, payload);
+            String payload = jwtTokenProvider.getValidatedPayload(token);
+            request.setAttribute(PAYLOAD, payload);
             return true;
         } catch (InvalidTokenException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
