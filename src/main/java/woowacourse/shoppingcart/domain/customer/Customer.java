@@ -69,4 +69,35 @@ public class Customer {
     public String getAddress() {
         return address;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Customer customer = (Customer)o;
+
+        if (getId() != null ? !getId().equals(customer.getId()) : customer.getId() != null)
+            return false;
+        if (getUsername() != null ? !getUsername().equals(customer.getUsername()) : customer.getUsername() != null)
+            return false;
+        if (getPassword() != null ? !getPassword().equals(customer.getPassword()) : customer.getPassword() != null)
+            return false;
+        if (getPhoneNumber() != null ? !getPhoneNumber().equals(customer.getPhoneNumber()) :
+            customer.getPhoneNumber() != null)
+            return false;
+        return getAddress() != null ? getAddress().equals(customer.getAddress()) : customer.getAddress() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getUsername() != null ? getUsername().hashCode() : 0);
+        result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
+        result = 31 * result + (getPhoneNumber() != null ? getPhoneNumber().hashCode() : 0);
+        result = 31 * result + (getAddress() != null ? getAddress().hashCode() : 0);
+        return result;
+    }
 }

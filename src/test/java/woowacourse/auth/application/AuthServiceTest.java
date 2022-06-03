@@ -49,12 +49,7 @@ class AuthServiceTest {
         LoginRequest loginRequest = new LoginRequest("dongho108", "password1234");
         Customer customer = authService.findCustomerByUsername(loginRequest.getUsername());
 
-        assertAll(
-            () -> assertThat(customer.getUsername()).isEqualTo(savedCustomer.getUsername()),
-            () -> assertThat(customer.getPassword()).isEqualTo(savedCustomer.getPassword()),
-            () -> assertThat(customer.getPhoneNumber()).isEqualTo(savedCustomer.getPhoneNumber()),
-            () -> assertThat(customer.getAddress()).isEqualTo(savedCustomer.getAddress())
-        );
+        assertThat(customer).isEqualTo(savedCustomer);
     }
 
     @DisplayName("username이 일치하지 않으면 UserNotFoundException을 반환해야 한다.")
