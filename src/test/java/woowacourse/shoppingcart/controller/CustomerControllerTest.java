@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.service.AuthService;
 import woowacourse.shoppingcart.service.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
 
 @WebMvcTest(CustomerController.class)
 public class CustomerControllerTest {

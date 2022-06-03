@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CheckDuplicationRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -83,7 +83,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(getResponse.body().jsonPath().getString("name")).isEqualTo("ellie");
+        assertThat(getResponse.body().jsonPath().getString("userName")).isEqualTo("ellie");
     }
 
     /*

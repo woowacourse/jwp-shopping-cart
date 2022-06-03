@@ -2,12 +2,12 @@ package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dto.CheckDuplicationResponse;
+import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
 import woowacourse.shoppingcart.exception.auth.AuthorizationException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.exception.duplicate.DuplicateCustomerException;
 import woowacourse.shoppingcart.support.Encryptor;
 
@@ -24,11 +24,11 @@ public class CustomerService {
     }
 
     public void addCustomer(final CustomerRequest customerRequest) {
-        if (customerDao.existsByName(customerRequest.getName())) {
+        if (customerDao.existsByName(customerRequest.getUserName())) {
             throw new DuplicateCustomerException();
         }
         final String encryptedPassword = encryptor.encrypt(customerRequest.getPassword());
-        customerDao.save(new Customer(customerRequest.getName(), encryptedPassword));
+        customerDao.save(new Customer(customerRequest.getUserName(), encryptedPassword));
     }
 
     public void deleteCustomerByName(final String customerName) {

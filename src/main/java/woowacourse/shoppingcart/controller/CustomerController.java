@@ -4,11 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.dto.CheckDuplicationRequest;
-import woowacourse.shoppingcart.dto.CheckDuplicationResponse;
+import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
+import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
 import woowacourse.shoppingcart.service.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -29,7 +29,7 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<Void> signUp(@RequestBody @Valid final CustomerRequest customerRequest) {
         customerService.addCustomer(customerRequest);
-        return ResponseEntity.created(URI.create("/api/customers/" + customerRequest.getName())).build();
+        return ResponseEntity.created(URI.create("/api/customers/" + customerRequest.getUserName())).build();
     }
 
     @PutMapping("/me")
