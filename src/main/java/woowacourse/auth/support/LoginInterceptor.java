@@ -27,10 +27,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
         logger.info("request uri = {}, request method = {} ", request.getRequestURI(), request.getMethod());
         String token = AuthorizationExtractor.extract(request);
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new WrongTokenException();
+        if (jwtTokenProvider.validateToken(token)) {
+            return true;
         }
-        return true;
+        throw new WrongTokenException();
     }
 
     private boolean isPreflight(HttpServletRequest request) {
