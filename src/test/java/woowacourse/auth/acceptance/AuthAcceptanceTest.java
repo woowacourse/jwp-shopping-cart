@@ -34,7 +34,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(new TokenRequest("email", "Pw123456!"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/customers/login")
+                .post("/auth/login")
                 .then().log().all()
                 .extract().as(TokenResponse.class).getAccessToken();
         // when
@@ -60,7 +60,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(new TokenRequest("email", "Pw123456!"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/customers/login")
+                .post("/auth/login")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().as(ExceptionResponse.class);

@@ -49,6 +49,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
+            IllegalArgumentException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,

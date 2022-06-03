@@ -44,19 +44,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.getMessage()).isEqualTo("중복된 email 입니다.");
     }
 
-    @DisplayName("이메일 중복 확인할 때, 중복인 경우 false를 반환한다.")
+    @DisplayName("이메일 중복 확인할 때, 중복이 아닌 경우 예외가 발생하지 않는다.")
     @Test
     void isNotDuplicationEmail() {
         //then
-        Boolean isDuplicationEmail = RestAssured.given().log().all()
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .param("email", "email")
                 .when()
                 .post("/customers/email")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract().as(Boolean.class);
+                .extract();
 
-        assertThat(isDuplicationEmail).isFalse();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("회원가입")
@@ -99,7 +98,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(new TokenRequest("email", "Pw123456!"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/customers/login")
+                .post("/auth/login")
                 .then().log().all()
                 .extract().as(TokenResponse.class).getAccessToken();
         //when
@@ -144,7 +143,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(new TokenRequest("email", "Pw123456!"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/customers/login")
+                .post("/auth/login")
                 .then().log().all()
                 .extract().as(TokenResponse.class).getAccessToken();
         //when
