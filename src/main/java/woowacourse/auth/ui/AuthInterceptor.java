@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.application.AuthorizationException;
 import woowacourse.auth.support.AuthorizationExtractor;
 
 public class AuthInterceptor implements HandlerInterceptor {
@@ -34,13 +33,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     public void validateToken(HttpServletRequest request) {
         String token = AuthorizationExtractor.extract(request);
-        if (token == null) {
-            throw new AuthorizationException("토큰이 없습니다.");
-        }
-
-        if (authService.isInvalidToken(token)) {
-            throw new AuthorizationException();
-        }
+        authService.validateToken(token);
     }
-
 }

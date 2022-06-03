@@ -2,11 +2,13 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import woowacourse.auth.domain.LoginCustomer;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.CheckDuplicationRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -27,25 +29,25 @@ public class CustomerController {
     }
 
     @PostMapping("/duplication")
-    public ResponseEntity<Boolean> checkDuplicatedName(@RequestBody String customerName) {
-        boolean isExistCustomer = customerService.existsCustomer(customerName);
+    public ResponseEntity<Boolean> checkDuplicatedName(@RequestBody CheckDuplicationRequest checkDuplicationRequest) {
+        boolean isExistCustomer = customerService.existsCustomer(checkDuplicationRequest.getName());
         return ResponseEntity.ok(isExistCustomer);
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> edit(HttpServletRequest request, @RequestBody @Valid CustomerRequest editRequest) {
-        customerService.editCustomer(request, editRequest);
+    public ResponseEntity<Void> edit(@AuthenticationPrincipal LoginCustomer loginCustomer, @RequestBody @Valid CustomerRequest editRequest) {
+        customerService.editCustomer(loginCustomer.getUserName(), editRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> customer(HttpServletRequest request) {
-        return ResponseEntity.ok(customerService.findCustomer(request));
+    public ResponseEntity<CustomerResponse> customer(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        return ResponseEntity.ok(customerService.findCustomer(loginCustomer.getUserName()));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> withDraw(HttpServletRequest request) {
-        customerService.deleteCustomer(request);
+    public ResponseEntity<Void> withDraw(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        customerService.deleteCustomer(loginCustomer.getUserName());
         return ResponseEntity.noContent().build();
     }
 }

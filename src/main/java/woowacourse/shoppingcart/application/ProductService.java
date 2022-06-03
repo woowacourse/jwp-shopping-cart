@@ -2,30 +2,69 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.domain.LoginCustomer;
+import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class ProductService {
     private final ProductDao productDao;
+    private final CartItemDao cartItemDao;
+    private final CustomerDao customerDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(final ProductDao productDao, final CartItemDao cartItemDao, final CustomerDao customerDao) {
         this.productDao = productDao;
+        this.cartItemDao = cartItemDao;
+        this.customerDao = customerDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    @Transactional(readOnly = true)
+    public List<ProductResponse> findProducts(final LoginCustomer loginCustomer) {
+        List<Product> products = productDao.findProducts();
+
+        if(loginCustomer.isUnauthorized()){
+            return products.stream()
+                    .map(ProductResponse::of)
+                    .collect(Collectors.toList());
+        }
+
+        Long userId = customerDao.findIdByUserName(loginCustomer.getUserName());
+
+        return products.stream()
+                .map(Product::getId)
+                .map(productId -> assembleProductResponse(userId, productId))
+                .collect(Collectors.toList());
     }
 
     public Long addProduct(final Product product) {
         return productDao.save(product);
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    @Transactional(readOnly = true)
+    public ProductResponse findProductById(final LoginCustomer loginCustomer, final Long productId) {
+        Product product = productDao.findProductById(productId);
+        Long userId = customerDao.findIdByUserName(loginCustomer.getUserName());
+
+        if (loginCustomer.isUnauthorized() || !cartItemDao.existByCustomerIdAndProductId(userId, productId)) {
+            return ProductResponse.of(product);
+        }
+
+        return assembleProductResponse(userId, productId);
+    }
+
+    private ProductResponse assembleProductResponse(Long customerId, Long productId) {
+        Product product = productDao.findProductById(productId);
+        Long cartId = cartItemDao.findIdByCustomerIdAndProductId(customerId, productId);
+        int cartQuantity = cartItemDao.findQuantityById(customerId);
+
+        return ProductResponse.of(product, cartId, cartQuantity);
     }
 
     public void deleteProductById(final Long productId) {

@@ -2,8 +2,6 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -12,7 +10,6 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +20,15 @@ public class CartService {
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao, JwtTokenProvider jwtTokenProvider) {
+    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public List<Cart> findCarts(final HttpServletRequest request) {
-        String customerName = getNameFromToken(request);
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public List<Cart> findCarts(final String userName) {
+        final List<Long> cartIds = findCartIdsByCustomerName(userName);
 
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
@@ -45,14 +39,13 @@ public class CartService {
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    private List<Long> findCartIdsByCustomerName(final String userName) {
+        final Long customerId = customerDao.findIdByUserName(userName);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final HttpServletRequest request, final Long productId) {
-        String customerName = getNameFromToken(request);
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long addCart(final String userName, final Long productId) {
+        final Long customerId = customerDao.findIdByUserName(userName);
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
@@ -60,9 +53,8 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final HttpServletRequest request, final Long cartId) {
-        String customerName = getNameFromToken(request);
-        validateCustomerCart(cartId, customerName);
+    public void deleteCart(final String userName, final Long cartId) {
+        validateCustomerCart(cartId, userName);
         cartItemDao.deleteCartItem(cartId);
     }
 
@@ -74,8 +66,7 @@ public class CartService {
         throw new NotInCustomerCartItemException();
     }
 
-    private String getNameFromToken(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        return jwtTokenProvider.getPayload(token);
+    public void updateQuantity(Long cartId, int quantity) {
+        cartItemDao.updateProductQuantity(cartId, quantity);
     }
 }
