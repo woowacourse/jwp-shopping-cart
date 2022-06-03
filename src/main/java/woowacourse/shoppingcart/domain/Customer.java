@@ -1,9 +1,5 @@
 package woowacourse.shoppingcart.domain;
 
-import woowacourse.shoppingcart.utils.CustomerInformationValidator;
-
-import javax.xml.validation.Validator;
-
 public class Customer {
     private final Long id;
     private final String email;

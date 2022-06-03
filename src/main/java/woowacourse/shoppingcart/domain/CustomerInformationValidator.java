@@ -1,7 +1,6 @@
-package woowacourse.shoppingcart.utils;
+package woowacourse.shoppingcart.domain;
 
 public class CustomerInformationValidator {
-
 
     private static final String EMAIL_FORMAT = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$";
     private static final String PASSWORD_FORMAT = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$";

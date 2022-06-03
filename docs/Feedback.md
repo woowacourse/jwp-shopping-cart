@@ -13,8 +13,10 @@
     - [x] 서버에서 에러가 발생한 경우 Bad Request 가 맞는지?
       - `Exception`으로 에러가 발생한다면 500 반환
     - [x] `ExceptionHandler` 코드 중복 제거
-- [ ] `Util` - CustomerInformationValidator
-    - [ ] Util 클래스로 분리한 목적과 Util 클래스의 정의
-- [x] `DB` - `Customer` 테이블
+- [x] `Util` - CustomerInformationValidator
+    - [x] Util 클래스로 분리한 목적과 Util 클래스의 정의
+      - Util클래스 : 특정 비즈니스 로직과 독립적인 기능을 수행하는 클래스
+      - 현재 `CustomerInformationValidator` 클래스는 `Customer` 클래스의 값을 검증하는 기능을 수행하기때문에 `Domain`으로 재분리
+- [x] `DB` - `Customer` 테이블 
     - [x] name이 unique로 되어있음. -> email로 수정 필요
 - [x] ArgumentResolver 기능 구현

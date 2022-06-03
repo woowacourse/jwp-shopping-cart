@@ -6,7 +6,7 @@ import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.utils.Encryptor;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.utils.CustomerInformationValidator;
+import woowacourse.shoppingcart.domain.CustomerInformationValidator;
 
 @Service
 public class CustomerService {
