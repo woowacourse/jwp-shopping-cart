@@ -96,62 +96,6 @@ public class CustomerDaoTest {
     }
 
     @Test
-    @DisplayName("회원 이름에 따른 회원의 비밀번호가 일치한다.")
-    void isValidPasswordByUsername() {
-        // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
-        customerDao.save(레넌);
-
-        // when
-        boolean result = customerDao.isValidPasswordByUsername("레넌", "1234");
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @DisplayName("회언 이름에 따른 회원의 비밀번호가 일치하지 않는다.")
-    void isInvalidPasswordByUsername() {
-        // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
-        customerDao.save(레넌);
-
-        // when
-        boolean result = customerDao.isValidPasswordByUsername("레넌", "1235");
-
-        // then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    @DisplayName("회원 이메일에 따른 회원의 비밀번호가 일치한다.")
-    void isValidPasswordByEmail() {
-        // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
-        customerDao.save(레넌);
-
-        // when
-        boolean result = customerDao.isValidPasswordByEmail("rennon@woowa.com", "1234");
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @DisplayName("회원 이메일에 따른 회원의 비밀번호가 일치하지 않는다.")
-    void isInvalidPasswordByEmail() {
-        // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
-        customerDao.save(레넌);
-
-        // when
-        boolean result = customerDao.isValidPasswordByEmail("rennon@woowa.com", "1235");
-
-        // then
-        assertThat(result).isFalse();
-    }
-
-    @Test
     @DisplayName("비밀번호를 갱신할 수 있다.")
     void updatePassword() {
         // given
@@ -160,10 +104,10 @@ public class CustomerDaoTest {
 
         // when
         customerDao.updatePassword(customer.getId(), "5678");
-        boolean result = customerDao.isValidPasswordByUsername("레넌", "5678");
+        Customer foundCustomer = customerDao.findByUsername("레넌");
 
         // then
-        assertThat(result).isTrue();
+        assertThat(foundCustomer.getPassword()).isEqualTo("5678");
     }
 
     @Test

@@ -11,8 +11,6 @@ import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @Service
 @Transactional(readOnly = true)
@@ -44,31 +42,22 @@ public class CustomerService {
         }
     }
 
-    public CustomerResponse findMe(String username) {
+    public CustomerResponse findCustomer(String username) {
         Customer customer = customerDao.findByUsername(username);
         return new CustomerResponse(customer.getUsername(), customer.getEmail());
     }
 
     @Transactional
-    public void updateMe(String username, UpdatePasswordRequest updatePasswordRequest) {
+    public void updateCustomer(String username, UpdatePasswordRequest updatePasswordRequest) {
         Customer customer = customerDao.findByUsername(username);
-        validateCustomer(username, updatePasswordRequest.getPassword());
+        customer.validatePassword(updatePasswordRequest.getPassword());
         customerDao.updatePassword(customer.getId(), updatePasswordRequest.getNewPassword());
     }
 
     @Transactional
-    public void deleteMe(String username, DeleteCustomerRequest deleteCustomerRequest) {
-        validateCustomer(username, deleteCustomerRequest.getPassword());
+    public void deleteCustomer(String username, DeleteCustomerRequest deleteCustomerRequest) {
+        Customer customer = customerDao.findByUsername(username);
+        customer.validatePassword(deleteCustomerRequest.getPassword());
         customerDao.deleteByUsername(username);
-    }
-
-    private void validateCustomer(String username, String updatePasswordRequest) {
-        if (!customerDao.existByUsername(username)) {
-            throw new InvalidCustomerException();
-        }
-
-        if (!customerDao.isValidPasswordByUsername(username, updatePasswordRequest)) {
-            throw new InvalidPasswordException();
-        }
     }
 }

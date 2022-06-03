@@ -14,7 +14,7 @@ import woowacourse.shoppingcart.exception.AuthorizationException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public AuthenticationPrincipalArgumentResolver(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;

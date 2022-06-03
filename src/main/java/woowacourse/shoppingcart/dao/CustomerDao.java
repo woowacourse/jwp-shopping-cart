@@ -82,31 +82,21 @@ public class CustomerDao {
         }
     }
 
-    public boolean isValidPasswordByUsername(String username, String password) {
-        try {
-            final String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ? AND password = ?)";
-            return jdbcTemplate.queryForObject(query, Boolean.class, username, password);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
-    }
-
-    public boolean isValidPasswordByEmail(String email, String password) {
-        try {
-            final String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ? AND password = ?)";
-            return jdbcTemplate.queryForObject(query, Boolean.class, email, password);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
-    }
-
     public void updatePassword(Long id, String password) {
-        final String query = "UPDATE CUSTOMER SET password = ? WHERE id = ?";
-        jdbcTemplate.update(query, password, id);
+        try {
+            final String query = "UPDATE CUSTOMER SET password = ? WHERE id = ?";
+            jdbcTemplate.update(query, password, id);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
     }
 
     public void deleteByUsername(String username) {
-        final String query = "DELETE FROM customer WHERE username = ?";
-        jdbcTemplate.update(query, username);
+        try {
+            final String query = "DELETE FROM customer WHERE username = ?";
+            jdbcTemplate.update(query, username);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
     }
 }

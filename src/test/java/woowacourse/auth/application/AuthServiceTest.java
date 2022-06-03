@@ -14,6 +14,7 @@ import woowacourse.auth.dto.SignInResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @SpringBootTest
 @Sql("classpath:schema.sql")
@@ -46,7 +47,7 @@ class AuthServiceTest {
     void signInFailThrowNoCustomerException() {
         assertThatThrownBy(() -> authService.signIn(new SignInRequest("rennon@woowa.com", "1234")))
                 .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("로그인 실패");
+                .hasMessage("존재하지 않는 유저입니다.");
     }
 
     @Test
@@ -57,7 +58,7 @@ class AuthServiceTest {
 
         // when & then
         assertThatThrownBy(() -> authService.signIn(new SignInRequest("rennon@woowa.com", "1235")))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("로그인 실패");
+                .isInstanceOf(InvalidPasswordException.class)
+                .hasMessage("비밀번호가 틀렸습니다.");
     }
 }

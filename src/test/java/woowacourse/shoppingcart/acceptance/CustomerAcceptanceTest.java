@@ -59,7 +59,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/me")
-                .then().log().all().statusCode(HttpStatus.OK.value());
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("토큰이 없으면 내 정보를 조회할 수 없다.")
@@ -90,7 +91,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(ContentType.JSON)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/me")
-                .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("내 정보를 수정할 수 있다.")
@@ -157,7 +159,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(ContentType.JSON)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().patch("/users/me")
-                .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("회원을 탈퇴할 수 있다.")

@@ -37,20 +37,20 @@ public class CustomerController {
 
     @GetMapping("/me")
     public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String userNameByToken) {
-        return ResponseEntity.ok().body(customerService.findMe(userNameByToken));
+        return ResponseEntity.ok().body(customerService.findCustomer(userNameByToken));
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal String userNameByToken,
+    public ResponseEntity<Void> updateMe(@AuthenticationPrincipal String userNameByToken,
                                                      @RequestBody @Valid UpdatePasswordRequest updatePasswordRequest) {
-        customerService.updateMe(userNameByToken, updatePasswordRequest);
+        customerService.updateCustomer(userNameByToken, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal String userNameByToken,
                                          @RequestBody @Valid DeleteCustomerRequest deleteCustomerRequest) {
-        customerService.deleteMe(userNameByToken, deleteCustomerRequest);
+        customerService.deleteCustomer(userNameByToken, deleteCustomerRequest);
         return ResponseEntity.noContent().build();
     }
 }

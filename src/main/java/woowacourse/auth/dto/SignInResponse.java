@@ -2,9 +2,9 @@ package woowacourse.auth.dto;
 
 public class SignInResponse {
 
-    private String username;
-    private String email;
-    private String token;
+    private final String username;
+    private final String email;
+    private final String token;
 
     public SignInResponse(String username, String email, String token) {
         this.username = username;

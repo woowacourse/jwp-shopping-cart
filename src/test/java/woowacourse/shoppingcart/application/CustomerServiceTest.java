@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -93,7 +94,7 @@ public class CustomerServiceTest {
         customerService.addCustomer(signUpRequest);
 
         // when
-        CustomerResponse response = customerService.findMe(name);
+        CustomerResponse response = customerService.findCustomer(name);
 
         // then
         assertThat(response.getUsername()).isEqualTo("greenlawn");
@@ -109,10 +110,10 @@ public class CustomerServiceTest {
         customerService.addCustomer(signUpRequest);
 
         // when
-        customerService.updateMe(name, new UpdatePasswordRequest("1234", "5678"));
-
+        customerService.updateCustomer(name, new UpdatePasswordRequest("1234", "5678"));
+        Customer customer = customerDao.findByUsername(name);
         // then
-        assertThat(customerDao.isValidPasswordByUsername(name, "5678")).isTrue();
+        assertThat(customer.getPassword()).isEqualTo("5678");
     }
 
     @Test
@@ -126,7 +127,7 @@ public class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() ->
-                customerService.updateMe(name, new UpdatePasswordRequest("1235", "5678")))
+                customerService.updateCustomer(name, new UpdatePasswordRequest("1235", "5678")))
                 .isInstanceOf(InvalidPasswordException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
     }
@@ -141,7 +142,7 @@ public class CustomerServiceTest {
         customerService.addCustomer(signUpRequest);
 
         // when
-        customerService.deleteMe(name, new DeleteCustomerRequest("1234"));
+        customerService.deleteCustomer(name, new DeleteCustomerRequest("1234"));
 
         // then
         assertThatThrownBy(() -> customerDao.findByUsername(name))
@@ -158,7 +159,7 @@ public class CustomerServiceTest {
         customerService.addCustomer(signUpRequest);
 
         // when & then
-        assertThatThrownBy(() -> customerService.deleteMe(name, new DeleteCustomerRequest("1235")))
+        assertThatThrownBy(() -> customerService.deleteCustomer(name, new DeleteCustomerRequest("1235")))
                 .isInstanceOf(InvalidPasswordException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
 
