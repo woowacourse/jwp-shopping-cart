@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtTokenProvider {
+    private static final String EMAIL_KEY = "email";
+
     private final SecretKey key;
     private final long validityInMilliseconds;
 
@@ -25,7 +27,7 @@ public class JwtTokenProvider {
     }
 
     public String createToken(final String email) {
-        final Claims claims = Jwts.claims(Map.of("email", email));
+        final Claims claims = Jwts.claims(Map.of(EMAIL_KEY, email));
         final Date now = new Date();
         final Date validity = new Date(now.getTime() + validityInMilliseconds);
 
@@ -41,7 +43,7 @@ public class JwtTokenProvider {
         return Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("email", String.class);
+                .get(EMAIL_KEY, String.class);
     }
 
     public boolean validateToken(final String token) {
