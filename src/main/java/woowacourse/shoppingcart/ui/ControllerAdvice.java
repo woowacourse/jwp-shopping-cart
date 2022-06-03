@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.ui;
 
-import java.util.List;
-import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +10,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.application.exception.AuthException;
-import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.application.exception.ShoppingCartException;
+import woowacourse.shoppingcart.dto.ErrorResponse;
+
+import javax.validation.ConstraintViolationException;
+import java.util.List;
 
 @RestControllerAdvice
 public class ControllerAdvice {
