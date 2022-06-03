@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.CheckDuplicationRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -27,8 +28,8 @@ public class CustomerController {
     }
 
     @PostMapping("/duplication")
-    public ResponseEntity<Boolean> checkDuplicatedName(@RequestBody String customerName) {
-        boolean isExistCustomer = customerService.existsCustomer(customerName);
+    public ResponseEntity<Boolean> checkDuplicatedName(@RequestBody CheckDuplicationRequest checkDuplicationRequest) {
+        boolean isExistCustomer = customerService.existsCustomer(checkDuplicationRequest.getName());
         return ResponseEntity.ok(isExistCustomer);
     }
 
