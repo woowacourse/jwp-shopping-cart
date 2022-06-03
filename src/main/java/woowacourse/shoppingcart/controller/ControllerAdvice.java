@@ -41,7 +41,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<CommonExceptionDto> handleUnhandledException(final RuntimeException e) {
-        e.printStackTrace();
         return ResponseEntity.badRequest().body(new CommonExceptionDto("Unhandled Exception"));
     }
 
@@ -53,7 +52,6 @@ public class ControllerAdvice {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<CommonExceptionDto> handleInvalidRequest(final BindingResult bindingResult,
                                                                    final MethodArgumentNotValidException e) {
-        e.printStackTrace();
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
