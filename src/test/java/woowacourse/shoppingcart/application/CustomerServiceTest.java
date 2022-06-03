@@ -11,8 +11,8 @@ import woowacourse.auth.support.HashPasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.EncodePassword;
-import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
@@ -50,8 +50,9 @@ class CustomerServiceTest {
     @DisplayName("중복된 회원을 가입시키려할 때 예외를 발생시킨다.")
     @Test
     void addCustomer_duplicated() {
+        customerService.addCustomer(customerRequest1);
         assertThatExceptionOfType(InvalidArgumentRequestException.class)
-                .isThrownBy(() -> customerService.addCustomer(customerRequest2))
+                .isThrownBy(() -> customerService.addCustomer(customerRequest1))
                 .withMessageContaining("중복");
     }
 
@@ -102,7 +103,6 @@ class CustomerServiceTest {
                 () -> assertThat(actual.getAge()).isEqualTo(newAge)
         );
     }
-
 
     @DisplayName("회원 정보를 삭제한다")
     @Test
