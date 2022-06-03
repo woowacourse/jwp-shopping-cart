@@ -26,7 +26,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 회원_가입() {
         // when
-        ExtractableResponse<Response> createResponse = 회원_가입("ellie", "12345678");
+        ExtractableResponse<Response> createResponse = 회원_가입("ellie", "Ellie1234!");
 
         // then
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -42,10 +42,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 중복된_이름으로_회원_가입() {
         // given
-        회원_가입("ellie", "12345678");
+        회원_가입("ellie", "Ellie1234!");
 
         // when
-        ExtractableResponse<Response> createResponse = 회원_가입("ellie", "12345678");
+        ExtractableResponse<Response> createResponse = 회원_가입("ellie", "Ellie1234!");
 
         // then
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -75,8 +75,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 내_정보_조회() {
         // given
-        회원_가입("ellie", "12345678");
-        String accessToken = 로그인_및_토큰_발급("ellie", "12345678");
+        회원_가입("ellie", "Ellie1234!");
+        String accessToken = 로그인_및_토큰_발급("ellie", "Ellie1234!");
 
         // when
         ExtractableResponse<Response> getResponse = 내_정보_조회(accessToken);
@@ -110,14 +110,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 내_정보_수정() {
         // given
-        회원_가입("ellie", "12345678");
-        String accessToken = 로그인_및_토큰_발급("ellie", "12345678");
+        회원_가입("ellie", "Ellie1234!");
+        String accessToken = 로그인_및_토큰_발급("ellie", "Ellie1234!");
 
         // when
-        ExtractableResponse<Response> editResponse = 내_정보_수정(accessToken, "ellie", "123456789");
+        ExtractableResponse<Response> editResponse = 내_정보_수정(accessToken, "ellie", "Ellie1234@");
 
         // then
-        ExtractableResponse<Response> loginResponse = 로그인("ellie", "123456789");
+        ExtractableResponse<Response> loginResponse = 로그인("ellie", "Ellie1234@");
 
         assertThat(editResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -147,8 +147,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 회원_탈퇴() {
         // given
-        회원_가입("ellie", "12345678");
-        String accessToken = 로그인_및_토큰_발급("ellie", "12345678");
+        회원_가입("ellie", "Ellie1234!");
+        String accessToken = 로그인_및_토큰_발급("ellie", "Ellie1234!");
 
         // when
         ExtractableResponse<Response> deleteResponse = 회원_탈퇴(accessToken);
@@ -183,7 +183,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 존재하는_이름으로_회원_이름_중복_검사() {
         // given
-        회원_가입("ellie", "12345678");
+        회원_가입("ellie", "Ellie1234!");
 
         // when
         ExtractableResponse<Response> checkDuplicationResponse = 회원_이름_중복_검사("ellie");

@@ -24,7 +24,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("ellie", "12345678"))
+                .body(new CustomerRequest("ellie", "Ellie1234!"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -32,7 +32,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         String accessToken = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("ellie", "12345678"))
+                .body(new TokenRequest("ellie", "Ellie1234!"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
@@ -56,7 +56,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("ellie", "12345678"))
+                .body(new CustomerRequest("ellie", "Ellie1234!"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -64,7 +64,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> tokenResponse = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("ellie", "123456789"))
+                .body(new TokenRequest("ellie", "Ellie1234@"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
@@ -80,7 +80,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("ellie", "12345678"))
+                .body(new CustomerRequest("ellie", "Ellie1234!"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
