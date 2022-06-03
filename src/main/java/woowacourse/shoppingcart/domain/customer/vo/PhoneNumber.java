@@ -10,9 +10,13 @@ public class PhoneNumber {
 
     private final String value;
 
+    public PhoneNumber(String value) {
+        validate(value);
+        this.value = value;
+    }
+
     public PhoneNumber(String start, String middle, String last) {
-        validate(start + middle + last);
-        this.value = start + middle + last;
+        this(start + middle + last);
     }
 
     private void validate(String value) {

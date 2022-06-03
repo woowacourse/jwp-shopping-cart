@@ -8,14 +8,17 @@ import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
 
 public class Customer {
 
+    private final Long id;
     private final Account account;
     private final Nickname nickname;
     private final EncryptPassword password;
     private final Address address;
     private final PhoneNumber phoneNumber;
 
-    public Customer(Account account, Nickname nickname, EncryptPassword password, Address address,
+    public Customer(Long id, Account account, Nickname nickname, EncryptPassword password,
+            Address address,
             PhoneNumber phoneNumber) {
+        this.id = id;
         this.account = account;
         this.nickname = nickname;
         this.password = password;
@@ -25,14 +28,30 @@ public class Customer {
 
     public Customer(String account, String nickname, String password, String address,
             PhoneNumber phoneNumber) {
-        this(new Account(account), new Nickname(nickname), new EncryptPassword(password),
+        this(null, new Account(account), new Nickname(nickname), new EncryptPassword(password),
                 new Address(address), phoneNumber);
     }
 
     public Customer(String account, String nickname, EncryptPassword password,
             String address, PhoneNumber phoneNumber) {
-        this(new Account(account), new Nickname(nickname), password, new Address(address),
+        this(null, new Account(account), new Nickname(nickname), password, new Address(address),
                 phoneNumber);
+    }
+
+    public Customer(Long id, String account, String nickname, String password, String address,
+            PhoneNumber phoneNumber) {
+        this(id, new Account(account), new Nickname(nickname), new EncryptPassword(password),
+                new Address(address), phoneNumber);
+    }
+
+    public Customer(Long id, String account, String nickname, EncryptPassword password,
+            String address, PhoneNumber phoneNumber) {
+        this(id, new Account(account), new Nickname(nickname), password, new Address(address),
+                phoneNumber);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Account getAccount() {

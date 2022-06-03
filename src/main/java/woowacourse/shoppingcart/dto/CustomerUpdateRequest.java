@@ -9,8 +9,7 @@ public class CustomerUpdateRequest {
     private CustomerUpdateRequest() {
     }
 
-    public CustomerUpdateRequest(String nickname, String address,
-            PhoneNumberRequest phoneNumber) {
+    public CustomerUpdateRequest(String nickname, String address, PhoneNumberRequest phoneNumber) {
         this.nickname = nickname;
         this.address = address;
         this.phoneNumber = phoneNumber;

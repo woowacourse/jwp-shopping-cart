@@ -2,9 +2,6 @@ package woowacourse.shoppingcart.application;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-import woowacourse.shoppingcart.domain.customer.vo.EncryptPassword;
-import woowacourse.shoppingcart.domain.customer.vo.Password;
-import woowacourse.shoppingcart.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.common.exception.BadRequestException;
 import woowacourse.common.exception.NotFoundException;
@@ -13,7 +10,9 @@ import woowacourse.common.utils.EncryptAlgorithm;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.vo.Address;
+import woowacourse.shoppingcart.domain.customer.vo.EncryptPassword;
 import woowacourse.shoppingcart.domain.customer.vo.Nickname;
+import woowacourse.shoppingcart.domain.customer.vo.Password;
 import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -21,25 +20,29 @@ import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberResponse;
 import woowacourse.shoppingcart.dto.SigninRequest;
+import woowacourse.shoppingcart.dto.TokenResponse;
 import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Service
 public class CustomerService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomerDao customerDao;
+    private final CustomerRepository customerRepository;
 
-    public CustomerService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
+    public CustomerService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao,
+            CustomerRepository customerRepository) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.customerDao = customerDao;
+        this.customerRepository = customerRepository;
     }
 
     public void create(CustomerRequest customerRequest) {
         if (customerDao.existsByAccount(customerRequest.getAccount())) {
             throw new BadRequestException("이미 존재하는 계정입니다.");
         }
-        Customer customer = toCustomer(customerRequest);
-        customerDao.save(CustomerEntity.from(customer));
+        customerRepository.save(toCustomer(customerRequest));
     }
 
     private Customer toCustomer(CustomerRequest request) {
@@ -53,15 +56,25 @@ public class CustomerService {
 
     public TokenResponse signin(SigninRequest signinRequest) {
         String account = signinRequest.getAccount();
-        CustomerEntity customerEntity = customerDao.findByAccount(account)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+        Customer customer = getCustomer(account);
+        validatePassword(signinRequest, customer);
+        String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
+        return new TokenResponse(token);
+    }
 
-        if (!EncryptAlgorithm.match(signinRequest.getPassword(), customerEntity.getPassword())) {
+    private void validatePassword(SigninRequest signinRequest, Customer customer) {
+        if (checkPassword(signinRequest.getPassword(), customer.getPassword().getValue())) {
             throw new UnauthorizedException("로그인이 불가능합니다.");
         }
+    }
 
-        return new TokenResponse(
-                jwtTokenProvider.createToken(String.valueOf(customerEntity.getId())));
+    private Customer getCustomer(String account) {
+        return customerRepository.findByAccount(account)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+    }
+
+    private boolean checkPassword(String rawPassword, String encodedPassword) {
+        return !EncryptAlgorithm.match(rawPassword, encodedPassword);
     }
 
     public CustomerResponse findById(Long customerId) {
