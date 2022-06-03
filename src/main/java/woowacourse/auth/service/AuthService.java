@@ -7,15 +7,15 @@ import woowacourse.auth.domain.TokenProvider;
 import woowacourse.auth.ui.dto.TokenRequest;
 import woowacourse.exception.LoginFailureException;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.service.CustomerService;
+import woowacourse.shoppingcart.service.SpringCustomerService;
 
 @Service
 public class AuthService implements AuthenticationService {
-    private final CustomerService customerService;
+    private final SpringCustomerService customerService;
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(CustomerService customerService, TokenProvider tokenProvider,
+    public AuthService(SpringCustomerService customerService, TokenProvider tokenProvider,
                        PasswordEncoder passwordEncoder) {
         this.customerService = customerService;
         this.tokenProvider = tokenProvider;
@@ -24,7 +24,7 @@ public class AuthService implements AuthenticationService {
 
     @Override
     public String getToken(TokenRequest tokenRequest) {
-        final Customer customer = customerService.getByEmail(tokenRequest.getEmail());
+        final Customer customer = customerService.findByEmail(tokenRequest.getEmail());
         validatePassword(tokenRequest, customer);
 
         return tokenProvider.createToken(Map.of("id", customer.getId()));

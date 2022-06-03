@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
+import woowacourse.shoppingcart.service.dto.CustomerUpdatePasswordServiceRequest;
 
 public class CustomerUpdatePasswordRequest {
 
@@ -27,5 +28,9 @@ public class CustomerUpdatePasswordRequest {
 
     public String getNewPassword() {
         return newPassword;
+    }
+
+    public CustomerUpdatePasswordServiceRequest toServiceRequest() {
+        return new CustomerUpdatePasswordServiceRequest(this.oldPassword, this.newPassword);
     }
 }

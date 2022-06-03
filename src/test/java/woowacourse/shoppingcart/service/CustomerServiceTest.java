@@ -15,33 +15,35 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.exception.CustomerNotFoundException;
 import woowacourse.exception.PasswordIncorrectException;
-import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.infra.JdbcCustomerRepository;
+import woowacourse.shoppingcart.infra.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
 
 @JdbcTest
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Sql("/truncate.sql")
 class CustomerServiceTest {
-
-    public final CustomerService customerService;
+    public final SpringCustomerService customerService;
 
     public CustomerServiceTest(JdbcTemplate jdbcTemplate) {
-        this.customerService = new CustomerService(new CustomerDao(jdbcTemplate), new BCryptPasswordEncoder());
+        this.customerService = new SpringCustomerService(
+                new JdbcCustomerRepository(new JdbcCustomerDao(jdbcTemplate)),
+                new BCryptPasswordEncoder());
     }
 
     @DisplayName("회원이름을 수정할 수 있다.")
     @Test
     void updateProfile() {
         // given
-        customerService.create(잉_회원생성요청);
+        customerService.create(잉_회원생성요청.toServiceRequest());
         final CustomerUpdateProfileRequest 잉_이름변경요청 = new CustomerUpdateProfileRequest(잉_회원생성요청.getName() + "수정");
 
         // when
-        customerService.updateProfile(1L, 잉_이름변경요청);
-        final CustomerResponse 수정된_잉 = customerService.findById(1L);
+        customerService.updateProfile(1L, 잉_이름변경요청.toServiceRequest());
+        final Customer 수정된_잉 = customerService.findById(1L);
 
         // then
         assertThat(수정된_잉.getName()).isEqualTo(잉_이름변경요청.getName());
@@ -51,11 +53,11 @@ class CustomerServiceTest {
     @Test
     void updateProfileWithInvalidIdShouldFail() {
         // given
-        customerService.create(잉_회원생성요청);
+        customerService.create(잉_회원생성요청.toServiceRequest());
         final CustomerUpdateProfileRequest 잉_이름변경요청 = new CustomerUpdateProfileRequest(잉_회원생성요청.getName() + "수정");
 
         // when then
-        assertThatThrownBy(() -> customerService.updateProfile(100L, 잉_이름변경요청))
+        assertThatThrownBy(() -> customerService.updateProfile(100L, 잉_이름변경요청.toServiceRequest()))
                 .isInstanceOf(CustomerNotFoundException.class);
     }
 
@@ -63,12 +65,12 @@ class CustomerServiceTest {
     @Test
     void updatePasswordWithIncorrectPasswordShouldFail() {
         // given
-        customerService.create(잉_회원생성요청);
+        customerService.create(잉_회원생성요청.toServiceRequest());
         final CustomerUpdatePasswordRequest 잉_비밀번호수정요청 = new CustomerUpdatePasswordRequest(
                 잉_회원생성요청.getPassword() + "incorrect", 잉_회원생성요청.getPassword() + "new");
 
         // when then
-        assertThatThrownBy(() -> customerService.updatePassword(1L, 잉_비밀번호수정요청))
+        assertThatThrownBy(() -> customerService.updatePassword(1L, 잉_비밀번호수정요청.toServiceRequest()))
                 .isInstanceOf(PasswordIncorrectException.class);
     }
 
@@ -76,13 +78,13 @@ class CustomerServiceTest {
     @Test
     void updatePassword() {
         // given
-        customerService.create(잉_회원생성요청);
+        customerService.create(잉_회원생성요청.toServiceRequest());
         final CustomerUpdatePasswordRequest 잉_비밀번호수정요청 = new CustomerUpdatePasswordRequest(
                 잉_회원생성요청.getPassword(), 잉_회원생성요청.getPassword() + "new");
 
         // when then
-        customerService.updatePassword(1L, 잉_비밀번호수정요청);
-        assertThatThrownBy(() -> customerService.updatePassword(1L, 잉_비밀번호수정요청))
+        customerService.updatePassword(1L, 잉_비밀번호수정요청.toServiceRequest());
+        assertThatThrownBy(() -> customerService.updatePassword(1L, 잉_비밀번호수정요청.toServiceRequest()))
                 .isInstanceOf(PasswordIncorrectException.class);
     }
 
@@ -90,12 +92,12 @@ class CustomerServiceTest {
     @Test
     void delete() {
         // given
-        customerService.create(잉_회원생성요청);
+        customerService.create(잉_회원생성요청.toServiceRequest());
         final CustomerDeleteRequest 잉회원탈퇴요청 = 잉_회원탈퇴요청;
         final long id = 1L;
 
         // when then
-        customerService.delete(id, 잉회원탈퇴요청);
+        customerService.delete(id, 잉회원탈퇴요청.toServiceRequest());
         assertThatThrownBy(() -> customerService.findById(id))
                 .isInstanceOf(CustomerNotFoundException.class);
     }
@@ -104,12 +106,12 @@ class CustomerServiceTest {
     @Test
     void deleteWithIncorrectPasswordShouldFail() {
         // given
-        customerService.create(잉_회원생성요청);
+        customerService.create(잉_회원생성요청.toServiceRequest());
         final CustomerDeleteRequest 잉회원탈퇴요청 = new CustomerDeleteRequest(잉_회원생성요청.getPassword() + "stranger");
         final long id = 1L;
 
         // when then
-        assertThatThrownBy(() -> customerService.delete(id, 잉회원탈퇴요청))
+        assertThatThrownBy(() -> customerService.delete(id, 잉회원탈퇴요청.toServiceRequest()))
                 .isInstanceOf(PasswordIncorrectException.class);
     }
 
@@ -117,12 +119,12 @@ class CustomerServiceTest {
     @Test
     void deleteWithInvalidIdShouldFail() {
         // given
-        customerService.create(잉_회원생성요청);
+        customerService.create(잉_회원생성요청.toServiceRequest());
         final CustomerDeleteRequest 잉회원탈퇴요청 = new CustomerDeleteRequest(잉_회원생성요청.getPassword());
         final long id = 100L;
 
         // when then
-        assertThatThrownBy(() -> customerService.delete(id, 잉회원탈퇴요청))
+        assertThatThrownBy(() -> customerService.delete(id, 잉회원탈퇴요청.toServiceRequest()))
                 .isInstanceOf(CustomerNotFoundException.class);
     }
 }

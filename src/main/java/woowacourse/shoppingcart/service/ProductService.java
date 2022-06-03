@@ -3,8 +3,8 @@ package woowacourse.shoppingcart.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.infra.dao.ProductDao;
 
 @Service
 @Transactional(rollbackFor = Exception.class)

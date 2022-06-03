@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui.dto.request;
 
 import javax.validation.constraints.NotBlank;
+import woowacourse.shoppingcart.service.dto.CustomerUpdateProfileServiceRequest;
 
 public class CustomerUpdateProfileRequest {
     @NotBlank
@@ -15,5 +16,9 @@ public class CustomerUpdateProfileRequest {
 
     public String getName() {
         return name;
+    }
+
+    public CustomerUpdateProfileServiceRequest toServiceRequest() {
+        return new CustomerUpdateProfileServiceRequest(this.name);
     }
 }

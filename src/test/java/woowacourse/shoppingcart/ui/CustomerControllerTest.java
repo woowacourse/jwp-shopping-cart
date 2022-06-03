@@ -14,20 +14,21 @@ import woowacourse.exception.CustomerNotFoundException;
 import woowacourse.exception.EmailDuplicateException;
 import woowacourse.exception.PasswordIncorrectException;
 import woowacourse.exception.TokenInvalidException;
-import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.service.dto.CustomerCreateServiceRequest;
+import woowacourse.shoppingcart.service.dto.CustomerDeleteServiceRequest;
+import woowacourse.shoppingcart.service.dto.CustomerUpdatePasswordServiceRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 
 public class CustomerControllerTest extends ControllerTest {
     private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MjcsImlhdCI6MTY1NDA2NjczOCwiZXhwIjoxNjU0MDcwMzM4fQ.AvAJuT4YmyL-hAU2WrukGMT1Tt3k-J92DED9rGyDl38";
 
-    //    @DisplayName("회원 생성 시도 시, 입력한 이메일이 이미 존재할 경우 400을 응답한다")
-    @DisplayName("회원 생성 시도 중 예외가 발생하면  400을 응답한다")
+    @DisplayName("회원 생성 시도 시, 입력한 이메일이 이미 존재할 경우 400을 응답한다")
     @Test
     void createCustomerWithAlreadyExistEmailShouldFail() throws Exception {
         doThrow(new EmailDuplicateException())
                 .when(customerService)
-                .create(any(CustomerRequest.class));
+                .create(any(CustomerCreateServiceRequest.class));
 
         // when then
         mockMvc.perform(postWithBody("/api/customer", 잉_회원생성요청))
@@ -39,7 +40,7 @@ public class CustomerControllerTest extends ControllerTest {
     @Test
     void createCustomerWithPasswordLengthLessThanEightShouldFail() throws Exception {
         // given
-        doThrow(new EmailDuplicateException()).when(customerService).create(any(CustomerRequest.class));
+        doThrow(new EmailDuplicateException()).when(customerService).create(any(CustomerCreateServiceRequest.class));
 
         // when then
         mockMvc.perform(postWithBody("/api/customer", 잉_회원생성요청)).andDo(print()).andExpect(status().isBadRequest());
@@ -151,14 +152,15 @@ public class CustomerControllerTest extends ControllerTest {
     @Test
     void updateCustomerPasswordWithInvalidOldPasswordShouldFail() throws Exception {
         // given
-        final CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest(
+        final CustomerUpdatePasswordServiceRequest customerUpdatePasswordServiceRequest = new CustomerUpdatePasswordServiceRequest(
                 "some_random_password", "some_new_password");
 
         doThrow(new PasswordIncorrectException()).when(customerService)
-                .updatePassword(any(Long.class), any(CustomerUpdatePasswordRequest.class));
+                .updatePassword(any(Long.class), any(CustomerUpdatePasswordServiceRequest.class));
 
         // when then
-        mockMvc.perform(updateWithToken("/api/customer/password", TOKEN, customerUpdatePasswordRequest)).andDo(print())
+        mockMvc.perform(updateWithToken("/api/customer/password", TOKEN, customerUpdatePasswordServiceRequest))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -194,7 +196,7 @@ public class CustomerControllerTest extends ControllerTest {
                 "some_random_password");
 
         doThrow(new PasswordIncorrectException()).when(customerService)
-                .delete(any(Long.class), any(CustomerDeleteRequest.class));
+                .delete(any(Long.class), any(CustomerDeleteServiceRequest.class));
 
         // when then
         mockMvc.perform(deleteWithToken("/api/customer", TOKEN, params)).andDo(print())

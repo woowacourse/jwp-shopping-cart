@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class Customer {
@@ -29,6 +30,10 @@ public class Customer {
 
     public Customer changePassword(String password) {
         return new Customer(this.id, this.email, this.name, password);
+    }
+
+    public boolean isNew() {
+        return Objects.isNull(this.id);
     }
 
     public Long getId() {

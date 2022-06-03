@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.service.CustomerService;
+import woowacourse.shoppingcart.service.SpringCustomerService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,7 +31,7 @@ public class ControllerTest {
     protected ObjectMapper objectMapper;
 
     @MockBean
-    protected CustomerService customerService;
+    protected SpringCustomerService customerService;
 
     @MockBean
     protected AuthService authService;

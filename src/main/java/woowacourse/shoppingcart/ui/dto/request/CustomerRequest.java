@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import woowacourse.shoppingcart.service.dto.CustomerCreateServiceRequest;
 
 public class CustomerRequest {
     @NotBlank
@@ -19,6 +20,10 @@ public class CustomerRequest {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public CustomerCreateServiceRequest toServiceRequest() {
+        return new CustomerCreateServiceRequest(this.name, this.email, this.password);
     }
 
     public String getName() {

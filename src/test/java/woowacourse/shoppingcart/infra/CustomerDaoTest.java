@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dao;
+package woowacourse.shoppingcart.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.infra.dao.CustomerDao;
+import woowacourse.shoppingcart.infra.dao.JdbcCustomerDao;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -22,7 +24,7 @@ public class CustomerDaoTest {
     private final CustomerDao customerDao;
 
     public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
-        customerDao = new CustomerDao(jdbcTemplate);
+        customerDao = new JdbcCustomerDao(jdbcTemplate);
     }
 
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
@@ -33,7 +35,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findByName(userName).orElseThrow().getId();
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -47,7 +49,7 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findByName(userName).orElseThrow().getId();
 
         // then
         assertThat(customerId).isEqualTo(16L);

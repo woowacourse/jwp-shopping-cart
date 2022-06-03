@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
+import woowacourse.shoppingcart.service.dto.CustomerDeleteServiceRequest;
 
 public class CustomerDeleteRequest {
 
@@ -18,5 +19,9 @@ public class CustomerDeleteRequest {
 
     public String getPassword() {
         return password;
+    }
+
+    public CustomerDeleteServiceRequest toServiceRequest() {
+        return new CustomerDeleteServiceRequest(this.password);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.domain.LoginMemberPrincipal;
 import woowacourse.auth.ui.dto.LoginMember;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.service.CustomerService;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
@@ -22,7 +23,6 @@ import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
 @RestController
 @RequestMapping("/api/customer")
 public class CustomerController {
-
     private final CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
@@ -31,34 +31,38 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody @Valid CustomerRequest customerRequest) {
-        customerService.create(customerRequest);
+        customerService.create(customerRequest.toServiceRequest());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<CustomerResponse> findByToken(@LoginMemberPrincipal LoginMember loginMember) {
-        final CustomerResponse customerResponse = customerService.findById(loginMember.getId());
-        return ResponseEntity.ok().body(customerResponse);
+        final Customer customer = customerService.findById(loginMember.getId());
+        return ResponseEntity.ok().body(toCustomerResponse(customer));
     }
 
     @PutMapping("/profile")
     public ResponseEntity<Void> updateProfile(@LoginMemberPrincipal LoginMember loginMember,
                                               @RequestBody @Valid CustomerUpdateProfileRequest customerUpdateProfileRequest) {
-        customerService.updateProfile(loginMember.getId(), customerUpdateProfileRequest);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        customerService.updateProfile(loginMember.getId(), customerUpdateProfileRequest.toServiceRequest());
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(@LoginMemberPrincipal LoginMember loginMember,
                                                @RequestBody @Valid CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
-        customerService.updatePassword(loginMember.getId(), customerUpdatePasswordRequest);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        customerService.updatePassword(loginMember.getId(), customerUpdatePasswordRequest.toServiceRequest());
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@LoginMemberPrincipal LoginMember loginMember,
                                        @RequestBody @Valid CustomerDeleteRequest customerDeleteRequest) {
-        customerService.delete(loginMember.getId(), customerDeleteRequest);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        customerService.delete(loginMember.getId(), customerDeleteRequest.toServiceRequest());
+        return ResponseEntity.noContent().build();
+    }
+
+    private CustomerResponse toCustomerResponse(Customer customer) {
+        return new CustomerResponse(customer.getEmail(), customer.getName());
     }
 }
