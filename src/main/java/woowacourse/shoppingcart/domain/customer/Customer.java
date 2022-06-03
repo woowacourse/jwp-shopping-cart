@@ -22,7 +22,7 @@ public class Customer {
     }
 
     public void checkPassword(String password) {
-        this.password.checkPassword(password);
+        this.password.checkPasswordIsSame(password);
     }
 
     public Long getId() {
