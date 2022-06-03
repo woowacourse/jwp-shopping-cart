@@ -1,4 +1,4 @@
-package woowacourse.auth.config;
+package woowacourse.config;
 
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
