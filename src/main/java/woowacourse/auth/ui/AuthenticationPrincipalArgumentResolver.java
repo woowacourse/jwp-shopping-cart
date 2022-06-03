@@ -6,7 +6,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -27,12 +26,12 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public String resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                    NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 
         final HttpServletRequest nativeRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         final String token = AuthorizationExtractor.extract(nativeRequest);
 
-        if(!jwtTokenProvider.validateToken(token)){
+        if (!jwtTokenProvider.validateToken(token)) {
             throw new AuthException("유효하지 않은 토큰입니다.", ErrorResponse.INVALID_TOKEN);
         }
         return jwtTokenProvider.getPayload(token);

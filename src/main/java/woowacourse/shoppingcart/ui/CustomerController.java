@@ -42,14 +42,15 @@ public class CustomerController {
         return ResponseEntity.ok(customerResponse);
     }
 
-    @PatchMapping(value = "/me",params = "target=password")
+    @PatchMapping(value = "/me", params = "target=password")
     public ResponseEntity<Void> changePassword(@AuthenticationPrincipal String email, @RequestBody
-                                                           ChangePasswordRequest changePasswordRequest) {
-        customerService.changePassword(email, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+            ChangePasswordRequest changePasswordRequest) {
+        customerService.changePassword(email, changePasswordRequest.getOldPassword(),
+                changePasswordRequest.getNewPassword());
         return ResponseEntity.ok().location(URI.create("/login")).build();
     }
 
-    @PatchMapping(value = "/me",params = "target=generalInfo")
+    @PatchMapping(value = "/me", params = "target=generalInfo")
     public ResponseEntity<CustomerResponse> changeGeneral(@AuthenticationPrincipal String email, @RequestBody
             ChangeGeneralInfoRequest changeGeneralInfoRequest) {
         final CustomerResponse customerResponse = customerService

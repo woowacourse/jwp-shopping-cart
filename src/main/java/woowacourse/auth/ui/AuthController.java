@@ -21,8 +21,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest){
-        TokenResponse tokenResponse =  authService.login(loginRequest.getEmail(), loginRequest.getPassword());
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+        TokenResponse tokenResponse = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
         return ResponseEntity.ok().location(URI.create("/")).body(tokenResponse);
     }
 }
