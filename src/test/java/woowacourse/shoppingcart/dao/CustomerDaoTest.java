@@ -7,14 +7,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.setup.DatabaseTest;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")
 class CustomerDaoTest extends DatabaseTest {
@@ -24,12 +22,11 @@ class CustomerDaoTest extends DatabaseTest {
     private static final String 유효한_닉네임 = "nickname";
     private static final int 유효한_나이 = 20;
 
-    @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
-
     private final CustomerDao customerDao;
+    private final DatabaseFixture databaseFixture;
 
     public CustomerDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
+        databaseFixture = new DatabaseFixture(jdbcTemplate);
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
@@ -40,7 +37,7 @@ class CustomerDaoTest extends DatabaseTest {
         @Test
         void 존재하는_고객인_경우_값이_있는_Optional_반환() {
             Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
-            saveFixture(고객);
+            databaseFixture.save(고객);
 
             Customer actual = customerDao.findByUserName(유효한_아이디).get();
 
@@ -74,7 +71,7 @@ class CustomerDaoTest extends DatabaseTest {
         @Test
         void 중복되는_아이디로_데이터를_저장하려는_경우_예외발생() {
             Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
-            saveFixture(고객);
+            databaseFixture.save(고객);
 
             assertThatThrownBy(() -> customerDao.save(고객))
                     .isInstanceOf(DataAccessException.class);
@@ -90,7 +87,7 @@ class CustomerDaoTest extends DatabaseTest {
             Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
             EncryptedPassword 새로운_비밀번호 = new EncryptedPassword("새로운_비밀번호");
             Customer 수정된_고객 = new Customer(유효한_아이디, 새로운_비밀번호, "새로운닉네임", 80);
-            saveFixture(고객);
+            databaseFixture.save(고객);
 
             customerDao.updateByUsername(수정된_고객);
             Customer actual = customerDao.findByUserName(유효한_아이디).get();
@@ -114,7 +111,7 @@ class CustomerDaoTest extends DatabaseTest {
         @Test
         void 제거_성공() {
             Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
-            saveFixture(고객);
+            databaseFixture.save(고객);
 
             customerDao.delete(고객);
             boolean exists = customerDao.findByUserName(유효한_아이디).isPresent();
@@ -129,13 +126,5 @@ class CustomerDaoTest extends DatabaseTest {
             assertThatNoException()
                     .isThrownBy(() -> customerDao.delete(고객));
         }
-    }
-
-    private void saveFixture(Customer customer) {
-        final String sql = "INSERT INTO customer(username, password, nickname, age) "
-                + "VALUES(:username, :password, :nickname, :age)";
-        SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
-
-        jdbcTemplate.update(sql, params);
     }
 }

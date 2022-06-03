@@ -21,6 +21,7 @@ import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.response.GetMeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 import woowacourse.shoppingcart.exception.NotFoundException;
+import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")
 class CustomerServiceTest extends DatabaseTest {
@@ -31,12 +32,14 @@ class CustomerServiceTest extends DatabaseTest {
     private static final String 유효한_닉네임 = "닉네임";
     private static final int 유효한_나이 = 20;
 
-    private final CustomerDao customerDao;
     private final CustomerService customerService;
+    private final CustomerDao customerDao;
+    private final DatabaseFixture databaseFixture;
 
     public CustomerServiceTest(NamedParameterJdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(jdbcTemplate);
         customerService = new CustomerService(customerDao);
+        databaseFixture = new DatabaseFixture(jdbcTemplate);
     }
 
     @DisplayName("getCustomer 메서드는 사용자 정보에 해당되는 고객 데이터를 조회")
@@ -46,7 +49,7 @@ class CustomerServiceTest extends DatabaseTest {
         @Test
         void 존재하는_고객의_정보인_경우_조회결과_반환() {
             Customer 고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
-            saveFixture(고객);
+            databaseFixture.save(고객);
             User 고객에_대응되는_사용자 = new User(유효한_아이디, 암호화된_비밀번호);
 
             GetMeResponse actual = customerService.getCustomer(고객에_대응되는_사용자);
@@ -81,7 +84,7 @@ class CustomerServiceTest extends DatabaseTest {
         @Test
         void 이미_존재하는_아이디인_경우_거짓() {
             String 중복되는_아이디 = "duplicate";
-            saveFixture(new Customer(중복되는_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이));
+            databaseFixture.save(new Customer(중복되는_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이));
 
             UniqueUsernameResponse actual = customerService.checkUniqueUsername(중복되는_아이디);
             UniqueUsernameResponse expected = new UniqueUsernameResponse(false);
@@ -170,7 +173,7 @@ class CustomerServiceTest extends DatabaseTest {
 
         @Test
         void 유효한_정보로_고객의_닉네임과_나이_수정() {
-            saveFixture(유효한_고객);
+            databaseFixture.save(유효한_고객);
             String 새로운_닉네임 = "새로운닉네임";
             int 새로운_나이 = 100;
             UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest(유효한_아이디, 새로운_닉네임, 새로운_나이);
@@ -184,7 +187,7 @@ class CustomerServiceTest extends DatabaseTest {
 
         @Test
         void 현재_정보_그대로_수정하려는_경우_예외_미발생() {
-            saveFixture(유효한_고객);
+            databaseFixture.save(유효한_고객);
             UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest(유효한_아이디, 유효한_닉네임, 유효한_나이);
 
             assertThatNoException()
@@ -193,7 +196,7 @@ class CustomerServiceTest extends DatabaseTest {
 
         @Test
         void 본인의_아이디를_수정하려는_경우_예외발생() {
-            saveFixture(유효한_고객);
+            databaseFixture.save(유효한_고객);
             UpdateMeRequest 아이디_수정_정보 = new UpdateMeRequest("new_username", 유효한_닉네임, 유효한_나이);
 
             assertThatThrownBy(() -> customerService.updateNicknameAndAge(유효한_사용자, 아이디_수정_정보))
@@ -219,7 +222,7 @@ class CustomerServiceTest extends DatabaseTest {
 
         @Test
         void 기존_비밀번호를_맞추면_비밀번호_수정_성공() {
-            saveFixture(유효한_고객);
+            databaseFixture.save(유효한_고객);
             UpdatePasswordRequest 비밀번호_수정_정보 = new UpdatePasswordRequest(비밀번호, 새로운_비밀번호);
 
             customerService.updatePassword(유효한_사용자, 비밀번호_수정_정보);
@@ -230,7 +233,7 @@ class CustomerServiceTest extends DatabaseTest {
 
         @Test
         void 기존_비밀번호를_틀린_경우_예외발생() {
-            saveFixture(유효한_고객);
+            databaseFixture.save(유효한_고객);
             String 틀린_기존_비밀번호 = "wrong1234!@#";
             UpdatePasswordRequest 비밀번호_수정_정보 = new UpdatePasswordRequest(틀린_기존_비밀번호, 새로운_비밀번호);
 
@@ -256,7 +259,7 @@ class CustomerServiceTest extends DatabaseTest {
 
         @Test
         void 사용자에_대응되는_고객이_존재하면_삭제성공() {
-            saveFixture(유효한_고객);
+            databaseFixture.save(유효한_고객);
 
             customerService.deleteCustomer(유효한_사용자);
             boolean exists = customerDao.findByUserName(유효한_아이디).isPresent();
@@ -273,9 +276,5 @@ class CustomerServiceTest extends DatabaseTest {
 
     private Customer findCustomer(String username) {
         return customerDao.findByUserName(username).get();
-    }
-
-    private void saveFixture(Customer customer) {
-        customerDao.save(customer);
     }
 }

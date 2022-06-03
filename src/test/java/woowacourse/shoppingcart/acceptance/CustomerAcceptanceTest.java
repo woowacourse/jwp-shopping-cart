@@ -84,7 +84,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
     @Nested
     class UpdateMeTest {
 
-        private SignUpRequest 고객 = new SignUpRequest(유효한_아이디, "password123@", 유효한_닉네임, 15);
+        private final SignUpRequest 고객 = new SignUpRequest(유효한_아이디, "password123@", 유효한_닉네임, 15);
 
         @Test
         void 로그인된_경우_200() {
