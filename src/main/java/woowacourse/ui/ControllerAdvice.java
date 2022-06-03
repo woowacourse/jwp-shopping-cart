@@ -39,8 +39,9 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<String> handle() {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    public ResponseEntity<ErrorResponse> handle() {
+        ErrorResponse errorResponse = new ErrorResponse("존재하지 않는 데이터 요청입니다.");
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 
     @ExceptionHandler({FormatException.class, DisagreeToTermsException.class})
@@ -67,8 +68,9 @@ public class ControllerAdvice {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    public ResponseEntity handleInvalidRequest(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleInvalidRequest(final RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 
     @ExceptionHandler({
