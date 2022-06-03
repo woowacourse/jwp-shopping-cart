@@ -14,8 +14,8 @@ public class Nickname {
         this.value = value;
     }
 
-    private void validateFormat(String nickname) {
-        Matcher nicknameMatcher = NICKNAME_PATTERN.matcher(nickname);
+    private void validateFormat(String value) {
+        Matcher nicknameMatcher = NICKNAME_PATTERN.matcher(value);
         if (!nicknameMatcher.matches()) {
             throw new IllegalArgumentException("닉네임 형식이 맞지 않습니다.");
         }
