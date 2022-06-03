@@ -96,7 +96,7 @@ class CustomerTest {
         String password = "Password123!";
         Customer customer = new Customer("awesome@gmail.com", "awesome", password);
 
-        assertThatThrownBy(() -> customer.changePassword(password + "1", newPassword))
+        assertThatThrownBy(() -> customer.changePassword(password, newPassword))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("패스워드 형식이 맞지 않습니다.");
     }
