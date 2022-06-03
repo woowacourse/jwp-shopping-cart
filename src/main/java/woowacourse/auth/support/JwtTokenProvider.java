@@ -5,11 +5,11 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import woowacourse.auth.domain.TokenProvider;
@@ -17,14 +17,14 @@ import woowacourse.exception.TokenInvalidException;
 
 @Component
 public class JwtTokenProvider implements TokenProvider {
-    private final Key key;
+    private final SecretKey secretKey;
     private final long validityInMilliseconds;
 
     public JwtTokenProvider(
             @Value("${security.jwt.token.secret-key}") String secretKey,
             @Value("${security.jwt.token.expire-length}") long validityInMilliseconds
     ) {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.validityInMilliseconds = validityInMilliseconds;
     }
 
@@ -37,7 +37,7 @@ public class JwtTokenProvider implements TokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(key)
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -56,7 +56,7 @@ public class JwtTokenProvider implements TokenProvider {
 
     private Claims extractBody(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
