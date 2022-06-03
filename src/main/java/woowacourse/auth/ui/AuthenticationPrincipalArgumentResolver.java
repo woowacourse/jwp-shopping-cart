@@ -8,17 +8,11 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.exception.TokenExpiredException;
+import woowacourse.shoppingcart.exception.PayloadNotFoundException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
-
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public AuthenticationPrincipalArgumentResolver(final JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+    private static final String TOKEN_PAYLOAD = "TOKEN_PAYLOAD";
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
@@ -27,23 +21,15 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public Long resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
-        final String token = (String) webRequest.getAttribute(ACCESS_TOKEN, NativeWebRequest.SCOPE_REQUEST);
-        validateTokenExpired(token);
-        final String payload = jwtTokenProvider.getPayload(token);
+        final String payload = (String) webRequest.getAttribute(TOKEN_PAYLOAD, NativeWebRequest.SCOPE_REQUEST);
         validatePayload(payload);
 
         return Long.parseLong(payload);
     }
 
-    private void validateTokenExpired(final String token) {
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new TokenExpiredException();
-        }
-    }
-
     private void validatePayload(final String payload) {
         if (payload == null) {
-            throw new MalformedJwtException("잘못된 형식의 토큰입니다.");
+            throw new PayloadNotFoundException();
         }
     }
 }

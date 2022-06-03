@@ -216,7 +216,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("잘못된 형식의 토큰입니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("토큰의 페이로드를 찾을 수 없습니다.")
         );
     }
 
@@ -283,7 +283,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("잘못된 형식의 토큰입니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("토큰의 페이로드를 찾을 수 없습니다.")
         );
     }
 
@@ -408,7 +408,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("잘못된 형식의 토큰입니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("토큰의 페이로드를 찾을 수 없습니다.")
         );
     }
 }
