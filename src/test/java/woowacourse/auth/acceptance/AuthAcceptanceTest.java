@@ -1,46 +1,63 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import com.ori.acceptancetest.SpringBootAcceptanceTest;
+
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 
 @DisplayName("인증 관련 기능")
-public class AuthAcceptanceTest extends AcceptanceTest {
-    @DisplayName("Bearer Auth 로그인 성공")
-    @Test
-    void myInfoWithBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+@SpringBootAcceptanceTest
+public class AuthAcceptanceTest {
 
-        // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+	private final String email = "123@gmail.com";
+	private final String password = "a1234!";
+	private final String nickname = "does";
 
-        // then
-        // 내 정보가 조회된다
-    }
+	@DisplayName("로그인 성공")
+	@Test
+	void myInfoWithBearerAuth() {
+		// given
+		RestUtils.signUp(email, password, nickname);
 
-    @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
+		// when
+		ExtractableResponse<Response> loginResponse = RestUtils.login(email, password);
+		// then
+		assertAll(
+			() -> assertThat(loginResponse.jsonPath().getString("nickname")).isEqualTo("does"),
+			() -> assertThat(loginResponse.jsonPath().getString("accessToken")).isNotNull()
+		);
+	}
 
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+	@DisplayName("비밀 번호를 틀리면 로그인하지 못한다.")
+	@Test
+	void myInfoWithInvalidPassword() {
+		// given
+		RestUtils.signUp(email, password, nickname);
 
-        // then
-        // 토큰 발급 요청이 거부된다
-    }
+		// when
+		ExtractableResponse<Response> loginResponse = RestUtils.login(email, "a1234!!!23");
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+		// then
+		assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+	}
 
-        // then
-        // 내 정보 조회 요청이 거부된다
-    }
+	@DisplayName("이메일을 틀리면 로그인하지 못한다.")
+	@Test
+	void myInfoWithInvalidEmail() {
+		// given
+		RestUtils.signUp(email, password, nickname);
+
+		// when
+		ExtractableResponse<Response> loginResponse = RestUtils.login("email@gmail.com", password);
+
+		// then
+		assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+	}
 }
