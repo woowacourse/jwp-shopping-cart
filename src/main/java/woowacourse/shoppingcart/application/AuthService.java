@@ -22,10 +22,14 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public String login(final LoginRequest request) {
+        final Customer customer = fetchCustomer(request.getEmail());
+        checkPassword(request, customer);
+        return jwtTokenProvider.createToken(request.getEmail());
+    }
+
+    private Customer fetchCustomer(final String email) {
         try {
-            final Customer customer = customerService.getByEmail(request.getEmail());
-            checkPassword(request, customer);
-            return jwtTokenProvider.createToken(request.getEmail());
+            return customerService.getByEmail(email);
         } catch (final NotFoundCustomerException exception) {
             throw new InvalidLoginException();
         }
