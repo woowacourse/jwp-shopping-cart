@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.customdbaccess.ExtendedSqlParameterSource;
 import woowacourse.shoppingcart.domain.Age;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
@@ -73,11 +74,12 @@ public class CustomerDao {
         final String sql = "INSERT INTO customer(username, password, nickname, age) "
                 + "VALUES(:username, :password, :nickname, :age)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        MapSqlParameterSource params = new MapSqlParameterSource();
+        SqlParameterSource params = new ExtendedSqlParameterSource(customer);
+        /*MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("username", customer.getUsername().getValue());
         params.addValue("password", customer.getPassword().getValue());
         params.addValue("nickname", customer.getNickname().getValue());
-        params.addValue("age", customer.getAge().getValue());
+        params.addValue("age", customer.getAge().getValue());*/
 
         jdbcTemplate.update(sql, params, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -87,13 +89,14 @@ public class CustomerDao {
         final String sql = "UPDATE customer SET username = :username, "
                 + "password = :password, nickname = :nickname, age = :age "
                 + "WHERE id = :id";
-//        SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
-        MapSqlParameterSource params = new MapSqlParameterSource();
+        SqlParameterSource params = new ExtendedSqlParameterSource(customer);
+
+        /*MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", customer.getId());
         params.addValue("username", customer.getUsername().getValue());
         params.addValue("password", customer.getPassword().getValue());
         params.addValue("nickname", customer.getNickname().getValue());
-        params.addValue("age", customer.getAge().getValue());
+        params.addValue("age", customer.getAge().getValue());*/
 
         jdbcTemplate.update(sql, params);
     }
