@@ -1,0 +1,67 @@
+= Customer 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:snippets: ../../../build/generated-snippets
+
+= Customer
+---
+== 유저 API
+
+=== 회원가입
+
+`POST /api/customers`
+
+요청 HTTP
+include::{snippets}/customer-sign-up/http-request.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/customer-sign-up/http-response.adoc[]
+include::{snippets}/customer-sign-up/response-headers.adoc[]
+
+=== 내 정보 조회
+
+`GET /api/customers/me`
+
+요청 HTTP
+include::{snippets}/customer-get-me/http-request.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/customer-get-me/http-response.adoc[]
+include::{snippets}/customer-get-me/response-fields.adoc[]
+
+=== 내 정보 수정
+
+`PUT /api/customers/me`
+
+요청 HTTP
+include::{snippets}/customer-update-me/http-request.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/customer-update-me/http-response.adoc[]
+include::{snippets}/customer-update-me/response-fields.adoc[]
+
+=== 회원 탈퇴
+
+`DELETE /api/customers/me`
+
+요청 HTTP
+include::{snippets}/customer-delete-me/http-request.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/customer-delete-me/http-response.adoc[]
+== 중복 이름 확인
+
+`POST /api/customers/duplication`
+
+요청 HTTP
+include::{snippets}/customer-duplication-check-name/http-request.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/customer-duplication-check-name/http-response.adoc[]
+include::{snippets}/customer-duplication-check-name/response-fields.adoc[]
+
+
