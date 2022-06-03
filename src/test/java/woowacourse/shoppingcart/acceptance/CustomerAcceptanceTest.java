@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 
 @DisplayName("회원 관련 기능")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@SuppressWarnings({"NonAsciiCharacters", "InnerClassMayBeStatic"})
+@SuppressWarnings("NonAsciiCharacters")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
@@ -304,51 +304,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(response.statusCode()).isEqualTo(400);
         assertThat(findValue(response, "message")).contains("휴대폰 번호는 숫자만 가능합니다.");
-    }
-
-    @Test
-    void 로그인() {
-        // given
-        String account = "leo8842";
-        String password = "leoLeo123!";
-
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
-
-        // when
-        ExtractableResponse<Response> response = 로그인_후_토큰_발급(account, password);
-
-        // then
-        assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(findValue(response, "accessToken")).isNotNull();
-    }
-
-    @Test
-    void 로그인_비밀번호_불일치로_인해_실패() {
-        // given
-        String account = "leo8842";
-        String password = "leoLeo123!";
-
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
-
-        // when
-        ExtractableResponse<Response> response = 로그인_후_토큰_발급(account, "dpepsWkd");
-
-        // then
-        assertThat(response.statusCode()).isEqualTo(401);
-        assertThat(findValue(response, "message"))
-                .contains("로그인이 불가능합니다.");
     }
 
     @Test

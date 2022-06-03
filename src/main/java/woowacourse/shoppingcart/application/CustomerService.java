@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.common.exception.BadRequestException;
 import woowacourse.common.exception.NotFoundException;
 import woowacourse.common.exception.UnauthorizedException;
@@ -13,8 +12,6 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberRequest;
-import woowacourse.shoppingcart.dto.SignInRequest;
-import woowacourse.shoppingcart.dto.TokenResponse;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 
 @Service
@@ -22,16 +19,12 @@ public class CustomerService {
 
     private static final String DUPLICATED_CUSTOMER_ERROR = "이미 존재하는 계정입니다.";
     private static final String NO_CUSTOMER_ERROR = "존재하지 않는 사용자입니다.";
-    private static final String LOGIN_FAILED_ERROR = "로그인이 불가능합니다.";
     private static final String MISMATCHED_PASSWORD_ERROR = "비밀번호가 일치하지 않습니다.";
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final CustomerDao customerDao;
 
-    public CustomerService(JwtTokenProvider jwtTokenProvider,
-                           PasswordEncoder passwordEncoder, CustomerDao customerDao) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public CustomerService(PasswordEncoder passwordEncoder, CustomerDao customerDao) {
         this.passwordEncoder = passwordEncoder;
         this.customerDao = customerDao;
     }
@@ -44,19 +37,6 @@ public class CustomerService {
         customer.encryptPassword(passwordEncoder);
 
         customerDao.save(CustomerEntity.from(customer));
-    }
-
-    public TokenResponse login(SignInRequest signinRequest) {
-        String account = signinRequest.getAccount();
-        CustomerEntity customerEntity = customerDao.findByAccount(account)
-                .orElseThrow(() -> new NotFoundException(NO_CUSTOMER_ERROR));
-
-        if (!passwordEncoder.match(signinRequest.getPassword(), customerEntity.getPassword())) {
-            throw new UnauthorizedException(LOGIN_FAILED_ERROR);
-        }
-
-        return new TokenResponse(
-                jwtTokenProvider.createToken(String.valueOf(customerEntity.getId())));
     }
 
     public CustomerResponse findById(Long customerId) {
