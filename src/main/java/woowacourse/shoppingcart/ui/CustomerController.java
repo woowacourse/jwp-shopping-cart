@@ -45,16 +45,16 @@ public class CustomerController {
         return customerService.findById(customerId);
     }
 
+    @PutMapping("/customers")
+    public void modify(@AuthenticationPrincipal Long customerId,
+            @RequestBody CustomerUpdateRequest customerUpdateRequest) {
+        customerService.update(customerId, customerUpdateRequest);
+    }
+
     @DeleteMapping("/customers")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal Long customerId,
             @RequestBody PasswordRequest passwordRequest) {
         customerService.delete(customerId, passwordRequest);
-    }
-
-    @PutMapping("/customers")
-    public void modify(@AuthenticationPrincipal Long customerId,
-            @RequestBody CustomerUpdateRequest customerUpdateRequest) {
-        customerService.update(customerId, customerUpdateRequest);
     }
 }

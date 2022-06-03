@@ -22,14 +22,23 @@ public class CustomerRepository {
 
     public Optional<Customer> findByAccount(String account) {
         return customerDao.findByAccount(account)
-                .map(it -> new Customer(
-                        it.getId(),
-                        it.getAccount(),
-                        it.getNickname(),
-                        it.getPassword(),
-                        it.getAddress(),
-                        new PhoneNumber(it.getPhoneNumber()
-                        )));
+                .map(this::toCustomer);
 
+    }
+
+    public Optional<Customer> findById(Long customerId) {
+        return customerDao.findById(customerId)
+                .map(this::toCustomer);
+    }
+
+    private Customer toCustomer(CustomerEntity it) {
+        return new Customer(
+                it.getId(),
+                it.getAccount(),
+                it.getNickname(),
+                it.getPassword(),
+                it.getAddress(),
+                new PhoneNumber(it.getPhoneNumber()
+                ));
     }
 }
