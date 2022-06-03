@@ -203,50 +203,41 @@
 
   **ErrorCode 1000번대는 `회원가입`**
 
-    - 이메일 중복
+  | 에러 상황 | 에러 코드 | 에러 메세지 |
+      | :------------: | :-------------: |:------------: |
+  | 이메일 중복 | 1001  | Duplicated Email |
 
-      (Error Code: 1001 → Duplicated Email)
-
+<br>
 
 - **로그인** `[400, Bad Reqeust]`
 
   **ErrorCode 2000번대는 `로그인`**
 
-  (Error Code: 2001 → Login Fail)
+  | 에러 상황 | 에러 코드 | 에러 메세지 |
+      | :------------: | :-------------: |:------------: |
+  | 이메일 또는 패드워드가 맞지 않음 | 2001  | Login Fail |
+  | 이메일 형식만 잘못됨 | 4001  | Invalid Email |
 
-    - 이메일 또는 패스워드가 맞지 않음
-
-      (이메일 또는 패스워드가 일치하지 않습니다.)
-
-      **(이메일 형식만 확인) → Error Code: 4001**
-
+<br>
 
 - **회원 정보 조회 / 수정 / 탈퇴`[401, Unauthorized]`**
     - 비밀번호 수정 페이지는 따로
 
-      **비밀번호 수정**
+  | 에러 상황 | 에러 코드 | 에러 메세지 |
+      | :------------: | :-------------: |:------------: |
+  | 기존 패스워드 불일치 | 3001 | Incorrect Password |
+  | 새 패스워드 형식이 맞지 않음 | 4002 | Invalid Password |
+  | 토큰 만료 또는 없음 | 3002 | Invalid Token |
 
-        - 기존 패스워드 불일치
+    - camelCase로 작성하기
 
-          (Error Code: 3001 → Incorrect Password)
-
-        - 새 패스워드 형식이 맞지 않는 경우 → Error Code: 4002
-        - 토큰이 만료 또는 없음
-
-          (Error Code: 3002 → Invalid token)
-
-        - camelCase로 작성하기
-
+<br>
 
 - **입력 형식** `[400, Bad Request]`
-    - Email
 
-      (Error Code: 4001 → Invalid Email)
-
-    - 패스워드 규칙이 맞지 않음 (패스워드 관련 입력 형식 에러)
-
-      (Error Code: 4002 → Invalid Password)
-
-    - 유저 네임 입력 글자 수
-
-      (1~10자) (Error Code: 4003 → Invalid Username)
+  | 에러 상황 | 에러 코드 | 에러 메세지 |
+      | :------------: | :-------------: |:------------: |
+  | 이메일 형식이 맞지 않음 | 4001 | Invalid Email |
+  | 패스워드 형식이 맞지 않음 | 4002 | Invalid Password |
+  | 유저 네임 글자 수가 맞지 않음 | 4003 | Invalid Username |
+    
