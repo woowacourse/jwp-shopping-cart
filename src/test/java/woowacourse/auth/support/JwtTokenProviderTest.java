@@ -1,6 +1,7 @@
 package woowacourse.auth.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import woowacourse.shoppingcart.exception.InvalidTokenException;
 
 class JwtTokenProviderTest {
 
@@ -37,21 +39,23 @@ class JwtTokenProviderTest {
     }
 
     @Test
-    @DisplayName("정상 토큰 validation")
-    void resolveToken() {
-        String token = jwtTokenProvider.createToken(SUBJECT);
-
-        assertThat(jwtTokenProvider.validateToken(token)).isTrue();
+    @DisplayName("비어있는 토큰 validation 예외 발생")
+    void resolveTokenEmptyToken_false() {
+        assertThatThrownBy(() -> jwtTokenProvider.validateToken(null))
+                .isInstanceOf(InvalidTokenException.class)
+                .hasMessageContaining("토큰 정보가 존재하지 않습니다.");
     }
 
     @Test
-    @DisplayName("이상한 토큰 validation false")
+    @DisplayName("이상한 토큰 validation 예외 발생")
     void resolveTokenErrorToken_false() {
-        assertThat(jwtTokenProvider.validateToken("this.is.error")).isFalse();
+        assertThatThrownBy(() -> jwtTokenProvider.validateToken("this.is.error"))
+                .isInstanceOf(InvalidTokenException.class)
+                .hasMessageContaining("유효하지 않거나 만료된 토큰입니다.");
     }
 
     @Test
-    @DisplayName("만료된 토큰 validation false")
+    @DisplayName("만료된 토큰 validation 예외 발생")
     void resolveTokenExpiredToken_false() {
         String expiredToken = Jwts.builder()
                 .signWith(Keys.hmacShaKeyFor(SECRETE_KEY.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
@@ -59,6 +63,8 @@ class JwtTokenProviderTest {
                 .setExpiration(new Date((new Date()).getTime() - 1))
                 .compact();
 
-        assertThat(jwtTokenProvider.validateToken(expiredToken)).isFalse();
+        assertThatThrownBy(() -> jwtTokenProvider.validateToken(expiredToken))
+                .isInstanceOf(InvalidTokenException.class)
+                .hasMessageContaining("유효하지 않거나 만료된 토큰입니다.");
     }
 }
