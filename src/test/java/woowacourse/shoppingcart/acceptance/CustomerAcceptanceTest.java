@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.TokenResponseDto;
+import woowacourse.auth.dto.SignInResponseDto;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
@@ -41,10 +41,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
         final ExtractableResponse<Response> createResponse = createCustomer(signUpDto);
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
-        final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
+        final SignInResponseDto signInResponseDto = loginResponse.body().as(SignInResponseDto.class);
 
         final ExtractableResponse<Response> customerResponse = get(createResponse.header(HttpHeaders.LOCATION),
-                new Header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()));
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + signInResponseDto.getAccessToken()));
 
         final CustomerDto customerDto = customerResponse.body().as(CustomerDto.class);
 
@@ -60,12 +60,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
         final ExtractableResponse<Response> createResponse = createCustomer(signUpDto);
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
-        final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
+        final SignInResponseDto signInResponseDto = loginResponse.body().as(SignInResponseDto.class);
 
         final String updateUsername = "테스트2";
         final ExtractableResponse<Response> updateResponse = put(
                 createResponse.header(HttpHeaders.LOCATION),
-                new Header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()),
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + signInResponseDto.getAccessToken()),
                 new UpdateCustomerDto(updateUsername)
         );
 
@@ -79,17 +79,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
         final ExtractableResponse<Response> createResponse = createCustomer(signUpDto);
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
-        final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
+        final SignInResponseDto signInResponseDto = loginResponse.body().as(SignInResponseDto.class);
 
         final ExtractableResponse<Response> deleteResponse = post(
                 createResponse.header(HttpHeaders.LOCATION),
-                new Header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken()),
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + signInResponseDto.getAccessToken()),
                 new DeleteCustomerDto(TEST_PASSWORD)
         );
 
         final ExtractableResponse<Response> customerResponse = get(
                 createResponse.header(HttpHeaders.LOCATION),
-                new Header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponseDto.getAccessToken())
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + signInResponseDto.getAccessToken())
         );
 
         assertAll(

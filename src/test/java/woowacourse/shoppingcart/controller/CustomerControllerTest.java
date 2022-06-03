@@ -24,8 +24,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.dto.SignInDto;
-import woowacourse.auth.dto.TokenResponseDto;
+import woowacourse.auth.dto.SignInRequestDto;
+import woowacourse.auth.dto.SignInResponseDto;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.DeleteCustomerDto;
@@ -100,8 +100,8 @@ class CustomerControllerTest extends ControllerTest {
         when(authService.extractEmail(any(String.class))).thenReturn(TEST_EMAIL);
         when(customerService.findCustomerByEmail(any(String.class)))
                 .thenReturn(customerDto);
-        when(authService.login(any(SignInDto.class))).thenReturn(
-                new TokenResponseDto(accessToken, 1000000L, customerDto));
+        when(authService.login(any(SignInRequestDto.class))).thenReturn(
+                new SignInResponseDto(accessToken, 1000000L, customerDto));
         final DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto(TEST_PASSWORD);
         final MockHttpServletResponse response = mockMvc.perform(post("/api/customers/" + CUSTOMER_ID)
                         .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)

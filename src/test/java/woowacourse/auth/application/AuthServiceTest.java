@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import woowacourse.auth.dto.SignInDto;
-import woowacourse.auth.dto.TokenResponseDto;
+import woowacourse.auth.dto.SignInRequestDto;
+import woowacourse.auth.dto.SignInResponseDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.service.CustomerService;
 
@@ -30,9 +30,9 @@ class AuthServiceTest {
     void login() {
         final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
         customerService.signUp(signUpDto);
-        final SignInDto signInDto = new SignInDto(TEST_EMAIL, TEST_PASSWORD);
+        final SignInRequestDto signInDto = new SignInRequestDto(TEST_EMAIL, TEST_PASSWORD);
 
-        final TokenResponseDto token = authService.login(signInDto);
+        final SignInResponseDto token = authService.login(signInDto);
         final String subject = authService.extractEmail(token.getAccessToken());
 
         assertThat(subject).isEqualTo(TEST_EMAIL);

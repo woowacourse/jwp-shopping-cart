@@ -20,8 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.dto.SignInDto;
-import woowacourse.auth.dto.TokenResponseDto;
+import woowacourse.auth.dto.SignInRequestDto;
+import woowacourse.auth.dto.SignInResponseDto;
 import woowacourse.shoppingcart.controller.ControllerTest;
 import woowacourse.shoppingcart.dto.CustomerDto;
 
@@ -40,14 +40,14 @@ class AuthControllerTest extends ControllerTest {
     @DisplayName("이메일과 패스워드를 받아 로그인한 후 accessToken과 유효시간을 반환한다.")
     void login() throws Exception {
         final CustomerDto customerDto = new CustomerDto(CUSTOMER_ID, TEST_EMAIL, TEST_USERNAME);
-        when(authService.login(any())).thenReturn(new TokenResponseDto("testAccessToken", 10800000L, customerDto));
+        when(authService.login(any())).thenReturn(new SignInResponseDto("testAccessToken", 10800000L, customerDto));
 
-        final SignInDto signInDto = new SignInDto(TEST_EMAIL, TEST_PASSWORD);
+        final SignInRequestDto signInRequestDto = new SignInRequestDto(TEST_EMAIL, TEST_PASSWORD);
 
         final MockHttpServletResponse response = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(signInDto)))
+                        .content(objectMapper.writeValueAsString(signInRequestDto)))
                 .andDo(print())
                 .andReturn()
                 .getResponse();

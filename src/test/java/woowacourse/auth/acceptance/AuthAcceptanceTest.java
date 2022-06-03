@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.TokenResponseDto;
+import woowacourse.auth.dto.SignInResponseDto;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
@@ -28,12 +28,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
-        final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
-        final String accessToken = tokenResponseDto.getAccessToken();
+        final SignInResponseDto signInResponseDto = loginResponse.body().as(SignInResponseDto.class);
+        final String accessToken = signInResponseDto.getAccessToken();
 
         // when
         final ExtractableResponse<Response> response = get(
-                "/api/customers/" + tokenResponseDto.getCustomer().getId(),
+                "/api/customers/" + signInResponseDto.getCustomer().getId(),
                 new Header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
         );
 
@@ -64,11 +64,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithWrongBearerAuth() {
         createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
-        final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
+        final SignInResponseDto signInResponseDto = loginResponse.body().as(SignInResponseDto.class);
 
         // when
         final ExtractableResponse<Response> response = get(
-                "/api/customers/" + tokenResponseDto.getCustomer().getId(),
+                "/api/customers/" + signInResponseDto.getCustomer().getId(),
                 new Header(HttpHeaders.AUTHORIZATION, BEARER + "invalidToken")
         );
 

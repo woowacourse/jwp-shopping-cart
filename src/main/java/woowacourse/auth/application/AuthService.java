@@ -1,8 +1,8 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.dto.SignInDto;
-import woowacourse.auth.dto.TokenResponseDto;
+import woowacourse.auth.dto.SignInRequestDto;
+import woowacourse.auth.dto.SignInResponseDto;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -30,7 +30,7 @@ public class AuthService {
         return jwtTokenProvider.extractClaim(token);
     }
 
-    public TokenResponseDto login(final SignInDto signInDto) {
+    public SignInResponseDto login(final SignInRequestDto signInDto) {
         final Customer customer = customerDao.findByEmail(signInDto.getEmail())
                 .orElseThrow(() -> new AuthorizationFailException("로그인에 실패했습니다."));
 
@@ -38,14 +38,14 @@ public class AuthService {
 
         final CustomerDto customerDto = new CustomerDto(customer.getId(), customer.getEmail(), customer.getUsername());
         final String accessToken = createAccessToken(customerDto);
-        return new TokenResponseDto(accessToken, jwtTokenProvider.getValidityInMilliseconds(), customerDto);
+        return new SignInResponseDto(accessToken, jwtTokenProvider.getValidityInMilliseconds(), customerDto);
     }
 
     private String createAccessToken(final CustomerDto customer) {
         return jwtTokenProvider.createToken(customer.getEmail());
     }
 
-    private void checkPassword(final SignInDto signInDto, final Customer customer) {
+    private void checkPassword(final SignInRequestDto signInDto, final Customer customer) {
         if (!passwordEncoder.matches(signInDto.getPassword(), customer.getPassword())) {
             throw new AuthorizationFailException("로그인에 실패했습니다.");
         }

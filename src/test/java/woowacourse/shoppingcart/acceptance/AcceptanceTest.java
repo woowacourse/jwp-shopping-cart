@@ -10,7 +10,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import woowacourse.auth.dto.SignInDto;
+import woowacourse.auth.dto.SignInRequestDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -31,7 +31,7 @@ public class AcceptanceTest {
     }
 
     protected ExtractableResponse<Response> loginCustomer(final String email, final String password) {
-        final SignInDto signInDto = new SignInDto(email, password);
+        final SignInRequestDto signInDto = new SignInRequestDto(email, password);
         return post("/api/auth/login", EMPTY_HEADER, signInDto);
     }
 
