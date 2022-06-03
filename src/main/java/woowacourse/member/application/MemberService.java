@@ -15,7 +15,7 @@ import woowacourse.member.exception.DuplicateMemberEmailException;
 import woowacourse.member.exception.NoMemberException;
 import woowacourse.member.infrastructure.PasswordEncoder;
 
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class MemberService {
 
@@ -27,6 +27,7 @@ public class MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public Long save(final MemberRegisterRequest memberRegisterRequest) {
         validateDuplicateEmail(memberRegisterRequest.getEmail());
         Member member = Member.createMemberWithPasswordEncode(memberRegisterRequest.getEmail(),
@@ -36,7 +37,6 @@ public class MemberService {
         return memberDao.save(member);
     }
 
-    @Transactional(readOnly = true)
     public void validateDuplicateEmail(final EmailCheckRequest emailCheckRequest) {
         validateDuplicateEmail(emailCheckRequest.getEmail());
     }
@@ -47,7 +47,6 @@ public class MemberService {
         }
     }
 
-    @Transactional(readOnly = true)
     public Member login(final TokenRequest tokenRequest) {
         Member member = memberDao.findByEmail(tokenRequest.getEmail())
                 .orElseThrow(NoMemberException::new);
@@ -55,33 +54,36 @@ public class MemberService {
         return member;
     }
 
-    @Transactional(readOnly = true)
     public MemberResponse getMemberInformation(final Long id) {
-        Member member = memberDao.findById(id)
-                .orElseThrow(NoMemberException::new);
+        Member member = findMemberById(id);
         return MemberResponse.from(member);
     }
 
+    @Transactional
     public void updateName(final Long id, final MemberNameUpdateRequest memberNameUpdateRequest) {
-        Member member = memberDao.findById(id)
-                .orElseThrow(NoMemberException::new);
+        Member member = findMemberById(id);
         member.updateName(memberNameUpdateRequest.getName());
         memberDao.updateName(member);
     }
 
+    @Transactional
     public void updatePassword(final Long id, final MemberPasswordUpdateRequest memberPasswordUpdateRequest) {
-        Member member = memberDao.findById(id)
-                .orElseThrow(NoMemberException::new);
+        Member member = findMemberById(id);
         member.updatePassword(memberPasswordUpdateRequest.getOldPassword(),
                 memberPasswordUpdateRequest.getNewPassword(),
                 passwordEncoder);
         memberDao.updatePassword(member);
     }
 
+    @Transactional
     public void deleteById(final Long id, final MemberDeleteRequest memberDeleteRequest) {
-        Member member = memberDao.findById(id)
-                .orElseThrow(NoMemberException::new);
+        Member member = findMemberById(id);
         member.validateWrongPassword(memberDeleteRequest.getPassword(), passwordEncoder);
         memberDao.deleteById(id);
+    }
+
+    private Member findMemberById(final Long id) {
+        return memberDao.findById(id)
+                .orElseThrow(NoMemberException::new);
     }
 }

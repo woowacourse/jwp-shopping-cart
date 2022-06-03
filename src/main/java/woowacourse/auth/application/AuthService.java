@@ -1,12 +1,14 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.member.application.MemberService;
 import woowacourse.member.domain.Member;
 
+@Transactional
 @Service
 public class AuthService {
 
