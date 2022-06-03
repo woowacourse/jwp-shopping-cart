@@ -1,16 +1,20 @@
-package woowacourse.auth.dto;
+package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import woowacourse.auth.application.dto.LoginServiceRequest;
+import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 import woowacourse.shoppingcart.domain.Password;
 
-public class TokenRequest {
+public class CustomerRegisterRequest {
 
+    private static final String EMPTY_NAME_MESSAGE = "이름은 공백일 수 없습니다.";
     private static final String EMPTY_EMAIL_MESSAGE = "이메일은 공백일 수 없습니다.";
     private static final String INVALID_EMAIL_FORMAT_MESSAGE = "이메일 형식이 올바르지 않습니다.";
     private static final String INVALID_PASSWORD_LENGTH_MESSAGE = "비밀번호는 8자 이상이어야 합니다.";
+
+    @NotBlank(message = EMPTY_NAME_MESSAGE)
+    private String name;
 
     @NotBlank(message = EMPTY_EMAIL_MESSAGE)
     @Email(message = INVALID_EMAIL_FORMAT_MESSAGE)
@@ -20,12 +24,21 @@ public class TokenRequest {
     @Size(min = Password.MIN_RAW_VALUE_LENGTH, message = INVALID_PASSWORD_LENGTH_MESSAGE)
     private String password;
 
-    private TokenRequest() {
+    private CustomerRegisterRequest() {
     }
 
-    public TokenRequest(String email, String password) {
+    public CustomerRegisterRequest(final String name, final String email, final String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public CustomerSaveServiceRequest toServiceDto() {
+        return new CustomerSaveServiceRequest(name, email, password);
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getEmail() {
@@ -34,9 +47,5 @@ public class TokenRequest {
 
     public String getPassword() {
         return password;
-    }
-
-    public LoginServiceRequest toServiceDto() {
-        return new LoginServiceRequest(email, password);
     }
 }
