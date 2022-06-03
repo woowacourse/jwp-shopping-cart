@@ -20,7 +20,7 @@ public class Customer {
         this(null, username, email, password);
     }
 
-    public void validatePassword(String password){
+    public void validatePassword(String password) {
         if (!this.password.equals(password)) {
             throw new InvalidPasswordException();
         }

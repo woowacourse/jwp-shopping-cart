@@ -122,6 +122,16 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
+        RestAssured
+                .given().log().all()
+                .body(signInRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
         // when & then
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         // 내 정보 조회 요청이 거부된다

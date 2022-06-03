@@ -9,6 +9,7 @@ public class SignInRequest {
     @Pattern(regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
     @Length(max = 64)
     private String email;
+
     @PasswordCheck
     @Length(min = 6)
     private String password;

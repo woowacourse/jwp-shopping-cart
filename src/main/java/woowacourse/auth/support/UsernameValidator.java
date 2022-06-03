@@ -7,10 +7,7 @@ public class UsernameValidator implements ConstraintValidator<UsernameCheck, Str
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return false;
-        }
-        if (!value.matches("\\S+")) {
+        if (value == null || value.contains(" ")) {
             return false;
         }
         return true;

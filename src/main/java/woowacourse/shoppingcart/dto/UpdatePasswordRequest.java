@@ -8,6 +8,7 @@ public class UpdatePasswordRequest {
     @PasswordCheck
     @Length(min = 6)
     private String password;
+
     @PasswordCheck
     @Length(min = 6)
     private String newPassword;

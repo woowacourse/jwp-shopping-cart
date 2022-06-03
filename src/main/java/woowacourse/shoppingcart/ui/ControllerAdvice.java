@@ -15,9 +15,11 @@ import woowacourse.shoppingcart.dto.ShoppingCartErrorResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidEmailException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.InvalidUsernameException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @RestControllerAdvice
@@ -50,7 +52,9 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
+            InvalidUsernameException.class,
             InvalidPasswordException.class,
+            InvalidEmailException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
