@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.exception.DuplicatedUsernameException;
 import woowacourse.shoppingcart.exception.EmptyResultException;
 
 @SpringBootTest
@@ -37,6 +38,21 @@ class CustomerServiceTest {
             () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(signupRequest.getPhoneNumber()),
             () -> assertThat(customer.getAddress()).isEqualTo(signupRequest.getAddress())
         );
+    }
+
+    @DisplayName("중복된 username의 회원을 저장하면 예외를 던져야 한다.")
+    @Test
+    void duplicatedCustomer() {
+        // given
+        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        customerService.save(signupRequest);
+
+        // when
+        SignupRequest duplicatedSignupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+
+        // then
+        assertThatThrownBy(() -> customerService.save(duplicatedSignupRequest))
+            .isInstanceOf(DuplicatedUsernameException.class);
     }
 
     @DisplayName("이름으로 회원을 조회한다.")

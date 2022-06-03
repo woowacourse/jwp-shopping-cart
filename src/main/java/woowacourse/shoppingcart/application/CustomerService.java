@@ -2,14 +2,13 @@ package woowacourse.shoppingcart.application;
 
 import java.util.function.Supplier;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.DuplicatedUsernameException;
 import woowacourse.shoppingcart.exception.EmptyResultException;
 
@@ -31,11 +30,11 @@ public class CustomerService {
             signupRequest.getAddress()
         );
 
-        try {
-            return customerDao.save(customer);
-        } catch (DataIntegrityViolationException exception) {
+        if (customerDao.findByUsername(signupRequest.getUsername()).isPresent()) {
             throw new DuplicatedUsernameException();
         }
+
+        return customerDao.save(customer);
     }
 
     public Customer findByUsername(String username) {

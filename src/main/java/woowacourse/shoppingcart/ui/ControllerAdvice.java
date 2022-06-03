@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,12 @@ public class ControllerAdvice {
     public ResponseEntity<ExceptionResponse> handleDuplicatedException(DuplicatedUsernameException exception) {
         ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ExceptionResponse> handleDataAccessException() {
+        ExceptionResponse response = new ExceptionResponse(List.of("데이터베이스 접근 에러가 발생했습니다."));
+        return ResponseEntity.internalServerError().body(response);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
