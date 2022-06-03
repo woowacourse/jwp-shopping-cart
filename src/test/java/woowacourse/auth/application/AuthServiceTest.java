@@ -13,8 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.service.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.exception.shoppingcart.InvalidCustomerException;
 

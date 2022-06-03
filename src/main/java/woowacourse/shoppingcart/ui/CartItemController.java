@@ -7,7 +7,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
-import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.service.CartService;
 
 import java.net.URI;
 import java.util.List;

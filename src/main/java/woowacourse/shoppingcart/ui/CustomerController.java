@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.service.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
