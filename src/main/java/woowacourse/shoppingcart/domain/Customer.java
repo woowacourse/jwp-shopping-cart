@@ -31,10 +31,6 @@ public class Customer {
         }
     }
 
-    public boolean isSameLoginId(String loginId) {
-        return this.loginId.equals(loginId);
-    }
-
     public boolean isSamePassword(String password) {
         return this.password.equals(password);
     }

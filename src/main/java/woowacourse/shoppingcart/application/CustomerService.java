@@ -46,18 +46,16 @@ public class CustomerService {
         return CustomerResponse.of(updatedCustomer);
     }
 
-    private void checkUpdatable(Customer customer, String password) {
-        if (!customer.isSamePassword(password)) {
-            throw new IllegalArgumentException("비밀번호는 변경할 수 없습니다.");
-        }
-    }
-
     public void delete(LoginCustomer loginCustomer, CustomerDeleteRequest customerDeleteRequest) {
         Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         String encryptedPassword = CryptoUtils.encrypt(customerDeleteRequest.getPassword());
-        if (!customer.isSamePassword(encryptedPassword)) {
+        checkUpdatable(customer, encryptedPassword);
+        customerDao.delete(loginCustomer.getLoginId());
+    }
+
+    private void checkUpdatable(Customer customer, String password) {
+        if (!customer.isSamePassword(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        customerDao.delete(loginCustomer.getLoginId());
     }
 }
