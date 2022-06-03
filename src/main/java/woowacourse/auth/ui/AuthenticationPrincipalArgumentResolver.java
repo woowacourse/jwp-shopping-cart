@@ -1,13 +1,11 @@
 package woowacourse.auth.ui;
 
-import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.exception.PayloadNotFoundException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {

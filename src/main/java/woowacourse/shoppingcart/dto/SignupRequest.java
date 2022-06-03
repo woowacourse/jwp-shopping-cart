@@ -21,7 +21,6 @@ public class SignupRequest {
     @Valid
     private final PhoneNumber phoneNumber;
 
-
     @JsonCreator
     public SignupRequest(String account, String nickname, String password, String address, PhoneNumber phoneNumber) {
         this.account = account;
