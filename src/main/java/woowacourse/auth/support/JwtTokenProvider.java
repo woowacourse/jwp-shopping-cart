@@ -14,10 +14,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtTokenProvider {
-    @Value("${security.jwt.token.secret-key}")
-    private String secretKey;
-    @Value("${security.jwt.token.expire-length}")
-    private long validityInMilliseconds;
+
+    final private Key secretKey;
+
+    final private long validityInMilliseconds;
+
+    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
+                            @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
+        byte[] secretKeyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        this.secretKey =  Keys.hmacShaKeyFor(secretKeyBytes);
+        this.validityInMilliseconds = validityInMilliseconds;
+    }
 
     public String createToken(String payload) {
         Claims claims = Jwts.claims().setSubject(payload);
@@ -28,23 +35,18 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(generateSecretKey(), SignatureAlgorithm.HS256)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String getPayload(String token) {
-        Key key = generateSecretKey();
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
     }
 
-    private Key generateSecretKey() {
-        byte[] secretKeyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(secretKeyBytes);
-    }
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(generateSecretKey()).build().parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
 
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
