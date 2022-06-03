@@ -12,6 +12,6 @@
     - [ ] `ExceptionHandler` 코드 중복 제거
 - [ ] `Util` - CustomerInformationValidator
     - [ ] Util 클래스로 분리한 목적과 Util 클래스의 정의
-- [ ] `DB` - `Customer` 테이블
-    - [ ] name이 unique로 되어있음. -> email로 수정 필요
+- [x] `DB` - `Customer` 테이블
+    - [x] name이 unique로 되어있음. -> email로 수정 필요
 - [ ] ArgumentResolver 기능 구현
