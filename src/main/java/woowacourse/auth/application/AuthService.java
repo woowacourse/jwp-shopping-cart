@@ -26,12 +26,16 @@ public class AuthService {
     }
 
     public Customer getAuthenticatedCustomer(final String token) {
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException();
-        }
+        validateAvailableToken(token);
         Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
         return customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
+    }
+
+    private void validateAvailableToken(final String token) {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new InvalidTokenException();
+        }
     }
 
     public TokenResponse login(final TokenRequest tokenRequest) {
