@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dto.CheckDuplicationResponse;
 import woowacourse.shoppingcart.exception.auth.AuthorizationException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -50,5 +51,9 @@ public class CustomerService {
             return;
         }
         throw new AuthorizationException("로그인에 실패했습니다😤");
+    }
+
+    public CheckDuplicationResponse checkDuplicationByName(final String userName) {
+        return new CheckDuplicationResponse(customerDao.existsByName(userName));
     }
 }

@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CheckDuplicationRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -172,6 +174,44 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
+    /*
+       Scenario: 존재하는 이름으로 회원 이름 중복 검사
+           Given: 회원 가입을 한다.
+           When: 회원 가입 했던 이름으로 이름 중복 검사를 요청한다.
+           Then: 200 상태, 있음(True)를 반환한다.
+    */
+    @Test
+    void 존재하는_이름으로_회원_이름_중복_검사() {
+        // given
+        회원_가입("ellie", "12345678");
+
+        // when
+        ExtractableResponse<Response> checkDuplicationResponse = 회원_이름_중복_검사("ellie");
+
+        // then
+        assertAll(
+                () -> assertThat(checkDuplicationResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(checkDuplicationResponse.body().jsonPath().getBoolean("duplicated")).isTrue()
+        );
+    }
+
+    /*
+       Scenario: 존재하지 않는 이름으로 회원 이름 중복 검사
+           When: 이름 중복 검사를 요청한다.
+           Then: 200 상태, 없음(False)를 반환한다.
+    */
+    @Test
+    void 존재하지_않는_이름으로_회원_이름_중복_검사() {
+        // when
+        ExtractableResponse<Response> checkDuplicationResponse = 회원_이름_중복_검사("ellie");
+
+        // then
+        assertAll(
+                () -> assertThat(checkDuplicationResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(checkDuplicationResponse.body().jsonPath().getBoolean("duplicated")).isFalse()
+        );
+    }
+
     private ExtractableResponse<Response> 회원_가입(String name, String password) {
         return RestAssured
                 .given().log().all()
@@ -223,6 +263,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/api/customers/me")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 회원_이름_중복_검사(String userName) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CheckDuplicationRequest(userName))
+                .when().post("/api/customers/duplication")
                 .then().log().all()
                 .extract();
     }

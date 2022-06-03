@@ -15,8 +15,7 @@
 ### 리팩토링
 
 - [X] 회원 이름, 비밀번호 제약 변경
-- [ ] 회원 이름 중복 검사 기능 추가
-  - /api/customers/duplication
+- [X] 회원 이름 중복 검사 기능 추가
 - [ ] 회원 이름 userName으로 변수명 통일
 
 <br>
@@ -32,6 +31,7 @@
 | PUT    | /api/customers/me | 내 정보 수정     |
 | DELETE | /api/customers/me | 회원 탈퇴       |
 | POST   | /api/login        | 로그인         |
+| POST   |/api/customers/duplication | 회원 이름 중복 검사 |
 
 <br>
 

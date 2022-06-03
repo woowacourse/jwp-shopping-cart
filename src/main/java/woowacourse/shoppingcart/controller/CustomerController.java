@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.shoppingcart.dto.CheckDuplicationRequest;
+import woowacourse.shoppingcart.dto.CheckDuplicationResponse;
 import woowacourse.shoppingcart.service.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -49,6 +51,11 @@ public class CustomerController {
         final String customerName = getNameFromToken(request);
         customerService.deleteCustomerByName(customerName);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/duplication")
+    public ResponseEntity<CheckDuplicationResponse> checkDuplication(@RequestBody final CheckDuplicationRequest request) {
+        return ResponseEntity.ok(customerService.checkDuplicationByName(request.getUserName()));
     }
 
     private String getNameFromToken(final HttpServletRequest request) {

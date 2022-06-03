@@ -78,4 +78,20 @@ public class CustomerDaoTest {
         assertThatThrownBy(() -> customerDao.getByName("ellie"))
                 .isInstanceOf(NotFoundCustomerException.class);
     }
+
+    @Test
+    void 이름으로_사용자_존재_여부_확인() {
+        // given
+        customerDao.save(new Customer("ellie", "12345678"));
+
+        // when
+        boolean isExists = customerDao.existsByName("ellie");
+        boolean isNotExists = customerDao.existsByName("haeri");
+
+        // then
+        assertAll(
+                () -> assertThat(isExists).isTrue(),
+                () -> assertThat(isNotExists).isFalse()
+        );
+    }
 }
