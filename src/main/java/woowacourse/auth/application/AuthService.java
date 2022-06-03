@@ -24,22 +24,22 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public boolean isDuplicationEmail(String email) {
-        return customerDao.existByEmail(email);
+    public void checkDuplicationEmail(String email) {
+        validateDuplicationEmail(email);
+    }
+
+    private void validateDuplicationEmail(String email) {
+        if (customerDao.existByEmail(email)) {
+            throw new IllegalArgumentException("중복된 email 입니다.");
+        }
     }
 
     @Transactional
     public CustomerResponse save(CustomerRequest customerRequest) {
-        validateDuplicationEmail(customerRequest);
+        validateDuplicationEmail(customerRequest.getEmail());
         Customer customer = customerRequest.createCustomer();
         customerDao.save(customer);
         return CustomerResponse.from(customer);
-    }
-
-    private void validateDuplicationEmail(CustomerRequest customerRequest) {
-        if (customerDao.existByEmail(customerRequest.getEmail())) {
-            throw new IllegalArgumentException("중복된 email 입니다.");
-        }
     }
 
     public Long loginCustomer(TokenRequest tokenRequest) {

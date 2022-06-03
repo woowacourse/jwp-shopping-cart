@@ -47,8 +47,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(CustomerResponse.class);
 
-        //TODO : RestAssured status code 검증 위치 통일
-
         // then
         assertThat(customerResponse).extracting("email", "name", "phone", "address")
                 .containsExactly("email", "name", "010-1234-5678", "address");

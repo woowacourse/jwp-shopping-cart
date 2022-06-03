@@ -23,24 +23,16 @@ class AuthServiceTest {
     @Autowired
     private AuthService authService;
 
-    @DisplayName("이메일 중복 조회를 할 때, 중복이 발생하면 true를 반환한다.")
+    @DisplayName("이메일 중복 조회를 할 때, 중복이 발생하면 예외를 반환한다.")
     @Test
-    void isDuplicationEmail() {
+    void checkDuplicationEmail() {
         CustomerRequest customer =
                 new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
         authService.save(customer);
 
-        boolean isDuplicationEmail = authService.isDuplicationEmail("email");
-
-        assertThat(isDuplicationEmail).isTrue();
-    }
-
-    @DisplayName("이메일 중복 조회를 할 때, 중복이 발생하지 않으면 false를 반환한다.")
-    @Test
-    void isNotDuplicationEmail() {
-        boolean isDuplicationEmail = authService.isDuplicationEmail("email");
-
-        assertThat(isDuplicationEmail).isFalse();
+        assertThatThrownBy(() -> authService.checkDuplicationEmail("email"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("중복된 email 입니다.");
     }
 
     @DisplayName("회원을 등록한다.")

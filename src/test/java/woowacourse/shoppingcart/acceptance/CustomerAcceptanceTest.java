@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("이메일 중복 확인할 때, 중복인 경우 true를 반환한다.")
+    @DisplayName("이메일 중복 확인할 때, 중복인 경우 예외 메세지를 반환 반환한다.")
     @Test
     void isDuplicationEmail() {
         // given
@@ -33,15 +33,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        Boolean isDuplicationEmail = RestAssured.given().log().all()
+        ExceptionResponse response = RestAssured.given().log().all()
                 .param("email", "email")
                 .when()
                 .post("/customers/email")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract().as(Boolean.class);
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract().as(ExceptionResponse.class);
 
-        assertThat(isDuplicationEmail).isTrue();
+        assertThat(response.getMessage()).isEqualTo("중복된 email 입니다.");
     }
 
     @DisplayName("이메일 중복 확인할 때, 중복인 경우 false를 반환한다.")

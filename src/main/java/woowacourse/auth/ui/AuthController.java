@@ -29,8 +29,8 @@ public class AuthController {
 
     @PostMapping("/email")
     @ResponseStatus(HttpStatus.OK)
-    public boolean checkEmail(@RequestParam String email) {
-        return authService.isDuplicationEmail(email);
+    public void checkEmail(@RequestParam String email) {
+        authService.checkDuplicationEmail(email);
     }
 
     @PostMapping
