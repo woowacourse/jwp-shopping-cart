@@ -1,17 +1,16 @@
 package woowacourse.auth.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.assertj.core.api.Assertions.*;
+import static org.springframework.http.HttpStatus.*;
 
-import io.restassured.http.Header;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import io.restassured.http.Header;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceFixture;
@@ -31,7 +30,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBearerAuth() {
         // given
         final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "dwoo");
+            new CustomerRequest("email@email.com", "password1!", "dwoo");
         AcceptanceFixture.post(request, "/api/customers");
 
         final TokenRequest tokenRequest = new TokenRequest(request.getEmail(), request.getPassword());
@@ -47,17 +46,17 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(loginResponse.statusCode()).isEqualTo(OK.value());
         assertThat(customerResponse)
-                .extracting("email", "username")
-                .containsExactly(request.getEmail(), request.getUsername());
+            .extracting("email", "username")
+            .containsExactly(request.getEmail(), request.getUsername());
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
     @ParameterizedTest
-    @CsvSource(value = {"email@email.com, password2!", "email2@email.com, password1!"})
+    @CsvSource(value = {"email@email.com, invalidpwd2!", "invalidemail2@email.com, password1!"})
     void myInfoWithBadBearerAuth(String email, String password) {
         // given
         final CustomerRequest request =
-                new CustomerRequest("email@email.com", "password1!", "dwoo");
+            new CustomerRequest("email@email.com", "password1!", "dwoo");
         AcceptanceFixture.post(request, "/api/customers");
 
         // when
@@ -83,13 +82,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     private String extractAccessToken(ExtractableResponse<Response> response) {
         return response.jsonPath()
-                .getObject(".", TokenResponse.class)
-                .getAccessToken();
+            .getObject(".", TokenResponse.class)
+            .getAccessToken();
     }
 
     private CustomerResponse extractCustomer(ExtractableResponse<Response> response) {
         return response.jsonPath()
-                .getObject(".", CustomerResponse.class);
+            .getObject(".", CustomerResponse.class);
     }
 
     private int extractErrorCode(ExtractableResponse<Response> response) {
