@@ -32,7 +32,7 @@ public class AuthService {
 
     public TokenResponseDto login(final SignInDto signInDto) {
         final Customer customer = customerDao.findByEmail(signInDto.getEmail())
-                .orElseThrow(() -> new AuthorizationFailException("로그인에 실패했습니다."));
+                .orElseThrow(() -> new AuthorizationFailException("id 또는 비밀번호가 틀렸습니다."));
 
         checkPassword(signInDto, customer);
 
@@ -47,7 +47,7 @@ public class AuthService {
 
     private void checkPassword(final SignInDto signInDto, final Customer customer) {
         if (!passwordEncoder.matches(signInDto.getPassword(), customer.getPassword())) {
-            throw new AuthorizationFailException("로그인에 실패했습니다.");
+            throw new AuthorizationFailException("id 또는 비밀번호가 틀렸습니다");
         }
     }
 }
