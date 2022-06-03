@@ -7,10 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.support.HashPasswordEncoder;
-import woowacourse.shoppingcart.domain.customer.EncodePassword;
-import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
-import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
@@ -43,14 +39,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void checkDuplicationUserName_unique() {
         signUpCustomer();
         UserNameDuplicationRequest request = new UserNameDuplicationRequest("kth990303");
-        RestAssured.given().log().all()
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/customers/username/duplication")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("isUnique", equalTo(true));
+        checkUserNameIsUnique(request, true);
     }
 
     @DisplayName("아이디가 중복될 때, 아이디 중복 여부를 검사한다.")
@@ -58,6 +47,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void checkDuplicationUserName_duplicated() {
         signUpCustomer();
         UserNameDuplicationRequest request = new UserNameDuplicationRequest("forky");
+        checkUserNameIsUnique(request, false);
+    }
+
+    private void checkUserNameIsUnique(UserNameDuplicationRequest request, boolean expected) {
         RestAssured.given().log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +58,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().get("/customers/username/duplication")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("isUnique", equalTo(false));
+                .body("isUnique", equalTo(expected));
     }
 
     @DisplayName("로그인한 회원이 자신의 정보를 조회한다.")
@@ -155,12 +148,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(customerResponse.getNickName()).isEqualTo(nickName),
                 () -> assertThat(customerResponse.getAge()).isEqualTo(age)
         );
-    }
-
-    private EncodePassword encode(String rawPassword) {
-        RawPassword password = new RawPassword(rawPassword);
-        PasswordEncoder passwordEncoder = new HashPasswordEncoder();
-        return passwordEncoder.encode(password);
     }
 
     @DisplayName("회원탈퇴를 성공적으로 진행한다.")
