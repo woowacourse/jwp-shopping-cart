@@ -1,46 +1,100 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static woowacourse.CustomerFixture.SAMPLE_EMAIL;
+import static woowacourse.CustomerFixture.SAMPLE_PASSWORD;
+import static woowacourse.CustomerFixture.SAMPLE_USERNAME;
+
+import io.restassured.http.Header;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.acceptance.AcceptanceFixture;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
-    @DisplayName("Bearer Auth 로그인 성공")
+
+    private static final String BEARER = "Bearer ";
+    private static final String INVALID_TOKEN_HEADER = "invalidTokenHeader";
+    private static final int LOGIN_FAIL = 2001;
+    private static final int INVALID_TOKEN = 3002;
+
+    @DisplayName("이메일, 비밀번호, 닉네임으로 회원가입을 한 이후 동일한 이메일, 비밀번호로 로그인 시 로그인에 성공한다.")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        AcceptanceFixture.post(request, "/api/customers");
+
+        final TokenRequest tokenRequest = new TokenRequest(request.getEmail(), request.getPassword());
+        final ExtractableResponse<Response> loginResponse = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        final String accessToken = extractAccessToken(loginResponse);
+
+        final Header header = new Header("Authorization", BEARER + accessToken);
+        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/customers/me", header);
+        final CustomerResponse customerResponse = extractCustomer(response);
 
         // then
-        // 내 정보가 조회된다
+        assertThat(loginResponse.statusCode()).isEqualTo(OK.value());
+        assertThat(customerResponse)
+                .extracting("email", "username")
+                .containsExactly(request.getEmail(), request.getUsername());
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
+    @DisplayName("회원가입시 입력한 비밀번호와 다른경우 혹은 가입되지 않은 회원인 경우 로그인에 실패한다.")
+    @ParameterizedTest
+    @CsvSource(value = {"email@email.com, invalidpwd1!", "invalidEmail@email.com, password1!"})
+    void myInfoWithBadBearerAuth(String email, String password) {
         // given
-        // 회원이 등록되어 있고
+        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        AcceptanceFixture.post(request, "/api/customers");
 
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+        final TokenRequest tokenRequest = new TokenRequest(email, password);
+        final ExtractableResponse<Response> response = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
 
         // then
-        // 토큰 발급 요청이 거부된다
+        assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extractErrorCode(response)).isEqualTo(LOGIN_FAIL);
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @DisplayName("유효하지 않은 토큰으로 내 정보를 조회하려고 시도하면 실패한다.")
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        final Header header = new Header("Authorization", BEARER + INVALID_TOKEN_HEADER);
+        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/customers/me", header);
 
         // then
-        // 내 정보 조회 요청이 거부된다
+        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
+        assertThat(extractErrorCode(response)).isEqualTo(INVALID_TOKEN);
+    }
+
+    private String extractAccessToken(ExtractableResponse<Response> response) {
+        return response.jsonPath()
+                .getObject(".", TokenResponse.class)
+                .getAccessToken();
+    }
+
+    private CustomerResponse extractCustomer(ExtractableResponse<Response> response) {
+        return response.jsonPath()
+                .getObject(".", CustomerResponse.class);
+    }
+
+    private int extractErrorCode(ExtractableResponse<Response> response) {
+        return response.jsonPath().getInt("errorCode");
     }
 }
