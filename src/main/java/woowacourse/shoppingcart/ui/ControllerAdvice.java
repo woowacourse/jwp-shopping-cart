@@ -20,11 +20,6 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
-        return ResponseEntity.badRequest().body(ErrorResponse.from("Unhandled Exception"));
-    }
-
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<ErrorResponse> handle() {
         return ResponseEntity.badRequest().body(ErrorResponse.from("존재하지 않는 데이터 요청입니다."));
@@ -57,5 +52,10 @@ public class ControllerAdvice {
     @ExceptionHandler({InvalidAuthException.class})
     public ResponseEntity<ErrorResponse> handleInvalidAuthAccess(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.from(e));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+        return ResponseEntity.internalServerError().body(ErrorResponse.from("Unhandled Exception"));
     }
 }
