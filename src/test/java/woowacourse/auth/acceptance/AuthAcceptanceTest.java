@@ -32,13 +32,24 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     private static final MemberCreateRequest MEMBER_CREATE_REQUEST =
             new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-    private static final LoginRequest LOGIN_REQUEST =
-            new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+    private static final LoginRequest VALID_LOGIN_REQUEST = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
+    private static final PasswordCheckRequest VALID_PASSWORD_CHECK_REQUEST = new PasswordCheckRequest("1q2w3e4r!");
+    private static final PasswordUpdateRequest INVALID_PASSWORD_UPDATE_REQUEST = new PasswordUpdateRequest("1q2w3e4r");
+    private static final PasswordUpdateRequest VALID_PASSWORD_UPDATE_REQUEST = new PasswordUpdateRequest("1q2w3e4r@");
+    private static final MemberUpdateRequest INVALID_NICKNAME_UPDATE_REQUEST = new MemberUpdateRequest("잘못된닉네임");
+    private static final MemberUpdateRequest VALID_NICKNAME_UPDATE_REQUEST = new MemberUpdateRequest("바뀐닉네임");
+
+    private static final String LOGIN_URI = "/api/login";
+    private static final String SIGN_UP_URI = "/api/members";
+    private static final String EMAIL_DUPLICATION_CHECK_URI = "/api/members/check-email?email=";
+    private static final String PASSWORD_UPDATE_URI = "/api/members/password";
+    private static final String PASSWORD_CHECK_URI = "/api/members/password-check";
+    private static final String MEMBERS_URI = "/api/members/me";
 
     @DisplayName("이메일, 비밀번호, 닉네임으로 회원 가입에 성공하면 201를 응답한다.")
     @Test
     void signUp_Created() {
-        ExtractableResponse<Response> response = post("/api/members", MEMBER_CREATE_REQUEST);
+        ExtractableResponse<Response> response = post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -47,9 +58,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @CsvSource({"abc, 1q2w3e4r!, 닉네임", "abc@woowahan.com, 1q2w3e4r, 닉네임", "abc@woowahan.com, 1q2w3e4r!, 잘못된닉네임"})
     void signUp_BadRequest(String email, String password, String nickname) {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(email, password, nickname);
+        MemberCreateRequest invalidMemberCreateRequest = new MemberCreateRequest(email, password, nickname);
 
-        ExtractableResponse<Response> response = post("/api/members", memberCreateRequest);
+        ExtractableResponse<Response> response = post(SIGN_UP_URI, invalidMemberCreateRequest);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -63,9 +74,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @CsvSource({"abc@woowahan.com, false", "abc@naver.com, true"})
     void checkDuplicatedEmail_OK(String email, boolean expected) {
-        post("/api/members", MEMBER_CREATE_REQUEST);
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
 
-        ExtractableResponse<Response> response = get("/api/members/check-email?email=" + email);
+        ExtractableResponse<Response> response = get(EMAIL_DUPLICATION_CHECK_URI + email);
         boolean success = response.as(CheckResponse.class)
                 .isUnique();
 
@@ -80,7 +91,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void checkDuplicatedEmail_BadRequest() {
         String invalidEmail = "abc";
 
-        ExtractableResponse<Response> response = get("/api/members/check-email?email=" + invalidEmail);
+        ExtractableResponse<Response> response = get(EMAIL_DUPLICATION_CHECK_URI + invalidEmail);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -93,15 +104,15 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("올바른 이메일과 비밀번호로 로그인 요청을 하면 토큰과 닉네임을 반환하고 200을 응답한다.")
     @Test
     void login_Ok() {
-        post("/api/members", MEMBER_CREATE_REQUEST);
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
 
-        ExtractableResponse<Response> response = post("/api/login", LOGIN_REQUEST);
+        ExtractableResponse<Response> response = post(LOGIN_URI, VALID_LOGIN_REQUEST);
         LoginResponse loginResponse = response.as(LoginResponse.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(loginResponse.getToken()).isNotNull(),
-                () -> assertThat(loginResponse.getNickname()).isEqualTo("닉네임")
+                () -> assertThat(loginResponse.getNickname()).isEqualTo(MEMBER_CREATE_REQUEST.getNickname())
         );
     }
 
@@ -109,10 +120,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @CsvSource({"abc@naver.com, 1q2w3e4r!", "abc@woowahan.com, 1q2w3e4r@"})
     void login_BadRequest(String email, String password) {
-        post("/api/members", MEMBER_CREATE_REQUEST);
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
         LoginRequest loginRequest = new LoginRequest(email, password);
 
-        ExtractableResponse<Response> response = post("/api/login", loginRequest);
+        ExtractableResponse<Response> response = post(LOGIN_URI, loginRequest);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -126,15 +137,13 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @CsvSource({"1q2w3e4r!, true", "1q2w3e4r@, false"})
     void confirmPassword_Ok(String password, boolean expected) {
-        post("/api/members", MEMBER_CREATE_REQUEST);
-        String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
+        String token = post(LOGIN_URI, VALID_LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
 
-        ExtractableResponse<Response> response = postWithAuthorization(
-                "/api/members/password-check",
-                token,
-                new PasswordCheckRequest(password)
-        );
+        ExtractableResponse<Response> response =
+                postWithAuthorization(PASSWORD_CHECK_URI, token, new PasswordCheckRequest(password)
+                );
         boolean success = response.as(CheckResponse.class)
                 .isUnique();
 
@@ -148,7 +157,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void requestWithUnauthorized_Unauthorized() {
         ExtractableResponse<Response> response =
-                post("/api/members/password-check", new PasswordCheckRequest("1q2w3e4r!"));
+                post(PASSWORD_CHECK_URI, VALID_PASSWORD_CHECK_REQUEST);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -161,11 +170,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("유효하지 않은 토큰으로 인증이 필요한 URI에 접근하면 401을 응답한다.")
     @Test
     void requestWithInvalidToken_Unauthorized() {
-        ExtractableResponse<Response> response = postWithAuthorization(
-                "/api/members/password-check",
-                "abc",
-                new PasswordCheckRequest("1q2w3e4r!")
-        );
+        String invalidToken = "abc";
+        ExtractableResponse<Response> response =
+                postWithAuthorization(PASSWORD_CHECK_URI, invalidToken, VALID_PASSWORD_CHECK_REQUEST);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -178,50 +185,48 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("토큰에 해당하는 사용자의 회원 정보와 200을 응답한다.")
     @Test
     void showMember_Ok() {
-        post("/api/members", MEMBER_CREATE_REQUEST);
-        String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
+        String token = post(LOGIN_URI, VALID_LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
 
-        ExtractableResponse<Response> response = getWithAuthorization("/api/members/me", token);
+        ExtractableResponse<Response> response = getWithAuthorization(MEMBERS_URI, token);
         MemberResponse memberResponse = response.as(MemberResponse.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com"),
-                () -> assertThat(memberResponse.getNickname()).isEqualTo("닉네임")
+                () -> assertThat(memberResponse.getEmail()).isEqualTo(MEMBER_CREATE_REQUEST.getEmail()),
+                () -> assertThat(memberResponse.getNickname()).isEqualTo(MEMBER_CREATE_REQUEST.getNickname())
         );
     }
 
     @DisplayName("토큰에 해당하는 사용자의 회원 정보를 수정하고 성공하면 204를 응답한다.")
     @Test
     void updateMember_NoContent() {
-        post("/api/members", MEMBER_CREATE_REQUEST);
-        String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
+        String token = post(LOGIN_URI, VALID_LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
-        MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("바뀐닉네임");
 
         ExtractableResponse<Response> response =
-                patchWithAuthorization("/api/members/me", token, memberUpdateRequest);
-        MemberResponse memberResponse = getWithAuthorization("/api/members/me", token)
+                patchWithAuthorization(MEMBERS_URI, token, VALID_NICKNAME_UPDATE_REQUEST);
+        MemberResponse memberResponse = getWithAuthorization(MEMBERS_URI, token)
                 .as(MemberResponse.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com"),
-                () -> assertThat(memberResponse.getNickname()).isEqualTo("바뀐닉네임")
+                () -> assertThat(memberResponse.getEmail()).isEqualTo(MEMBER_CREATE_REQUEST.getEmail()),
+                () -> assertThat(memberResponse.getNickname()).isEqualTo(VALID_NICKNAME_UPDATE_REQUEST.getNickname())
         );
     }
 
     @DisplayName("형식에 맞지 않는 회원 정보로 수정하려고 하면 400을 응답한다.")
     @Test
     void updateMember_BadRequest() {
-        post("/api/members", MEMBER_CREATE_REQUEST);
-        String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
+        String token = post(LOGIN_URI, VALID_LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
-        MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("잘못된닉네임");
 
         ExtractableResponse<Response> response =
-                patchWithAuthorization("/api/members/me", token, memberUpdateRequest);
+                patchWithAuthorization(MEMBERS_URI, token, INVALID_NICKNAME_UPDATE_REQUEST);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -234,15 +239,15 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("토큰에 해당하는 사용자의 비밀번호를 수정하고 성공하면 204를 응답한다.")
     @Test
     void updatePassword_NoContent() {
-        post("/api/members", MEMBER_CREATE_REQUEST);
-        String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
+        String token = post(LOGIN_URI, VALID_LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
-        PasswordUpdateRequest passwordUpdateRequest = new PasswordUpdateRequest("1q2w3e4r@");
 
         ExtractableResponse<Response> response =
-                patchWithAuthorization("/api/members/password", token, passwordUpdateRequest);
-        LoginRequest updatedLoginRequest = new LoginRequest("abc@woowahan.com", "1q2w3e4r@");
-        ExtractableResponse<Response> updatedLoginResponse = post("/api/login", updatedLoginRequest);
+                patchWithAuthorization(PASSWORD_UPDATE_URI, token, VALID_PASSWORD_UPDATE_REQUEST);
+        LoginRequest updatedLoginRequest =
+                new LoginRequest(MEMBER_CREATE_REQUEST.getEmail(), VALID_PASSWORD_UPDATE_REQUEST.getPassword());
+        ExtractableResponse<Response> updatedLoginResponse = post(LOGIN_URI, updatedLoginRequest);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
@@ -253,13 +258,12 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("형식에 맞지 않는 비밀번호로 수정하려고 하면 400을 응답한다.")
     @Test
     void updatePassword_BadRequest() {
-        post("/api/members", MEMBER_CREATE_REQUEST);
-        String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
+        String token = post(LOGIN_URI, VALID_LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
-        PasswordUpdateRequest passwordUpdateRequest = new PasswordUpdateRequest("1q2w3e4r");
 
         ExtractableResponse<Response> response =
-                patchWithAuthorization("/api/members/password", token, passwordUpdateRequest);
+                patchWithAuthorization(PASSWORD_UPDATE_URI, token, INVALID_PASSWORD_UPDATE_REQUEST);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -272,12 +276,12 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("토큰에 해당하는 회원을 삭제하고 성공하면 204를 응답한다.")
     @Test
     void deleteMember_NoContent() {
-        post("/api/members", MEMBER_CREATE_REQUEST);
-        String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
+        String token = post(LOGIN_URI, VALID_LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
 
-        ExtractableResponse<Response> response = deleteWithAuthorization("/api/members/me", token);
-        ExtractableResponse<Response> loginResponse = post("/api/login", LOGIN_REQUEST);
+        ExtractableResponse<Response> response = deleteWithAuthorization(MEMBERS_URI, token);
+        ExtractableResponse<Response> loginResponse = post(LOGIN_URI, VALID_LOGIN_REQUEST);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
@@ -288,12 +292,12 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("이미 삭제된 회원의 토큰으로 접근하려고 하면 401을 응답한다.")
     @Test
     void requestWithDeletedMemberToken_Unauthorized() {
-        post("/api/members", MEMBER_CREATE_REQUEST);
-        String token = post("/api/login", LOGIN_REQUEST).as(LoginResponse.class)
+        post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
+        String token = post(LOGIN_URI, VALID_LOGIN_REQUEST).as(LoginResponse.class)
                 .getToken();
-        deleteWithAuthorization("/api/members/me", token);
+        deleteWithAuthorization(MEMBERS_URI, token);
 
-        ExtractableResponse<Response> response = deleteWithAuthorization("/api/members/me", token);
+        ExtractableResponse<Response> response = deleteWithAuthorization(MEMBERS_URI, token);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
