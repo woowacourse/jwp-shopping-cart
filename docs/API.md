@@ -16,7 +16,7 @@ content-type: application/json
 
 method: GET
 
-URL: “/api/members/check-email?email=${email}”
+URL: “/api/members/email-check?email=${email}”
 
 content-type: application/json
 

@@ -28,7 +28,7 @@ public class AcceptanceTestUtil {
     }
 
     public static void 이메일_중복체크를_한다(String email) {
-        boolean unique = get("/api/members/check-email?email=" + email)
+        boolean unique = get("/api/members/email-check?email=" + email)
                 .as(EmailUniqueCheckResponse.class)
                 .isUnique();
         if (!unique) {

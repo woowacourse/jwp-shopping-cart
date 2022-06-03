@@ -85,7 +85,7 @@ class AuthControllerTest {
         given(authService.existsEmail(any()))
                 .willReturn(true);
 
-        mockMvc.perform(get("/api/members/check-email?email=" + "abc@woowahan.com"))
+        mockMvc.perform(get("/api/members/email-check?email=" + "abc@woowahan.com"))
                 .andExpect(status().isOk());
         verify(authService, times(1))
                 .existsEmail("abc@woowahan.com");

@@ -35,7 +35,7 @@ public class AuthController {
                 .build();
     }
 
-    @GetMapping("/members/check-email")
+    @GetMapping("/members/email-check")
     public ResponseEntity<EmailUniqueCheckResponse> checkUniqueEmail(@RequestParam String email) {
         EmailUniqueCheckResponse emailUniqueCheckResponse = new EmailUniqueCheckResponse(!authService.existsEmail(email));
         return ResponseEntity.ok(emailUniqueCheckResponse);
