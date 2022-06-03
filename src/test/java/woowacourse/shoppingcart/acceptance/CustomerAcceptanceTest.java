@@ -99,7 +99,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponse tokenResponse = 로그인을_한다("giron", rowBasicPassword).as(TokenResponse.class);
 
         // when
-        ExtractableResponse<Response> extractableResponse = 내_정보를_조회한다(tokenResponse.getAccessToken());
+        ExtractableResponse<Response> extractableResponse = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
+                .when().delete("/api/customers/me")
+                .then().log().all()
+                .extract();
         ExtractableResponse<Response> findResponse = 내_정보를_조회한다(tokenResponse.getAccessToken());
 
         // then
