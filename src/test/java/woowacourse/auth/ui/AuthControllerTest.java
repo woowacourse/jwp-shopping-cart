@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.helper.restdocs.RestDocsTest;
 
 @DisplayName("Auth 컨트롤러 단위테스트")
@@ -54,5 +55,34 @@ public class AuthControllerTest extends RestDocsTest {
                 responseFields(
                         fieldWithPath("accessToken").type(STRING).description("토큰")
                 )));
+    }
+
+    @DisplayName("이메일 형식으로 인해 로그인에 실패한다.")
+    @Test
+    void loginEmailNotRight() throws Exception {
+        final TokenRequest request = new TokenRequest("Huni", PASSWORD);
+        final ErrorResponse response = new ErrorResponse("올바른 이메일 형식으로 입력해주세요.");
+
+        mockMvc.perform(post("/api/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(response)));
+    }
+
+
+    @DisplayName("비밀번호 공백으로 인해 로그인에 실패한다.")
+    @Test
+    void loginPasswordNotRight() throws Exception {
+        final TokenRequest request = new TokenRequest(EMAIL, " ");
+        final ErrorResponse response = new ErrorResponse("비밀번호에는 공백이 허용되지 않습니다.");
+
+        mockMvc.perform(post("/api/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(response)));
     }
 }
