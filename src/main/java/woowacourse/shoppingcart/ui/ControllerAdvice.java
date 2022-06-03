@@ -41,22 +41,10 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<ExceptionResponse> handleDataAccessException() {
-        ExceptionResponse response = new ExceptionResponse(List.of("데이터베이스 접근 에러가 발생했습니다."));
-        return ResponseEntity.internalServerError().body(response);
-    }
-
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<ExceptionResponse> handle() {
         ExceptionResponse response = new ExceptionResponse(List.of("존재하지 않는 데이터 요청입니다."));
         return ResponseEntity.badRequest().body(response);
-    }
-
-    @ExceptionHandler(LoginException.class)
-    public ResponseEntity<ExceptionResponse> handleLoginException(LoginException exception) {
-        ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(response);
     }
 
     @ExceptionHandler
@@ -96,5 +84,17 @@ public class ControllerAdvice {
     public ResponseEntity<ExceptionResponse> handleAuthException(final AuthorizationException e) {
         ExceptionResponse response = new ExceptionResponse(List.of(e.getMessage()));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
+    @ExceptionHandler(LoginException.class)
+    public ResponseEntity<ExceptionResponse> handleLoginException(LoginException exception) {
+        ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(response);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ExceptionResponse> handleDataAccessException() {
+        ExceptionResponse response = new ExceptionResponse(List.of("데이터베이스 접근 에러가 발생했습니다."));
+        return ResponseEntity.internalServerError().body(response);
     }
 }
