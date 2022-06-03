@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.application;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import woowacourse.shoppingcart.domain.customer.vo.EncryptPassword;
+import woowacourse.shoppingcart.domain.customer.vo.Password;
 import woowacourse.shoppingcart.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.common.exception.BadRequestException;
@@ -36,8 +38,17 @@ public class CustomerService {
         if (customerDao.existsByAccount(customerRequest.getAccount())) {
             throw new BadRequestException("이미 존재하는 계정입니다.");
         }
-        Customer customer = customerRequest.toCustomer();
+        Customer customer = toCustomer(customerRequest);
         customerDao.save(CustomerEntity.from(customer));
+    }
+
+    private Customer toCustomer(CustomerRequest request) {
+        return new Customer(
+                request.getAccount(),
+                request.getNickname(),
+                new EncryptPassword(new Password(request.getPassword())),
+                request.getAddress(),
+                request.getPhoneNumber().toPhoneNumber());
     }
 
     public TokenResponse signin(SigninRequest signinRequest) {

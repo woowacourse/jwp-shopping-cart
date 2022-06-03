@@ -2,19 +2,19 @@ package woowacourse.shoppingcart.domain.customer;
 
 import woowacourse.shoppingcart.domain.customer.vo.Account;
 import woowacourse.shoppingcart.domain.customer.vo.Address;
+import woowacourse.shoppingcart.domain.customer.vo.EncryptPassword;
 import woowacourse.shoppingcart.domain.customer.vo.Nickname;
-import woowacourse.shoppingcart.domain.customer.vo.Password;
 import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
 
 public class Customer {
 
     private final Account account;
     private final Nickname nickname;
-    private final Password password;
+    private final EncryptPassword password;
     private final Address address;
     private final PhoneNumber phoneNumber;
 
-    public Customer(Account account, Nickname nickname, Password password, Address address,
+    public Customer(Account account, Nickname nickname, EncryptPassword password, Address address,
             PhoneNumber phoneNumber) {
         this.account = account;
         this.nickname = nickname;
@@ -25,8 +25,14 @@ public class Customer {
 
     public Customer(String account, String nickname, String password, String address,
             PhoneNumber phoneNumber) {
-        this(new Account(account), new Nickname(nickname), new Password(password),
+        this(new Account(account), new Nickname(nickname), new EncryptPassword(password),
                 new Address(address), phoneNumber);
+    }
+
+    public Customer(String account, String nickname, EncryptPassword password,
+            String address, PhoneNumber phoneNumber) {
+        this(new Account(account), new Nickname(nickname), password, new Address(address),
+                phoneNumber);
     }
 
     public Account getAccount() {
@@ -37,7 +43,7 @@ public class Customer {
         return nickname;
     }
 
-    public Password getPassword() {
+    public EncryptPassword getPassword() {
         return password;
     }
 

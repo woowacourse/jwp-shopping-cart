@@ -22,10 +22,6 @@ public class CustomerRequest {
         this.phoneNumber = phoneNumber;
     }
 
-    public Customer toCustomer() {
-        return new Customer(account, nickname, password, address, phoneNumber.toPhoneNumber());
-    }
-
     public String getAccount() {
         return account;
     }
