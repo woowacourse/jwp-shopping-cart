@@ -15,9 +15,9 @@ import woowacourse.auth.ui.dto.LoginMember;
 import woowacourse.shoppingcart.service.CustomerService;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
 
 @RestController
 @RequestMapping("/api/customer")

@@ -17,9 +17,9 @@ import woowacourse.exception.CustomerNotFoundException;
 import woowacourse.exception.PasswordIncorrectException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
 
 @JdbcTest
 @TestConstructor(autowireMode = AutowireMode.ALL)

@@ -17,7 +17,7 @@ import woowacourse.auth.ui.dto.TokenRequest;
 import woowacourse.auth.ui.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
+import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @DisplayName("인증 관련 기능")
