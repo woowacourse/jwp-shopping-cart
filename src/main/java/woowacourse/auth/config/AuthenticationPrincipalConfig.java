@@ -12,6 +12,7 @@ import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
+
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider) {
@@ -20,22 +21,12 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
+        argumentResolvers.add(new AuthenticationPrincipalArgumentResolver(jwtTokenProvider));
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authenticationInterceptor())
+        registry.addInterceptor(new AuthenticationInterceptor(jwtTokenProvider))
                 .addPathPatterns("/customers/**");
-    }
-
-    @Bean
-    public AuthenticationInterceptor authenticationInterceptor() {
-        return new AuthenticationInterceptor(jwtTokenProvider);
-    }
-
-    @Bean
-    public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
     }
 }
