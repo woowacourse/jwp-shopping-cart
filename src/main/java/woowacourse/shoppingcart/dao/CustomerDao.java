@@ -11,7 +11,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.CannotDeleteException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -58,7 +59,7 @@ public class CustomerDao {
             Long id = rs.getLong("id");
             String userName = rs.getString("username");
             String password = rs.getString("password");
-            return new Customer(id, userName, password);
+            return new Customer(id, new UserName(userName), password);
         };
     }
 
@@ -80,7 +81,7 @@ public class CustomerDao {
         if (update == 0) {
             throw new InvalidCustomerException();
         }
-        return new Customer(id, userName, password);
+        return new Customer(id, new UserName(userName), password);
     }
 
     public void deleteById(final Long id) {

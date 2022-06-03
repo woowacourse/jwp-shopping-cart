@@ -21,7 +21,8 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.UserName;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -42,8 +43,8 @@ class AuthServiceTest {
     @Test
     void login() {
         // given
-        String userName = "기론";
-        Customer customer = new Customer(1L, userName, encryptedBasicPassword);
+        String userName = "giron";
+        Customer customer = new Customer(1L, new UserName(userName), encryptedBasicPassword);
         given(customerDao.findByUserName(userName))
                 .willReturn(Optional.of(customer));
         given(jwtTokenProvider.createToken("1"))
@@ -68,9 +69,9 @@ class AuthServiceTest {
     @Test
     void getAuthenticatedCustomer() {
         // given
-        String userName = "기론";
+        String userName = "giron";
         String token = "accessToken";
-        Customer customer = new Customer(1L, userName, encryptedBasicPassword);
+        Customer customer = new Customer(1L, new UserName(userName), encryptedBasicPassword);
         given(jwtTokenProvider.validateToken(token))
                 .willReturn(true);
         given(jwtTokenProvider.getPayload(token))

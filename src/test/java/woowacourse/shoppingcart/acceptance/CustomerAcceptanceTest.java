@@ -31,7 +31,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         // given
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론",
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("giron",
                 rowBasicPassword);
 
         // when
@@ -55,7 +55,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("기론",
+        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
                 rowBasicPassword);
         RestAssured
                 .given().log().all()
@@ -65,7 +65,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("giron", rowBasicPassword);
         final TokenResponse tokenResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -87,7 +87,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.getUserName()).isEqualTo("기론")
+                () -> assertThat(response.getUserName()).isEqualTo("giron")
         );
     }
 
@@ -95,7 +95,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("기론",
+        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
                 rowBasicPassword);
         RestAssured
                 .given().log().all()
@@ -105,7 +105,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("giron", rowBasicPassword);
         final TokenResponse tokenResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -116,7 +116,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .as(TokenResponse.class);
 
         // when
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론", "87654321");
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("giron", "87654321");
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
@@ -130,7 +130,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.getUserName()).isEqualTo("기론")
+                () -> assertThat(response.getUserName()).isEqualTo("giron")
         );
     }
 
@@ -138,7 +138,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("기론",
+        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
                 rowBasicPassword);
         RestAssured
                 .given().log().all()
@@ -148,7 +148,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("giron", rowBasicPassword);
         final TokenResponse tokenResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -202,7 +202,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void isDuplicatedUserName() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("기론",
+        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
                 rowBasicPassword);
         RestAssured
                 .given().log().all()
@@ -213,7 +213,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // when
-        CustomerRequest.UserNameOnly request = new UserNameOnly("기론");
+        CustomerRequest.UserNameOnly request = new UserNameOnly("giron");
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -236,7 +236,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void signUpWithShortPassword(String password) {
         // given
         CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword("기론", password);
+                new CustomerRequest.UserNameAndPassword("giron", password);
 
         // when
         final ExtractableResponse<Response> response = RestAssured

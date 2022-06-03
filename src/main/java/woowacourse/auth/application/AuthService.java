@@ -8,7 +8,7 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.NotMatchPasswordException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service

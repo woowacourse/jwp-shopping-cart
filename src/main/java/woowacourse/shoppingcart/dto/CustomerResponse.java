@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerResponse {
-    
+
     private String userName;
 
     private CustomerResponse() {

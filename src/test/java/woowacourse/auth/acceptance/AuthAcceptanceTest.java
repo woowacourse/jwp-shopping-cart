@@ -30,7 +30,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginReturnBearerToken() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("giron", rowBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +40,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // when
-        final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("giron", rowBasicPassword);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +58,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("giron", rowBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -67,7 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        final TokenRequest tokenRequest = new TokenRequest("기론", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("giron", rowBasicPassword);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -87,14 +87,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final CustomerResponse customerResponse = responseMe.as(CustomerResponse.class);
 
         // then
-        assertThat(customerResponse.getUserName()).isEqualTo("기론");
+        assertThat(customerResponse.getUserName()).isEqualTo("giron");
     }
 
     @DisplayName("Bearer Auth 로그인 실패 - 유저 이름이 잘못된 경우 404-NOT_FOUND를 반환한다.")
     @Test
     void loginFailureWithWrongUserName() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("giron", rowBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -126,7 +126,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginFailureWithWrongPassword() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("giron", rowBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -136,7 +136,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // when
-        final TokenRequest tokenRequest = new TokenRequest("기론", "wrongPassword");
+        final TokenRequest tokenRequest = new TokenRequest("giron", "wrongPassword");
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -158,7 +158,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("기론", rowBasicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("giron", rowBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -214,7 +214,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @NullSource
     void loginWithWrongPassword(String password) {
         // given
-        TokenRequest tokenRequest = new TokenRequest("기론", password);
+        TokenRequest tokenRequest = new TokenRequest("giron", password);
 
         // when
         final ExtractableResponse<Response> response = RestAssured

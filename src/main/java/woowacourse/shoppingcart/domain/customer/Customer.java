@@ -1,24 +1,21 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
 
 public class Customer {
 
     private final Long id;
-    private final String userName;
+    private final UserName userName;
     private final String password;
 
-    public Customer(final Long id, final String userName, final String password) {
+    public Customer(final Long id, final UserName userName, final String password) {
         this.id = id;
         this.userName = userName;
         this.password = password;
     }
 
     public void validateUserNameChange(final String userName) {
-        if (!this.userName.equals(userName)) {
-            throw new CannotUpdateUserNameException();
-        }
+        this.userName.validateChange(userName);
     }
 
     public Long getId() {
@@ -26,7 +23,7 @@ public class Customer {
     }
 
     public String getUserName() {
-        return userName;
+        return userName.getValue();
     }
 
     public String getPassword() {

@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
@@ -12,7 +12,7 @@ class CustomerTest {
     @DisplayName("유저 이름을 변경하면 예외가 발생한다.")
     @Test
     void validateUserNameChange() {
-        final Customer customer = new Customer(1L, "기론", encryptedBasicPassword);
+        final Customer customer = new Customer(1L, new UserName("giron"), encryptedBasicPassword);
 
         assertThatThrownBy(() -> customer.validateUserNameChange("티키"))
                 .isExactlyInstanceOf(CannotUpdateUserNameException.class)

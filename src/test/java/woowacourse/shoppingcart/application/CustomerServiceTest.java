@@ -19,7 +19,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -44,7 +45,7 @@ class CustomerServiceTest {
     @Test
     void signUp() {
         // given
-        final String userName = "기론";
+        final String userName = "giron";
         given(customerDao.existsByUserName(userName)).willReturn(false);
         given(passwordEncoder.encode(rowBasicPassword)).willReturn(encryptedBasicPassword);
         given(customerDao.save(userName, encryptedBasicPassword)).willReturn(1L);
@@ -67,7 +68,7 @@ class CustomerServiceTest {
     @Test
     void signUpWithDuplicateUserName() {
         // given
-        final String userName = "기론";
+        final String userName = "giron";
         given(customerDao.existsByUserName(userName)).willReturn(true);
 
         // when
@@ -88,8 +89,8 @@ class CustomerServiceTest {
     void getMeById() {
         // given
         final Long id = 1L;
-        final String userName = "기론";
-        Customer customer = new Customer(id, userName, encryptedBasicPassword);
+        final String userName = "giron";
+        Customer customer = new Customer(id, new UserName(userName), encryptedBasicPassword);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
         // when
@@ -123,19 +124,19 @@ class CustomerServiceTest {
     void updateById() {
         // given
         final Long id = 1L;
-        final String userName = "기론";
-        Customer customer = new Customer(id, userName, encryptedBasicPassword);
-        Customer updatedCustomer = new Customer(id, userName, "321");
+        final String userName = "giron";
+        Customer customer = new Customer(id, new UserName(userName), encryptedBasicPassword);
+        Customer updatedCustomer = new Customer(id, new UserName(userName), "321");
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
         given(customerDao.update(id, userName, "321")).willReturn(updatedCustomer);
 
         // when
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론", "321");
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("giron", "321");
         CustomerResponse response = customerService.updateById(id, request);
 
         // then
         assertAll(
-                () -> assertThat(response.getUserName()).isEqualTo("기론"),
+                () -> assertThat(response.getUserName()).isEqualTo("giron"),
                 () -> verify(customerDao).findById(id),
                 () -> verify(customerDao).update(id, userName, "321")
         );
@@ -149,7 +150,7 @@ class CustomerServiceTest {
         given(customerDao.findById(id)).willReturn(Optional.empty());
 
         // when
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("기론", "87654321");
+        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("giron", "87654321");
 
         // then
         assertAll(
@@ -165,8 +166,8 @@ class CustomerServiceTest {
     void updateUserName() {
         // given
         final Long id = 1L;
-        final String userName = "기론";
-        Customer customer = new Customer(id, userName, encryptedBasicPassword);
+        final String userName = "giron";
+        Customer customer = new Customer(id, new UserName(userName), encryptedBasicPassword);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
         // when
@@ -186,8 +187,8 @@ class CustomerServiceTest {
     void deleteById() {
         // given
         final Long id = 1L;
-        final String userName = "기론";
-        Customer customer = new Customer(id, userName, encryptedBasicPassword);
+        final String userName = "giron";
+        Customer customer = new Customer(id, new UserName(userName), encryptedBasicPassword);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
         doNothing().when(customerDao).deleteById(id);
 
@@ -203,7 +204,7 @@ class CustomerServiceTest {
     @Test
     void isDuplicateUserName() {
         // given
-        final String userName = "기론";
+        final String userName = "giron";
         given(customerDao.existsByUserName(userName))
                 .willReturn(true);
 
