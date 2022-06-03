@@ -9,8 +9,8 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.HashPasswordEncoder;
 import woowacourse.shoppingcart.domain.customer.EncodePassword;
-import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
@@ -118,8 +118,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().put("/customers/me/password")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
-
-        assertCustomer(accessToken, "forky", "forky@4321", "복희", 26);
     }
 
     @DisplayName("내 비밀번호를 제외한 정보를 수정한다.")
@@ -139,10 +137,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
-        assertCustomer(accessToken, "forky", "forky@1234", "권복희", 12);
+        assertCustomer(accessToken, "forky", "권복희", 12);
     }
 
-    private void assertCustomer(String accessToken, String userName, String password, String nickName, int age) {
+    private void assertCustomer(String accessToken, String userName, String nickName, int age) {
         CustomerResponse customerResponse = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -154,7 +152,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(customerResponse.getUserName()).isEqualTo(userName),
-                () -> assertThat(customerResponse.getPassword()).isEqualTo(encode(password).getPassword()),
                 () -> assertThat(customerResponse.getNickName()).isEqualTo(nickName),
                 () -> assertThat(customerResponse.getAge()).isEqualTo(age)
         );
