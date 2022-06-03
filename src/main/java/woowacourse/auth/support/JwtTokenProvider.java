@@ -10,8 +10,8 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-
     private final String secretKey;
+
     @Value("${security.jwt.token.expire-length}")
     private long validityInMilliseconds;
 

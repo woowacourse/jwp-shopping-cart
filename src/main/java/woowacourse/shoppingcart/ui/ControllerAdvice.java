@@ -19,9 +19,9 @@ import java.util.List;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    @ExceptionHandler({RuntimeException.class, Exception.class})
+    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+        return ResponseEntity.internalServerError().body(new ErrorResponse("서버 에러가 발생했습니다."));
     }
 
     @ExceptionHandler({UnauthorizedException.class, JwtException.class})
