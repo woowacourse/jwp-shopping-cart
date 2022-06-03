@@ -8,7 +8,7 @@ public class TokenRequest {
     @NotBlank(message = "비밀번호는 빈칸일 수 없습니다.")
     private String password;
 
-    public TokenRequest() {
+    private TokenRequest() {
     }
 
     public TokenRequest(String userName, String password) {
