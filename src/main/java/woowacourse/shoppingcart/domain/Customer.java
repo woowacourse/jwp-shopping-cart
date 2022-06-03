@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 public class Customer {
 
+    private static final long DEFAULT_ID = 0L;
     private Long id;
     private UserName name;
     private Password password;
@@ -16,7 +17,7 @@ public class Customer {
     }
 
     public Customer(String name, String password) {
-        this(0L, name, password);
+        this(DEFAULT_ID, name, password);
     }
 
     public Long getId() {

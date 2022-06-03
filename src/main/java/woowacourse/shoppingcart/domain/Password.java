@@ -2,7 +2,9 @@ package woowacourse.shoppingcart.domain;
 
 public class Password {
 
-    private static final int STANDARD_PASSWORD_LENGTH = 8;
+    private static final int STANDARD_PASSWORD_MIN_LENGTH = 8;
+    private static final int STANDARD_PASSWORD_MAX_LENGTH = 20;
+    private static final String regex = "^[a-z0-9!@#$%^&*-_]{8,16}$";
 
     private final String password;
 
@@ -12,13 +14,13 @@ public class Password {
     }
 
     public void validatePassword(String password) {
-        if (password.length() < STANDARD_PASSWORD_LENGTH) {
-            throw new IllegalArgumentException("패스워드의 길이는 8자 이상이어야 합니다.");
+        if (password.matches(regex)) {
+            return;
         }
+        throw new IllegalArgumentException("패스워드는 영문 소문자, 숫자, 특수문자 8~16자리로 구성하여야 합니다.");
     }
 
-    @Override
-    public String toString() {
-        return password.toString();
+    public String value() {
+        return password;
     }
 }

@@ -37,7 +37,7 @@ public class CustomerService {
 
     public CustomerResponse findCustomerByName(final String customerName) {
         final Customer customer = customerDao.findCustomerByName(customerName);
-        return new CustomerResponse(customer.getName().toString());
+        return new CustomerResponse(customer.getName().value());
     }
 
     public void editCustomerByName(final String name, final CustomerRequest editRequest) {

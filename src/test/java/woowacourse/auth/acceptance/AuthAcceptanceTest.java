@@ -48,7 +48,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value()).extract().as(Customer.class);
 
-        assertThat(customer.getName().toString()).isEqualTo("test");
+        assertThat(customer.getName().value()).isEqualTo("test");
     }
 
     @DisplayName("Bearer Auth 로그인 실패")

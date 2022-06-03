@@ -26,8 +26,8 @@ public class CustomerDao {
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, customer.getName().toString());
-            preparedStatement.setString(2, customer.getPassword().toString());
+            preparedStatement.setString(1, customer.getName().value());
+            preparedStatement.setString(2, customer.getPassword().value());
             return preparedStatement;
         }, keyHolder);
     }
@@ -63,7 +63,7 @@ public class CustomerDao {
 
     public void updateByName(String customerName, Customer customer) {
         final String query = "UPDATE customer SET password = ? WHERE username = ?";
-        jdbcTemplate.update(query, customer.getPassword().toString(), customerName);
+        jdbcTemplate.update(query, customer.getPassword().value(), customerName);
     }
 
     public boolean existsCustomer(Customer customer) {
@@ -72,8 +72,8 @@ public class CustomerDao {
                 jdbcTemplate.queryForObject(
                         query,
                         Boolean.class,
-                        customer.getName().toString(),
-                        customer.getPassword().toString()
+                        customer.getName().value(),
+                        customer.getPassword().value()
                 )
         );
     }

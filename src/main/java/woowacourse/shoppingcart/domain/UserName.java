@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 public class UserName {
 
-    private static final String regex = "^[a-zA-Z]{1}[a-zA-Z0-9_]{3,11}$";
+    private static final String regex = "^[a-z0-9_]{5,20}$";
 
     private final String name;
 
@@ -15,11 +15,10 @@ public class UserName {
         if (name.matches(regex)) {
             return;
         }
-        throw new IllegalArgumentException("허용되지 않는 ID 형식입니다.");
+        throw new IllegalArgumentException("아이디는 소문자, 숫자, _ 5~20글자로 구성되어야 합니다.");
     }
 
-    @Override
-    public String toString() {
-        return name.toString();
+    public String value() {
+        return name;
     }
 }
