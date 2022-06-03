@@ -1,4 +1,4 @@
-package woowacourse.auth.utils;
+package woowacourse.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

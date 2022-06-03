@@ -1,4 +1,4 @@
-package woowacourse.auth.support;
+package woowacourse.utils;
 
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;

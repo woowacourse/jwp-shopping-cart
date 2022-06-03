@@ -1,4 +1,4 @@
-package woowacourse.auth.utils;
+package woowacourse.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

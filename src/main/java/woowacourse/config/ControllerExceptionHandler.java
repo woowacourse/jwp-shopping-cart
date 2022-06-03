@@ -1,7 +1,8 @@
-package woowacourse.global.ui;
+package woowacourse.config;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,24 +30,62 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @RestControllerAdvice
-public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(RuntimeException.class)
-    public ErrorResponse handleUnhandledException() {
-        return new ErrorResponse("Unhandled Exception");
-    }
+@Slf4j
+public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ErrorResponse handle() {
+    public ErrorResponse handle(Exception ex) {
+        log.error("error: {}", ex.getMessage());
         return new ErrorResponse("존재하지 않는 데이터 요청입니다.");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+            InvalidCustomerException.class,
+            InvalidCartItemException.class,
+            InvalidProductException.class,
+            InvalidOrderException.class,
+            NotInCustomerCartItemException.class,
+            ConstraintViolationException.class
+    })
+    public ErrorResponse handleInvalidAccess(final RuntimeException ex) {
+        log.error("error: {}", ex.getMessage());
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({DuplicateEmailException.class, DuplicateUsernameException.class})
+    public FieldErrorResponse handleDuplicatedRequest(DuplicateDomainException exception) {
+        return new FieldErrorResponse(exception.getField(), exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
+    public ErrorResponse handleLoginFailException(Exception ex) {
+        log.error("error: {}", ex.getMessage());
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ForbiddenAccessException.class)
+    public ErrorResponse handleForbiddenAccessException(Exception ex) {
+        log.error("error: {}", ex.getMessage());
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleAllOtherErrors(final Exception ex) {
+        log.error("error: {}", ex.getMessage());
+        return new ErrorResponse(ex.getMessage());
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
+        log.error("error: {}", ex.getMessage());
         BindingResult bindingResult = ex.getBindingResult();
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
@@ -57,51 +96,10 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
                 .body(response);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({DuplicateEmailException.class, DuplicateUsernameException.class})
-    public FieldErrorResponse handleDuplicatedRequest(DuplicateDomainException exception) {
-        return new FieldErrorResponse(exception.getField(), exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ErrorResponse handleInvalidRequest(final RuntimeException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({
-            InvalidCustomerException.class,
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
-    })
-    public ErrorResponse handleInvalidAccess(final RuntimeException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
-    public ErrorResponse handleLoginFailException(Exception exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(ForbiddenAccessException.class)
-    public ErrorResponse handleForbiddenAccessException(Exception exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleAllOtherErrors(final Exception e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
                                                              HttpStatus status, WebRequest request) {
+        log.error("error: {}", ex.getMessage());
         ErrorResponse response = new ErrorResponse(ex.getMessage());
         return ResponseEntity
                 .status(status)

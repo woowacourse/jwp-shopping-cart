@@ -1,8 +1,8 @@
-package woowacourse.global.utils;
+package woowacourse.fixture;
 
 import static io.restassured.RestAssured.given;
-import static woowacourse.global.utils.Fixture.get;
-import static woowacourse.global.utils.Fixture.post;
+import static woowacourse.fixture.Fixture.get;
+import static woowacourse.fixture.Fixture.post;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

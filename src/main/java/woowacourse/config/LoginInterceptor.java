@@ -1,4 +1,4 @@
-package woowacourse.auth.support;
+package woowacourse.config;
 
 import static java.util.Arrays.stream;
 
@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.exception.InvalidTokenException;
+import woowacourse.utils.AuthorizationExtractor;
+import woowacourse.utils.JwtTokenProvider;
 
 @RequiredArgsConstructor
 public class LoginInterceptor implements HandlerInterceptor {

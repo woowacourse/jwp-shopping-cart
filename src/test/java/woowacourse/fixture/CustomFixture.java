@@ -1,4 +1,4 @@
-package woowacourse.global.utils;
+package woowacourse.fixture;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

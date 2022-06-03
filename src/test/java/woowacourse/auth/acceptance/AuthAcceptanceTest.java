@@ -1,10 +1,10 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.global.utils.AuthFixture.로그인_요청;
-import static woowacourse.global.utils.AuthFixture.로그인_요청_및_토큰발급;
-import static woowacourse.global.utils.AuthFixture.회원조회_요청;
-import static woowacourse.global.utils.CustomFixture.회원가입_요청_및_ID_추출;
+import static woowacourse.fixture.AuthFixture.로그인_요청;
+import static woowacourse.fixture.AuthFixture.로그인_요청_및_토큰발급;
+import static woowacourse.fixture.AuthFixture.회원조회_요청;
+import static woowacourse.fixture.CustomFixture.회원가입_요청_및_ID_추출;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.global.utils.AcceptanceTest;
+import woowacourse.global.AcceptanceTest;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 

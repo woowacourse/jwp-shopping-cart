@@ -1,4 +1,4 @@
-package woowacourse.global.utils;
+package woowacourse.fixture;
 
 import static io.restassured.RestAssured.given;
 

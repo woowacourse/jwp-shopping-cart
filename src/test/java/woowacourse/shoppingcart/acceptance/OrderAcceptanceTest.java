@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.global.utils.CustomFixture.회원가입_요청_및_ID_추출;
+import static woowacourse.fixture.CustomFixture.회원가입_요청;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.global.utils.AcceptanceTest;
+import woowacourse.global.AcceptanceTest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
@@ -34,7 +34,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", USER_NAME, "123456789"));
+        회원가입_요청(new CustomerCreateRequest("philz@gmail.com", USER_NAME, "123456789"));
 
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");

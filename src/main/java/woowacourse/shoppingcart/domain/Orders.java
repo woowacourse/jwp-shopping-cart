@@ -1,13 +1,16 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class Orders {
 
-    private final Long id;
-    private final List<OrderDetail> orderDetails;
+    private Long id;
+    private List<OrderDetail> orderDetails;
 }

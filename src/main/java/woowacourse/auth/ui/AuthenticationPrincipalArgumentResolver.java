@@ -7,8 +7,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.config.AuthenticationPrincipal;
+import woowacourse.utils.AuthorizationExtractor;
 import woowacourse.shoppingcart.domain.Customer;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {

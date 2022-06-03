@@ -1,4 +1,4 @@
-package woowacourse.auth.support;
+package woowacourse.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

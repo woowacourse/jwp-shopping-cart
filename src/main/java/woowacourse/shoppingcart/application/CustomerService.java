@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.specification.CustomerSpecification;
-import woowacourse.auth.utils.CryptoUtils;
+import woowacourse.utils.CryptoUtils;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;

@@ -1,10 +1,10 @@
-package woowacourse.shoppingcart.config;
+package woowacourse.config;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static woowacourse.shoppingcart.config.WebConfig.ALLOWED_METHOD_NAMES;
+import static woowacourse.config.WebMvcConfig.ALLOWED_METHOD_NAMES;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class WebConfigTest {
+public class WebMvcConfigTest {
 
     @Autowired
     private MockMvc mockMvc;

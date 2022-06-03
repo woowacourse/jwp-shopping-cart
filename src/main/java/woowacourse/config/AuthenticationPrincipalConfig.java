@@ -1,4 +1,4 @@
-package woowacourse.auth.config;
+package woowacourse.config;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +8,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.support.LoginInterceptor;
+import woowacourse.utils.JwtTokenProvider;
 import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 
 @Configuration
