@@ -12,9 +12,9 @@ class CustomerTest {
     @DisplayName("유저 이름을 변경하면 예외가 발생한다.")
     @Test
     void validateUserNameChange() {
-        final Customer customer = new Customer(1L, "기론", encryptedBasicPassword);
+        final Customer customer = new Customer(1L, "giron", encryptedBasicPassword);
 
-        assertThatThrownBy(() -> customer.validateUserNameChange("티키"))
+        assertThatThrownBy(() -> customer.validateUserNameChange("tiki12"))
                 .isExactlyInstanceOf(CannotUpdateUserNameException.class)
                 .hasMessageContaining("유저 이름을 변경할 수 없습니다.");
     }

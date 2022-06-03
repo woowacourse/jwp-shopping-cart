@@ -43,7 +43,7 @@ class AuthServiceTest {
     @Test
     void login() {
         // given
-        String userName = "기론";
+        String userName = "giron";
         Customer customer = new Customer(1L, userName, encryptedBasicPassword);
         given(customerDao.findByUserName(userName))
                 .willReturn(Optional.of(customer));
@@ -69,7 +69,7 @@ class AuthServiceTest {
     @Test
     void getAuthenticatedCustomer() {
         // given
-        String userName = "기론";
+        String userName = "giron";
         String token = "accessToken";
         Customer customer = new Customer(1L, userName, encryptedBasicPassword);
         given(jwtTokenProvider.validateToken(token))
@@ -95,7 +95,7 @@ class AuthServiceTest {
     @Test
     void getAuthenticatedCustomerFailure() {
         // given
-        String userName = "기론";
+        String userName = "giron";
         String token = "accessToken";
         Customer customer = new Customer(1L, userName, encryptedBasicPassword);
         given(jwtTokenProvider.validateToken(token))

@@ -60,7 +60,7 @@ public class CustomerDaoTest {
     @Test
     void save() {
         // given
-        final String userName = "tiki";
+        final String userName = "tiki12";
         final String password = "password";
 
         // when
