@@ -1,5 +1,6 @@
 package woowacourse.member.domain;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import woowacourse.member.exception.EmailNotValidException;
 import woowacourse.member.exception.NameNotValidException;
@@ -9,8 +10,7 @@ import woowacourse.member.infrastructure.PasswordEncoder;
 
 public class Member {
 
-    private final String EMAIL_REGEX = "^(.+)@(.+)$";
-    private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@!?-])[A-Za-z\\d@!?-]{6,20}";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^(.+)@(.+)$");
 
     private Long id;
     private String email;
@@ -38,7 +38,8 @@ public class Member {
     }
 
     private void validateRightEmail(final String email) {
-        if (!Pattern.matches(EMAIL_REGEX, email)) {
+        final Matcher matcher = EMAIL_PATTERN.matcher(email);
+        if (!matcher.matches()) {
             throw new EmailNotValidException();
         }
     }
