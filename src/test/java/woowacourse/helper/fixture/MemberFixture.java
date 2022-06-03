@@ -1,5 +1,6 @@
 package woowacourse.helper.fixture;
 
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.member.domain.Member;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.infrastructure.PasswordEncoder;
@@ -15,6 +16,7 @@ public class MemberFixture {
     public static final String BEARER = "Bearer ";
     public static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjUzODIwOTg2LCJleHAiOjE2NTM4MjQ1ODZ9.le7-3iZnWEAn1OwoMnIJl8UXfg1t5Tnpog58kV89f1c";
     public static final String UNAUTHORIZED_MESSAGE = "[ERROR] 인증이 되지 않은 유저입니다.";
+    public static final ErrorResponse TOKEN_ERROR_RESPONSE = new ErrorResponse("[ERROR] 토큰이 올바르지 않습니다.");
 
     public static Member createMember(String email, String password, String name) {
         return Member.createMemberWithPasswordEncode(email, password, name, passwordEncoder());
