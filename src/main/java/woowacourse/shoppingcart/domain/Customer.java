@@ -11,20 +11,18 @@ public class Customer {
     private static final Pattern SPECIAL_CHARACTERS_PATTERN = Pattern.compile(".*[!@#$%^&*].*");
     private static final Pattern NUMBERS_PATTERN = Pattern.compile(".*[0-9].*");
     private static final Pattern SIZE_PATTERN = Pattern.compile("^(?=.{8,20}$).*");
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^(.+)@(.+)$");
     private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[A-Za-z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{1,10}$");
 
     private final Long id;
-    private final String email;
+    private final Email email;
     private String nickname;
     private String password;
 
     public Customer(Long id, String email, String nickname, String password) {
-        validateEmailFormat(email);
         validatePasswordFormat(password);
         validateNicknameFormat(nickname);
         this.id = id;
-        this.email = email;
+        this.email = new Email(email);
         this.nickname = nickname;
         this.password = password;
     }
@@ -74,19 +72,12 @@ public class Customer {
         }
     }
 
-    private void validateEmailFormat(String email) {
-        Matcher matcher = EMAIL_PATTERN.matcher(email);
-        if (!matcher.matches()) {
-            throw new IllegalArgumentException("이메일 형식이 맞지 않습니다.");
-        }
-    }
-
     public Long getId() {
         return id;
     }
 
     public String getEmail() {
-        return email;
+        return email.getAddress();
     }
 
     public String getNickname() {
