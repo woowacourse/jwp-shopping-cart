@@ -1,13 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
+import woowacourse.shoppingcart.domain.customer.address.FullAddress;
 import woowacourse.shoppingcart.entity.AddressEntity;
 
 public interface AddressDao {
-    void save(int customerId, AddressEntity addressEntity);
+    void save(int customerId, FullAddress fullAddress);
 
-    AddressEntity findById(int id);
+    AddressEntity findById(int customerId);
 
-    void update(int customerId, AddressEntity addressEntity);
+    void update(int customerId, FullAddress fullAddress);
 
     void delete(int customerId);
 }

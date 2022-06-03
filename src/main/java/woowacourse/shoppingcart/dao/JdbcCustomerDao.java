@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 
 @Repository
@@ -33,12 +34,12 @@ public class JdbcCustomerDao implements CustomerDao {
     }
 
     @Override
-    public int save(CustomerEntity customerEntity) {
+    public int save(Customer customer) {
         Map<String, Object> params = new HashMap<>();
-        params.put("email", customerEntity.getEmail());
-        params.put("password", customerEntity.getPassword());
-        params.put("profile_image_url", customerEntity.getProfileImageUrl());
-        params.put("terms", customerEntity.isTerms());
+        params.put("email", customer.getEmail().getValue());
+        params.put("password", customer.getPassword().getValue());
+        params.put("profile_image_url", customer.getProfileImageUrl().getValue());
+        params.put("terms", customer.isTerms());
 
         return jdbcInsert.executeAndReturnKey(params).intValue();
     }
@@ -56,10 +57,10 @@ public class JdbcCustomerDao implements CustomerDao {
     }
 
     @Override
-    public void update(int id, CustomerEntity customerEntity) {
+    public void update(int id, Customer customer) {
         String sql = "UPDATE CUSTOMER SET password = ?, profile_image_url = ?, terms = ? WHERE id = ?";
-        jdbcTemplate.update(sql, customerEntity.getPassword(), customerEntity.getProfileImageUrl(),
-                customerEntity.isTerms(), id);
+        jdbcTemplate.update(sql, customer.getPassword().getValue(), customer.getProfileImageUrl().getValue(),
+                customer.isTerms(), id);
     }
 
     @Override

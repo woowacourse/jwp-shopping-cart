@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.shoppingcart.Fixtures.CUSTOMER_1;
+import static woowacourse.shoppingcart.Fixtures.CUSTOMER_1_UPDATED_PASSWORD;
 import static woowacourse.shoppingcart.Fixtures.CUSTOMER_ENTITY_1;
 
 import javax.sql.DataSource;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 
 @JdbcTest
@@ -29,7 +30,7 @@ class JdbcCustomerDaoTest {
     @Test
     void save() {
         // when
-        int actual = customerDao.save(CUSTOMER_ENTITY_1);
+        int actual = customerDao.save(CUSTOMER_1);
 
         // then
         assertThat(actual).isNotNull();
@@ -39,58 +40,55 @@ class JdbcCustomerDaoTest {
     @Test
     void findById() {
         //given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_1);
 
         // when
         CustomerEntity actual = customerDao.findById(customerId);
 
         // then
         assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
-                .containsExactly(customerId, CUSTOMER_ENTITY_1.getEmail(), CUSTOMER_ENTITY_1.getPassword(),
-                        CUSTOMER_ENTITY_1.getProfileImageUrl(), CUSTOMER_ENTITY_1.isTerms());
+                .containsExactly(customerId, CUSTOMER_1.getEmail().getValue(), CUSTOMER_1.getPassword().getValue(),
+                        CUSTOMER_1.getProfileImageUrl().getValue(), CUSTOMER_1.isTerms());
     }
 
     @DisplayName("Customer email을 전달받아 해당하는 Customer 객체를 조회한다.")
     @Test
     void findByEmail() {
         //given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_1);
 
         // when
-        CustomerEntity actual = customerDao.findByEmail(CUSTOMER_ENTITY_1.getEmail());
+        CustomerEntity actual = customerDao.findByEmail(CUSTOMER_1.getEmail().getValue());
 
         // then
         assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
-                .containsExactly(customerId, CUSTOMER_ENTITY_1.getEmail(), CUSTOMER_ENTITY_1.getPassword(),
-                        CUSTOMER_ENTITY_1.getProfileImageUrl(), CUSTOMER_ENTITY_1.isTerms());
+                .containsExactly(customerId, CUSTOMER_1.getEmail().getValue(), CUSTOMER_1.getPassword().getValue(),
+                        CUSTOMER_1.getProfileImageUrl().getValue(), CUSTOMER_1.isTerms());
     }
 
-    @DisplayName("CustomerEntity와 id를 전달받아 해당하는 Customer를 수정한다.")
+    @DisplayName("Customer와 id를 전달받아 해당하는 Customer를 수정한다.")
     @Test
     void update() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encryptedNewPassword = passwordEncoder.encode("newpassword1!");
-        CustomerEntity newCustomerEntity = new CustomerEntity(customerId, CUSTOMER_ENTITY_1.getEmail(),
-                encryptedNewPassword,
-                "http://gravatar.com/avatar/2?d=identicon", true);
+        int customerId = customerDao.save(CUSTOMER_1);
 
         // when
-        customerDao.update(customerId, newCustomerEntity);
+        customerDao.update(customerId, CUSTOMER_1_UPDATED_PASSWORD);
         CustomerEntity actual = customerDao.findById(customerId);
 
         // then
         assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
-                .containsExactly(customerId, newCustomerEntity.getEmail(), newCustomerEntity.getPassword(),
-                        newCustomerEntity.getProfileImageUrl(), newCustomerEntity.isTerms());
+                .containsExactly(customerId, CUSTOMER_1_UPDATED_PASSWORD.getEmail().getValue(),
+                        CUSTOMER_1_UPDATED_PASSWORD.getPassword().getValue(),
+                        CUSTOMER_1_UPDATED_PASSWORD.getProfileImageUrl().getValue(),
+                        CUSTOMER_1_UPDATED_PASSWORD.isTerms());
     }
 
     @DisplayName("id를 전달받아 해당하는 Customer를 삭제한다.")
     @Test
     void delete() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_1);
 
         // when
         customerDao.delete(customerId);
@@ -105,7 +103,7 @@ class JdbcCustomerDaoTest {
     @ParameterizedTest
     void checkEmailExists(String email, boolean expected) {
         // given
-        customerDao.save(CUSTOMER_ENTITY_1);
+        customerDao.save(CUSTOMER_1);
 
         // when
         boolean actual = customerDao.hasEmail(email);

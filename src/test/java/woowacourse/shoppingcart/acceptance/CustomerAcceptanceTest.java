@@ -59,7 +59,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/api/validation?email=" + CUSTOMER_REQUEST_1.getEmail())
+                .get("/api/validation?email=" + CUSTOMER_REQUEST_1.getEmail())
                 .then().log().all()
                 .extract();
 

@@ -3,7 +3,10 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.shoppingcart.Fixtures.ADDRESS_ENTITY_1;
+import static woowacourse.shoppingcart.Fixtures.CUSTOMER_1;
 import static woowacourse.shoppingcart.Fixtures.CUSTOMER_ENTITY_1;
+import static woowacourse.shoppingcart.Fixtures.FULL_ADDRESS_1;
+import static woowacourse.shoppingcart.Fixtures.FULL_ADDRESS_2;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
@@ -25,14 +28,14 @@ class JdbcAddressDaoTest {
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
     }
 
-    @DisplayName("AddressEntity를 전달받아 데이터베이스에 추가한다.")
+    @DisplayName("fullAddress를 전달받아 데이터베이스에 추가한다.")
     @Test
     void save() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_1);
 
         // when
-        addressDao.save(customerId, ADDRESS_ENTITY_1);
+        addressDao.save(customerId, FULL_ADDRESS_1);
         AddressEntity addressEntity = addressDao.findById(customerId);
 
         // then
@@ -43,8 +46,8 @@ class JdbcAddressDaoTest {
     @Test
     void findById() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        addressDao.save(customerId, ADDRESS_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_1);
+        addressDao.save(customerId, FULL_ADDRESS_1);
 
         // when
         AddressEntity actual = addressDao.findById(customerId);
@@ -55,31 +58,31 @@ class JdbcAddressDaoTest {
     }
 
 
-    @DisplayName("AddressEntity와 Customer id를 전달받아 해당하는 Address를 수정한다.")
+    @DisplayName("Address와 Customer id를 전달받아 해당하는 Address를 수정한다.")
     @Test
     void update() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        addressDao.save(customerId, ADDRESS_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_1);
+        addressDao.save(customerId, FULL_ADDRESS_1);
 
         // when
-        AddressEntity newAddressEntity = new AddressEntity("경기도 양주시", "옥정동 배카라하우스", "12312");
-        addressDao.update(customerId, newAddressEntity);
+        addressDao.update(customerId, FULL_ADDRESS_2);
 
         AddressEntity actual = addressDao.findById(customerId);
 
         // then
         assertThat(actual).extracting("customerId", "address", "detailAddress", "zoneCode")
-                .containsExactly(customerId, newAddressEntity.getAddress(), newAddressEntity.getDetailAddress(),
-                        newAddressEntity.getZoneCode());
+                .containsExactly(customerId, FULL_ADDRESS_2.getAddress().getValue(),
+                        FULL_ADDRESS_2.getDetailAddress().getValue(),
+                        FULL_ADDRESS_2.getZoneCode().getValue());
     }
 
     @DisplayName("id를 전달받아 해당하는 Address를 삭제한다.")
     @Test
     void delete() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        addressDao.save(customerId, ADDRESS_ENTITY_1);
+        int customerId = customerDao.save(CUSTOMER_1);
+        addressDao.save(customerId, FULL_ADDRESS_1);
 
         // when
         addressDao.delete(customerId);
