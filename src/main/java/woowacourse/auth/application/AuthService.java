@@ -37,11 +37,11 @@ public class AuthService {
         checkPassword(signInDto, customer);
 
         final CustomerDto customerDto = new CustomerDto(customer.getId(), customer.getEmail(), customer.getUsername());
-        final String accessToken = makeAccessToken(customerDto);
+        final String accessToken = createAccessToken(customerDto);
         return new TokenResponseDto(accessToken, jwtTokenProvider.getValidityInMilliseconds(), customerDto);
     }
 
-    private String makeAccessToken(final CustomerDto customer) {
+    private String createAccessToken(final CustomerDto customer) {
         return jwtTokenProvider.createToken(customer.getEmail());
     }
 
