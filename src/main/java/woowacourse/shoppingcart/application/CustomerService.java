@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundExceptio
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 @Service
+@Transactional(readOnly = true)
 public class CustomerService {
 
     private final AuthService authService;
@@ -27,6 +28,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
+    @Transactional
     public Long signUp(final SignUpRequest signUpRequest) {
         Customer customer = signUpRequest.toEntity();
         validateCustomer(customer);
@@ -61,6 +63,7 @@ public class CustomerService {
         customerDao.updatePassword(customerForUpdate.getId(), customerForUpdate.getPassword());
     }
 
+    @Transactional
     public void withdraw(final TokenRequest tokenRequest) {
         Customer customer = findCustomerById(tokenRequest.getId());
         customerDao.delete(customer.getId());
