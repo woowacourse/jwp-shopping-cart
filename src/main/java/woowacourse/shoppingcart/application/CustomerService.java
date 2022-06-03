@@ -17,7 +17,6 @@ import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
 import woowacourse.shoppingcart.entity.AddressEntity;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
-import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @Transactional
 @Service
@@ -44,14 +43,10 @@ public class CustomerService {
 
     @Transactional(readOnly = true)
     public CustomerResponse getCustomerById(int id) {
-        try {
-            CustomerEntity customerEntity = customerDao.findById(id);
-            PrivacyEntity privacyEntity = privacyDao.findById(id);
-            AddressEntity addressEntity = addressDao.findById(id);
-            return convertEntityToResponse(customerEntity, privacyEntity, addressEntity);
-        } catch (EmptyResultDataAccessException e) {
-            throw new CustomerNotFoundException();
-        }
+        CustomerEntity customerEntity = customerDao.findById(id);
+        PrivacyEntity privacyEntity = privacyDao.findById(id);
+        AddressEntity addressEntity = addressDao.findById(id);
+        return convertEntityToResponse(customerEntity, privacyEntity, addressEntity);
     }
 
     public void updateCustomerById(int customerId, CustomerRequest customerRequest) {
@@ -73,13 +68,7 @@ public class CustomerService {
     }
 
     private void validateExists(int customerId) {
-        try {
-            customerDao.findById(customerId);
-            privacyDao.findById(customerId);
-            addressDao.findById(customerId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new CustomerNotFoundException();
-        }
+        customerDao.findById(customerId);
     }
 
     @Transactional(readOnly = true)

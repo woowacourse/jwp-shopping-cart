@@ -22,7 +22,6 @@ import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.format.FormatException;
-import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -46,12 +45,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler({FormatException.class, DisagreeToTermsException.class})
     public ResponseEntity<ErrorResponse> handleFormatException(RuntimeException e) {
-        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
-
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleCustomerNotFoundException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }

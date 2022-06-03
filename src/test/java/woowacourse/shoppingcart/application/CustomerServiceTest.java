@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.shoppingcart.dao.AddressDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -19,7 +20,6 @@ import woowacourse.shoppingcart.dao.JdbcPrivacyDao;
 import woowacourse.shoppingcart.dao.PrivacyDao;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
-import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @JdbcTest
 class CustomerServiceTest {
@@ -80,7 +80,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.getCustomerById(id + 1))
-                .isInstanceOf(CustomerNotFoundException.class);
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @DisplayName("Customer Id를 통해 해당 유저의 정보를 수정할 수 있다.")
@@ -107,7 +107,7 @@ class CustomerServiceTest {
 
         // then
         assertThatThrownBy(() -> customerService.updateCustomerById(id + 1, CUSTOMER_REQUEST_2))
-                .isInstanceOf(CustomerNotFoundException.class);
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @DisplayName("Customer Id를 통해 해당 유저를 삭제할 수 있다.")
@@ -121,7 +121,7 @@ class CustomerServiceTest {
 
         // then
         assertThatThrownBy(() -> customerService.getCustomerById(id))
-                .isInstanceOf(CustomerNotFoundException.class);
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @DisplayName("존재하지 않는 유저를 삭제하면 예외가 발생한다.")
@@ -132,6 +132,6 @@ class CustomerServiceTest {
 
         // then
         assertThatThrownBy(() -> customerService.deleteCustomer(id + 1))
-                .isInstanceOf(CustomerNotFoundException.class);
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }
