@@ -11,19 +11,17 @@ public class Customer {
     private static final Pattern SPECIAL_CHARACTERS_PATTERN = Pattern.compile(".*[!@#$%^&*].*");
     private static final Pattern NUMBERS_PATTERN = Pattern.compile(".*[0-9].*");
     private static final Pattern SIZE_PATTERN = Pattern.compile("^(?=.{8,20}$).*");
-    private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[A-Za-z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{1,10}$");
 
     private final Long id;
     private final Email email;
-    private String nickname;
+    private Nickname nickname;
     private String password;
 
     public Customer(Long id, String email, String nickname, String password) {
         validatePasswordFormat(password);
-        validateNicknameFormat(nickname);
         this.id = id;
         this.email = new Email(email);
-        this.nickname = nickname;
+        this.nickname = new Nickname(nickname);
         this.password = password;
     }
 
@@ -44,16 +42,7 @@ public class Customer {
     }
 
     public void changeNickname(String nickname) {
-        validateNicknameFormat(nickname);
-        this.nickname = nickname;
-    }
-
-    private void validateNicknameFormat(String nickname) {
-        Matcher nicknameMatcher = NICKNAME_PATTERN.matcher(nickname);
-
-        if (!nicknameMatcher.matches()) {
-            throw new IllegalArgumentException("닉네임 형식이 맞지 않습니다.");
-        }
+        this.nickname = new Nickname(nickname);
     }
 
     private void validatePasswordFormat(String password) {
@@ -77,11 +66,11 @@ public class Customer {
     }
 
     public String getEmail() {
-        return email.getAddress();
+        return email.getValue();
     }
 
     public String getNickname() {
-        return nickname;
+        return nickname.getValue();
     }
 
     public String getPassword() {
