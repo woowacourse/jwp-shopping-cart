@@ -1,4 +1,4 @@
-package woowacourse.config;
+package woowacourse;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
