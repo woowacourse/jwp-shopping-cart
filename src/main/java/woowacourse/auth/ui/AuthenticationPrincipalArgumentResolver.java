@@ -29,11 +29,23 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 
         final HttpServletRequest nativeRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        final String token = AuthorizationExtractor.extract(nativeRequest);
+        checkNativeRequest(nativeRequest);
 
+        final String token = AuthorizationExtractor.extract(nativeRequest);
+        checkValidateToken(token);
+
+        return jwtTokenProvider.getPayload(token);
+    }
+
+    private void checkNativeRequest(HttpServletRequest nativeRequest) {
+        if (nativeRequest == null) {
+            throw new AuthException("유효하지 않은 토큰입니다.", ErrorResponse.INVALID_TOKEN);
+        }
+    }
+
+    private void checkValidateToken(String token) {
         if (!jwtTokenProvider.validateToken(token)) {
             throw new AuthException("유효하지 않은 토큰입니다.", ErrorResponse.INVALID_TOKEN);
         }
-        return jwtTokenProvider.getPayload(token);
     }
 }
