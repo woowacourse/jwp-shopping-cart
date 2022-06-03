@@ -48,7 +48,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         @DisplayName("비밀번호가 불일치하여 실패")
         @Test
-        void dismatchPassword_fail() {
+        void mismatchPassword_fail() {
             TokenRequest request = new TokenRequest(USERNAME, "123password");
             ExtractableResponse<Response> response = 로그인_요청(request);
             로그인안됨(response);
@@ -71,6 +71,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         정보_조회_실패(response);
     }
 
+    @DisplayName("모든 주소에 대한 OPTIONS 요청은 토큰이 없어도 유효")
+    @Test
+    void optionsMethod_withoutToken_success() {
+        ExtractableResponse<Response> response = 내_정보_조회_OPTIONS();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
     public static ExtractableResponse<Response> 로그인_요청(final TokenRequest request) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -87,6 +94,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         return 로그인_요청(tokenRequest).body()
                 .as(TokenResponse.class)
                 .getAccessToken();
+    }
+
+    private static ExtractableResponse<Response> 내_정보_조회_OPTIONS() {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().options("/api/customers")
+                .then().log().all()
+                .extract();
     }
 
     private void 로그인됨(final ExtractableResponse<Response> response) {
