@@ -19,12 +19,17 @@ public class CustomerService {
     }
 
     public Long create(final CustomerCreationRequest request) {
-        final boolean existEmail = customerDao.existEmail(request.getEmail());
+        final boolean existEmail = isExistEmail(request.getEmail());
         if (existEmail) {
             throw new DuplicateEmailException();
         }
         final Customer customer = request.toCustomer();
         return customerDao.save(customer);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isExistEmail(final String email) {
+        return customerDao.existEmail(email);
     }
 
     @Transactional(readOnly = true)

@@ -5,17 +5,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.support.JwtTokenProvider;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     public static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH";
 
-    private final LoginCustomerResolver loginCustomerResolver;
+    private final CustomerService customerService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public WebConfig(final LoginCustomerResolver loginCustomerResolver) {
-        this.loginCustomerResolver = loginCustomerResolver;
+    public WebConfig(final CustomerService customerService, final JwtTokenProvider jwtTokenProvider) {
+        this.customerService = customerService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -26,7 +31,16 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
+    public void addInterceptors(final InterceptorRegistry registry) {
+        registry.addInterceptor(new LoginInterceptor(customerService, jwtTokenProvider))
+                .addPathPatterns("/**")
+                .excludePathPatterns("/login")
+                .excludePathPatterns("/users")
+                .excludePathPatterns("/api/**");
+    }
+
+    @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(loginCustomerResolver);
+        resolvers.add(new LoginCustomerResolver(customerService, jwtTokenProvider));
     }
 }

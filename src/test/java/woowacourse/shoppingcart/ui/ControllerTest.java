@@ -43,5 +43,7 @@ abstract class ControllerTest {
 
         given(customerService.getByEmail(customer.getEmail()))
                 .willReturn(customer);
+        given(customerService.isExistEmail(customer.getEmail()))
+                .willReturn(true);
     }
 }

@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.config;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -14,7 +13,6 @@ import woowacourse.shoppingcart.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
 import woowacourse.shoppingcart.support.Login;
 
-@Component
 public class LoginCustomerResolver implements HandlerMethodArgumentResolver {
 
     private final CustomerService customerService;
