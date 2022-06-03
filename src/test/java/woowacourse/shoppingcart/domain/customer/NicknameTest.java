@@ -9,9 +9,10 @@ import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@DisplayName("Nickname 도메인 테스트")
 class NicknameTest {
 
-    @DisplayName("닉네임에 null 을 입력하면 안된다.")
+    @DisplayName("닉네임에 null 을 입력하면 예외가 발생한다.")
     @Test
     void nicknameNullException() {
         // when & then
@@ -22,7 +23,7 @@ class NicknameTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("닉네임에 빈값을 입력하면 안된다.")
+    @DisplayName("닉네임에 빈값을 입력하면 예외가 발생한다.")
     void nicknameBlankException(String nickname) {
         // when & then
         assertThatThrownBy(() -> new Nickname(nickname))
@@ -32,7 +33,7 @@ class NicknameTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"a", "aaaaaaaaaaa", "!@#$"})
-    @DisplayName("닉네임이 영문, 한글, 숫자를 조합하여 2 ~ 10 자가 아니면 안된다.")
+    @DisplayName("닉네임이 영문, 한글, 숫자를 조합하여 2 ~ 10 자가 아니면 예외가 발생한다.")
     void nicknameFormatException(String nickname) {
         // when & then
         assertThatThrownBy(() -> new Nickname(nickname))

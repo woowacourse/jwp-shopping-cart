@@ -9,9 +9,10 @@ import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@DisplayName("Password 도메인 테스트")
 public class PasswordTest {
 
-    @DisplayName("비밀번호에 null 을 입력하면 안된다.")
+    @DisplayName("비밀번호에 null 을 입력하면 예외가 발생한다.")
     @Test
     void passwordNullException() {
         // when & then
@@ -22,7 +23,7 @@ public class PasswordTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("비밀번호에 빈값을 입력하면 안된다.")
+    @DisplayName("비밀번호에 빈값을 입력하면 예외가 발생한다.")
     void passwordBlankException(String password) {
         // when & then
         assertThatThrownBy(() -> new Password(password))
@@ -32,7 +33,7 @@ public class PasswordTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"12345678!", "asdsad^f#$", "1231234ads", "asd2$$", "adsfsdaf324234#@$#@$#@"})
-    @DisplayName("비밀번호가 영문, 한글, 숫자를 필수로 조합한 8 ~ 16 자가 아니면 안된다.")
+    @DisplayName("비밀번호가 영문, 한글, 숫자를 필수로 조합한 8 ~ 16 자가 아니면 예외가 발생한다.")
     void passwordFormatException(String password) {
         // when & then
         assertThatThrownBy(() -> new Password(password))

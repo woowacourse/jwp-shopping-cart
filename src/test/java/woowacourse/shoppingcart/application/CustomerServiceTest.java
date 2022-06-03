@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @SpringBootTest
 @Transactional
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@DisplayName("Customer 서비스 테스트")
 class CustomerServiceTest {
 
     @Autowired
@@ -47,7 +48,7 @@ class CustomerServiceTest {
         customerService = new CustomerService(authService, customerDao);
     }
 
-    @DisplayName("아이디에 null 을 입력하면 안된다.")
+    @DisplayName("아이디에 null 을 입력하면 예외가 발생한다.")
     @Test
     void signUpUserIdNullException() {
         // given
@@ -61,7 +62,7 @@ class CustomerServiceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("아이디에 빈값을 입력하면 안된다.")
+    @DisplayName("아이디에 빈값을 입력하면 예외가 발생한다.")
     void signUpUserIdBlankException(String userId) {
         // given
         SignUpRequest signUpRequest = new SignUpRequest(userId, "유콩", "1234asdf!");
@@ -72,7 +73,7 @@ class CustomerServiceTest {
                 .hasMessage("아이디를 입력해주세요.");
     }
 
-    @DisplayName("닉네임에 null 을 입력하면 안된다.")
+    @DisplayName("닉네임에 null 을 입력하면 예외가 발생한다.")
     @Test
     void signUpNicknamedNullException() {
         // given
@@ -86,7 +87,7 @@ class CustomerServiceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("닉네임에 빈값을 입력하면 안된다.")
+    @DisplayName("닉네임에 빈값을 입력하면 예외가 발생한다.")
     void signUpNicknameBlankException(String nickname) {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("username@woowacourse.com", nickname, "1234asdf!");
@@ -97,7 +98,7 @@ class CustomerServiceTest {
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
-    @DisplayName("비밀번호에 null 을 입력하면 안된다.")
+    @DisplayName("비밀번호에 null 을 입력하면 예외가 발생한다.")
     @Test
     void signUpPasswordNullException() {
         // given
@@ -111,7 +112,7 @@ class CustomerServiceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("비밀번호에 빈값을 입력하면 안된다.")
+    @DisplayName("비밀번호에 빈값을 입력하면 예외가 발생한다.")
     void signUpPasswordBlankException(String password) {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("username@woowacourse.com", "유콩", password);
@@ -122,9 +123,9 @@ class CustomerServiceTest {
                 .hasMessage("비밀번호를 입력해주세요.");
     }
 
-    @DisplayName("중복된 아이디로 가입할 수 없다.")
+    @DisplayName("중복된 아이디로 가입하면 예외가 발생한다.")
     @Test
-    void validateDuplicateUserId() {
+    void validateDuplicateUserIdException() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("puterism@woowacourse.com", "유콩", "1234asdf!");
 
@@ -134,9 +135,9 @@ class CustomerServiceTest {
                 .hasMessage("이미 존재하는 아이디입니다.");
     }
 
-    @DisplayName("중복된 닉네임을 가입할 수 없다.")
+    @DisplayName("중복된 닉네임으로 가입하면 예외가 발생한다.")
     @Test
-    void validateDuplicateNickname() {
+    void validateDuplicateNicknameException() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", "nickname1", "1234asdf!");
 
@@ -146,9 +147,9 @@ class CustomerServiceTest {
                 .hasMessage("이미 존재하는 닉네임입니다.");
     }
 
-    @DisplayName("아이디는 이메일 형식이 아니면 안된다.")
+    @DisplayName("아이디는 이메일 형식이 아니면 예외가 발생한다.")
     @Test
-    void validateUserIdFormat() {
+    void validateUserIdFormatException() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("coobim", "nickname1", "1234asdf!");
 
@@ -160,8 +161,8 @@ class CustomerServiceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"a", "aaaaaaaaaaa", "!@#$"})
-    @DisplayName("닉네임이 영문, 한글, 숫자를 조합하여 2 ~ 10 자가 아니면 안된다.")
-    void validateNicknameFormat(String nickname) {
+    @DisplayName("닉네임이 영문, 한글, 숫자를 조합하여 2 ~ 10 자가 아니면 예외가 발생한다.")
+    void validateNicknameFormatException(String nickname) {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", nickname, "1234asdf!");
 
@@ -173,8 +174,8 @@ class CustomerServiceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"12345678!", "asdsad^f#$", "1231234ads", "asd2$$", "adsfsdaf324234#@$#@$#@"})
-    @DisplayName("비밀번호가 영문, 한글, 숫자를 필수로 조합한 8 ~ 16 자가 아니면 안된다.")
-    void validatePasswordFormat(String password) {
+    @DisplayName("비밀번호가 영문, 한글, 숫자를 필수로 조합한 8 ~ 16 자가 아니면 예외가 발생한다.")
+    void validatePasswordFormatException(String password) {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", "유콩", password);
 
@@ -186,8 +187,8 @@ class CustomerServiceTest {
 
     @ParameterizedTest
     @CsvSource(value = {"asdf@woowacourse.com:1234asdf!", "puterism@woowacourse.com:12345asdf!"}, delimiter = ':')
-    @DisplayName("존재하지 않은 회원 정보로 로그인하면 안된다.")
-    void loginNonExistentCustomer(String userId, String password) {
+    @DisplayName("존재하지 않은 회원 정보로 로그인하면 예외가 발생한다.")
+    void loginNonExistentCustomerException(String userId, String password) {
         // given
         LoginRequest loginRequest = new LoginRequest(userId, password);
 
@@ -214,9 +215,9 @@ class CustomerServiceTest {
         );
     }
 
-    @DisplayName("가입하지 않은 사용자를 조회하면 안된다.")
+    @DisplayName("가입하지 않은 사용자를 조회하면 예외가 발생한다.")
     @Test
-    void findByCustomerIdException() {
+    void findByCustomerIdNotExistingException() {
         // given
         TokenRequest tokenRequest = new TokenRequest("-1");
 
@@ -226,9 +227,9 @@ class CustomerServiceTest {
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
-    @DisplayName("탈퇴한 사용자를 조회하려고 하면 안된다.")
+    @DisplayName("탈퇴한 사용자를 조회하려고 하면 예외가 발생한다.")
     @Test
-    void findByCustomerIdWithdrawalCustomer() {
+    void findByCustomerIdWithdrawalCustomerException() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
@@ -260,9 +261,9 @@ class CustomerServiceTest {
         );
     }
 
-    @DisplayName("존재하지 않는 사용자를 수정하려고 하면 안된다.")
+    @DisplayName("존재하지 않는 사용자를 수정하려고 하면 예외가 발생한다.")
     @Test
-    void update() {
+    void updateNotExistingException() {
         // given
         TokenRequest tokenRequest = new TokenRequest("-1");
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("nickname");
@@ -273,9 +274,9 @@ class CustomerServiceTest {
                 .hasMessage("이미 존재하는 닉네임입니다.");
     }
 
-    @DisplayName("탈퇴한 사용자를 수정하려고 하면 안된다.")
+    @DisplayName("탈퇴한 사용자를 수정하려고 하면 예외가 발생한다.")
     @Test
-    void updateWithdrawalCustomer() {
+    void updateWithdrawalCustomerException() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
@@ -289,7 +290,7 @@ class CustomerServiceTest {
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
-    @DisplayName("사용자 정보 수정 시 닉네임에 null 을 입력하면 안된다.")
+    @DisplayName("사용자 정보 수정 시 닉네임에 null 을 입력하면 예외가 발생한다.")
     @Test
     void updateNicknamedNullException() {
         // given
@@ -305,7 +306,7 @@ class CustomerServiceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("사용자 정보 수정 시 닉네임에 빈값을 입력하면 안된다.")
+    @DisplayName("사용자 정보 수정 시 닉네임에 빈값을 입력하면 예외가 발생한다.")
     void updateNicknameBlankException(String nickname) {
         // given
         Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
@@ -318,9 +319,9 @@ class CustomerServiceTest {
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
-    @DisplayName("존재하지 않는 사용자 비밀번호를 수정하려고 하면 안된다.")
+    @DisplayName("존재하지 않는 사용자 비밀번호를 수정하려고 하면 예외가 발생한다.")
     @Test
-    void updatePassword() {
+    void updatePasswordNotExistingException() {
         // given
         TokenRequest tokenRequest = new TokenRequest("-1");
         CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234(dddd", "47374*ffff");
@@ -331,9 +332,9 @@ class CustomerServiceTest {
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
-    @DisplayName("탈퇴한 사용자 비밀번호를 수정하려고 하면 안된다.")
+    @DisplayName("탈퇴한 사용자 비밀번호를 수정하려고 하면 예외가 발생한다.")
     @Test
-    void updatePasswordWithdrawalCustomer() {
+    void updatePasswordWithdrawalCustomerException() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
@@ -347,7 +348,7 @@ class CustomerServiceTest {
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
-    @DisplayName("사용자 비밀번호 수정 시 닉네임에 null 을 입력하면 안된다.")
+    @DisplayName("사용자 비밀번호 수정 시 닉네임에 null 을 입력하면 예외가 발생한다.")
     @Test
     void updatePasswordNullException() {
         // given
@@ -363,7 +364,7 @@ class CustomerServiceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("사용자 비밀번호 수정 시 닉네임에 빈값을 입력하면 안된다.")
+    @DisplayName("사용자 비밀번호 수정 시 닉네임에 빈값을 입력하면 예외가 발생한다.")
     void updatePasswordBlankException(String password) {
         // given
         Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
@@ -395,7 +396,7 @@ class CustomerServiceTest {
 
     @DisplayName("존재하지 않은 회원이 탈퇴하면 예외가 발생한다.")
     @Test
-    void withdrawNonCustomer() {
+    void withdrawNonCustomerException() {
         // given
         TokenRequest tokenRequest = new TokenRequest("9999999");
 
@@ -407,7 +408,7 @@ class CustomerServiceTest {
 
     @DisplayName("탈퇴한 회원이 다시 탈퇴하면 예외가 발생한다.")
     @Test
-    void withdrawCustomerAgain() {
+    void withdrawCustomerAgainException() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);

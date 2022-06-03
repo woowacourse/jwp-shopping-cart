@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@DisplayName("Customer DAO 테스트")
 public class CustomerDaoTest {
 
     private final CustomerDao customerDao;

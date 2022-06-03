@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
-@DisplayName("인증 관련 기능")
+@DisplayName("인증 관련 기능 인수테스트")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("Bearer Auth 로그인 성공")

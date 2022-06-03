@@ -17,7 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("회원 관련 기능")
+@DisplayName("회원 관련 기능 인수테스트")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("회원가입을 한다.")
@@ -31,7 +31,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("중복된 아이디로 회원가입을 하면 예외가 발생한다.")
+    @DisplayName("중복된 아이디로 회원가입을 하면 400 에러가 발생한다.")
     @Test
     void signUpDuplicateUserId() {
         ExtractableResponse<Response> response = signUp(
@@ -44,7 +44,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("중복된 닉네임으로 회원가입을 하면 예외가 발생한다.")
+    @DisplayName("중복된 닉네임으로 회원가입을 하면 400 에러가 발생한다.")
     @Test
     void signUpDuplicateNickname() {
         ExtractableResponse<Response> response = signUp(
@@ -59,7 +59,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"ddfkdksfk", "ddddddddddnaver.com", "cdd@dd"})
-    @DisplayName("잘못된 아이디 형식으로 회원가입을 하면 예외가 발생한다.")
+    @DisplayName("잘못된 아이디 형식으로 회원가입을 하면 400 에러가 발생한다.")
     void signUpInvalidFormatUserId(final String userId) {
         ExtractableResponse<Response> response = signUp(
                 userId, "nickname", "1234asdf!"
@@ -73,7 +73,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"!@#$%", "a", "aaaaaaaaaaa"})
-    @DisplayName("잘못된 닉네임 형식으로 회원가입을 하면 예외가 발생한다.")
+    @DisplayName("잘못된 닉네임 형식으로 회원가입을 하면 400 에러가 발생한다.")
     void signUpInvalidFormatNickname(final String nickname) {
         ExtractableResponse<Response> response = signUp(
                 "test@woowacourse.com", nickname, "1234asdf!"
@@ -88,7 +88,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"1234!@#$", "1234asdf", "asdf!@#$", "a", "aaaaaaaaaaaaaaaaa"})
-    @DisplayName("잘못된 비밀번호 형식으로 회원가입을 하면 예외가 발생한다.")
+    @DisplayName("잘못된 비밀번호 형식으로 회원가입을 하면 400 에러가 발생한다.")
     void signUpInvalidFormatPassword(final String password) {
         ExtractableResponse<Response> response = signUp(
                 "test@woowacourse.com", "test", password
@@ -103,7 +103,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("로그인을 한다.")
     @Test
-    void loginCustoemr() {
+    void loginCustomer() {
         ExtractableResponse<Response> response = login("puterism@woowacourse.com", "1234asdf!");
 
         assertAll(
@@ -113,7 +113,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("존재하지 않은 회원 정보로 로그인하면 안된다.")
+    @DisplayName("존재하지 않은 회원 정보로 로그인하면 401 에러가 발생한다.")
     @Test
     void loginNotExistingCustomer() {
         ExtractableResponse<Response> response = login("test@woowacourse.com", "1234asdf!");
@@ -125,7 +125,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("비밀번호가 틀리면 로그인이 안된다.")
+    @DisplayName("비밀번호가 틀리면 로그인이 401 에러가 발생한다.")
     @Test
     void loginInvalidPassword() {
         ExtractableResponse<Response> response = login("puterism@woowacourse.com", "invalidPassword");
@@ -137,7 +137,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("내 정보 조회를 한다.")
     @Test
     void getMe() {
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
@@ -153,7 +153,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("탈퇴한 회원의 정보 조회를 하면 안된다.")
+    @DisplayName("탈퇴한 회원의 정보 조회를 하면 404 에러가 발생한다.")
     @Test
     void getMeWithdrawal() {
         // given
@@ -172,7 +172,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("내 정보 수정을 한다.")
     @Test
     void updateMe() {
         // given
@@ -188,7 +188,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("존재하지 않는 사용자가 내 정보 수정을 요청하면 안된다.")
+    @DisplayName("존재하지 않는 사용자가 내 정보 수정을 요청하면 404 에러가 발생한다.")
     @Test
     void updateMeNotExistingCustomer() {
         // given
@@ -207,7 +207,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("이미 존재하는 닉네임으로 내 정보 수정을 요청하면 안된다.")
+    @DisplayName("이미 존재하는 닉네임으로 내 정보 수정을 요청하면 400 에러가 발생한다.")
     @Test
     void updateMeDuplicateNickname() {
         // given
@@ -225,7 +225,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("비밀번호 수정")
+    @DisplayName("내 비밀번호를 수정한다.")
     @Test
     void updateMePassword() {
         // given
@@ -241,7 +241,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("기존 비밀번호가 일치하지 않는 경우 비밀번호 변경이 안된다.")
+    @DisplayName("내 비밀번호 변경 요청 시 기존 비밀번호가 일치하지 않는 경우 400 에러가 발생한다.")
     @Test
     void updateMeInvalidPassword() {
         // given
@@ -259,7 +259,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("수정하려는 비밀번호가 올바른 형식이 아닐 경우 비밀번호 변경이 안된다.")
+    @DisplayName("내 비밀번호 변경 요청 시 수정하려는 비밀번호가 올바른 형식이 아닐 경우 400 에러가 발생한다.")
     @Test
     void updateMeInvalidPasswordFormat() {
         // given
@@ -277,7 +277,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("회원탈퇴")
+    @DisplayName("회원탈퇴를 한다.")
     @Test
     void deleteMe() {
         // given
@@ -293,7 +293,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("탈퇴한 사용자가 탈퇴를 요청할 경우 안된다.")
+    @DisplayName("탈퇴한 사용자가 탈퇴를 요청할 경우 404 에러가 발생한다.")
     @Test
     void deleteMeWithdrawal() {
         // given

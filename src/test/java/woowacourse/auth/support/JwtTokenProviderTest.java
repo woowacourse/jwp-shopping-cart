@@ -8,12 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@DisplayName("JwtTokenProvider 테스트")
 class JwtTokenProviderTest {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @DisplayName("토큰을 샹성한다.")
+    @DisplayName("토큰을 생성한다.")
     @Test
     void createToken() {
         // when & then

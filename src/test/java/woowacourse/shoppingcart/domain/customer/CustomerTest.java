@@ -9,9 +9,10 @@ import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@DisplayName("Customer 도메인 테스트")
 class CustomerTest {
 
-    @DisplayName("아이디에 null 을 입력하면 안된다.")
+    @DisplayName("아이디에 null 을 입력하면 예외가 발생한다.")
     @Test
     void userIdNullException() {
         // when & then
@@ -22,7 +23,7 @@ class CustomerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("아이디에 빈값을 입력하면 안된다.")
+    @DisplayName("아이디에 빈값을 입력하면 예외가 발생한다.")
     void userIdBlankException(String userId) {
         // when & then
         assertThatThrownBy(() -> new Customer(null, userId, "유콩", "1234"))
@@ -30,7 +31,7 @@ class CustomerTest {
                 .hasMessage("아이디를 입력해주세요.");
     }
 
-    @DisplayName("닉네임에 null 을 입력하면 안된다.")
+    @DisplayName("닉네임에 null 을 입력하면 예외가 발생한다.")
     @Test
     void nicknameNullException() {
         // when & then
@@ -41,7 +42,7 @@ class CustomerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("닉네임에 빈값을 입력하면 안된다.")
+    @DisplayName("닉네임에 빈값을 입력하면 예외가 발생한다.")
     void nicknameBlankException(String nickname) {
         // when & then
         assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", nickname, "1234"))
@@ -49,7 +50,7 @@ class CustomerTest {
                 .hasMessage("닉네임을 입력해주세요.");
     }
 
-    @DisplayName("비밀번호에 null 을 입력하면 안된다.")
+    @DisplayName("비밀번호에 null 을 입력하면 예외가 발생한다.")
     @Test
     void passwordNullException() {
         // when & then
@@ -60,7 +61,7 @@ class CustomerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("비밀번호에 빈값을 입력하면 안된다.")
+    @DisplayName("비밀번호에 빈값을 입력하면 예외가 발생한다.")
     void passwordBlankException(String password) {
         // when & then
         assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", "유콩", password))
@@ -68,7 +69,7 @@ class CustomerTest {
                 .hasMessage("비밀번호를 입력해주세요.");
     }
 
-    @DisplayName("아이디가 이메일 형식이 아니면 안된다.")
+    @DisplayName("아이디가 이메일 형식이 아니면 예외가 발생한다.")
     @Test
     void userIdFormatException() {
         // when & then
@@ -79,7 +80,7 @@ class CustomerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"a", "aaaaaaaaaaa", "!@#$"})
-    @DisplayName("닉네임이 영문, 한글, 숫자를 조합하여 2 ~ 10 자가 아니면 안된다.")
+    @DisplayName("닉네임이 영문, 한글, 숫자를 조합하여 2 ~ 10 자가 아니면 예외가 발생한다.")
     void nicknameFormatException(String nickname) {
         // when & then
         assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", nickname, "1234"))
@@ -89,7 +90,7 @@ class CustomerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"12345678!", "asdsad^f#$", "1231234ads", "asd2$$", "adsfsdaf324234#@$#@$#@"})
-    @DisplayName("비밀번호가 영문, 한글, 숫자를 필수로 조합한 8 ~ 16 자가 아니면 안된다.")
+    @DisplayName("비밀번호가 영문, 한글, 숫자를 필수로 조합한 8 ~ 16 자가 아니면 예외가 발생한다.")
     void passwordFormatException(String password) {
         // when & then
         assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", "유콩", password))
