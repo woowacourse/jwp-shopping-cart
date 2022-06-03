@@ -209,7 +209,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 정보를 조회할 때 잘못된 형식의 토큰이 전달되면 상태코드 401을 반환한다.")
     void invalidTokenFormatWhenGetCustomer() {
         // given
-        JwtTokenProvider jwtTokenProvider = new FakeJwtTokenProvider("fake");
+        JwtTokenProvider jwtTokenProvider = new FakeJwtTokenProvider();
         final String invalidToken = jwtTokenProvider.createToken("fake");
         // when
         final ExtractableResponse<Response> response = get("/customers", invalidToken);
@@ -273,7 +273,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 정보를 수정할 때 잘못된 형식의 토큰이 전달되면 상태코드 401을 반환한다.")
     void invalidTokenFormatWhenUpdateCustomer() {
         // given
-        JwtTokenProvider jwtTokenProvider = new FakeJwtTokenProvider("fake");
+        JwtTokenProvider jwtTokenProvider = new FakeJwtTokenProvider();
         final String invalidToken = jwtTokenProvider.createToken("fake");
 
         // when
@@ -398,7 +398,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원을 탈퇴할 때 잘못된 형식의 토큰이 전달되면 상태코드 401을 반환한다.")
     void invalidTokenFormatWhenDeleteCustomer() {
         // given
-        JwtTokenProvider jwtTokenProvider = new FakeJwtTokenProvider("fake");
+        JwtTokenProvider jwtTokenProvider = new FakeJwtTokenProvider();
         final String invalidToken = jwtTokenProvider.createToken("fake");
 
         // when

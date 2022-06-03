@@ -14,15 +14,9 @@ import java.util.List;
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public AuthenticationPrincipalConfig(final JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
-
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthenticationInterceptor(jwtTokenProvider))
+        registry.addInterceptor(new AuthenticationInterceptor(jwtTokenProvider()))
                 .addPathPatterns("/customers/**");
     }
 
@@ -34,5 +28,10 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
         return new AuthenticationPrincipalArgumentResolver();
+    }
+
+    @Bean
+    public JwtTokenProvider jwtTokenProvider() {
+        return new JwtTokenProvider();
     }
 }

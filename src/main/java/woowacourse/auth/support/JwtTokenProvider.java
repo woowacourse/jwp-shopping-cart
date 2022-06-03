@@ -7,17 +7,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component
 public class JwtTokenProvider {
 
-    private final String secretKey;
+    @Value("${security.jwt.token.secret-key}")
+    private String secretKey;
 
     @Value("${security.jwt.token.expire-length}")
     private long validityInMilliseconds;
-
-    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String secretKey) {
-        this.secretKey = secretKey;
-    }
 
     public String createToken(final String payload) {
         final Claims claims = Jwts.claims().setSubject(payload);

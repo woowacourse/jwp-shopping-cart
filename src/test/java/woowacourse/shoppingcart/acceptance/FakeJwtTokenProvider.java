@@ -10,13 +10,8 @@ import java.util.Date;
 
 public class FakeJwtTokenProvider extends JwtTokenProvider {
 
-    private final String secretKey;
+    private final String secretKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.ih1aovtQShabQ7l0cINw4k1fagApg3qLWiB8Kt59Lno";
     private final long validityInMilliseconds = 30000;
-
-    public FakeJwtTokenProvider(String secretKey) {
-        super(secretKey);
-        this.secretKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.ih1aovtQShabQ7l0cINw4k1fagApg3qLWiB8Kt59Lno";
-    }
 
     @Override
     public String createToken(String payload) {
