@@ -8,7 +8,6 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.AuthorizationExtractor;
 
 public class AuthInterceptor implements HandlerInterceptor {
-
     private AuthService authService;
 
     public AuthInterceptor(AuthService authService) {

@@ -10,8 +10,8 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 public class AuthService {
-
     private static final String DIFFERENT_PASSWORD = "[ERROR] 비밀번호가 일치하지 않습니다.";
+
     private CustomerDao customerDao;
     private JwtTokenProvider jwtTokenProvider;
 

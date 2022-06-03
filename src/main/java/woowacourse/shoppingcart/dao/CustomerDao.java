@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
-
     private static final RowMapper<Customer> CUSTOMER_MAPPER = (rs, rowNum) -> {
         var username = rs.getString("username");
         var email = rs.getString("email");
@@ -19,6 +18,7 @@ public class CustomerDao {
     };
     private static final String NOT_EXIST_EMAIL = "[ERROR] 존재하지 않는 이메일 입니다.";
     private static final String NOT_EXIST_NAME = "[ERROR] 존재하지 않는 이름입니다.";
+
     private final JdbcTemplate jdbcTemplate;
 
     public CustomerDao(final JdbcTemplate jdbcTemplate) {

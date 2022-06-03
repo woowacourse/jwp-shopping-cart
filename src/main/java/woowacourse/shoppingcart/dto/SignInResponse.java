@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
 public class SignInResponse {
-
     private final String username;
     private final String email;
     private final String token;

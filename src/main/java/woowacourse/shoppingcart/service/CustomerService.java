@@ -16,6 +16,7 @@ public class CustomerService {
     private static final String DUPLICATED_NAME = "[ERROR] 이미 존재하는 사용자 이름입니다.";
     private static final String DUPLICATED_EMAIL = "[ERROR] 이미 존재하는 이메일입니다.";
     private static final String NOT_MATCH_PASSWORD = "[ERROR] 비밀번호가 일치하지 않습니다.";
+
     private final CustomerDao customerDao;
 
     public CustomerService(CustomerDao customerDao) {

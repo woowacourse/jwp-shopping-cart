@@ -24,7 +24,6 @@ public class SignInRequest {
     @PasswordCheck
     private final String password;
 
-
     public SignInRequest(String email, String password) {
         this.email = email;
         this.password = password;
