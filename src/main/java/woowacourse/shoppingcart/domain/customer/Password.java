@@ -2,8 +2,8 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.exception.InputFormatException;
-import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.common.exception.InputFormatException;
+import woowacourse.common.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.util.EncryptionUtil;
 
 public class Password {

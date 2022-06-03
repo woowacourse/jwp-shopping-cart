@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.exception.AuthException;
-import woowacourse.exception.JoinException;
-import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.common.exception.AuthException;
+import woowacourse.common.exception.JoinException;
+import woowacourse.common.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;

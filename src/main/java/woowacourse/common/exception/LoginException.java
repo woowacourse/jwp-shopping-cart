@@ -1,6 +1,6 @@
-package woowacourse.exception;
+package woowacourse.common.exception;
 
-import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.common.exception.dto.ErrorResponse;
 
 public class LoginException extends CustomException {
 

@@ -3,8 +3,8 @@ package woowacourse.auth.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.exception.LoginException;
-import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.common.exception.LoginException;
+import woowacourse.common.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 

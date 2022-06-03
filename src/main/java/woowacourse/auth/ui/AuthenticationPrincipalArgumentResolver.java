@@ -9,8 +9,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.exception.AuthException;
-import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.common.exception.AuthException;
+import woowacourse.common.exception.dto.ErrorResponse;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
     private final JwtTokenProvider jwtTokenProvider;

@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.domain.customer;
 
 import java.util.regex.Pattern;
-import woowacourse.exception.InputFormatException;
-import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.common.exception.InputFormatException;
+import woowacourse.common.exception.dto.ErrorResponse;
 
 public class Email {
     private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9+-\\\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");

@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import woowacourse.exception.InputFormatException;
-import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.common.exception.InputFormatException;
+import woowacourse.common.exception.dto.ErrorResponse;
 
 public class Username {
     private final String value;

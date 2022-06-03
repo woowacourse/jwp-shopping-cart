@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.exception.LoginException;
+import woowacourse.common.exception.LoginException;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 
