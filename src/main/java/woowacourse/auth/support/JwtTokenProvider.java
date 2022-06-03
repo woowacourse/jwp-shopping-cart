@@ -9,7 +9,7 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import woowacourse.auth.exception.InvalidTokenException;
+import woowacourse.exception.auth.InvalidTokenException;
 
 @Component
 public class JwtTokenProvider {
@@ -36,7 +36,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getPayload(String token) {
+    public String getValidatedPayload(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(secretKey)

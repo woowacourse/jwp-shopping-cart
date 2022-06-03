@@ -20,7 +20,7 @@ class JwtTokenProviderTest {
         String token = jwtTokenProvider.createToken(페퍼_아이디);
 
         //when
-        String payload = jwtTokenProvider.getPayload(token);
+        String payload = jwtTokenProvider.getValidatedPayload(token);
 
         //then
         assertThat(payload).isEqualTo(페퍼_아이디);
