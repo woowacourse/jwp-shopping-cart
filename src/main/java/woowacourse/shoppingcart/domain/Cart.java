@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.domain;
 
-import javax.validation.constraints.NegativeOrZero.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

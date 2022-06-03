@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

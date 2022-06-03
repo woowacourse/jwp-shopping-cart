@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.acceptance.fixture;
+package woowacourse.global.utils;
 
 import static io.restassured.RestAssured.given;
 
@@ -8,6 +8,9 @@ import io.restassured.specification.RequestSpecification;
 import org.springframework.http.MediaType;
 
 public abstract class Fixture {
+
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String BEARER = "Bearer ";
 
     public static ExtractableResponse<Response> get(String path, Object body) {
         return afterMethod(beforeMethod(body).get(path));
@@ -47,13 +50,13 @@ public abstract class Fixture {
 
     protected static RequestSpecification beforeMethod(String token) {
         return given().log().all()
-                .header("Authorization", "Bearer " + token)
+                .header(AUTHORIZATION, BEARER + token)
                 .when();
     }
 
     protected static RequestSpecification beforeMethod(String token, Object body) {
         return given().log().all()
-                .header("Authorization", "Bearer " + token)
+                .header(AUTHORIZATION, BEARER + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
                 .when();

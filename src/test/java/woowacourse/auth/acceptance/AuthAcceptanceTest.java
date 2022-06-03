@@ -1,18 +1,18 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.global.utils.AuthFixture.로그인_요청;
+import static woowacourse.global.utils.AuthFixture.로그인_요청_및_토큰발급;
+import static woowacourse.global.utils.AuthFixture.회원조회_요청;
+import static woowacourse.global.utils.CustomFixture.회원가입_요청_및_ID_추출;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.acceptance.fixture.CustomFixture;
+import woowacourse.global.utils.AcceptanceTest;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
@@ -26,7 +26,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         // email, password를 사용해 토큰을 발급받고
-        long savedId = CustomFixture.회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
+        long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
         TokenRequest tokenRequest = new TokenRequest("philz@gmail.com", "123456789");
         String accessToken = 로그인_요청_및_토큰발급(tokenRequest);
 
@@ -65,37 +65,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         // 내 정보 조회 요청이 거부된다
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    private ExtractableResponse<Response> 로그인_요청(TokenRequest request) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/auth/login")
-                .then().log().all()
-                .extract();
-    }
-
-    public String 로그인_요청_및_토큰발급(TokenRequest request) {
-        ExtractableResponse<Response> loginResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/auth/login")
-                .then().log().all()
-                .extract();
-
-        TokenResponse tokenResponse = loginResponse.body().as(TokenResponse.class);
-        return tokenResponse.getAccessToken();
-    }
-
-    public ExtractableResponse<Response> 회원조회_요청(String token, Long id) {
-        return RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .when().get("/api/customers/" + id)
-                .then().log().all()
-                .extract();
     }
 }

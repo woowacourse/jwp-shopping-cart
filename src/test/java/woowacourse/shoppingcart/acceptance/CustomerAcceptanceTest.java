@@ -2,13 +2,13 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.acceptance.fixture.CustomFixture.ID_추출;
-import static woowacourse.shoppingcart.acceptance.fixture.CustomFixture.로그인_요청_및_토큰발급;
-import static woowacourse.shoppingcart.acceptance.fixture.CustomFixture.회원가입_요청;
-import static woowacourse.shoppingcart.acceptance.fixture.CustomFixture.회원가입_요청_및_ID_추출;
-import static woowacourse.shoppingcart.acceptance.fixture.CustomFixture.회원정보수정_요청;
-import static woowacourse.shoppingcart.acceptance.fixture.CustomFixture.회원조회_요청;
-import static woowacourse.shoppingcart.acceptance.fixture.CustomFixture.회원탈퇴_요청;
+import static woowacourse.global.utils.CustomFixture.ID_추출;
+import static woowacourse.global.utils.CustomFixture.로그인_요청_및_토큰발급;
+import static woowacourse.global.utils.CustomFixture.회원가입_요청;
+import static woowacourse.global.utils.CustomFixture.회원가입_요청_및_ID_추출;
+import static woowacourse.global.utils.CustomFixture.회원정보수정_요청;
+import static woowacourse.global.utils.CustomFixture.회원조회_요청;
+import static woowacourse.global.utils.CustomFixture.회원탈퇴_요청;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -19,7 +19,8 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.acceptance.fixture.CustomFixture;
+import woowacourse.global.utils.AcceptanceTest;
+import woowacourse.global.utils.CustomFixture;
 import woowacourse.shoppingcart.dto.FieldErrorResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
@@ -233,7 +234,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void delete() {
-        long savedId = CustomFixture.회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
+        long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
         String token = 로그인_요청_및_토큰발급(new TokenRequest("philz@gmail.com", "123456789"));
         ExtractableResponse<Response> response = 회원탈퇴_요청(token, savedId);
 
@@ -243,13 +244,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("다른 사람의 정보를 수정하면 403을 반환한다")
     @Test
     void delete_otherId() {
-        long savedId = CustomFixture.회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
+        long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
         String token = 로그인_요청_및_토큰발급(new TokenRequest("philz@gmail.com", "123456789"));
         long 다른사람의_ID = savedId + 50;
         ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
-
-
 }

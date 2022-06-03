@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

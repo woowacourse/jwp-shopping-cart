@@ -16,6 +16,7 @@ public class CustomerSpecification {
 
     public void validateUsernameDuplicate(String username) {
         boolean existCustomerBySameUsername = customerDao.findByUsername(username).isPresent();
+
         if (existCustomerBySameUsername) {
             throw new DuplicateUsernameException();
         }

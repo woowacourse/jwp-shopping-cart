@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.acceptance;
+package woowacourse.global.utils;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;

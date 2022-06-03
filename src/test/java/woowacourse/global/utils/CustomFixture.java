@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.acceptance.fixture;
+package woowacourse.global.utils;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

@@ -2,10 +2,8 @@ package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Getter
