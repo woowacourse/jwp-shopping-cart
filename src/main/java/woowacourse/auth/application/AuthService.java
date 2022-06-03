@@ -78,7 +78,7 @@ public class AuthService {
     }
 
     public MemberResponse findMember(String email) {
-        Member member = findByEmail(email, new AuthorizationException("유효하지 않은 토큰입니다."));
+        Member member = findByEmail(email, new AuthorizationException("회원 정보를 찾지 못했습니다."));
         return new MemberResponse(member);
     }
 
@@ -92,7 +92,7 @@ public class AuthService {
 
     private void validateExists(String email) {
         if (!existsEmail(email)) {
-            throw new AuthorizationException("유효하지 않은 토큰입니다.");
+            throw new AuthorizationException("회원 정보를 찾지 못했습니다.");
         }
     }
 
