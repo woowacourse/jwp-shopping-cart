@@ -273,7 +273,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .getMessage();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-        assertThat(message).isEqualTo("유효하지 않은 토큰입니다.");
+        assertThat(message).isEqualTo("회원 정보를 찾지 못했습니다.");
     }
 
     @DisplayName("preflight 요청에 대해서는 인증 정보를 확인하지 않는다.")
