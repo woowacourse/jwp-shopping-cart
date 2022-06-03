@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import woowacourse.shoppingcart.domain.Customer;
 
 public class CustomerRequest {
 
@@ -22,10 +21,6 @@ public class CustomerRequest {
         this.loginId = loginId;
         this.name = name;
         this.password = password;
-    }
-
-    public Customer toCustomer() {
-        return new Customer(loginId, name, password);
     }
 
     public String getLoginId() {
