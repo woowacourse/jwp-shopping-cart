@@ -11,7 +11,7 @@ drop table if exists customer;
 create table customer
 (
     id           bigint       not null auto_increment,
-    name     varchar(20) not null unique,
+    userName     varchar(20) not null unique,
     password     varchar(60)  not null,
     email        varchar(255) not null unique,
     address      varchar(255) not null,
@@ -22,7 +22,7 @@ create table customer
 create table product
 (
     id        bigint       not null auto_increment,
-    name      varchar(255) not null,
+    username      varchar(255) not null,
     price     integer      not null,
     image_url varchar(255),
     primary key (id)

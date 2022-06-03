@@ -14,8 +14,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import woowacourse.shoppingcart.exception.domain.NotFoundException;
 import woowacourse.shoppingcart.exception.ShoppingCartException;
+import woowacourse.shoppingcart.exception.domain.NotFoundException;
 
 @RestControllerAdvice
 public class ShoppingCartControllerAdvice {

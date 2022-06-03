@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import woowacourse.shoppingcart.domain.customer.Name;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.attribute.InvalidFormException;
 import woowacourse.shoppingcart.exception.attribute.InvalidLengthException;
 
@@ -22,7 +22,7 @@ class NameTest {
     void createName() {
         String value = "slowchalee";
 
-        assertThatCode(() -> new Name(value))
+        assertThatCode(() -> new UserName(value))
             .doesNotThrowAnyException();
     }
 
@@ -31,7 +31,7 @@ class NameTest {
     @DisplayName("이름의 길이는 5이상 20이하가 아닌 경우, 예외를 발생한다.")
     void invalidLengthException(String value) {
         assertThatExceptionOfType(InvalidLengthException.class)
-            .isThrownBy(() -> new Name(value));
+            .isThrownBy(() -> new UserName(value));
     }
 
     @ParameterizedTest
@@ -39,7 +39,7 @@ class NameTest {
     @DisplayName("영문 소문자, 숫자, 특수기호(_, -) 외의 문자를 사용해서 이름을 생성한 경우, 예외를 발생한다.")
     void invalidFormException(String value) {
         assertThatExceptionOfType(InvalidFormException.class)
-            .isThrownBy(() -> new Name(value));
+            .isThrownBy(() -> new UserName(value));
     }
 
     private static Stream<Arguments> provideInvalidName() {

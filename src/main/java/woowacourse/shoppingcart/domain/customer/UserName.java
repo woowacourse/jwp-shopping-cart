@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import woowacourse.shoppingcart.exception.attribute.InvalidFormException;
 import woowacourse.shoppingcart.exception.attribute.InvalidLengthException;
 
-public class Name {
+public class UserName {
 
     private static final int MIN_NAME_LENGTH = 5;
     private static final int MAX_NAME_LENGTH = 20;
@@ -13,7 +13,7 @@ public class Name {
 
     private final String value;
 
-    public Name(String value) {
+    public UserName(String value) {
         validateLength(value);
         validateForm(value);
         this.value = value;

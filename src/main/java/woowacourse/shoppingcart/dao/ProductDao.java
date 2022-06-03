@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.domain.InvalidProductException;
 
 @Repository
@@ -17,7 +17,7 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(final JdbcTemplate jdbcTemplate) {
+    public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -42,7 +42,8 @@ public class ProductDao {
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                 new Product(
                     productId,
-                    resultSet.getString("name"), resultSet.getInt("price"),
+                    resultSet.getString("name"),
+                    resultSet.getInt("price"),
                     resultSet.getString("image_url")
                 ), productId
             );
