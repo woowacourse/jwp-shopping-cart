@@ -7,6 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import woowacourse.shoppingcart.domain.customer.BcryptPasswordEncryptor;
+import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
+
 class PasswordEncryptorTest {
 
     private static final int ENCRYPTED_SIZE = 60;

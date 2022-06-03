@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 

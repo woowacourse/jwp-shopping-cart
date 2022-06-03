@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import woowacourse.shoppingcart.exception.InvalidLengthException;
 

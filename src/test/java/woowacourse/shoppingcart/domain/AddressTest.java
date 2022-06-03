@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import woowacourse.shoppingcart.domain.customer.Address;
 import woowacourse.shoppingcart.exception.InvalidLengthException;
 
 class AddressTest {

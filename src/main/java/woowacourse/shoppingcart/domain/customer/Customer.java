@@ -1,6 +1,5 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
-import woowacourse.auth.domain.BcryptPasswordMatcher;
 import woowacourse.auth.domain.PasswordMatcher;
 
 public class Customer {
