@@ -4,12 +4,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.exception.InvalidTokenException;
-import woowacourse.auth.exception.NotMatchPasswordException;
+import woowacourse.auth.application.exception.InvalidTokenException;
+import woowacourse.auth.application.exception.NotMatchPasswordException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 
 @Service
 public class AuthService {

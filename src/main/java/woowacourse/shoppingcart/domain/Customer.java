@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
+import woowacourse.shoppingcart.application.exception.CannotUpdateUserNameException;
 
 public class Customer {
 

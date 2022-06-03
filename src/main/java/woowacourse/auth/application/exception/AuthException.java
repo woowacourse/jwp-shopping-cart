@@ -1,12 +1,12 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.auth.application.exception;
 
 import org.springframework.http.HttpStatus;
 
-public abstract class ShoppingCartException extends RuntimeException {
+public abstract class AuthException extends RuntimeException {
 
     private final HttpStatus httpStatus;
 
-    public ShoppingCartException(String message, HttpStatus httpStatus) {
+    public AuthException(String message, HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
     }

@@ -18,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.exception.InvalidTokenException;
+import woowacourse.auth.application.exception.InvalidTokenException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;

@@ -24,9 +24,9 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
-import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
-import woowacourse.shoppingcart.exception.DuplicatedNameException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.application.exception.CannotUpdateUserNameException;
+import woowacourse.shoppingcart.application.exception.DuplicatedNameException;
+import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {

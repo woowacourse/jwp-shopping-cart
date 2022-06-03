@@ -5,7 +5,7 @@ import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
+import woowacourse.shoppingcart.application.exception.CannotUpdateUserNameException;
 
 class CustomerTest {
 

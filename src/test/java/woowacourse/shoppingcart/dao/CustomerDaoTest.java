@@ -15,8 +15,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.CannotDeleteException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.application.exception.CannotDeleteException;
+import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

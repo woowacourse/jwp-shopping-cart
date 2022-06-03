@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.application.exception;
 
 import org.springframework.http.HttpStatus;
 

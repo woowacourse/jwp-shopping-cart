@@ -1,4 +1,4 @@
-package woowacourse.auth.exception;
+package woowacourse.auth.application.exception;
 
 import org.springframework.http.HttpStatus;
 

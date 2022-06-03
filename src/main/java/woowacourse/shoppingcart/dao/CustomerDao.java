@@ -12,8 +12,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.CannotDeleteException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.application.exception.CannotDeleteException;
+import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {

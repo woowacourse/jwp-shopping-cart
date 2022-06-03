@@ -11,9 +11,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.auth.exception.AuthException;
+import woowacourse.auth.application.exception.AuthException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.ShoppingCartException;
+import woowacourse.shoppingcart.application.exception.ShoppingCartException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
