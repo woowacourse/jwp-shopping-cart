@@ -3,8 +3,8 @@ package woowacourse.shoppingcart.domain.customer;
 import java.util.regex.Pattern;
 
 import woowacourse.auth.domain.PasswordMatcher;
-import woowacourse.shoppingcart.exception.InvalidFormException;
-import woowacourse.shoppingcart.exception.InvalidLengthException;
+import woowacourse.shoppingcart.exception.attribute.InvalidFormException;
+import woowacourse.shoppingcart.exception.attribute.InvalidLengthException;
 
 public class Password {
 

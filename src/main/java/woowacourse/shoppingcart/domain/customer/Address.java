@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import woowacourse.shoppingcart.exception.InvalidLengthException;
+import woowacourse.shoppingcart.exception.attribute.InvalidLengthException;
 
 public class Address {
 

@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.attribute;
 
 public class InvalidFormException extends InvalidPropertyException {
 

@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.domain.CartItemNotFoundException;
 
 @Repository
 public class CartItemDao {
@@ -37,7 +37,7 @@ public class CartItemDao {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
+            throw new CartItemNotFoundException();
         }
     }
 
@@ -59,7 +59,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new CartItemNotFoundException();
         }
     }
 }

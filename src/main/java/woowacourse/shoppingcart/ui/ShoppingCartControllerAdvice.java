@@ -14,25 +14,15 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import woowacourse.auth.exception.AuthenticationFailureException;
-import woowacourse.auth.exception.InvalidTokenException;
-import woowacourse.shoppingcart.exception.NotFoundException;
+import woowacourse.shoppingcart.exception.domain.NotFoundException;
 import woowacourse.shoppingcart.exception.ShoppingCartException;
 
 @RestControllerAdvice
-public class ControllerAdvice {
+public class ShoppingCartControllerAdvice {
 
     @ExceptionHandler(ShoppingCartException.class)
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler({
-        AuthenticationFailureException.class,
-        InvalidTokenException.class
-    })
-    public ResponseEntity<String> handleAuthenticationFailure(final RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)

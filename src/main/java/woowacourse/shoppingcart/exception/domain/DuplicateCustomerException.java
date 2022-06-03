@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.domain;
 
 public class DuplicateCustomerException extends DuplicateException {
 

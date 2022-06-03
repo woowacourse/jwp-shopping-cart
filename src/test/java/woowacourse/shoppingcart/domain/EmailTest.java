@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.exception.InvalidFormException;
+import woowacourse.shoppingcart.exception.attribute.InvalidFormException;
 
 class EmailTest {
 

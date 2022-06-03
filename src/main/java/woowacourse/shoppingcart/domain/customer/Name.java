@@ -2,8 +2,8 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.regex.Pattern;
 
-import woowacourse.shoppingcart.exception.InvalidFormException;
-import woowacourse.shoppingcart.exception.InvalidLengthException;
+import woowacourse.shoppingcart.exception.attribute.InvalidFormException;
+import woowacourse.shoppingcart.exception.attribute.InvalidLengthException;
 
 public class Name {
 

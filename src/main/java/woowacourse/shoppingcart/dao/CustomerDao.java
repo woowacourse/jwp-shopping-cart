@@ -15,7 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
 
 @Repository
 public class CustomerDao {
@@ -40,7 +40,7 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE name = ?";
             return jdbcTemplate.queryForObject(query, Long.class, name.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new CustomerNotFoundException();
         }
     }
 

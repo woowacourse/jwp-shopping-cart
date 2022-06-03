@@ -1,4 +1,6 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.attribute;
+
+import woowacourse.shoppingcart.exception.ShoppingCartException;
 
 public class InvalidPropertyException extends ShoppingCartException {
 
