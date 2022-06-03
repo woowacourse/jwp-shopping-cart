@@ -25,11 +25,7 @@ public class CustomerCreationRequest {
     }
 
     public Customer toCustomer() {
-        return new Customer(
-                nickname,
-                email,
-                password
-        );
+        return new Customer(nickname, email, password);
     }
 
     public String getEmail() {

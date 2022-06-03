@@ -14,10 +14,7 @@ public class CustomerResponse {
     }
 
     public static CustomerResponse from(final Customer customer) {
-        return new CustomerResponse(
-                customer.getEmail(),
-                customer.getNickname()
-        );
+        return new CustomerResponse(customer.getEmail(), customer.getNickname());
     }
 
     public String getEmail() {

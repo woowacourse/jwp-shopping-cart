@@ -61,11 +61,10 @@ class AuthControllerTest extends ControllerTest {
                 .willThrow(new InvalidLoginException());
 
         // when
-        final ResultActions perform = mockMvc.perform(
-                post("/login")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(json)
-                        .accept(MediaType.ALL)
+        final ResultActions perform = mockMvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(json)
+                .accept(MediaType.ALL)
         ).andDo(print());
 
         // then

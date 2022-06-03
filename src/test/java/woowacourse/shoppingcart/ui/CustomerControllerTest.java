@@ -103,11 +103,10 @@ class CustomerControllerTest extends ControllerTest {
         final String expected = objectMapper.writeValueAsString(response);
 
         // when
-        final ResultActions perform = mockMvc.perform(
-                get("/users/me")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.ALL)
+        final ResultActions perform = mockMvc.perform(get("/users/me")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.ALL)
         ).andDo(print());
 
         // then
@@ -123,10 +122,9 @@ class CustomerControllerTest extends ControllerTest {
     @DisplayName("로그인한 Customer의 정보를 조회하는 요청에 토큰이 존재하지 않으면 401을 반환한다.")
     void getMe_notExistToken_401() throws Exception {
         // when
-        final ResultActions perform = mockMvc.perform(
-                get("/users/me")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.ALL)
+        final ResultActions perform = mockMvc.perform(get("/users/me")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.ALL)
         ).andDo(print());
 
         // then
@@ -144,11 +142,10 @@ class CustomerControllerTest extends ControllerTest {
                 .willReturn(false);
 
         // when
-        final ResultActions perform = mockMvc.perform(
-                get("/users/me")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.ALL)
+        final ResultActions perform = mockMvc.perform(get("/users/me")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.ALL)
         ).andDo(print());
 
         // then
@@ -165,11 +162,10 @@ class CustomerControllerTest extends ControllerTest {
         getLoginCustomerByToken(accessToken, customer);
 
         // when
-        final ResultActions perform = mockMvc.perform(
-                delete("/users/me")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.ALL)
+        final ResultActions perform = mockMvc.perform(delete("/users/me")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.ALL)
         ).andDo(print());
 
         // then
@@ -187,12 +183,11 @@ class CustomerControllerTest extends ControllerTest {
         final String json = objectMapper.writeValueAsString(request);
 
         // when
-        final ResultActions perform = mockMvc.perform(
-                put("/users/me")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(json)
-                        .accept(MediaType.ALL)
+        final ResultActions perform = mockMvc.perform(put("/users/me")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(json)
+                .accept(MediaType.ALL)
         ).andDo(print());
 
         // then
