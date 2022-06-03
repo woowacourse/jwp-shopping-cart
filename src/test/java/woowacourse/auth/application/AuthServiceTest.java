@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
