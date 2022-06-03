@@ -91,18 +91,14 @@ public class CustomerService {
     }
 
     public void update(Long customerId, CustomerUpdateRequest customerUpdateRequest) {
-        if (!customerDao.existsById(customerId)) {
-            throw new NotFoundException("존재하지 않는 사용자입니다.");
-        }
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
         Nickname nickname = new Nickname(customerUpdateRequest.getNickname());
         Address address = new Address(customerUpdateRequest.getAddress());
         PhoneNumber phoneNumber = customerUpdateRequest.getPhoneNumber().toPhoneNumber();
-
-        CustomerEntity updateEntity = new CustomerEntity(customerId, null, nickname.getValue(),
-                null, address.getValue(), phoneNumber.getValue());
-
-        customerDao.update(updateEntity);
+        customer.update(nickname, address, phoneNumber);
+        customerRepository.update(customer);
     }
 
     public void delete(Long customerId, PasswordRequest passwordRequest) {

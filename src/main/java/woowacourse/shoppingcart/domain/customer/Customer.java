@@ -10,10 +10,10 @@ public class Customer {
 
     private final Long id;
     private final Account account;
-    private final Nickname nickname;
+    private Nickname nickname;
     private final EncryptPassword password;
-    private final Address address;
-    private final PhoneNumber phoneNumber;
+    private Address address;
+    private PhoneNumber phoneNumber;
 
     public Customer(Long id, Account account, Nickname nickname, EncryptPassword password,
             Address address,
@@ -72,5 +72,11 @@ public class Customer {
 
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public void update(Nickname nickname, Address address, PhoneNumber phoneNumber) {
+        this.nickname = nickname;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
     }
 }

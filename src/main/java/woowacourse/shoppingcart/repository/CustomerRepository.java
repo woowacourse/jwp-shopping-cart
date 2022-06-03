@@ -38,7 +38,16 @@ public class CustomerRepository {
                 it.getNickname(),
                 it.getPassword(),
                 it.getAddress(),
-                new PhoneNumber(it.getPhoneNumber()
-                ));
+                new PhoneNumber(it.getPhoneNumber()));
+    }
+
+    public void update(Customer customer) {
+        customerDao.update(new CustomerEntity(
+                customer.getId(),
+                customer.getAccount().getValue(),
+                customer.getNickname().getValue(),
+                customer.getPassword().getValue(),
+                customer.getAddress().getValue(),
+                customer.getPhoneNumber().getValue()));
     }
 }
