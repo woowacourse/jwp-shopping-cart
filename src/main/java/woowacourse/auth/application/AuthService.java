@@ -7,7 +7,7 @@ import woowacourse.auth.support.CryptoUtils;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.exception.shoppingcart.InvalidCustomerException;
 
 @Service
 public class AuthService {

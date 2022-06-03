@@ -21,7 +21,7 @@ import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.exception.shoppingcart.InvalidCustomerException;
 
 @SpringBootTest
 @Transactional

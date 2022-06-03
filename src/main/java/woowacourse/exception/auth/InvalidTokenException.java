@@ -1,4 +1,4 @@
-package woowacourse.auth.exception;
+package woowacourse.exception.auth;
 
 public class InvalidTokenException extends RuntimeException {
 
