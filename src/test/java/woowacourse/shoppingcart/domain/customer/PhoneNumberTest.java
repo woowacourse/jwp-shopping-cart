@@ -28,10 +28,15 @@ class PhoneNumberTest {
     @DisplayName("phoneNumber를 변경한다.")
     @Test
     void update() {
+        // given
         PhoneNumber phoneNumber = new PhoneNumber("01012341234");
         String newPhoneNumber = "01011112222";
-        PhoneNumber updatePhoneNumber = phoneNumber.update(newPhoneNumber);
+        PhoneNumber expected = new PhoneNumber(newPhoneNumber);
 
-        assertThat(updatePhoneNumber.getValue()).isEqualTo(newPhoneNumber);
+        // when
+        PhoneNumber actual = phoneNumber.update(newPhoneNumber);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
     }
 }
