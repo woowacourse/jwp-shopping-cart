@@ -25,7 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             setUsernameAndReturn(request, token);
         }
 
-        if (!jwtTokenProvider.validateToken(token) || token == null) {
+        if (!jwtTokenProvider.validateToken(token)) {
             throw new AuthorizationException();
         }
 
