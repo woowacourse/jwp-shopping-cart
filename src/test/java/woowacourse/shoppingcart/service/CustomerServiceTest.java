@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 
 @SpringBootTest
@@ -41,6 +42,20 @@ class CustomerServiceTest {
         assertThat(response)
             .extracting("email", "username")
             .contains(request.getEmail(), request.getUsername());
+    }
+
+    @DisplayName("이미 존재하는 email로는 회원가입을 할 수 없다.")
+    @Test
+    public void saveDuplicateEmail() {
+        // given
+        final CustomerRequest request =
+            new CustomerRequest("email@email.com", "password1!", "azpi");
+
+        // when
+        customerService.save(request);
+
+        // then
+        assertThatThrownBy(() -> customerService.save(request)).isInstanceOf(DuplicateCustomerException.class);
     }
 
     @DisplayName("email 을 통해서 해당 Customer를 조회할 수 있다.")

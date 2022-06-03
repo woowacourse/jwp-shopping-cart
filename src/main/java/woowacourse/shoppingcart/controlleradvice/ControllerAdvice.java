@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -34,7 +35,12 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handle(DuplicateKeyException e) {
+    public ResponseEntity<String> handle(DuplicateKeyException e) {
+        return ResponseEntity.badRequest().body("중복 키가 존재합니다.");
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(DuplicateCustomerException e) {
         return ResponseEntity.badRequest().body(ErrorResponse.DUPLICATED_EMAIL);
     }
 

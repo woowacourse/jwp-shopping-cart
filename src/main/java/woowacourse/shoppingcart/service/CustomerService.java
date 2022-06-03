@@ -1,13 +1,16 @@
 package woowacourse.shoppingcart.service;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.DeleteException;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -23,9 +26,12 @@ public class CustomerService {
 
     public void save(CustomerRequest customerRequest) {
         final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getPassword(),
-                customerRequest.getUsername());
-
-        customerDao.save(customer);
+            customerRequest.getUsername());
+        try {
+            customerDao.save(customer);
+        } catch (final DuplicateKeyException e) {
+            throw new DuplicateCustomerException("해당 아이디가 이미 존재합니다.");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -40,7 +46,7 @@ public class CustomerService {
         foundCustomer.checkPassword(request.getOldPassword());
 
         final Customer customer = new Customer(foundCustomer.getId(), email, request.getNewPassword(),
-                foundCustomer.getUsername());
+            foundCustomer.getUsername());
         customerDao.update(customer);
     }
 
@@ -64,7 +70,7 @@ public class CustomerService {
         final int deleteCount = customerDao.deleteById(customer.getId());
 
         if (deleteCount == DELETE_FAIL) {
-           throw new DeleteException("고객 정보 삭제에 실패하였습니다.");
+            throw new DeleteException("고객 정보 삭제에 실패하였습니다.");
         }
     }
 }
