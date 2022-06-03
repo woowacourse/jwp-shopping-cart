@@ -6,11 +6,10 @@ security:
 
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url:
-    username:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
     password:
-    initialization-mode: always
 
   h2:
     console:

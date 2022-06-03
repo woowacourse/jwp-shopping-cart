@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    runtimeOnly 'com.h2database:h2'
+    implementation 'mysql:mysql-connector-java:8.0.28'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -22,11 +22,11 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-security:2.4.5'
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.6.7'
 
+    testImplementation 'com.h2database:h2'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
 }
 
 test {
