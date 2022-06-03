@@ -9,9 +9,10 @@
     - [x] `login` 이외의 기능이 인증, 인가에 관련된 부분인지 고민
       - `login` : Auth
       - `이 외 기능` : Customer
-- [ ] `Exception`
-    - [ ] 서버에서 에러가 발생한 경우 Bad Request 가 맞는지?
-    - [ ] `ExceptionHandler` 코드 중복 제거
+- [x] `Exception`
+    - [x] 서버에서 에러가 발생한 경우 Bad Request 가 맞는지?
+      - `Exception`으로 에러가 발생한다면 500 반환
+    - [x] `ExceptionHandler` 코드 중복 제거
 - [ ] `Util` - CustomerInformationValidator
     - [ ] Util 클래스로 분리한 목적과 Util 클래스의 정의
 - [x] `DB` - `Customer` 테이블
