@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.LoginRequest;
-import woowacourse.shoppingcart.dto.LoginResponse;
-import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.application.dto.request.LoginRequest;
+import woowacourse.shoppingcart.application.dto.response.LoginResponse;
+import woowacourse.shoppingcart.application.dto.request.SignUpRequest;
 
 @RestController
 @RequestMapping("/customers")

@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.TokenRequest;
+import woowacourse.shoppingcart.application.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.application.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.application.dto.request.CustomerUpdateRequest;
+import woowacourse.shoppingcart.application.dto.request.TokenRequest;
 
 @RestController
 @RequestMapping("/auth/customers/profile")

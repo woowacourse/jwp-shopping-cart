@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.application.dto.request;
 
 public class TokenRequest {
 

@@ -8,7 +8,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.dto.TokenRequest;
+import woowacourse.shoppingcart.application.dto.request.TokenRequest;
 
 import javax.servlet.http.HttpServletRequest;
 

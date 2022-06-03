@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.ui.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.dataempty.DataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.DataFormatException;
 import woowacourse.shoppingcart.exception.datanotfound.DataNotFoundException;
