@@ -29,31 +29,31 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException() {
+    public ResponseEntity<ExceptionResponse> handleUnhandledException() {
         ExceptionResponse response = new ExceptionResponse(List.of("Unhandled Exception"));
         return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(DuplicatedUsernameException.class)
-    public ResponseEntity handleDuplicatedException(DuplicatedUsernameException exception) {
+    public ResponseEntity<ExceptionResponse> handleDuplicatedException(DuplicatedUsernameException exception) {
         ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
         return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity handle() {
+    public ResponseEntity<ExceptionResponse> handle() {
         ExceptionResponse response = new ExceptionResponse(List.of("존재하지 않는 데이터 요청입니다."));
         return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(LoginException.class)
-    public ResponseEntity handleLoginException(LoginException exception) {
+    public ResponseEntity<ExceptionResponse> handleLoginException(LoginException exception) {
         ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(response);
     }
 
     @ExceptionHandler
-    public ResponseEntity handleBindingException(final BindException exception) {
+    public ResponseEntity<ExceptionResponse> handleBindingException(final BindException exception) {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 
         List<String> messages = fieldErrors.stream()
@@ -68,7 +68,7 @@ public class ControllerAdvice {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    public ResponseEntity handleInvalidRequest(final RuntimeException exception) {
+    public ResponseEntity<ExceptionResponse> handleInvalidRequest(final RuntimeException exception) {
         ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
         return ResponseEntity.badRequest().body(response);
     }
@@ -80,13 +80,13 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity handleInvalidAccess(final RuntimeException exception) {
+    public ResponseEntity<ExceptionResponse> handleInvalidAccess(final RuntimeException exception) {
         ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
         return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler
-    public ResponseEntity handleAuthException(final AuthorizationException e) {
+    public ResponseEntity<ExceptionResponse> handleAuthException(final AuthorizationException e) {
         ExceptionResponse response = new ExceptionResponse(List.of(e.getMessage()));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
