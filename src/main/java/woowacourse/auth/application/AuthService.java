@@ -8,12 +8,12 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.EncodePassword;
-import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
