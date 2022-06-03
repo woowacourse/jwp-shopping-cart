@@ -1,7 +1,10 @@
 package woowacourse.util;
 
 import static org.assertj.core.api.Assertions.fail;
+import static woowacourse.util.HttpRequestUtil.deleteWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.get;
+import static woowacourse.util.HttpRequestUtil.getWithAuthorization;
+import static woowacourse.util.HttpRequestUtil.patchWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.post;
 import static woowacourse.util.HttpRequestUtil.postWithAuthorization;
 
@@ -10,7 +13,9 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
+import woowacourse.auth.dto.request.PasswordUpdateRequest;
 import woowacourse.auth.dto.response.EmailUniqueCheckResponse;
 import woowacourse.auth.dto.response.LoginResponse;
 
@@ -56,5 +61,25 @@ public class AcceptanceTestUtil {
                 .options(url)
                 .then().log().all()
                 .extract();
+    }
+
+    public static ExtractableResponse<Response> 회원_정보를_조회한다(String token) {
+        return getWithAuthorization("/api/members/me", token);
+    }
+
+    public static ExtractableResponse<Response> 로그인_없이_회원_정보를_조회한다() {
+        return get("/api/members/me");
+    }
+
+    public static ExtractableResponse<Response> 회원_정보를_수정한다(String token, MemberUpdateRequest requestBody) {
+        return patchWithAuthorization("/api/members/me", token, requestBody);
+    }
+
+    public static ExtractableResponse<Response> 비밀번호를_수정한다(String token, PasswordUpdateRequest requestBody) {
+        return patchWithAuthorization("/api/members/password", token, requestBody);
+    }
+
+    public static ExtractableResponse<Response> 회원을_삭제한다(String token) {
+        return deleteWithAuthorization("/api/members/me", token);
     }
 }
