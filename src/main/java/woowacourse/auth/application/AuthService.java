@@ -33,12 +33,4 @@ public class AuthService {
         }
         return new TokenResponse(tokenProvider.createToken(customer.getName()));
     }
-
-    public boolean isValid(String token) {
-        return tokenProvider.isValid(token);
-    }
-
-    public String getPayload(String token) {
-        return tokenProvider.getPayload(token);
-    }
 }
