@@ -22,7 +22,6 @@ public class CustomerService {
     }
 
     public CustomerResponse save(CustomerRequest customerRequest) {
-//        Customer customer = customerRequest.toCustomer();
         Customer customer = new Customer(customerRequest.getLoginId(), customerRequest.getName(),
                 CryptoUtils.encrypt(customerRequest.getPassword()));
         Long customerId = customerDao.save(customer);
