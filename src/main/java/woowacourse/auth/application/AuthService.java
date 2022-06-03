@@ -17,7 +17,6 @@ import woowacourse.shoppingcart.utils.CustomerInformationValidator;
 public class AuthService {
 
     private final CustomerDao customerDao;
-
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
@@ -45,17 +44,13 @@ public class AuthService {
         return new TokenResponse(accessToken);
     }
 
-    public CustomerResponse findCustomerByToken(String token) {
-        validateToken(token);
-        final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
+    public CustomerResponse findCustomerById(Long id) {
         final Customer customer = customerDao.findById(id);
         return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getName(), customer.getPhone(),
                 customer.getAddress());
     }
 
-    public void edit(String token, CustomerRequest customerRequest) {
-        validateToken(token);
-        final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
+    public void edit(Long id, CustomerRequest customerRequest) {
         CustomerInformationValidator.validatePassword(customerRequest.getPassword());
         final Customer customer = new Customer(id, customerRequest.getEmail(), customerRequest.getName(),
                 customerRequest.getPhone(), customerRequest.getAddress(),
@@ -63,9 +58,7 @@ public class AuthService {
         customerDao.edit(customer);
     }
 
-    public void delete(String token) {
-        validateToken(token);
-        final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
+    public void delete(Long id) {
         customerDao.delete(id);
     }
 

@@ -16,8 +16,8 @@ import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
@@ -29,6 +29,9 @@ public class AuthServiceTest {
 
     @Autowired
     private CustomerDao customerDao;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     private String firstCustomerEmail = "test@test.com";
     private String firstCustomerName = "Bunny";
@@ -104,8 +107,9 @@ public class AuthServiceTest {
         CustomerResponse createResponse = authService.register(firstCustomerRequest);
         TokenRequest tokenRequest = new TokenRequest(firstCustomerEmail, firstCustomerPassword);
         TokenResponse tokenResponse = authService.login(tokenRequest);
+        Long id = getIdByTokenResponse(tokenResponse);
         // when
-        CustomerResponse customer = authService.findCustomerByToken(tokenResponse.getAccessToken());
+        CustomerResponse customer = authService.findCustomerById(id);
         // then
         assertAll(
                 () -> assertThat(customer.getId()).isEqualTo(createResponse.getId()),
@@ -126,10 +130,11 @@ public class AuthServiceTest {
         String firstCustomerToken = tokenResponse.getAccessToken();
         CustomerRequest updateResponse = new CustomerRequest(firstCustomerEmail, firstCustomerPassword,
                 firstCustomerName, "010-1111-1111", "경기도 양평시");
+        Long id = getIdByTokenResponse(tokenResponse);
         // when
-        authService.edit(firstCustomerToken, updateResponse);
+        authService.edit(id, updateResponse);
         // then
-        CustomerResponse customer = authService.findCustomerByToken(tokenResponse.getAccessToken());
+        CustomerResponse customer = authService.findCustomerById(id);
         assertAll(
                 () -> assertThat(customer.getId()).isEqualTo(createResponse.getId()),
                 () -> assertThat(customer.getEmail()).isEqualTo(firstCustomerEmail),
@@ -146,9 +151,9 @@ public class AuthServiceTest {
         authService.register(firstCustomerRequest);
         TokenRequest tokenRequest = new TokenRequest(firstCustomerEmail, firstCustomerPassword);
         TokenResponse tokenResponse = authService.login(tokenRequest);
-        String firstCustomerToken = tokenResponse.getAccessToken();
+        Long id = getIdByTokenResponse(tokenResponse);
         // when & then
-        assertDoesNotThrow(() -> authService.delete(firstCustomerToken));
+        assertDoesNotThrow(() -> authService.delete(id));
     }
 
     @Test
@@ -157,5 +162,9 @@ public class AuthServiceTest {
         authService.register(firstCustomerRequest);
 
         assertThat(authService.validateEmail(firstCustomerEmail)).isTrue();
+    }
+
+    private Long getIdByTokenResponse(TokenResponse tokenResponse) {
+        return Long.parseLong(jwtTokenProvider.getPayload(tokenResponse.getAccessToken()));
     }
 }

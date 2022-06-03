@@ -15,6 +15,7 @@ import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 
 @RestController
@@ -40,23 +41,20 @@ public class AuthController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerResponse> findCustomer(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        CustomerResponse customerResponse = authService.findCustomerByToken(token);
+    public ResponseEntity<CustomerResponse> findCustomer(@AuthenticationPrincipal Long id) {
+        CustomerResponse customerResponse = authService.findCustomerById(id);
         return ResponseEntity.ok().body(customerResponse);
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateCustomer(@RequestBody CustomerRequest customerRequest, HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        authService.edit(token, customerRequest);
+    public ResponseEntity<Void> updateCustomer(@RequestBody CustomerRequest customerRequest, @AuthenticationPrincipal Long id) {
+        authService.edit(id, customerRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCustomer(HttpServletRequest request){
-        String token = AuthorizationExtractor.extract(request);
-        authService.delete(token);
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal Long id){
+        authService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
