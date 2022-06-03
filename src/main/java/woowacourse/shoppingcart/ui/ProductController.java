@@ -33,6 +33,7 @@ public class ProductController {
                 .fromCurrentRequest()
                 .path("/" + productId)
                 .build().toUri();
+
         return ResponseEntity.created(uri).build();
     }
 
@@ -44,6 +45,7 @@ public class ProductController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> delete(@PathVariable final Long productId) {
         productService.deleteProductById(productId);
+
         return ResponseEntity.noContent().build();
     }
 }

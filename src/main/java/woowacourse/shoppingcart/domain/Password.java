@@ -4,7 +4,7 @@ public class Password {
 
     private static final int STANDARD_PASSWORD_MIN_LENGTH = 8;
     private static final int STANDARD_PASSWORD_MAX_LENGTH = 20;
-    private static final String regex = "^[a-zA-Z0-9!@#$%^&*_-]{8,16}$";
+    private static final String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*_-])[A-Za-z\\d@$!%*?&]{8,16}$";
 
     private final String password;
 
