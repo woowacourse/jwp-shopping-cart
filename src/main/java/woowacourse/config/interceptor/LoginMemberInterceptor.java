@@ -75,7 +75,7 @@ public class LoginMemberInterceptor implements HandlerInterceptor {
         }
 
         private static Predicate<ExcludeRule> isExcludedMethod(final HttpServletRequest request) {
-            return rule -> rule.httpMethod.name().equals(request.getMethod());
+            return rule -> Objects.equals(rule.httpMethod.name(), request.getMethod());
         }
 
         private static Predicate<ExcludeRule> isExcludedURI(HttpServletRequest request) {
