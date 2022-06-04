@@ -9,10 +9,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.password.Encoder;
+import woowacourse.shoppingcart.domain.customer.password.Password;
+import woowacourse.shoppingcart.domain.customer.password.PasswordEncoderAdapter;
 import woowacourse.shoppingcart.exception.format.InvalidPasswordFormatException;
 
 class PasswordTest {
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final Encoder passwordEncoder = new PasswordEncoderAdapter();
 
     @DisplayName("평문을 전달받아 생성한다.")
     @Test

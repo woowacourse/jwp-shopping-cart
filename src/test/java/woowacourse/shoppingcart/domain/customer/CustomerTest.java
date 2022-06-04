@@ -8,11 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.shoppingcart.domain.customer.address.FullAddress;
+import woowacourse.shoppingcart.domain.customer.password.Encoder;
+import woowacourse.shoppingcart.domain.customer.password.Password;
+import woowacourse.shoppingcart.domain.customer.password.PasswordEncoderAdapter;
 import woowacourse.shoppingcart.domain.customer.privacy.Privacy;
 import woowacourse.shoppingcart.exception.DisagreeToTermsException;
 
 class CustomerTest {
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final Encoder passwordEncoder = new PasswordEncoderAdapter();
 
     @DisplayName("유저 정보를 전달하여 유저를 생성한다.")
     @Test

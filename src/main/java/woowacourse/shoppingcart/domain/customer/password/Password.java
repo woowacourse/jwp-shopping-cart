@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain.customer;
+package woowacourse.shoppingcart.domain.customer.password;
 
 import java.util.Objects;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,14 +8,14 @@ public class Password {
     private static final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,}$";
 
     private final String value;
-    private final PasswordEncoder passwordEncoder;
+    private final Encoder passwordEncoder;
 
-    public Password(String value, PasswordEncoder passwordEncoder) {
+    public Password(String value, Encoder passwordEncoder) {
         this.value = value;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public static Password fromPlainText(String value, PasswordEncoder passwordEncoder) {
+    public static Password fromPlainText(String value, Encoder passwordEncoder) {
         validateFormat(value);
         return new Password(passwordEncoder.encode(value), passwordEncoder);
     }

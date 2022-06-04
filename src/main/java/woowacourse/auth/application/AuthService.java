@@ -7,7 +7,8 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.LoginFailedException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.password.Password;
+import woowacourse.shoppingcart.domain.customer.password.PasswordEncoderAdapter;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 
 @Service
@@ -40,7 +41,7 @@ public class AuthService {
     }
 
     private void validatePassword(String password, CustomerEntity customerEntity) {
-        Password encryptedPassword = new Password(customerEntity.getPassword(), new BCryptPasswordEncoder());
+        Password encryptedPassword = new Password(customerEntity.getPassword(), new PasswordEncoderAdapter());
 
         if (!encryptedPassword.matches(password)) {
             throw new LoginFailedException();
