@@ -63,7 +63,7 @@
     Content-Length:47
 
     {
-    "accessToken":"대충 토큰"
+    "accessToken":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2NTQzMTEzMDIsImV4cCI6MTY1NDMxNDkwMn0.pvn__FNuQWXlyzImVDpGIIQ5-A8e7QS6f0dKiggk8cw"
     }
 ```
 
@@ -136,7 +136,7 @@
     Accept:application/json
     Content-Length:35
     Host:localhost:8080
-    **Authorization:Bearer XXXXXXXXXXXXXX**
+    Authorization:Bearer XXXXXXXXXXXXXX
 
     {
     "username":"다오"
@@ -167,7 +167,7 @@
     Accept:application/json
     Content-Length:35
     Host:localhost:8080
-    **Authorization:Bearer XXXXXXXXXXXXXX**
+    Authorization:Bearer XXXXXXXXXXXXXX
 
     {
     "password":"newPassword0!"
@@ -204,7 +204,7 @@
   **ErrorCode 1000번대는 `회원가입`**
 
   | 에러 상황 | 에러 코드 | 에러 메세지 |
-      | :------------: | :-------------: |:------------: |
+        | :------------: | :-------------: |:------------: |
   | 이메일 중복 | 1001  | Duplicated Email |
 
 <br>
@@ -214,7 +214,7 @@
   **ErrorCode 2000번대는 `로그인`**
 
   | 에러 상황 | 에러 코드 | 에러 메세지 |
-      | :------------: | :-------------: |:------------: |
+        | :------------: | :-------------: |:------------: |
   | 이메일 또는 패드워드가 맞지 않음 | 2001  | Login Fail |
   | 이메일 형식만 잘못됨 | 4001  | Invalid Email |
 
@@ -224,7 +224,7 @@
     - 비밀번호 수정 페이지는 따로
 
   | 에러 상황 | 에러 코드 | 에러 메세지 |
-      | :------------: | :-------------: |:------------: |
+        | :------------: | :-------------: |:------------: |
   | 기존 패스워드 불일치 | 3001 | Incorrect Password |
   | 새 패스워드 형식이 맞지 않음 | 4002 | Invalid Password |
   | 토큰 만료 또는 없음 | 3002 | Invalid Token |
@@ -236,7 +236,7 @@
 - **입력 형식** `[400, Bad Request]`
 
   | 에러 상황 | 에러 코드 | 에러 메세지 |
-      | :------------: | :-------------: |:------------: |
+        | :------------: | :-------------: |:------------: |
   | 이메일 형식이 맞지 않음 | 4001 | Invalid Email |
   | 패스워드 형식이 맞지 않음 | 4002 | Invalid Password |
   | 유저 네임 글자 수가 맞지 않음 | 4003 | Invalid Username |
