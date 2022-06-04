@@ -9,7 +9,7 @@ import woowacourse.auth.support.EncryptionStrategy;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
-import woowacourse.auth.exception.InvalidAuthException;
+import woowacourse.exception.InvalidAuthException;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Service

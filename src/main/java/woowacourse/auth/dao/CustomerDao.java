@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {

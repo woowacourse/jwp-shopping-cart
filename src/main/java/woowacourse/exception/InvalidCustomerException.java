@@ -1,6 +1,7 @@
-package woowacourse.auth.exception;
+package woowacourse.exception;
 
-public class InvalidCustomerException extends RuntimeException {
+public class InvalidCustomerException extends BusinessException {
+
 	public InvalidCustomerException() {
 		super();
 	}

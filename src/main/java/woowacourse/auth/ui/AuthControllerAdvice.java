@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,8 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import woowacourse.auth.dto.ExceptionResponse;
-import woowacourse.auth.exception.InvalidAuthException;
-import woowacourse.auth.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidAuthException;
+import woowacourse.exception.InvalidCustomerException;
 
 @RestControllerAdvice(basePackages = "woowacourse.auth")
 public class AuthControllerAdvice {

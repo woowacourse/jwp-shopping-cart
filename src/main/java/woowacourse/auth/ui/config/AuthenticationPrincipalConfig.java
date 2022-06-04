@@ -2,8 +2,6 @@ package woowacourse.auth.ui.config;
 
 import lombok.RequiredArgsConstructor;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.application.CustomerService;
-import woowacourse.auth.support.JwtTokenProvider;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

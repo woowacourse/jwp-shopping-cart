@@ -15,6 +15,7 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
+import woowacourse.exception.BusinessException;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,7 +30,7 @@ public class AuthController {
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<ExceptionResponse> loginExceptionHandler(RuntimeException exception) {
+	public ResponseEntity<ExceptionResponse> loginExceptionHandler(BusinessException exception) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 			.body(new ExceptionResponse(exception));
 	}

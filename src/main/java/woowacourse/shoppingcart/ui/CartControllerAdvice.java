@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import woowacourse.auth.dto.ExceptionResponse;
-import woowacourse.auth.exception.InvalidAuthException;
-import woowacourse.auth.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidAuthException;
+import woowacourse.exception.InvalidCustomerException;
 
 @RestControllerAdvice(basePackages = "woowacourse.shoppingcart")
 public class CartControllerAdvice {

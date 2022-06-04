@@ -11,8 +11,8 @@ import woowacourse.auth.support.EncryptionStrategy;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.customer.CustomerRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
-import woowacourse.auth.exception.InvalidAuthException;
-import woowacourse.auth.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidAuthException;
+import woowacourse.exception.InvalidCustomerException;
 
 @RequiredArgsConstructor
 @Transactional
