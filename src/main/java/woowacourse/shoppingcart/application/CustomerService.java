@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
@@ -16,9 +17,12 @@ import woowacourse.shoppingcart.repository.CustomerRepository;
 @Service
 public class CustomerService {
 
+    private final JwtTokenProvider jwtTokenProvider;
     private CustomerRepository customerRepository;
 
-    public CustomerService(final CustomerRepository customerRepository) {
+    public CustomerService(JwtTokenProvider jwtTokenProvider,
+                           final CustomerRepository customerRepository) {
+        this.jwtTokenProvider = jwtTokenProvider;
         this.customerRepository = customerRepository;
     }
 
@@ -28,7 +32,8 @@ public class CustomerService {
 
     public CustomerLoginResponse login(final CustomerLoginRequest request) {
         Customer customer = customerRepository.findValidUser(request.getUserId(), request.getPassword());
-        return CustomerLoginResponse.ofExceptToken(customer);
+        String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
+        return CustomerLoginResponse.ofToken(customer, token);
     }
 
     public CustomerResponse findById(final TokenRequest request) {
