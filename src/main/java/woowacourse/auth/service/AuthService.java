@@ -39,7 +39,7 @@ public class AuthService {
 
     private void checkCustomer(TokenRequest request) {
         final Customer customer = customerDao.findByEmail(request.getEmail());
-        customer.checkPassword(request.getPassword());
+        customer.checkPasswordisSame(request.getPassword());
     }
 
     public String findCustomerByToken(String token) {

@@ -43,7 +43,7 @@ public class CustomerService {
 
     public void changePassword(String email, ChangePasswordRequest request) {
         final Customer foundCustomer = customerDao.findByEmail(email);
-        foundCustomer.checkPassword(request.getOldPassword());
+        foundCustomer.checkPasswordIsSame(request.getOldPassword());
 
         final Customer customer = new Customer(foundCustomer.getId(), email, request.getNewPassword(),
             foundCustomer.getUsername());
@@ -65,7 +65,7 @@ public class CustomerService {
 
     public void delete(String email, String password) {
         final Customer customer = customerDao.findByEmail(email);
-        customer.checkPassword(password);
+        customer.checkPasswordIsSame(password);
 
         final int deleteCount = customerDao.deleteById(customer.getId());
 
