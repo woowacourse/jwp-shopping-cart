@@ -7,7 +7,7 @@ public class OrderRequest {
 
     @NotNull
     private final Long cartId;
-    @Min(0)
+    @Min(value = 0, message = "수량은 0 미만이 될 수 없습니다.")
     private final int quantity;
 
     public OrderRequest() {
