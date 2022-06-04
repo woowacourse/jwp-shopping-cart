@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public class Email {
 
-	private static final String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+	private static final String REGEX = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 
 	private final String value;
 
@@ -19,7 +19,7 @@ public class Email {
 	}
 
 	private void validate(String value) {
-		if (!Pattern.matches(regex, value)) {
+		if (!Pattern.matches(REGEX, value)) {
 			throw new IllegalArgumentException("이메일 형식에 맞지 않습니다.");
 		}
 	}
