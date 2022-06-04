@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.dto.ErrorResponse;
@@ -10,6 +11,7 @@ import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
+@Transactional(readOnly = true)
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -18,6 +20,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
+    @Transactional
     public void register(String email, String password, String username) {
         final Password encryptedPassword = Password.from(password);
         if(customerDao.existsByEmail(email)){
@@ -32,6 +35,7 @@ public class CustomerService {
         return new CustomerResponse(customer.getEmail(), customer.getUsername());
     }
 
+    @Transactional
     public void changePassword(String email, String oldPassword, String newPassword) {
         final Customer customer = customerDao.findByEmail(email);
         if(customer.isDifferentPassword(oldPassword)){
@@ -41,6 +45,7 @@ public class CustomerService {
         customerDao.updatePassword(customer.getId(), encryptedPassword.getPassword());
     }
 
+    @Transactional
     public CustomerResponse changeGeneralInfo(String email, String username) {
         final Customer customer = customerDao.findByEmail(email);
         customerDao.updateGeneralInfo(customer.getId(), username);
@@ -48,6 +53,7 @@ public class CustomerService {
         return new CustomerResponse(updatedCustomer.getEmail(), updatedCustomer.getUsername());
     }
 
+    @Transactional
     public void delete(String email, String password) {
         final Customer customer = customerDao.findByEmail(email);
         if(customer.isDifferentPassword(password)){
