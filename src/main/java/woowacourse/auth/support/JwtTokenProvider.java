@@ -3,7 +3,6 @@ package woowacourse.auth.support;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -40,8 +39,6 @@ public class JwtTokenProvider {
                     .setSigningKey(toKey())
                     .build()
                     .parseClaimsJws(token).getBody();
-        } catch (DecodingException e) {
-            throw new AuthorizationException("권한이 없습니다.");
         } catch (JwtException e) {
             throw new AuthorizationException("권한이 없습니다.");
         }
