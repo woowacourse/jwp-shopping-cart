@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Address;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Nickname;
 import woowacourse.shoppingcart.domain.PhoneNumber;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
@@ -45,7 +46,7 @@ public class CustomerService {
         final String processedAccount = removeSpecialCharacter(signupRequest);
         PhoneNumberFormat phoneNumberFormat = signupRequest.getPhoneNumber();
         return new Customer(processedAccount,
-                signupRequest.getNickname(),
+                new Nickname(signupRequest.getNickname()),
                 passwordEncoder.encode(signupRequest.getPassword()),
                 new Address(signupRequest.getAddress()),
                 new PhoneNumber(phoneNumberFormat.appendNumbers()));

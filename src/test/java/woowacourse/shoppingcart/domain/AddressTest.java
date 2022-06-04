@@ -27,6 +27,6 @@ class AddressTest {
         //then
         assertThatThrownBy(() -> new Address("a".repeat(256)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("주소 길이는 255자를 초과할 수 없습니다.");
+                .hasMessage("주소 길이는 255자를 초과할 수 없습니다.");
     }
 }

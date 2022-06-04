@@ -32,7 +32,7 @@ class PhoneNumberTest {
         //then
         assertThatThrownBy(() -> new PhoneNumber(phoneNumber))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("휴대폰번호 형식이 일치하지 않습니다.");
+                .hasMessage("휴대폰번호 형식이 일치하지 않습니다.");
     }
 
     @Test
@@ -45,6 +45,6 @@ class PhoneNumberTest {
         //then
         assertThatThrownBy(() -> new PhoneNumber(notDigit))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("휴대폰 번호는 숫자만 가능합니다.");
+                .hasMessage("휴대폰 번호는 숫자만 가능합니다.");
     }
 }

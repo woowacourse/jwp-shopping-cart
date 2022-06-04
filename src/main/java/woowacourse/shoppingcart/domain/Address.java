@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 public class Address {
 
-    public static final int ADDRESS_LENGTH_LIMIT = 255;
+    private static final int ADDRESS_LENGTH_LIMIT = 255;
 
     private final String value;
 

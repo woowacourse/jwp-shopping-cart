@@ -3,23 +3,18 @@ package woowacourse.shoppingcart.domain;
 public class Customer {
 
     private final long id;
-//    private final Account account;
-//    private final Nickname nickname;
-//    private final Password password;
-//    private final Address address;
-//
-//
-private final String account;
-    private final String nickname;
+    private final String account;
+    private final Nickname nickname;
     private final String password;
     private final Address address;
     private final PhoneNumber phoneNumber;
 
-    public Customer(String account, String nickname, String password, Address address, PhoneNumber phoneNumber) {
+    public Customer(String account, Nickname nickname, String password, Address address, PhoneNumber phoneNumber) {
         this(0, account, nickname, password, address, phoneNumber);
     }
 
-    public Customer(long id, String account, String nickname, String password, Address address, PhoneNumber phoneNumber) {
+    public Customer(long id, String account, Nickname nickname, String password, Address address,
+                    PhoneNumber phoneNumber) {
         this.id = id;
         this.account = account;
         this.nickname = nickname;
@@ -37,7 +32,7 @@ private final String account;
     }
 
     public String getNickname() {
-        return nickname;
+        return nickname.getValue();
     }
 
     public String getPassword() {

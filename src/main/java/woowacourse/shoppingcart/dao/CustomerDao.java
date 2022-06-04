@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Address;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Nickname;
 import woowacourse.shoppingcart.domain.PhoneNumber;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
@@ -24,7 +25,7 @@ public class CustomerDao {
             new Customer(
                     rs.getLong("id"),
                     rs.getString("account"),
-                    rs.getString("nickname"),
+                    new Nickname(rs.getString("nickname")),
                     rs.getString("password"),
                     new Address(rs.getString("address")),
                     new PhoneNumber(rs.getString("phone_number"))
@@ -51,7 +52,7 @@ public class CustomerDao {
         return new Customer(
                 number.longValue(),
                 customer.getAccount(),
-                customer.getNickname(),
+                new Nickname(customer.getNickname()),
                 customer.getPassword(),
                 new Address(customer.getAddress()),
                 new PhoneNumber(customer.getPhoneNumber()

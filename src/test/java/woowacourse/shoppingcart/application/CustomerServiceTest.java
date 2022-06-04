@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import woowacourse.shoppingcart.domain.Address;
+import woowacourse.shoppingcart.domain.Nickname;
 import woowacourse.shoppingcart.domain.PhoneNumber;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberFormat;
@@ -42,9 +43,10 @@ class CustomerServiceTest {
 
     @BeforeEach
     void setUp() {
+        Nickname nickname = new Nickname("corinne");
         Address address = new Address("코린네");
         PhoneNumber phoneNumber = new PhoneNumber("01012345678");
-        this.customer = new Customer(1L, "hamcheeseburger", "corinne", "password123", address, phoneNumber);
+        this.customer = new Customer(1L, "hamcheeseburger", nickname, "password123", address, phoneNumber);
     }
 
     @Test
