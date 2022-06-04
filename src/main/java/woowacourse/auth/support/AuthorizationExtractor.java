@@ -1,7 +1,8 @@
 package woowacourse.auth.support;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import javax.servlet.http.HttpServletRequest;
+import woowacourse.auth.exception.UnAuthorizedException;
 
 public class AuthorizationExtractor {
     public static final String AUTHORIZATION = "Authorization";
@@ -23,6 +24,6 @@ public class AuthorizationExtractor {
             }
         }
 
-        return null;
+        throw new UnAuthorizedException();
     }
 }

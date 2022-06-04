@@ -1,0 +1,55 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+= Auth api
+
+== auth
+=== request
+include::{snippets}/auth-login/http-request.adoc[]
+=== response
+include::{snippets}/auth-login/http-response.adoc[]
+
+= Member api
+
+== member duplicate email
+=== request
+include::{snippets}/member-duplicate-email/http-request.adoc[]
+=== response
+include::{snippets}/member-duplicate-email/http-response.adoc[]
+
+== member register
+=== request
+include::{snippets}/member-register/http-request.adoc[]
+=== response
+include::{snippets}/member-register/http-response.adoc[]
+
+== member me
+=== request
+include::{snippets}/member-me/http-request.adoc[]
+=== response
+include::{snippets}/member-me/http-response.adoc[]
+
+== member name update
+=== request
+include::{snippets}/member-name-update/http-request.adoc[]
+=== response
+include::{snippets}/member-name-update/http-response.adoc[]
+
+== member password update
+=== request
+include::{snippets}/member-password-update/http-request.adoc[]
+=== response
+include::{snippets}/member-password-update/http-response.adoc[]
+
+== member delete
+=== request
+include::{snippets}/member-delete/http-request.adoc[]
+=== response
+include::{snippets}/member-delete/http-response.adoc[]
+
