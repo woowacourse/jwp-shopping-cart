@@ -37,11 +37,7 @@ public class MemberService {
         return memberDao.save(member);
     }
 
-    public void validateDuplicateEmail(final EmailCheckRequest emailCheckRequest) {
-        validateDuplicateEmail(emailCheckRequest.getEmail());
-    }
-
-    private void validateDuplicateEmail(final String email) {
+    public void validateDuplicateEmail(final String email) {
         if (memberDao.isEmailExist(email)) {
             throw new DuplicateMemberEmailException();
         }

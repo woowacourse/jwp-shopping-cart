@@ -153,7 +153,7 @@ public class MemberServiceTest {
     @Test
     void validateDuplicateEmailExist() {
         memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
-        assertThatThrownBy(() -> memberService.validateDuplicateEmail(new EmailCheckRequest(EMAIL)))
+        assertThatThrownBy(() -> memberService.validateDuplicateEmail(EMAIL))
                 .isInstanceOf(DuplicateMemberEmailException.class);
     }
 }

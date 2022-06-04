@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.application.MemberService;
@@ -62,9 +63,9 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/duplicate-email")
-    public ResponseEntity<Void> validateDuplicateEmail(@Valid @RequestBody EmailCheckRequest emailCheckRequest) {
-        memberService.validateDuplicateEmail(emailCheckRequest);
+    @GetMapping("/duplicate-email")
+    public ResponseEntity<Void> validateDuplicateEmail(@RequestParam String email) {
+        memberService.validateDuplicateEmail(email);
         return ResponseEntity.ok().build();
     }
 }
