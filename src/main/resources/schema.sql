@@ -16,6 +16,8 @@ create table customer
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
+create index customer_idx on customer(username);
+
 alter table customer
     add unique key (username);
 

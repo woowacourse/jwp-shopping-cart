@@ -6,7 +6,6 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.application.CheckDuplicateResponse;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CheckDuplicateRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;

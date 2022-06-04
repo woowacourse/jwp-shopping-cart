@@ -5,14 +5,13 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +24,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "12345678"))
+                .body(new CustomerRequest("testx", "1aB45678!"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -33,22 +32,22 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         String accessToken = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("test", "12345678"))
+                .body(new TokenRequest("testx", "1aB45678!"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
                 .then().log().all().extract().as(TokenResponse.class).getAccessToken();
 
         // then
-        Customer customer = RestAssured
+        CustomerResponse customer = RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/customers/me")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value()).extract().as(Customer.class);
+                .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
 
-        assertThat(customer.getName().value()).isEqualTo("test");
+        assertThat(customer.getName()).isEqualTo("testx");
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
@@ -58,7 +57,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "12345678"))
+                .body(new CustomerRequest("testx", "1aB45678!"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -66,7 +65,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> tokenResponse = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("test", "55223344"))
+                .body(new TokenRequest("testx", "1aB4567C!"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
@@ -83,7 +82,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "12345678"))
+                .body(new CustomerRequest("testx", "1aB45678!"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();

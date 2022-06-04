@@ -17,23 +17,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 회원_가입() {
-        ExtractableResponse<Response> createResponse = 회원_가입("test", "12345678");
+        ExtractableResponse<Response> createResponse = 회원_가입("testx", "1A2B5c78!");
 
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(createResponse.header("Location")).isEqualTo("/api/customers/test");
+        assertThat(createResponse.header("Location")).isEqualTo("/api/customers/testx");
     }
 
     @Test
     void 중복된_이름으로_회원_가입() {
-        회원_가입("test", "12345678");
-        ExtractableResponse<Response> createResponse = 회원_가입("test", "12345678");
+        회원_가입("testx", "1A2B5c78!");
+        ExtractableResponse<Response> createResponse = 회원_가입("testx", "1A2B5c78!");
 
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
     void 회원가입_시_누락된_필드값_존재() {
-        ExtractableResponse<Response> createResponse = 회원_가입("test", null);
+        ExtractableResponse<Response> createResponse = 회원_가입("testx", null);
 
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -41,8 +41,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 내_정보_조회() {
         // given
-        회원_가입("test", "12345678");
-        String accessToken = 로그인_후_토큰_획득("test", "12345678");
+        회원_가입("testx", "1A2B5c78!");
+        String accessToken = 로그인_후_토큰_획득("testx", "1A2B5c78!");
 
         // when
         ExtractableResponse<Response> getResponse = RestAssured
@@ -55,7 +55,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(getResponse.body().jsonPath().getString("name")).isEqualTo("test");
+        assertThat(getResponse.body().jsonPath().getString("name")).isEqualTo("testx");
     }
 
     @Test
@@ -75,15 +75,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 내_정보_수정() {
         // given
-        회원_가입("test", "12345678");
-        String accessToken = 로그인_후_토큰_획득("test", "12345678");
+        회원_가입("testx", "1A2B5c78!");
+        String accessToken = 로그인_후_토큰_획득("testx", "1A2B5c78!");
 
         // when
         ExtractableResponse<Response> editResponse = RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "12553344"))
+                .body(new CustomerRequest("testx", "1A2C5c78!"))
                 .when().put("/api/customers/me")
                 .then().log().all()
                 .extract();
@@ -91,7 +91,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         ExtractableResponse<Response> loginResponse = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("test", "12553344"))
+                .body(new TokenRequest("testx", "1A2C5c78!"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
@@ -107,7 +107,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> editResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("test", "12553344"))
+                .body(new CustomerRequest("testx", "1A2B5c78!"))
                 .when().put("/api/customers/me")
                 .then().log().all()
                 .extract();
@@ -119,8 +119,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 회원_탈퇴() {
         // given
-        회원_가입("test", "12345678");
-        String accessToken = 로그인_후_토큰_획득("test", "12345678");
+        회원_가입("testx", "1A2B5c78!");
+        String accessToken = 로그인_후_토큰_획득("testx", "1A2B5c78!");
 
         // when
         ExtractableResponse<Response> deleteResponse = RestAssured

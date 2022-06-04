@@ -1,8 +1,11 @@
 package woowacourse.shoppingcart.domain;
 
+import org.ccil.cowan.tagsoup.ScanHandler;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.support.SHA256Encryptor;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -16,12 +19,12 @@ public class PasswordTest {
     void validateTest(String password, boolean result) {
         if (result) {
             assertDoesNotThrow(() -> {
-                new Password(password);
+                Password.toPasswordWithEncrypt(password, new SHA256Encryptor());
             });
             return;
         }
         assertThatThrownBy(() -> {
-            new Password(password);
+                Password.toPasswordWithEncrypt(password, new SHA256Encryptor());
         }).isInstanceOf(IllegalArgumentException.class);
     }
 }

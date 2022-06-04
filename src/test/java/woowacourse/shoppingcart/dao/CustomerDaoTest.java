@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.customer.UserName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,21 +29,7 @@ public class CustomerDaoTest {
     void findIdByUserNameTest() {
 
         // given
-        final String userName = "puterism";
-
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(1L);
-    }
-
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
-        // given
-        final String userName = "puTeriSm";
+        final UserName userName = new UserName("puterism");
 
         // when
         final Long customerId = customerDao.findIdByUserName(userName);

@@ -1,13 +1,11 @@
 package woowacourse.shoppingcart.application;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.application.AuthorizationException;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.domain.UserName;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CheckDuplicateRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -28,13 +26,10 @@ public class CustomerService {
     }
 
     public void addCustomer(final CustomerRequest customerRequest) {
-        UserName userName = new UserName(customerRequest.getName());
-        Password password = new Password(customerRequest.getPassword());
-        if (customerDao.existsByName(userName)) {
+        Customer customer = new Customer(customerRequest.getName(), customerRequest.getPassword(), encryptor);
+        if (customerDao.existsByName(customer.getName())) {
             throw new DuplicateNameException();
         }
-        String encryptedRawPassword = password.encrypt(encryptor);
-        Customer customer = new Customer(customerRequest.getName(), encryptedRawPassword);
         customerDao.save(customer);
     }
 
@@ -57,8 +52,7 @@ public class CustomerService {
         UserName userName = new UserName(rawUserName);
         if (customerDao.existsByName(userName)) {
             Customer customer = customerDao.findCustomerByName(userName);
-            String encryptedPassword = encryptor.encrypt(editRequest.getPassword());
-            customer.update(userName.value(), encryptedPassword);
+            customer.update(userName.value(), editRequest.getPassword(), encryptor);
             customerDao.updateByName(userName, customer);
             return;
         }
@@ -66,9 +60,7 @@ public class CustomerService {
     }
 
     public void validateNameAndPassword(final String userName, final String rawPassword) {
-        Password password = new Password(rawPassword);
-        String encryptedRawPassword = password.encrypt(encryptor);
-        Customer customer = new Customer(userName, encryptedRawPassword);
+        Customer customer = new Customer(userName, rawPassword, encryptor);
         if (customerDao.existsCustomer(customer)) {
             return;
         }

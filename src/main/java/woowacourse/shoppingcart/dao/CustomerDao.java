@@ -4,8 +4,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.UserName;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
@@ -55,7 +55,7 @@ public class CustomerDao {
                             resultSet.getLong("id"),
                             customerName.value(),
                             resultSet.getString("password")
-                    ), customerName
+                    ), customerName.value()
             );
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
