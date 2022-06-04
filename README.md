@@ -314,3 +314,14 @@
 - [x]  password 가 일치하는지 확인하는 API 기능
 - [x]  입력된 password 가 내 password 와 일치하는지 확인하는 기능
     - 일치하지 않으면 예외를 발생시킨다.
+
+## TODO
+
+### 1단계 피드백
+
+- [x] JwtTokenProvider -> 공통 로직은 메서드로 분리할 수 있겠네요!
+- [ ] dao와 repository에서의 메서드명이 login일 필요가 있을까요?
+- [ ] 토큰을 생성하는것까지 Service에서 하는것이 맞지 않을까요~??
+- [ ] TokenRequest -> 어떤 id를 의미하는지 명확하게 나타내면 좋을 것 같아요~
+- [ ] checkDuplicateUsername -> 파라미터 설정 값이� 중복된게 아닌가 해요! 
+- [ ] CustomerRepository -> 예외 메시지를 넣지 않고 비워둔 이유가 있을까요?
