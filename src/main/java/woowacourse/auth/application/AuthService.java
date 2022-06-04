@@ -41,9 +41,8 @@ public class AuthService {
 
     private void validatePassword(String password, CustomerEntity customerEntity) {
         Password encryptedPassword = new Password(customerEntity.getPassword(), new BCryptPasswordEncoder());
-        boolean isValid = encryptedPassword.matches(password);
 
-        if (!isValid) {
+        if (!encryptedPassword.matches(password)) {
             throw new LoginFailedException();
         }
     }

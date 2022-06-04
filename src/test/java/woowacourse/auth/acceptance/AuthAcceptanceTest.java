@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
@@ -21,6 +19,9 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
+
+    public static final String EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU0MzUyNzMwLCJleHAiOjE2NTQzNTI3MzB9.OvlNgJk_dG30BL_JWj_DQRPmepqLMLl6Djwtlp2hBWw";
+    public static final String INVALID_TOKEN = "invalidToken";
 
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
@@ -97,7 +98,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .header("Authorization", "invalidToken")
+                .header("Authorization", INVALID_TOKEN)
                 .when().get(customerUri)
                 .then().log().all()
                 .extract();
@@ -119,7 +120,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .header("Authorization",
-                        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU0MDExOTk1LCJleHAiOjE2NTQwMTE5OTV9.L5pnN2Dorp20abb75HFXbYTLxhfFqP4pSfUFu5Rqyzs")
+                        "Bearer " + EXPIRED_TOKEN)
                 .when().get(customerUri)
                 .then().log().all()
                 .extract();
@@ -156,11 +157,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String customerUri = customerResponse.header("Location");
 
         // when
-        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
-
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .header("Authorization",
-                        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU0MDExOTk1LCJleHAiOjE2NTQwMTE5OTV9.L5pnN2Dorp20abb75HFXbYTLxhfFqP4pSfUFu5Rqyzs")
+                        "Bearer " + EXPIRED_TOKEN)
                 .when().post(customerUri + "/authentication/sign-out")
                 .then().log().all()
                 .extract();
@@ -176,13 +175,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String customerUri = customerResponse.header("Location");
 
         // when
-        TokenResponse tokenResponse = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getPassword());
-
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .header("Authorization", "invalidToken")
+                .header("Authorization", INVALID_TOKEN)
                 .when().post(customerUri + "/authentication/sign-out")
                 .then().log().all()
                 .extract();
+
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
