@@ -6,6 +6,7 @@ public class Age {
 
     private static final int MINIMUM_AGE = 0;
     private static final String WRONG_AGE_EXCEPTION = "나이는 0살 이상이여야 합니다.";
+
     private final int value;
 
     public Age(int value) {
