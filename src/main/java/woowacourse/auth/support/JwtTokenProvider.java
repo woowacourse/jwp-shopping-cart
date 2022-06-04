@@ -35,7 +35,8 @@ public class JwtTokenProvider {
 
     public String getPayload(String token) {
         Key key = generateKey();
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+        var jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
+        return jwtParser.parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean validateToken(String token) {
