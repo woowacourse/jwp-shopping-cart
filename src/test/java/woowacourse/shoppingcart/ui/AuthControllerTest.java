@@ -3,14 +3,21 @@ package woowacourse.shoppingcart.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static woowacourse.shoppingcart.utils.ApiDocumentUtils.getDocumentRequest;
+import static woowacourse.shoppingcart.utils.ApiDocumentUtils.getDocumentResponse;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.shoppingcart.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.LoginResponse;
@@ -48,6 +55,19 @@ class AuthControllerTest extends ControllerTest {
                 .getContentAsString();
 
         assertThat(body).isEqualTo(expected);
+
+        // docs
+        perform.andDo(document("login",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                        fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+                ),
+                responseFields(
+                        fieldWithPath("accessToken").type(JsonFieldType.STRING).description("토큰")
+                )
+        ));
     }
 
     @Test
@@ -71,5 +91,19 @@ class AuthControllerTest extends ControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("errorCode").value("1002"))
                 .andExpect(jsonPath("message").value("로그인에 실패했습니다."));
+
+        // docs
+        perform.andDo(document("login-fail",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                        fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+                ),
+                responseFields(
+                        fieldWithPath("errorCode").type(JsonFieldType.STRING).description("에러코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지")
+                )
+        ));
     }
 }
