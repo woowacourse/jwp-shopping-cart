@@ -17,7 +17,7 @@ public class Password {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
+        if (o == null || o.getClass().isInstance(Password.class)) return false;
         Password password = (Password) o;
         return Objects.equals(getValue(), password.getValue());
     }

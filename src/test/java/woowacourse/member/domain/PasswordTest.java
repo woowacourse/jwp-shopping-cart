@@ -2,6 +2,7 @@ package woowacourse.member.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import woowacourse.member.domain.password.ExistPassword;
 import woowacourse.member.domain.password.NewPassword;
 import woowacourse.member.domain.password.Password;
 import woowacourse.member.exception.InvalidPasswordException;
@@ -47,6 +48,15 @@ public class PasswordTest {
     void equals() {
         Password password = new NewPassword("Wooteco123!");
         Password comparison = new NewPassword("Wooteco123!");
+        boolean result = password.equals(comparison);
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("다른 타입이어도 같은 값의 비밀번호면 동등하다고 판단한다.")
+    @Test
+    void equals2() {
+        Password password = new NewPassword("Wooteco123!");
+        Password comparison = new ExistPassword(password.getValue());
         boolean result = password.equals(comparison);
         assertThat(result).isTrue();
     }
