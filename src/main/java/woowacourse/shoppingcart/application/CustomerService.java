@@ -55,8 +55,7 @@ public class CustomerService {
     }
 
     public void updateInfo(Customer customer, CustomerRequest customerRequest) {
-        Customer updateCustomer = customer.updateInfo(customerRequest.getNickname(), customerRequest.getAge());
-        customerDao.updateInfo(updateCustomer);
+        customerDao.updateInfo(customer.getUsername(), customerRequest.getNickname(), customerRequest.getAge());
     }
 
     public void deleteCustomer(Customer customer) {

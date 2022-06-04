@@ -76,9 +76,9 @@ public class CustomerDao {
         validateUpdated(updated);
     }
 
-    public void updateInfo(Customer customer) {
+    public void updateInfo(String username, String updateNickname, int updateAge) {
         final String sql = "UPDATE customer SET nickname = ?, age = ? WHERE username = ?";
-        int updated = jdbcTemplate.update(sql, customer.getNickname(), customer.getAge(), customer.getUsername());
+        int updated = jdbcTemplate.update(sql, updateNickname, updateAge, username);
         validateUpdated(updated);
     }
 

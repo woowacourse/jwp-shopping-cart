@@ -11,8 +11,8 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.support.HashPasswordEncoder;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.EncodePassword;
-import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -96,7 +96,7 @@ public class CustomerDaoTest {
         final Customer expected = Customer.of(username, encode("kth@990303"), "케이", 23);
 
         customerDao.save(given);
-        customerDao.updateInfo(expected);
+        customerDao.updateInfo(expected.getUsername(), expected.getNickname(), expected.getAge());
 
         Customer actual = customerDao.findCustomerByUsername(username)
                 .orElseThrow(InvalidCustomerException::new);
