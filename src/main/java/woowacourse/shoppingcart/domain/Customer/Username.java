@@ -15,8 +15,8 @@ public class Username {
     }
 
     public Username(String value) {
-        this.value = value;
         validateUsername(value);
+        this.value = value;
     }
 
     public static Username empty() {

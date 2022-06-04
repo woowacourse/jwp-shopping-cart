@@ -15,8 +15,8 @@ public class Email {
     }
 
     public Email(String value) {
-        this.value = value;
         validateEmail(value);
+        this.value = value;
     }
 
     public static Email empty() {
