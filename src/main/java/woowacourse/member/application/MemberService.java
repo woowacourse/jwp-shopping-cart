@@ -80,18 +80,18 @@ public class MemberService {
     }
 
     private Member findMemberByEmail(String email) {
-        return memberDao.findMemberByEmail(email)
+        return memberDao.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("해당 이메일로 가입된 회원은 존재하지 않습니다."));
     }
 
     private void validateDuplicateEmail(String email) {
-        if (memberDao.isAlreadyExistEmail(email)) {
+        if (memberDao.existsByEmail(email)) {
             throw new DuplicateEmailException("중복되는 이메일이 존재합니다.");
         }
     }
 
     private Member findMemberById(long id) {
-        return memberDao.findMemberById(id)
+        return memberDao.findById(id)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
     }
 

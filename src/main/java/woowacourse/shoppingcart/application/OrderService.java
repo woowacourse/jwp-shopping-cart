@@ -37,7 +37,7 @@ public class OrderService {
     }
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String memberName) {
-        final Long memberId = memberDao.findIdByMemberName(memberName);
+        final Long memberId = memberDao.findIdByName(memberName);
         final Long ordersId = orderDao.addOrders(memberId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
@@ -58,7 +58,7 @@ public class OrderService {
     }
 
     private void validateOrderIdByMemberName(final String memberName, final Long orderId) {
-        final Long memberId = memberDao.findIdByMemberName(memberName);
+        final Long memberId = memberDao.findIdByName(memberName);
 
         if (!orderDao.isValidOrderId(memberId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
@@ -66,7 +66,7 @@ public class OrderService {
     }
 
     public List<Orders> findOrdersByMemberName(final String memberName) {
-        final Long memberId = memberDao.findIdByMemberName(memberName);
+        final Long memberId = memberDao.findIdByName(memberName);
         final List<Long> orderIds = orderDao.findOrderIdsByMemberId(memberId);
 
         return orderIds.stream()

@@ -28,27 +28,27 @@ class MemberDaoTest {
     @DisplayName("이메일로 회원을 찾아 반환한다.")
     @Test
     void findMemberByEmail() {
-        Optional<Member> result = memberDao.findMemberByEmail("ari@wooteco.com");
+        Optional<Member> result = memberDao.findByEmail("ari@wooteco.com");
         assertThat(result.get().getName()).isEqualTo("아리");
     }
 
     @DisplayName("존재하지 않는 이메일인 경우 빈 Optional을 반환한다.")
     @Test
     void findMemberByNotExistEmail() {
-        Optional<Member> result = memberDao.findMemberByEmail("pobi@wooteco.com");
+        Optional<Member> result = memberDao.findByEmail("pobi@wooteco.com");
         assertThat(result).isEmpty();
     }
 
     @Test
     @DisplayName("해당 이메일이 존재한다면 true를 반환한다.")
     void existMemberByEmailWhenTrue() {
-        assertThat(memberDao.isAlreadyExistEmail("ari@wooteco.com")).isTrue();
+        assertThat(memberDao.existsByEmail("ari@wooteco.com")).isTrue();
     }
 
     @Test
     @DisplayName("해당 이메일이 존재하지 않는다면 false를 반환한다.")
     void existMemberByEmailWhenFalse() {
-        assertThat(memberDao.isAlreadyExistEmail("woni@wooteco.com")).isFalse();
+        assertThat(memberDao.existsByEmail("woni@wooteco.com")).isFalse();
     }
 
     @DisplayName("회원을 저장한다.")
@@ -57,20 +57,20 @@ class MemberDaoTest {
         String email = "wooteco@naver.com";
         Member member = Member.withEncrypt(email, "wooteco", "Wooteco1!");
         memberDao.save(member);
-        assertThat(memberDao.isAlreadyExistEmail(email)).isTrue();
+        assertThat(memberDao.existsByEmail(email)).isTrue();
     }
 
     @DisplayName("id로 회원을 찾아 반환한다.")
     @Test
     void findMemberById() {
-        Optional<Member> result = memberDao.findMemberById(1L);
+        Optional<Member> result = memberDao.findById(1L);
         assertThat(result.get().getName()).isEqualTo("아리");
     }
 
     @DisplayName("존재하지 않는 id인 경우 빈 Optional을 반환한다.")
     @Test
     void findMemberByNotExistId() {
-        Optional<Member> result = memberDao.findMemberById(100L);
+        Optional<Member> result = memberDao.findById(100L);
         assertThat(result).isEmpty();
     }
 
@@ -79,7 +79,7 @@ class MemberDaoTest {
     void updateName() {
         memberDao.updateNameById(1L, "메아리");
 
-        Optional<Member> result = memberDao.findMemberById(1L);
+        Optional<Member> result = memberDao.findById(1L);
         assertThat(result.get().getName()).isEqualTo("메아리");
     }
 
@@ -88,7 +88,7 @@ class MemberDaoTest {
     void updatePassword() {
         memberDao.updatePasswordById(1L, "NewPassword!");
 
-        Optional<Member> result = memberDao.findMemberById(1L);
+        Optional<Member> result = memberDao.findById(1L);
         assertThat(result.get().getPassword()).isEqualTo("NewPassword!");
     }
 
@@ -96,7 +96,7 @@ class MemberDaoTest {
     @Test
     void deleteById() {
         memberDao.deleteById(1L);
-        Optional<Member> member = memberDao.findMemberById(1L);
+        Optional<Member> member = memberDao.findById(1L);
         assertThat(member).isEmpty();
     }
 }

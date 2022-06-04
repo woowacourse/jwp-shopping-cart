@@ -35,7 +35,7 @@ public class MemberDao {
                     resultSet.getString("password")
             );
 
-    public Optional<Member> findMemberByEmail(String email) {
+    public Optional<Member> findByEmail(String email) {
         try {
             String SQL = "SELECT id, email, name, password FROM member WHERE email = ?";
             Member member = jdbcTemplate.queryForObject(SQL, rowMapper, email);
@@ -45,7 +45,7 @@ public class MemberDao {
         }
     }
 
-    public boolean isAlreadyExistEmail(String email) {
+    public boolean existsByEmail(String email) {
         String SQL = "SELECT EXISTS (SELECT * FROM MEMBER WHERE email = ?)";
         return jdbcTemplate.queryForObject(SQL, Boolean.class, email);
     }
@@ -55,7 +55,7 @@ public class MemberDao {
         simpleJdbcInsert.execute(namedParameterSource);
     }
 
-    public Optional<Member> findMemberById(long id) {
+    public Optional<Member> findById(long id) {
         try {
             String SQL = "SELECT id, email, name, password FROM member WHERE id = ?";
             Member member = jdbcTemplate.queryForObject(SQL, rowMapper, id);
@@ -80,7 +80,7 @@ public class MemberDao {
         jdbcTemplate.update(SQL, id);
     }
 
-    public Long findIdByMemberName(final String userName) {
+    public Long findIdByName(final String userName) {
         try {
             final String query = "SELECT id FROM member WHERE name = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
