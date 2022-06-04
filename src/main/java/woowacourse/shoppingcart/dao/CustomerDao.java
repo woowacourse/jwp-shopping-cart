@@ -33,27 +33,27 @@ public class CustomerDao {
         }, keyHolder);
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByUserName(final UserName userName) {
         try {
             final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            return jdbcTemplate.queryForObject(query, Long.class, userName.value().toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }
 
-    public void deleteByName(String customerName) {
+    public void deleteByName(UserName customerName) {
         final String query = "DELETE FROM customer WHERE username = ?";
-        jdbcTemplate.update(query, customerName);
+        jdbcTemplate.update(query, customerName.value());
     }
 
-    public Customer findCustomerByName(String customerName) {
+    public Customer findCustomerByName(UserName customerName) {
         try {
             final String query = "SELECT id, password FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                     new Customer(
                             resultSet.getLong("id"),
-                            customerName,
+                            customerName.value(),
                             resultSet.getString("password")
                     ), customerName
             );
@@ -62,9 +62,9 @@ public class CustomerDao {
         }
     }
 
-    public void updateByName(String customerName, Customer customer) {
+    public void updateByName(UserName customerName, Customer customer) {
         final String query = "UPDATE customer SET password = ? WHERE username = ?";
-        jdbcTemplate.update(query, customer.getPassword().value(), customerName);
+        jdbcTemplate.update(query, customer.getPassword().value(), customerName.value());
     }
 
     public boolean existsCustomer(Customer customer) {

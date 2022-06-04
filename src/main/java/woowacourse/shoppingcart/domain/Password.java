@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.support.Encryptor;
+
 public class Password {
 
     private static final int STANDARD_PASSWORD_MIN_LENGTH = 8;
@@ -18,6 +20,10 @@ public class Password {
             return;
         }
         throw new IllegalArgumentException("패스워드는 영문 소문자, 숫자, 특수문자 8~16자리로 구성하여야 합니다.");
+    }
+
+    public String encrypt(Encryptor encryptor) {
+        return encryptor.encrypt(password);
     }
 
     public String value() {

@@ -18,10 +18,10 @@ import java.util.List;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<String> handleUnhandledException() {
-//        return ResponseEntity.internalServerError().body("Unhandled Exception");
-//    }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleUnhandledException() {
+        return ResponseEntity.internalServerError().body("Unhandled Exception");
+    }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handle() {
@@ -50,6 +50,7 @@ public class ControllerAdvice {
             InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
+            NoExistUserException.class
     })
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
