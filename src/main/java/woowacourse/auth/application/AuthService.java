@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.common.exception.UnauthorizedException;
@@ -11,6 +12,7 @@ import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
     private static final String LOGIN_FAILED_ERROR = "로그인이 불가능합니다.";

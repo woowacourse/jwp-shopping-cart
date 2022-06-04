@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.common.exception.UnauthorizedException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.exception.DuplicatedCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@Transactional
 public class CustomerService {
 
     private static final String MISMATCHED_PASSWORD_ERROR = "비밀번호가 일치하지 않습니다.";
@@ -33,6 +34,7 @@ public class CustomerService {
         customerDao.save(CustomerEntity.from(customer));
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse findById(Long customerId) {
         CustomerEntity customerEntity = getCustomer(customerId);
         return CustomerResponse.from(customerEntity.toCustomer());
