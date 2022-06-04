@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.application.dto.AddressDto;
+
 public class CustomerResponse {
 
     private Long id;
@@ -9,7 +11,7 @@ public class CustomerResponse {
     private String gender;
     private String birthday;
     private String contact;
-    private AddressResponse fullAddress;
+    private AddressDto fullAddress;
     private boolean terms;
 
     public CustomerResponse() {
@@ -24,7 +26,7 @@ public class CustomerResponse {
         this.gender = gender;
         this.birthday = birthday;
         this.contact = contact;
-        this.fullAddress = new AddressResponse(address, detailAddress, zoneCode);
+        this.fullAddress = new AddressDto(address, detailAddress, zoneCode);
         this.terms = true;
     }
 
@@ -35,38 +37,6 @@ public class CustomerResponse {
                 request.getFullAddress().getDetailAddress(), request.getFullAddress().getZoneCode());
     }
 
-    public static class AddressResponse {
-
-        private String address;
-        private String detailAddress;
-        private String zoneCode;
-
-        public AddressResponse() {
-        }
-
-        public AddressResponse(String address, String detailAddress, String zoneCode) {
-            this.address = address;
-            this.detailAddress = detailAddress;
-            this.zoneCode = zoneCode;
-        }
-
-        public static AddressResponse fromAddressRequest(final CustomerRequest.AddressRequest addressRequest) {
-            return new AddressResponse(addressRequest.getAddress(), addressRequest.getDetailAddress(),
-                    addressRequest.getZoneCode());
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public String getDetailAddress() {
-            return detailAddress;
-        }
-
-        public String getZoneCode() {
-            return zoneCode;
-        }
-    }
 
     public Long getId() {
         return id;
@@ -96,7 +66,7 @@ public class CustomerResponse {
         return contact;
     }
 
-    public AddressResponse getFullAddress() {
+    public AddressDto getFullAddress() {
         return fullAddress;
     }
 
