@@ -9,6 +9,20 @@
 
 ## API 명세
 
+**로컬에서 html 파일로 확인하기**
+
+1. 아래 명령어를 실행해서 서버를 띄우세요 ☁️
+```shell
+git clone https://github.com/nailseong/jwp-shopping-cart.git
+cd jwp-shopping-cart
+./gradlew bootJar
+java -jar ./build/libs/jwp-shopping-cart-0.0.1-SNAPSHOT.jar --spring.profiles.active=local
+```
+
+2. localhost에 접속해서 문서를 확인하세요 📄
+- [인증 관련 기능](http://localhost:8080/docs/auth.html)
+- [회원 관련 기능](http://localhost:8080/docs/customer.html)
+
 ### 회원가입
 
 - 요청
@@ -17,9 +31,9 @@
 POST /users
 
 {
-	email: "email",
-	password: "password",
-	nickname: "nickname"
+  email: "email",
+  password: "password",
+  nickname: "nickname"
 }
 ```
 
@@ -60,8 +74,8 @@ POST /users
 POST /login
 
 {
-	email: "email",
-	password: "password"
+  email: "email",
+  password: "password"
 }
 ```
 
@@ -107,8 +121,8 @@ PUT /users/me
 Authorization : accessToken
 
 {
-	nickname: "nickname",
-	password: "password"
+nickname: "nickname",
+password: "password"
 }
 ```
 
@@ -188,9 +202,11 @@ Authorization : accessToken
 ### 에러 코드
 
 **400 Bad Request**
+
 - 1000 : 회원정보 양식이 잘못됐을 때
 - 1001 : 이메일이 중복일 때
 - 1002 : 존재하지 않는 아이디 또는 잘못된 비밀번호로 로그인 시도
 
 **500 Internal Server Error**
+
 - 500 : 서버가 요청을 처리하지 못할 때
