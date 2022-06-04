@@ -27,13 +27,17 @@ public class AuthService {
     }
 
     public TokenResponse createToken(TokenRequest request) {
-        try {
-            String encodedPassword = passwordEncoder.encode(request.getPassword());
-            Customer loginCustomer = customerService.findByEmailAndPassword(request.getEmail(), encodedPassword);
-            String token = jwtTokenProvider.createToken(loginCustomer.getEmail());
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        Customer loginCustomer = fetchUser(request, encodedPassword);
+        String token = jwtTokenProvider.createToken(loginCustomer.getEmail());
 
-            return new TokenResponse(token, jwtTokenProvider.getValidityInMilliseconds(),
-                    new CustomerResponse(loginCustomer));
+        return new TokenResponse(token, jwtTokenProvider.getValidityInMilliseconds(),
+                new CustomerResponse(loginCustomer));
+    }
+
+    private Customer fetchUser(TokenRequest request, String encodedPassword) {
+        try {
+            return customerService.findByEmailAndPassword(request.getEmail(), encodedPassword);
         } catch (InvalidCustomerException exception) {
             throw new LoginFailException();
         }
