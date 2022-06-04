@@ -7,6 +7,8 @@ import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
+import woowacourse.shoppingcart.domain.Password;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,13 +23,14 @@ public class AuthService {
     }
 
     public SignInResponse signIn(SignInRequest signInRequest) {
-        Customer customer = customerDao.findByEmail(signInRequest.getEmail());
-        customer.validatePassword(signInRequest.getPassword());
+        Customer customer = customerDao.findByEmail(new Email(signInRequest.getEmail()));
+        Password password = new Password(signInRequest.getPassword());
+        customer.validatePassword(password);
 
         return new SignInResponse(
-                customer.getUsername(),
-                customer.getEmail(),
-                jwtTokenProvider.createToken(customer.getUsername())
+                customer.getUsername().getValue(),
+                customer.getEmail().getValue(),
+                jwtTokenProvider.createToken(customer.getUsername().getValue())
         );
     }
 }

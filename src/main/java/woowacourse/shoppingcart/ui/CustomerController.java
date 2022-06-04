@@ -42,7 +42,7 @@ public class CustomerController {
 
     @PatchMapping("/me")
     public ResponseEntity<Void> updateMe(@AuthenticationPrincipal String userNameByToken,
-                                                     @RequestBody @Valid UpdatePasswordRequest updatePasswordRequest) {
+                                         @RequestBody @Valid UpdatePasswordRequest updatePasswordRequest) {
         customerService.updateCustomer(userNameByToken, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }

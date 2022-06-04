@@ -12,10 +12,10 @@ public class SignUpResponse {
         this.email = email;
     }
 
-    public static SignUpResponse fromCustomer(Customer customer) {
+    public static SignUpResponse from(Customer customer) {
         return new SignUpResponse(
-                customer.getUsername(),
-                customer.getEmail()
+                customer.getUsername().getValue(),
+                customer.getEmail().getValue()
         );
     }
 

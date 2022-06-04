@@ -12,6 +12,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
+import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @JdbcTest
@@ -30,7 +33,7 @@ public class CustomerDaoTest {
     @DisplayName("회원을 저장할 수 있다.")
     void save() {
         // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
 
         // when
         Customer customer = customerDao.save(레넌);
@@ -43,39 +46,39 @@ public class CustomerDaoTest {
     @DisplayName("유저이름으로 회원 정보를 조회할 수 있다.")
     void findByUsername() {
         // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
         customerDao.save(레넌);
 
         // when
-        Customer foundCustomer = customerDao.findByUsername("레넌");
+        Customer foundCustomer = customerDao.findByUsername(new Username("레넌"));
 
         // then
-        assertThat(foundCustomer.getEmail()).isEqualTo("rennon@woowa.com");
+        assertThat(foundCustomer.getEmail().getValue()).isEqualTo("rennon@woowa.com");
     }
 
     @Test
     @DisplayName("유저이메일로 회원 정보를 조회할 수 있다.")
     void findByEmail() {
         // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
         customerDao.save(레넌);
 
         // when
-        Customer foundCustomer = customerDao.findByEmail("rennon@woowa.com");
+        Customer foundCustomer = customerDao.findByEmail(new Email("rennon@woowa.com"));
 
         // then
-        assertThat(foundCustomer.getEmail()).isEqualTo("rennon@woowa.com");
+        assertThat(foundCustomer.getEmail().getValue()).isEqualTo("rennon@woowa.com");
     }
 
     @Test
     @DisplayName("유저이름이 존재하는지 확인할 수 있다.")
     void existByUsername() {
         // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
         customerDao.save(레넌);
 
         // when
-        boolean result = customerDao.existByUsername("레넌");
+        boolean result = customerDao.existByUsername(new Username("레넌"));
 
         // then
         assertThat(result).isTrue();
@@ -85,11 +88,11 @@ public class CustomerDaoTest {
     @DisplayName("이메일이 존재하는지 확인할 수 있다.")
     void existByEmail() {
         // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
         customerDao.save(레넌);
 
         // when
-        boolean result = customerDao.existByEmail("rennon@woowa.com");
+        boolean result = customerDao.existByEmail(new Email("rennon@woowa.com"));
 
         // then
         assertThat(result).isTrue();
@@ -99,29 +102,29 @@ public class CustomerDaoTest {
     @DisplayName("비밀번호를 갱신할 수 있다.")
     void updatePassword() {
         // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
         Customer customer = customerDao.save(레넌);
 
         // when
-        customerDao.updatePassword(customer.getId(), "5678");
-        Customer foundCustomer = customerDao.findByUsername("레넌");
+        customerDao.updatePassword(customer.getId(), new Password("567890"));
+        Customer foundCustomer = customerDao.findByUsername(new Username("레넌"));
 
         // then
-        assertThat(foundCustomer.getPassword()).isEqualTo("5678");
+        assertThat(foundCustomer.getPassword().getValue()).isEqualTo("567890");
     }
 
     @Test
     @DisplayName("회원을 지울 수 있다.")
     void deleteByUsername() {
         // given
-        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "1234");
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
         customerDao.save(레넌);
 
         // when
-        customerDao.deleteByUsername("레넌");
+        customerDao.deleteByUsername(new Username("레넌"));
 
         // then
-        assertThatThrownBy(() -> customerDao.findByUsername("레넌"))
+        assertThatThrownBy(() -> customerDao.findByUsername(new Username("레넌")))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }

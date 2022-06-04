@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
@@ -34,5 +35,26 @@ public class Password {
         if (value.length() < 6) {
             throw new InvalidPasswordException("비밀번호는 6자 이상입니다.");
         }
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Password password = (Password) o;
+        return Objects.equals(value, password.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

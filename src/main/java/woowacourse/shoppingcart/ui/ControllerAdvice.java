@@ -48,7 +48,7 @@ public class ControllerAdvice {
             ConstraintViolationException.class,
     })
     public ResponseEntity handleInvalidRequest(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.badRequest().body(ShoppingCartErrorResponse.from(e.getMessage()));
     }
 
     @ExceptionHandler({

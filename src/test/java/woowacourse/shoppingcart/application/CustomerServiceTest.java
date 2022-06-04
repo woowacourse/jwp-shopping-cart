@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -31,12 +32,12 @@ public class CustomerServiceTest {
     private CustomerDao customerDao;
 
     @Test
-    @DisplayName("회원을 저장하고 회원 정보를 반환할 수 있다..")
+    @DisplayName("회원을 저장하고 회원 정보를 반환할 수 있다.")
     void addCustomer() {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "123456");
 
         // when
         SignUpResponse signUpResponse = customerService.addCustomer(signUpRequest);
@@ -54,13 +55,13 @@ public class CustomerServiceTest {
         // given
         String name1 = "greenlawn";
         String email1 = "green@woowa.com";
-        SignUpRequest signUpRequest1 = new SignUpRequest(name1, email1, "1234");
+        SignUpRequest signUpRequest1 = new SignUpRequest(name1, email1, "123456");
         customerService.addCustomer(signUpRequest1);
 
         // when & then
         String name2 = "greenlawn";
         String email2 = "rennon@woowa.com";
-        SignUpRequest signUpRequest2 = new SignUpRequest(name2, email2, "1234");
+        SignUpRequest signUpRequest2 = new SignUpRequest(name2, email2, "123456");
         assertThatThrownBy(() -> customerService.addCustomer(signUpRequest2))
                 .isInstanceOf(DuplicateUsernameException.class)
                 .hasMessage("회원이름이 중복되었습니다.");
@@ -72,25 +73,25 @@ public class CustomerServiceTest {
         // given
         String name1 = "greenlawn";
         String email1 = "green@woowa.com";
-        SignUpRequest signUpRequest1 = new SignUpRequest(name1, email1, "1234");
+        SignUpRequest signUpRequest1 = new SignUpRequest(name1, email1, "123456");
         customerService.addCustomer(signUpRequest1);
 
         // when & then
         String name2 = "rennon";
         String email2 = "green@woowa.com";
-        SignUpRequest signUpRequest2 = new SignUpRequest(name2, email2, "1234");
+        SignUpRequest signUpRequest2 = new SignUpRequest(name2, email2, "123456");
         assertThatThrownBy(() -> customerService.addCustomer(signUpRequest2))
                 .isInstanceOf(DuplicateEmailException.class)
                 .hasMessage("이메일이 중복되었습니다.");
     }
 
     @Test
-    @DisplayName("나의 정보를 반환할 수 있다.")
-    void findMe() {
+    @DisplayName("회원의 정보를 반환할 수 있다.")
+    void findCustomer() {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "123456");
         customerService.addCustomer(signUpRequest);
 
         // when
@@ -101,65 +102,65 @@ public class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("나의 정보를 수정할 수 있다.")
-    void updateMe() {
+    @DisplayName("회원의 정보를 수정할 수 있다.")
+    void updateCustomer() {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "123456");
         customerService.addCustomer(signUpRequest);
 
         // when
-        customerService.updateCustomer(name, new UpdatePasswordRequest("1234", "5678"));
-        Customer customer = customerDao.findByUsername(name);
+        customerService.updateCustomer(name, new UpdatePasswordRequest("123456", "567890"));
+        Customer customer = customerDao.findByUsername(new Username(name));
         // then
-        assertThat(customer.getPassword()).isEqualTo("5678");
+        assertThat(customer.getPassword().getValue()).isEqualTo("567890");
     }
 
     @Test
-    @DisplayName("비밀번호가 틀리면 나의 정보를 수정할 수 없다.")
-    void updateMeThrowException() {
+    @DisplayName("비밀번호가 틀리면 회원의 정보를 수정할 수 없다.")
+    void updateCustomerThrowException() {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "123456");
         customerService.addCustomer(signUpRequest);
 
         // when & then
         assertThatThrownBy(() ->
-                customerService.updateCustomer(name, new UpdatePasswordRequest("1235", "5678")))
+                customerService.updateCustomer(name, new UpdatePasswordRequest("123567", "567890")))
                 .isInstanceOf(InvalidPasswordException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
     }
 
     @Test
     @DisplayName("회원을 탈퇴할 수 있다.")
-    void deleteMe() {
+    void deleteCustomer() {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "123456");
         customerService.addCustomer(signUpRequest);
 
         // when
-        customerService.deleteCustomer(name, new DeleteCustomerRequest("1234"));
+        customerService.deleteCustomer(name, new DeleteCustomerRequest("123456"));
 
         // then
-        assertThatThrownBy(() -> customerDao.findByUsername(name))
+        assertThatThrownBy(() -> customerDao.findByUsername(new Username(name)))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
     @Test
     @DisplayName("비밀번호가 틀리면 회원을 탈퇴할 수 없다.")
-    void deleteMeThrowException() {
+    void deleteCustomerThrowException() {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "123456");
         customerService.addCustomer(signUpRequest);
 
         // when & then
-        assertThatThrownBy(() -> customerService.deleteCustomer(name, new DeleteCustomerRequest("1235")))
+        assertThatThrownBy(() -> customerService.deleteCustomer(name, new DeleteCustomerRequest("123567")))
                 .isInstanceOf(InvalidPasswordException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
 

@@ -12,10 +12,10 @@ public class CustomerTest {
     @DisplayName("비밀번호가 일치하는지 확인한다.")
     void validatePassword() {
         // given
-        Customer customer = new Customer(1L, "레넌", "rennon@woowa.com", "123456");
+        Customer customer = new Customer(1L, new Username("레넌"), new Email("rennon@woowa.com"), new Password("123456"));
 
         // when & then
-        assertThatCode(() -> customer.validatePassword("123456"))
+        assertThatCode(() -> customer.validatePassword(new Password("123456")))
                 .doesNotThrowAnyException();
     }
 
@@ -23,10 +23,10 @@ public class CustomerTest {
     @DisplayName("비밀번호가 일치하지 않으면 예외가 발생한다..")
     void validatePasswordThrowException() {
         // given
-        Customer customer = new Customer(1L, "레넌", "rennon@woowa.com", "123456");
+        Customer customer = new Customer(1L, new Username("레넌"), new Email("rennon@woowa.com"), new Password("123456"));
 
         // when & then
-        assertThatCode(() -> customer.validatePassword("12345"))
+        assertThatCode(() -> customer.validatePassword(new Password("1234567")))
                 .isInstanceOf(InvalidPasswordException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
     }

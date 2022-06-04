@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
 import woowacourse.shoppingcart.exception.InvalidUsernameException;
 
 public class Username {
@@ -22,5 +23,26 @@ public class Username {
         if (value.length() > 32) {
             throw new InvalidUsernameException("회원 이름은 32자 이하입니다.");
         }
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Username username = (Username) o;
+        return Objects.equals(value, username.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

@@ -5,22 +5,26 @@ import woowacourse.shoppingcart.exception.InvalidPasswordException;
 public class Customer {
 
     private final Long id;
-    private final String username;
-    private final String email;
-    private final String password;
+    private final Username username;
+    private final Email email;
+    private final Password password;
 
-    public Customer(Long id, String username, String email, String password) {
+    public Customer(Long id, Username username, Email email, Password password) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    public Customer(String username, String email, String password) {
+    public Customer(Username username, Email email, Password password) {
         this(null, username, email, password);
     }
 
-    public void validatePassword(String password) {
+    public Customer(String username, String email, String password) {
+        this(null, new Username(username), new Email(email), new Password(password));
+    }
+
+    public void validatePassword(Password password) {
         if (!this.password.equals(password)) {
             throw new InvalidPasswordException();
         }
@@ -30,15 +34,15 @@ public class Customer {
         return id;
     }
 
-    public String getUsername() {
+    public Username getUsername() {
         return username;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public String getPassword() {
+    public Password getPassword() {
         return password;
     }
 }
