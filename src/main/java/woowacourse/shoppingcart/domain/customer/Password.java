@@ -4,8 +4,8 @@ import woowacourse.shoppingcart.support.Encryptor;
 
 public class Password {
 
-    private static final int STANDARD_PASSWORD_MIN_LENGTH = 8;
-    private static final int STANDARD_PASSWORD_MAX_LENGTH = 16;
+    private static final int PASSWORD_MIN_LENGTH = 8;
+    private static final int PASSWORD_MAX_LENGTH = 16;
 
     private final String password;
 
@@ -32,7 +32,7 @@ public class Password {
     }
 
     private boolean isLengthRange() {
-        return password.length() >= STANDARD_PASSWORD_MIN_LENGTH && password.length() <= STANDARD_PASSWORD_MAX_LENGTH;
+        return password.length() >= PASSWORD_MIN_LENGTH && password.length() <= PASSWORD_MAX_LENGTH;
     }
 
     private boolean isContainsLetter() {

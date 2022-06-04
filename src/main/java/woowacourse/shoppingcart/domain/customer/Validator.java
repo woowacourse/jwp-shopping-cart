@@ -2,8 +2,13 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.OptionalInt;
 
-public class Validator {
-    public static boolean isContainsNumber(String text) {
+class Validator {
+
+    private Validator() {
+
+    }
+
+    static boolean isContainsNumber(String text) {
         OptionalInt result = text.chars()
                 .filter(Character::isDigit)
                 .findAny();
@@ -11,7 +16,7 @@ public class Validator {
         return result.isPresent();
     }
 
-    public static boolean isContainsUpperCase(String text) {
+    static boolean isContainsUpperCase(String text) {
         OptionalInt result = text.chars()
                 .filter(ch -> Character.isAlphabetic(ch) && Character.isUpperCase(ch))
                 .findAny();
@@ -19,7 +24,7 @@ public class Validator {
         return result.isPresent();
     }
 
-    public static boolean isContainsLowerCase(String text) {
+    static boolean isContainsLowerCase(String text) {
         OptionalInt result = text.chars()
                 .filter(ch -> Character.isAlphabetic(ch) && Character.isLowerCase(ch))
                 .findAny();
@@ -27,7 +32,7 @@ public class Validator {
         return result.isPresent();
     }
 
-    public static boolean isContainsSpecialCase(String text) {
+    static boolean isContainsSpecialCase(String text) {
         String special = "!@#$%^&*-_";
         OptionalInt result = text.chars()
                 .filter(ch -> special.indexOf(ch) != -1)
@@ -35,4 +40,17 @@ public class Validator {
 
         return result.isPresent();
     }
+
+    static boolean isLowerCase(int ch) {
+        return Character.isAlphabetic(ch) && Character.isLowerCase(ch);
+    }
+
+    static boolean isDigit(int ch) {
+        return Character.isDigit(ch);
+    }
+
+    static boolean isUnderBar(int ch) {
+        return ch == '_';
+    }
+
 }
