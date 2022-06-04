@@ -4,7 +4,7 @@
 
 - [ ] `테스트`
     - [ ] 시나리오 작성 후 해당 시나리오를 따라 테스트 코드 작성
-    - [ ] Controller Test 추가
+    - [x] Controller Test 추가
 - [x] `Auth`
     - [x] `login` 이외의 기능이 인증, 인가에 관련된 부분인지 고민
       - `login` : Auth
