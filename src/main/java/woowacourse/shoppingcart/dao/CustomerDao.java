@@ -28,11 +28,15 @@ public class CustomerDao {
     }
 
     public Customer save(final Customer customer) {
-        final String sql = "insert into customer(email, name, phone, address, password) values (:email, :name, :phone, :address, :password)";
-        final SqlParameterSource query = new BeanPropertySqlParameterSource(customer);
+        final String sql = "insert into customer(email, name, phone, address, password) values (:email, :name, :phone, :address, :password)" +
+                " on duplicate key update email = :email, name = :name, phone = :phone, address = :address, password = :password";
         KeyHolder keyholder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, query, keyholder, new String[]{"id"});
-        return new Customer(Objects.requireNonNull(keyholder.getKey()).longValue(), customer);
+        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer), keyholder, new String[]{"id"});
+        try {
+            return new Customer(Objects.requireNonNull(keyholder.getKey()).longValue(), customer);
+        } catch (NullPointerException e) {
+            return customer;
+        }
     }
 
     public Long findIdByUserName(final String userName) {
@@ -61,11 +65,6 @@ public class CustomerDao {
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException("존재하지 않는 아이디 입니다.");
         }
-    }
-
-    public void edit(Customer customer) {
-        final String sql = "update customer set name = :name, phone = :phone, address = :address where id = :id";
-        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer));
     }
 
     public void delete(Long id) {

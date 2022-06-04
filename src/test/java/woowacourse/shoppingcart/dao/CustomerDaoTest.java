@@ -102,12 +102,11 @@ public class CustomerDaoTest {
     @Test
     void edit() {
         customerDao = new CustomerDao(jdbcTemplate);
-        final String sql = "insert into customer(email, name, phone, address, password) values (:email, :name, :phone, :address, :password)";
-        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer));
+        customerDao.save(customer);
 
         Customer update = new Customer(1L, EMAIL, "bunny", "010-9999-9999", "Seoul City", PASSWORD);
 
-        customerDao.edit(update);
+        customerDao.save(update);
         Customer customer = customerDao.findById(1L);
 
         assertAll(
@@ -117,6 +116,23 @@ public class CustomerDaoTest {
                 () -> assertThat(customer.getPhone()).isEqualTo("010-9999-9999"),
                 () -> assertThat(customer.getAddress()).isEqualTo("Seoul City")
         );
+    }
+
+    @DisplayName("Customer Id를 통해 Customer를 수정하고 새로운 Customer를 생성했을 때 customerId와 정보가 올바른지 확인한다.")
+    @Test
+    void saveTwoCustomers() {
+        customerDao = new CustomerDao(jdbcTemplate);
+        customerDao.save(customer);
+
+        Customer update = new Customer(1L, EMAIL, "bunny", "010-9999-9999", "Seoul City", PASSWORD);
+        customerDao.save(update);
+
+        Customer newCustomer = new Customer("new@naver.com", NAME, PHONE, ADDRESS, PASSWORD);
+        customerDao.save(newCustomer);
+
+        Customer result = customerDao.findByEmail("new@naver.com");
+
+        assertThat(result.getId()).isEqualTo(3L);
     }
 
     @DisplayName("Customer Id를 통해 Customer를 삭제한다.")

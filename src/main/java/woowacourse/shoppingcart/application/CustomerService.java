@@ -47,7 +47,7 @@ public class CustomerService {
         final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
         CustomerInformationValidator.validatePassword(customerRequest.getPassword());
         final Customer customer = new Customer(id, customerRequest.getEmail(), customerRequest.getName(), customerRequest.getPhone(), customerRequest.getAddress(), Encryptor.encrypt(customerRequest.getPassword()));
-        customerDao.edit(customer);
+        customerDao.save(customer);
     }
 
     public void delete(String token) {
