@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 @SuppressWarnings("NonAsciiCharacters")
 class NicknameTest {
 
-    @ParameterizedTest(name = "닉네임 : '{0}'")
+    @ParameterizedTest(name = "닉네임 : {0}")
     @ValueSource(strings = {" 호호 ", "호호 ", " 호호"})
     void 앞뒤_공백_제거_후_생성(String value) {
         Nickname nickname = new Nickname(value);

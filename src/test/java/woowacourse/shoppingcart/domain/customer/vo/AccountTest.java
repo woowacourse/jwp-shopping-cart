@@ -35,7 +35,7 @@ class AccountTest {
                 .withMessage(String.format("계정은 4 ~ 15자로 생성 가능합니다. 입력값: %s", value));
     }
 
-    @ParameterizedTest(name = "계정명 : '{0}'")
+    @ParameterizedTest(name = "계정명 : {0}")
     @ValueSource(strings = {" yeon06 ", "yeon06 ", " yeon06"})
     void 앞뒤_공백_제거_후_생성(String value) {
         Account account = new Account(value);
