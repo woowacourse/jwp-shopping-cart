@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ChangeGeneralInfoRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -37,30 +38,29 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> showCustomer(@AuthenticationPrincipal String email) {
-        CustomerResponse customerResponse = customerService.showCustomer(email);
-        return ResponseEntity.ok(customerResponse);
+    public ResponseEntity<CustomerResponse> showCustomer(@AuthenticationPrincipal Customer customer) {
+        return ResponseEntity.ok(new CustomerResponse(customer.getEmail(), customer.getUsername()));
     }
 
     @PatchMapping(value = "/me",params = "target=password")
-    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal String email, @RequestBody
+    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal Customer customer, @RequestBody
                                                            ChangePasswordRequest changePasswordRequest) {
-        customerService.changePassword(email, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+        customerService.changePassword(customer, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
         return ResponseEntity.ok().location(URI.create("/login")).build();
     }
 
     @PatchMapping(value = "/me",params = "target=generalInfo")
-    public ResponseEntity<CustomerResponse> changeGeneral(@AuthenticationPrincipal String email, @RequestBody
+    public ResponseEntity<CustomerResponse> changeGeneral(@AuthenticationPrincipal Customer customer, @RequestBody
             ChangeGeneralInfoRequest changeGeneralInfoRequest) {
         final CustomerResponse customerResponse = customerService
-                .changeGeneralInfo(email, changeGeneralInfoRequest.getUsername());
+                .changeGeneralInfo(customer, changeGeneralInfoRequest.getUsername());
         return ResponseEntity.ok().body(customerResponse);
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<CustomerResponse> delete(@AuthenticationPrincipal String email, @RequestBody
+    public ResponseEntity<CustomerResponse> delete(@AuthenticationPrincipal Customer customer, @RequestBody
             DeleteCustomerRequest deleteCustomerRequest) {
-        customerService.delete(email, deleteCustomerRequest.getPassword());
+        customerService.delete(customer, deleteCustomerRequest.getPassword());
         return ResponseEntity.noContent().location(URI.create("/")).build();
     }
 }

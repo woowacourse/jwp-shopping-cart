@@ -1,22 +1,21 @@
 package woowacourse.auth.config;
 
-import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
-import woowacourse.auth.application.AuthService;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
+import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
+import woowacourse.shoppingcart.dao.CustomerDao;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
-    private final AuthService authService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomerDao customerDao;
 
-    public AuthenticationPrincipalConfig(AuthService authService, JwtTokenProvider jwtTokenProvider) {
-        this.authService = authService;
+    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.customerDao = customerDao;
     }
 
     @Override
@@ -26,6 +25,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService, jwtTokenProvider);
+        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider, customerDao);
     }
 }

@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.dto.ErrorResponse;
@@ -14,11 +13,9 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 public class CustomerService {
 
     private final CustomerDao customerDao;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public CustomerService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
+    public CustomerService(CustomerDao customerDao) {
         this.customerDao = customerDao;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public void register(String email, String password, String username) {
@@ -29,14 +26,7 @@ public class CustomerService {
         customerDao.save(new Customer(email, encryptedPassword.getPassword(), username));
     }
 
-    public CustomerResponse showCustomer(String email) {
-        final Customer customer = customerDao.findByEmail(email);
-
-        return new CustomerResponse(customer.getEmail(), customer.getUsername());
-    }
-
-    public void changePassword(String email, String oldPassword, String newPassword) {
-        final Customer customer = customerDao.findByEmail(email);
+    public void changePassword(Customer customer, String oldPassword, String newPassword) {
         if(customer.isDifferentPassword(oldPassword)){
             throw new AuthException("기존 비밀번호와 맞지 않습니다.", ErrorResponse.INCORRECT_PASSWORD);
         }
@@ -44,15 +34,13 @@ public class CustomerService {
         customerDao.updatePassword(customer.getId(), encryptedPassword.getPassword());
     }
 
-    public CustomerResponse changeGeneralInfo(String email, String username) {
-        final Customer customer = customerDao.findByEmail(email);
+    public CustomerResponse changeGeneralInfo(Customer customer, String username) {
         customerDao.updateGeneralInfo(customer.getId(), username);
-        final Customer updatedCustomer = customerDao.findByEmail(email);
+        final Customer updatedCustomer = customerDao.findByEmail(customer.getEmail());
         return new CustomerResponse(updatedCustomer.getEmail(), updatedCustomer.getUsername());
     }
 
-    public void delete(String email, String password) {
-        final Customer customer = customerDao.findByEmail(email);
+    public void delete(Customer customer, String password) {
         if(customer.isDifferentPassword(password)){
             throw new AuthException("기존 비밀번호와 맞지 않습니다.", ErrorResponse.INCORRECT_PASSWORD);
         }
