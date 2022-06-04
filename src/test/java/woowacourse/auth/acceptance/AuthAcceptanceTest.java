@@ -25,7 +25,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         requestHttpPost("", customer, "/customers");
 
-        String accessToken = requestHttpPost("", tokenRequest, "/customers/login")
+        String accessToken = requestHttpPost("", tokenRequest, "/auth/login")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         // when
@@ -44,7 +44,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBadBearerAuth() {
         // when
-        ValidatableResponse response = requestHttpPost("", tokenRequest, "/customers/login");
+        ValidatableResponse response = requestHttpPost("", tokenRequest, "/auth/login");
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value());

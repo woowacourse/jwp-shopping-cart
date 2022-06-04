@@ -54,7 +54,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         requestHttpPost("", customer, "/customers");
 
-        String accessToken = requestHttpPost("", tokenRequest, "/customers/login")
+        String accessToken = requestHttpPost("", tokenRequest, "/auth/login")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         //when
@@ -78,7 +78,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         requestHttpPost("", customer, "/customers");
 
-        String accessToken = requestHttpPost("", tokenRequest, "/customers/login")
+        String accessToken = requestHttpPost("", tokenRequest, "/auth/login")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         //when
