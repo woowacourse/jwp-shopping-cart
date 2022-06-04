@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -149,6 +151,19 @@ class CustomerControllerTest extends ControllerTest {
                 .getContentAsString();
 
         assertThat(body).isEqualTo(expected);
+
+        // docs
+        perform.andDo(document("get-me",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                responseFields(
+                        fieldWithPath("email").type(STRING).description("이메일"),
+                        fieldWithPath("nickname").type(STRING).description("닉네임")
+                )
+        ));
     }
 
     @Test
@@ -164,6 +179,16 @@ class CustomerControllerTest extends ControllerTest {
         perform.andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("errorCode").value("998"))
                 .andExpect(jsonPath("message").value("유효하지 않은 토큰입니다."));
+
+        // docs
+        perform.andDo(document("get-me-empty-token",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                responseFields(
+                        fieldWithPath("errorCode").type(STRING).description("에러 코드"),
+                        fieldWithPath("message").type(STRING).description("에러 메시지")
+                )
+        ));
     }
 
     @Test
@@ -185,6 +210,19 @@ class CustomerControllerTest extends ControllerTest {
         perform.andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("errorCode").value("998"))
                 .andExpect(jsonPath("message").value("유효하지 않은 토큰입니다."));
+
+        // docs
+        perform.andDo(document("get-me-invalid-token",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                responseFields(
+                        fieldWithPath("errorCode").type(STRING).description("에러 코드"),
+                        fieldWithPath("message").type(STRING).description("에러 메시지")
+                )
+        ));
     }
 
     @Test

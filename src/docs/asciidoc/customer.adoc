@@ -56,3 +56,39 @@ include::{snippets}/create-user-fail-password2/http-request.adoc[]
 ===== HTTP response
 
 include::{snippets}/create-user-fail-password1/http-response.adoc[]
+
+[[resources-customer-get-me]]
+=== 회원 정보 조회
+
+[[resources-customer-get-me-success]]
+==== 성공
+
+===== HTTP request
+
+include::{snippets}/get-me/http-request.adoc[]
+
+===== HTTP response
+
+include::{snippets}/get-me/http-response.adoc[]
+
+[[resources-customer-get-me-empty-token]]
+==== 실패 - 토큰이 존재하지 않음
+
+===== HTTP request
+
+include::{snippets}/get-me-empty-token/http-request.adoc[]
+
+===== HTTP response
+
+include::{snippets}/get-me-empty-token/http-response.adoc[]
+
+[[resources-customer-get-me-invalid-token]]
+==== 실패 - 토큰이 유효하지 않음
+
+===== HTTP request
+
+include::{snippets}/get-me-invalid-token/http-request.adoc[]
+
+===== HTTP response
+
+include::{snippets}/get-me-invalid-token/http-response.adoc[]
