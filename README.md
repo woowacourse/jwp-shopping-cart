@@ -35,7 +35,16 @@
   - 예외 테스트 등은 컨트롤러 테스트로 옮겼습니다.
   - 컨트롤러 테스트에서는 DirtiesContext를 하지 않으면서 속도가 매우 빨라졌습니다.
 - [ ] interceptor가 ui 패키지에 포함되어 있다. ui보다 config에 있는게 맞지 않을까? ui에 포함하게된 기준이 무엇이었을까?
-- [ ] webpage를 보며 me라는 표현을 본적이 없지 않나요?
+- [x] webpage를 보며 me라는 표현을 본적이 없지 않나요?
+  - 팀에서 `/{username}`으로 내 username을 요청하는 것이 아닌 `/me`라는 URL을 사용한 이유는 나만의 정보를 조회, 수정, 탈퇴하게 하기 위해서 입니다.
+  - `/{username}`처럼 url요청을 받으면 나의 유효한 토큰으로 다른 username의 정보를 조회, 수정, 탈퇴하지 못하게 하려면 토큰의 정보와 `/{username}`의 정보를 비교하는 추가적인 작업이 필요합니다.
+  - 이런 가능성을 처음부터 없애기 위해 `/me`처럼 url을 구성했습니다.
+  - 그리고 `/me`라는 URL으로 정한 이유는 두 가지입니다.
+    1. [prolog](https://github.com/woowacourse/prolog)
+    2. [네이버 회원 프로필 조회 API](https://developers.naver.com/docs/login/profile/profile.md)
+  - jwt Bearer 토큰을 사용하는 API를 찾아보면서 위 두개를 찾았습니다.
+  - prolog는 아직 적용되지는 않았지만 현재 수정되고 있는 코드에서는 내 정보를 조회하거나 할 때 `/me`를 사용하고 있고 네이버 회원 프로필 조회 API에서도 `/me`를 사용하고 있었습니다. 
+  - 하지만 myInfo라는 표현이 조금 더 명확해보여서 팀원들과 이야기를 해보겠습니다.
 - [x] exception과 runtimeException을 같이 잡은 이유가 있을까요??
   - 둘의 차이점을 크게 생각하지 않고 내가 예상할 수 있는 예외를 제외한 모든 예외를 잡아야겠다는 생각으로 Exception을 핸들링하고 있던 것 같습니다.
   - 프로그램이 실행되면서 발생하는 예외만 잡는다면 runtimeException만 잡아도 될 것 같습니다.
