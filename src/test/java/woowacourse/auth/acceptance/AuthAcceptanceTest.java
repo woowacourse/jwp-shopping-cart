@@ -1,10 +1,10 @@
 package woowacourse.auth.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -13,10 +13,10 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
@@ -28,8 +28,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/customers")
-                .then().log().all()
-                .extract();
+                .then().log().all();
 
         String accessToken = RestAssured.given().log().all()
                 .body(new TokenRequest("email", "Pw123456!"))
@@ -38,68 +37,69 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .post("/customers/login")
                 .then().log().all()
                 .extract().as(TokenResponse.class).getAccessToken();
+
         // when
-        CustomerResponse customerResponse = RestAssured.given().log().all()
+        ValidatableResponse response = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/customers")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract().as(CustomerResponse.class);
-
-        //TODO : RestAssured status code 검증 위치 통일
+                .then().log().all();
 
         // then
-        assertThat(customerResponse).extracting("email", "name", "phone", "address")
-                .containsExactly("email", "name", "010-1234-5678", "address");
+        response.statusCode(HttpStatus.OK.value());
+        response.body(
+                "email", equalTo("email"),
+                "name", equalTo("name"),
+                "phone", equalTo("010-1234-5678"),
+                "address", equalTo("address"));
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
     @Test
     void myInfoWithBadBearerAuth() {
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        ValidatableResponse response = RestAssured.given().log().all()
                 .body(new TokenRequest("email", "Pw123456!"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/customers/login")
-                .then().log().all()
-                .extract();
+                .then().log().all();
+
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.body().asString()).isEqualTo("Email 또는 Password가 일치하지 않습니다.");
+        response.statusCode(HttpStatus.BAD_REQUEST.value());
+        response.body(containsString("Email 또는 Password가 일치하지 않습니다."));
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
-        String accessToken = "aaaaaaaaa";
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        String accessToken = "invalidToken";
+        ValidatableResponse response = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/customers")
-                .then().log().all()
-                .extract();
+                .then().log().all();
+
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-        assertThat(response.body().asString()).isEqualTo("유효하지 않거나 만료된 토큰입니다.");
+        response.statusCode(HttpStatus.UNAUTHORIZED.value());
+        response.body(containsString("유효하지 않거나 만료된 토큰입니다."));
     }
 
     @DisplayName("Bearer Auth 토큰 정보가 존재하지 않는 경우")
     @Test
     void myInfoWithNoBearerAuth() {
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        ValidatableResponse response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/customers")
-                .then().log().all()
-                .extract();
+                .then().log().all();
+
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-        assertThat(response.body().asString()).isEqualTo("토큰 정보가 존재하지 않습니다.");
+        response.statusCode(HttpStatus.UNAUTHORIZED.value());
+        response.body(containsString("토큰 정보가 존재하지 않습니다."));
     }
 }

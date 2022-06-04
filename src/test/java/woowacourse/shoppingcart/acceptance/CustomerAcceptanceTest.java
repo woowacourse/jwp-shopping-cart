@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -25,20 +24,20 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 "email", "Pw123456!", "name", "010-1234-5678", "address");
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        ValidatableResponse response = RestAssured.given().log().all()
                 .body(customer)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/customers")
-                .then().log().all()
-                .extract();
-        CustomerResponse customerResponse = response.jsonPath()
-                .getObject(".", CustomerResponse.class);
+                .then().log().all();
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(customerResponse).extracting("email", "name", "phone", "address")
-                .containsExactly("email", "name", "010-1234-5678", "address");
+        response.statusCode(HttpStatus.CREATED.value());
+        response.body(
+                "email", equalTo("email"),
+                "name", equalTo("name"),
+                "phone", equalTo("010-1234-5678"),
+                "address", equalTo("address"));
     }
 
     @DisplayName("이메일 중복 여부 조회")
@@ -47,23 +46,22 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         CustomerRequest customer = new CustomerRequest(
                 "email@naver.com", "Pw123456!", "name", "010-1234-5678", "address");
+
         RestAssured.given().log().all()
                 .body(customer)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/customers")
-                .then().log().all()
-                .extract();
+                .then().log().all();
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        ValidatableResponse response = RestAssured.given().log().all()
                 .when()
                 .get("/customers/email?email=email@naver.com")
-                .then().log().all()
-                .extract();
+                .then().log().all();
 
         // then
-        assertThat(response.body().asString()).isEqualTo("true");
+        response.body(containsString("true"));
     }
 
     @DisplayName("내 정보 수정")
@@ -72,13 +70,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         CustomerRequest customer = new CustomerRequest(
                 "email", "Pw123456!", "name", "010-1234-5678", "address");
+
         RestAssured.given().log().all()
                 .body(customer)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/customers")
-                .then().log().all()
-                .extract();
+                .then().log().all();
 
         String accessToken = RestAssured.given().log().all()
                 .body(new TokenRequest("email", "Pw123456!"))
@@ -87,6 +85,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .post("/customers/login")
                 .then().log().all()
                 .extract().as(TokenResponse.class).getAccessToken();
+
         //when
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
@@ -95,20 +94,22 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when()
                 .put("/customers")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
+                .statusCode(HttpStatus.OK.value());
+
         //then
-        CustomerResponse customerResponse = RestAssured.given().log().all()
+        ValidatableResponse response = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/customers")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract().as(CustomerResponse.class);
+                .then().log().all();
 
-        assertThat(customerResponse).extracting("email", "name", "phone", "address")
-                .containsExactly("email", "judy", "010-1111-2222", "address2");
+        response.statusCode(HttpStatus.OK.value());
+        response.body(
+                "email", equalTo("email"),
+                "name", equalTo("judy"),
+                "phone", equalTo("010-1111-2222"),
+                "address", equalTo("address2"));
     }
 
     @DisplayName("회원탈퇴")
@@ -122,8 +123,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/customers")
-                .then().log().all()
-                .extract();
+                .then().log().all();
 
         String accessToken = RestAssured.given().log().all()
                 .body(new TokenRequest("email", "Pw123456!"))
@@ -132,24 +132,24 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .post("/customers/login")
                 .then().log().all()
                 .extract().as(TokenResponse.class).getAccessToken();
+
         //when
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when()
                 .delete("/customers")
                 .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value())
-                .extract();
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
         //then
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
+        ValidatableResponse response = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/customers")
-                .then().log().all()
-                .extract();
+                .then().log().all();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.body().asString()).isEqualTo("존재하지 않는 유저입니다.");
+        response.statusCode(HttpStatus.BAD_REQUEST.value());
+        response.body(containsString("존재하지 않는 유저입니다."));
     }
 }
