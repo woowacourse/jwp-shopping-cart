@@ -14,7 +14,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
 import woowacourse.support.SimpleRestAssured;
 

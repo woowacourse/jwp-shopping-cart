@@ -13,7 +13,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.support.SimpleRestAssured;
 
 @DisplayName("인증 관련 기능")

@@ -9,7 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("classpath:schema.sql")
+@Sql(scripts = "classpath:schema-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @ActiveProfiles("test")
 public class AcceptanceTest {
 

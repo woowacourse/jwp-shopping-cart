@@ -5,19 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.support.test.ExtendedJdbcTest;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@ExtendedJdbcTest
 public class CustomerDaoTest {
 
     private final CustomerDao customerDao;
