@@ -8,8 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.OrderRequest;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,7 +23,7 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
+    private static final String USER = "pobi";
     private Long cartId1;
     private Long cartId2;
 

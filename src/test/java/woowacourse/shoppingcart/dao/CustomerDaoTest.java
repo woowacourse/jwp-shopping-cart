@@ -5,11 +5,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Account;
+import woowacourse.shoppingcart.domain.Customer;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -19,35 +24,104 @@ public class CustomerDaoTest {
 
     private final CustomerDao customerDao;
 
-    public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
+    public CustomerDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
-    void findIdByUserNameTest() {
-
+    @DisplayName("회원을 저장한다.")
+    void save() {
         // given
-        final String userName = "puterism";
-
+        final Customer customer = new Customer(new Account("hamcheeseburger"), "corinne", "Password123!", "address", "01012345678");
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
+        final Customer savedCustomer = customerDao.save(customer);
         // then
-        assertThat(customerId).isEqualTo(1L);
+        assertAll(
+                () -> assertThat(savedCustomer.getId()).isEqualTo(2L),
+                () -> assertThat(savedCustomer.getAccount().getValue()).isEqualTo("hamcheeseburger"),
+                () -> assertThat(savedCustomer.getNickname()).isEqualTo("corinne"),
+                () -> assertThat(savedCustomer.getPassword()).isEqualTo("Password123!"),
+                () -> assertThat(savedCustomer.getAddress()).isEqualTo("address"),
+                () -> assertThat(savedCustomer.getPhoneNumber()).isEqualTo("01012345678")
+        );
     }
 
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
+    @DisplayName("회원을 id로 조회한다.")
+    void findById() {
         // given
-        final String userName = "gwangyeol-iM";
+        final Optional<Customer> customer = customerDao.findById(1L);
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        assert (customer.isPresent());
 
         // then
-        assertThat(customerId).isEqualTo(16L);
+        final Customer foundCustomer = customer.get();
+        assertAll(
+                () -> assertThat(foundCustomer.getAccount().getValue()).isEqualTo("pobi"),
+                () -> assertThat(foundCustomer.getNickname()).isEqualTo("eden"),
+                () -> assertThat(foundCustomer.getPassword()).isEqualTo("Password123!"),
+                () -> assertThat(foundCustomer.getAddress()).isEqualTo("address"),
+                () -> assertThat(foundCustomer.getPhoneNumber()).isEqualTo("01012345678")
+        );
+    }
+
+    @Test
+    @DisplayName("회원을 account 로 조회한다.")
+    void findByAccount() {
+        // given
+        final Optional<Customer> customer = customerDao.findByAccount("pobi");
+
+        // when
+        assert (customer.isPresent());
+
+        // then
+        final Customer foundCustomer = customer.get();
+        assertAll(
+                () -> assertThat(foundCustomer.getAccount().getValue()).isEqualTo("pobi"),
+                () -> assertThat(foundCustomer.getNickname()).isEqualTo("eden"),
+                () -> assertThat(foundCustomer.getPassword()).isEqualTo("Password123!"),
+                () -> assertThat(foundCustomer.getAddress()).isEqualTo("address"),
+                () -> assertThat(foundCustomer.getPhoneNumber()).isEqualTo("01012345678")
+        );
+    }
+
+    @Test
+    @DisplayName("회원의 정보를 수정한다.")
+    void updateById() {
+        // given
+        String nickname = "eden22";
+        String address = "new address";
+        String phoneNumber = "01012341234";
+
+        // when
+        final int affectedRows = customerDao.update(1L, nickname, address, phoneNumber);
+        final Optional<Customer> customer = customerDao.findById(1L);
+
+        assert (customer.isPresent());
+
+        final Customer actual = customer.get();
+        // then
+        assertAll(
+                () -> assertThat(affectedRows).isEqualTo(1),
+                () -> assertThat(actual.getNickname()).isEqualTo("eden22"),
+                () -> assertThat(actual.getAddress()).isEqualTo("new address"),
+                () -> assertThat(actual.getPhoneNumber()).isEqualTo("01012341234")
+        );
+    }
+
+    @Test
+    @DisplayName("회원을 삭제한다.")
+    void deleteById() {
+        // given
+        long id = 1L;
+        // when
+        int affectedRows = customerDao.deleteById(id);
+        final Optional<Customer> deletedCustomer = customerDao.findById(id);
+        // then
+        assertAll(
+                () -> assertThat(affectedRows).isEqualTo(1),
+                () -> assertThat(deletedCustomer.isEmpty()).isTrue()
+        );
     }
 }

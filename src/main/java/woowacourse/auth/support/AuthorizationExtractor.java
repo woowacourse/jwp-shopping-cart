@@ -1,28 +1,36 @@
 package woowacourse.auth.support;
 
+import woowacourse.shoppingcart.exception.UnauthorizedException;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
 public class AuthorizationExtractor {
-    public static final String AUTHORIZATION = "Authorization";
-    public static String BEARER_TYPE = "Bearer";
-    public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
 
-    public static String extract(HttpServletRequest request) {
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER_TYPE = "Bearer";
+
+    public static String extract(final HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
-            String value = headers.nextElement();
-            if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
-                String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
-                request.setAttribute(ACCESS_TOKEN_TYPE, value.substring(0, BEARER_TYPE.length()).trim());
-                int commaIndex = authHeaderValue.indexOf(',');
-                if (commaIndex > 0) {
-                    authHeaderValue = authHeaderValue.substring(0, commaIndex);
-                }
+            String authHeaderValue = extractHeaderValue(headers.nextElement());
+            if (authHeaderValue != null) {
                 return authHeaderValue;
             }
         }
 
-        return null;
+        throw new UnauthorizedException();
+    }
+
+    private static String extractHeaderValue(String value) {
+        if (!isBearer(value)) {
+            return null;
+        }
+
+        return value.substring(BEARER_TYPE.length()).trim();
+    }
+
+    private static boolean isBearer(String value) {
+        return value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase());
     }
 }

@@ -1,12 +1,13 @@
 package woowacourse.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class TokenResponse {
-    private String accessToken;
 
-    public TokenResponse() {
-    }
+    private final String accessToken;
 
-    public TokenResponse(String accessToken) {
+    @JsonCreator
+    public TokenResponse(final String accessToken) {
         this.accessToken = accessToken;
     }
 

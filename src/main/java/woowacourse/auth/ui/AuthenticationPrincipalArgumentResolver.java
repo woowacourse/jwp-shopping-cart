@@ -6,24 +6,28 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.application.AuthService;
+import woowacourse.shoppingcart.exception.PayloadNotFoundException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
-    private AuthService authService;
 
-    public AuthenticationPrincipalArgumentResolver(AuthService authService) {
-        this.authService = authService;
-    }
+    private static final String TOKEN_PAYLOAD = "TOKEN_PAYLOAD";
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
     }
 
-    // parameter에 @AuthenticationPrincipal이 붙어있는 경우 동작
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        // TODO: 유효한 로그인인 경우 로그인한 사용자 객체를 만들어서 응답하기
-        return null;
+    public Long resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
+        final String payload = (String) webRequest.getAttribute(TOKEN_PAYLOAD, NativeWebRequest.SCOPE_REQUEST);
+        validatePayload(payload);
+
+        return Long.parseLong(payload);
+    }
+
+    private void validatePayload(final String payload) {
+        if (payload == null) {
+            throw new PayloadNotFoundException();
+        }
     }
 }
