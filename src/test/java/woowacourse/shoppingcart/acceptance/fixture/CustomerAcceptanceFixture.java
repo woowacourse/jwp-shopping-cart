@@ -7,14 +7,28 @@ import woowacourse.support.SimpleRestAssured;
 
 public class CustomerAcceptanceFixture {
 
+    private static final String DEFAULT_NAME = "username";
+
     public static ExtractableResponse<Response> saveCustomer() {
-        CustomerRequest request = new CustomerRequest(
+        CustomerRequest request = createRequest(null);
+        return SimpleRestAssured.post("/api/customers", request);
+    }
+
+    public static ExtractableResponse<Response> saveCustomer(String name) {
+        final CustomerRequest request = createRequest(name);
+        return SimpleRestAssured.post("/api/customers", request);
+    }
+
+    private static CustomerRequest createRequest(String name) {
+        if (name == null) {
+            name = DEFAULT_NAME;
+        }
+        return new CustomerRequest(
             "username",
             "password12!@",
             "example@example.com",
             "some-address",
             "010-0000-0001"
         );
-        return SimpleRestAssured.post("/api/customers", request);
     }
 }

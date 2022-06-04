@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.domain.Cart;
 
 @DisplayName("장바구니 관련 기능")
@@ -102,6 +103,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static Long 장바구니_아이템_추가되어_있음(String name, Long productId) {
+        CustomerAcceptanceFixture.saveCustomer(name);
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(name, productId);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
