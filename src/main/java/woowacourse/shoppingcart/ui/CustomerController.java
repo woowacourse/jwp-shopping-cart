@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.shoppingcart.dto.AuthorizedCustomer;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
@@ -32,21 +33,22 @@ public class CustomerController {
     }
 
     @GetMapping("/users/me")
-    public ResponseEntity<CustomerResponse> searchCustomerInformation(@AuthenticationPrincipal String username) {
-        return ResponseEntity.ok().body(customerService.findCustomerInformation(username));
+    public ResponseEntity<CustomerResponse> searchCustomerInformation(
+            @AuthenticationPrincipal AuthorizedCustomer authorizedCustomer) {
+        return ResponseEntity.ok().body(CustomerResponse.from(authorizedCustomer));
     }
 
     @PatchMapping("/users/me")
-    public ResponseEntity changePassword(@AuthenticationPrincipal String username,
+    public ResponseEntity changePassword(@AuthenticationPrincipal AuthorizedCustomer authorizedCustomer,
                                          @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
-        customerService.changePassword(username, changePasswordRequest);
+        customerService.changePassword(authorizedCustomer, changePasswordRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/users/me")
-    public ResponseEntity changePassword(@AuthenticationPrincipal String username,
+    public ResponseEntity changePassword(@AuthenticationPrincipal AuthorizedCustomer authorizedCustomer,
                                          @Valid @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
-        customerService.deleteUser(username, deleteCustomerRequest);
+        customerService.deleteUser(authorizedCustomer, deleteCustomerRequest);
         return ResponseEntity.noContent().build();
     }
 }

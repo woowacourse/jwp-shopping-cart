@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.AuthorizedCustomer;
 import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.SignInResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -21,16 +22,25 @@ public class AuthService {
     }
 
     public SignInResponse signIn(SignInRequest signInRequest) {
-        String email = signInRequest.getEmail();
+        var email = signInRequest.getEmail();
+        var authorizedCustomer = customerDao.findCustomerByEmail(email);
+        var customer = convertCustomer(authorizedCustomer);
 
-        var customer = customerDao.findCustomerByEmail(email);
-        String username = customer.getUsername();
+        var username = customer.getUsername();
 
         validateSamePassword(signInRequest, customer);
 
-        String token = jwtTokenProvider.createToken(username);
+        var token = jwtTokenProvider.createToken(username);
 
         return new SignInResponse(username, email, token);
+    }
+
+    private Customer convertCustomer(AuthorizedCustomer authorizedCustomer) {
+        return new Customer(
+                authorizedCustomer.getUsername(),
+                authorizedCustomer.getEmail(),
+                authorizedCustomer.getPassword()
+        );
     }
 
     private void validateSamePassword(SignInRequest signInRequest, Customer customer) {

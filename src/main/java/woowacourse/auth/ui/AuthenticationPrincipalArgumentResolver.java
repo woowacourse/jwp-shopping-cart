@@ -9,12 +9,16 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.shoppingcart.dao.CustomerDao;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
+    private final CustomerDao customerDao;
     private AuthService authService;
 
-    public AuthenticationPrincipalArgumentResolver(AuthService authService) {
+
+    public AuthenticationPrincipalArgumentResolver(AuthService authService, CustomerDao customerDao) {
         this.authService = authService;
+        this.customerDao = customerDao;
     }
 
     @Override
@@ -27,7 +31,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         var httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
         var token = AuthorizationExtractor.extract(httpServletRequest);
-
-        return authService.decode(token);
+        var username = authService.decode(token);
+        return customerDao.findCustomerByUserName(username);
     }
 }

@@ -99,7 +99,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @ValueSource(strings = {"칙촉1234", "a b1234"})
     void 로그인시_비밀번호에_한글이_포함된_경우(String invalidPassword) {
         SignInRequest signInRequest = new SignInRequest(VALID_EMAIL, invalidPassword);
-
         var extract = createSignInResult(signInRequest, HttpStatus.BAD_REQUEST);
 
         assertThat(extract.body().jsonPath().getString("message"))

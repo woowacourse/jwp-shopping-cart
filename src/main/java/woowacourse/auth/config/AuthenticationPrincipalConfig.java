@@ -8,13 +8,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.ui.AuthInterceptor;
 import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
+import woowacourse.shoppingcart.dao.CustomerDao;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     private final AuthService authService;
+    private final CustomerDao customerDao;
 
-    public AuthenticationPrincipalConfig(AuthService authService) {
+    public AuthenticationPrincipalConfig(AuthService authService, CustomerDao customerDao) {
         this.authService = authService;
+        this.customerDao = customerDao;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService);
+        return new AuthenticationPrincipalArgumentResolver(authService, customerDao);
     }
 
     @Bean

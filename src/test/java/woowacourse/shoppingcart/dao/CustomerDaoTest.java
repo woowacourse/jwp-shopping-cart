@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @JdbcTest
@@ -32,11 +32,14 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Customer actual = customerDao.findCustomerByUserName(userName);
-        Customer expected = new Customer("puterism", "crew01@naver.com", "a12345");
+        final var actual = customerDao.findCustomerByUserName(userName);
 
         // then
-        assertThat(actual.equals(expected)).isTrue();
+        assertAll(
+                () -> assertThat(actual.getUsername()).isEqualTo("puterism"),
+                () -> assertThat(actual.getEmail()).isEqualTo("crew01@naver.com"),
+                () -> assertThat(actual.getPassword()).isEqualTo("a12345")
+        );
     }
 
     @Test
@@ -45,14 +48,14 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // then
-        assertThat(customerDao.isValidName(userName)).isFalse();
+        assertThat(customerDao.isExistName(userName)).isFalse();
     }
 
     @Test
     void 사용자의_이메일이_존재하지_않는_경우() {
         final String email = "me@google.com";
 
-        assertThat(customerDao.isValidEmail(email)).isFalse();
+        assertThat(customerDao.isExistEmail(email)).isFalse();
     }
 
     @Test
@@ -67,7 +70,7 @@ public class CustomerDaoTest {
         //then
         var actual = customerDao.findCustomerByUserName(name);
 
-        assertThat(actual.isSamePassword(newPassword)).isTrue();
+        assertThat(actual.getPassword()).isEqualTo(newPassword);
     }
 
     @Test
@@ -76,7 +79,7 @@ public class CustomerDaoTest {
 
         customerDao.deleteByName(name);
 
-        assertThat(customerDao.isValidName(name)).isFalse();
+        assertThat(customerDao.isExistName(name)).isFalse();
     }
 
     @Test
@@ -87,7 +90,7 @@ public class CustomerDaoTest {
 
         customerDao.saveCustomer(name, email, password);
 
-        assertThat(customerDao.isValidName("alpha")).isTrue();
+        assertThat(customerDao.isExistName("alpha")).isTrue();
     }
 
     @Test

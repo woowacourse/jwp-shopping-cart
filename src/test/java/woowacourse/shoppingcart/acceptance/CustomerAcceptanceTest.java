@@ -169,10 +169,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 유효한_토큰으로_정보를_조회하는_경우() {
-        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        var accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
 
-        CustomerResponse customerResponse = createCustomerInformation(accessToken, HttpStatus.OK).as(
-                CustomerResponse.class);
+        var customerResponse = createCustomerInformation(accessToken, HttpStatus.OK)
+                .as(CustomerResponse.class);
 
         assertAll(
                 () -> assertThat(customerResponse.getUsername()).isEqualTo(VALID_USERNAME),
