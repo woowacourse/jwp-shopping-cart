@@ -66,7 +66,6 @@ public class CustomerControllerTest {
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location", "/customers/login"))
                 .andExpect(jsonPath("id").exists());
-        ;
     }
 
     @DisplayName("회원 조회 성공 시 상태코드 200과 회원 정보를 반환한다.")
