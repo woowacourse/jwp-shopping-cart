@@ -103,3 +103,14 @@ include::{snippets}/delete-me/http-request.adoc[]
 ==== HTTP response
 
 include::{snippets}/delete-me/http-response.adoc[]
+
+[[resources-customer-update-me]]
+=== 회원 정보 변경
+
+==== HTTP request
+
+include::{snippets}/update-me/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/update-me/http-response.adoc[]

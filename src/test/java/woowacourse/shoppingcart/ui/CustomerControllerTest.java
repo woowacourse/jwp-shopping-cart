@@ -272,5 +272,18 @@ class CustomerControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isNoContent());
+
+        // docs
+        perform.andDo(document("update-me",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                requestFields(
+                        fieldWithPath("nickname").type(STRING).description("닉네임"),
+                        fieldWithPath("password").type(STRING).description("비밀번호")
+                )
+        ));
     }
 }
