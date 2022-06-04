@@ -63,16 +63,12 @@ public class LoginMemberInterceptor implements HandlerInterceptor {
 
         public static boolean isExcluded(HttpServletRequest request) {
             return Arrays.stream(values())
-                    .filter(isExcludedMethod(request))
-                    .anyMatch(isExcludedURI(request));
+                    .anyMatch(noAuthRequiredRequest(request));
         }
 
-        private static Predicate<ExcludeRule> isExcludedMethod(HttpServletRequest request) {
-            return rule -> rule.httpMethod.name().equals(request.getMethod());
-        }
-
-        private static Predicate<ExcludeRule> isExcludedURI(HttpServletRequest request) {
-            return rule -> Objects.equals(rule.requestURI, request.getRequestURI());
+        private static Predicate<ExcludeRule> noAuthRequiredRequest(final HttpServletRequest request) {
+            return rule -> Objects.equals(rule.httpMethod.name(), request.getMethod())
+                    && Objects.equals(rule.requestURI, request.getRequestURI());
         }
     }
 }
