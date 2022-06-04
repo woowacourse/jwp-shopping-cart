@@ -8,7 +8,8 @@ import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
-import woowacourse.member.domain.Password;
+import woowacourse.member.domain.password.NewPassword;
+import woowacourse.member.domain.password.Password;
 import woowacourse.member.exception.MemberNotFoundException;
 import woowacourse.member.exception.WrongPasswordException;
 
@@ -32,7 +33,7 @@ public class AuthService {
 
     public Long authenticate(LoginRequest request) {
         Member member = validateExistMember(memberDao.findMemberByEmail(request.getEmail()));
-        Password requestPassword = Password.withEncrypt(request.getPassword());
+        Password requestPassword = new NewPassword(request.getPassword());
         if (!member.isSamePassword(requestPassword)) {
             throw new WrongPasswordException("잘못된 비밀번호입니다.");
         }

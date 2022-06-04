@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.member.domain.Member;
-import woowacourse.member.domain.Password;
+import woowacourse.member.domain.password.ExistPassword;
 import woowacourse.member.exception.MemberNotFoundException;
 
 import javax.sql.DataSource;
@@ -63,7 +63,7 @@ public class MemberDao {
                     resultSet.getLong("id"),
                     resultSet.getString("email"),
                     resultSet.getString("name"),
-                    Password.withoutEncrypt(resultSet.getString("password"))
+                    new ExistPassword(resultSet.getString("password"))
             );
 
     public void updateName(long id, String name) {

@@ -2,10 +2,10 @@ package woowacourse.member.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.LoginRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
-import woowacourse.member.domain.Password;
+import woowacourse.member.domain.password.NewPassword;
+import woowacourse.member.domain.password.Password;
 import woowacourse.member.dto.*;
 import woowacourse.member.exception.*;
 
@@ -26,7 +26,7 @@ public class MemberService {
             throw new InvalidMemberEmailException("중복되는 이메일이 존재합니다.");
         }
 
-        Password password = Password.withEncrypt(request.getPassword());
+        Password password = new NewPassword(request.getPassword());
         Member member = new Member(request.getEmail(), request.getName(), password);
         memberDao.save(member);
     }
@@ -55,7 +55,7 @@ public class MemberService {
         Member member = validateExistMember(memberDao.findMemberById(id));
         validateUpdatePassword(request, member);
 
-        Password newPassword = Password.withEncrypt(request.getNewPassword());
+        Password newPassword = new NewPassword(request.getNewPassword());
         memberDao.updatePassword(id, newPassword.getValue());
     }
 
@@ -64,7 +64,7 @@ public class MemberService {
     }
 
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {
-        Password requestPassword = Password.withEncrypt(request.getOldPassword());
+        Password requestPassword = new NewPassword(request.getOldPassword());
         if (!member.isSamePassword(requestPassword)) {
             throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
         }
@@ -76,7 +76,7 @@ public class MemberService {
 
     public void withdraw(long id, WithdrawalRequest request) {
         Member member = validateExistMember(memberDao.findMemberById(id));
-        Password requestPassword = Password.withEncrypt(request.getPassword());
+        Password requestPassword = new NewPassword(request.getPassword());
         if (!member.isSamePassword(requestPassword)) {
             throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
         }

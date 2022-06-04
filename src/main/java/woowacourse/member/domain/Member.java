@@ -1,5 +1,6 @@
 package woowacourse.member.domain;
 
+import woowacourse.member.domain.password.Password;
 import woowacourse.member.exception.InvalidMemberEmailException;
 import woowacourse.member.exception.InvalidMemberNameException;
 
