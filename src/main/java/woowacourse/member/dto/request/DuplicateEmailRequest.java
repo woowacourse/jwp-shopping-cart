@@ -9,8 +9,7 @@ public class DuplicateEmailRequest {
     @Email(message = "올바르지 않은 형식의 이메일입니다.")
     private String email;
 
-    public DuplicateEmailRequest() {
-    }
+    private DuplicateEmailRequest(){}
 
     public DuplicateEmailRequest(String email) {
         this.email = email;

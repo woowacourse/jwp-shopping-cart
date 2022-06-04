@@ -51,11 +51,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @DisplayName("이메일이 중복되는 경우 400 Bad Request를 반환한다.")
     @Test
     void checkDuplicateEmailWithDuplicateEmail() {
-        SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
-
-        DuplicateEmailRequest duplicateEmailRequest = new DuplicateEmailRequest("pobi@wooteco.com");
-        RestAssuredConvenienceMethod.postRequest(duplicateEmailRequest, "/api/members/duplicate-email")
+        RestAssuredConvenienceMethod.getRequestWithoutToken("/api/members/duplicate-email?email=ari@wooteco.com")
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -65,8 +61,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
         RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
 
-        DuplicateEmailRequest duplicateEmailRequest = new DuplicateEmailRequest("woni@wooteco.com");
-        RestAssuredConvenienceMethod.postRequest(duplicateEmailRequest, "/api/members/duplicate-email")
+        RestAssuredConvenienceMethod.getRequestWithoutToken("/api/members/duplicate-email?email=tony@wooteco.com")
                 .statusCode(HttpStatus.OK.value());
     }
 

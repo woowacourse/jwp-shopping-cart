@@ -39,6 +39,7 @@ public class MemberService {
         memberDao.save(member);
     }
 
+    @Transactional(readOnly = true)
     public void checkDuplicateEmail(DuplicateEmailRequest request) {
         validateDuplicateEmail(request.getEmail());
     }

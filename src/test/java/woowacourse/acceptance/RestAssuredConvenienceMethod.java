@@ -25,6 +25,15 @@ public class RestAssuredConvenienceMethod {
                 .then().log().all();
     }
 
+    public static ValidatableResponse getRequestWithoutToken(String path) {
+        return RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get(path)
+                .then().log().all();
+    }
+
     public static ValidatableResponse deleteRequestWithToken(String accessToken, Object body, String path) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)

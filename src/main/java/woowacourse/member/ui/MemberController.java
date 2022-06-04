@@ -3,7 +3,6 @@ package woowacourse.member.ui;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.application.AuthService;
-import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.application.MemberService;
@@ -37,9 +36,9 @@ public class MemberController {
         memberService.signUp(request);
     }
 
-    @PostMapping("/members/duplicate-email")
+    @GetMapping("/members/duplicate-email")
     @ResponseStatus(HttpStatus.OK)
-    public void checkDuplicateEmail(@Valid @RequestBody DuplicateEmailRequest request) {
+    public void checkDuplicateEmail(@Valid @ModelAttribute DuplicateEmailRequest request) {
         memberService.checkDuplicateEmail(request);
     }
 

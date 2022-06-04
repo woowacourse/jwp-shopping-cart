@@ -103,21 +103,18 @@ class MemberControllerTest {
     @DisplayName("checkDuplicateEmail 메서드는")
     @Nested
     class CheckDuplicateEmailTest {
-        private final String uri = "/api/members/duplicate-email";
+        private final String uri = "/api/members/duplicate-email?email=";
 
-        @DisplayName("이메일메 Null 값, 빈 값을 허용하지 않는다.")
-        @ParameterizedTest
-        @NullAndEmptySource
-        void emptyEmail(String email) throws Exception {
-            DuplicateEmailRequest request = new DuplicateEmailRequest(email);
-            testPostBadRequest(uri, request, "이메일은 빈 값일 수 없습니다.");
+        @DisplayName("이메일에 Null 값, 빈 값을 허용하지 않는다.")
+        @Test
+        void emptyEmail() throws Exception {
+            testGetBadRequest(uri, "이메일은 빈 값일 수 없습니다.");
         }
 
         @DisplayName("올바르지 못한 형식의 이메일은 허용하지 않는다.")
         @Test
         void invalidEmailForm() throws Exception {
-            DuplicateEmailRequest request = new DuplicateEmailRequest("wooteco.com");
-            testPostBadRequest(uri, request, "올바르지 않은 형식의 이메일입니다.");
+            testGetBadRequest(uri + "woowacourse12naver.com", "올바르지 않은 형식의 이메일입니다.");
         }
     }
 
@@ -171,6 +168,12 @@ class MemberControllerTest {
             testDeleteBadRequest(uri, request, "비밀번호는 빈 값일 수 없습니다.");
         }
 
+    }
+
+    void testGetBadRequest(String uri, String errorMessage) throws Exception {
+        mockMvc.perform(get(uri))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString(errorMessage)));
     }
 
     void testPostBadRequest(String uri, Object request, String errorMessage) throws Exception {
