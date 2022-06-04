@@ -1,17 +1,19 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.로그인;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원가입;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원조회;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원탈퇴;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
@@ -23,127 +25,68 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void createToken() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
-        RestAssured
-                .given().log().all()
-                .body(signUpRequest)
-                .contentType(ContentType.JSON)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        회원가입(signUpRequest);
 
         // when
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
-        String token = RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
+        String token = 로그인(signInRequest)
+                .as(SignInResponse.class)
+                .getToken();
 
         // then
         assertThat(token).isNotBlank();
     }
 
-    @DisplayName("Bearer Auth 로그인 성공")
+    @DisplayName("Bearer Auth 로그인에 성공한다.")
     @Test
     void myInfoWithBearerAuth() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
-        RestAssured
-                .given().log().all()
-                .body(signUpRequest)
-                .contentType(ContentType.JSON)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        회원가입(signUpRequest);
 
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
-        String token = RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
+        String token = 로그인(signInRequest)
+                .as(SignInResponse.class)
+                .getToken();
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
-        CustomerResponse response = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/me")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
-        // then
-        // 내 정보가 조회된다
+        ExtractableResponse<Response> response = 회원조회(token);
 
-        assertThat(response.getEmail()).isEqualTo("rennon@woowa.com");
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
+    @DisplayName("Bearer Auth 로그인에 실패한다.")
     @Test
     void myInfoWithBadBearerAuth() {
         // given
-        // 회원이 등록되어 있고
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
-        RestAssured
-                .given().log().all()
-                .body(signUpRequest)
-                .contentType(ContentType.JSON)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        회원가입(signUpRequest);
 
-        // when & then
-        // 잘못된 id, password를 사용해 토큰을 요청하면
-        // 토큰 발급 요청이 거부된다
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1235");
-        RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+        // when
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "012345");
+        ExtractableResponse<Response> response = 로그인(signInRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @DisplayName("Bearer Auth 유효하지 않은 토큰으로 회원 조회를 할 수 없다.")
     @Test
     void myInfoWithWrongBearerAuth() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
-        RestAssured
-                .given().log().all()
-                .body(signUpRequest)
-                .contentType(ContentType.JSON)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        회원가입(signUpRequest);
 
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
-        RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+        로그인(signInRequest);
 
-        // when & then
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-        // 내 정보 조회 요청이 거부된다
+        // when
         String token = "dummy";
-        RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/me")
-                .then().log().all()
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+        ExtractableResponse<Response> response = 회원조회(token);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
@@ -151,40 +94,20 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithNotExistBearerAuth() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
-        RestAssured
-                .given().log().all()
-                .body(signUpRequest)
-                .contentType(ContentType.JSON)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        회원가입(signUpRequest);
 
         SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
-        String token = RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
+        String token = 로그인(signInRequest)
+                .as(SignInResponse.class)
+                .getToken();
 
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("123456");
-        RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .body(deleteCustomerRequest)
-                .contentType(ContentType.JSON)
-                .when().delete("/users/me")
-                .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+        회원탈퇴(deleteCustomerRequest, token);
 
-        // when & then
-        RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/me")
-                .then().log().all()
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+        // when
+        ExtractableResponse<Response> response = 회원조회(token);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }

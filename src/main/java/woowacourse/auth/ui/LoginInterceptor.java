@@ -2,12 +2,12 @@ package woowacourse.auth.ui;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 
-public class LoginInterceptor extends HandlerInterceptorAdapter {
+public class LoginInterceptor implements HandlerInterceptor {
 
     private final AuthService authService;
 
@@ -25,6 +25,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         authService.validateToken(token);
         authService.validateExistUser(jwtTokenProvider.getPayload(token));
 
-        return super.preHandle(request, response, handler);
+        return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 }
