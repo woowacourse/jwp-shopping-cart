@@ -3,8 +3,11 @@ package woowacourse.member.domain;
 import woowacourse.member.exception.InvalidMemberEmailException;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class Email {
+
+    private static final Pattern pattern = Pattern.compile("^(.+)@(.+)$");
 
     private final String value;
 
@@ -18,7 +21,7 @@ public class Email {
     }
 
     private void validateForm(String email) {
-        if (!email.contains("@")) {
+        if (!pattern.matcher(email).find()) {
             throw new InvalidMemberEmailException("올바르지 못한 이메일 형식입니다.");
         }
     }
