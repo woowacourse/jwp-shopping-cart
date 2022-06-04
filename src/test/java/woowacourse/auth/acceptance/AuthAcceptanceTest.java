@@ -12,6 +12,7 @@ import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @DisplayName("인증 관련 기능")
@@ -136,6 +137,48 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         // 내 정보 조회 요청이 거부된다
         String token = "dummy";
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/users/me")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 후 기존의 토큰을 보내 회원 조회를 할 수 없다.")
+    void myInfoWithNotExistBearerAuth() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        RestAssured
+                .given().log().all()
+                .body(signUpRequest)
+                .contentType(ContentType.JSON)
+                .when().post("/users")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
+        String token = RestAssured
+                .given().log().all()
+                .body(signInRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract().as(SignInResponse.class).getToken();
+
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("123456");
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .body(deleteCustomerRequest)
+                .contentType(ContentType.JSON)
+                .when().delete("/users/me")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        // when & then
         RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
