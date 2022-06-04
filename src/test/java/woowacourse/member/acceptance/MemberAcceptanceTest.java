@@ -2,6 +2,8 @@ package woowacourse.member.acceptance;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.HttpStatus;
 import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
@@ -21,19 +23,11 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("회원가입에 성공한 경우 201 Created가 반환된다.")
-    @Test
-    void signUpMemberWithNullName() {
-        SignUpRequest request = new SignUpRequest("woowacourse12@naver.com", null, "Woowacourse1!");
-
-        RestAssuredConvenienceMethod.postRequest(request, "/api/members")
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
     @DisplayName("회원가입에 실패한 경우 400 Bad Request를 반환한다.")
-    @Test
-    void signUpMemberFailed() {
-        SignUpRequest request = new SignUpRequest("woowacourse12@naver.com", "우테코", "");
+    @ParameterizedTest
+    @NullAndEmptySource
+    void signUpMemberWithNullName(String name) {
+        SignUpRequest request = new SignUpRequest("woowacourse12@naver.com", name, "Woowacourse1!");
 
         RestAssuredConvenienceMethod.postRequest(request, "/api/members")
                 .statusCode(HttpStatus.BAD_REQUEST.value());
