@@ -66,4 +66,3 @@ public class JwtTokenProvider implements TokenManager {
         }
     }
 }
-
