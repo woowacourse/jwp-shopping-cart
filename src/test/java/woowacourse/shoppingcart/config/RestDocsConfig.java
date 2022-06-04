@@ -1,4 +1,4 @@
-package woowacourse;
+package woowacourse.shoppingcart.config;
 
 import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfigurationCustomizer;
 import org.springframework.boot.test.context.TestConfiguration;

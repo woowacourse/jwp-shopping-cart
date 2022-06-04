@@ -64,11 +64,12 @@ include::{snippets}/customer-delete-me/http-response.adoc[]
 
 === 중복 이름 확인
 
-`POST /api/customers/duplication`
+`GET /api/customers/duplication`
 
 요청 HTTP
 
 include::{snippets}/customer-duplication-check-name/http-request.adoc[]
+include::{snippets}/customer-duplication-check-name/request-parameters.adoc[]
 
 성공 응답 HTTP
 

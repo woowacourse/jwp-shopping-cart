@@ -49,10 +49,8 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/duplication")
-    public ResponseEntity<DuplicateResponse> duplicateUserName(
-            @Valid @RequestBody CustomerRequest.UserNameOnly customerRequest) {
-        final DuplicateResponse response = customerService.isDuplicateUserName(customerRequest);
-        return ResponseEntity.ok(response);
+    @GetMapping("/duplication")
+    public ResponseEntity<DuplicateResponse> duplicateUserName(@Valid @RequestParam String userName) {
+        return ResponseEntity.ok(customerService.isDuplicateUserName(userName));
     }
 }

@@ -214,8 +214,7 @@ class CustomerServiceTest {
                 .willReturn(true);
 
         // when
-        CustomerRequest.UserNameOnly customerRequest = new UserNameOnly(userName);
-        final DuplicateResponse isDuplicateUserName = customerService.isDuplicateUserName(customerRequest);
+        final DuplicateResponse isDuplicateUserName = customerService.isDuplicateUserName(userName);
 
         // then
         assertAll(

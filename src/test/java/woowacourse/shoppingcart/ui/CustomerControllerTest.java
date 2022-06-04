@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.RestDocsConfig;
+import woowacourse.shoppingcart.config.RestDocsConfig;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
@@ -28,6 +28,8 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.responseH
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -148,21 +150,20 @@ class CustomerControllerTest {
         Customer customer = new Customer(1L, "giron", "paA@14sswordd");
 
         DuplicateResponse response = new DuplicateResponse(false);
-        CustomerRequest.UserNameOnly request = new CustomerRequest.UserNameOnly("giron");
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
         given(customerService.isDuplicateUserName(any())).willReturn(response);
 
-        ResultActions results = mvc.perform(post("/api/customers/duplication")
+        ResultActions results = mvc.perform(get("/api/customers/duplication")
+                .param("userName", "giron")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(request)));
+                .characterEncoding("UTF-8"));
 
         results.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("customer-duplication-check-name",
-                        requestFields(
-                                fieldWithPath("userName").type(JsonFieldType.STRING).description("유저 이름")
+                        requestParameters(
+                                parameterWithName("userName").description("중복검사 확인 할 유저 이름")
                         ),
                         responseFields(
                                 fieldWithPath("isDuplicate").type(JsonFieldType.BOOLEAN).description("중복된다면 true, 아니면 false")

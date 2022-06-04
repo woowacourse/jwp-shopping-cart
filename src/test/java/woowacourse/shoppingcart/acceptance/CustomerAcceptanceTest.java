@@ -128,15 +128,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void isDuplicatedUserName() {
         // given
-        회원가입을_한다("giron", rawBasicPassword);
+        final String userName = "giron";
+        회원가입을_한다(userName, rawBasicPassword);
 
         // when
-        CustomerRequest.UserNameOnly request = new UserNameOnly("giron");
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers/duplication")
+                .param("userName", userName)
+                .body(userName)
+                .when().get("/api/customers/duplication")
                 .then().log().all()
                 .extract();
 
