@@ -27,14 +27,6 @@ public class CustomerDao {
                     new Nickname(resultSet.getString("nickname")),
                     new Age(resultSet.getInt("age")));
 
-    /*static final RowMapper<CustomerEntity> ROW_MAPPER = (resultSet, rowNum) ->
-            new CustomerEntity(
-                    resultSet.getLong("id"),
-                    resultSet.getString("username"),
-                    resultSet.getString("password"),
-                    resultSet.getString("nickname"),
-                    resultSet.getInt("age"));*/
-
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public CustomerDao(final NamedParameterJdbcTemplate jdbcTemplate) {
