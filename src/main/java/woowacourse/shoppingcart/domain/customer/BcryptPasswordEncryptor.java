@@ -1,17 +1,11 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class BcryptPasswordEncryptor implements PasswordEncryptor {
 
-    private final PasswordEncoder encoder;
-
-    public BcryptPasswordEncryptor(PasswordEncoder encoder) {
-        this.encoder = encoder;
-    }
-
     @Override
     public String encrypt(String password) {
-        return encoder.encode(password);
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }

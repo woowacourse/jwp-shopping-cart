@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> saveResponse = CustomerAcceptanceFixture.saveCustomer();
 
         assertAll(
-            () -> assertThat(saveResponse.header("Location")).startsWith("/api/customers"),
-            () -> assertThat(saveResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+            () -> assertThat(saveResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+            () -> assertThat(saveResponse.header("Location")).startsWith("/api/customers")
         );
     }
 
@@ -41,12 +42,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         String token = "Bearer " + tokenProvider.createToken("username");
 
-        CustomerResponse customerResponse = SimpleRestAssured.toObject(
-            SimpleRestAssured.get("/api/customers/me", new Header("Authorization", token)),
-            CustomerResponse.class
+        final ExtractableResponse<Response> response =
+            SimpleRestAssured.get("/api/customers/me", new Header("Authorization", token));
+        CustomerResponse customerResponse = SimpleRestAssured.toObject(response, CustomerResponse.class);
+
+        Assertions.assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+            () -> assertThat(customerResponse.getName()).isEqualTo("username")
         );
 
-        assertThat(customerResponse.getName()).isEqualTo("username");
     }
 
     @DisplayName("존재하지 않는 회원을 조회하면 예외를 발생한다.")
@@ -55,8 +59,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String token = "Bearer " + tokenProvider.createToken("invalidUser");
 
         ExtractableResponse<Response> foundResponse =
-            SimpleRestAssured.get("/api/customers/me", new Header("Authorization", token)
-            );
+            SimpleRestAssured.get("/api/customers/me", new Header("Authorization", token));
 
         assertThat(foundResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }

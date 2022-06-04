@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -17,11 +16,9 @@ import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
 public class CustomerService {
 
     private final CustomerDao customerDao;
-    private final PasswordEncoder encoder;
 
-    public CustomerService(CustomerDao customerDao, PasswordEncoder encoder) {
+    public CustomerService(CustomerDao customerDao) {
         this.customerDao = customerDao;
-        this.encoder = encoder;
     }
 
     public Long createCustomer(CustomerRequest request) {
@@ -31,7 +28,7 @@ public class CustomerService {
             request.getEmail(),
             request.getAddress(),
             request.getPhoneNumber()
-        ).encryptPassword(new BcryptPasswordEncryptor(encoder));
+        ).encryptPassword(new BcryptPasswordEncryptor());
 
         return customerDao.save(customer)
             .orElseThrow(DuplicateCustomerException::new);

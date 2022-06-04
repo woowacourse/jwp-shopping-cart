@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import woowacourse.shoppingcart.domain.customer.BcryptPasswordEncryptor;
 import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
@@ -13,7 +12,7 @@ import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
 class PasswordEncryptorTest {
 
     private static final int ENCRYPTED_SIZE = 60;
-    private final PasswordEncryptor encryptor = new BcryptPasswordEncryptor(new BCryptPasswordEncoder());
+    private final PasswordEncryptor encryptor = new BcryptPasswordEncryptor();
 
     @Test
     @DisplayName("평문을 암호화한다.")

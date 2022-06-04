@@ -1,6 +1,5 @@
 package woowacourse.auth.application;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import woowacourse.auth.domain.BcryptPasswordMatcher;
@@ -16,19 +15,16 @@ public class AuthService {
 
     private final CustomerDao customerDao;
     private final JwtTokenProvider tokenProvider;
-    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(CustomerDao customerDao, JwtTokenProvider tokenProvider,
-        PasswordEncoder passwordEncoder) {
+    public AuthService(CustomerDao customerDao, JwtTokenProvider tokenProvider) {
         this.customerDao = customerDao;
         this.tokenProvider = tokenProvider;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public TokenResponse createToken(TokenRequest tokenRequest) {
         Customer customer = customerDao.findByName(tokenRequest.getName())
             .orElseThrow(AuthenticationFailureException::new);
-        if (!customer.isPasswordMatch(tokenRequest.getPassword(), new BcryptPasswordMatcher(passwordEncoder))) {
+        if (!customer.isPasswordMatch(tokenRequest.getPassword(), new BcryptPasswordMatcher())) {
             throw new AuthenticationFailureException();
         }
         return new TokenResponse(tokenProvider.createToken(customer.getName()));
