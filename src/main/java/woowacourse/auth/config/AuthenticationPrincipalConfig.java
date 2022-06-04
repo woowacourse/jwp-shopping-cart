@@ -10,7 +10,7 @@ import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
-    private JwtTokenProvider jwtTokenProvider;
+    final private JwtTokenProvider jwtTokenProvider;
 
     public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
