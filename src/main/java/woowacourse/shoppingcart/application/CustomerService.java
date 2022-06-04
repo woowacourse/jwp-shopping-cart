@@ -1,12 +1,13 @@
 package woowacourse.shoppingcart.application;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.exception.DuplicatedNameException;
 import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.PasswordEncrypter;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
 import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
@@ -18,17 +19,20 @@ import woowacourse.shoppingcart.dto.DuplicateResponse;
 public class CustomerService {
 
     private final CustomerDao customerDao;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncrypter passwordEncrypter;
 
-    public CustomerService(final CustomerDao customerDao, final PasswordEncoder passwordEncoder) {
+    public CustomerService(final CustomerDao customerDao, final PasswordEncrypter passwordEncrypter) {
         this.customerDao = customerDao;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordEncrypter = passwordEncrypter;
     }
 
     public Long signUp(UserNameAndPassword customerRequest) {
         validateDuplicateName(customerRequest.getUserName());
-        final String encodedPassword = passwordEncoder.encode(customerRequest.getPassword());
-        return customerDao.save(customerRequest.getUserName(), encodedPassword);
+
+        Password password = passwordEncrypter.encode(customerRequest.getPassword());
+        Customer customer = new Customer(customerRequest.getUserName(), password);
+
+        return customerDao.save(customer.getUserName(), customer.getPassword().getValue());
     }
 
     private void validateDuplicateName(String name) {

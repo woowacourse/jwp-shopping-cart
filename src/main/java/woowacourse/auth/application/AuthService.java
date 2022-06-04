@@ -1,6 +1,5 @@
 package woowacourse.auth.application;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.application.exception.InvalidTokenException;
 import woowacourse.auth.application.exception.NotMatchPasswordException;
@@ -10,19 +9,20 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.PasswordEncrypter;
 
 @Service
 public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncrypter passwordEncrypter;
     private final CustomerDao customerDao;
 
     public AuthService(final JwtTokenProvider jwtTokenProvider,
-                       final PasswordEncoder passwordEncoder,
+                       final PasswordEncrypter passwordEncrypter,
                        final CustomerDao customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordEncrypter = passwordEncrypter;
         this.customerDao = customerDao;
     }
 
@@ -48,7 +48,7 @@ public class AuthService {
     }
 
     private void validatePassword(final TokenRequest tokenRequest, final Customer customer) {
-        if (!passwordEncoder.matches(tokenRequest.getPassword(), customer.getPassword())) {
+        if (!passwordEncrypter.matches(tokenRequest.getPassword(), customer.getPassword())) {
             throw new NotMatchPasswordException();
         }
     }

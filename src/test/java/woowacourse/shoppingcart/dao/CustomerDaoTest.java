@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.application.exception.CannotDeleteException;
 import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -96,7 +97,7 @@ public class CustomerDaoTest {
         assertAll(
                 () -> assertThat(customer.getId()).isEqualTo(id),
                 () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
-                () -> assertThat(customer.getPassword()).isEqualTo(rawBasicPassword)
+                () -> assertThat(customer.getPassword().getValue()).isEqualTo(rawBasicPassword)
         );
     }
 
@@ -106,16 +107,16 @@ public class CustomerDaoTest {
         // given
         final Long id = 1L;
         final String userName = "puterism";
-        final String password = "87654321";
+        final Password password = new Password("876A@!54321");
 
         // when
-        final Customer customer = customerDao.update(id, userName, password);
+        final Customer customer = customerDao.update(id, userName, "876A@!54321");
 
         // then
         assertAll(
                 () -> assertThat(customer.getId()).isEqualTo(id),
                 () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
-                () -> assertThat(customer.getPassword()).isEqualTo("87654321")
+                () -> assertThat(customer.getPassword()).isEqualTo(password)
         );
     }
 
@@ -166,7 +167,7 @@ public class CustomerDaoTest {
         // then
         assertAll(
                 () -> assertThat(customer.getUserName()).isEqualTo(userName),
-                () -> assertThat(customer.getPassword()).isEqualTo(rawBasicPassword)
+                () -> assertThat(customer.getPassword().getValue()).isEqualTo(rawBasicPassword)
         );
 
     }

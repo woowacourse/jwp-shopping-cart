@@ -6,12 +6,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.shoppingcart.application.exception.CannotUpdateUserNameException;
 import woowacourse.shoppingcart.application.exception.DuplicatedNameException;
 import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.PasswordEncrypter;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -39,16 +40,17 @@ class CustomerServiceTest {
     private CustomerDao customerDao;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncrypter passwordEncrypter;
 
     @DisplayName("회원가입을 하고 id값을 반환한다.")
     @Test
     void signUp() {
         // given
         final String userName = "giron";
+        Password password = new Password(rawBasicPassword);
         given(customerDao.existsByUserName(userName)).willReturn(false);
-        given(passwordEncoder.encode(rawBasicPassword)).willReturn(encryptedBasicPassword);
-        given(customerDao.save(userName, encryptedBasicPassword)).willReturn(1L);
+        given(passwordEncrypter.encode(rawBasicPassword)).willReturn(password);
+        given(customerDao.save(userName, password.getValue())).willReturn(1L);
 
         // when
         final CustomerRequest.UserNameAndPassword request =
@@ -59,8 +61,8 @@ class CustomerServiceTest {
         assertAll(
                 () -> assertThat(id).isEqualTo(1L),
                 () -> verify(customerDao).existsByUserName(userName),
-                () -> verify(passwordEncoder).encode(rawBasicPassword),
-                () -> verify(customerDao).save(userName, encryptedBasicPassword)
+                () -> verify(passwordEncrypter).encode(rawBasicPassword),
+                () -> verify(customerDao).save(userName, password.getValue())
         );
     }
 

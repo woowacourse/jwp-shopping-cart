@@ -8,9 +8,17 @@ public class Customer {
 
     private final Long id;
     private final String userName;
-    private final String password;
+    private final Password password;
+
+    public Customer(final String userName, final Password password) {
+        this(null, userName, password);
+    }
 
     public Customer(final Long id, final String userName, final String password) {
+        this(id, userName, new Password(password));
+    }
+
+    public Customer(final Long id, final String userName, final Password password) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -30,7 +38,7 @@ public class Customer {
         return userName;
     }
 
-    public String getPassword() {
+    public Password getPassword() {
         return password;
     }
 
