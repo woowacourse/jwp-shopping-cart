@@ -20,11 +20,6 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<ErrorResponse> handle() {
-        return ResponseEntity.badRequest().body(ErrorResponse.from("존재하지 않는 데이터 요청입니다."));
-    }
-
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final BindingResult bindingResult) {
         return ResponseEntity.badRequest().body(ErrorResponse.from(bindingResult));
