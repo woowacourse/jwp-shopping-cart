@@ -7,15 +7,15 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
 
     private static final String ID_KEY = "id";
-    private final Key secretKey;
+    private final SecretKey secretKey;
     private final long validityInMilliseconds;
 
     public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String secretKey,
