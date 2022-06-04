@@ -1,11 +1,12 @@
 package woowacourse.shoppingcart.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import woowacourse.auth.exception.PasswordNotMatchException;
 
 class CustomerTest {
 
@@ -15,18 +16,27 @@ class CustomerTest {
     private static final String RAW_PASSWORD = "12345678";
     private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD);
 
-    @DisplayName("비밀번호가 일치하는지 확인한다.")
+    @DisplayName("비밀번호가 일치하지 않으면 예외가 발생한다.")
     @ParameterizedTest
-    @CsvSource(value = {"12345678:true", "1312321312323:false"}, delimiter = ':')
-    void isSamePassword(final String password, final boolean expected) {
+    @ValueSource(strings = {"12345677", "1312321312323"})
+    void checkPasswordMatch_incorrectPassword_throwsException(final String password) {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
 
-        // when
-        final boolean actual = customer.isSamePassword(password);
+        // when, then
+        assertThatThrownBy(() -> customer.checkPasswordMatch(password))
+                .isInstanceOf(PasswordNotMatchException.class);
+    }
 
-        // then
-        assertThat(actual).isEqualTo(expected);
+    @DisplayName("비밀번호가 일치하는지 확인한다.")
+    @Test
+    void checkPasswordMatch() {
+        // given
+        final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
+
+        // when, then
+        assertThatCode(() -> customer.checkPasswordMatch(RAW_PASSWORD))
+                .doesNotThrowAnyException();
     }
 
     @Test

@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.auth.exception.PasswordNotMatchException;
+
 public class Customer {
 
     private final Long id;
@@ -28,8 +30,10 @@ public class Customer {
         return this;
     }
 
-    public boolean isSamePassword(final String password) {
-        return this.password.isSamePassword(password);
+    public void checkPasswordMatch(final String password) {
+        if (!this.password.isSamePassword(password)) {
+            throw new PasswordNotMatchException();
+        }
     }
 
     public Long getId() {

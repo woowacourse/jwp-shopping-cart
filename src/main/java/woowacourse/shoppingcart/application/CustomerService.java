@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.application.dto.*;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -49,19 +48,13 @@ public class CustomerService {
 
     public void delete(final CustomerDeleteServiceRequest request) {
         final Customer customer = findCustomerById(request.getId());
-        validatePassword(customer, request.getPassword());
+        customer.checkPasswordMatch(request.getPassword());
         customerDao.deleteById(request.getId());
-    }
-
-    private void validatePassword(final Customer customer, final String password) {
-        if (!customer.isSamePassword(password)) {
-            throw new PasswordNotMatchException();
-        }
     }
 
     public void updatePassword(final CustomerPasswordUpdateServiceRequest request) {
         final Customer customer = findCustomerById(request.getId());
-        validatePassword(customer, request.getOldPassword());
+        customer.checkPasswordMatch(request.getOldPassword());
         final String newPassword = request.getNewPassword();
         final Customer updatedCustomer = customer.updatePassword(Password.fromRawValue(newPassword));
         customerDao.updateById(updatedCustomer);
