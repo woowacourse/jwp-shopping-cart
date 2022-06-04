@@ -9,14 +9,12 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.exception.DeleteException;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CustomerService {
-    
+
     private final CustomerDao customerDao;
 
     public CustomerService(CustomerDao customerDao) {
@@ -63,13 +61,9 @@ public class CustomerService {
     }
 
     public void delete(String email, String password) {
-        try {
-            final Customer customer = customerDao.findByEmail(email);
-            customer.checkPasswordIsSame(password);
+        final Customer customer = customerDao.findByEmail(email);
+        customer.checkPasswordIsSame(password);
 
-            customerDao.delete(customer.getId());
-        } catch (InvalidCustomerException e) {
-            throw new DeleteException();
-        }
+        customerDao.delete(customer.getId());
     }
 }

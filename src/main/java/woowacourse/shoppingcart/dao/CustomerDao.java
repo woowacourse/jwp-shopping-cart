@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.exception.DeleteException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -82,6 +83,10 @@ public class CustomerDao {
 
     public void delete(final Long id) {
         final String query = "DELETE FROM customer WHERE id = :id";
-        jdbcTemplate.update(query, Map.of("id", id));
+        int updatedCount = jdbcTemplate.update(query, Map.of("id", id));
+
+        if (updatedCount != 1) {
+            throw new DeleteException();
+        }
     }
 }
