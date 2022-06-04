@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
+
 public class Customer {
 
     private final Long id;
@@ -16,6 +18,12 @@ public class Customer {
 
     public Customer(String username, String email, String password) {
         this(null, username, email, password);
+    }
+
+    public void isValidPassword(String password) {
+        if (!this.password.equals(password)) {
+                throw new InvalidCustomerException("로그인 실패");
+        }
     }
 
     public Long getId() {

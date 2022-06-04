@@ -22,11 +22,8 @@ public class AuthService {
 
     @Transactional
     public SignInResponse signIn(SignInRequest signInRequest) {
-        if (!customerDao.isValidPasswordByEmail(signInRequest.getEmail(), signInRequest.getPassword())) {
-            throw new InvalidCustomerException("로그인 실패");
-        }
-
         Customer customer = customerDao.findByEmail(signInRequest.getEmail());
+        customer.isValidPassword(signInRequest.getPassword());
 
         return new SignInResponse(
                 customer.getUsername(),

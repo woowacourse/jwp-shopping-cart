@@ -36,9 +36,19 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("로그인에 실패한다.")
-    void signInFail() {
+    @DisplayName("로그인에 실패한다. - 유저가 존재하지 않는 경우")
+    void signInFailIfNotExistUser() {
         assertThatThrownBy(() -> authService.signIn(new SignInRequest("rennon@woowa.com", "1234")))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessageContaining("존재하지 않는 유저입니다.");
+    }
+
+    @Test
+    @DisplayName("로그인 실패 - 비밀번호가 맞지 않는 경우")
+    void signInFailIfWrongPassword() {
+        customerService.addCustomer(new SignUpRequest("레넌", "rennon@woowa.com", "1234"));
+
+        assertThatThrownBy(() -> authService.signIn(new SignInRequest("rennon@woowa.com", "1235")))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("로그인 실패");
     }
