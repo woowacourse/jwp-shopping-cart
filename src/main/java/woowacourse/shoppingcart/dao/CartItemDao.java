@@ -60,4 +60,24 @@ public class CartItemDao {
             throw new InvalidCartItemException();
         }
     }
+
+    public boolean existByCustomerIdAndProductId(Long customerId, Long productId) {
+        final String query = "SELECT EXISTS (SELECT id FROM cart_item where customer_id = ? and product_id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, customerId, productId));
+    }
+
+    public Long findIdByCustomerIdAndProductId(Long customerId, Long productId) {
+        final String query = "SELECT id FROM cart_item WHERE customer_id = ? and product_id = ?";
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getLong("customer_id"), customerId, productId);
+    }
+
+    public int findQuantityById(Long customerId) {
+        final String query = "SELECT product_quantity FROM cart_item WHERE customer_id = ?";
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getInt("product_quantity"), customerId);
+    }
+
+    public void updateProductQuantity(Long cartId, int quantity) {
+        final String query = "UPDATE cart_item SET product_quantity = ? WHERE id = ?";
+        jdbcTemplate.update(query, quantity, cartId);
+    }
 }

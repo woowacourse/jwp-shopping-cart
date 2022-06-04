@@ -27,8 +27,8 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public List<Cart> findCarts(final String userName) {
+        final List<Long> cartIds = findCartIdsByCustomerName(userName);
 
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
@@ -39,13 +39,13 @@ public class CartService {
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    private List<Long> findCartIdsByCustomerName(final String userName) {
+        final Long customerId = customerDao.findIdByUserName(userName);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long addCart(final String userName, final Long productId) {
+        final Long customerId = customerDao.findIdByUserName(userName);
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
@@ -53,8 +53,8 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
+    public void deleteCart(final String userName, final Long cartId) {
+        validateCustomerCart(cartId, userName);
         cartItemDao.deleteCartItem(cartId);
     }
 
@@ -64,5 +64,9 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    public void updateQuantity(Long cartId, int quantity) {
+        cartItemDao.updateProductQuantity(cartId, quantity);
     }
 }

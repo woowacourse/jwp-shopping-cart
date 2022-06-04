@@ -42,12 +42,12 @@ public class CustomerDaoTest {
     void findIdByUserNameTestIgnoreUpperLowerCase() {
 
         // given
-        final String userName = "gwangyeol-iM";
+        final String userName = "puTeriSm";
 
         // when
         final Long customerId = customerDao.findIdByUserName(userName);
 
         // then
-        assertThat(customerId).isEqualTo(16L);
+        assertThat(customerId).isEqualTo(1L);
     }
 }

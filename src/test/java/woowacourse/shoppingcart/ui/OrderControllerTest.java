@@ -9,17 +9,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.auth.application.AuthService;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.OrderRequest;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,6 +37,9 @@ public class OrderControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private AuthService authService;
+
     @MockBean
     private OrderService orderService;
 
@@ -47,24 +51,28 @@ public class OrderControllerTest {
         final int quantity = 5;
         final Long cartId2 = 1L;
         final int quantity2 = 5;
-        final String customerName = "pobi";
+        final String customerName = "puterism";
+        final String password = "1234";
         final List<OrderRequest> requestDtos =
                 Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(customerName)))
+        when(orderService.addOrder(any(), any()))
                 .thenReturn(expectedOrderId);
 
+        String accessToken = authService.createToken(new TokenRequest(customerName, password));
+
         // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(requestDtos))
-        ).andDo(print())
+        mockMvc.perform(post("/api/customers/me/orders")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(requestDtos))
+                ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
-                        "/api/" + customerName + "/orders/" + expectedOrderId));
+                        "/api/me/orders/" + expectedOrderId));
     }
 
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
@@ -72,17 +80,21 @@ public class OrderControllerTest {
     void findOrder() throws Exception {
 
         // given
-        final String customerName = "pobi";
+        final String customerName = "puterism";
+        final String password = "1234";
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
 
-        when(orderService.findOrderById(customerName, orderId))
+        when(orderService.findOrderById(any(), any()))
                 .thenReturn(expected);
 
+        String accessToken = authService.createToken(new TokenRequest(customerName, password));
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
-        ).andDo(print())
+        mockMvc.perform(get("/api/customers/me/orders/" + orderId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
                 .andExpect(jsonPath("orderDetails[0].productId").value(2L))
@@ -96,7 +108,8 @@ public class OrderControllerTest {
     @Test
     void findOrders() throws Exception {
         // given
-        final String customerName = "pobi";
+        final String customerName = "puterism";
+        final String password = "1234";
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
                         new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
@@ -104,12 +117,15 @@ public class OrderControllerTest {
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
-        when(orderService.findOrdersByCustomerName(customerName))
+        when(orderService.findOrders(any()))
                 .thenReturn(expected);
 
+        String accessToken = authService.createToken(new TokenRequest(customerName, password));
+
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
-        ).andDo(print())
+        mockMvc.perform(get("/api/customers/me/orders/")
+                        .header("Authorization", "Bearer " + accessToken)
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))

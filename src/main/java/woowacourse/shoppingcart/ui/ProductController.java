@@ -4,10 +4,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import woowacourse.auth.application.AuthorizationException;
+import woowacourse.auth.domain.LoginCustomer;
+import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.application.ProductService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 
@@ -22,8 +28,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
+    public ResponseEntity<List<ProductResponse>> products(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        return ResponseEntity.ok(productService.findProducts(loginCustomer));
     }
 
     @PostMapping
@@ -37,8 +43,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> product(@PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.findProductById(productId));
+    public ResponseEntity<ProductResponse> product(@AuthenticationPrincipal LoginCustomer loginCustomer, @PathVariable final Long productId) {
+        return ResponseEntity.ok(productService.findProductById(loginCustomer, productId));
     }
 
     @DeleteMapping("/{productId}")
