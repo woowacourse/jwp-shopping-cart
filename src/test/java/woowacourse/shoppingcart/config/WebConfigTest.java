@@ -20,11 +20,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
 import woowacourse.shoppingcart.ui.CustomerController;
+import woowacourse.shoppingcart.ui.ProductController;
 
-@WebMvcTest(CustomerController.class)
+@WebMvcTest({
+        ProductController.class,
+        CustomerController.class
+})
 class WebConfigTest {
+
+    @MockBean
+    private ProductService productService;
 
     @MockBean
     private CustomerService customerService;
@@ -62,11 +70,22 @@ class WebConfigTest {
         perform.andExpect(status().isUnauthorized());
     }
 
+    @ParameterizedTest(name = "로그인하지 않은 유저가 {0} {1} 요청을 하면 요청에 성공한다.")
+    @CsvSource(value = {"GET:/api/products", "GET:/api/products/1"}, delimiter = ':')
+    void interceptor_guestUser_success(final String httpMethod, final String url) throws Exception {
+        // when
+        final ResultActions perform = mockMvc.perform(request(HttpMethod.resolve(httpMethod), url)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andExpect(status().is2xxSuccessful());
+    }
+
     @Test
     @DisplayName("로그인하지 않은 OPTIONS 요청은 로그인이 필요한 경로여도 허용한다.")
     void interceptor_optionRequest_allow() throws Exception {
-        // given
-
         // when
         final ResultActions perform = mockMvc.perform(options("/users/me")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
