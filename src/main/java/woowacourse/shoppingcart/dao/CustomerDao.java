@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.PhoneNumber;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class CustomerDao {
                     rs.getString("nickname"),
                     rs.getString("password"),
                     rs.getString("address"),
-                    rs.getString("phone_number")
+                    new PhoneNumber(rs.getString("phone_number"))
             );
 
     public CustomerDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -46,7 +47,14 @@ public class CustomerDao {
         parameters.put("phone_number", customer.getPhoneNumber());
 
         final Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new Customer(number.longValue(), customer.getAccount(), customer.getNickname(), customer.getPassword(), customer.getAddress(), customer.getPhoneNumber());
+        return new Customer(
+                number.longValue(),
+                customer.getAccount(),
+                customer.getNickname(),
+                customer.getPassword(),
+                customer.getAddress(),
+                new PhoneNumber(customer.getPhoneNumber()
+                ));
     }
 
     public Optional<Customer> findByAccount(String account) {

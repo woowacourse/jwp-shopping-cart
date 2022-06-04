@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
 
 import java.util.Optional;
+import woowacourse.shoppingcart.domain.PhoneNumber;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -31,7 +32,8 @@ public class CustomerDaoTest {
     @DisplayName("회원을 저장한다.")
     void save() {
         // given
-        final Customer customer = new Customer("hamcheeseburger", "corinne", "Password123!", "address", "01012345678");
+        PhoneNumber phoneNumber = new PhoneNumber("01012345678");
+        final Customer customer = new Customer("hamcheeseburger", "corinne", "Password123!", "address", phoneNumber);
         // when
         final Customer savedCustomer = customerDao.save(customer);
         // then

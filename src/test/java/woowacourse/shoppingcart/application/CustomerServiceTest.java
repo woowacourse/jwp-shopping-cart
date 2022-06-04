@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.application;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import woowacourse.shoppingcart.domain.PhoneNumber;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberFormat;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
@@ -30,9 +32,17 @@ class CustomerServiceTest {
     @Mock
     private CustomerDao customerDao;
 
+    private Customer customer;
+
     public CustomerServiceTest() {
         MockitoAnnotations.openMocks(this);
         this.customerService = new CustomerService(customerDao, new FakePasswordEncoder());
+    }
+
+    @BeforeEach
+    void setUp() {
+        PhoneNumber phoneNumber = new PhoneNumber("01012345678");
+        this.customer = new Customer(1L, "hamcheeseburger", "corinne", "password123", "코린네", phoneNumber);
     }
 
     @Test
@@ -40,8 +50,7 @@ class CustomerServiceTest {
     void createCustomer() {
         // given
         given(customerDao.findByAccount(any(String.class))).willReturn(Optional.empty());
-        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "password123", "코린네", "01012345678");
-        given(customerDao.save(any(Customer.class))).willReturn(expected);
+        given(customerDao.save(any(Customer.class))).willReturn(customer);
 
         // when
         final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumberFormat("010", "1234", "5678"));
@@ -55,8 +64,7 @@ class CustomerServiceTest {
     @DisplayName("이미 존재하는 아이디로 회원을 생성하면 예외를 발생한다.")
     void thrownWhenExistAccount() {
         // given
-        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "password123", "코린네", "01012345678");
-        given(customerDao.findByAccount(any(String.class))).willReturn(Optional.of(expected));
+        given(customerDao.findByAccount(any(String.class))).willReturn(Optional.of(customer));
 
         // when
         final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumberFormat("010", "1234", "5678"));
@@ -71,8 +79,7 @@ class CustomerServiceTest {
     @DisplayName("사용자를 id로 조회한다.")
     void findById() {
         // given
-        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "password123", "코린네", "01012345678");
-        given(customerDao.findById(any(Long.class))).willReturn(Optional.of(expected));
+        given(customerDao.findById(any(Long.class))).willReturn(Optional.of(customer));
 
         // when
         final CustomerResponse customerResponse = customerService.getById(1L);
@@ -125,12 +132,11 @@ class CustomerServiceTest {
     @DisplayName("회원을 탈퇴한다.")
     void delete() {
         // given
-        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "Password123!", "코린네", "01012345678");
-        given(customerDao.findById(1L)).willReturn(Optional.of(expected));
+        given(customerDao.findById(1L)).willReturn(Optional.of(customer));
         given(customerDao.deleteById(1L)).willReturn(1);
 
         // when
-        final int affectedRows = customerService.delete(1L, new DeleteCustomerRequest("Password123!"));
+        final int affectedRows = customerService.delete(1L, new DeleteCustomerRequest("password123"));
         // then
         assertThat(affectedRows).isEqualTo(1);
     }
@@ -139,8 +145,7 @@ class CustomerServiceTest {
     @DisplayName("회원을 탈퇴할 때 비밀번호가 일치하지 않으면 예외를 발생한다.")
     void throwWhenPasswordNotMatch() {
         // given
-        final Customer expected = new Customer(1L, "hamcheeseburger", "corinne", "Password123!", "코린네", "01012345678");
-        given(customerDao.findById(1L)).willReturn(Optional.of(expected));
+        given(customerDao.findById(1L)).willReturn(Optional.of(customer));
 
         // when
 

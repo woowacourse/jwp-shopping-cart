@@ -9,6 +9,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.FakePasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.PhoneNumber;
 import woowacourse.shoppingcart.exception.LoginFailException;
 
 import java.util.Optional;
@@ -37,7 +38,8 @@ class AuthServiceTest {
     @DisplayName("로그인 정보를 확인하고 토큰을 발행한다.")
     void createToken() {
         // given
-        final Customer customer = new Customer(1L, "leo0842", "eden", "Password123!", "address", "01023456789");
+        PhoneNumber phoneNumber = new PhoneNumber("01023456789");
+        final Customer customer = new Customer(1L, "leo0842", "eden", "Password123!", "address", phoneNumber);
         given(customerDao.findByAccount("leo0842")).willReturn(Optional.of(customer));
         given(jwtTokenProvider.createToken(String.valueOf(1L))).willReturn("token");
 
@@ -66,7 +68,8 @@ class AuthServiceTest {
     @DisplayName("비밀번호가 일치하지 않으면 로그인 실패 예외를 반환한다.")
     void throwPasswordNotMatch() {
         // given
-        final Customer customer = new Customer(1L, "leo0842", "eden", "Password123!", "address", "01023456789");
+        PhoneNumber phoneNumber = new PhoneNumber("01023456789");
+        final Customer customer = new Customer(1L, "leo0842", "eden", "Password123!", "address", phoneNumber);
         given(customerDao.findByAccount("leo0842")).willReturn(Optional.of(customer));
 
         // when

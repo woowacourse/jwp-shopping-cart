@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.PhoneNumber;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
+import woowacourse.shoppingcart.dto.PhoneNumberFormat;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
@@ -39,13 +41,18 @@ public class CustomerService {
     }
 
     private Customer toCustomer(SignupRequest signupRequest) {
-        final String processedAccount = signupRequest.getAccount().replaceAll(EXCLUDE_NUMBER_AND_ALPHABET, "")
-                .toLowerCase(Locale.ROOT).trim();
+        final String processedAccount = removeSpecialCharacter(signupRequest);
+        PhoneNumberFormat phoneNumberFormat = signupRequest.getPhoneNumber();
         return new Customer(processedAccount,
                 signupRequest.getNickname(),
                 passwordEncoder.encode(signupRequest.getPassword()),
                 signupRequest.getAddress(),
-                signupRequest.getPhoneNumber().appendNumbers());
+                new PhoneNumber(phoneNumberFormat.appendNumbers()));
+    }
+
+    private String removeSpecialCharacter(SignupRequest signupRequest) {
+        return signupRequest.getAccount().replaceAll(EXCLUDE_NUMBER_AND_ALPHABET, "")
+                .toLowerCase(Locale.ROOT).trim();
     }
 
     @Transactional(readOnly = true)
