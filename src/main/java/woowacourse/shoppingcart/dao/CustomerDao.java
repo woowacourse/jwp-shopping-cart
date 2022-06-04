@@ -70,9 +70,9 @@ public class CustomerDao {
         }
     }
 
-    public void updatePassword(Customer customer) {
+    public void updatePassword(String updatePassword, String username) {
         final String sql = "UPDATE customer SET password = ? WHERE username = ?";
-        int updated = jdbcTemplate.update(sql, customer.getPassword(), customer.getUsername());
+        int updated = jdbcTemplate.update(sql, updatePassword, username);
         validateUpdated(updated);
     }
 

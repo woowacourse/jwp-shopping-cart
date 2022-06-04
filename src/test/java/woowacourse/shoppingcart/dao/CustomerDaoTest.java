@@ -81,7 +81,7 @@ public class CustomerDaoTest {
         final Customer expected = Customer.of(username, encode("kth@990303"), "김태현", 21);
 
         customerDao.save(given);
-        customerDao.updatePassword(expected);
+        customerDao.updatePassword(expected.getPassword(), username);
 
         Customer actual = customerDao.findCustomerByUsername(username)
                 .orElseThrow(InvalidCustomerException::new);

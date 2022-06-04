@@ -51,7 +51,7 @@ public class CustomerService {
     public void updatePassword(Customer customer, PasswordRequest passwordRequest) {
         EncodePassword encodePassword = passwordEncoder.encode(new RawPassword(passwordRequest.getNewPassword()));
         Customer updateCustomer = customer.updatePassword(encodePassword);
-        customerDao.updatePassword(updateCustomer);
+        customerDao.updatePassword(updateCustomer.getPassword(), customer.getUsername());
     }
 
     public void updateInfo(Customer customer, CustomerRequest customerRequest) {
