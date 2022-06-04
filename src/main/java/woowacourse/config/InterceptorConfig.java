@@ -17,7 +17,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor(jwtTokenProvider))
-                .order(1)
                 .addPathPatterns("/customers/me")
                 .excludePathPatterns("/css/**", "/*.ico", "/error");
     }
