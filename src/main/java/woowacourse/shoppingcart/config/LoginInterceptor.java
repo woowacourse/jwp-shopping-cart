@@ -4,18 +4,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedTokenException;
 import woowacourse.shoppingcart.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
-    private final CustomerService customerService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public LoginInterceptor(final CustomerService customerService, final JwtTokenProvider jwtTokenProvider) {
-        this.customerService = customerService;
+    public LoginInterceptor(final JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -26,13 +23,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        final String token = AuthorizationExtractor.extract(request);
-        if (token == null) {
-            throw new UnauthorizedTokenException();
-        }
-        validateToken(token);
-        checkExistCustomer(token);
-
+        validateToken(request);
         return true;
     }
 
@@ -40,18 +31,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         return HttpMethod.OPTIONS.matches(request.getMethod());
     }
 
-    private void validateToken(final String token) {
+    private void validateToken(final HttpServletRequest request) {
+        final String token = AuthorizationExtractor.extract(request);
         final boolean isValidToken = jwtTokenProvider.validateToken(token);
         if (isValidToken) {
-            return;
-        }
-        throw new UnauthorizedTokenException();
-    }
-
-    private void checkExistCustomer(String token) {
-        final String email = jwtTokenProvider.getPayload(token);
-        final boolean existEmail = customerService.isExistEmail(email);
-        if (existEmail) {
             return;
         }
         throw new UnauthorizedTokenException();

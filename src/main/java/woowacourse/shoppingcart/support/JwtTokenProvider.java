@@ -40,7 +40,7 @@ public class JwtTokenProvider {
             final Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
 
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (final JwtException | IllegalArgumentException e) {
+        } catch (final JwtException | IllegalArgumentException | NullPointerException e) {
             return false;
         }
     }

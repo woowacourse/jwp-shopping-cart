@@ -8,7 +8,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedTokenException;
 import woowacourse.shoppingcart.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
 import woowacourse.shoppingcart.support.Login;
@@ -33,12 +32,6 @@ public class LoginCustomerResolver implements HandlerMethodArgumentResolver {
                                     final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String token = AuthorizationExtractor.extract(request);
-
-        final boolean isValidToken = jwtTokenProvider.validateToken(token);
-        if (!isValidToken) {
-            throw new UnauthorizedTokenException();
-        }
-
         final String email = jwtTokenProvider.getPayload(token);
 
         return customerService.getByEmail(email);

@@ -55,6 +55,19 @@ class JwtTokenProviderTest {
     }
 
     @Test
+    @DisplayName("값이 null인 토큰을 검증하면 false를 반환한다.")
+    void validateToken_nullToken_falseReturned() {
+        // given
+        final String token = null;
+
+        // when
+        final boolean actual = jwtTokenProvider.validateToken(token);
+
+        // then
+        assertThat(actual).isFalse();
+    }
+
+    @Test
     @DisplayName("payload가 동일하고 생성 시점이 같지 않으면 다른 토큰이다.")
     void validateToken_invalidToken_falseReturned2() {
         // given
