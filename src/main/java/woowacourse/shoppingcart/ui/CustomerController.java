@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.ui.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.FindCustomerRequest;
-import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
+import woowacourse.shoppingcart.ui.dto.FindCustomerRequest;
+import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
 
 @RestController
 @RequestMapping("/api/customers")

@@ -14,7 +14,7 @@ import io.restassured.response.Response;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
+import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
 import woowacourse.support.SimpleRestAssured;
 
 @DisplayName("회원 관련 기능")

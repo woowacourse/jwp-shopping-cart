@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.acceptance.fixture;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.ui.dto.CustomerRequest;
 import woowacourse.support.SimpleRestAssured;
 
 public class CustomerAcceptanceFixture {

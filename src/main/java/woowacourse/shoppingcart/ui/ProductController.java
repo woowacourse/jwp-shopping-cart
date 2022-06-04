@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.ui.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.ui.dto.Request;
 
 @RestController
 @RequestMapping("/api/products")

@@ -1,11 +1,18 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.ui.dto;
+
+import javax.validation.constraints.NotEmpty;
 
 public class CustomerRequest {
 
+    @NotEmpty(message = "이름은 비어있을 수 없습니다.")
     private final String name;
+    @NotEmpty(message = "패스워드는 비어있을 수 없습니다.")
     private final String password;
+    @NotEmpty(message = "이메일은 비어있을 수 없습니다.")
     private final String email;
+    @NotEmpty(message = "주소는 비어있을 수 없습니다.")
     private final String address;
+    @NotEmpty(message = "전화번호는 비어있을 수 없습니다.")
     private final String phoneNumber;
 
     private CustomerRequest() {

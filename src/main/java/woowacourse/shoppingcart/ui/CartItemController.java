@@ -16,8 +16,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.ui.dto.ProductRequest;
+import woowacourse.shoppingcart.ui.dto.Request;
 
 @RestController
 @RequestMapping("/api/customers/{customerName}/carts")
