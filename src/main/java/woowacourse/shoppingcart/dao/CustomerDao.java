@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.UserName;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
@@ -78,8 +79,8 @@ public class CustomerDao {
         );
     }
 
-    public boolean existsByName(String name) {
+    public boolean existsByName(UserName userName) {
         final String query = "SELECT EXISTS (SELECT id FROM customer where username = ?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name));
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, userName.value()));
     }
 }
