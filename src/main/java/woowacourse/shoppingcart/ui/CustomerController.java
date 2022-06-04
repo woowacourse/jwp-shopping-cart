@@ -41,8 +41,8 @@ public class CustomerController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal String userNameByToken,
-                                                     @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+    public ResponseEntity<Void> updateMe(@AuthenticationPrincipal String userNameByToken,
+                                         @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         customerService.updateMe(userNameByToken, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }

@@ -128,7 +128,7 @@ public class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() ->
-                customerService.updateMe(name, new UpdatePasswordRequest("34561278", "56781234")))
+                customerService.updateMe(name, new UpdatePasswordRequest("1235", "56781234")))
                 .isInstanceOf(InvalidPasswordException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
     }

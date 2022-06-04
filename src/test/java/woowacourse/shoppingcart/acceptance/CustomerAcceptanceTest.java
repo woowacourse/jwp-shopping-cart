@@ -1,136 +1,61 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
-    @DisplayName("회원가입을 할 수 있다.")
+    @DisplayName("username, email, password로 회원가입을 하면 회원가입을 성공한다.")
     void addCustomer() {
-        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "12345678");
+        // given(username, email, password로)
+        String username = "alien";
+        String email = "alien@woowa.com";
+        SignUpRequest signUpRequest = new SignUpRequest(username, email, "12345678");
 
-        RestAssured
+        // when(회원가입을 하면)
+        ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
                 .body(signUpRequest)
                 .when().post("/users")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+                .extract();
+
+        // then(회원가입을 성공한다)
+        SignUpResponse signUpResponse = response.body().jsonPath().getObject(".", SignUpResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                () -> assertThat(signUpResponse.getUsername()).isEqualTo(username),
+                () -> assertThat(signUpResponse.getEmail()).isEqualTo(email)
+        );
     }
 
-    @Test
-    @DisplayName("중복된 username으로 회원가입을 하면 실패한다.")
-    void addCustomerDuplicateUsername() {
-        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "12345678");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
-
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @ParameterizedTest(name = "{displayName} : 길이 -> {arguments}")
-    @ValueSource(ints = {1, 32})
-    @DisplayName("username을 공백 제외 1 ~ 32자로 회원가입을 한다.")
-    void addCustomerValidLength(int length) {
-        SignUpRequest signUpRequest = new SignUpRequest("a".repeat(length), "alien@woowa.com", "12345678");
-
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
-    }
-
-    @ParameterizedTest(name = "{displayName} : 길이 -> {arguments}")
-    @ValueSource(ints = {0, 33})
-    @DisplayName("username을 공백 또는 33자 이상 길이로 회원가입을 하면 실패한다.")
-    void addCustomerInvalidLength(int length) {
-        SignUpRequest signUpRequest = new SignUpRequest("a".repeat(length), "alien@woowa.com", "12345678");
-
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Test
-    @DisplayName("잘못된 형식의 이메일로 회원가입할 경우 실패한다.")
-    void addCustomerInvalidEmail() {
-        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien", "12345678");
-
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @ParameterizedTest(name = "{displayName} : 길이 -> {arguments}")
-    @ValueSource(ints = {6, 255})
-    @DisplayName("비밀번호를 공백 제외 6 ~ 255자로 회원가입을 한다.")
-    void addCustomerValidPasswordLength(int length) {
-        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "1".repeat(length));
-
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
-    }
-
-    @ParameterizedTest(name = "{displayName} : 길이 -> {arguments}")
-    @ValueSource(ints = {5, 256})
-    @DisplayName("비밀번호를 공백 제외 6 ~ 255자가 아닌 길이로 회원가입을 하면 실패한다.")
-    void addCustomerInvalidPasswordLength(int length) {
-        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "1".repeat(length));
-
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @DisplayName("내 정보 조회")
+    @DisplayName("회원가입하고 로그인을 하고 내 정보를 조회하면 내 정보를 조회한다.")
     @Test
     void getMe() {
-        //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "12345678");
+        //given(회원가입하고 로그인을 하고)
+        String username = "rennon";
+        String email = "rennon@woowa.com";
+        String password = "12345678";
+        SignUpRequest signUpRequest = new SignUpRequest(username, email, password);
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -139,7 +64,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "12345678");
+        SignInRequest signInRequest = new SignInRequest(email, password);
         String token = RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -148,52 +73,33 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
-        //when
-        RestAssured
+        //when(발급 받은 토큰을 사용하여 내 정보를 조회하면)
+        ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/me")
-                .then().log().all().statusCode(HttpStatus.OK.value());
-    }
-
-    @DisplayName("토큰이 없으면 내 정보를 조회할 수 없다")
-    @Test
-    void getMeNoTokenThrowException() {
-        //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "12345678");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+                .extract();
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "12345678");
-        String token = RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
-
-        //when
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/me")
-                .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+        // then(내 정보를 조회한다.)
+        CustomerResponse customerResponse = response.body().jsonPath().getObject(".", CustomerResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(customerResponse.getUsername()).isEqualTo(username),
+                () -> assertThat(customerResponse.getEmail()).isEqualTo(email)
+        );
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("회원가입하고 로그인을 하고 새로운 비밀번호로 비밀번호를 수정하면 비밀번호를 수정한다.")
     @Test
     void updateMe() {
-        //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "12345678");
+        //given(회원가입하고 로그인을 하고)
+        String username = "rennon";
+        String email = "rennon@woowa.com";
+        String password = "12345678";
+        SignUpRequest signUpRequest = new SignUpRequest(username, email, password);
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -202,7 +108,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "12345678");
+        SignInRequest signInRequest = new SignInRequest(email, password);
         String token = RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -211,56 +117,31 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
-        //when
-        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("12345678", "56781234");
-        RestAssured
+        //when(발급 받은 토큰을 사용하여 새로운 비밀번호로 비밀번호를 수정하면)
+        String newPassword = "56781234";
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(password, newPassword);
+        ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
                 .body(updatePasswordRequest)
                 .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().patch("/users/me")
-                .then().log().all().statusCode(HttpStatus.OK.value());
-    }
-
-    @DisplayName("토큰이 없으면 내 정보를 수정할 수 없다")
-    @Test
-    void updateMeNoTokenThrowException() {
-        //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "12345678");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+                .extract();
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "12345678");
-        String token = RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
-
-        //when
-        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("12345678", "56781234");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(updatePasswordRequest)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/users/me")
-                .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+        // then(비밀번호를 수정한다.)
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
-        //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "12345678");
+        //given(회원가입하고 로그인을 하고)
+        String username = "rennon";
+        String email = "rennon@woowa.com";
+        String password = "12345678";
+        SignUpRequest signUpRequest = new SignUpRequest(username, email, password);
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -269,7 +150,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "12345678");
+        SignInRequest signInRequest = new SignInRequest(email, password);
         String token = RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -278,46 +159,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/login")
                 .then().log().all().extract().as(SignInResponse.class).getToken();
 
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("12345678");
-        RestAssured
+        //when(발급 받은 토큰을 사용하여 회원탈퇴를 하면)
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest(password);
+        ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
                 .body(deleteCustomerRequest)
                 .when().delete("/users/me")
                 .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
-    }
+                .extract();
 
-    @DisplayName("토큰이 없으면 내 정보를 탈퇴할 수 없다")
-    @Test
-    void deleteMeThrowException() {
-        //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "12345678");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(signUpRequest)
-                .when().post("/users")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
-
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "12345678");
-        RestAssured
-                .given().log().all()
-                .body(signInRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all().extract().as(SignInResponse.class).getToken();
-
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("12345678");
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(deleteCustomerRequest)
-                .when().delete("/users/me")
-                .then().log().all()
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+        //then(회원을 탈퇴한다.)
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }
