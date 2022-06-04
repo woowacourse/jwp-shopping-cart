@@ -10,17 +10,17 @@ public class Username {
 
     private final String value;
 
-    public Username(final String value) {
-        validateUsername(value);
+    private Username(final String value) {
         this.value = value;
     }
 
-    private Username() {
-        this.value = null;
+    public static Username valueOf(final String value) {
+        validateUsername(value);
+        return new Username(value);
     }
 
     public static Username empty() {
-        return new Username();
+        return new Username(null);
     }
 
     private static void validateUsername(final String username) {

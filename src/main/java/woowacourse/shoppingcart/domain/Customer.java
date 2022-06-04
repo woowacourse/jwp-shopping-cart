@@ -12,9 +12,9 @@ public class Customer {
 
     public Customer(final Long id, final String email, final String password, final String username) {
         this.id = id;
-        this.email = new Email(email);
+        this.email = Email.valueOf(email);
         this.password = password;
-        this.username = new Username(username);
+        this.username = Username.valueOf(username);
     }
 
     private Customer(final Long id, final Email email, final String password, final Username username) {
@@ -33,7 +33,7 @@ public class Customer {
     }
 
     public static Customer createWithoutEmailAndPassword(final Long id, final String username) {
-        return new Customer(id, Email.empty(), null, new Username(username));
+        return new Customer(id, Email.empty(), null, Username.valueOf(username));
     }
 
     public Long getId() {

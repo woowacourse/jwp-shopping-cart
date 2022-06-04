@@ -12,17 +12,17 @@ public class Email {
 
     private final String value;
 
-    public Email(final String value) {
-        validateEmail(value);
+    private Email(final String value) {
         this.value = value;
     }
 
-    private Email() {
-        this.value = null;
+    public static Email valueOf(final String value) {
+        validateEmail(value);
+        return new Email(value);
     }
 
     public static Email empty() {
-        return new Email();
+        return new Email(null);
     }
 
     private static void validateEmail(final String email) {

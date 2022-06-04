@@ -15,7 +15,7 @@ class EmailTest {
     @DisplayName("이메일 형식의 값 객체를 생성한다.")
     void create() {
         final String rawEmail = "younghwna960@gmail.com";
-        final Email email = new Email(rawEmail);
+        final Email email = Email.valueOf(rawEmail);
 
         assertThat(email.getValue()).isEqualTo(rawEmail);
     }
@@ -31,7 +31,7 @@ class EmailTest {
     @Test
     @DisplayName("이메일 형식이 아닌 형태로 객체를 생성하려 하면 예외가 발생한다.")
     void createWithNoEmailForm() {
-        assertThatThrownBy(() -> new Email("askjfhabsfafbnsalfbnf"))
+        assertThatThrownBy(() -> Email.valueOf("askjfhabsfafbnsalfbnf"))
                 .isInstanceOf(EmailValidationException.class)
                 .hasMessageContaining("이메일 형식을 지켜야합니다.");
     }
@@ -40,7 +40,7 @@ class EmailTest {
     @ValueSource(strings = {"a@a.com", "abcdeabcdeabcdeabcde@abcdeabcdeabcdeabcdeabcdea.com"})
     @DisplayName("이메일의 길이가 8미만 50초과일 경우 예외가 발생한다.")
     void createWithInvalidLength(final String rawEmail) {
-        assertThatThrownBy(() -> new Email(rawEmail))
+        assertThatThrownBy(() -> Email.valueOf(rawEmail))
                 .isInstanceOf(EmailValidationException.class)
                 .hasMessageContaining("이메일은 8자 이상 50자 이하여야합니다.");
     }

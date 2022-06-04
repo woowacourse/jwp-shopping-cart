@@ -23,7 +23,7 @@ class UsernameTest {
     @ValueSource(strings = {"aaaaaaaaaaa"})
     @DisplayName("닉네임의 길이가 1미만 10초과일 경우 예외가 발생한다.")
     void createWithInvalidLength(final String rawUsername) {
-        assertThatThrownBy(() -> new Username(rawUsername))
+        assertThatThrownBy(() -> Username.valueOf(rawUsername))
                 .isInstanceOf(UsernameValidationException.class)
                 .hasMessageContaining("닉네임은 1자 이상 10자 이하여야합니다.");
     }
