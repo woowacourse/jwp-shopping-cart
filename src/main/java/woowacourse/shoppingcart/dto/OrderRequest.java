@@ -4,6 +4,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
+
     @NotNull
     private final Long cartId;
     @Min(0)
