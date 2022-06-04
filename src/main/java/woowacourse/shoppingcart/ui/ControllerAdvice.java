@@ -26,13 +26,17 @@ import woowacourse.shoppingcart.exception.ResourceNotFoundException;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+    private static final String INVALID_DATA_ERROR_MESSAGE = "존재하지 않는 데이터 요청입니다.";
+    private static final String UNHANDLED_ERROR_MESSAGE = "예상치못한 에러가 발생했습니다.";
+    private static final String DUPLICATE_KEY_ERROR_MESSAGE = "중복된 값이 존재합니다.";
+
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity handle() {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    public ResponseEntity<String> handle() {
+        return ResponseEntity.badRequest().body(INVALID_DATA_ERROR_MESSAGE);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity handleInvalidRequest(final BindingResult bindingResult) {
+    public ResponseEntity<String> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
@@ -43,7 +47,7 @@ public class ControllerAdvice {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    public ResponseEntity handleInvalidRequest(final RuntimeException e) {
+    public ResponseEntity<String> handleInvalidRequest(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
@@ -53,47 +57,47 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
+    public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler
-    public ResponseEntity duplicateKeyException(final DuplicateKeyException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복된 값이 존재합니다.");
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<String> duplicateKeyException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(DUPLICATE_KEY_ERROR_MESSAGE);
     }
 
     @ExceptionHandler
-    public ResponseEntity invalidPasswordException(final InvalidPasswordException exception) {
+    public ResponseEntity<String> invalidPasswordException(final InvalidPasswordException exception) {
         return ResponseEntity.status(InvalidPasswordException.STATUS_CODE).body(exception.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity invalidCustomerException(final InvalidCustomerException exception) {
+    public ResponseEntity<String> invalidCustomerException(final InvalidCustomerException exception) {
         return ResponseEntity.status(InvalidCustomerException.STATUS_CODE).body(exception.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity resourceNotFoundException(final ResourceNotFoundException exception) {
+    public ResponseEntity<String> resourceNotFoundException(final ResourceNotFoundException exception) {
         return ResponseEntity.status(ResourceNotFoundException.STATUS_CODE).body(exception.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity invalidLoginException(final InvalidLoginException exception) {
+    public ResponseEntity<String> invalidLoginException(final InvalidLoginException exception) {
         return ResponseEntity.status(InvalidLoginException.STATUS_CODE).body(exception.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity authorizationException(final AuthorizationException exception) {
+    public ResponseEntity<String> authorizationException(final AuthorizationException exception) {
         return ResponseEntity.status(AuthorizationException.STATUS_CODE).body(exception.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity invalidInputException(final InvalidInputException exception) {
+    public ResponseEntity<String> invalidInputException(final InvalidInputException exception) {
         return ResponseEntity.status(InvalidInputException.STATUS_CODE).body(exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity unhandledException() {
-        return ResponseEntity.badRequest().body("예상치못한 에러가 발생했습니다.");
+    public ResponseEntity<String> unhandledException() {
+        return ResponseEntity.badRequest().body(UNHANDLED_ERROR_MESSAGE);
     }
 }

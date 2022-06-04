@@ -12,6 +12,10 @@ import woowacourse.shoppingcart.repository.dao.CustomerDao;
 @Repository
 public class CustomerRepository {
 
+    private static final String DUPLICATE_VALUE_ERROR_MESSAGE = "중복된 값이 존재합니다.";
+    private static final String INVALID_PASSWORD_ERROR_MESSAGE = "비밀번호가 일치하지 않습니다.";
+    private static final String INVALID_LOGIN_ERROR_MESSAGE = "로그인 할 수 없습니다.";
+
     private final CustomerDao customerDao;
 
     public CustomerRepository(final CustomerDao customerDao) {
@@ -30,7 +34,7 @@ public class CustomerRepository {
         try {
             return customerDao.findByUsernameAndPassword(username, password);
         } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidLoginException("로그인 할 수 없습니다.");
+            throw new InvalidLoginException(INVALID_LOGIN_ERROR_MESSAGE);
         }
     }
 
@@ -49,19 +53,19 @@ public class CustomerRepository {
 
     public void validateDuplicateUsername(final String username) {
         if (customerDao.checkDuplicatedUsername(username)) {
-            throw new DuplicateKeyException("");
+            throw new DuplicateKeyException(DUPLICATE_VALUE_ERROR_MESSAGE);
         }
     }
 
     public void validateDuplicateNickname(final String nickname) {
         if (customerDao.checkDuplicatedNickname(nickname)) {
-            throw new DuplicateKeyException("");
+            throw new DuplicateKeyException(DUPLICATE_VALUE_ERROR_MESSAGE);
         }
     }
 
     public void matchPassword(final Long id, final String password) {
         if (!customerDao.matchPassword(id, password)) {
-            throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
+            throw new InvalidPasswordException(INVALID_PASSWORD_ERROR_MESSAGE);
         }
     }
 }

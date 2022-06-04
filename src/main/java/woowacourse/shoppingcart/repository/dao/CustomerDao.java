@@ -26,6 +26,8 @@ public class CustomerDao {
             resultSet.getString("password"),
             resultSet.getString("nickname")
     );
+    private static final String NO_CUSTOMER_ERROR_MESSAGE = "존재하지 않는 유저입니다.";
+    private static final String INVALID_PASSWORD_ERROR_MESSAGE = "비밀번호가 일치하지 않습니다.";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -40,7 +42,7 @@ public class CustomerDao {
         try {
             return namedParameterJdbcTemplate.queryForObject(query, params, Long.class);
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException("존재하지 않는 유저입니다.");
+            throw new InvalidCustomerException(NO_CUSTOMER_ERROR_MESSAGE);
         }
     }
 
@@ -62,7 +64,7 @@ public class CustomerDao {
         try {
             return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
         } catch (EmptyResultDataAccessException exception) {
-            throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
+            throw new ResourceNotFoundException(NO_CUSTOMER_ERROR_MESSAGE);
         }
     }
 
@@ -83,7 +85,7 @@ public class CustomerDao {
         params.put("nickname", newCustomer.getNickname());
         int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
         if (affectedRowCount == 0) {
-            throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
+            throw new ResourceNotFoundException(NO_CUSTOMER_ERROR_MESSAGE);
         }
     }
 
@@ -96,7 +98,7 @@ public class CustomerDao {
         params.put("oldPassword", oldPassword);
         int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
         if (affectedRowCount == 0) {
-            throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
+            throw new InvalidPasswordException(INVALID_PASSWORD_ERROR_MESSAGE);
         }
     }
 
@@ -106,7 +108,7 @@ public class CustomerDao {
         params.put("id", id);
         int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
         if (affectedRowCount == 0) {
-            throw new ResourceNotFoundException("존재하지 않는 회원입니다.");
+            throw new ResourceNotFoundException(NO_CUSTOMER_ERROR_MESSAGE);
         }
     }
 

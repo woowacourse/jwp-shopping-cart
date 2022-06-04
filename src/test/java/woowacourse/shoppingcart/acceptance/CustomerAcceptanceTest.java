@@ -153,7 +153,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> 나의_정보조회Response = 나의_정보조회(accessToken);
         assertAll(
                 () -> NOT_FOUND(나의_정보조회Response),
-                () -> 예외메세지_검증(나의_정보조회Response, "존재하지 않는 회원입니다.")
+                () -> 예외메세지_검증(나의_정보조회Response, "존재하지 않는 유저입니다.")
         );
 
     }
@@ -180,7 +180,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // 예외를 발생시킨다.
         assertAll(
                 () -> NOT_FOUND(response),
-                () -> 예외메세지_검증(response, "존재하지 않는 회원입니다.")
+                () -> 예외메세지_검증(response, "존재하지 않는 유저입니다.")
         );
     }
 
@@ -232,7 +232,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // 예외를 발생시킨다.
         assertAll(
                 () -> NOT_FOUND(response),
-                () -> 예외메세지_검증(response, "존재하지 않는 회원입니다.")
+                () -> 예외메세지_검증(response, "존재하지 않는 유저입니다.")
         );
     }
 
@@ -341,7 +341,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // 예외를 발생시킨다.
         assertAll(
                 () -> NOT_FOUND(response),
-                () -> 예외메세지_검증(response, "존재하지 않는 회원입니다.")
+                () -> 예외메세지_검증(response, "존재하지 않는 유저입니다.")
         );
     }
 }

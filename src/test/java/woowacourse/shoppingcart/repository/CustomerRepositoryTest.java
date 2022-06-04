@@ -115,6 +115,6 @@ class CustomerRepositoryTest {
         // then
         assertThatThrownBy(() -> customerRepository.findById(id))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("존재하지 않는 회원입니다.");
+                .hasMessage("존재하지 않는 유저입니다.");
     }
 }
