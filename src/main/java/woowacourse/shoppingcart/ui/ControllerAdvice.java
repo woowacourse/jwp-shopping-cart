@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidEmailException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -60,6 +61,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
+            InvalidEmailException.class,
             InvalidPasswordException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,

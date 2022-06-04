@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.domain.SignIn;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -22,9 +23,10 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public SignInResponse signIn(SignInRequest signInRequest) {
-        validatePassword(signInRequest.getEmail(), signInRequest.getPassword());
+        SignIn signIn = signInRequest.toSignIn();
+        validatePassword(signIn.getEmail(), signIn.getPassword());
 
-        Customer customer = customerDao.findByEmail(signInRequest.getEmail());
+        Customer customer = customerDao.findByEmail(signIn.getEmail());
 
         return new SignInResponse(
                 customer.getUsername(),

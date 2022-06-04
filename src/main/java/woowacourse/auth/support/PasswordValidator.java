@@ -19,6 +19,16 @@ public class PasswordValidator implements ConstraintValidator<PasswordCheck, Str
         return true;
     }
 
+    public boolean isValid(String value) {
+        if (value == null || value.isBlank() || !isValidLength(value)) {
+            return false;
+        }
+        if (value.matches("[ㄱ-ㅎ]+|[ㅏ-ㅣ]+|[가-힣]+") || !value.matches("\\S+")) {
+            return false;
+        }
+        return true;
+    }
+
     private boolean isValidLength(String value) {
         return MIN_LENGTH <= value.length() && value.length() <= MAX_LENGTH;
     }

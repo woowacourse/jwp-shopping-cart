@@ -1,40 +1,21 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.auth.domain;
 
 import woowacourse.auth.support.EmailValidator;
 import woowacourse.auth.support.PasswordValidator;
 import woowacourse.shoppingcart.exception.InvalidEmailException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
-public class Customer {
+public class SignIn {
 
-    private static final int MAX_USERNAME_LENGTH = 32;
-
-    private final Long id;
-    private final String username;
     private final String email;
     private final String password;
 
-    public Customer(Long id, String username, String email, String password) {
-        validateUsername(username);
+    public SignIn(String email, String password) {
         validateEmail(email);
         validatePassword(password);
 
-        this.id = id;
-        this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public Customer(String username, String email, String password) {
-        this(null, username, email, password);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public String getEmail() {
@@ -43,12 +24,6 @@ public class Customer {
 
     public String getPassword() {
         return password;
-    }
-
-    private void validateUsername(String username) {
-        if (username == null || username.isBlank() || username.length() > MAX_USERNAME_LENGTH) {
-            throw new InvalidEmailException();
-        }
     }
 
     private void validateEmail(String email) {

@@ -35,7 +35,7 @@ public class CustomerServiceTest {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "12345678");
 
         // when
         SignUpResponse signUpResponse = customerService.addCustomer(signUpRequest);
@@ -53,8 +53,8 @@ public class CustomerServiceTest {
         String name = "greenlawn";
         String email1 = "green@woowa.com";
         String email2 = "rennon@woowa.com";
-        SignUpRequest signUpRequest1 = new SignUpRequest(name, email1, "1234");
-        SignUpRequest signUpRequest2 = new SignUpRequest(name, email2, "1234");
+        SignUpRequest signUpRequest1 = new SignUpRequest(name, email1, "12345678");
+        SignUpRequest signUpRequest2 = new SignUpRequest(name, email2, "12345678");
         customerService.addCustomer(signUpRequest1);
 
         // when
@@ -71,8 +71,8 @@ public class CustomerServiceTest {
         String name1 = "greenlawn";
         String name2 = "rennon";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest1 = new SignUpRequest(name1, email, "1234");
-        SignUpRequest signUpRequest2 = new SignUpRequest(name2, email, "1234");
+        SignUpRequest signUpRequest1 = new SignUpRequest(name1, email, "12345678");
+        SignUpRequest signUpRequest2 = new SignUpRequest(name2, email, "12345678");
         customerService.addCustomer(signUpRequest1);
 
         boolean b1 = customerDao.existByUsername(name1);
@@ -91,7 +91,7 @@ public class CustomerServiceTest {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "12345678");
         customerService.addCustomer(signUpRequest);
 
         // when
@@ -107,14 +107,14 @@ public class CustomerServiceTest {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "12345678");
         customerService.addCustomer(signUpRequest);
 
         // when
-        customerService.updateMe(name, new UpdatePasswordRequest("1234", "5678"));
+        customerService.updateMe(name, new UpdatePasswordRequest("12345678", "56781234"));
 
         // then
-        assertThat(customerDao.isValidPasswordByUsername(name, "5678")).isTrue();
+        assertThat(customerDao.isValidPasswordByUsername(name, "56781234")).isTrue();
     }
 
     @Test
@@ -123,12 +123,12 @@ public class CustomerServiceTest {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "12345678");
         customerService.addCustomer(signUpRequest);
 
         // when & then
         assertThatThrownBy(() ->
-                customerService.updateMe(name, new UpdatePasswordRequest("1235", "5678")))
+                customerService.updateMe(name, new UpdatePasswordRequest("34561278", "56781234")))
                 .isInstanceOf(InvalidPasswordException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
     }
@@ -139,11 +139,11 @@ public class CustomerServiceTest {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "12345678");
         customerService.addCustomer(signUpRequest);
 
         // when
-        customerService.deleteMe(name, new DeleteCustomerRequest("1234"));
+        customerService.deleteMe(name, new DeleteCustomerRequest("12345678"));
 
         // given
         assertThatThrownBy(() -> customerDao.findByUsername(name))
@@ -156,12 +156,12 @@ public class CustomerServiceTest {
         // given
         String name = "greenlawn";
         String email = "green@woowa.com";
-        SignUpRequest signUpRequest = new SignUpRequest(name, email, "1234");
+        SignUpRequest signUpRequest = new SignUpRequest(name, email, "12345678");
         customerService.addCustomer(signUpRequest);
 
         // when
         // given
-        assertThatThrownBy(() -> customerService.deleteMe(name, new DeleteCustomerRequest("5678")))
+        assertThatThrownBy(() -> customerService.deleteMe(name, new DeleteCustomerRequest("56781234")))
                 .isInstanceOf(InvalidPasswordException.class);
     }
 }
