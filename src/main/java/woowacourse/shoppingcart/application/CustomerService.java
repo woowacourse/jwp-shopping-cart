@@ -11,7 +11,7 @@ import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.response.GetMeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
-import woowacourse.shoppingcart.exception.NotFoundException;
+import woowacourse.exception.NotFoundException;
 
 @Service
 public class CustomerService {

@@ -1,7 +1,7 @@
 package woowacourse.auth.support;
 
 import javax.servlet.http.HttpServletRequest;
-import woowacourse.auth.exception.ForbiddenException;
+import woowacourse.exception.ForbiddenException;
 
 public class HttpHeaderUtil {
 

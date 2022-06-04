@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.exception;
 
 public class NotFoundException extends RuntimeException {
 

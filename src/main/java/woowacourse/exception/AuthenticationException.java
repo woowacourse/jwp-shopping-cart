@@ -1,4 +1,4 @@
-package woowacourse.auth.exception;
+package woowacourse.exception;
 
 public class AuthenticationException extends RuntimeException {
 

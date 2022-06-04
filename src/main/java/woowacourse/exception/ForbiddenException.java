@@ -1,4 +1,4 @@
-package woowacourse.auth.exception;
+package woowacourse.exception;
 
 public class ForbiddenException extends RuntimeException {
 
