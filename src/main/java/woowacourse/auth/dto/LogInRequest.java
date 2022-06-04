@@ -1,14 +1,14 @@
 package woowacourse.auth.dto;
 
-public class SignInRequest {
+public class LogInRequest {
 
     private String email;
     private String password;
 
-    public SignInRequest() {
+    public LogInRequest() {
     }
 
-    public SignInRequest(String email, String password) {
+    public LogInRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.acceptance.RestAssuredFixture;
 import woowacourse.acceptance.AcceptanceTest;
-import woowacourse.auth.dto.SignInRequest;
+import woowacourse.auth.dto.LogInRequest;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
@@ -60,8 +60,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssuredFixture.post(signUpRequest, "users", 201);
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssuredFixture.getSignInResponse(signInRequest, "/login").getToken();
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "1234");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
         RestAssuredFixture.get(token, "/users/me", 200)
@@ -77,8 +77,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         RestAssuredFixture.post(signUpRequest, "users", 201);
 
         //when & then
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1235");
-        RestAssuredFixture.post(signInRequest, "/login", 400);
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "1235");
+        RestAssuredFixture.post(logInRequest, "/login", 400);
     }
 
     @Test
@@ -89,8 +89,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         RestAssuredFixture.post(signUpRequest, "users", 201);
 
         //when & then
-        SignInRequest signInRequest = new SignInRequest("rennon1@woowa.com", "1234");
-        RestAssuredFixture.post(signInRequest, "/login", 400);
+        LogInRequest logInRequest = new LogInRequest("rennon1@woowa.com", "1234");
+        RestAssuredFixture.post(logInRequest, "/login", 400);
     }
 
     @DisplayName("내 정보 조회")
@@ -100,8 +100,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssuredFixture.post(signUpRequest, "users", 201);
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssuredFixture.getSignInResponse(signInRequest, "/login").getToken();
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "1234");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
         RestAssuredFixture.get(token, "/users/me", 200)
@@ -127,8 +127,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssuredFixture.post(signUpRequest, "users", 201);
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssuredFixture.getSignInResponse(signInRequest, "/login").getToken();
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "1234");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
         UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("1234", "5678");
@@ -154,8 +154,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssuredFixture.post(signUpRequest, "users", 201);
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssuredFixture.getSignInResponse(signInRequest, "/login").getToken();
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "1234");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1234");
@@ -169,8 +169,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
         RestAssuredFixture.post(signUpRequest, "users", 201);
 
-        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "1234");
-        String token = RestAssuredFixture.getSignInResponse(signInRequest, "/login").getToken();
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "1234");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1235");
