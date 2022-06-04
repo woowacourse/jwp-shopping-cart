@@ -18,22 +18,17 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    @Transactional(readOnly = true)
-    public boolean isExistEmail(String email) {
-        return customerDao.existByEmail(email);
+    public void validateEmailDuplication(String email) {
+        if (customerDao.existByEmail(email)) {
+            throw new IllegalArgumentException("중복된 email 입니다.");
+        }
     }
 
     public CustomerResponse save(CustomerRequest customerRequest) {
-        validateDuplicationEmail(customerRequest);
+        validateEmailDuplication(customerRequest.getEmail());
         Customer customer = customerRequest.createCustomer();
         customerDao.save(customer);
         return CustomerResponse.from(customer);
-    }
-
-    private void validateDuplicationEmail(CustomerRequest customerRequest) {
-        if (isExistEmail(customerRequest.getEmail())) {
-            throw new IllegalArgumentException("중복된 email 입니다.");
-        }
     }
 
     @Transactional(readOnly = true)

@@ -45,7 +45,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ValidatableResponse response = requestHttpGet("", "/customers/email?email=email@naver.com");
 
         // then
-        response.body(containsString("true"));
+        response.statusCode(HttpStatus.BAD_REQUEST.value());
+        response.body(containsString("중복된 email 입니다."));
     }
 
     @DisplayName("내 정보 수정")

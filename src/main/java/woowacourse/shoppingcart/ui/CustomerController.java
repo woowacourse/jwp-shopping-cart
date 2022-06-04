@@ -28,8 +28,8 @@ public class CustomerController {
 
     @GetMapping("/email")
     @ResponseStatus(HttpStatus.OK)
-    public boolean checkEmailExistence(@RequestParam String email) {
-        return customerService.isExistEmail(email);
+    public void checkEmailExistence(@RequestParam String email) {
+        customerService.validateEmailDuplication(email);
     }
 
     @PostMapping
