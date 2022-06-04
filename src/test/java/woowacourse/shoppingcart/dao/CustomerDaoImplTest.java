@@ -16,12 +16,12 @@ import woowacourse.shoppingcart.domain.Customer;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CustomerDaoTest {
+public class CustomerDaoImplTest {
 
     private final CustomerDao customerDao;
 
-    public CustomerDaoTest(DataSource dataSource) {
-        customerDao = new CustomerDao(dataSource);
+    public CustomerDaoImplTest(DataSource dataSource) {
+        customerDao = new CustomerDaoImpl(dataSource);
     }
 
     @Test
