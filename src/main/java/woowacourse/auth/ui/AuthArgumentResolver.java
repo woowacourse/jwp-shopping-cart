@@ -9,7 +9,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.domain.User;
 import woowacourse.auth.support.AuthenticatedUser;
-import woowacourse.auth.support.HttpHeaderUtil;
+import woowacourse.auth.support.HttpHeaderConstant;
 
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -30,8 +30,20 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
                                 NativeWebRequest webRequest,
                                 WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        return authService.findUserByToken(extractBearerToken(request));
+    }
 
-        String token = HttpHeaderUtil.extractBearerToken(request);
-        return authService.findUserByToken(token);
+    public String extractBearerToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader(HttpHeaderConstant.AUTHORIZATION);
+        String bearerToken = authorizationHeader.substring(HttpHeaderConstant.BEARER_TYPE.length()).trim();
+        return toSingleToken(bearerToken);
+    }
+
+    private String toSingleToken(String bearerToken) {
+        int commaIndex = bearerToken.indexOf(',');
+        if (commaIndex > 0) {
+            return bearerToken.substring(0, commaIndex);
+        }
+        return bearerToken;
     }
 }
