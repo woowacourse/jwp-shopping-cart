@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import woowacourse.shoppingcart.application.dto.CartResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.exception.domain.InvalidProductException;
 import woowacourse.shoppingcart.exception.domain.NotInCustomerCartItemException;
 
@@ -28,15 +30,16 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<Cart> findCartsByCustomerName(final String customerName) {
+    public CartResponse findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
-        return cartIds.stream()
-            .map(cartId -> new Cart(
+        Cart cart = new Cart(cartIds.stream()
+            .map(cartId -> new CartItem(
                 cartId,
                 productDao.findProductById(cartItemDao.findProductIdById(cartId))
             ))
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
+        return CartResponse.from(cart);
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {

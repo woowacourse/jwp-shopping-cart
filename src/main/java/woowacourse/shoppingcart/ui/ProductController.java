@@ -16,7 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.ui.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.application.dto.ProductResponse;
 import woowacourse.shoppingcart.ui.dto.Request;
 
 @RestController

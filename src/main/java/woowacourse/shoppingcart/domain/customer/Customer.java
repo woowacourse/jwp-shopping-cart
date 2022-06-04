@@ -5,16 +5,16 @@ import woowacourse.auth.domain.PasswordMatcher;
 public class Customer {
 
     private final Long id;
-    private final UserName userName;
+    private final UserName name;
     private final Password password;
     private final Email email;
     private final Address address;
     private final PhoneNumber phoneNumber;
 
-    public Customer(Long id, UserName userName, Password password, Email email, Address address,
+    public Customer(Long id, UserName name, Password password, Email email, Address address,
         PhoneNumber phoneNumber) {
         this.id = id;
-        this.userName = userName;
+        this.name = name;
         this.password = password;
         this.email = email;
         this.address = address;
@@ -41,11 +41,11 @@ public class Customer {
     }
 
     public Customer update(String address, String phoneNumber) {
-        return new Customer(id, userName, password, email, new Address(address), new PhoneNumber(phoneNumber));
+        return new Customer(id, name, password, email, new Address(address), new PhoneNumber(phoneNumber));
     }
 
     public Customer encryptPassword(PasswordEncryptor encryptor) {
-        return new Customer(id, userName, password.encrypt(encryptor), email, address, phoneNumber);
+        return new Customer(id, name, password.encrypt(encryptor), email, address, phoneNumber);
     }
 
     public boolean isPasswordMatch(String password, PasswordMatcher matcher) {
@@ -57,7 +57,7 @@ public class Customer {
     }
 
     public String getName() {
-        return userName.getValue();
+        return name.getValue();
     }
 
     public String getPassword() {

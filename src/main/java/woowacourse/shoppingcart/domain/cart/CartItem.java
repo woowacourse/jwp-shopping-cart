@@ -1,16 +1,16 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.cart;
 
 import woowacourse.shoppingcart.domain.product.Product;
 
-public class Cart {
+public class CartItem {
 
     private Long id;
     private Product product;
 
-    public Cart() {
+    public CartItem() {
     }
 
-    public Cart(Long id, Product product) {
+    public CartItem(Long id, Product product) {
         this.id = id;
         this.product = product;
     }
