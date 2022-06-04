@@ -1,6 +1,6 @@
 package woowacourse.auth.acceptance;
 
-import woowacourse.auth.dto.PhoneNumber;
+import woowacourse.shoppingcart.dto.PhoneNumber;
 import woowacourse.shoppingcart.dto.SignupRequest;
 
 public class AcceptanceTestFixture {

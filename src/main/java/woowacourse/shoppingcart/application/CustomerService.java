@@ -1,19 +1,18 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.Locale;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.DeleteCustomerRequest;
-import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.DuplicatedAccountException;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
-
-import java.util.Locale;
 
 @Service
 @Transactional
@@ -40,7 +39,8 @@ public class CustomerService {
     }
 
     private Customer toCustomer(SignupRequest signupRequest) {
-        final String processedAccount = signupRequest.getAccount().replaceAll(EXCLUDE_NUMBER_AND_ALPHABET, "").toLowerCase(Locale.ROOT).trim();
+        final String processedAccount = signupRequest.getAccount().replaceAll(EXCLUDE_NUMBER_AND_ALPHABET, "")
+                .toLowerCase(Locale.ROOT).trim();
         return new Customer(processedAccount,
                 signupRequest.getNickname(),
                 passwordEncoder.encode(signupRequest.getPassword()),
