@@ -29,10 +29,12 @@ public class ProductService {
         );
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         return ProductResponse.from(productDao.findProductById(productId));
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findProducts() {
         return productDao.findProducts()
             .stream()

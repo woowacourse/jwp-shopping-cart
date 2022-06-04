@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.BcryptPasswordEncryptor;
@@ -13,6 +14,7 @@ import woowacourse.shoppingcart.exception.domain.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -34,6 +36,7 @@ public class CustomerService {
             .orElseThrow(DuplicateCustomerException::new);
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse findCustomer(FindCustomerRequest findCustomerRequest) {
         Customer customer = customerDao.findByName(findCustomerRequest.getName())
             .orElseThrow(CustomerNotFoundException::new);
