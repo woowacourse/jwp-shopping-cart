@@ -21,7 +21,7 @@ public class Customer {
         this.username = username;
     }
 
-    public void checkPasswordisSame(String password) {
+    public void checkPasswordIsSame(String password) {
         this.password.checkPasswordIsSame(password);
     }
 

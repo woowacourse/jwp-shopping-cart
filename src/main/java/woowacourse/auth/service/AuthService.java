@@ -1,6 +1,5 @@
 package woowacourse.auth.service;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +11,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.IncorrectPasswordException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 @Transactional
@@ -29,7 +29,7 @@ public class AuthService {
     public TokenResponse createToken(TokenRequest request) {
         try {
             checkCustomer(request);
-        } catch (EmptyResultDataAccessException | IncorrectPasswordException e) {
+        } catch (InvalidCustomerException | IncorrectPasswordException e) {
             throw new InvalidLoginException("Login Fail");
         }
 
@@ -39,7 +39,7 @@ public class AuthService {
 
     private void checkCustomer(TokenRequest request) {
         final Customer customer = customerDao.findByEmail(request.getEmail());
-        customer.checkPasswordisSame(request.getPassword());
+        customer.checkPasswordIsSame(request.getPassword());
     }
 
     public String findCustomerByToken(String token) {

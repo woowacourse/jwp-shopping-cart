@@ -66,8 +66,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handle(InvalidCustomerException e) {
-        return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.INCORRECT_PASSWORD);
+    public ResponseEntity<String> handle(InvalidCustomerException e) {
+        return ResponseEntity.badRequest().body("존재하지 않는 유저입니다.");
     }
 
     @ExceptionHandler

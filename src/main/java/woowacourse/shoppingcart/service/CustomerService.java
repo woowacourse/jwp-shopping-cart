@@ -11,13 +11,12 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.DeleteException;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CustomerService {
-
-    private static final int DELETE_FAIL = 0;
-
+    
     private final CustomerDao customerDao;
 
     public CustomerService(CustomerDao customerDao) {
@@ -64,13 +63,13 @@ public class CustomerService {
     }
 
     public void delete(String email, String password) {
-        final Customer customer = customerDao.findByEmail(email);
-        customer.checkPasswordIsSame(password);
+        try {
+            final Customer customer = customerDao.findByEmail(email);
+            customer.checkPasswordIsSame(password);
 
-        final int deleteCount = customerDao.deleteById(customer.getId());
-
-        if (deleteCount == DELETE_FAIL) {
-            throw new DeleteException("고객 정보 삭제에 실패하였습니다.");
+            customerDao.delete(customer.getId());
+        } catch (InvalidCustomerException e) {
+            throw new DeleteException();
         }
     }
 }

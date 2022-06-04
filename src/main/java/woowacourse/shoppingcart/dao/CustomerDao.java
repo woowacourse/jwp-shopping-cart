@@ -44,7 +44,11 @@ public class CustomerDao {
     public Customer findByEmail(final String email) {
         final String query = "SELECT * FROM customer WHERE email = :email";
 
-        return jdbcTemplate.queryForObject(query, Map.of("email", email), CUSTOMER_ROW_MAPPER);
+        try {
+            return jdbcTemplate.queryForObject(query, Map.of("email", email), CUSTOMER_ROW_MAPPER);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
     }
 
     public Long findIdByUserName(final String userName) {
@@ -76,8 +80,8 @@ public class CustomerDao {
         jdbcTemplate.update(query, parameterSource);
     }
 
-    public int deleteById(final Long id) {
+    public void delete(final Long id) {
         final String query = "DELETE FROM customer WHERE id = :id";
-        return jdbcTemplate.update(query, Map.of("id", id));
+        jdbcTemplate.update(query, Map.of("id", id));
     }
 }
