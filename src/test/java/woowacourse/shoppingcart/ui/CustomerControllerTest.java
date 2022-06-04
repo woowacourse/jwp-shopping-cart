@@ -2,6 +2,11 @@ package woowacourse.shoppingcart.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -9,6 +14,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static woowacourse.shoppingcart.utils.ApiDocumentUtils.getDocumentRequest;
+import static woowacourse.shoppingcart.utils.ApiDocumentUtils.getDocumentResponse;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,16 +66,27 @@ class CustomerControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isNoContent());
+
+        // docs
+        perform.andDo(document("create-user",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                        fieldWithPath("email").type(STRING).description("이메일"),
+                        fieldWithPath("password").type(STRING).description("비밀번호"),
+                        fieldWithPath("nickname").type(STRING).description("닉네임")
+                )
+        ));
     }
 
     @ParameterizedTest(name = "잘못된 {3}으로 회원가입을 요청하면 400을 반환한다.")
     @CsvSource(value = {
-            "email#email.com:1q2w3e4r:rick:이메일 양식",
-            "email@email.com:1q2w3e:rick:비밀번호 양식",
-            "email@email.com:12345678:rick:비밀번호 양식",
-            "email@email.com:1q2w3e4r:릭:닉네임 양식"
+            "email:email#email.com:1q2w3e4r:rick:이메일 양식",
+            "password1:email@email.com:1q2w3e:rick:비밀번호 양식",
+            "password2:email@email.com:12345678:rick:비밀번호 양식",
+            "nickname:email@email.com:1q2w3e4r:릭:닉네임 양식"
     }, delimiter = ':')
-    void create_invalidForm_400(final String email, final String password, final String nickname, final String message)
+    void create_invalidForm_400(final String docName, final String email, final String password, final String nickname, final String message)
             throws Exception {
         // given
         final CustomerCreationRequest request = new CustomerCreationRequest(
@@ -90,6 +108,21 @@ class CustomerControllerTest extends ControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("errorCode").value("1000"))
                 .andExpect(jsonPath("message").value(message + "이 잘못 되었습니다."));
+
+        // docs
+        perform.andDo(document("create-user-fail-" + docName,
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                        fieldWithPath("email").type(STRING).description("이메일"),
+                        fieldWithPath("password").type(STRING).description("비밀번호"),
+                        fieldWithPath("nickname").type(STRING).description("닉네임")
+                ),
+                responseFields(
+                        fieldWithPath("errorCode").type(STRING).description("에러 코드"),
+                        fieldWithPath("message").type(STRING).description("에러 메시지")
+                )
+        ));
     }
 
     @Test

@@ -1,0 +1,58 @@
+= Shopping cart API - rick
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-customer]]
+== 회원 관련 기능
+
+[[resources-customer-create]]
+=== 회원가입
+
+[[resources-customer-create-success]]
+==== 성공
+
+===== HTTP request
+
+include::{snippets}/create-user/http-request.adoc[]
+
+===== HTTP response
+
+include::{snippets}/create-user/http-response.adoc[]
+
+[[resources-customer-create-invalid-email]]
+==== 실패 - 올바르지 않은 이메일 양식
+
+===== HTTP request
+
+include::{snippets}/create-user-fail-email/http-request.adoc[]
+
+===== HTTP response
+
+include::{snippets}/create-user-fail-email/http-response.adoc[]
+
+[[resources-customer-create-invalid-nickname]]
+==== 실패 - 올바르지 않은 닉네임 양식
+
+===== HTTP request
+
+include::{snippets}/create-user-fail-nickname/http-request.adoc[]
+
+===== HTTP response
+
+include::{snippets}/create-user-fail-nickname/http-response.adoc[]
+
+[[resources-customer-create-invalid-password]]
+==== 실패 - 올바르지 않은 비밀번호 양식
+
+===== HTTP request1
+
+include::{snippets}/create-user-fail-password1/http-request.adoc[]
+
+===== HTTP request2
+
+include::{snippets}/create-user-fail-password2/http-request.adoc[]
+
+===== HTTP response
+
+include::{snippets}/create-user-fail-password1/http-response.adoc[]
