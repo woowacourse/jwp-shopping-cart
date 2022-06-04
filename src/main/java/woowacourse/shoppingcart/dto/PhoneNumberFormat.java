@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import javax.validation.constraints.Pattern;
 
-public class PhoneNumber {
+public class PhoneNumberFormat {
 
     private static final String errorMessage = "휴대폰번호 형식이 일치하지 않습니다.";
     private static final int  PHONE_NUMBER_START_BEGIN_INDEX = 0;
@@ -20,14 +20,14 @@ public class PhoneNumber {
     private final String end;
 
     @JsonCreator
-    public PhoneNumber(String start, String middle, String end) {
+    public PhoneNumberFormat(String start, String middle, String end) {
         this.start = start;
         this.middle = middle;
         this.end = end;
     }
 
-    public static PhoneNumber of(String phoneNumber) {
-        return new PhoneNumber(
+    public static PhoneNumberFormat of(String phoneNumber) {
+        return new PhoneNumberFormat(
                 phoneNumber.substring(PHONE_NUMBER_START_BEGIN_INDEX, PHONE_NUMBER_START_LAST_INDEX),
                 phoneNumber.substring(PHONE_NUMBER_START_LAST_INDEX, PHONE_NUMBER_MIDDLE_LAST_INDEX),
                 phoneNumber.substring(PHONE_NUMBER_MIDDLE_LAST_INDEX, PHONE_NUMBER_END_LAST_INDEX));

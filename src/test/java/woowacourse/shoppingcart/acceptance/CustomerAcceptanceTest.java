@@ -12,14 +12,12 @@ import woowacourse.auth.dto.*;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
-import woowacourse.shoppingcart.dto.PhoneNumber;
-import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.dto.PhoneNumberFormat;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.auth.acceptance.AcceptanceTestFixture.에덴;
-import static woowacourse.auth.acceptance.AcceptanceTestFixture.코린;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -102,7 +100,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumberFormat("010", "1234", "1234"));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
@@ -115,7 +113,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumberFormat("010", "1234", "1234"));
         final ExtractableResponse<Response> response = put("/customers", updateCustomerRequest);
 
         // then
@@ -133,7 +131,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final String invalidToken = jwtTokenProvider.createToken("fake");
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumberFormat("010", "1234", "1234"));
         final ExtractableResponse<Response> response = put("/customers", invalidToken, updateCustomerRequest);
 
         // then
@@ -152,7 +150,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest(nickName, "address", new PhoneNumber("010", "1234", "5678"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest(nickName, "address", new PhoneNumberFormat("010", "1234", "5678"));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
@@ -171,7 +169,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         String address = "a".repeat(256);
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", address, new PhoneNumber("010", "1234", "5678"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", address, new PhoneNumberFormat("010", "1234", "5678"));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
@@ -190,7 +188,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "address", new PhoneNumber(start, middle, end
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "address", new PhoneNumberFormat(start, middle, end
         ));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 

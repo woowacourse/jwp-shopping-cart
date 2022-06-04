@@ -20,10 +20,10 @@ public class SignupRequest {
     @Size(max = 255, message = "주소 길이는 255자를 초과할 수 없습니다.")
     private final String address;
     @Valid
-    private final PhoneNumber phoneNumber;
+    private final PhoneNumberFormat phoneNumber;
 
     @JsonCreator
-    public SignupRequest(String account, String nickname, String password, String address, PhoneNumber phoneNumber) {
+    public SignupRequest(String account, String nickname, String password, String address, PhoneNumberFormat phoneNumber) {
         this.account = account;
         this.nickname = nickname;
         this.password = password;
@@ -47,7 +47,7 @@ public class SignupRequest {
         return address;
     }
 
-    public PhoneNumber getPhoneNumber() {
+    public PhoneNumberFormat getPhoneNumber() {
         return phoneNumber;
     }
 }

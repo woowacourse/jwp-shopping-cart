@@ -8,9 +8,9 @@ public class CustomerResponse {
     private final String account;
     private final String nickname;
     private final String address;
-    private final PhoneNumber phoneNumber;
+    private final PhoneNumberFormat phoneNumber;
 
-    public CustomerResponse(long id, String account, String nickname, String address, PhoneNumber phoneNumber) {
+    public CustomerResponse(long id, String account, String nickname, String address, PhoneNumberFormat phoneNumber) {
         this.id = id;
         this.account = account;
         this.nickname = nickname;
@@ -20,7 +20,7 @@ public class CustomerResponse {
 
 
     public static CustomerResponse of(Customer customer) {
-        final PhoneNumber phoneNumber = PhoneNumber.of(customer.getPhoneNumber());
+        final PhoneNumberFormat phoneNumber = PhoneNumberFormat.of(customer.getPhoneNumber());
         return new CustomerResponse(customer.getId(), customer.getAccount(), customer.getNickname(),
                 customer.getAddress(), phoneNumber);
     }
@@ -41,7 +41,7 @@ public class CustomerResponse {
         return address;
     }
 
-    public PhoneNumber getPhoneNumber() {
+    public PhoneNumberFormat getPhoneNumber() {
         return phoneNumber;
     }
 }

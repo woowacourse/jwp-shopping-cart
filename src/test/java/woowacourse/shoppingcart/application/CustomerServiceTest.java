@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
-import woowacourse.shoppingcart.dto.PhoneNumber;
+import woowacourse.shoppingcart.dto.PhoneNumberFormat;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -44,7 +44,7 @@ class CustomerServiceTest {
         given(customerDao.save(any(Customer.class))).willReturn(expected);
 
         // when
-        final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumberFormat("010", "1234", "5678"));
         final CustomerResponse customerResponse = customerService.create(signupRequest);
 
         // then
@@ -59,7 +59,7 @@ class CustomerServiceTest {
         given(customerDao.findByAccount(any(String.class))).willReturn(Optional.of(expected));
 
         // when
-        final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumberFormat("010", "1234", "5678"));
 
         // then
         assertThatThrownBy(() -> customerService.create(signupRequest))
@@ -115,7 +115,7 @@ class CustomerServiceTest {
                 any(String.class))).willReturn(1);
 
         // when
-        final int affectedRows = customerService.update(1L, new UpdateCustomerRequest("hamcheeseburger", "코린네", new PhoneNumber("010", "1234", "1234")));
+        final int affectedRows = customerService.update(1L, new UpdateCustomerRequest("hamcheeseburger", "코린네", new PhoneNumberFormat("010", "1234", "1234")));
 
         // then
         assertThat(affectedRows).isEqualTo(1);
