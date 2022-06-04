@@ -19,13 +19,18 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handle(InvalidRequestException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(toErrorResponse(e));
+    public ResponseEntity<ErrorResponse> handleInvalidRequest(final MethodArgumentNotValidException bindingResult) {
+        String causes = bindingResult.getFieldErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(", "));
+        String errorMessage = String.format("입력이 잘못되었습니다: [%s]", causes);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handle(NotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(toErrorResponse(e));
+    public ResponseEntity<ErrorResponse> handle(InvalidRequestException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(toErrorResponse(e));
     }
 
     @ExceptionHandler
@@ -39,13 +44,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleInvalidRequest(final MethodArgumentNotValidException bindingResult) {
-        String causes = bindingResult.getFieldErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.joining(", "));
-        String errorMessage = String.format("입력이 잘못되었습니다: [%s]", causes);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+    public ResponseEntity<ErrorResponse> handle(NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(toErrorResponse(e));
     }
 
     private ErrorResponse toErrorResponse(Exception e) {
