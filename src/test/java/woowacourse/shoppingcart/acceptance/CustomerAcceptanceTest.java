@@ -2,9 +2,9 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_INVALID_REQUEST_1;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_2;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_INVALID_REQUEST_1;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST_2;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
