@@ -20,6 +20,13 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
 
     runtimeOnly 'com.h2database:h2'
+    testRuntimeOnly 'com.h2database:h2'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
