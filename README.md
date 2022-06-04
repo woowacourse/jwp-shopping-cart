@@ -33,7 +33,7 @@
 - [ ] webpage를 보며 me라는 표현을 본적이 없지 않나요?
 - [ ] exception과 runtimeException을 같이 잡은 이유가 있을까요??
 - [ ] 로그인 시 `isValidPasswordByEmail()`에 대한 테스트가 없는 것 같다.
-- [ ] (JwtTokenProvider.getPayload) 한줄에 여러개를 모두 표현하기보다 한줄에 한개씩 표현하는게 더 명확한거 같아요!
+- [x] (JwtTokenProvider.getPayload) 한줄에 여러개를 모두 표현하기보다 한줄에 한개씩 표현하는게 더 명확한거 같아요!
 - [x] service에서 dto로 변환하여 넘겨주는 것이 역할에 맞을까요??
   - service에서 도메인을 넘겨주고 컨트롤러에서 변환하는 방법과 dto를 넘겨주는 것으로 크루들과 토론한 적이 있습니다. 
   - 도메인 반환 파
