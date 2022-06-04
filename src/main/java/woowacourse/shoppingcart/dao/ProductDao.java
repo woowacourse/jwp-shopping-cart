@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -7,18 +11,11 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Objects;
-
 @Repository
+@RequiredArgsConstructor
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public ProductDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public Long save(final Product product) {
         final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";

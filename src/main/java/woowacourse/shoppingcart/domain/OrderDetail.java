@@ -1,14 +1,18 @@
 package woowacourse.shoppingcart.domain;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class OrderDetail {
+
     private Long productId;
     private int quantity;
     private int price;
     private String name;
     private String imageUrl;
-
-    public OrderDetail() {
-    }
 
     public OrderDetail(final Long productId, final int quantity) {
         this.productId = productId;
@@ -26,25 +30,5 @@ public class OrderDetail {
         this.name = name;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public int getQuantity() {
-        return quantity;
     }
 }

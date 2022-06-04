@@ -1,21 +1,18 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.util.List;
-
 @Repository
+@RequiredArgsConstructor
 public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public OrderDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public Long addOrders(final Long customerId) {
         final String sql = "INSERT INTO orders (customer_id) VALUES (?)";

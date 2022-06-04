@@ -1,16 +1,15 @@
 package woowacourse.auth.dto;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@Getter
 public class TokenResponse {
+
     private String accessToken;
-
-    public TokenResponse() {
-    }
-
-    public TokenResponse(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
+    private Long expirationTime;
 }
