@@ -34,7 +34,10 @@
   - 인수 테스트를 할 때 제가 생각하는 시나리오로 인수테스트를 할 수 있도록 수정해보고 주석으로 시나리오를 써봤습니다.
   - 예외 테스트 등은 컨트롤러 테스트로 옮겼습니다.
   - 컨트롤러 테스트에서는 DirtiesContext를 하지 않으면서 속도가 매우 빨라졌습니다.
-- [ ] interceptor가 ui 패키지에 포함되어 있다. ui보다 config에 있는게 맞지 않을까? ui에 포함하게된 기준이 무엇이었을까?
+- [x] interceptor가 ui 패키지에 포함되어 있다. ui보다 config에 있는게 맞지 않을까? ui에 포함하게된 기준이 무엇이었을까?
+  - 제 프로젝트에서는 ui 패키지에 Advice, Resolver, Interceptor가 모두 있습니다.
+  - 저는 auth.config에는 리졸버와 인터셉터를 등록하고 설정하는 XXXConfig만을 넣어야 한다고 생각했고 사용자의 요청, 응답과 관련된 것들을 ui패키지에 포함시켰습니다.
+  - Controller(사용자 요청, 응답 처리), Advice(Controller에서 발생한 문제 핸들링), Resolver(특정 값을 만들어서 Controller에게 전달해줌), Interceptor(Controller가 실행되기 전 요청을 가로채서 특정 로직을 처리함)
 - [x] webpage를 보며 me라는 표현을 본적이 없지 않나요?
   - 팀에서 `/{username}`으로 내 username을 요청하는 것이 아닌 `/me`라는 URL을 사용한 이유는 나만의 정보를 조회, 수정, 탈퇴하게 하기 위해서 입니다.
   - `/{username}`처럼 url요청을 받으면 나의 유효한 토큰으로 다른 username의 정보를 조회, 수정, 탈퇴하지 못하게 하려면 토큰의 정보와 `/{username}`의 정보를 비교하는 추가적인 작업이 필요합니다.
