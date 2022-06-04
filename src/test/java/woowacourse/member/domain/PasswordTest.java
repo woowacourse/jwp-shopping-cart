@@ -40,20 +40,21 @@ public class PasswordTest {
         assertThat(password.getValue()).isNotEqualTo("Wooteco123");
     }
 
-    @DisplayName("비밀번호가 일치한다면 true를 반환한다.")
+    @DisplayName("같은 비밀번호로 만들어진 경우 동일하다고 판단한다.")
     @Test
-    void isSameAs() {
+    void equals() {
         Password password = Password.withEncrypt("Wooteco123!");
-        boolean result = password.isSameAs("Wooteco123!");
+        Password comparison = Password.withEncrypt("Wooteco123!");
+        boolean result = password.equals(comparison);
         assertThat(result).isTrue();
     }
 
-    @DisplayName("비밀번호가 일치하지 않는다면 false를 반환한다.")
+    @DisplayName("다른 비밀번호로 만들어진 경우 동일하다고 판단한다.")
     @Test
-    void isNotSameAs() {
+    void notEquals() {
         Password password = Password.withEncrypt("Wooteco123!");
-        String expected = PasswordEncoder.encrypt("Wooteco123?");
-        boolean result = password.isSameAs(expected);
+        Password comparison = Password.withEncrypt("Wooteco123?");
+        boolean result = password.equals(comparison);
         assertThat(result).isFalse();
     }
 }

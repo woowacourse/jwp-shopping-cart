@@ -50,11 +50,6 @@ public class Password {
         }
     }
 
-    public boolean isSameAs(String input) {
-        String comparison = PasswordEncoder.encrypt(input);
-        return value.equals(comparison);
-    }
-
     public String getValue() {
         return value;
     }

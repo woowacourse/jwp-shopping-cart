@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import woowacourse.member.exception.InvalidMemberEmailException;
 import woowacourse.member.exception.InvalidMemberNameException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MemberTest {
@@ -33,5 +34,25 @@ class MemberTest {
         assertThatThrownBy(() -> new Member("wooteconaver.com", "wooteco", password))
                 .isInstanceOf(InvalidMemberEmailException.class)
                 .hasMessageContaining("올바르지 못한 이메일 형식입니다.");
+    }
+
+
+    @DisplayName("비밀번호가 일치한다면 true를 반환한다.")
+    @Test
+    void isSamePassword() {
+        Password password = Password.withEncrypt("Wooteco123!");
+        Member member = new Member("wooteco@naver.com", "우테코", password);
+        boolean result = member.isSamePassword(password);
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("비밀번호가 일치하지 않는다면 false를 반환한다.")
+    @Test
+    void isNotSamePassword() {
+        Password password = Password.withEncrypt("Wooteco123!");
+        Password wrongPassword = Password.withEncrypt("Wooteco123?");
+        Member member = new Member("wooteco@naver.com", "우테코", password);
+        boolean result = member.isSamePassword(wrongPassword);
+        assertThat(result).isFalse();
     }
 }
