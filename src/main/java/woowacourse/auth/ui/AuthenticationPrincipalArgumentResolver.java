@@ -2,6 +2,7 @@ package woowacourse.auth.ui;
 
 import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -10,6 +11,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.exception.TokenExpiredException;
 
+@Component
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
