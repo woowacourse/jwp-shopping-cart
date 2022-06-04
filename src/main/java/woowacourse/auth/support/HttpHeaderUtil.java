@@ -19,7 +19,7 @@ public class HttpHeaderUtil {
 
     private static void validateAuthorizationHeader(String header) {
         if (header == null || !header.toLowerCase().startsWith(BEARER_TYPE)) {
-            throw new ForbiddenException("로그인이 필요합니다.");
+            throw new ForbiddenException();
         }
     }
 

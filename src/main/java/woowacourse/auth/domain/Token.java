@@ -22,7 +22,7 @@ public class Token {
         } catch (ExpiredJwtException e) {
             throw AuthenticationException.ofInvalidToken();
         } catch (JwtException | IllegalArgumentException e) {
-            throw new ForbiddenException("로그인이 필요합니다.");
+            throw new ForbiddenException();
         }
     }
 
