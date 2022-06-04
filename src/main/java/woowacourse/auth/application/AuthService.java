@@ -28,11 +28,7 @@ public class AuthService {
 
         Customer customer = customerDao.findByEmail(signIn.getEmail());
 
-        return new SignInResponse(
-                customer.getUsername(),
-                customer.getEmail(),
-                jwtTokenProvider.createToken(customer.getUsername())
-        );
+        return SignInResponse.fromCustomer(customer, jwtTokenProvider);
     }
 
     private void validatePassword(String email, String password) {

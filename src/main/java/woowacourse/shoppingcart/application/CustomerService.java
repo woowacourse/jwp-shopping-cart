@@ -35,7 +35,7 @@ public class CustomerService {
     @Transactional(readOnly = true)
     public CustomerResponse findMe(String username) {
         Customer customer = customerDao.findByUsername(username);
-        return new CustomerResponse(customer.getUsername(), customer.getEmail());
+        return CustomerResponse.from(customer);
     }
 
     @Transactional
