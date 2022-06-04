@@ -53,7 +53,7 @@ public class CustomerController {
 
     @PutMapping("/customers/{customerId}")
     public ResponseEntity<Void> updateCustomerInformation(
-            @AuthenticationPrincipal final PermissionCustomerRequest emailDto,
+            @AuthenticationPrincipal final PermissionCustomerRequest permissionRequest,
             @PathVariable Long customerId,
             @RequestBody final ModifiedCustomerRequest request) {
         customerService.updateCustomer(ModifiedCustomerDto.fromModifiedCustomerRequest(request));
@@ -61,9 +61,9 @@ public class CustomerController {
     }
 
     @DeleteMapping("/customers/{customerId}")
-    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal final PermissionCustomerRequest emailDto,
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal final PermissionCustomerRequest permissionRequest,
                                                @PathVariable Long customerId) {
-        customerService.deleteCustomer(emailDto);
+        customerService.deleteCustomer(permissionRequest);
         return ResponseEntity.noContent().build();
     }
 }
