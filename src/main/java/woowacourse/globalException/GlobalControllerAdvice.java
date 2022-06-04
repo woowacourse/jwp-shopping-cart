@@ -1,5 +1,6 @@
 package woowacourse.globalException;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -33,9 +34,13 @@ public class GlobalControllerAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ErrorResponse> handleDataAccessException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("데이터 처리중 문제가 발생하였습니다."));
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handlerException(Exception e) {
-        e.printStackTrace();
-        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    public ResponseEntity<ErrorResponse> handlerException() {
+        return ResponseEntity.badRequest().body(new ErrorResponse("다뤄지지 않은 에러입니다."));
     }
 }
