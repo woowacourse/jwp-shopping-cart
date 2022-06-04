@@ -1,6 +1,6 @@
 package woowacourse.auth.ui;
 
-import static woowacourse.auth.support.AuthorizationExtractor.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static woowacourse.auth.support.AuthorizationExtractor.BEARER_TYPE;
 
 import org.springframework.core.MethodParameter;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.JwtTokenProvider;
 
