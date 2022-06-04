@@ -15,6 +15,7 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
+
     private static final String INVALID_TOKEN_MESSAGE = "잘못된 토큰입니다.";
 
     @Value("${security.jwt.token.secret-key}")

@@ -1,13 +1,14 @@
 package woowacourse.auth.config;
 
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import woowacourse.auth.ui.AuthInterceptor;
-import woowacourse.auth.application.AuthService;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import woowacourse.auth.application.AuthService;
+import woowacourse.auth.ui.AuthInterceptor;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
+
     private final AuthService authService;
 
     public AuthenticationPrincipalConfig(AuthService authService) {

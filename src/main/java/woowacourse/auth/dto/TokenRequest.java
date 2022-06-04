@@ -1,6 +1,7 @@
 package woowacourse.auth.dto;
 
 public class TokenRequest {
+
     private String userName;
     private String password;
 

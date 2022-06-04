@@ -7,7 +7,7 @@ public class Password {
     private static final int STANDARD_PASSWORD_MIN_LENGTH = 8;
     private static final int STANDARD_PASSWORD_MAX_LENGTH = 16;
 
-    private String password;
+    private final String password;
 
     private Password(String password) {
         this.password = password;
@@ -15,7 +15,6 @@ public class Password {
 
     public static Password toPasswordWithEncrypt(String rawPassword, Encryptor encryptor) {
         Password password = new Password(rawPassword);
-        System.out.println(rawPassword);
         password.validatePassword();
         return new Password(encryptor.encrypt(password.value()));
     }

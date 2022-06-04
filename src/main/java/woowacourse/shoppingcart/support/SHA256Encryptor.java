@@ -6,15 +6,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Component
-public class SHA256Encryptor implements Encryptor{
+public class SHA256Encryptor implements Encryptor {
 
     @Override
-    public String encrypt(String plainText){
+    public String encrypt(String plainText) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(plainText.getBytes());
             return bytesToHex(md.digest());
-        } catch(NoSuchAlgorithmException e){
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException();
         }
     }
