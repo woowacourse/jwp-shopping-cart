@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
-import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequest;
+import javax.validation.constraints.NotBlank;
 
 public class CustomerProfileUpdateRequest {
 

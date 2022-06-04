@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
 import java.util.ArrayList;
 import java.util.List;
 

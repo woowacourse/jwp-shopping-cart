@@ -1,12 +1,9 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,16 +11,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.exception.PasswordNotMatchException;
-import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
-import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
-import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
-import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequest;
-import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
+import woowacourse.shoppingcart.application.dto.*;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {

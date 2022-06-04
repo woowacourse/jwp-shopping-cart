@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.domain.Password;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class CustomerDeleteRequest {
 

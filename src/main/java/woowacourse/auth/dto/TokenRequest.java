@@ -1,10 +1,10 @@
 package woowacourse.auth.dto;
 
+import woowacourse.auth.application.dto.LoginServiceRequest;
+import woowacourse.shoppingcart.domain.Password;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import woowacourse.auth.application.dto.LoginServiceRequest;
-import woowacourse.shoppingcart.domain.Password;
 
 public class TokenRequest {
 

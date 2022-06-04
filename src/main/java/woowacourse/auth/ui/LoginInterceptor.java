@@ -1,12 +1,12 @@
 package woowacourse.auth.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.exception.AuthorizationFailureException;
 import woowacourse.auth.support.AuthorizationExtractor;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class LoginInterceptor implements HandlerInterceptor {
 

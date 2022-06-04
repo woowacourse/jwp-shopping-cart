@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
+import woowacourse.shoppingcart.domain.Password;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
-import woowacourse.shoppingcart.domain.Password;
 
 public class CustomerRegisterRequest {
 
