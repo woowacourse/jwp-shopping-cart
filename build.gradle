@@ -54,8 +54,9 @@ asciidoctor {
 
 task createDocument(type: Copy) {
     dependsOn asciidoctor
-    from file("build/asciidoc/html5/index.html")
-    into file("src/main/resources/static/docs")
+    from 'build/asciidoc/html5'
+    include '*.html'
+    into 'src/main/resources/static/docs'
 }
 
 bootJar {
