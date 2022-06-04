@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.domain;
 import java.util.regex.Pattern;
 
 public class Customer {
+    private static final Pattern loginPattern = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
+
     private final Long id;
     private final String loginId;
     private final String name;
@@ -10,10 +12,6 @@ public class Customer {
 
     public Customer(String loginId, String name, String password) {
         this(null, loginId, name, password);
-    }
-
-    public Customer(Long id, Customer customer) {
-        this(id, customer.getLoginId(), customer.getName(), customer.getPassword());
     }
 
     public Customer(Long id, String loginId, String name, String password) {
@@ -25,8 +23,7 @@ public class Customer {
     }
 
     private void validateLoginId(String loginId) {
-        String emailRegex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
-        if (!Pattern.matches(emailRegex, loginId)) {
+        if (!loginPattern.matcher(loginId).matches()) {
             throw new IllegalArgumentException("아이디 형식이 잘못되었습니다.");
         }
     }
