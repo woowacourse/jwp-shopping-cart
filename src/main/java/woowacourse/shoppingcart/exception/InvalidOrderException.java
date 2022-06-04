@@ -1,6 +1,9 @@
 package woowacourse.shoppingcart.exception;
 
-public class InvalidOrderException extends RuntimeException {
+import woowacourse.common.exception.BadRequestException;
+
+public class InvalidOrderException extends BadRequestException {
+
     public InvalidOrderException() {
         this("유효하지 않은 주문입니다.");
     }
