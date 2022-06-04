@@ -57,8 +57,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         ExtractableResponse<Response> createResponse = createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
-        final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
-        final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
+        loginCustomer(TEST_EMAIL, TEST_PASSWORD);
 
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
