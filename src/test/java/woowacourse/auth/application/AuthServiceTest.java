@@ -22,8 +22,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
-import static woowacourse.fixture.PasswordFixture.rawBasicPassword;
+import static woowacourse.fixture.PasswordFixture.ENCRYPTED_BASIC_PASSWORD;
+import static woowacourse.fixture.PasswordFixture.RAW_BASIC_PASSWORD;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -45,17 +45,17 @@ class AuthServiceTest {
     void login() {
         // given
         String userName = "giron";
-        Password encryptedPassword = new Password(rawBasicPassword);
+        Password encryptedPassword = new Password(RAW_BASIC_PASSWORD);
         Customer customer = new Customer(1L, userName, encryptedPassword);
         given(customerDao.findByUserName(userName))
                 .willReturn(Optional.of(customer));
         given(jwtTokenProvider.createToken("1"))
                 .willReturn("accessToken");
-        given(passwordEncrypter.matches(rawBasicPassword, encryptedPassword))
+        given(passwordEncrypter.matches(RAW_BASIC_PASSWORD, encryptedPassword))
                 .willReturn(true);
 
         // when
-        TokenRequest request = new TokenRequest(userName, rawBasicPassword);
+        TokenRequest request = new TokenRequest(userName, RAW_BASIC_PASSWORD);
         final TokenResponse response = authService.login(request);
 
         // then
@@ -63,7 +63,7 @@ class AuthServiceTest {
                 () -> assertThat(response.getAccessToken()).isEqualTo("accessToken"),
                 () -> verify(customerDao).findByUserName(userName),
                 () -> verify(jwtTokenProvider).createToken("1"),
-                () -> verify(passwordEncrypter).matches(rawBasicPassword, encryptedPassword)
+                () -> verify(passwordEncrypter).matches(RAW_BASIC_PASSWORD, encryptedPassword)
         );
     }
 
@@ -73,7 +73,7 @@ class AuthServiceTest {
         // given
         String userName = "giron";
         String token = "accessToken";
-        Customer customer = new Customer(1L, userName, encryptedBasicPassword);
+        Customer customer = new Customer(1L, userName, ENCRYPTED_BASIC_PASSWORD);
         given(jwtTokenProvider.validateToken(token))
                 .willReturn(true);
         given(jwtTokenProvider.getPayload(token))

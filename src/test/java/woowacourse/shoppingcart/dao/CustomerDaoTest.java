@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static woowacourse.fixture.PasswordFixture.rawBasicPassword;
+import static woowacourse.fixture.PasswordFixture.ORIGIN_USER_1_PASSWORD;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -97,7 +97,7 @@ public class CustomerDaoTest {
         assertAll(
                 () -> assertThat(customer.getId()).isEqualTo(id),
                 () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
-                () -> assertThat(customer.getPassword().getValue()).isEqualTo(rawBasicPassword)
+                () -> assertThat(customer.getPassword().getValue()).isEqualTo(ORIGIN_USER_1_PASSWORD)
         );
     }
 
@@ -167,7 +167,7 @@ public class CustomerDaoTest {
         // then
         assertAll(
                 () -> assertThat(customer.getUserName()).isEqualTo(userName),
-                () -> assertThat(customer.getPassword().getValue()).isEqualTo(rawBasicPassword)
+                () -> assertThat(customer.getPassword().getValue()).isEqualTo(ORIGIN_USER_1_PASSWORD)
         );
 
     }

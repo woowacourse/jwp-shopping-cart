@@ -14,7 +14,6 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.PasswordEncrypter;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
 
@@ -27,8 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
-import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
-import static woowacourse.fixture.PasswordFixture.rawBasicPassword;
+import static woowacourse.fixture.PasswordFixture.ENCRYPTED_BASIC_PASSWORD;
+import static woowacourse.fixture.PasswordFixture.RAW_BASIC_PASSWORD;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -47,21 +46,21 @@ class CustomerServiceTest {
     void signUp() {
         // given
         final String userName = "giron";
-        Password password = new Password(rawBasicPassword);
+        Password password = new Password(RAW_BASIC_PASSWORD);
         given(customerDao.existsByUserName(userName)).willReturn(false);
-        given(passwordEncrypter.encode(rawBasicPassword)).willReturn(password);
+        given(passwordEncrypter.encode(RAW_BASIC_PASSWORD)).willReturn(password);
         given(customerDao.save(userName, password.getValue())).willReturn(1L);
 
         // when
         final CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword(userName, rawBasicPassword);
+                new CustomerRequest.UserNameAndPassword(userName, RAW_BASIC_PASSWORD);
         final Long id = customerService.signUp(request);
 
         // then
         assertAll(
                 () -> assertThat(id).isEqualTo(1L),
                 () -> verify(customerDao).existsByUserName(userName),
-                () -> verify(passwordEncrypter).encode(rawBasicPassword),
+                () -> verify(passwordEncrypter).encode(RAW_BASIC_PASSWORD),
                 () -> verify(customerDao).save(userName, password.getValue())
         );
     }
@@ -75,7 +74,7 @@ class CustomerServiceTest {
 
         // when
         final CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword(userName,
-                rawBasicPassword);
+                RAW_BASIC_PASSWORD);
 
         // then
         assertAll(
@@ -92,7 +91,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, encryptedBasicPassword);
+        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
         // when
@@ -127,7 +126,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, encryptedBasicPassword);
+        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
         Customer updatedCustomer = new Customer(id, userName, "321");
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
         given(customerDao.update(id, userName, "321")).willReturn(updatedCustomer);
@@ -171,7 +170,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, encryptedBasicPassword);
+        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
         // when
@@ -193,7 +192,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, encryptedBasicPassword);
+        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
         doNothing().when(customerDao).deleteById(id);
 
