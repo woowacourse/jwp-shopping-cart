@@ -31,15 +31,6 @@ public class MemberService {
         memberDao.save(member);
     }
 
-    public Long authenticate(LoginRequest request) {
-        Member member = validateExistMember(memberDao.findMemberByEmail(request.getEmail()));
-        Password requestPassword = Password.withEncrypt(request.getPassword());
-        if (!member.isSamePassword(requestPassword)) {
-            throw new WrongPasswordException("잘못된 비밀번호입니다.");
-        }
-        return member.getId();
-    }
-
     public MemberInfoResponse findMemberInfo(long id) {
         Member member = validateExistMember(memberDao.findMemberById(id));
         return new MemberInfoResponse(member);

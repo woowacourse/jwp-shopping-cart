@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
-import woowacourse.member.application.MemberService;
 
 import javax.validation.Valid;
 
@@ -14,17 +13,15 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
-    private final MemberService memberService;
 
-    public AuthController(AuthService authService, MemberService memberService) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.memberService = memberService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
-        Long id = memberService.authenticate(request);
+        Long id = authService.authenticate(request);
         return authService.createToken(id);
     }
 }

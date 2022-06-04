@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.member.dto.*;
 import woowacourse.member.exception.*;
@@ -20,9 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 class MemberServiceTest {
 
     private final MemberService memberService;
+    private final AuthService authService;
 
-    public MemberServiceTest(MemberService memberService) {
+    public MemberServiceTest(MemberService memberService, AuthService authService) {
         this.memberService = memberService;
+        this.authService = authService;
     }
 
     @DisplayName("올바른 데이터로 회원가입에 성공한다.")
@@ -40,32 +43,6 @@ class MemberServiceTest {
                 () -> memberService.signUp(new SignUpRequest("ari@wooteco.com", "가짜아리", "Wooteco!"))
         ).isInstanceOf(InvalidMemberEmailException.class)
                 .hasMessageContaining("중복되는 이메일이 존재합니다.");
-    }
-
-    @DisplayName("올바른 데이터로 회원 인증에 성공한다.")
-    @Test
-    void authenticateMember() {
-        assertDoesNotThrow(
-                () -> memberService.authenticate(new LoginRequest("ari@wooteco.com", "Wooteco1!"))
-        );
-    }
-
-    @DisplayName("존재하지 않는 이메일로 회원 인증을 하는 경우 예외가 발생한다.")
-    @Test
-    void authenticateMemberWithNotExistEmail() {
-        assertThatThrownBy(
-                () -> memberService.authenticate(new LoginRequest("pobi@wooteco.com", "Wooteco!"))
-        ).isInstanceOf(MemberNotFoundException.class)
-                .hasMessageContaining("존재하지 않는 회원입니다.");
-    }
-
-    @DisplayName("잘못된 비밀번호로 회원 인증을 하는 경우 예외가 발생한다.")
-    @Test
-    void authenticateMemberWithWrongPassword() {
-        assertThatThrownBy(
-                () -> memberService.authenticate(new LoginRequest("ari@wooteco.com", "Javajigi!!"))
-        ).isInstanceOf(WrongPasswordException.class)
-                .hasMessageContaining("잘못된 비밀번호입니다.");
     }
 
     @DisplayName("올바른 id로 회원정보를 조회한다.")
@@ -125,7 +102,7 @@ class MemberServiceTest {
     @Test
     void updatePassword() {
         memberService.updatePassword(1L, new UpdatePasswordRequest("Wooteco1!", "NewPassword1!"));
-        assertThat(memberService.authenticate(new LoginRequest("ari@wooteco.com", "NewPassword1!"))).isEqualTo(1L);
+        assertThat(authService.authenticate(new LoginRequest("ari@wooteco.com", "NewPassword1!"))).isEqualTo(1L);
     }
 
     @DisplayName("현재 비밀번호와 일치하지 않을시 예외가 발생한다.")
