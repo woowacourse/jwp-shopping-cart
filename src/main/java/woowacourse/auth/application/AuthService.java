@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
@@ -9,6 +10,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.support.passwordencoder.PasswordEncoder;
 
+@Transactional
 @Service
 public class AuthService {
 

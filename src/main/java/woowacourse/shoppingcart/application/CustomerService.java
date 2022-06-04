@@ -42,6 +42,7 @@ public class CustomerService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Customer findByUsername(final String username) {
         return customerDao.findByUsername(username)
             .orElseThrow(UserNotFoundException::new);
