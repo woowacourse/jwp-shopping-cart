@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import woowacourse.auth.domain.EncryptedPassword;
+import woowacourse.common.exception.InvalidRequestException;
 
 @SuppressWarnings("NonAsciiCharacters")
 class CustomerTest {
@@ -32,14 +33,14 @@ class CustomerTest {
         @Test
         void 아이디가_4글자_미만인_경우_예외발생() {
             assertThatThrownBy(() -> new Customer("abc", 암호화된_비밀번호, 유효한_닉네임, 10))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
         void 아이디가_20글자_초과인_경우_예외발생() {
             String tooLongUsername = "012345678901234567890";
             assertThatThrownBy(() -> new Customer(tooLongUsername, 암호화된_비밀번호, 유효한_닉네임, 10))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
     }
 
@@ -55,14 +56,14 @@ class CustomerTest {
         @Test
         void 닉네임이_0글자인_경우_예외발생() {
             assertThatThrownBy(() -> new Customer(유효한_아이디, 암호화된_비밀번호, "", 10))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
         void 닉네임이_10글자_초과인_경우_예외발생() {
             String tooLongNickname = "12345678901";
             assertThatThrownBy(() -> new Customer(유효한_아이디, 암호화된_비밀번호, tooLongNickname, 10))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
     }
 
@@ -73,13 +74,13 @@ class CustomerTest {
         @Test
         void 나이가_음수인_경우_예외발생() {
             assertThatThrownBy(() -> new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, -1))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
         void 나이가_200_초과인_경우_예외발생() {
             assertThatThrownBy(() -> new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 201))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
     }
 }

@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import woowacourse.common.exception.InvalidRequestException;
 
 @SuppressWarnings("NonAsciiCharacters")
 class PasswordTest {
@@ -26,7 +27,7 @@ class PasswordTest {
         void 알파벳이_없으면_예외_발생() {
             String 알파벳_누락 = "123456!@#$%";
             assertThatThrownBy(() -> new Password(알파벳_누락))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -34,7 +35,7 @@ class PasswordTest {
             String 특수문자_누락 = "asdf12345";
 
             assertThatThrownBy(() -> new Password(특수문자_누락))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -42,7 +43,7 @@ class PasswordTest {
             String 숫자_누락 = "asdf!@#$%";
 
             assertThatThrownBy(() -> new Password(숫자_누락))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -50,7 +51,7 @@ class PasswordTest {
             String 공백_포함 = "asdf !@#$ 12345";
 
             assertThatThrownBy(() -> new Password(공백_포함))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -58,7 +59,7 @@ class PasswordTest {
             String 길이가_7인_비밀번호 = "asd@123";
 
             assertThatThrownBy(() -> new Password(길이가_7인_비밀번호))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -66,7 +67,7 @@ class PasswordTest {
             String 길이가_21인_비밀번호 = "asdfg!@#$%12345678901";
 
             assertThatThrownBy(() -> new Password(길이가_21인_비밀번호))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -74,7 +75,7 @@ class PasswordTest {
             String 한글_포함_비밀번호 = "ㅁㄴㅇabc!@#12";
 
             assertThatThrownBy(() -> new Password(한글_포함_비밀번호))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
     }
 

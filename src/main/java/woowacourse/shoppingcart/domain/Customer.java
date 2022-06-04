@@ -5,6 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.auth.domain.Password;
+import woowacourse.common.exception.InvalidExceptionType;
+import woowacourse.common.exception.InvalidRequestException;
 
 public class Customer {
 
@@ -37,20 +39,20 @@ public class Customer {
     private void validateUsername(String username) {
         Matcher matcher = USERNAME_PATTERN.matcher(username);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("아이디는 최소 4글자, 최대 20글자여야 합니다.");
+            throw new InvalidRequestException(InvalidExceptionType.USERNAME_FORMAT);
         }
     }
 
     private void validateNickname(String nickname) {
         Matcher matcher = NICKNAME_PATTERN.matcher(nickname);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("닉네임은 최소 1글자, 최대 10글자여야 합니다.");
+            throw new InvalidRequestException(InvalidExceptionType.NICKNAME_FORMAT);
         }
     }
 
     private void validateAge(int age) {
         if (age < 0 || age > 200) {
-            throw new IllegalArgumentException("나이는 0~200세만 입력할 수 있습니다.");
+            throw new InvalidRequestException(InvalidExceptionType.AGE_FORMAT);
         }
     }
 

@@ -4,6 +4,8 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import woowacourse.common.exception.InvalidExceptionType;
+import woowacourse.common.exception.InvalidRequestException;
 
 public class Password {
 
@@ -20,7 +22,7 @@ public class Password {
     private void validate(String value) {
         Matcher matcher = PATTERN.matcher(value);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("비밀번호는 알파벳, 숫자, 특수문자로 구성되어야 합니다. (8~20글자)");
+            throw new InvalidRequestException(InvalidExceptionType.PASSWORD_FORMAT);
         }
     }
 

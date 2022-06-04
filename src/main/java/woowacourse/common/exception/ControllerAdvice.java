@@ -1,12 +1,9 @@
 package woowacourse.common.exception;
 
 import java.util.stream.Collectors;
-import javax.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,7 +19,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handle(IllegalArgumentException e) {
+    public ResponseEntity<ErrorResponse> handle(InvalidRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(toErrorResponse(e));
     }
 
@@ -49,21 +46,6 @@ public class ControllerAdvice {
                 .collect(Collectors.joining(", "));
         String errorMessage = String.format("입력이 잘못되었습니다: [%s]", causes);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
-    }
-
-    // TODO: legacy: should be removed at step2
-    @ExceptionHandler({
-            EmptyResultDataAccessException.class,
-            HttpMessageNotReadableException.class,
-            ConstraintViolationException.class,
-            InvalidCustomerException.class,
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
-    })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     private ErrorResponse toErrorResponse(Exception e) {

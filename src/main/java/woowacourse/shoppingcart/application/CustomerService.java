@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.domain.User;
+import woowacourse.common.exception.InvalidExceptionType;
+import woowacourse.common.exception.InvalidRequestException;
+import woowacourse.common.exception.NotFoundException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
@@ -11,7 +14,6 @@ import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.response.GetMeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
-import woowacourse.common.exception.NotFoundException;
 
 @Service
 public class CustomerService {
@@ -43,7 +45,7 @@ public class CustomerService {
     public void updateNicknameAndAge(User user, UpdateMeRequest request) {
         Customer customer = findCustomer(user);
         if (!customer.hasSameUsername(request.getUsername())) {
-            throw new IllegalArgumentException("아이디는 수정할 수 없습니다.");
+            throw new InvalidRequestException("아이디는 수정할 수 없습니다.");
         }
         Customer updatedCustomer = new Customer(customer.getUsername(),
                 customer.getEncryptedPassword(), request.getNickname(), request.getAge());
@@ -54,7 +56,7 @@ public class CustomerService {
     public void updatePassword(User user, UpdatePasswordRequest request) {
         Customer customer = findCustomer(user);
         if (user.hasDifferentPassword(request.getOldPassword())) {
-            throw new IllegalArgumentException("현재 비밀번호를 잘못 입력하였습니다.");
+            throw new InvalidRequestException(InvalidExceptionType.WRONG_PASSWORD);
         }
         Customer updatedCustomer = new Customer(user.getUsername(),
                 new Password(request.getNewPassword()), customer.getNickname(), customer.getAge());

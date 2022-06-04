@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.common.exception.InvalidExceptionType;
+import woowacourse.common.exception.InvalidRequestException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.common.exception.InvalidProductException;
-import woowacourse.common.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -48,7 +48,7 @@ public class CartService {
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
-            throw new InvalidProductException();
+            throw new InvalidRequestException(InvalidExceptionType.PRODUCT);
         }
     }
 
@@ -62,6 +62,6 @@ public class CartService {
         if (cartIds.contains(cartId)) {
             return;
         }
-        throw new NotInCustomerCartItemException();
+        throw new InvalidRequestException(InvalidExceptionType.NOT_IN_CART);
     }
 }

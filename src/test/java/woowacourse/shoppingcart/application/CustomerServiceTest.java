@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.domain.User;
+import woowacourse.common.exception.InvalidRequestException;
+import woowacourse.common.exception.NotFoundException;
 import woowacourse.setup.DatabaseTest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -20,7 +22,6 @@ import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.response.GetMeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
-import woowacourse.common.exception.NotFoundException;
 import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -125,7 +126,7 @@ class CustomerServiceTest extends DatabaseTest {
             SignUpRequest 회원가입_정보 = new SignUpRequest("아이디", 비밀번호, 유효한_닉네임, 유효한_나이);
 
             assertThatThrownBy(() -> customerService.createCustomer(회원가입_정보))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -134,7 +135,7 @@ class CustomerServiceTest extends DatabaseTest {
             SignUpRequest 회원가입_정보 = new SignUpRequest(너무_긴_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
             assertThatThrownBy(() -> customerService.createCustomer(회원가입_정보))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -143,7 +144,7 @@ class CustomerServiceTest extends DatabaseTest {
             SignUpRequest 회원가입_정보 = new SignUpRequest(유효한_아이디, 비밀번호, 닉네임, 유효한_나이);
 
             assertThatThrownBy(() -> customerService.createCustomer(회원가입_정보))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -152,7 +153,7 @@ class CustomerServiceTest extends DatabaseTest {
             SignUpRequest 회원가입_정보 = new SignUpRequest(유효한_아이디, 비밀번호, 닉네임, 유효한_나이);
 
             assertThatThrownBy(() -> customerService.createCustomer(회원가입_정보))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -160,7 +161,7 @@ class CustomerServiceTest extends DatabaseTest {
             SignUpRequest 회원가입_정보 = new SignUpRequest(유효한_아이디, 비밀번호, 유효한_닉네임, -1);
 
             assertThatThrownBy(() -> customerService.createCustomer(회원가입_정보))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
     }
 
@@ -200,7 +201,7 @@ class CustomerServiceTest extends DatabaseTest {
             UpdateMeRequest 아이디_수정_정보 = new UpdateMeRequest("new_username", 유효한_닉네임, 유효한_나이);
 
             assertThatThrownBy(() -> customerService.updateNicknameAndAge(유효한_사용자, 아이디_수정_정보))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
@@ -238,7 +239,7 @@ class CustomerServiceTest extends DatabaseTest {
             UpdatePasswordRequest 비밀번호_수정_정보 = new UpdatePasswordRequest(틀린_기존_비밀번호, 새로운_비밀번호);
 
             assertThatThrownBy(() -> customerService.updatePassword(유효한_사용자, 비밀번호_수정_정보))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidRequestException.class);
         }
 
         @Test
