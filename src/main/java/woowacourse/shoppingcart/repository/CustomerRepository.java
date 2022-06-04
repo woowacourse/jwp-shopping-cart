@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.repository;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.exception.InvalidLoginException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
@@ -24,8 +26,12 @@ public class CustomerRepository {
         return customerDao.findById(id);
     }
 
-    public Customer login(final String username, final String password) {
-        return customerDao.login(username, password);
+    public Customer findValidUser(final String username, final String password) {
+        try {
+            return customerDao.findByUsernameAndPassword(username, password);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new InvalidLoginException("로그인 할 수 없습니다.");
+        }
     }
 
     public void update(final Customer newCustomer) {

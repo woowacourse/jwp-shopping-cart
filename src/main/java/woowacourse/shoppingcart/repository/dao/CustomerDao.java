@@ -13,7 +13,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidLoginException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.ResourceNotFoundException;
 
@@ -35,10 +34,10 @@ public class CustomerDao {
     }
 
     public Long findIdByUserName(final String username) {
+        final String query = "SELECT id FROM customer WHERE username = :username";
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
         try {
-            final String query = "SELECT id FROM customer WHERE username = :username";
-            Map<String, Object> params = new HashMap<>();
-            params.put("username", username);
             return namedParameterJdbcTemplate.queryForObject(query, params, Long.class);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException("존재하지 않는 유저입니다.");
@@ -67,18 +66,14 @@ public class CustomerDao {
         }
     }
 
-    public Customer login(final String username, final String password) {
+    public Customer findByUsernameAndPassword(final String username, final String password) {
         String query = "select id, username, password, nickname from"
                 + REAL_CUSTOMER_QUERY
                 + "where username = :username and password = :password";
         Map<String, Object> params = new HashMap<>();
         params.put("username", username);
         params.put("password", password);
-        try {
-            return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
-        } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidLoginException("로그인 할 수 없습니다.");
-        }
+        return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
     }
 
     public void update(final Customer newCustomer) {

@@ -56,7 +56,7 @@ class CustomerRepositoryTest {
         customerRepository.create(customer);
 
         // when
-        Customer loginCustomerResult = customerRepository.login("jo@naver.com", "1234abcd!");
+        Customer loginCustomerResult = customerRepository.findValidUser("jo@naver.com", "1234abcd!");
 
         // then
         assertThat(loginCustomerResult)

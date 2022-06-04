@@ -27,7 +27,7 @@ public class CustomerService {
     }
 
     public CustomerLoginResponse login(final CustomerLoginRequest request) {
-        Customer customer = customerRepository.login(request.getUserId(), request.getPassword());
+        Customer customer = customerRepository.findValidUser(request.getUserId(), request.getPassword());
         return CustomerLoginResponse.ofExceptToken(customer);
     }
 
