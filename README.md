@@ -326,6 +326,6 @@
     - -> 각각 역할에 맞게 메소드명 고민
 - [x] 토큰을 생성하는것까지 Service에서 하는것이 맞지 않을까요~??
     - -> 서비스로 옮기자
-- [ ] TokenRequest -> 어떤 id를 의미하는지 명확하게 나타내면 좋을 것 같아요~
-- [ ] checkDuplicateUsername -> 파라미터 설정 값이� 중복된게 아닌가 해요!
+- [x] TokenRequest -> 어떤 id를 의미하는지 명확하게 나타내면 좋을 것 같아요~
+- [x] checkDuplicateUsername -> 파라미터 설정 값이 중복된게 아닌가 해요!
 - [ ] CustomerRepository -> 예외 메시지를 넣지 않고 비워둔 이유가 있을까요?
