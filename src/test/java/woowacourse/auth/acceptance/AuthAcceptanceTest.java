@@ -82,6 +82,18 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .as(AuthorizationException.class);
     }
 
+    @DisplayName("토큰 없이 회원 관련 기능에 접근할 경우 요청이 거부된다.")
+    @Test
+    void myInfoWithNoAuth() {
+        // when then
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/me")
+                .then().log().all()
+                .extract()
+                .as(AuthorizationException.class);
+    }
+
     private void signUpCustomer() {
         CustomerRequest customerRequest =
                 new CustomerRequest("forky", "forky@1234", "복희", 26);

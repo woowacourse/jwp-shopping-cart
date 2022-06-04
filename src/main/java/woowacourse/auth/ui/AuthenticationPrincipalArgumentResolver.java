@@ -10,6 +10,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 
 import javax.servlet.http.HttpServletRequest;
+import woowacourse.auth.support.JwtTokenProvider;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
     private final AuthService authService;
