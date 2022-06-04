@@ -1,0 +1,26 @@
+DELETE
+FROM orders_detail;
+
+DELETE
+FROM orders;
+
+DELETE
+FROM cart_item;
+
+DELETE
+FROM product;
+
+DELETE
+FROM customer;
+
+
+ALTER TABLE orders_detail
+    ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE orders
+    ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE cart_item
+    ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE product
+    ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE customer
+    ALTER COLUMN id RESTART WITH 1;

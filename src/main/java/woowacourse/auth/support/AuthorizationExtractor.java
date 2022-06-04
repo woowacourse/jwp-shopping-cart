@@ -1,7 +1,7 @@
 package woowacourse.auth.support;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import javax.servlet.http.HttpServletRequest;
 
 public class AuthorizationExtractor {
     public static final String AUTHORIZATION = "Authorization";
@@ -10,6 +10,7 @@ public class AuthorizationExtractor {
 
     public static String extract(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
+
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
             if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
