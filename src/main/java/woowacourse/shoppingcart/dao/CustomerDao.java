@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Account;
 import woowacourse.shoppingcart.domain.Address;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
@@ -24,7 +25,7 @@ public class CustomerDao {
     private final RowMapper<Customer> customerRowMapper = (rs, rowNum) ->
             new Customer(
                     rs.getLong("id"),
-                    rs.getString("account"),
+                    new Account(rs.getString("account")),
                     new Nickname(rs.getString("nickname")),
                     rs.getString("password"),
                     new Address(rs.getString("address")),
@@ -51,7 +52,7 @@ public class CustomerDao {
         final Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
         return new Customer(
                 number.longValue(),
-                customer.getAccount(),
+                new Account(customer.getAccount()),
                 new Nickname(customer.getNickname()),
                 customer.getPassword(),
                 new Address(customer.getAddress()),

@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Account;
 import woowacourse.shoppingcart.domain.Address;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
@@ -21,8 +22,6 @@ import woowacourse.shoppingcart.exception.WrongPasswordException;
 @Service
 @Transactional
 public class CustomerService {
-
-    private static final String EXCLUDE_NUMBER_AND_ALPHABET = "[^\\da-zA-Z]";
 
     private final CustomerDao customerDao;
     private final PasswordEncoder passwordEncoder;
@@ -43,18 +42,13 @@ public class CustomerService {
     }
 
     private Customer toCustomer(SignupRequest signupRequest) {
-        final String processedAccount = removeSpecialCharacter(signupRequest);
         PhoneNumberFormat phoneNumberFormat = signupRequest.getPhoneNumber();
-        return new Customer(processedAccount,
+        return new Customer(
+                new Account(signupRequest.getAccount()),
                 new Nickname(signupRequest.getNickname()),
                 passwordEncoder.encode(signupRequest.getPassword()),
                 new Address(signupRequest.getAddress()),
                 new PhoneNumber(phoneNumberFormat.appendNumbers()));
-    }
-
-    private String removeSpecialCharacter(SignupRequest signupRequest) {
-        return signupRequest.getAccount().replaceAll(EXCLUDE_NUMBER_AND_ALPHABET, "")
-                .toLowerCase(Locale.ROOT).trim();
     }
 
     @Transactional(readOnly = true)

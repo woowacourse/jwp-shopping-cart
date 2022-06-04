@@ -87,7 +87,7 @@ public class SignupAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @CsvSource(value = {"에덴짱123"})
-    @DisplayName("회원가입 시 아이디에 한글이 포함이면 400 상태코드를 반환한다.")
+    @DisplayName("회원가입 시 아이디에 한글이 포함되면 400 상태코드를 반환한다.")
     void notAcceptedKoreanAccount(String account) {
         // given
         final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumberFormat("010", "1234", "5678"));

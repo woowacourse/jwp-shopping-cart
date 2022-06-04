@@ -8,6 +8,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.FakePasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Account;
 import woowacourse.shoppingcart.domain.Address;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
@@ -40,10 +41,11 @@ class AuthServiceTest {
     @DisplayName("로그인 정보를 확인하고 토큰을 발행한다.")
     void createToken() {
         // given
+        Account account = new Account("leo0842");
         Nickname nickname = new Nickname("eden");
         Address address = new Address("address");
         PhoneNumber phoneNumber = new PhoneNumber("01023456789");
-        final Customer customer = new Customer(1L, "leo0842", nickname, "Password123!", address, phoneNumber);
+        final Customer customer = new Customer(1L, account, nickname, "Password123!", address, phoneNumber);
         given(customerDao.findByAccount("leo0842")).willReturn(Optional.of(customer));
         given(jwtTokenProvider.createToken(String.valueOf(1L))).willReturn("token");
 
@@ -72,10 +74,11 @@ class AuthServiceTest {
     @DisplayName("비밀번호가 일치하지 않으면 로그인 실패 예외를 반환한다.")
     void throwPasswordNotMatch() {
         // given
+        Account account = new Account("leo0842");
         Nickname nickname = new Nickname("eden");
         Address address = new Address("address");
         PhoneNumber phoneNumber = new PhoneNumber("01023456789");
-        final Customer customer = new Customer(1L, "leo0842", nickname, "Password123!", address, phoneNumber);
+        final Customer customer = new Customer(1L, account, nickname, "Password123!", address, phoneNumber);
         given(customerDao.findByAccount("leo0842")).willReturn(Optional.of(customer));
 
         // when
