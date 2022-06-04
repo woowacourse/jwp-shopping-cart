@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.PermissionCustomerRequest;
@@ -41,17 +42,25 @@ public class CustomerService {
 
     public TokenResponse signIn(final SignInDto signInDto) {
         final Email email = new Email(signInDto.getEmail());
-        final NewPassword password = new NewPassword(signInDto.getPassword());
+        final Long customerId = checkSignUpCustomer(email);
         final String foundPassword = customerDao.findPasswordByEmail(email);
-        verifyPassword(password, foundPassword);
-        Long customerId = customerDao.findIdByEmail(email);
+        verifyPassword(signInDto.getPassword(), foundPassword);
         String payload = createPayload(new PermissionCustomerRequest(email.getValue()));
         return new TokenResponse(customerId, provider.createToken(payload));
     }
 
-    private void verifyPassword(final NewPassword password, final String hashedPassword) {
-        if (!password.isSamePassword(hashedPassword)) {
+    private void verifyPassword(final String password, final String hashedPassword) {
+        final NewPassword newPassword = new NewPassword(password);
+        if (!newPassword.isSamePassword(hashedPassword)) {
             throw new IllegalArgumentException("올바르지 않은 비밀번호입니다.");
+        }
+    }
+
+    private Long checkSignUpCustomer(Email email) {
+        try {
+            return customerDao.findIdByEmail(email);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("가입하지 않은 유저입니다.");
         }
     }
 

@@ -2,8 +2,10 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -57,6 +59,7 @@ public class CustomerDao {
         final String query = "SELECT id FROM customer WHERE email = ?";
         return jdbcTemplate.queryForObject(query, Long.class, email.getValue());
     }
+
 
     public String findPasswordByEmail(final Email email) {
         final String query = "SELECT password FROM customer WHERE email = ?";
