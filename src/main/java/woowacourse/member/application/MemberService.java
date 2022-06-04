@@ -12,7 +12,7 @@ import woowacourse.member.exception.*;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberDao memberDao;
@@ -21,6 +21,7 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
+    @Transactional
     public void signUp(SignUpRequest request) {
         if (memberDao.existMemberByEmail(request.getEmail())) {
             throw new InvalidMemberEmailException("중복되는 이메일이 존재합니다.");
@@ -42,6 +43,7 @@ public class MemberService {
         }
     }
 
+    @Transactional
     public void updateName(long id, UpdateNameRequest request) {
         Member member = validateExistMember(memberDao.findMemberById(id));
 
@@ -51,6 +53,7 @@ public class MemberService {
         memberDao.updateName(id, request.getName());
     }
 
+    @Transactional
     public void updatePassword(long id, UpdatePasswordRequest request) {
         Member member = validateExistMember(memberDao.findMemberById(id));
         validateUpdatePassword(request, member);
@@ -74,6 +77,7 @@ public class MemberService {
         }
     }
 
+    @Transactional
     public void withdraw(long id, WithdrawalRequest request) {
         Member member = validateExistMember(memberDao.findMemberById(id));
         Password requestPassword = new NewPassword(request.getPassword());
