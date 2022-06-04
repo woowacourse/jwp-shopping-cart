@@ -1,22 +1,24 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Cart;
+import static org.assertj.core.api.Assertions.*;
+import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import woowacourse.shoppingcart.domain.Cart;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -34,6 +36,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("장바구니 아이템 추가")
+    @Disabled
     @Test
     void addCartItem() {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
@@ -42,6 +45,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
+    @Disabled
     @Test
     void getCartItems() {
         장바구니_아이템_추가되어_있음(USER, productId1);
@@ -54,6 +58,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("장바구니 삭제")
+    @Disabled
     @Test
     void deleteCartItem() {
         Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
