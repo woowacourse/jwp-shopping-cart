@@ -1,28 +1,39 @@
 package woowacourse.auth.config;
 
-import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
-import woowacourse.auth.application.AuthService;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
+import woowacourse.auth.support.TokenManager;
+import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
+import woowacourse.auth.ui.LoginInterceptor;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
-    private final AuthService authService;
 
-    public AuthenticationPrincipalConfig(AuthService authService) {
-        this.authService = authService;
+    private final TokenManager tokenManager;
+
+    public AuthenticationPrincipalConfig(TokenManager tokenManager) {
+        this.tokenManager = tokenManager;
     }
 
     @Override
-    public void addArgumentResolvers(List argumentResolvers) {
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoginInterceptor(tokenManager))
+                .addPathPatterns("/api/members/**")
+                .excludePathPatterns("/api/members")
+                .excludePathPatterns("/api/members/check-email");
     }
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService);
+        return new AuthenticationPrincipalArgumentResolver(tokenManager);
     }
 }
