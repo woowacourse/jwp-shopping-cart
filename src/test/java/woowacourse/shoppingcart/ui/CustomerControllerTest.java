@@ -31,29 +31,29 @@ public class CustomerControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @DisplayName("회원가입 시 아이디를 4자 미만 20자 초과로 작성한 경우 예외를 발생시킨다.")
+    @DisplayName("아이디를 4자 미만 20자 초과로 작성한 경우 예외를 발생시킨다.")
     @ParameterizedTest
     @ValueSource(strings = {"abc", "abcdefghijklmnopqrstu"})
-    void createCustomerWithInvalidName(String username) throws Exception {
+    void invalidName(String username) throws Exception {
         CustomerRequest customerRequest =
                 new CustomerRequest(username, DEFAULT_PASSWORD, DEFAULT_NICKNAME, DEFAULT_AGE);
         String message = "아이디는 4자 이상 20자 이하여야 합니다.";
         performAndExpectedErrorMessage(customerRequest, message);
     }
 
-    @DisplayName("회원가입 시 비밀번호를 8자 미만 20자 초과로 작성한 경우 예외를 발생시킨다.")
+    @DisplayName("비밀번호를 8자 미만 20자 초과로 작성한 경우 예외를 발생시킨다.")
     @ParameterizedTest
     @ValueSource(strings = {"abcdefg", "abcdefghijklmnopqrstu"})
-    void createCustomerWithInvalidPassword(String password) throws Exception {
+    void invalidPassword(String password) throws Exception {
         CustomerRequest customerRequest =
                 new CustomerRequest(DEFAULT_PASSWORD, password, DEFAULT_NICKNAME, DEFAULT_AGE);
         String message = "비밀번호는 8자 이상 20자 이하여야 합니다.";
         performAndExpectedErrorMessage(customerRequest, message);
     }
 
-    @DisplayName("회원가입 시 이름을 10자 초과로 작성한 경우 예외를 발생시킨다.")
+    @DisplayName("이름을 10자 초과로 작성한 경우 예외를 발생시킨다.")
     @Test
-    void createCustomerWithInvalid() throws Exception {
+    void invalidUsername() throws Exception {
         CustomerRequest customerRequest =
                 new CustomerRequest(DEFAULT_USERNAME, DEFAULT_PASSWORD, "이런저런열한글자의이름", DEFAULT_AGE);
         String message = "이름은 1자 이상 10자 이하여야 합니다.";
@@ -62,7 +62,7 @@ public class CustomerControllerTest {
 
     @DisplayName("회원가입 시 나이를 0살 이하로 작성한 경우 예외를 발생시킨다.")
     @Test
-    void createCustomerWithInvalidAge() throws Exception {
+    void invalidAge() throws Exception {
         CustomerRequest customerRequest =
                 new CustomerRequest(DEFAULT_USERNAME, DEFAULT_PASSWORD, DEFAULT_NICKNAME, -1);
         String message = "올바른 나이를 입력해주세요.";
