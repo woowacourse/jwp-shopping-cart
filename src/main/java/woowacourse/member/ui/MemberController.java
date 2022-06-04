@@ -32,7 +32,7 @@ public class MemberController {
 
     @PostMapping("/duplicate-email")
     @ResponseStatus(HttpStatus.OK)
-    public void checkDuplicateEmail(@Valid @RequestBody DuplicateEmailRequest request) {
+    public void checkDuplicateEmail(@Valid @RequestBody EmailDuplicateCheckRequest request) {
         memberService.checkDuplicateEmail(request);
     }
 

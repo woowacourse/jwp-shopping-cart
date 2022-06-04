@@ -92,7 +92,7 @@ class MemberServiceTest {
     @Test
     void checkDuplicateEmailWithNotDuplicateEmail() {
         assertDoesNotThrow(
-                () -> memberService.checkDuplicateEmail(new DuplicateEmailRequest("pobi@wooteco.com"))
+                () -> memberService.checkDuplicateEmail(new EmailDuplicateCheckRequest("pobi@wooteco.com"))
         );
     }
 
@@ -100,7 +100,7 @@ class MemberServiceTest {
     @Test
     void checkDuplicateEmailWithDuplicateEmail() {
         assertThatThrownBy(
-                () -> memberService.checkDuplicateEmail(new DuplicateEmailRequest("ari@wooteco.com"))
+                () -> memberService.checkDuplicateEmail(new EmailDuplicateCheckRequest("ari@wooteco.com"))
         ).isInstanceOf(DuplicateEmailException.class)
                 .hasMessageContaining("이메일은 중복될 수 없습니다.");
     }

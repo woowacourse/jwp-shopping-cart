@@ -3,16 +3,16 @@ package woowacourse.member.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-public class DuplicateEmailRequest {
+public class EmailDuplicateCheckRequest {
 
     @NotBlank(message = "이메일은 빈 값일 수 없습니다.")
     @Email(message = "올바르지 않은 형식의 이메일입니다.")
     private String email;
 
-    public DuplicateEmailRequest() {
+    public EmailDuplicateCheckRequest() {
     }
 
-    public DuplicateEmailRequest(String email) {
+    public EmailDuplicateCheckRequest(String email) {
         this.email = email;
     }
 

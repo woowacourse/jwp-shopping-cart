@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.member.dto.DuplicateEmailRequest;
+import woowacourse.member.dto.EmailDuplicateCheckRequest;
 import woowacourse.member.dto.SignUpRequest;
 
 import static org.hamcrest.Matchers.containsString;
@@ -116,7 +116,7 @@ class MemberControllerTest {
         @DisplayName("이메일은 빈 값을 허용하지 않는다.")
         @Test
         void blankEmailException() throws Exception {
-            DuplicateEmailRequest request = new DuplicateEmailRequest("");
+            EmailDuplicateCheckRequest request = new EmailDuplicateCheckRequest("");
             mockMvc.perform(post("/api/members/duplicate-email")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request))
@@ -127,7 +127,7 @@ class MemberControllerTest {
         @DisplayName("올바르지 못한 형식의 이메일은 허용하지 않는다.")
         @Test
         void invalidEmailFormException() throws Exception {
-            DuplicateEmailRequest request = new DuplicateEmailRequest("wooteco.com");
+            EmailDuplicateCheckRequest request = new EmailDuplicateCheckRequest("wooteco.com");
             mockMvc.perform(post("/api/members/duplicate-email")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request))

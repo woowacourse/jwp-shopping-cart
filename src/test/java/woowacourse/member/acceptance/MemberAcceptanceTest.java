@@ -45,8 +45,8 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
         RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
 
-        DuplicateEmailRequest duplicateEmailRequest = new DuplicateEmailRequest("pobi@wooteco.com");
-        RestAssuredConvenienceMethod.postRequest(duplicateEmailRequest, "/api/members/duplicate-email")
+        EmailDuplicateCheckRequest emailDuplicateCheckRequest = new EmailDuplicateCheckRequest("pobi@wooteco.com");
+        RestAssuredConvenienceMethod.postRequest(emailDuplicateCheckRequest, "/api/members/duplicate-email")
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -56,8 +56,8 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
         RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
 
-        DuplicateEmailRequest duplicateEmailRequest = new DuplicateEmailRequest("woni@wooteco.com");
-        RestAssuredConvenienceMethod.postRequest(duplicateEmailRequest, "/api/members/duplicate-email")
+        EmailDuplicateCheckRequest emailDuplicateCheckRequest = new EmailDuplicateCheckRequest("woni@wooteco.com");
+        RestAssuredConvenienceMethod.postRequest(emailDuplicateCheckRequest, "/api/members/duplicate-email")
                 .statusCode(HttpStatus.OK.value());
     }
 
