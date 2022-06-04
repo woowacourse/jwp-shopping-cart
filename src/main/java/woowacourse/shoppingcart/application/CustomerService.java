@@ -9,7 +9,6 @@ import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequ
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -24,11 +23,7 @@ public class CustomerService {
     }
 
     public void save(final CustomerSaveServiceRequest customerSaveServiceRequest) {
-        final Customer customer = new Customer(
-                customerSaveServiceRequest.getName(),
-                new Email(customerSaveServiceRequest.getEmail()),
-                Password.fromRawValue(customerSaveServiceRequest.getPassword())
-        );
+        final Customer customer = customerSaveServiceRequest.toEntity();
 
         validateDuplicatedEmail(customer);
         customerDao.save(customer);
