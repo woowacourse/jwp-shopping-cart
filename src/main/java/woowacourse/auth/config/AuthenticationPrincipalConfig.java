@@ -38,7 +38,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
         return new AuthenticationPrincipalArgumentResolver(authService);
     }
 
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
