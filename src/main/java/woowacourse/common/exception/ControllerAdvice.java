@@ -1,4 +1,4 @@
-package woowacourse.exception;
+package woowacourse.common.exception;
 
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;

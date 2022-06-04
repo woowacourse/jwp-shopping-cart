@@ -1,4 +1,4 @@
-package woowacourse.exception;
+package woowacourse.common.exception;
 
 public class InvalidOrderException extends RuntimeException {
     public InvalidOrderException() {

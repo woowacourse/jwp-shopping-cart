@@ -17,7 +17,7 @@ import woowacourse.auth.domain.Token;
 import woowacourse.auth.domain.User;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.exception.AuthenticationException;
+import woowacourse.common.exception.AuthenticationException;
 import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")

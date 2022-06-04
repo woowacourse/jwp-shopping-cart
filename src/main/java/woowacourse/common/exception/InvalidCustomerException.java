@@ -1,4 +1,4 @@
-package woowacourse.exception;
+package woowacourse.common.exception;
 
 public class InvalidCustomerException extends RuntimeException {
     public InvalidCustomerException() {

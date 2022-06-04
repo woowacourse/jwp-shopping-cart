@@ -12,8 +12,8 @@ import javax.crypto.SecretKey;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import woowacourse.exception.AuthenticationException;
-import woowacourse.exception.ForbiddenException;
+import woowacourse.common.exception.AuthenticationException;
+import woowacourse.common.exception.ForbiddenException;
 
 @SuppressWarnings("NonAsciiCharacters")
 class TokenTest {

@@ -5,8 +5,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import javax.crypto.SecretKey;
-import woowacourse.exception.AuthenticationException;
-import woowacourse.exception.ForbiddenException;
+import woowacourse.common.exception.AuthenticationException;
+import woowacourse.common.exception.ForbiddenException;
 
 public class Token {
 

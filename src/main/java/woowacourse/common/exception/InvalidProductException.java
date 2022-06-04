@@ -1,4 +1,4 @@
-package woowacourse.exception;
+package woowacourse.common.exception;
 
 public class InvalidProductException extends RuntimeException {
     public InvalidProductException() {
