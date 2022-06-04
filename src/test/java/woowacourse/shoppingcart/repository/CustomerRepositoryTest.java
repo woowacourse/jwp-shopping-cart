@@ -110,7 +110,7 @@ class CustomerRepositoryTest {
         TokenRequest tokenRequest = new TokenRequest(id);
 
         // when
-        customerRepository.delete(tokenRequest.getId());
+        customerRepository.delete(tokenRequest.getCustomerId());
 
         // then
         assertThatThrownBy(() -> customerRepository.findById(id))

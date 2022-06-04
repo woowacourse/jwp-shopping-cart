@@ -37,12 +37,12 @@ public class CustomerService {
     }
 
     public CustomerResponse findById(final TokenRequest request) {
-        Customer customer = customerRepository.findById(request.getId());
+        Customer customer = customerRepository.findById(request.getCustomerId());
         return CustomerResponse.of(customer);
     }
 
     public void update(final TokenRequest tokenRequest, final CustomerUpdateRequest customerUpdateRequest) {
-        Customer oldCustomer = customerRepository.findById(tokenRequest.getId());
+        Customer oldCustomer = customerRepository.findById(tokenRequest.getCustomerId());
         Customer newCustomer = customerUpdateRequest.updatedCustomer(oldCustomer);
         customerRepository.update(newCustomer);
     }
@@ -50,11 +50,11 @@ public class CustomerService {
     public void updatePassword(final TokenRequest tokenRequest, final PasswordChangeRequest passwordChangeRequest) {
         Password oldPassword = new Password(passwordChangeRequest.getOldPassword());
         Password newPassword = new Password(passwordChangeRequest.getNewPassword());
-        customerRepository.updatePassword(tokenRequest.getId(), oldPassword, newPassword);
+        customerRepository.updatePassword(tokenRequest.getCustomerId(), oldPassword, newPassword);
     }
 
     public void withdraw(final TokenRequest request) {
-        customerRepository.delete(request.getId());
+        customerRepository.delete(request.getCustomerId());
     }
 
     public void checkDuplicateUsername(final String username) {
@@ -66,6 +66,6 @@ public class CustomerService {
     }
 
     public void matchPassword(final TokenRequest tokenRequest, final PasswordRequest passwordRequest) {
-        customerRepository.matchPassword(tokenRequest.getId(), passwordRequest.getPassword());
+        customerRepository.matchPassword(tokenRequest.getCustomerId(), passwordRequest.getPassword());
     }
 }

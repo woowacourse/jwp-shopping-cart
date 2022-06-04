@@ -66,7 +66,7 @@ public class CustomerController {
     }
 
     @GetMapping(value = "/auth/customers/check", params = "userId")
-    public ResponseEntity<Void> checkDuplicateUsername(final @RequestParam(name = "userId") String username) {
+    public ResponseEntity<Void> checkDuplicateUsername(final @RequestParam String username) {
         customerService.checkDuplicateUsername(username);
         return ResponseEntity.ok().build();
     }
