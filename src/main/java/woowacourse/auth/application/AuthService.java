@@ -11,7 +11,6 @@ import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.exception.AuthorizationException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 @Transactional(readOnly = true)
