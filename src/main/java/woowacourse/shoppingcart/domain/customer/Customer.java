@@ -15,29 +15,14 @@ public class Customer {
     private Address address;
     private PhoneNumber phoneNumber;
 
-    private Customer(Long id, String account, String nickname, String password, String address,
-                     PhoneNumber phoneNumber) {
+    public Customer(Long id, Account account, Nickname nickname, Password password, Address address,
+                    PhoneNumber phoneNumber) {
         this.id = id;
-        this.account = new Account(account);
-        this.nickname = new Nickname(nickname);
-        this.password = new Password(password);
-        this.address = new Address(address);
+        this.account = account;
+        this.nickname = nickname;
+        this.password = password;
+        this.address = address;
         this.phoneNumber = phoneNumber;
-    }
-
-    public Customer(Long id, String account, String nickname, String password, String address, String phoneNumber) {
-        this(id, account, nickname, password, address, new PhoneNumber(phoneNumber));
-    }
-
-    public Customer(Long id, String account, String nickname, String password, String address,
-                    String phoneNumberStart, String phoneNumberMiddle, String phoneNumberLast) {
-        this(id, account, nickname, password, address,
-                new PhoneNumber(phoneNumberStart, phoneNumberMiddle, phoneNumberLast));
-    }
-
-    public void encryptPassword(PasswordEncoder passwordEncoder) {
-        password.validateRawPassword();
-        password.encrypt(passwordEncoder);
     }
 
     public void changeNickname(String nickname) {

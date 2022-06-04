@@ -32,8 +32,6 @@ public class CustomerService {
             throw new DuplicatedCustomerException();
         }
         Customer customer = customerRequest.toCustomer();
-        customer.encryptPassword(passwordEncoder);
-
         customerDao.save(CustomerEntity.from(customer));
     }
 

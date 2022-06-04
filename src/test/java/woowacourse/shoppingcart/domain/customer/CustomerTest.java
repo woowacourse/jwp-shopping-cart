@@ -17,7 +17,12 @@ class CustomerTest {
 
     @Test
     void 고객_생성() {
-        Customer customer = new Customer(null, "yhh1056", "호호", "gusghWkd12!", "호호네", "010", "1234", "5678");
+        Customer customer = new Customer(null,
+                new Account("yhh1056"),
+                new Nickname("호호"),
+                Password.plainText("gusghWkd12!"),
+                new Address("호호네"),
+                new PhoneNumber("010", "1234", "5678"));
 
         assertThat(customer).isNotNull();
     }

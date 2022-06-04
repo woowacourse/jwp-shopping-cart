@@ -21,27 +21,23 @@ class PasswordTest {
             "aaaa1111", "AAAA1111", "aaaa!!!!", "1111!!!!", "AAAA!!!!",
             "abcABC123", "ABC123!@#", "abc123!@#", "abcABC!@#"})
     void 대소문자_숫자_특수문자_미포함_검증(String value) {
-        Password password = new Password(value);
-
         assertThatIllegalArgumentException()
-                .isThrownBy(password::validateRawPassword)
+                .isThrownBy(() -> Password.plainText(value))
                 .withMessage("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.");
     }
 
     @ParameterizedTest(name = "비밀번호 : {0}")
     @ValueSource(strings = {"aA!4567", "aA!456789012345678901"})
     void 올바르지_않은_글자수_비밀번호_검증(String value) {
-        Password password = new Password(value);
-
         assertThatIllegalArgumentException()
-                .isThrownBy(password::validateRawPassword)
+                .isThrownBy(() -> Password.plainText(value))
                 .withMessage("비밀번호는 8 ~ 20자로 생성 가능합니다.");
     }
 
     @Test
     void 비밀번호_암호화() {
         String input = "leoLeo84!";
-        Password password = 암호화된_비밀번호(input);
+        Password password = Password.plainText(input);
 
         assertThat(password.getValue()).isNotEqualTo(input);
     }
@@ -49,16 +45,9 @@ class PasswordTest {
     @Test
     void 암호화된_비밀번호_일치_여부() {
         String input = "leoLeo84!";
-        Password actual = 암호화된_비밀번호(input);
-        Password expected = 암호화된_비밀번호(input);
+        Password actual = Password.plainText(input);
+        String expected = passwordEncoder.encrypt(input);
 
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    private Password 암호화된_비밀번호(String input) {
-        Password password = new Password(input);
-        password.encrypt(passwordEncoder);
-
-        return password;
+        assertThat(actual.getValue()).isEqualTo(expected);
     }
 }

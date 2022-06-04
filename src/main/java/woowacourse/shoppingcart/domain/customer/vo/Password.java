@@ -9,33 +9,39 @@ public class Password {
     private static final Pattern FORMAT = Pattern.compile("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W])).*");
     private static final int MIN_LENGTH = 8;
     private static final int MAX_LENGTH = 20;
+    private static final PasswordEncoder PASSWORD_ENCODER = new PasswordEncoder();
 
-    private String value;
+    private final String value;
 
-    public Password(String value) {
+    private Password(String value) {
         this.value = value;
     }
 
-    public void validateRawPassword() {
+    public static Password encryptText(String value) {
+        return new Password(value);
+    }
+
+    public static Password plainText(String value) {
+        validateRawPassword(value);
+        return new Password(PASSWORD_ENCODER.encrypt(value));
+    }
+
+    private static void validateRawPassword(String value) {
         validateFormat(value);
         validateLength(value);
     }
 
-    private void validateFormat(String value) {
+    private static void validateFormat(String value) {
         if (!FORMAT.matcher(value).matches()) {
             throw new IllegalArgumentException("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.");
         }
     }
 
-    private void validateLength(String value) {
+    private static void validateLength(String value) {
         if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH) {
             throw new IllegalArgumentException(
                     String.format("비밀번호는 %d ~ %d자로 생성 가능합니다.", MIN_LENGTH, MAX_LENGTH));
         }
-    }
-
-    public void encrypt(PasswordEncoder passwordEncoder) {
-        value = passwordEncoder.encrypt(value);
     }
 
     public String getValue() {
