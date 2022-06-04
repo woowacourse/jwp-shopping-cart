@@ -39,7 +39,8 @@ public class CustomerService {
 
     @Transactional(readOnly = true)
     public UsernameDuplicationResponse checkDuplication(UsernameDuplicationRequest usernameDuplicationRequest) {
-        boolean isUnique = !isDuplicateUsername(usernameDuplicationRequest.getUsername());
+        Username username = new Username(usernameDuplicationRequest.getUsername());
+        boolean isUnique = !isDuplicateUsername(username.getUsername());
         return new UsernameDuplicationResponse(isUnique);
     }
 
