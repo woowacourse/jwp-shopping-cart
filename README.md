@@ -13,7 +13,7 @@
 
 1. 아래 명령어를 실행해서 서버를 띄우세요 ☁️
 ```shell
-git clone https://github.com/nailseong/jwp-shopping-cart.git
+git clone -b step1 --single-branch https://github.com/nailseong/jwp-shopping-cart.git
 cd jwp-shopping-cart
 ./gradlew bootJar
 java -jar ./build/libs/jwp-shopping-cart-0.0.1-SNAPSHOT.jar --spring.profiles.active=local
