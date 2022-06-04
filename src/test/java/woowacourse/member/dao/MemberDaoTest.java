@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.domain.Member;
+import woowacourse.member.domain.Password;
 
 import javax.sql.DataSource;
 import java.util.Optional;
@@ -29,7 +30,8 @@ class MemberDaoTest {
     @Test
     void save() {
         String email = "wooteco@naver.com";
-        Member member = Member.withEncrypt(email, "wooteco", "Wooteco1!");
+        Password password = Password.withEncrypt("Wooteco1!");
+        Member member = new Member(email, "wooteco", password);
         memberDao.save(member);
         assertThat(memberDao.existMemberByEmail(email)).isTrue();
     }

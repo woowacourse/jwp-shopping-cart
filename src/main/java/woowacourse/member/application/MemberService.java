@@ -26,7 +26,8 @@ public class MemberService {
             throw new InvalidMemberEmailException("중복되는 이메일이 존재합니다.");
         }
 
-        Member member = Member.withEncrypt(request.getEmail(), request.getName(), request.getPassword());
+        Password password = Password.withEncrypt(request.getPassword());
+        Member member = new Member(request.getEmail(), request.getName(), password);
         memberDao.save(member);
     }
 

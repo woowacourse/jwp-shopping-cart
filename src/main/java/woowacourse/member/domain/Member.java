@@ -16,7 +16,7 @@ public class Member {
     private final String name;
     private final Password password;
 
-    private Member(Long id, String email, String name, Password password) {
+    public Member(Long id, String email, String name, Password password) {
         validateEmailForm(email);
         validateName(name);
         this.id = id;
@@ -25,12 +25,8 @@ public class Member {
         this.password = password;
     }
 
-    public static Member withEncrypt(String email, String name, String password) {
-        return new Member(0L, email, name, Password.withEncrypt(password));
-    }
-
-    public static Member withoutEncrypt(Long id, String email, String name, String password) {
-        return new Member(id, email, name, Password.withoutEncrypt(password));
+    public Member(String email, String name, Password password) {
+        this(null, email, name, password);
     }
 
     private void validateEmailForm(String email) {

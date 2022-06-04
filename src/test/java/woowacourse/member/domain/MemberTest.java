@@ -9,10 +9,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MemberTest {
 
+    private final Password password = Password.withEncrypt("Wooteco1!");
+
     @DisplayName("이름은 공백이 포함되지 않아야 한다.")
     @Test
     void nameNotContainSpace() {
-        assertThatThrownBy(() -> Member.withEncrypt("wooteco@naver.com", "woote co", "Wooteco1!"))
+        assertThatThrownBy(() -> new Member("wooteco@naver.com", "woote co", password))
                 .isInstanceOf(InvalidMemberNameException.class)
                 .hasMessageContaining("이름에 공백이 포함될 수 없습니다.");
     }
@@ -20,7 +22,7 @@ class MemberTest {
     @DisplayName("이름은 10자 이하여야 한다.")
     @Test
     void nameLessThan10Letters() {
-        assertThatThrownBy(() -> Member.withEncrypt("wooteco@naver.com", "ILoveWooteco", "Wooteco1!"))
+        assertThatThrownBy(() -> new Member("wooteco@naver.com", "ILoveWooteco", password))
                 .isInstanceOf(InvalidMemberNameException.class)
                 .hasMessageContaining("이름은 10자 이하이어야 합니다.");
     }
@@ -28,7 +30,7 @@ class MemberTest {
     @DisplayName("이메일은 @이 포함된 올바른 형식이어야 한다.")
     @Test
     void emailContainsAt() {
-        assertThatThrownBy(() -> Member.withEncrypt("wooteconaver.com", "wooteco", "Wooteco1!"))
+        assertThatThrownBy(() -> new Member("wooteconaver.com", "wooteco", password))
                 .isInstanceOf(InvalidMemberEmailException.class)
                 .hasMessageContaining("올바르지 못한 이메일 형식입니다.");
     }
