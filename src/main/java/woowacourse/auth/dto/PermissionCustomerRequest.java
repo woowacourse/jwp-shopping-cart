@@ -1,13 +1,13 @@
 package woowacourse.auth.dto;
 
-public class EmailDto {
+public class PermissionCustomerRequest {
 
     private String email;
 
-    public EmailDto() {
+    public PermissionCustomerRequest() {
     }
 
-    public EmailDto(String email) {
+    public PermissionCustomerRequest(String email) {
         this.email = email;
     }
 

@@ -4,7 +4,7 @@
 
 ## ✏️ Code Review Process
 
-[텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+[텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https:github.com/next-step/nextstep-docs/tree/master/codereview)
 
 ## 요구사항
 
@@ -30,8 +30,8 @@
 
 - **✅ 프로필 이미지 (profileImageUrl)**
     - 검증규칙 : URL
-    - 프로필 이미지는 [그라바타](https://ko.gravatar.com/)
-      사용 [http://gravatar.com/avatar/:randomNumber?d=identicon](http://gravatar.com/avatar/1?d=identicon)
+    - 프로필 이미지는 [그라바타](https:ko.gravatar.com/)
+      사용 [http:gravatar.com/avatar/:randomNumber?d=identicon](http:gravatar.com/avatar/1?d=identicon)
     - 검증 규칙(regex)
 
 
@@ -58,7 +58,7 @@
     - **☑ 상세주소** - detailAddress
         - 검증규칙 : not empty
     - **✅ 우편번호** - zonecode
-        - 검증규칙 : 숫자 5자리 (**[새 우편번호는 5자리…8월 1일부터 사용](https://www.korea.kr/news/policyNewsView.do?newsId=148798638))**
+        - 검증규칙 : 숫자 5자리 (**[새 우편번호는 5자리…8월 1일부터 사용](https:www.korea.kr/news/policyNewsView.do?newsId=148798638))**
 
 - **✅ 가입일자** (createdAt)
     - **검증규칙** : Datetime (서버기준)

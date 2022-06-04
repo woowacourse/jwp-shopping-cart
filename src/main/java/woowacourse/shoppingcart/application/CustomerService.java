@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.EmailDto;
+import woowacourse.auth.dto.PermissionCustomerRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
@@ -45,7 +45,7 @@ public class CustomerService {
         final String foundPassword = customerDao.findPasswordByEmail(email);
         verifyPassword(password, foundPassword);
         Long customerId = customerDao.findIdByEmail(email);
-        String payload = createPayload(new EmailDto(email.getValue()));
+        String payload = createPayload(new PermissionCustomerRequest(email.getValue()));
         return new TokenResponse(customerId, provider.createToken(payload));
     }
 
@@ -55,7 +55,7 @@ public class CustomerService {
         }
     }
 
-    private String createPayload(final EmailDto email) {
+    private String createPayload(final PermissionCustomerRequest email) {
         try {
             ObjectMapper mapper = new JsonMapper();
             return mapper.writeValueAsString(email);
@@ -72,11 +72,11 @@ public class CustomerService {
         }
     }
 
-    public CustomerResponse findCustomerByEmail(EmailDto email) {
+    public CustomerResponse findCustomerByEmail(PermissionCustomerRequest email) {
         return customerDao.findByUserEmail(new Email(email.getEmail()));
     }
 
-    public void deleteCustomer(final EmailDto emailDto) {
+    public void deleteCustomer(final PermissionCustomerRequest emailDto) {
         final int affectedRows = customerDao.deleteCustomer(new Email(emailDto.getEmail()));
         if (affectedRows != 1) {
             throw new IllegalArgumentException("삭제가 되지 않았습니다.");
