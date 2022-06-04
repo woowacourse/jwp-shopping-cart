@@ -38,6 +38,7 @@ public class CustomerService {
         }
     }
 
+    @Transactional(readOnly = true)
     public GetMeResponse getMe(Long id) {
         Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
         return new GetMeResponse(customer);
