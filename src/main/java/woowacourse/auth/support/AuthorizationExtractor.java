@@ -2,6 +2,7 @@ package woowacourse.auth.support;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import woowacourse.auth.exception.InvalidTokenException;
@@ -13,7 +14,7 @@ public class AuthorizationExtractor {
     public static String BEARER_TYPE = "Bearer ";
 
     public String extract(HttpServletRequest request) {
-        final String header = request.getHeader(AUTHORIZATION);
+        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         validateExists(header);
         validateStartsWithBearer(header);
         return header.substring(BEARER_TYPE.length());

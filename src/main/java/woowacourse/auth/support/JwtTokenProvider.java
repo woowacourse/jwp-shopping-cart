@@ -20,10 +20,15 @@ public class JwtTokenProvider {
     private final Key key;
     private long validityInMilliseconds;
 
-    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
-        @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-        this.validityInMilliseconds = validityInMilliseconds;
+    // public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
+    //     @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
+    //     this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+    //     this.validityInMilliseconds = validityInMilliseconds;
+    // }
+
+    public JwtTokenProvider(JwtAttribute attribute) {
+        this.key = Keys.hmacShaKeyFor(attribute.getSecretKey().getBytes(StandardCharsets.UTF_8));
+        this.validityInMilliseconds = attribute.getExpireLength();
     }
 
     public String createToken(String payload) {

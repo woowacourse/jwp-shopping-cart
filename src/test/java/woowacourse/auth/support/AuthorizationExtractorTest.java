@@ -13,7 +13,7 @@ import woowacourse.auth.exception.InvalidTokenException;
 class AuthorizationExtractorTest {
 
     private static final String KEY_STRING = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.ih1aovtQShabQ7l0cINw4k1fagApg3qLWiB8Kt59Lno";
-    private final JwtTokenProvider provider = new JwtTokenProvider(KEY_STRING, 3600);
+    private final JwtTokenProvider provider = new JwtTokenProvider(JwtAttribute.of(KEY_STRING, 1000L));
     private final AuthorizationExtractor extractor = new AuthorizationExtractor();
 
     @DisplayName("토큰을 추출한다.")
