@@ -9,14 +9,14 @@ public class SignUpRequest {
     private String gender;
     private String birthday;
     private String contact;
-    private AddressRequest address;
+    private AddressRequest fullAddress;
     private boolean terms;
 
     public SignUpRequest() {
     }
 
     public SignUpRequest(String email, String password, String profileImageUrl, String name, String gender,
-                         String birthday, String contact, String address, String detailAddress, String zoneCode,
+                         String birthday, String contact, String fullAddress, String detailAddress, String zoneCode,
                          boolean terms) {
         this.email = email;
         this.password = password;
@@ -25,7 +25,7 @@ public class SignUpRequest {
         this.gender = gender;
         this.birthday = birthday;
         this.contact = contact;
-        this.address = new AddressRequest(address, detailAddress, zoneCode);
+        this.fullAddress = new AddressRequest(fullAddress, detailAddress, zoneCode);
         this.terms = terms;
     }
 
@@ -57,8 +57,8 @@ public class SignUpRequest {
         return contact;
     }
 
-    public AddressRequest getAddress() {
-        return address;
+    public AddressRequest getFullAddress() {
+        return fullAddress;
     }
 
     public boolean isTerms() {

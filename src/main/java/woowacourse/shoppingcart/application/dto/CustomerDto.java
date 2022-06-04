@@ -19,11 +19,11 @@ public class CustomerDto {
     private final String gender;
     private final String birthday;
     private final String contact;
-    private final AddressDto address;
+    private final AddressDto fullAddress;
     private final boolean terms;
 
     public CustomerDto(String email, String password, String profileImageUrl, String name, String gender,
-                       String birthday, String contact, AddressDto address, boolean terms) {
+                       String birthday, String contact, AddressDto fullAddress, boolean terms) {
         this.email = email;
         this.password = password;
         this.profileImageUrl = profileImageUrl;
@@ -31,14 +31,14 @@ public class CustomerDto {
         this.gender = gender;
         this.birthday = birthday;
         this.contact = contact;
-        this.address = address;
+        this.fullAddress = fullAddress;
         this.terms = terms;
     }
 
     public static CustomerDto fromCustomerRequest(final SignUpRequest request) {
         return new CustomerDto(request.getEmail(), request.getPassword(), request.getProfileImageUrl(),
                 request.getName(), request.getGender(), request.getBirthday(), request.getContact(),
-                AddressDto.fromAddressRequest(request.getAddress()), request.isTerms());
+                AddressDto.fromAddressRequest(request.getFullAddress()), request.isTerms());
     }
 
     public static Customer toCustomer(final CustomerDto request) {
@@ -77,19 +77,19 @@ public class CustomerDto {
     }
 
     public AddressDto getAddressDto() {
-        return address;
+        return fullAddress;
     }
 
-    public String getAddress() {
-        return address.getAddress();
+    public String getFullAddress() {
+        return fullAddress.getAddress();
     }
 
     public String getDetailAddress() {
-        return address.getDetailAddress();
+        return fullAddress.getDetailAddress();
     }
 
     public String getZoneCode() {
-        return address.getZoneCode();
+        return fullAddress.getZoneCode();
     }
 
     public boolean isTerms() {
