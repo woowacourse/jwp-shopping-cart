@@ -24,10 +24,14 @@ public class AuthService {
 	public TokenResponse login(TokenRequest tokenRequest) {
 		Customer customer = customerService.findByEmail(tokenRequest.getEmail());
 		String password = encryptionStrategy.encode(new Password(tokenRequest.getPassword()));
+		validatePassword(customer, password);
+		return new TokenResponse(customer.getNickname(), tokenProvider.createToken(customer.getEmail()));
+	}
+
+	private void validatePassword(Customer customer, String password) {
 		if (customer.isInvalidPassword(password)) {
 			throw new InvalidAuthException("비밀번호가 일치하지 않습니다.");
 		}
-		return new TokenResponse(customer.getNickname(), tokenProvider.createToken(customer.getEmail()));
 	}
 
 	public Customer findCustomerByToken(String token) {
@@ -37,7 +41,7 @@ public class AuthService {
 
 	private void validateToken(String token) {
 		if (token == null || !tokenProvider.validateToken(token)) {
-			throw new InvalidAuthException("유효하지 않은 토큰입니다. 토큰입니다.");
+			throw new InvalidAuthException("유효하지 않은 토큰입니다.");
 		}
 	}
 }
