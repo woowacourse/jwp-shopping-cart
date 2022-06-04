@@ -73,7 +73,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> signOut(@AuthenticationPrincipal final String email) {
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal final String email) {
         customerService.delete(email);
         return ResponseEntity.noContent().build();
     }

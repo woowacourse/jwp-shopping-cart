@@ -160,8 +160,8 @@ class CustomerControllerTest {
 
     @DisplayName("탈퇴한다.")
     @Test
-    void signOut() {
-        final ResponseEntity<Void> response = customerController.signOut("email@email.com");
+    void delete() {
+        final ResponseEntity<Void> response = customerController.delete("email@email.com");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
