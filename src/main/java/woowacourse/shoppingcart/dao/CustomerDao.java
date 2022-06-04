@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Address;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.PhoneNumber;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
@@ -25,7 +26,7 @@ public class CustomerDao {
                     rs.getString("account"),
                     rs.getString("nickname"),
                     rs.getString("password"),
-                    rs.getString("address"),
+                    new Address(rs.getString("address")),
                     new PhoneNumber(rs.getString("phone_number"))
             );
 
@@ -52,7 +53,7 @@ public class CustomerDao {
                 customer.getAccount(),
                 customer.getNickname(),
                 customer.getPassword(),
-                customer.getAddress(),
+                new Address(customer.getAddress()),
                 new PhoneNumber(customer.getPhoneNumber()
                 ));
     }

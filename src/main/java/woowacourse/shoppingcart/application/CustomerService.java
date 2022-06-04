@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Address;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.PhoneNumber;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -46,7 +47,7 @@ public class CustomerService {
         return new Customer(processedAccount,
                 signupRequest.getNickname(),
                 passwordEncoder.encode(signupRequest.getPassword()),
-                signupRequest.getAddress(),
+                new Address(signupRequest.getAddress()),
                 new PhoneNumber(phoneNumberFormat.appendNumbers()));
     }
 

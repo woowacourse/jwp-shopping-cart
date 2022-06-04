@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Address;
 import woowacourse.shoppingcart.domain.Customer;
 
 import java.util.Optional;
@@ -32,8 +33,9 @@ public class CustomerDaoTest {
     @DisplayName("회원을 저장한다.")
     void save() {
         // given
+        Address address = new Address("address");
         PhoneNumber phoneNumber = new PhoneNumber("01012345678");
-        final Customer customer = new Customer("hamcheeseburger", "corinne", "Password123!", "address", phoneNumber);
+        final Customer customer = new Customer("hamcheeseburger", "corinne", "Password123!", address, phoneNumber);
         // when
         final Customer savedCustomer = customerDao.save(customer);
         // then

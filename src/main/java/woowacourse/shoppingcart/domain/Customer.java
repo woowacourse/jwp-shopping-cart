@@ -12,14 +12,14 @@ public class Customer {
 private final String account;
     private final String nickname;
     private final String password;
-    private final String address;
+    private final Address address;
     private final PhoneNumber phoneNumber;
 
-    public Customer(String account, String nickname, String password, String address, PhoneNumber phoneNumber) {
+    public Customer(String account, String nickname, String password, Address address, PhoneNumber phoneNumber) {
         this(0, account, nickname, password, address, phoneNumber);
     }
 
-    public Customer(long id, String account, String nickname, String password, String address, PhoneNumber phoneNumber) {
+    public Customer(long id, String account, String nickname, String password, Address address, PhoneNumber phoneNumber) {
         this.id = id;
         this.account = account;
         this.nickname = nickname;
@@ -45,7 +45,7 @@ private final String account;
     }
 
     public String getAddress() {
-        return address;
+        return address.getValue();
     }
 
     public String getPhoneNumber() {
