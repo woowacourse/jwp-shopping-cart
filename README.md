@@ -31,7 +31,9 @@
     시나리오로 모든 경우를 테스트할 수 없기 때문에 controller로 통합테스트를 진행하는 것이지 않을까요?
 - [ ] interceptor가 ui 패키지에 포함되어 있다. ui보다 config에 있는게 맞지 않을까? ui에 포함하게된 기준이 무엇이었을까?
 - [ ] webpage를 보며 me라는 표현을 본적이 없지 않나요?
-- [ ] exception과 runtimeException을 같이 잡은 이유가 있을까요??
+- [x] exception과 runtimeException을 같이 잡은 이유가 있을까요??
+  - 둘의 차이점을 크게 생각하지 않고 내가 예상할 수 있는 예외를 제외한 모든 예외를 잡아야겠다는 생각으로 Exception을 핸들링하고 있던 것 같습니다.
+  - 프로그램이 실행되면서 발생하는 예외만 잡는다면 runtimeException만 잡아도 될 것 같습니다.
 - [x] 로그인 시 `isValidPasswordByEmail()`에 대한 테스트가 없는 것 같다.
 - [x] (JwtTokenProvider.getPayload) 한줄에 여러개를 모두 표현하기보다 한줄에 한개씩 표현하는게 더 명확한거 같아요!
 - [x] service에서 dto로 변환하여 넘겨주는 것이 역할에 맞을까요??

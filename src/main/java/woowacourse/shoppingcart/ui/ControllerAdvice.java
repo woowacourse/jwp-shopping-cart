@@ -77,9 +77,4 @@ public class ControllerAdvice {
     public ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException() {
-        return ResponseEntity.internalServerError().body(new ErrorResponse("서버에 에러가 발생했습니다."));
-    }
 }
