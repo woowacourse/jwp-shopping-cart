@@ -27,8 +27,4 @@ public class PasswordEncoder {
         }
         return builder.toString();
     }
-
-    public boolean match(String rawPassword, String encodedPassword) {
-        return encrypt(rawPassword).equals(encodedPassword);
-    }
 }

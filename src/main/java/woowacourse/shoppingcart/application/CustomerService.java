@@ -19,11 +19,9 @@ public class CustomerService {
 
     private static final String MISMATCHED_PASSWORD_ERROR = "비밀번호가 일치하지 않습니다.";
 
-    private final PasswordEncoder passwordEncoder;
     private final CustomerDao customerDao;
 
-    public CustomerService(PasswordEncoder passwordEncoder, CustomerDao customerDao) {
-        this.passwordEncoder = passwordEncoder;
+    public CustomerService(CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 
@@ -42,10 +40,9 @@ public class CustomerService {
 
     public void delete(Long customerId, PasswordRequest passwordRequest) {
         CustomerEntity customerEntity = getCustomer(customerId);
+        Customer customer = customerEntity.toCustomer();
 
-        String rawPassword = passwordRequest.getPassword();
-        String encryptPassword = customerEntity.getPassword();
-        if (!passwordEncoder.match(rawPassword, encryptPassword)) {
+        if (customer.isNotSamePassword(passwordRequest.getPassword())) {
             throw new UnauthorizedException(MISMATCHED_PASSWORD_ERROR);
         }
 

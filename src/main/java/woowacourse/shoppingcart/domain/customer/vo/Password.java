@@ -44,6 +44,10 @@ public class Password {
         }
     }
 
+    public boolean notSameRawValue(String value) {
+        return !this.value.equals(PASSWORD_ENCODER.encrypt(value));
+    }
+
     public String getValue() {
         return value;
     }

@@ -37,6 +37,10 @@ public class Customer {
         this.phoneNumber = new PhoneNumber(start, middle, last);
     }
 
+    public boolean isNotSamePassword(String password) {
+        return this.password.notSameRawValue(password);
+    }
+
     public Long getId() {
         return id;
     }
