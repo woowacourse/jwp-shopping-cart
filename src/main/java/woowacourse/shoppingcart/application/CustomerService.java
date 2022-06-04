@@ -38,12 +38,12 @@ public class CustomerService {
     }
 
     public CustomerResponse findById(Long customerId) {
-        CustomerEntity customerEntity = findCustomerById(customerId);
+        CustomerEntity customerEntity = getCustomer(customerId);
         return CustomerResponse.from(customerEntity.toCustomer());
     }
 
     public void delete(Long customerId, PasswordRequest passwordRequest) {
-        CustomerEntity customerEntity = findCustomerById(customerId);
+        CustomerEntity customerEntity = getCustomer(customerId);
 
         String rawPassword = passwordRequest.getPassword();
         String encryptPassword = customerEntity.getPassword();
@@ -55,7 +55,7 @@ public class CustomerService {
     }
 
     public void update(Long customerId, CustomerUpdateRequest customerUpdateRequest) {
-        CustomerEntity customerEntity = findCustomerById(customerId);
+        CustomerEntity customerEntity = getCustomer(customerId);
 
         Customer customer = customerEntity.toCustomer();
         updateCustomer(customer, customerUpdateRequest);
@@ -63,7 +63,7 @@ public class CustomerService {
         customerDao.update(CustomerEntity.from(customer));
     }
 
-    private CustomerEntity findCustomerById(Long customerId) {
+    private CustomerEntity getCustomer(Long customerId) {
         return customerDao.findById(customerId)
                 .orElseThrow(InvalidCustomerException::new);
     }
