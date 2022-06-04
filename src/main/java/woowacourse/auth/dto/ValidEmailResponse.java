@@ -7,7 +7,7 @@ public class ValidEmailResponse {
         this.isValidEmail = isValidEmail;
     }
 
-    public Boolean getValidEmail() {
+    public Boolean getIsValidEmail() {
         return isValidEmail;
     }
 }
