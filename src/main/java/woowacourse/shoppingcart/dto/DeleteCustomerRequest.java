@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.auth.support.PasswordCheck;
+
 public class DeleteCustomerRequest {
 
+    @PasswordCheck
     private String password;
 
     private DeleteCustomerRequest() {

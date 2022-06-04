@@ -1,8 +1,12 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.auth.support.PasswordCheck;
+
 public class UpdatePasswordRequest {
 
+    @PasswordCheck
     private String password;
+    @PasswordCheck
     private String newPassword;
 
     private UpdatePasswordRequest() {
