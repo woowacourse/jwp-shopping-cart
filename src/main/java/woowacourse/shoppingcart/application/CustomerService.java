@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.dto.ErrorResponse;
@@ -14,11 +13,9 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 public class CustomerService {
 
     private final CustomerDao customerDao;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public CustomerService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
+    public CustomerService(CustomerDao customerDao) {
         this.customerDao = customerDao;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public void register(String email, String password, String username) {
