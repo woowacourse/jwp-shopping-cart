@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.config;
+package woowacourse.common.config;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
