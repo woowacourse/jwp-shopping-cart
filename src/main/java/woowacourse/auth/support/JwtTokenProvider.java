@@ -39,11 +39,11 @@ public class JwtTokenProvider {
                     .setSigningKey(toKey())
                     .build()
                     .parseClaimsJws(token).getBody();
+            validateExpiration(claims);
+            return claims.getSubject();
         } catch (JwtException e) {
             throw new AuthorizationException("권한이 없습니다.");
         }
-        validateExpiration(claims);
-        return claims.getSubject();
     }
 
     private void validateExpiration(Claims claims) {
