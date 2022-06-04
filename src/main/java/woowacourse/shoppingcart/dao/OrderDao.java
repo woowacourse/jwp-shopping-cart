@@ -1,12 +1,12 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 
 @Repository
 public class OrderDao {
@@ -22,7 +22,7 @@ public class OrderDao {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[] {"id"});
             preparedStatement.setLong(1, customerId);
             return preparedStatement;
         }, keyHolder);

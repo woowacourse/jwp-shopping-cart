@@ -7,6 +7,10 @@ public class Orders {
     private final Long id;
     private final List<OrderDetail> orderDetails;
 
+    public Orders() {
+        this(null, null);
+    }
+
     public Orders(final Long id, final List<OrderDetail> orderDetails) {
         this.id = id;
         this.orderDetails = orderDetails;

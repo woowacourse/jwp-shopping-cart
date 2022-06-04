@@ -1,21 +1,23 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Product;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import woowacourse.shoppingcart.ui.dto.ProductRequest;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
@@ -58,42 +60,42 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+        ProductRequest productRequest = new ProductRequest(name, price, imageUrl);
 
         return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when().post("/api/products")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(productRequest)
+            .when().post("/api/products")
+            .then().log().all()
+            .extract();
     }
 
     public static ExtractableResponse<Response> 상품_목록_조회_요청() {
         return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/products")
+            .then().log().all()
+            .extract();
     }
 
     public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
         return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/products/{productId}", productId)
+            .then().log().all()
+            .extract();
     }
 
     public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
         return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().delete("/api/products/{productId}", productId)
+            .then().log().all()
+            .extract();
     }
 
     public static void 상품_추가됨(ExtractableResponse<Response> response) {
@@ -111,14 +113,14 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
-                .map(Product::getId)
-                .collect(Collectors.toList());
+        List<Long> resultProductIds = response.jsonPath().getList(".", ProductRequest.class).stream()
+            .map(ProductRequest::getId)
+            .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
     }
 
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
-        Product resultProduct = response.as(Product.class);
+        ProductRequest resultProduct = response.as(ProductRequest.class);
         assertThat(resultProduct.getId()).isEqualTo(productId);
     }
 
