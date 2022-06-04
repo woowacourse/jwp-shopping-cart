@@ -50,10 +50,10 @@ public class CustomerDaoTest {
     void findIdByUserNameTest() {
 
         // given
-        final String userName = "puterism";
+        final String username = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByUsername(username);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -64,10 +64,10 @@ public class CustomerDaoTest {
     void findIdByUserNameTestIgnoreUpperLowerCase() {
 
         // given
-        final String userName = "gwangyeol-iM";
+        final String username = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByUsername(username);
 
         // then
         assertThat(customerId).isEqualTo(16L);
@@ -76,14 +76,14 @@ public class CustomerDaoTest {
     @DisplayName("비밀번호를 업데이트한다.")
     @Test
     void updatePassword() {
-        final String userName = "kth990303";
-        final Customer given = Customer.of(userName, encode("kth@990202"), "김태현", 21);
-        final Customer expected = Customer.of(userName, encode("kth@990303"), "김태현", 21);
+        final String username = "kth990303";
+        final Customer given = Customer.of(username, encode("kth@990202"), "김태현", 21);
+        final Customer expected = Customer.of(username, encode("kth@990303"), "김태현", 21);
 
         customerDao.save(given);
         customerDao.updatePassword(expected);
 
-        Customer actual = customerDao.findCustomerByUserName(userName)
+        Customer actual = customerDao.findCustomerByUsername(username)
                 .orElseThrow(InvalidCustomerException::new);
         assertThat(actual.getPassword()).isEqualTo(expected.getPassword());
     }
@@ -91,17 +91,17 @@ public class CustomerDaoTest {
     @DisplayName("비밀번호를 제외한 회원 정보를 업데이트한다.")
     @Test
     void updateInfo() {
-        final String userName = "kth990303";
-        final Customer given = Customer.of(userName, encode("kth@990303"), "김태현", 21);
-        final Customer expected = Customer.of(userName, encode("kth@990303"), "케이", 23);
+        final String username = "kth990303";
+        final Customer given = Customer.of(username, encode("kth@990303"), "김태현", 21);
+        final Customer expected = Customer.of(username, encode("kth@990303"), "케이", 23);
 
         customerDao.save(given);
         customerDao.updateInfo(expected);
 
-        Customer actual = customerDao.findCustomerByUserName(userName)
+        Customer actual = customerDao.findCustomerByUsername(username)
                 .orElseThrow(InvalidCustomerException::new);
         assertAll(
-                () -> assertThat(actual.getNickName()).isEqualTo(expected.getNickName()),
+                () -> assertThat(actual.getNickname()).isEqualTo(expected.getNickname()),
                 () -> assertThat(actual.getAge()).isEqualTo(expected.getAge())
         );
     }
@@ -115,7 +115,7 @@ public class CustomerDaoTest {
         customerDao.delete(given);
 
         assertThatExceptionOfType(InvalidCustomerException.class)
-                .isThrownBy(() -> customerDao.findIdByUserName(given.getUserName()))
+                .isThrownBy(() -> customerDao.findIdByUsername(given.getUsername()))
                 .withMessageContaining("존재");
     }
 

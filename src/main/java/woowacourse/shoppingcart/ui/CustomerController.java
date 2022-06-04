@@ -26,9 +26,9 @@ public class CustomerController {
     }
 
     @GetMapping("/username/duplication")
-    public ResponseEntity<UserNameDuplicationResponse> checkDuplicationUserName(
-            @RequestBody UserNameDuplicationRequest userNameDuplicationRequest) {
-        return ResponseEntity.ok(customerService.checkDuplication(userNameDuplicationRequest));
+    public ResponseEntity<UsernameDuplicationResponse> checkDuplicationUserName(
+            @RequestBody UsernameDuplicationRequest usernameDuplicationRequest) {
+        return ResponseEntity.ok(customerService.checkDuplication(usernameDuplicationRequest));
     }
 
     @GetMapping("/me")

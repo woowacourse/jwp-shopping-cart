@@ -34,9 +34,9 @@ public class CustomerControllerTest {
     @DisplayName("회원가입 시 아이디를 4자 미만 20자 초과로 작성한 경우 예외를 발생시킨다.")
     @ParameterizedTest
     @ValueSource(strings = {"abc", "abcdefghijklmnopqrstu"})
-    void createCustomerWithInvalidName(String userName) throws Exception {
+    void createCustomerWithInvalidName(String username) throws Exception {
         CustomerRequest customerRequest =
-                new CustomerRequest(userName, DEFAULT_PASSWORD, DEFAULT_NICKNAME, DEFAULT_AGE);
+                new CustomerRequest(username, DEFAULT_PASSWORD, DEFAULT_NICKNAME, DEFAULT_AGE);
         String message = "아이디는 4자 이상 20자 이하여야 합니다.";
         performAndExpectedErrorMessage(customerRequest, message);
     }

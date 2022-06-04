@@ -6,13 +6,13 @@ import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-class NickNameTest {
+class NicknameTest {
 
     @DisplayName("닉네임이 10글자를 초과하면 예외가 발생한다")
     @Test
     void construct_over_10() {
         assertThatExceptionOfType(InvalidArgumentRequestException.class)
-                .isThrownBy(() -> new NickName("기똥차고멋들어진포키짱"))
+                .isThrownBy(() -> new Nickname("기똥차고멋들어진포키짱"))
                 .withMessageContaining("10자 이하");
     }
 
@@ -20,7 +20,7 @@ class NickNameTest {
     @Test
     void construct_blank() {
         assertThatExceptionOfType(InvalidArgumentRequestException.class)
-                .isThrownBy(() -> new NickName(" "))
+                .isThrownBy(() -> new Nickname(" "))
                 .withMessageContaining("공백");
     }
 }

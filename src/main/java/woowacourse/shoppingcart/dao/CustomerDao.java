@@ -37,9 +37,9 @@ public class CustomerDao {
         String sql = "INSERT INTO customer (username, password, nickname, age) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, customer.getUserName());
+            ps.setString(1, customer.getUsername());
             ps.setString(2, customer.getPassword());
-            ps.setString(3, customer.getNickName());
+            ps.setString(3, customer.getNickname());
             ps.setInt(4, customer.getAge());
             return ps;
         }, keyHolder);
@@ -47,10 +47,10 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByUsername(final String username) {
         try {
             final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            return jdbcTemplate.queryForObject(query, Long.class, username.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
@@ -61,10 +61,10 @@ public class CustomerDao {
         return jdbcTemplate.queryForList(sql, String.class);
     }
 
-    public Optional<Customer> findCustomerByUserName(String userName) {
+    public Optional<Customer> findCustomerByUsername(String username) {
         final String sql = "SELECT username, password, nickname, age FROM customer WHERE username = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, userName));
+            return Optional.of(jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, username));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -72,13 +72,13 @@ public class CustomerDao {
 
     public void updatePassword(Customer customer) {
         final String sql = "UPDATE customer SET password = ? WHERE username = ?";
-        int updated = jdbcTemplate.update(sql, customer.getPassword(), customer.getUserName());
+        int updated = jdbcTemplate.update(sql, customer.getPassword(), customer.getUsername());
         validateUpdated(updated);
     }
 
     public void updateInfo(Customer customer) {
         final String sql = "UPDATE customer SET nickname = ?, age = ? WHERE username = ?";
-        int updated = jdbcTemplate.update(sql, customer.getNickName(), customer.getAge(), customer.getUserName());
+        int updated = jdbcTemplate.update(sql, customer.getNickname(), customer.getAge(), customer.getUsername());
         validateUpdated(updated);
     }
 
@@ -90,6 +90,6 @@ public class CustomerDao {
 
     public void delete(Customer customer) {
         final String sql = "DELETE FROM customer WHERE username = ?";
-        jdbcTemplate.update(sql, customer.getUserName());
+        jdbcTemplate.update(sql, customer.getUsername());
     }
 }

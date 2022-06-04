@@ -15,8 +15,8 @@ import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
 import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
-import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
+import woowacourse.shoppingcart.dto.UsernameDuplicationRequest;
+import woowacourse.shoppingcart.dto.UsernameDuplicationResponse;
 import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -42,9 +42,9 @@ class CustomerServiceTest {
     @Test
     void addCustomer() {
         customerService.addCustomer(customerRequest1);
-        Customer actual = customerDao.findCustomerByUserName(customerRequest1.getUserName())
+        Customer actual = customerDao.findCustomerByUsername(customerRequest1.getUsername())
                 .orElseThrow(InvalidCustomerException::new);
-        assertThat(actual.getUserName()).isEqualTo(customerRequest1.getUserName());
+        assertThat(actual.getUsername()).isEqualTo(customerRequest1.getUsername());
     }
 
     @DisplayName("중복된 회원을 가입시키려할 때 예외를 발생시킨다.")
@@ -59,10 +59,10 @@ class CustomerServiceTest {
     @ParameterizedTest
     @DisplayName("중복 여부를 검사한다.")
     @CsvSource({"forky, true", "kth990303, false"})
-    void checkDuplication(String userName, boolean expected) {
+    void checkDuplication(String username, boolean expected) {
         customerService.addCustomer(customerRequest1);
-        UserNameDuplicationRequest request = new UserNameDuplicationRequest(userName);
-        UserNameDuplicationResponse response = customerService.checkDuplication(request);
+        UsernameDuplicationRequest request = new UsernameDuplicationRequest(username);
+        UsernameDuplicationResponse response = customerService.checkDuplication(request);
         assertThat(response.getIsUnique()).isEqualTo(expected);
     }
 
@@ -70,14 +70,14 @@ class CustomerServiceTest {
     @Test
     void updatePassword() {
         customerService.addCustomer(customerRequest1);
-        Customer customer = Customer.of(customerRequest1.getUserName(), encode(customerRequest1.getPassword()),
-                customerRequest1.getNickName(), customerRequest1.getAge());
+        Customer customer = Customer.of(customerRequest1.getUsername(), encode(customerRequest1.getPassword()),
+                customerRequest1.getNickname(), customerRequest1.getAge());
 
         String newPassword = "forky@forky123";
         PasswordRequest passwordRequest = new PasswordRequest(customer.getPassword(), newPassword);
         customerService.updatePassword(customer, passwordRequest);
 
-        Customer actual = customerDao.findCustomerByUserName(customerRequest1.getUserName())
+        Customer actual = customerDao.findCustomerByUsername(customerRequest1.getUsername())
                 .orElseThrow(InvalidCustomerException::new);
         assertThat(actual.getPassword()).isEqualTo(encode(newPassword).getPassword());
     }
@@ -88,18 +88,18 @@ class CustomerServiceTest {
         customerService.addCustomer(customerRequest1);
         String newNickName = "김태현";
         int newAge = 27;
-        Customer originCustomer = Customer.of(customerRequest1.getUserName(), encode(customerRequest1.getPassword()),
-                customerRequest1.getNickName(), customerRequest1.getAge());
+        Customer originCustomer = Customer.of(customerRequest1.getUsername(), encode(customerRequest1.getPassword()),
+                customerRequest1.getNickname(), customerRequest1.getAge());
         CustomerRequest updateCustomer =
-                new CustomerRequest(originCustomer.getUserName(), originCustomer.getPassword(), newNickName, newAge);
+                new CustomerRequest(originCustomer.getUsername(), originCustomer.getPassword(), newNickName, newAge);
 
         customerService.updateInfo(originCustomer, updateCustomer);
 
-        Customer actual = customerDao.findCustomerByUserName(customerRequest1.getUserName())
+        Customer actual = customerDao.findCustomerByUsername(customerRequest1.getUsername())
                 .orElseThrow(InvalidCustomerException::new);
 
         assertAll(
-                () -> assertThat(actual.getNickName()).isEqualTo(newNickName),
+                () -> assertThat(actual.getNickname()).isEqualTo(newNickName),
                 () -> assertThat(actual.getAge()).isEqualTo(newAge)
         );
     }
@@ -109,12 +109,12 @@ class CustomerServiceTest {
     void delete() {
         customerService.addCustomer(customerRequest1);
 
-        Customer customer = Customer.of(customerRequest1.getUserName(), encode(customerRequest1.getPassword()),
-                customerRequest1.getNickName(), customerRequest1.getAge());
+        Customer customer = Customer.of(customerRequest1.getUsername(), encode(customerRequest1.getPassword()),
+                customerRequest1.getNickname(), customerRequest1.getAge());
         customerService.deleteCustomer(customer);
 
         assertThatExceptionOfType(InvalidCustomerException.class)
-                .isThrownBy(() -> customerDao.findIdByUserName(customer.getUserName()))
+                .isThrownBy(() -> customerDao.findIdByUsername(customer.getUsername()))
                 .withMessageContaining("존재");
     }
 

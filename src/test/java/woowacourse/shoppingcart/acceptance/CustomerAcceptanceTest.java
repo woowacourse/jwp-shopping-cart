@@ -10,7 +10,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
+import woowacourse.shoppingcart.dto.UsernameDuplicationRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,19 +38,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void checkDuplicationUserName_unique() {
         signUpCustomer();
-        UserNameDuplicationRequest request = new UserNameDuplicationRequest("kth990303");
-        checkUserNameIsUnique(request, true);
+        UsernameDuplicationRequest request = new UsernameDuplicationRequest("kth990303");
+        checkUsernameIsUnique(request, true);
     }
 
     @DisplayName("아이디가 중복될 때, 아이디 중복 여부를 검사한다.")
     @Test
     void checkDuplicationUserName_duplicated() {
         signUpCustomer();
-        UserNameDuplicationRequest request = new UserNameDuplicationRequest("forky");
-        checkUserNameIsUnique(request, false);
+        UsernameDuplicationRequest request = new UsernameDuplicationRequest("forky");
+        checkUsernameIsUnique(request, false);
     }
 
-    private void checkUserNameIsUnique(UserNameDuplicationRequest request, boolean expected) {
+    private void checkUsernameIsUnique(UsernameDuplicationRequest request, boolean expected) {
         RestAssured.given().log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -76,8 +76,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .as(CustomerResponse.class);
 
         assertAll(
-                () -> assertThat(customerResponse.getUserName()).isEqualTo("forky"),
-                () -> assertThat(customerResponse.getNickName()).isEqualTo("복희"),
+                () -> assertThat(customerResponse.getUsername()).isEqualTo("forky"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("복희"),
                 () -> assertThat(customerResponse.getAge()).isEqualTo(26)
         );
     }
@@ -133,7 +133,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertCustomer(accessToken, "forky", "권복희", 12);
     }
 
-    private void assertCustomer(String accessToken, String userName, String nickName, int age) {
+    private void assertCustomer(String accessToken, String username, String nickname, int age) {
         CustomerResponse customerResponse = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -144,8 +144,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .as(CustomerResponse.class);
 
         assertAll(
-                () -> assertThat(customerResponse.getUserName()).isEqualTo(userName),
-                () -> assertThat(customerResponse.getNickName()).isEqualTo(nickName),
+                () -> assertThat(customerResponse.getUsername()).isEqualTo(username),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo(nickname),
                 () -> assertThat(customerResponse.getAge()).isEqualTo(age)
         );
     }

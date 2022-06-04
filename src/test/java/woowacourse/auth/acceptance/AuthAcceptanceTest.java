@@ -53,7 +53,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .as(CustomerResponse.class);
         // then
         assertAll(
-                () -> assertThat(actual.getUserName()).isEqualTo("forky")
+                () -> assertThat(actual.getUsername()).isEqualTo("forky")
         );
     }
 

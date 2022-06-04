@@ -33,15 +33,15 @@ public class AuthService {
     }
 
     private void checkInvalidLogin(String principal, String credentials) {
-        Customer customer = customerDao.findCustomerByUserName(principal)
+        Customer customer = customerDao.findCustomerByUsername(principal)
                 .orElseThrow(() -> new InvalidArgumentRequestException("아이디를 확인해주세요."));
         EncodePassword encodeCredentials = passwordEncoder.encode(new RawPassword(credentials));
         customer.validatePassword(encodeCredentials);
     }
 
     public Customer findCustomer(String token) {
-        String userName = jwtTokenProvider.getPayload(token);
-        return customerDao.findCustomerByUserName(userName)
+        String username = jwtTokenProvider.getPayload(token);
+        return customerDao.findCustomerByUsername(username)
                 .orElseThrow(InvalidCustomerException::new);
     }
 }

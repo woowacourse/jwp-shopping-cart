@@ -1,12 +1,12 @@
 package woowacourse.shoppingcart.dto;
 
-public class UserNameDuplicationRequest {
+public class UsernameDuplicationRequest {
     private String username;
 
-    private UserNameDuplicationRequest() {
+    private UsernameDuplicationRequest() {
     }
 
-    public UserNameDuplicationRequest(String username) {
+    public UsernameDuplicationRequest(String username) {
         this.username = username;
     }
 

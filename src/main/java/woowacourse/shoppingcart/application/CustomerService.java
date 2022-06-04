@@ -6,8 +6,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.*;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
-import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
+import woowacourse.shoppingcart.dto.UsernameDuplicationRequest;
+import woowacourse.shoppingcart.dto.UsernameDuplicationResponse;
 import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 @Transactional
@@ -22,30 +22,30 @@ public class CustomerService {
     }
 
     public void addCustomer(CustomerRequest customerRequest) {
-        validateUserName(customerRequest);
+        validateusername(customerRequest);
         RawPassword rawPassword = new RawPassword(customerRequest.getPassword());
         Customer customer = Customer.of(
-                customerRequest.getUserName(), passwordEncoder.encode(rawPassword),
-                customerRequest.getNickName(), customerRequest.getAge()
+                customerRequest.getUsername(), passwordEncoder.encode(rawPassword),
+                customerRequest.getNickname(), customerRequest.getAge()
         );
         customerDao.save(customer);
     }
 
-    private void validateUserName(CustomerRequest customerRequest) {
-        if (isDuplicateUserName(customerRequest.getUserName())) {
+    private void validateusername(CustomerRequest customerRequest) {
+        if (isDuplicateUsername(customerRequest.getUsername())) {
             throw new InvalidArgumentRequestException("기존 회원 아이디와 중복되는 아이디입니다.");
         }
     }
 
     @Transactional(readOnly = true)
-    public UserNameDuplicationResponse checkDuplication(UserNameDuplicationRequest userNameDuplicationRequest) {
-        boolean isUnique = !isDuplicateUserName(userNameDuplicationRequest.getUsername());
-        return new UserNameDuplicationResponse(isUnique);
+    public UsernameDuplicationResponse checkDuplication(UsernameDuplicationRequest usernameDuplicationRequest) {
+        boolean isUnique = !isDuplicateUsername(usernameDuplicationRequest.getUsername());
+        return new UsernameDuplicationResponse(isUnique);
     }
 
-    private boolean isDuplicateUserName(String userName) {
-        UserNames userNames = UserNames.from(customerDao.findAllUserNames());
-        return userNames.contains(userName);
+    private boolean isDuplicateUsername(String username) {
+        Usernames usernames = Usernames.from(customerDao.findAllUserNames());
+        return usernames.contains(username);
     }
 
     public void updatePassword(Customer customer, PasswordRequest passwordRequest) {
@@ -55,7 +55,7 @@ public class CustomerService {
     }
 
     public void updateInfo(Customer customer, CustomerRequest customerRequest) {
-        Customer updateCustomer = customer.updateInfo(customerRequest.getNickName(), customerRequest.getAge());
+        Customer updateCustomer = customer.updateInfo(customerRequest.getNickname(), customerRequest.getAge());
         customerDao.updateInfo(updateCustomer);
     }
 

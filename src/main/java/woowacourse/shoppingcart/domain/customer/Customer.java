@@ -3,23 +3,23 @@ package woowacourse.shoppingcart.domain.customer;
 import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 public class Customer {
-    private final UserName userName;
+    private final Username username;
     private final EncodePassword password;
-    private final NickName nickName;
+    private final Nickname nickname;
     private final Age age;
 
-    public Customer(UserName userName, EncodePassword password, NickName nickName, Age age) {
-        this.userName = userName;
+    public Customer(Username username, EncodePassword password, Nickname nickname, Age age) {
+        this.username = username;
         this.password = password;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.age = age;
     }
 
-    public static Customer of(String userName, EncodePassword password, String nickName, int age) {
+    public static Customer of(String username, EncodePassword password, String nickname, int age) {
         return new Customer(
-                new UserName(userName),
+                new Username(username),
                 password,
-                new NickName(nickName),
+                new Nickname(nickname),
                 new Age(age)
         );
     }
@@ -31,23 +31,23 @@ public class Customer {
     }
 
     public Customer updatePassword(EncodePassword newPassword) {
-        return new Customer(userName, newPassword, nickName, age);
+        return new Customer(username, newPassword, nickname, age);
     }
 
-    public Customer updateInfo(String nickName, int age) {
-        return new Customer(userName, password, new NickName(nickName), new Age(age));
+    public Customer updateInfo(String nickname, int age) {
+        return new Customer(username, password, new Nickname(nickname), new Age(age));
     }
 
-    public String getUserName() {
-        return userName.getUserName();
+    public String getUsername() {
+        return username.getUsername();
     }
 
     public String getPassword() {
         return password.getPassword();
     }
 
-    public String getNickName() {
-        return nickName.getNickName();
+    public String getNickname() {
+        return nickname.getNickname();
     }
 
     public int getAge() {

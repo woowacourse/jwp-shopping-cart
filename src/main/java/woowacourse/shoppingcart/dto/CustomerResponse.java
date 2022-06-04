@@ -3,31 +3,31 @@ package woowacourse.shoppingcart.dto;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerResponse {
-    private String userName;
-    private String nickName;
+    private String username;
+    private String nickname;
     private int age;
 
     private CustomerResponse() {
     }
 
-    private CustomerResponse(String userName, String nickName, int age) {
-        this.userName = userName;
-        this.nickName = nickName;
+    private CustomerResponse(String username, String nickname, int age) {
+        this.username = username;
+        this.nickname = nickname;
         this.age = age;
     }
 
     public static CustomerResponse from(Customer customer) {
         return new CustomerResponse(
-                customer.getUserName(), customer.getNickName(), customer.getAge()
+                customer.getUsername(), customer.getNickname(), customer.getAge()
         );
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
     public int getAge() {

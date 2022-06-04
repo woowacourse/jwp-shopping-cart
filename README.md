@@ -62,11 +62,11 @@
     - body를 통해 발급된 토큰 응답 `TokenResponse`
 - 내 정보 조회 `GET /customers/me` → `200 OK`
     - 해당하는 회원 정보 body로 응답
-        - `{id, userName, nickName, age}`
+        - `{id, username, nickname, age}`
     - [예외] 로그인 되지 않은 상태로 접근하면 `401 Unauthorized`
 - 내 정보 수정 `PUT /customers/me` → `200 OK`
     - 수정할 회원 정보 reqeust body
-        - `{id, userName, nickName, age, password}`
+        - `{id, username, nickname, age, password}`
     - 비밀번호 일치 여부 확인 후 DB의 정보 update
     - [예외] 로그인 되지 않은 상태로 접근하면 `401 Unauthorized`
     - [예외] password가 기존 password와 일치하지 않을 시 `400 Bad Request`
@@ -82,10 +82,10 @@
 
 ### 입력값 예외처리 `400 Bad Request`
 
-- userName
+- username
     - [예외] 공백
     - [예외] 4자 미만이거나 20자 초과
-- nickName
+- nickname
     - [예외] 공백
     - [예외] 10자 초과
 - password
