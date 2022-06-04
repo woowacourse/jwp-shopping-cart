@@ -3,12 +3,10 @@ package woowacourse.shoppingcart.acceptance;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -16,20 +14,15 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
+    private final CustomerRequest customer = new CustomerRequest(
+            "email", "Pw123456!", "name", "010-1234-5678", "address");
+    private final TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
+
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
-        // given
-        CustomerRequest customer = new CustomerRequest(
-                "email", "Pw123456!", "name", "010-1234-5678", "address");
-
         // when
-        ValidatableResponse response = RestAssured.given().log().all()
-                .body(customer)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers")
-                .then().log().all();
+        ValidatableResponse response = requestHttpPost("", customer, "/customers");
 
         // then
         response.statusCode(HttpStatus.CREATED.value());
@@ -46,19 +39,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         CustomerRequest customer = new CustomerRequest(
                 "email@naver.com", "Pw123456!", "name", "010-1234-5678", "address");
-
-        RestAssured.given().log().all()
-                .body(customer)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers")
-                .then().log().all();
+        requestHttpPost("", customer, "/customers");
 
         // when
-        ValidatableResponse response = RestAssured.given().log().all()
-                .when()
-                .get("/customers/email?email=email@naver.com")
-                .then().log().all();
+        ValidatableResponse response = requestHttpGet("", "/customers/email?email=email@naver.com");
 
         // then
         response.body(containsString("true"));
@@ -68,42 +52,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        CustomerRequest customer = new CustomerRequest(
-                "email", "Pw123456!", "name", "010-1234-5678", "address");
+        requestHttpPost("", customer, "/customers");
 
-        RestAssured.given().log().all()
-                .body(customer)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers")
-                .then().log().all();
-
-        String accessToken = RestAssured.given().log().all()
-                .body(new TokenRequest("email", "Pw123456!"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers/login")
-                .then().log().all()
+        String accessToken = requestHttpPost("", tokenRequest, "/customers/login")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         //when
-        RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
-                .body(new CustomerRequest("email", "Pw123456!", "judy", "010-1111-2222", "address2"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .put("/customers")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+        CustomerRequest newCustomer = new CustomerRequest(
+                "email", "Pw123456!", "judy", "010-1111-2222", "address2");
+        requestHttpPut(accessToken, newCustomer, "/customers");
 
         //then
-        ValidatableResponse response = RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/customers")
-                .then().log().all();
-
+        ValidatableResponse response = requestHttpGet(accessToken, "/customers");
         response.statusCode(HttpStatus.OK.value());
         response.body(
                 "email", equalTo("email"),
@@ -116,39 +76,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        CustomerRequest customer = new CustomerRequest(
-                "email", "Pw123456!", "name", "010-1234-5678", "address");
-        RestAssured.given().log().all()
-                .body(customer)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers")
-                .then().log().all();
+        requestHttpPost("", customer, "/customers");
 
-        String accessToken = RestAssured.given().log().all()
-                .body(new TokenRequest("email", "Pw123456!"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers/login")
-                .then().log().all()
+        String accessToken = requestHttpPost("", tokenRequest, "/customers/login")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         //when
-        RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
-                .when()
-                .delete("/customers")
-                .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+        requestHttpDelete(accessToken, "/customers").statusCode(HttpStatus.NO_CONTENT.value());
 
         //then
-        ValidatableResponse response = RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/customers")
-                .then().log().all();
-
+        ValidatableResponse response = requestHttpGet(accessToken, "/customers");
         response.statusCode(HttpStatus.BAD_REQUEST.value());
         response.body(containsString("존재하지 않는 유저입니다."));
     }

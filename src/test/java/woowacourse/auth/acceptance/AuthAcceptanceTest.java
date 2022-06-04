@@ -3,12 +3,10 @@ package woowacourse.auth.acceptance;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
@@ -17,34 +15,21 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
+    private final CustomerRequest customer = new CustomerRequest(
+            "email", "Pw123456!", "name", "010-1234-5678", "address");
+    private final TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
+
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        CustomerRequest customer = new CustomerRequest(
-                "email", "Pw123456!", "name", "010-1234-5678", "address");
-        RestAssured.given().log().all()
-                .body(customer)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers")
-                .then().log().all();
+        requestHttpPost("", customer, "/customers");
 
-        String accessToken = RestAssured.given().log().all()
-                .body(new TokenRequest("email", "Pw123456!"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers/login")
-                .then().log().all()
+        String accessToken = requestHttpPost("", tokenRequest, "/customers/login")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         // when
-        ValidatableResponse response = RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/customers")
-                .then().log().all();
+        ValidatableResponse response = requestHttpGet(accessToken, "/customers");
 
         // then
         response.statusCode(HttpStatus.OK.value());
@@ -59,12 +44,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBadBearerAuth() {
         // when
-        ValidatableResponse response = RestAssured.given().log().all()
-                .body(new TokenRequest("email", "Pw123456!"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers/login")
-                .then().log().all();
+        ValidatableResponse response = requestHttpPost("", tokenRequest, "/customers/login");
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value());
@@ -76,12 +56,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithWrongBearerAuth() {
         // when
         String accessToken = "invalidToken";
-        ValidatableResponse response = RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/customers")
-                .then().log().all();
+        ValidatableResponse response = requestHttpGet(accessToken, "/customers");
 
         // then
         response.statusCode(HttpStatus.UNAUTHORIZED.value());
@@ -92,11 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithNoBearerAuth() {
         // when
-        ValidatableResponse response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/customers")
-                .then().log().all();
+        ValidatableResponse response = requestHttpGet("", "/customers");
 
         // then
         response.statusCode(HttpStatus.UNAUTHORIZED.value());
