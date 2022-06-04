@@ -9,8 +9,8 @@ import javax.validation.constraints.Size;
 public class SignupRequest {
 
     private static final String PASSWORD_FORMAT_REGEX = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)).*";
-
     @Size(min = 4, max = 15, message = "아이디 길이는 4~15자를 만족해야 합니다.")
+    @Pattern(regexp = "[a-zA-Z\\d]\\w+", message = "한글 아이디는 허용되지 않습니다.")
     private final String account;
     @Size(min = 2, max = 10, message = "닉네임 길이는 2~10자를 만족해야 합니다.")
     private final String nickname;
