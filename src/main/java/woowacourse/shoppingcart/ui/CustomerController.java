@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
+@RequestMapping("/customers")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -22,25 +23,17 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody @Valid SignupRequest signupRequest) throws URISyntaxException {
-        customerService.create(signupRequest);
-
-        return ResponseEntity.created(new URI("/signin"))
-                .build();
-    }
-
-    @GetMapping("/customers")
+    @GetMapping
     public CustomerResponse getCustomers(@AuthenticationPrincipal long customerId) {
         return customerService.getById(customerId);
     }
 
-    @PutMapping("/customers")
+    @PutMapping
     public void updateCustomer(@AuthenticationPrincipal long customerId, @RequestBody @Valid UpdateCustomerRequest updateCustomerRequest) {
         customerService.update(customerId, updateCustomerRequest);
     }
 
-    @DeleteMapping("/customers")
+    @DeleteMapping
     public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal long customerId, @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
         customerService.delete(customerId, deleteCustomerRequest);
         return ResponseEntity.noContent().build();
