@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -72,7 +71,7 @@ public class CustomerDao {
         jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
     }
 
-    public Boolean isDuplicationEmail(String email) {
+    public Boolean isDuplication(String email) {
         final String sql = "select exists(select * from customer where email = :email)";
         return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email), Boolean.class);
     }

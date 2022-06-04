@@ -1,9 +1,9 @@
-package woowacourse.auth.dto;
+package woowacourse.shoppingcart.dto;
 
-public class ValidEmailResponse {
+public class EmailResponse {
     private final Boolean isValidEmail;
 
-    public ValidEmailResponse(Boolean isValidEmail) {
+    public EmailResponse(Boolean isValidEmail) {
         this.isValidEmail = isValidEmail;
     }
 

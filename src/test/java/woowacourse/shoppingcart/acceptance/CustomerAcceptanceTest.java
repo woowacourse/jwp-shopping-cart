@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.*;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.EmailRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -261,11 +264,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         // 이메일 중복을 확인하면
-        ValidEmailRequest validEmailRequest = new ValidEmailRequest(EMAIL);
+        EmailRequest emailRequest = new EmailRequest(EMAIL);
 
         ExtractableResponse<Response> validEmailResponse = RestAssured
                 .given().log().all()
-                .body(validEmailRequest)
+                .body(emailRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/customers/email")
@@ -274,6 +277,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         //  사용 불가능한 이메일인지 확인한다.
-        assertThat(validEmailResponse.jsonPath().getBoolean("isValidEmail")).isFalse();
+        assertThat(validEmailResponse.jsonPath().getBoolean("isDuplication")).isFalse();
     }
 }

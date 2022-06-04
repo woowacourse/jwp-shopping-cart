@@ -2,14 +2,15 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.dto.ValidEmailRequest;
-import woowacourse.auth.dto.ValidEmailResponse;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.EmailRequest;
+import woowacourse.shoppingcart.dto.EmailResponse;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.application.CustomerService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -36,8 +37,8 @@ public class CustomerController {
     }
 
     @PostMapping("/email")
-    public ResponseEntity<ValidEmailResponse> checkValidEmail(@RequestBody ValidEmailRequest validEmailRequest) {
-        return ResponseEntity.ok().body(customerService.isValidEmail(validEmailRequest));
+    public ResponseEntity<EmailResponse> checkValidEmail(@RequestBody @Valid EmailRequest emailRequest) {
+        return ResponseEntity.ok().body(customerService.isDuplication(emailRequest));
     }
 
     @PutMapping

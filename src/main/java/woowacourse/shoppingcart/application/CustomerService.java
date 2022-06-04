@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.dto.CustomerRequest;
-import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.dto.ValidEmailRequest;
-import woowacourse.auth.dto.ValidEmailResponse;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.EmailRequest;
+import woowacourse.shoppingcart.dto.EmailResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.utils.Encryptor;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -38,8 +38,8 @@ public class CustomerService {
         return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getName(), customer.getPhone(), customer.getAddress());
     }
 
-    public ValidEmailResponse isValidEmail(ValidEmailRequest validEmailRequest) {
-        return new ValidEmailResponse(!customerDao.isDuplicationEmail(validEmailRequest.getEmail()));
+    public EmailResponse isDuplication(EmailRequest emailRequest) {
+        return new EmailResponse(!customerDao.isDuplication(emailRequest.getEmail()));
     }
 
     public void edit(String token, CustomerRequest customerRequest) {

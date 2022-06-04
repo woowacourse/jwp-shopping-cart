@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
@@ -153,7 +152,7 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
         final String sql = "insert into customer(email, name, phone, address, password) values (:email, :name, :phone, :address, :password)";
         jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer));
-        final Boolean result = customerDao.isDuplicationEmail(EMAIL);
+        final Boolean result = customerDao.isDuplication(EMAIL);
 
         assertThat(result).isTrue();
     }
