@@ -12,16 +12,18 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Transactional(readOnly = true)
 public class AuthService {
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final CustomerDao customerDao;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(final JwtTokenProvider jwtTokenProvider, final CustomerDao customerDao) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthService(final CustomerDao customerDao, final JwtTokenProvider jwtTokenProvider) {
         this.customerDao = customerDao;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public String createToken(final TokenRequest tokenRequest) {
-        customerDao.findByEmailAndPassword(tokenRequest.toEmail(), tokenRequest.toPassword())
+        customerDao.findByEmailAndPassword(
+                        tokenRequest.toEmail(),
+                        tokenRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다."));
 
         return jwtTokenProvider.createToken(tokenRequest.getEmail());
