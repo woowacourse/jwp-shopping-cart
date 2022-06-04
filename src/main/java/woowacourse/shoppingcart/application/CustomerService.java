@@ -44,9 +44,6 @@ public class CustomerService {
     @Transactional
     public void updateNicknameAndAge(User user, UpdateMeRequest request) {
         Customer customer = findCustomer(user);
-        if (!customer.hasSameUsername(request.getUsername())) {
-            throw new InvalidRequestException("아이디는 수정할 수 없습니다.");
-        }
         Customer updatedCustomer = new Customer(customer.getUsername(),
                 customer.getEncryptedPassword(), request.getNickname(), request.getAge());
         customerDao.updateByUsername(updatedCustomer);

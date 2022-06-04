@@ -89,7 +89,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         @Test
         void 로그인된_경우_200() {
             String 유효한_토큰 = 회원가입_요청_후_토큰_반환(고객);
-            UpdateMeRequest 수정된_고객 = new UpdateMeRequest(유효한_아이디, "새로운닉네임", 20);
+            UpdateMeRequest 수정된_고객 = new UpdateMeRequest("새로운닉네임", 20);
 
             ExtractableResponse<Response> response = 내_정보_수정_요청(수정된_고객, 유효한_토큰);
 
@@ -99,12 +99,11 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         @Test
         void 필요한_정보가_하나라도_누락된_경우_400() {
             String 유효한_토큰 = 회원가입_요청_후_토큰_반환(고객);
-            Map<String, Object> 아이디_누락_요청 = new HashMap<>() {{
+            Map<String, Object> 나이_누락_요청 = new HashMap<>() {{
                 put("nickname", 유효한_닉네임);
-                put("age", 15);
             }};
 
-            ExtractableResponse<Response> response = 내_정보_수정_요청(아이디_누락_요청, 유효한_토큰);
+            ExtractableResponse<Response> response = 내_정보_수정_요청(나이_누락_요청, 유효한_토큰);
 
             assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         }

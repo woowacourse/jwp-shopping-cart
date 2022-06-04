@@ -4,8 +4,6 @@ import javax.validation.constraints.NotNull;
 
 public class UpdateMeRequest {
 
-    @NotNull(message = "아이디 입력 필요")
-    private String username;
     @NotNull(message = "닉네임 입력 필요")
     private String nickname;
     @NotNull(message = "나이 입력 필요")
@@ -14,14 +12,9 @@ public class UpdateMeRequest {
     public UpdateMeRequest() {
     }
 
-    public UpdateMeRequest(String username, String nickname, Integer age) {
-        this.username = username;
+    public UpdateMeRequest(String nickname, Integer age) {
         this.nickname = nickname;
         this.age = age;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public String getNickname() {
@@ -30,10 +23,6 @@ public class UpdateMeRequest {
 
     public int getAge() {
         return age;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public void setNickname(String nickname) {

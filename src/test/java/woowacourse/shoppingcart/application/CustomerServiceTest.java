@@ -177,7 +177,7 @@ class CustomerServiceTest extends DatabaseTest {
             databaseFixture.save(유효한_고객);
             String 새로운_닉네임 = "새로운닉네임";
             int 새로운_나이 = 100;
-            UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest(유효한_아이디, 새로운_닉네임, 새로운_나이);
+            UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest(새로운_닉네임, 새로운_나이);
 
             customerService.updateNicknameAndAge(유효한_사용자, 수정된_고객_정보);
             Customer actual = findCustomer(유효한_아이디);
@@ -189,24 +189,15 @@ class CustomerServiceTest extends DatabaseTest {
         @Test
         void 현재_정보_그대로_수정하려는_경우_예외_미발생() {
             databaseFixture.save(유효한_고객);
-            UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest(유효한_아이디, 유효한_닉네임, 유효한_나이);
+            UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest(유효한_닉네임, 유효한_나이);
 
             assertThatNoException()
                     .isThrownBy(() -> customerService.updateNicknameAndAge(유효한_사용자, 수정된_고객_정보));
         }
 
         @Test
-        void 본인의_아이디를_수정하려는_경우_예외발생() {
-            databaseFixture.save(유효한_고객);
-            UpdateMeRequest 아이디_수정_정보 = new UpdateMeRequest("new_username", 유효한_닉네임, 유효한_나이);
-
-            assertThatThrownBy(() -> customerService.updateNicknameAndAge(유효한_사용자, 아이디_수정_정보))
-                    .isInstanceOf(InvalidRequestException.class);
-        }
-
-        @Test
         void 사용자에_대응되는_고객이_없는_경우_예외발생() {
-            UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest(유효한_아이디, "새로운_닉네임", 100);
+            UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest("새로운_닉네임", 100);
 
             assertThatThrownBy(() -> customerService.updateNicknameAndAge(유효한_사용자, 수정된_고객_정보))
                     .isInstanceOf(NotFoundException.class);
