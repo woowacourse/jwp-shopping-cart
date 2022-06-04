@@ -1,17 +1,22 @@
 package woowacourse.shoppingcart.application;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.*;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.infrastructure.jdbc.dao.CartItemDao;
+import woowacourse.shoppingcart.infrastructure.jdbc.dao.CustomerDao;
+import woowacourse.shoppingcart.infrastructure.jdbc.dao.OrderDao;
+import woowacourse.shoppingcart.infrastructure.jdbc.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.infrastructure.jdbc.dao.ProductDao;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -33,7 +38,7 @@ public class OrderService {
     }
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = customerDao.findIdByNickname(customerName);
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
@@ -54,7 +59,7 @@ public class OrderService {
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = customerDao.findIdByNickname(customerName);
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
@@ -62,7 +67,7 @@ public class OrderService {
     }
 
     public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = customerDao.findIdByNickname(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
