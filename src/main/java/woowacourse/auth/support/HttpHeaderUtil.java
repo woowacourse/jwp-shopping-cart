@@ -5,8 +5,8 @@ import woowacourse.common.exception.ForbiddenException;
 
 public class HttpHeaderUtil {
 
-    private static final String AUTHORIZATION = "Authorization";
-    private static final String BEARER_TYPE = "Bearer".toLowerCase();
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String BEARER_TYPE = "Bearer".toLowerCase();
 
     private HttpHeaderUtil() {
     }
