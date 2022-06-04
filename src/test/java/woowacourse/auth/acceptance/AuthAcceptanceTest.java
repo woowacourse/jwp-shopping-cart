@@ -115,7 +115,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름의 길이는 5이상 20이하여야 합니다.")
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름은 빈칼일 수 없습니다.")
         );
     }
 
@@ -132,7 +132,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호의 길이는 8이상 16이하여야 합니다.")
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호는 빈칸일 수 없습니다.")
         );
     }
 }

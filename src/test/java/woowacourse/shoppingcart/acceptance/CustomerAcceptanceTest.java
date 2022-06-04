@@ -151,7 +151,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("회원 가입할 때 패스워드가 잘못된 경우 400-BAD_REQUEST를 반환한다.")
     @ParameterizedTest
-    @ValueSource(strings = {"1234567", "", "1"})
+    @ValueSource(strings = {"1234567", "", "1", "1234567qwerttyasdffgxzc"})
     void signUpWithShortPassword(String password) {
         // when
         final ExtractableResponse<Response> response = 회원가입을_한다("giron", password);
@@ -160,13 +160,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호는 8자리 이상이어야 합니다.")
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호의 길이는 8이상 16이하여야 합니다.")
         );
     }
 
     @DisplayName("회원 가입할 때 유저 이름이 잘못된 경우 400-BAD_REQUEST를 반환한다.")
     @ParameterizedTest
-    @ValueSource(strings = {"", " "})
+    @ValueSource(strings = {"a","", " ", "123456678zuduihsfnsdfda"})
     @NullSource
     void signUpWithWrongUserName(String userName) {
 
@@ -177,7 +177,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름은 빈칸일 수 없습니다.")
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름의 길이는 5이상 20이하여야 합니다.")
         );
     }
 }

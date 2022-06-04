@@ -104,7 +104,7 @@ class CustomerControllerTest {
 
         CustomerResponse response = new CustomerResponse(customer);
         CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("userName", "updatePa!sDSsAwo@r123d");
+                new CustomerRequest.UserNameAndPassword("giron", "updatePa!sD@");
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
         given(customerService.updateById(any(), any())).willReturn(response);
