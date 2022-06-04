@@ -12,6 +12,7 @@ public class ChangePasswordRequest {
     @Size(min = 6, message = INVALID_LENGTH_PASSWORD)
     @PasswordCheck
     private final String oldPassword;
+
     @NotBlank(message = INVALID_PASSWORD)
     @Size(min = 6, message = INVALID_LENGTH_PASSWORD)
     @PasswordCheck
