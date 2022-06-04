@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.domain.customer.NewPassword;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
@@ -41,7 +41,7 @@ public class CustomerService {
 
     public TokenResponse signIn(final SignInDto signInDto) {
         final Email email = new Email(signInDto.getEmail());
-        final NewPassword password = new NewPassword(signInDto.getPassword());
+        final Password password = new Password(signInDto.getPassword());
         final String foundPassword = customerDao.findPasswordByEmail(email);
         verifyPassword(password, foundPassword);
         CustomerResponse tokenPayloadDto = customerDao.findByUserEmail(email);
@@ -49,7 +49,7 @@ public class CustomerService {
         return new TokenResponse(tokenPayloadDto.getId(), provider.createToken(payload));
     }
 
-    private void verifyPassword(final NewPassword password, final String hashedPassword) {
+    private void verifyPassword(final Password password, final String hashedPassword) {
         if (!password.isSamePassword(hashedPassword)) {
             throw new IllegalArgumentException("올바르지 않은 비밀번호입니다.");
         }
