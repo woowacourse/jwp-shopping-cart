@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.fixture.Fixture.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AuthServiceTest {
 
     @Autowired
