@@ -29,25 +29,25 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        final CustomerRequest request =
+        final CustomerRequest customerRequest =
             new CustomerRequest("email@email.com", "password1!", "dwoo");
-        AcceptanceFixture.post(request, "/api/customers");
+        AcceptanceFixture.post(customerRequest, "/api/customers");
 
-        final TokenRequest tokenRequest = new TokenRequest(request.getEmail(), request.getPassword());
+        final TokenRequest tokenRequest = new TokenRequest(customerRequest.getEmail(), customerRequest.getPassword());
         final ExtractableResponse<Response> loginResponse = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
 
         // when
         final String accessToken = extractAccessToken(loginResponse);
 
         final Header header = new Header("Authorization", BEARER + accessToken);
-        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/customers/me", header);
-        final CustomerResponse customerResponse = extractCustomer(response);
+        final ExtractableResponse<Response> myInfoResponse = AcceptanceFixture.get("/api/customers/me", header);
+        final CustomerResponse customerResponse = extractCustomer(myInfoResponse);
 
         // then
         assertThat(loginResponse.statusCode()).isEqualTo(OK.value());
         assertThat(customerResponse)
             .extracting("email", "username")
-            .containsExactly(request.getEmail(), request.getUsername());
+            .containsExactly(customerRequest.getEmail(), customerRequest.getUsername());
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
@@ -55,17 +55,17 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @CsvSource(value = {"email@email.com, invalidpwd2!", "invalidemail2@email.com, password1!"})
     void myInfoWithBadBearerAuth(String email, String password) {
         // given
-        final CustomerRequest request =
+        final CustomerRequest customerRequest =
             new CustomerRequest("email@email.com", "password1!", "dwoo");
-        AcceptanceFixture.post(request, "/api/customers");
+        AcceptanceFixture.post(customerRequest, "/api/customers");
 
         // when
         final TokenRequest tokenRequest = new TokenRequest(email, password);
-        final ExtractableResponse<Response> response = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
+        final ExtractableResponse<Response> loginResponse = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
 
         // then
-        assertThat(response.statusCode()).isEqualTo(BAD_REQUEST.value());
-        assertThat(extractErrorCode(response)).isEqualTo(LOGIN_FAIL);
+        assertThat(loginResponse.statusCode()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extractErrorCode(loginResponse)).isEqualTo(LOGIN_FAIL);
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
@@ -73,11 +73,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithWrongBearerAuth() {
         // when
         final Header header = new Header("Authorization", "Bearer header");
-        final ExtractableResponse<Response> response = AcceptanceFixture.get("/api/customers/me", header);
+        final ExtractableResponse<Response> myInfoResponse = AcceptanceFixture.get("/api/customers/me", header);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(UNAUTHORIZED.value());
-        assertThat(extractErrorCode(response)).isEqualTo(INVALID_TOKEN);
+        assertThat(myInfoResponse.statusCode()).isEqualTo(UNAUTHORIZED.value());
+        assertThat(extractErrorCode(myInfoResponse)).isEqualTo(INVALID_TOKEN);
     }
 
     private String extractAccessToken(ExtractableResponse<Response> response) {
