@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.ProfileImageUrl;
 import woowacourse.shoppingcart.domain.customer.address.FullAddress;
 import woowacourse.shoppingcart.domain.customer.privacy.Privacy;
-import woowacourse.shoppingcart.dto.AddressRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.entity.AddressEntity;
 import woowacourse.shoppingcart.entity.CustomerEntity;
@@ -47,15 +46,15 @@ public class Fixtures {
 
     public static CustomerRequest CUSTOMER_REQUEST_1 = new CustomerRequest("seongwoo0513@example.com", "string&123",
             "http://gravatar.com/avatar/1?d=identicon",
-            "박성우", "male", "1999-03-23", "01022223333", new AddressRequest("서울특별시 강남구 선릉역", "이디야 1층", "12345"), true);
+            "박성우", "male", "1999-03-23", "01022223333", "서울특별시 강남구 선릉역", "이디야 1층", "12345", true);
 
     public static CustomerRequest CUSTOMER_REQUEST_2 = new CustomerRequest("seongwoo0513@example.com", "string&123",
             "http://gravatar.com/avatar/1?d=identicon",
-            "조동현", "male", "1999-03-23", "01012345678", new AddressRequest("서울특별시 성동구 왕십리역", "길바닥", "54321"), true);
+            "조동현", "male", "1999-03-23", "01012345678", "서울특별시 성동구 왕십리역", "길바닥", "54321", true);
 
     public static CustomerRequest CUSTOMER_INVALID_REQUEST_1 = new CustomerRequest("seongwoo0513", "string&123",
             "http://gravatar.com/avatar/1?d=identicon",
-            "조동현", "male", "1999-03-23", "01012345678", new AddressRequest("서울특별시 성동구 왕십리역", "길바닥", "54321"), true);
+            "조동현", "male", "1999-03-23", "01012345678", "서울특별시 성동구 왕십리역", "길바닥", "54321", true);
 
 
     public static TokenRequest TOKEN_REQUEST_1 = new TokenRequest(CUSTOMER_REQUEST_1.getEmail(),

@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.application;
 
 import java.time.format.DateTimeFormatter;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.AddressDao;
@@ -10,7 +9,6 @@ import woowacourse.shoppingcart.dao.PrivacyDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.address.FullAddress;
 import woowacourse.shoppingcart.domain.customer.privacy.Privacy;
-import woowacourse.shoppingcart.dto.AddressResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
@@ -79,8 +77,8 @@ public class CustomerService {
     private Customer convertRequestToCustomer(CustomerRequest customerRequest) {
         Privacy privacy = Privacy.of(customerRequest.getName(), customerRequest.getGender(),
                 customerRequest.getBirthday(), customerRequest.getContact());
-        FullAddress fullAddress = FullAddress.of(customerRequest.getFullAddress().getAddress(),
-                customerRequest.getFullAddress().getDetailAddress(), customerRequest.getFullAddress().getZoneCode());
+        FullAddress fullAddress = FullAddress.of(customerRequest.getAddress(),
+                customerRequest.getDetailAddress(), customerRequest.getZonecode());
 
         return Customer.of(customerRequest.getEmail(), customerRequest.getPassword(),
                 customerRequest.getProfileImageUrl(), privacy, fullAddress, customerRequest.isTerms());
@@ -88,12 +86,11 @@ public class CustomerService {
 
     private CustomerResponse convertEntityToResponse(CustomerEntity customerEntity, PrivacyEntity privacyEntity,
                                                      AddressEntity addressEntity) {
-        AddressResponse addressResponse = new AddressResponse(addressEntity.getAddress(),
-                addressEntity.getDetailAddress(), addressEntity.getZoneCode());
 
         return new CustomerResponse(customerEntity.getEmail(), customerEntity.getProfileImageUrl(),
                 privacyEntity.getName(), privacyEntity.getGender(),
                 privacyEntity.getBirthday().format(DateTimeFormatter.ISO_DATE), privacyEntity.getContact(),
-                addressResponse, customerEntity.isTerms());
+                addressEntity.getAddress(), addressEntity.getDetailAddress(), addressEntity.getZoneCode(),
+                customerEntity.isTerms());
     }
 }

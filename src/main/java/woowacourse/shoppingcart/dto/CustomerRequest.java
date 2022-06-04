@@ -8,14 +8,17 @@ public class CustomerRequest {
     private String gender;
     private String birthday;
     private String contact;
-    private AddressRequest fullAddress;
+    private String address;
+    private String detailAddress;
+    private String zonecode;
     private boolean terms;
 
     public CustomerRequest() {
     }
 
     public CustomerRequest(String email, String password, String profileImageUrl, String name, String gender,
-                           String birthday, String contact, AddressRequest fullAddress, boolean terms) {
+                           String birthday, String contact, String address, String detailAddress, String zonecode,
+                           boolean terms) {
         this.email = email;
         this.password = password;
         this.profileImageUrl = profileImageUrl;
@@ -23,7 +26,9 @@ public class CustomerRequest {
         this.gender = gender;
         this.birthday = birthday;
         this.contact = contact;
-        this.fullAddress = fullAddress;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.zonecode = zonecode;
         this.terms = terms;
     }
 
@@ -55,8 +60,16 @@ public class CustomerRequest {
         return contact;
     }
 
-    public AddressRequest getFullAddress() {
-        return fullAddress;
+    public String getAddress() {
+        return address;
+    }
+
+    public String getDetailAddress() {
+        return detailAddress;
+    }
+
+    public String getZonecode() {
+        return zonecode;
     }
 
     public boolean isTerms() {
@@ -73,7 +86,9 @@ public class CustomerRequest {
                 ", gender='" + gender + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", contact='" + contact + '\'' +
-                ", fullAddress=" + fullAddress +
+                ", address='" + address + '\'' +
+                ", detailAddress='" + detailAddress + '\'' +
+                ", zonecode='" + zonecode + '\'' +
                 ", terms=" + terms +
                 '}';
     }

@@ -145,12 +145,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         params.put("gender", customerRequest.getGender());
         params.put("birthday", customerRequest.getBirthday());
         params.put("contact", customerRequest.getContact());
-        params.put("fullAddress", Map.of("address", customerRequest.getFullAddress().getAddress(), "detailAddress",
-                customerRequest.getFullAddress().getDetailAddress(), "zoneCode",
-                customerRequest.getFullAddress().getZoneCode()));
+        params.put("address", customerRequest.getAddress());
+        params.put("detailAddress", customerRequest.getDetailAddress());
+        params.put("zonecode", customerRequest.getZonecode());
         params.put("terms", true);
 
-        //when
         return RestAssured.given().log().all()
                 .body(params)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
