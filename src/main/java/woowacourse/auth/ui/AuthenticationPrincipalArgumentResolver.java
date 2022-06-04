@@ -14,7 +14,7 @@ import woowacourse.shoppingcart.exception.TokenExpiredException;
 @Component
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+    private static final String ACCESS_TOKEN_ATTRIBUTE_NAME = "Access-Token";
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -30,7 +30,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     @Override
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                 NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String token = (String) webRequest.getAttribute(ACCESS_TOKEN, NativeWebRequest.SCOPE_REQUEST);
+        String token = (String) webRequest.getAttribute(ACCESS_TOKEN_ATTRIBUTE_NAME, NativeWebRequest.SCOPE_REQUEST);
         validateTokenExpired(token);
         final String payload = jwtTokenProvider.getPayload(token);
         validatePayload(payload);
