@@ -1,14 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.shoppingcart.domain.Customer;
@@ -47,14 +44,12 @@ public class CustomerDao {
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
-    public Long save(Customer customer) {
+    public void save(Customer customer) {
         final String sql = "INSERT INTO customer(username, password, nickname, age) "
                 + "VALUES(:username, :password, :nickname, :age)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
 
-        jdbcTemplate.update(sql, params, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        jdbcTemplate.update(sql, params);
     }
 
     public void updateByUsername(Customer customer) {

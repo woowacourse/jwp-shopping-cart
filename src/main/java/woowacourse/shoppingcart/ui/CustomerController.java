@@ -24,6 +24,8 @@ import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 @RequestMapping("/customers")
 public class CustomerController {
 
+    private static final URI CUSTOMER_INFO_LOCATION = URI.create("/customers/me");
+
     private final CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
@@ -32,9 +34,8 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Void> signUp(@Validated @RequestBody SignUpRequest request) {
-        Long customerId = customerService.createCustomer(request);
-        URI location = URI.create("/customers/" + customerId);
-        return ResponseEntity.created(location).build();
+        customerService.createCustomer(request);
+        return ResponseEntity.created(CUSTOMER_INFO_LOCATION).build();
     }
 
     @GetMapping("/me")
@@ -64,7 +65,8 @@ public class CustomerController {
     }
 
     @GetMapping("/username/duplication")
-    public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(@Validated @RequestBody UniqueUsernameRequest request) {
+    public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(
+            @Validated @RequestBody UniqueUsernameRequest request) {
         UniqueUsernameResponse response = customerService.checkUniqueUsername(request.getUsername());
         return ResponseEntity.ok(response);
     }

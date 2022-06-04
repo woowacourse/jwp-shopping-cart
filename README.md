@@ -17,7 +17,7 @@
 - 요청
     - 바디에 아이디(username), 비밀번호(password), 닉네임(nickname), 나이(age) 포함
 - 응답
-    - 성공시 201 : Location 헤더에 생성된 고객 정보를 토대로 `/customers/{customerId}` 포함
+    - 성공시 201 : Location 헤더에 생성된 고객 정보를 토대로 `/customers/me` 포함
 
 ### GET /customers/me : 내 정보 조회
 

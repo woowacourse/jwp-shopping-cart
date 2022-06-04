@@ -30,9 +30,9 @@ class CustomerDaoTest extends DatabaseTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
-    @DisplayName("findById 메서드는 아이디(username)에 해당되는 고객 데이터를 Optional로 반환")
+    @DisplayName("findByUserName 메서드는 아이디(username)에 해당되는 고객 데이터를 Optional로 반환")
     @Nested
-    class FindByIdTest {
+    class FindByUserNameTest {
 
         @Test
         void 존재하는_고객인_경우_값이_있는_Optional_반환() {
@@ -54,7 +54,7 @@ class CustomerDaoTest extends DatabaseTest {
         }
     }
 
-    @DisplayName("save 메서드는 새로운 고객 데이터를 저장하고 식별자(id)를 반환")
+    @DisplayName("save 메서드는 새로운 고객 데이터를 저장")
     @Nested
     class SaveTest {
 
@@ -62,10 +62,10 @@ class CustomerDaoTest extends DatabaseTest {
         void 유효한_데이터를_저장하려는_경우_성공() {
             Customer 신규_고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
-            Long actual = customerDao.save(신규_고객);
-            Long expected = 1L;
+            customerDao.save(신규_고객);
+            Customer actual = customerDao.findByUserName(유효한_아이디).get();
 
-            assertThat(actual).isEqualTo(expected);
+            assertThat(actual).isEqualTo(신규_고객);
         }
 
         @Test

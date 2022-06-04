@@ -34,11 +34,11 @@ public class CustomerService {
     }
 
     @Transactional
-    public Long createCustomer(SignUpRequest request) {
+    public void createCustomer(SignUpRequest request) {
         Password password = new Password(request.getPassword());
         Customer customer = new Customer(request.getUsername(),
                 password, request.getNickname(), request.getAge());
-        return customerDao.save(customer);
+        customerDao.save(customer);
     }
 
     @Transactional
