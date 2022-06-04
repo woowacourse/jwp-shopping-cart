@@ -17,7 +17,9 @@ import woowacourse.shoppingcart.dto.SignUpDto;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("test")
 public class AcceptanceTest {
+
     public static final Header EMPTY_HEADER = new Header("", "");
+
     @LocalServerPort
     int port;
 
