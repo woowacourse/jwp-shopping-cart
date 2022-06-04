@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.member.domain.Member;
+import woowacourse.member.domain.SavedPassword;
 import woowacourse.member.exception.MemberNotFoundException;
 
 import javax.sql.DataSource;
@@ -28,11 +29,11 @@ public class MemberDao {
     }
 
     private RowMapper<Member> rowMapper = (resultSet, rowNum) ->
-            Member.withoutEncrypt(
+            new Member(
                     resultSet.getLong("id"),
                     resultSet.getString("email"),
                     resultSet.getString("name"),
-                    resultSet.getString("password")
+                    new SavedPassword(resultSet.getString("password"))
             );
 
     public Optional<Member> findByEmail(String email) {

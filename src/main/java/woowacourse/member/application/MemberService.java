@@ -3,6 +3,7 @@ package woowacourse.member.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.member.dao.MemberDao;
+import woowacourse.member.domain.InputPassword;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.Name;
 import woowacourse.member.domain.Password;
@@ -23,9 +24,9 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Long logIn(LoginRequest request) {
         Member member = findMemberByEmail(request.getEmail());
-        Password requestPassword = Password.withEncrypt(request.getPassword());
+        Password password = new InputPassword(request.getPassword());
 
-        if (!member.isSamePassword(requestPassword)) {
+        if (!member.isSamePassword(password)) {
             throw new WrongPasswordException("잘못된 비밀번호입니다.");
         }
 
@@ -35,7 +36,7 @@ public class MemberService {
     public void signUp(SignUpRequest request) {
         validateDuplicateEmail(request.getEmail());
 
-        Member member = Member.withEncrypt(request.getEmail(), request.getName(), request.getPassword());
+        Member member = new Member(request.getEmail(), request.getName(), new InputPassword(request.getPassword()));
         memberDao.save(member);
     }
 
@@ -65,7 +66,7 @@ public class MemberService {
         Member member = findMemberById(id);
         validateUpdatePassword(request, member);
 
-        Password newPassword = Password.withEncrypt(request.getNewPassword());
+        Password newPassword = new InputPassword(request.getNewPassword());
         memberDao.updatePasswordById(id, newPassword.getValue());
     }
 
@@ -91,7 +92,7 @@ public class MemberService {
     }
 
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {
-        Password requestPassword = Password.withEncrypt(request.getOldPassword());
+        Password requestPassword = new InputPassword(request.getOldPassword());
 
         if (!member.isSamePassword(requestPassword)) {
             throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");

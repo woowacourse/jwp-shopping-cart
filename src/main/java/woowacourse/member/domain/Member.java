@@ -2,24 +2,24 @@ package woowacourse.member.domain;
 
 public class Member {
 
-    private final Long id;
+    private final long id;
     private final Email email;
     private final Name name;
     private final Password password;
 
-    private Member(Long id, Email email, Name name, Password password) {
+    private Member(long id, Email email, Name name, Password password) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.password = password;
     }
 
-    public static Member withEncrypt(String email, String name, String password) {
-        return new Member(0L, new Email(email), new Name(name), Password.withEncrypt(password));
+    public Member(String email, String name, Password password) {
+        this(0L, new Email(email), new Name(name), password);
     }
 
-    public static Member withoutEncrypt(Long id, String email, String name, String password) {
-        return new Member(id, new Email(email), new Name(name), Password.withoutEncrypt(password));
+    public Member(Long id, String email, String name, Password password) {
+        this(id, new Email(email), new Name(name), password);
     }
 
     public boolean isSameName(Name comparison) {

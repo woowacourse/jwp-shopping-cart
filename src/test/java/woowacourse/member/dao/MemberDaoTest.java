@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.member.domain.InputPassword;
 import woowacourse.member.domain.Member;
 
 import javax.sql.DataSource;
@@ -55,7 +56,7 @@ class MemberDaoTest {
     @Test
     void save() {
         String email = "wooteco@naver.com";
-        Member member = Member.withEncrypt(email, "wooteco", "Wooteco1!");
+        Member member = new Member(email, "wooteco", new InputPassword("Wooteco1!"));
         memberDao.save(member);
         assertThat(memberDao.existsByEmail(email)).isTrue();
     }
@@ -86,10 +87,10 @@ class MemberDaoTest {
     @DisplayName("id를 통해 회원을 찾아 회원 비밀번호를 변경한다.")
     @Test
     void updatePassword() {
-        memberDao.updatePasswordById(1L, "NewPassword!");
+        memberDao.updatePasswordById(1L, "InputPassword!");
 
         Optional<Member> result = memberDao.findById(1L);
-        assertThat(result.get().getPassword()).isEqualTo("NewPassword!");
+        assertThat(result.get().getPassword()).isEqualTo("InputPassword!");
     }
 
     @DisplayName("id를 통해 멤버 정보를 삭제한다.")

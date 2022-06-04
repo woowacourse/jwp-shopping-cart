@@ -10,29 +10,29 @@ class MemberTest {
     @Test
     @DisplayName("이름이 같다면 true를 반환한다.")
     void isSameNameWhenTrue() {
-        Member member = Member.withEncrypt("wooteco@email.com", "렉스", "Wooteco1!");
+        Member member = new Member("wooteco@email.com", "렉스", new InputPassword("Wooteco1!"));
         assertThat(member.isSameName(new Name("렉스"))).isTrue();
     }
 
     @Test
     @DisplayName("이름이 다르다면 false를 반환한다.")
     void isSameNameWhenFalse() {
-        Member member = Member.withEncrypt("wooteco@email.com", "렉스", "Wooteco1!");
+        Member member = new Member("wooteco@email.com", "렉스", new InputPassword("Wooteco1!"));
         assertThat(member.isSameName(new Name("롤렉스"))).isFalse();
     }
 
     @Test
     @DisplayName("비밀번호가 같다면 true를 반환한다.")
     void isSamePasswordWhenTrue() {
-        Member member = Member.withEncrypt("wooteco@email.com", "렉스", "Wooteco1!");
-        assertThat(member.isSamePassword(Password.withEncrypt("Wooteco1!"))).isTrue();
+        Member member = new Member("wooteco@email.com", "렉스", new InputPassword("Wooteco1!"));
+        assertThat(member.isSamePassword(new InputPassword("Wooteco1!"))).isTrue();
     }
 
     @Test
     @DisplayName("비밀번호가 다르다면 false를  반환한다.")
     void isSamePasswordWhenFalse() {
-        Member member = Member.withEncrypt("wooteco@email.com", "렉스", "Wooteco1!");
-        assertThat(member.isSamePassword(Password.withEncrypt("Fake1!"))).isFalse();
+        Member member = new Member("wooteco@email.com", "렉스", new InputPassword("Wooteco1!"));
+        assertThat(member.isSamePassword(new InputPassword("Fake1!"))).isFalse();
     }
 
 }
