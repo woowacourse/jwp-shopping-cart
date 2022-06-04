@@ -11,7 +11,7 @@ public class SignInRequest {
     @PasswordCheck
     private String password;
 
-    public SignInRequest() {
+    private SignInRequest() {
     }
 
     public SignInRequest(String email, String password) {

@@ -5,7 +5,7 @@ public class UpdatePasswordRequest {
     private String password;
     private String newPassword;
 
-    public UpdatePasswordRequest() {
+    private UpdatePasswordRequest() {
     }
 
     public UpdatePasswordRequest(String password, String newPassword) {

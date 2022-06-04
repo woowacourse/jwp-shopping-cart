@@ -35,4 +35,4 @@
 - [ ] 로그인 시 `isValidPasswordByEmail()`에 대한 테스트가 없는 것 같다.
 - [ ] (JwtTokenProvider.getPayload) 한줄에 여러개를 모두 표현하기보다 한줄에 한개씩 표현하는게 더 명확한거 같아요!
 - [ ] service에서 dto로 변환하여 넘겨주는 것이 역할에 맞을까요??
-- [ ] Request Dto 의 기본 생성자가 private여도 될 것 같다.
+- [x] Request Dto 의 기본 생성자가 private여도 될 것 같다.

@@ -4,7 +4,7 @@ public class DeleteCustomerRequest {
 
     private String password;
 
-    public DeleteCustomerRequest() {
+    private DeleteCustomerRequest() {
     }
 
     public DeleteCustomerRequest(String password) {
