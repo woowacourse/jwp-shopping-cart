@@ -1,8 +1,18 @@
+DROP TABLE IF EXISTS orders_detail;
+
+DROP TABLE IF EXISTS orders;
+
+DROP TABLE IF EXISTS cart_item;
+
+DROP TABLE IF EXISTS product;
+
+DROP TABLE IF EXISTS customer;
+
 CREATE TABLE customer
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT,
-    nickname VARCHAR(8)   NOT NULL,
-    email    VARCHAR(255) NOT NULL UNIQUE,
+    nickname VARCHAR(8) NOT NULL,
+    email    VARCHAR(255) NOT NULL,
     password VARCHAR(60)  NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
