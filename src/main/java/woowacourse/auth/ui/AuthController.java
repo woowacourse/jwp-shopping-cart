@@ -23,8 +23,7 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public TokenResponse login(@RequestBody TokenRequest tokenRequest) {
-        Long customerId = authService.loginCustomer(tokenRequest);
-        return authService.createToken(customerId);
+        return authService.loginCustomer(tokenRequest);
     }
 
 }

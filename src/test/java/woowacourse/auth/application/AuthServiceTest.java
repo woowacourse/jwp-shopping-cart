@@ -35,9 +35,9 @@ class AuthServiceTest {
         customerService.save(customer);
 
         TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
-        Long customerId = authService.loginCustomer(tokenRequest);
+        TokenResponse tokenResponse = authService.loginCustomer(tokenRequest);
 
-        assertThat(customerId).isEqualTo(1L);
+        assertThat(tokenResponse.getAccessToken()).isNotBlank();
     }
 
     @DisplayName("email과 password를 이용하여 일치하는 customer가 없는 경우 예외를 발생시킨다.")
@@ -47,21 +47,6 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.loginCustomer(tokenRequest))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("Email 또는 Password가 일치하지 않습니다.");
-    }
-
-    @DisplayName("customer id를 이용하여 token을 발급한다.")
-    @Test
-    void createToken() {
-        CustomerRequest customer =
-                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
-        customerService.save(customer);
-
-        TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
-        Long customerId = authService.loginCustomer(tokenRequest);
-
-        TokenResponse accessToken = authService.createToken(customerId);
-
-        assertThat(accessToken.getAccessToken()).isNotBlank();
     }
 
 

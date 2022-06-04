@@ -20,7 +20,12 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public Long loginCustomer(TokenRequest tokenRequest) {
+    public TokenResponse loginCustomer(TokenRequest tokenRequest) {
+        Long customerId = findCustomerId(tokenRequest);
+        return createToken(customerId);
+    }
+
+    private Long findCustomerId(TokenRequest tokenRequest) {
         Password encryptPassword = Password.encrypt(tokenRequest.getPassword());
         Optional<Long> idByEmailAndPassword = customerDao.findIdByEmailAndPassword(tokenRequest.getEmail(),
                 encryptPassword.getPassword());
@@ -28,7 +33,7 @@ public class AuthService {
                 () -> new InvalidCustomerException("Email 또는 Password가 일치하지 않습니다."));
     }
 
-    public TokenResponse createToken(Long customerId) {
+    private TokenResponse createToken(Long customerId) {
         String accessToken = jwtTokenProvider.createToken(String.valueOf(customerId));
         return new TokenResponse(accessToken);
     }
