@@ -5,6 +5,7 @@ import static org.hamcrest.core.Is.is;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredFixture;
 import woowacourse.auth.dto.LogInRequest;
@@ -33,13 +34,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBearerAuth() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
-        RestAssuredFixture.post(signUpRequest, "users", 201);
+        RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "1234");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
-        RestAssuredFixture.get(token, "/users/me", 200)
+        RestAssuredFixture.get(token, "/users/me", HttpStatus.OK.value())
                 .body("username", is("rennon"))
                 .body("email", is("rennon@woowa.com"));
     }
@@ -50,14 +51,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
-        RestAssuredFixture.post(signUpRequest, "users", 201);
+        RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
         // then
         // 토큰 발급 요청이 거부된다
         LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "1235");
-        RestAssuredFixture.post(logInRequest, "/login", 400);
+        RestAssuredFixture.post(logInRequest, "/login", HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
@@ -65,12 +66,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithWrongBearerAuth() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "1234");
-        RestAssuredFixture.post(signUpRequest, "users", 201);
+        RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         // then
         // 내 정보 조회 요청이 거부된다
-        RestAssuredFixture.get("dummy", "/users/me", 401);
+        RestAssuredFixture.get("dummy", "/users/me", HttpStatus.UNAUTHORIZED.value());
     }
 }
