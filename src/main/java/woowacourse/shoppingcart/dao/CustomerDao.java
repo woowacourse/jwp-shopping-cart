@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -28,6 +30,7 @@ public class CustomerDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     public CustomerDao(final NamedParameterJdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -74,6 +77,7 @@ public class CustomerDao {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, CUSTOMER_ENTITY_ROW_MAPPER));
         } catch (final EmptyResultDataAccessException e) {
+            logger.info("{email}과 {password}에 일치하는 레코드를 찾을 수 없습니다.", email, password);
             return Optional.empty();
         }
     }
