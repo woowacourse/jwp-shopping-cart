@@ -11,11 +11,12 @@ import java.util.Date;
 public class FakeJwtTokenProvider extends JwtTokenProvider {
 
     private final String secretKey;
-    private final long validityInMilliseconds = 30000;
+    private final long validityInMilliseconds;
 
-    public FakeJwtTokenProvider(String secretKey) {
-        super(secretKey);
+    public FakeJwtTokenProvider(String secretKey, long validityInMilliseconds) {
+        super(secretKey, validityInMilliseconds);
         this.secretKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.ih1aovtQShabQ7l0cINw4k1fagApg3qLWiB8Kt59Lno";
+        this.validityInMilliseconds = 36000000;
     }
 
     @Override
