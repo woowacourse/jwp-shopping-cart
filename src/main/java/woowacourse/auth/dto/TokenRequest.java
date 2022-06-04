@@ -1,8 +1,15 @@
 package woowacourse.auth.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 public class TokenRequest {
 
+    @NotBlank
+    @Size(min=4, max=20)
     private String username;
+    @NotBlank
+    @Size(min=8, max=20)
     private String password;
 
     public TokenRequest() {

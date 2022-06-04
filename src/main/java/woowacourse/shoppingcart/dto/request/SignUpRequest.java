@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dto.request;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import woowacourse.shoppingcart.domain.Age;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
@@ -8,9 +11,16 @@ import woowacourse.shoppingcart.domain.Username;
 
 public class SignUpRequest {
 
+    @NotBlank
+    @Size(min=4, max=20)
     private String username;
+    @NotBlank
+    @Size(min=8, max=20)
     private String password;
+    @NotBlank
+    @Size(min=1, max=10)
     private String nickname;
+    @Min(value=0)
     private Integer age;
 
     public SignUpRequest() {
