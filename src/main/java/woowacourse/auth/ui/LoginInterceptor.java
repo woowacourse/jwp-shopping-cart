@@ -3,11 +3,14 @@ package woowacourse.auth.ui;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jdk.jfr.Category;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 
+@Component
 public class LoginInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;

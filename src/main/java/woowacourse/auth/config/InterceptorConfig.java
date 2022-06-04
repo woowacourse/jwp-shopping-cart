@@ -8,17 +8,16 @@ import woowacourse.auth.ui.LoginInterceptor;
 
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
+    private final LoginInterceptor loginInterceptor;
 
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public InterceptorConfig(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public InterceptorConfig(LoginInterceptor loginInterceptor) {
+        this.loginInterceptor = loginInterceptor;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         WebMvcConfigurer.super.addInterceptors(registry);
-        registry.addInterceptor(new LoginInterceptor(jwtTokenProvider))
+        registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/users/**")
                 .excludePathPatterns("/users");
     }
