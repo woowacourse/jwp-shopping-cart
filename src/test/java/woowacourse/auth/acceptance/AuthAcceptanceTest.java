@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.dto.ErrorResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
+import static woowacourse.fixture.PasswordFixture.rawBasicPassword;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -25,10 +25,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginReturnBearerToken() {
         // given
-        회원가입을_한다("giron", rowBasicPassword);
+        회원가입을_한다("giron", rawBasicPassword);
 
         // when
-        final ExtractableResponse<Response> extract = 로그인을_한다("giron", rowBasicPassword);
+        final ExtractableResponse<Response> extract = 로그인을_한다("giron", rawBasicPassword);
         final TokenResponse tokenResponse = extract.as(TokenResponse.class);
 
         // then
@@ -39,9 +39,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        회원가입을_한다("giron", rowBasicPassword);
+        회원가입을_한다("giron", rawBasicPassword);
 
-        final ExtractableResponse<Response> extract = 로그인을_한다("giron", rowBasicPassword);
+        final ExtractableResponse<Response> extract = 로그인을_한다("giron", rawBasicPassword);
 
         final TokenResponse tokenResponse = extract.as(TokenResponse.class);
 
@@ -57,9 +57,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginFailureWithWrongUserName() {
         // given
-        회원가입을_한다("giron", rowBasicPassword);
+        회원가입을_한다("giron", rawBasicPassword);
         // when
-        final ExtractableResponse<Response> extract = 로그인을_한다("tiki12", rowBasicPassword);
+        final ExtractableResponse<Response> extract = 로그인을_한다("tiki12", rawBasicPassword);
 
         final ErrorResponse errorResponse = extract.as(ErrorResponse.class);
         // then
@@ -74,7 +74,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginFailureWithWrongPassword() {
         // given
-        회원가입을_한다("giron", rowBasicPassword);
+        회원가입을_한다("giron", rawBasicPassword);
         // when
         final ExtractableResponse<Response> extract = 로그인을_한다("giron", "wrongPassword");
         final ErrorResponse errorResponse = extract.as(ErrorResponse.class);
@@ -90,7 +90,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // given
-        회원가입을_한다("giron", rowBasicPassword);
+        회원가입을_한다("giron", rawBasicPassword);
 
         // when
         final ExtractableResponse<Response> responseMe = 내_정보를_조회한다("wrongAccessToken");

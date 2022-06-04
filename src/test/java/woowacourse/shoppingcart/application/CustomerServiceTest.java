@@ -27,7 +27,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
-import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
+import static woowacourse.fixture.PasswordFixture.rawBasicPassword;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -47,19 +47,19 @@ class CustomerServiceTest {
         // given
         final String userName = "giron";
         given(customerDao.existsByUserName(userName)).willReturn(false);
-        given(passwordEncoder.encode(rowBasicPassword)).willReturn(encryptedBasicPassword);
+        given(passwordEncoder.encode(rawBasicPassword)).willReturn(encryptedBasicPassword);
         given(customerDao.save(userName, encryptedBasicPassword)).willReturn(1L);
 
         // when
         final CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword(userName, rowBasicPassword);
+                new CustomerRequest.UserNameAndPassword(userName, rawBasicPassword);
         final Long id = customerService.signUp(request);
 
         // then
         assertAll(
                 () -> assertThat(id).isEqualTo(1L),
                 () -> verify(customerDao).existsByUserName(userName),
-                () -> verify(passwordEncoder).encode(rowBasicPassword),
+                () -> verify(passwordEncoder).encode(rawBasicPassword),
                 () -> verify(customerDao).save(userName, encryptedBasicPassword)
         );
     }
@@ -73,7 +73,7 @@ class CustomerServiceTest {
 
         // when
         final CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword(userName,
-                rowBasicPassword);
+                rawBasicPassword);
 
         // then
         assertAll(

@@ -20,7 +20,7 @@ import woowacourse.shoppingcart.dto.ErrorResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
+import static woowacourse.fixture.PasswordFixture.rawBasicPassword;
 import static woowacourse.fixture.TokenFixture.BEARER;
 
 @DisplayName("회원 관련 기능")
@@ -30,7 +30,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         // when
-        ExtractableResponse<Response> response = 회원가입을_한다("giron", rowBasicPassword);
+        ExtractableResponse<Response> response = 회원가입을_한다("giron", rawBasicPassword);
 
         // then
         Long id = Long.parseLong(response.header("Location").split("/")[3]);
@@ -45,8 +45,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         // given
-        회원가입을_한다("giron", rowBasicPassword);
-        final TokenResponse tokenResponse = 로그인을_한다("giron", rowBasicPassword).as(TokenResponse.class);
+        회원가입을_한다("giron", rawBasicPassword);
+        final TokenResponse tokenResponse = 로그인을_한다("giron", rawBasicPassword).as(TokenResponse.class);
 
         // when
         ExtractableResponse<Response> extractableResponse = 내_정보를_조회한다(tokenResponse.getAccessToken());
@@ -64,9 +64,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        회원가입을_한다("giron", rowBasicPassword);
+        회원가입을_한다("giron", rawBasicPassword);
 
-        final TokenResponse tokenResponse = 로그인을_한다("giron", rowBasicPassword).as(TokenResponse.class);
+        final TokenResponse tokenResponse = 로그인을_한다("giron", rawBasicPassword).as(TokenResponse.class);
         // when
         CustomerRequest.UserNameAndPassword request =
                 new CustomerRequest.UserNameAndPassword("giron", "87654321");
@@ -93,9 +93,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        회원가입을_한다("giron", rowBasicPassword);
+        회원가입을_한다("giron", rawBasicPassword);
 
-        final TokenResponse tokenResponse = 로그인을_한다("giron", rowBasicPassword).as(TokenResponse.class);
+        final TokenResponse tokenResponse = 로그인을_한다("giron", rawBasicPassword).as(TokenResponse.class);
 
         // when
         ExtractableResponse<Response> extractableResponse = RestAssured
@@ -128,7 +128,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void isDuplicatedUserName() {
         // given
-        회원가입을_한다("giron", rowBasicPassword);
+        회원가입을_한다("giron", rawBasicPassword);
 
         // when
         CustomerRequest.UserNameOnly request = new UserNameOnly("giron");

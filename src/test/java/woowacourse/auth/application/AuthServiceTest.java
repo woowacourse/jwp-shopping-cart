@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
-import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
+import static woowacourse.fixture.PasswordFixture.rawBasicPassword;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -49,11 +49,11 @@ class AuthServiceTest {
                 .willReturn(Optional.of(customer));
         given(jwtTokenProvider.createToken("1"))
                 .willReturn("accessToken");
-        given(passwordEncoder.matches(rowBasicPassword, encryptedBasicPassword))
+        given(passwordEncoder.matches(rawBasicPassword, encryptedBasicPassword))
                 .willReturn(true);
 
         // when
-        TokenRequest request = new TokenRequest(userName, rowBasicPassword);
+        TokenRequest request = new TokenRequest(userName, rawBasicPassword);
         final TokenResponse response = authService.login(request);
 
         // then
@@ -61,7 +61,7 @@ class AuthServiceTest {
                 () -> assertThat(response.getAccessToken()).isEqualTo("accessToken"),
                 () -> verify(customerDao).findByUserName(userName),
                 () -> verify(jwtTokenProvider).createToken("1"),
-                () -> verify(passwordEncoder).matches(rowBasicPassword, encryptedBasicPassword)
+                () -> verify(passwordEncoder).matches(rawBasicPassword, encryptedBasicPassword)
         );
     }
 
