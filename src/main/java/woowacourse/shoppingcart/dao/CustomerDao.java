@@ -59,6 +59,11 @@ public class CustomerDao {
         return jdbcTemplate.queryForList(sql, String.class);
     }
 
+    public boolean isUsernameExist(String userName) {
+        String sql = "SELECT EXISTS (SELECT username FROM customer WHERE username = ?) AS isExist;";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, userName);
+    }
+
     public Customer getCustomerByUserName(String userName) {
         try {
             final String sql = "SELECT username, password, nickname, age FROM customer WHERE username = ?";

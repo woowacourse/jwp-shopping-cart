@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -110,5 +112,12 @@ public class CustomerDaoTest {
         assertThatExceptionOfType(InvalidCustomerException.class)
                 .isThrownBy(() -> customerDao.getCustomerByUserName(given.getUserName()))
                 .withMessageContaining("존재");
+    }
+
+    @ParameterizedTest(name = "존재하는 username인지 확인한다.")
+    @CsvSource({"forky,false", "puterism,true"})
+    void isUsernameExist(String given, boolean expected) {
+        boolean actual = customerDao.isUsernameExist(given);
+        assertThat(actual).isEqualTo(expected);
     }
 }
