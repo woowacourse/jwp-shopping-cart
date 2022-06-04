@@ -22,3 +22,17 @@
 [API 문서](https://www.notion.so/brorae/1-API-c10e17f6fdc940bbb2379ec7e07b1cb4)
 ## ✏️ Code Review Process
 [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+## 1단게 수정 사항 & 피드백 정리
+
+- [ ] Acceptance test를 하면서 실제 사용자가 생각하는 흐름을 정리해보자
+  - 위의 두가지 경우처럼 나눌 수도 있고 더 다양하게 나누는 방법이 있을텐데요.
+    알린이 생각하는 시나리오를 한번 생각해보고 그것에 맞게 테스트를 작성해 보면 좋을 것 같아요!
+    시나리오로 모든 경우를 테스트할 수 없기 때문에 controller로 통합테스트를 진행하는 것이지 않을까요?
+- [ ] interceptor가 ui 패키지에 포함되어 있다. ui보다 config에 있는게 맞지 않을까? ui에 포함하게된 기준이 무엇이었을까?
+- [ ] webpage를 보며 me라는 표현을 본적이 없지 않나요?
+- [ ] exception과 runtimeException을 같이 잡은 이유가 있을까요??
+- [ ] 로그인 시 `isValidPasswordByEmail()`에 대한 테스트가 없는 것 같다.
+- [ ] (JwtTokenProvider.getPayload) 한줄에 여러개를 모두 표현하기보다 한줄에 한개씩 표현하는게 더 명확한거 같아요!
+- [ ] service에서 dto로 변환하여 넘겨주는 것이 역할에 맞을까요??
+- [ ] Request Dto 의 기본 생성자가 private여도 될 것 같다.
