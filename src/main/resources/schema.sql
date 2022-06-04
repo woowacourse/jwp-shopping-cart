@@ -11,12 +11,12 @@ drop table if exists customer;
 create table customer
 (
     id              bigint       not null auto_increment,
-    email           varchar(50)  not null,
-    password        varchar(200) not null,
-    profileImageUrl varchar(50)  not null,
-    name            varchar(255) not null,
+    email           varchar(255)  not null,
+    password        varchar(65) not null,
+    profileImageUrl varchar(2000)  not null,
+    name            varchar(10) not null,
     gender          varchar(10)           default 'undefined',
-    birthday        varchar(12)           default '',
+    birthday        date                  default '',
     contact         varchar(11)  not null,
     address         varchar(100) not null,
     detailAddress   varchar(50)           default '',
