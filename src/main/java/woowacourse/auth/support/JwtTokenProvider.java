@@ -12,20 +12,18 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import javax.annotation.PostConstruct;
 import woowacourse.auth.exception.InvalidTokenException;
 
 @Component
 public class JwtTokenProvider {
-    @Value("${security.jwt.token.secret-key}")
-    private String secretKey;
-    private Key key;
-    @Value("${security.jwt.token.expire-length}")
-    private long validityInMilliseconds;
 
-    @PostConstruct
-    private void initializeKey() {
-        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+    private final Key secretKey;
+    private final long validityInMilliseconds;
+
+    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String secretKey,
+                            @Value("${security.jwt.token.expire-length}") final long validityInMilliseconds) {
+        this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+        this.validityInMilliseconds = validityInMilliseconds;
     }
 
     public String createToken(final String payload) {
@@ -37,7 +35,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -56,7 +54,7 @@ public class JwtTokenProvider {
 
     private Claims extractJwtClaims(final String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
