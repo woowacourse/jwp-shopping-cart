@@ -33,7 +33,7 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse("존재하지 않는 데이터 요청입니다."));
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
@@ -51,7 +51,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             InvalidPasswordException.class,
-            InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
@@ -61,7 +60,7 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(AuthorizationException.class)
+    @ExceptionHandler({InvalidCustomerException.class, AuthorizationException.class})
     public ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
     }

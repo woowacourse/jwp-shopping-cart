@@ -58,7 +58,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         // 토큰 발급 요청이 거부된다
         LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "1235");
-        RestAssuredFixture.post(logInRequest, "/login", HttpStatus.BAD_REQUEST.value());
+        RestAssuredFixture.post(logInRequest, "/login", HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")

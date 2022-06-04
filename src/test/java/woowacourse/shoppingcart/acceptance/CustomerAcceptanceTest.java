@@ -79,7 +79,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         //when & then
         LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "1235");
-        RestAssuredFixture.post(logInRequest, "/login", HttpStatus.BAD_REQUEST.value());
+        RestAssuredFixture.post(logInRequest, "/login", HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         //when & then
         LogInRequest logInRequest = new LogInRequest("rennon1@woowa.com", "1234");
-        RestAssuredFixture.post(logInRequest, "/login", HttpStatus.BAD_REQUEST.value());
+        RestAssuredFixture.post(logInRequest, "/login", HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("내 정보 조회")
