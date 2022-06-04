@@ -38,7 +38,7 @@ public class CustomerDto {
     public static CustomerDto fromCustomerRequest(final SignUpRequest request) {
         return new CustomerDto(request.getEmail(), request.getPassword(), request.getProfileImageUrl(),
                 request.getName(), request.getGender(), request.getBirthday(), request.getContact(),
-                AddressDto.fromAddressRequest(request.getAddress()), request.isTerms());
+                AddressDto.fromAddressRequest(request.getFullAddress()), request.isTerms());
     }
 
     public static Customer toCustomer(final CustomerDto request) {
