@@ -92,3 +92,14 @@ include::{snippets}/get-me-invalid-token/http-request.adoc[]
 ===== HTTP response
 
 include::{snippets}/get-me-invalid-token/http-response.adoc[]
+
+[[resources-customer-delete-me]]
+=== 회원 탈퇴
+
+==== HTTP request
+
+include::{snippets}/delete-me/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/delete-me/http-response.adoc[]

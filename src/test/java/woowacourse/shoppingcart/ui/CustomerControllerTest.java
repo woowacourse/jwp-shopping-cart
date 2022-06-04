@@ -241,6 +241,15 @@ class CustomerControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isNoContent());
+
+        // docs
+        perform.andDo(document("delete-me",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                )
+        ));
     }
 
     @Test
