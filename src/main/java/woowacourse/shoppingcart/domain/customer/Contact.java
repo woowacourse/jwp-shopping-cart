@@ -6,7 +6,7 @@ public class Contact {
 
     private static final String REGULAR_EXPRESSION = "^\\d{11}$";
     private static final Pattern COMPILED_PATTERN = Pattern.compile(REGULAR_EXPRESSION);
-    static final String INVALID_CONTACT_FORMAT = "올바르지 않은 전화번호입니다.";
+    static final String INVALID_CONTACT_FORMAT = "핸드폰 양식의 전화번호를 입력해야합니다.";
 
     private final String value;
 

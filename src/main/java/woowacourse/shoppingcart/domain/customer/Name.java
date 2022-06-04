@@ -6,7 +6,7 @@ public class Name {
 
     private static final String REGULAR_EXPRESSION = "(^[ㄱ-ㅎㅓ-ㅣ가-힣]).{1,4}$";
     private static final Pattern COMPILED_PATTERN = Pattern.compile(REGULAR_EXPRESSION);
-    static final String INVALID_NAME_FORMAT = "올바르지 않은 이름입니다.";
+    static final String INVALID_NAME_FORMAT = "이름은 최대 5글자, 한글로 이뤄져야합니다.";
 
     private final String value;
 

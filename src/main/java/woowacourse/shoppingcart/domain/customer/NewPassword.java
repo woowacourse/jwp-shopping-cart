@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class NewPassword implements Password {
     private static final String REGULAR_EXPRESSION = "^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
     private static final Pattern compiledPattern = Pattern.compile(REGULAR_EXPRESSION);
-    static final String INVALID_PASSWORD_FORMAT = "올바르지 않은 비밀번호입니다.";
+    static final String INVALID_PASSWORD_FORMAT = "비밀번호는 8글자 이상 20글자 이하, 영문, 특수문자, 숫자 최소 1개씩 으로 이뤄져야합니다.";
 
     private final String value;
 
