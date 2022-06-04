@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DisplayName("MemberController에서")
 class MemberControllerTest {
 
     @Autowired
@@ -33,12 +34,12 @@ class MemberControllerTest {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @DisplayName("로그인 테스트")
+    @DisplayName("login 메서드는")
     @Nested
     class LoginTest {
         private final String uri = "/api/auth";
 
-        @DisplayName("이메일은 Null 값, 빈 값을 허용하지 않는다.")
+        @DisplayName("이메일에 Null 값, 빈 값을 허용하지 않는다.")
         @ParameterizedTest
         @NullAndEmptySource
         void emptyEmail(String email) throws Exception {
@@ -53,7 +54,7 @@ class MemberControllerTest {
             testPostBadRequest(uri, request, "올바르지 않은 형식의 이메일입니다.");
         }
 
-        @DisplayName("비밀번호는 Null 값, 빈 값을 허용하지 않는다.")
+        @DisplayName("비밀번호 Null 값, 빈 값을 허용하지 않는다.")
         @ParameterizedTest
         @NullAndEmptySource
         void emptyPassword(String password) throws Exception {
@@ -62,12 +63,12 @@ class MemberControllerTest {
         }
     }
 
-    @DisplayName("회원가입 테스트")
+    @DisplayName("signUp 메서드는")
     @Nested
     class SignUpTest {
         private final String uri = "/api/members";
 
-        @DisplayName("이름은 Null Null 값, 빈 값을 허용하지 않는다.")
+        @DisplayName("이름에 Null 값, 빈 값을 허용하지 않는다.")
         @ParameterizedTest
         @NullAndEmptySource
         void emptyName(String name) throws Exception {
@@ -75,7 +76,7 @@ class MemberControllerTest {
             testPostBadRequest(uri, request, "이름은 빈 값일 수 없습니다.");
         }
 
-        @DisplayName("이메일은 Null 값, 빈 값을 허용하지 않는다.")
+        @DisplayName("이메일에 Null 값, 빈 값을 허용하지 않는다.")
         @ParameterizedTest
         @NullAndEmptySource
         void emptyEmail(String email) throws Exception {
@@ -90,7 +91,7 @@ class MemberControllerTest {
             testPostBadRequest(uri, request, "올바르지 않은 형식의 이메일입니다.");
         }
 
-        @DisplayName("비밀번호는 Null 값, 빈 값을 허용하지 않는다.")
+        @DisplayName("비밀번호에 Null 값, 빈 값을 허용하지 않는다.")
         @ParameterizedTest
         @NullAndEmptySource
         void emptyPassword(String password) throws Exception {
@@ -99,12 +100,12 @@ class MemberControllerTest {
         }
     }
 
-    @DisplayName("이메일 중복 검증 테스트")
+    @DisplayName("checkDuplicateEmail 메서드는")
     @Nested
     class CheckDuplicateEmailTest {
         private final String uri = "/api/members/duplicate-email";
 
-        @DisplayName("이메일은 Null 값, 빈 값을 허용하지 않는다.")
+        @DisplayName("이메일메 Null 값, 빈 값을 허용하지 않는다.")
         @ParameterizedTest
         @NullAndEmptySource
         void emptyEmail(String email) throws Exception {
@@ -120,12 +121,12 @@ class MemberControllerTest {
         }
     }
 
-    @DisplayName("이름 수정 테스트")
+    @DisplayName("updateName 메서드는")
     @Nested
     class UpdateNameTest {
         private final String uri = "/api/members/me/name";
 
-        @DisplayName("이름은 Null 값, 빈 값을 허용하지 않는다.")
+        @DisplayName("이름 Null 값, 빈 값을 허용하지 않는다.")
         @ParameterizedTest
         @NullAndEmptySource
         void emptyName(String name) throws Exception {
@@ -135,26 +136,34 @@ class MemberControllerTest {
 
     }
 
-    @DisplayName("비밀번호 수정 테스트")
+    @DisplayName("updatePassword 메서드는")
     @Nested
     class UpdatePasswordTest {
         private final String uri = "/api/members/me/password";
 
-        @DisplayName("비밀번호는 Null 값, 빈 값을 허용하지 않는다.")
+        @DisplayName("이전 비밀번호 Null 값, 빈 값을 허용하지 않는다.")
         @ParameterizedTest
         @NullAndEmptySource
-        void emptyName(String oldPassword, String newPassword) throws Exception {
-            UpdatePasswordRequest request = new UpdatePasswordRequest(oldPassword, newPassword);
+        void emptyOldPassword(String oldPassword) throws Exception {
+            UpdatePasswordRequest request = new UpdatePasswordRequest(oldPassword, "Wooteco1!");
+            testPutBadRequest(uri, request, "비밀번호는 빈 값일 수 없습니다.");
+        }
+
+        @DisplayName("이전 비밀번호 Null 값, 빈 값을 허용하지 않는다.")
+        @ParameterizedTest
+        @NullAndEmptySource
+        void emptyNewPassword(String newPassword) throws Exception {
+            UpdatePasswordRequest request = new UpdatePasswordRequest("Wooteco1!", newPassword);
             testPutBadRequest(uri, request, "비밀번호는 빈 값일 수 없습니다.");
         }
     }
 
-    @DisplayName("회원탈퇴 테스트")
+    @DisplayName("deleteMember 메서드는")
     @Nested
     class DeleteMemberTest {
         private final String uri = "/api/members/me";
 
-        @DisplayName("비밀번호는  Null 값, 빈 값을 허용하지 않는다.")
+        @DisplayName("비밀번호에 Null 값, 빈 값을 허용하지 않는다.")
         @ParameterizedTest
         @NullAndEmptySource
         void emptyPassword(String password) throws Exception {
