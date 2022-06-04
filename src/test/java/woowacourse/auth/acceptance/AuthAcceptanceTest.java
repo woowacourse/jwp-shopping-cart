@@ -2,6 +2,7 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.*;
 import static woowacourse.util.HttpRequestUtil.deleteWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.get;
 import static woowacourse.util.HttpRequestUtil.getWithAuthorization;
@@ -31,21 +32,6 @@ import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
 class AuthAcceptanceTest extends AcceptanceTest {
-
-    private static final MemberCreateRequest MEMBER_CREATE_REQUEST =
-            new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-    private static final LoginRequest VALID_LOGIN_REQUEST = new LoginRequest("abc@woowahan.com", "1q2w3e4r!");
-    private static final PasswordRequest VALID_PASSWORD_CHECK_REQUEST = new PasswordRequest("1q2w3e4r!");
-    private static final PasswordRequest VALID_PASSWORD_UPDATE_REQUEST = new PasswordRequest("1q2w3e4r@");
-    private static final MemberUpdateRequest VALID_NICKNAME_UPDATE_REQUEST = new MemberUpdateRequest("바뀐닉네임");
-    private static final String DATA_EMPTY_EXCEPTION_MESSAGE = "입력하지 않은 정보가 있습니다.";
-
-    private static final String LOGIN_URI = "/api/login";
-    private static final String SIGN_UP_URI = "/api/members";
-    private static final String EMAIL_DUPLICATION_CHECK_URI = "/api/members/check-email?email=";
-    private static final String PASSWORD_UPDATE_URI = "/api/members/password";
-    private static final String PASSWORD_CHECK_URI = "/api/members/password-check";
-    private static final String MEMBERS_URI = "/api/members/me";
 
     @DisplayName("이메일, 비밀번호, 닉네임으로 회원 가입에 성공하면 201를 응답한다.")
     @Test
