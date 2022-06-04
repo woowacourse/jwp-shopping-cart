@@ -24,7 +24,7 @@ public class CustomerAcceptanceFixture {
             name = DEFAULT_NAME;
         }
         return new CustomerRequest(
-            "username",
+            name,
             "password12!@",
             "example@example.com",
             "some-address",
