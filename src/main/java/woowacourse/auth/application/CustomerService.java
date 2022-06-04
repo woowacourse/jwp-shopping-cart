@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.customer.CustomerDeleteRequest;
-import woowacourse.auth.support.EncryptionStrategy;
+import woowacourse.auth.domain.EncryptionStrategy;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.customer.CustomerRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
@@ -24,9 +24,13 @@ public class CustomerService {
 
 	public Customer signUp(CustomerRequest request) {
 		validateEmailDuplicated(request.getEmail());
-		Password password = new Password(request.getPassword());
-		Customer customer = request.toEntity(encryptionStrategy.encode(password));
-		return customerDao.save(customer);
+		return customerDao.save(Customer.builder()
+			.email(request.getEmail())
+			.nickname(request.getNickname())
+			.password(request.getPassword())
+			.encryptPassword(encryptionStrategy)
+			.build()
+		);
 	}
 
 	private void validateEmailDuplicated(String email) {
@@ -48,11 +52,13 @@ public class CustomerService {
 
 	public Customer update(Customer customer, CustomerUpdateRequest request) {
 		validatePassword(customer, new Password(request.getPassword()));
-		Customer updatedCustomer = new Customer(customer.getId(),
-			customer.getEmail(),
-			encryptionStrategy.encode(new Password(request.getNewPassword())),
-			request.getNickname()
-		);
+		Customer updatedCustomer = Customer.builder()
+			.id(customer.getId())
+			.email(customer.getEmail())
+			.nickname(request.getNickname())
+			.password(request.getNewPassword())
+			.encryptPassword(encryptionStrategy)
+			.build();
 		customerDao.update(updatedCustomer);
 		return updatedCustomer;
 	}

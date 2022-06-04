@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.support.EncryptionStrategy;
+import woowacourse.auth.domain.EncryptionStrategy;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;

@@ -23,9 +23,5 @@ public class CustomerRequest {
 	private String password;
 	@Size(min = 2, max = 10, message = "닉네임은 2~10 길이어야 합니다.")
 	private String nickname;
-
-	public Customer toEntity(String password) {
-		return new Customer(email, password, nickname);
-	}
 }
 

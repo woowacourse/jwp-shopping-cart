@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 
 import org.springframework.stereotype.Component;
 
+import woowacourse.auth.domain.EncryptionStrategy;
 import woowacourse.auth.domain.Password;
 
 @Component

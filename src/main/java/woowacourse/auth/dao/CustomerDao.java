@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.auth.domain.Customer;
+import woowacourse.auth.domain.Password;
 import woowacourse.exception.InvalidCustomerException;
 
 @Repository
@@ -31,7 +32,12 @@ public class CustomerDao {
 	public Customer save(Customer customer) {
 		long id = jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(customer))
 			.longValue();
-		return new Customer(id, customer.getEmail(), customer.getPassword(), customer.getNickname());
+		return Customer.builder()
+			.id(id)
+			.email(customer.getEmail())
+			.nickname(customer.getNickname())
+			.password(customer.getPassword())
+			.build();
 	}
 
 	public Boolean existByEmail(String email) {
@@ -60,11 +66,12 @@ public class CustomerDao {
 	}
 
 	private RowMapper<Customer> getCustomerMapper() {
-		return (rs, rowNum) -> new Customer(
-			rs.getLong("id"),
-			rs.getString("email"),
-			rs.getString("password"),
-			rs.getString("nickname"));
+		return (rs, rowNum) -> Customer.builder()
+			.id(rs.getLong("id"))
+			.email(rs.getString("email"))
+			.nickname(rs.getString("nickname"))
+			.password(rs.getString("password"))
+			.build();
 	}
 
 	public void delete(Long id) {
