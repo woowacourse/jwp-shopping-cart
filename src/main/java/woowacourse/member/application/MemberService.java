@@ -72,9 +72,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteById(final Long id, final MemberDeleteRequest memberDeleteRequest) {
-        Member member = findMemberById(id);
-        member.validateWrongPassword(memberDeleteRequest.getPassword(), passwordEncoder);
+    public void deleteById(final Long id) {
         memberDao.deleteById(id);
     }
 

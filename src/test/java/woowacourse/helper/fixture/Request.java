@@ -64,10 +64,9 @@ public class Request {
                 .extract();
     }
 
-    public ExtractableResponse<Response> deleteWithToken(Object params, String url, String token) {
+    public ExtractableResponse<Response> deleteWithToken(String url, String token) {
         return RestAssured.given().log().all()
                 .auth().oauth2(token)
-                .body(params)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .delete(url)

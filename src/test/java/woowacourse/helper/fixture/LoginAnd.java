@@ -38,7 +38,6 @@ public class LoginAnd extends Request {
     }
 
     public ExtractableResponse<Response> deleteMember() {
-        MemberDeleteRequest memberDeleteRequest = new MemberDeleteRequest(tMember.getPassword());
-        return deleteWithToken(memberDeleteRequest, "/api/members/me", tMember.getToken());
+        return deleteWithToken("/api/members/me", tMember.getToken());
     }
 }

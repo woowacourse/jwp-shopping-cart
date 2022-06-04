@@ -280,7 +280,7 @@ public class MemberControllerTest extends RestDocsTest {
     @Test
     void deleteMember() throws Exception {
         MemberDeleteRequest memberDeleteRequest = new MemberDeleteRequest(PASSWORD);
-        doNothing().when(memberService).deleteById(anyLong(), any(MemberDeleteRequest.class));
+        doNothing().when(memberService).deleteById(anyLong());
         given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
         given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
 
@@ -292,31 +292,10 @@ public class MemberControllerTest extends RestDocsTest {
                 .andExpect(status().isNoContent());
 
         resultActions.andDo(document("member-delete",
-                getRequestPreprocessor(),
                 getResponsePreprocessor(),
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
-                ),
-                requestFields(
-                        fieldWithPath("password").description("비밀번호")
                 )));
-    }
-
-    @DisplayName("비밀번호 조건이 맞지 않아 회원 삭제에 실패한다.")
-    @Test
-    void deleteMemberNotRightPassword() throws Exception {
-        MemberDeleteRequest memberDeleteRequest = new MemberDeleteRequest("abc12");
-
-        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
-        ErrorResponse response = new ErrorResponse("올바른 비밀번호 형식으로 입력해주세요.");
-        mockMvc.perform(delete("/api/members/me")
-                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(memberDeleteRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(objectMapper.writeValueAsString(response)));
     }
 
     @DisplayName("토큰이 만료되어 회원삭제에 실패한다.")
