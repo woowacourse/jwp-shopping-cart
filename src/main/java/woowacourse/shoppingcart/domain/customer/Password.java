@@ -43,7 +43,7 @@ public class Password {
         return Objects.hash(password);
     }
 
-    public String getPassword() {
+    public String get() {
         return password;
     }
 }

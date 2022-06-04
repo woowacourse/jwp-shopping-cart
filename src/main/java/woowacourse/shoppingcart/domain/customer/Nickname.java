@@ -28,7 +28,7 @@ public class Nickname {
         }
     }
 
-    public String getNickname() {
+    public String get() {
         return nickname;
     }
 }

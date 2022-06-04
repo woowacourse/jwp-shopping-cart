@@ -25,7 +25,7 @@ public class Email {
         return !EMAIL_PATTERN.matcher(email).matches();
     }
 
-    public String getEmail() {
+    public String get() {
         return email;
     }
 }
