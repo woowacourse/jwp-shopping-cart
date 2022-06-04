@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 
 @Repository
 public class CustomerDaoImpl implements CustomerDao {
@@ -60,7 +61,7 @@ public class CustomerDaoImpl implements CustomerDao {
             final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
             return jdbcTemplate.queryForObject(query, customerRowMapper, email);
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new NoSuchCustomerException();
         }
     }
 

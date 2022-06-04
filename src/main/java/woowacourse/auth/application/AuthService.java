@@ -9,6 +9,8 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 
 @Service
 public class AuthService {
@@ -24,6 +26,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public SignInResponse signIn(SignInRequest signInRequest) {
         SignIn signIn = signInRequest.toSignIn();
+        validateExistEmail(signIn.getEmail());
         validatePassword(signIn.getEmail(), signIn.getPassword());
 
         Customer customer = customerDao.findByEmail(signIn.getEmail());
@@ -31,9 +34,15 @@ public class AuthService {
         return SignInResponse.fromCustomer(customer, jwtTokenProvider);
     }
 
+    private void validateExistEmail(String email) {
+        if (!customerDao.existByEmail(email)) {
+            throw new NoSuchCustomerException();
+        }
+    }
+
     private void validatePassword(String email, String password) {
         if (!customerDao.isValidPasswordByEmail(email, password)) {
-            throw new InvalidCustomerException("로그인 실패");
+            throw new InvalidPasswordException();
         }
     }
 }
