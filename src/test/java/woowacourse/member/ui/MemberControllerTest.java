@@ -155,21 +155,6 @@ class MemberControllerTest {
         }
     }
 
-    @DisplayName("deleteMember 메서드는")
-    @Nested
-    class DeleteMemberTest {
-        private final String uri = "/api/members/me";
-
-        @DisplayName("비밀번호에 Null 값, 빈 값을 허용하지 않는다.")
-        @ParameterizedTest
-        @NullAndEmptySource
-        void emptyPassword(String password) throws Exception {
-            DeleteMemberRequest request = new DeleteMemberRequest(password);
-            testDeleteBadRequest(uri, request, "비밀번호는 빈 값일 수 없습니다.");
-        }
-
-    }
-
     void testGetBadRequest(String uri, String errorMessage) throws Exception {
         mockMvc.perform(get(uri))
                 .andExpect(status().isBadRequest())

@@ -62,7 +62,7 @@ public class MemberController {
 
     @DeleteMapping("/members/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMember(@AuthenticationPrincipal Long id, @Valid @RequestBody DeleteMemberRequest request) {
-        memberService.deleteMemberById(id, request);
+    public void deleteMember(@AuthenticationPrincipal Long id) {
+        memberService.deleteMemberById(id);
     }
 }

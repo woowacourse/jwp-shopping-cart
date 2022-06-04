@@ -69,14 +69,8 @@ public class MemberService {
         memberDao.updatePasswordById(id, newPassword.getValue());
     }
 
-    public void deleteMemberById(long id, DeleteMemberRequest request) {
-        Member member = findMemberById(id);
-        Password requestPassword = Password.withEncrypt(request.getPassword());
-
-        if (!member.isSamePassword(requestPassword)) {
-            throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
-        }
-
+    public void deleteMemberById(long id) {
+        findMemberById(id);
         memberDao.deleteById(id);
     }
 
