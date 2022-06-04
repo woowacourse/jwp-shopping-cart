@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.acceptance;
+package woowacourse.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

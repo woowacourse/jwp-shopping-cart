@@ -1,7 +1,6 @@
-package woowacourse.shoppingcart.acceptance;
+package woowacourse.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -36,8 +35,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         String sql = "INSERT INTO customer (username, password, nickname, age) VALUES ('puterism', '비밀번호', '닉네임', 10)";
         jdbcTemplate.update(sql);
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        productId1 = ProductAcceptanceTest.상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        productId2 = ProductAcceptanceTest.상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }
 
     @DisplayName("장바구니 아이템 추가")
