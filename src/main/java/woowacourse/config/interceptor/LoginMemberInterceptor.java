@@ -49,7 +49,6 @@ public class LoginMemberInterceptor implements HandlerInterceptor {
     }
 
     enum ExcludeRule {
-        OPTIONS(HttpMethod.OPTIONS, "/api/customer/**"),
         SIGN_UP(HttpMethod.POST, "/api/customer"),
         ;
 
@@ -62,12 +61,20 @@ public class LoginMemberInterceptor implements HandlerInterceptor {
         }
 
         public static boolean isExcluded(HttpServletRequest request) {
+            return isPreFlight(request) || isNoAuthRequiredRequest(request);
+        }
+
+        private static boolean isPreFlight(final HttpServletRequest request) {
+            return HttpMethod.OPTIONS.matches(request.getMethod());
+        }
+
+        private static boolean isNoAuthRequiredRequest(final HttpServletRequest request) {
             return Arrays.stream(values())
                     .filter(isExcludedMethod(request))
                     .anyMatch(isExcludedURI(request));
         }
 
-        private static Predicate<ExcludeRule> isExcludedMethod(HttpServletRequest request) {
+        private static Predicate<ExcludeRule> isExcludedMethod(final HttpServletRequest request) {
             return rule -> rule.httpMethod.name().equals(request.getMethod());
         }
 
