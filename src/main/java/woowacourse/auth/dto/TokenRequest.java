@@ -1,19 +1,20 @@
 package woowacourse.auth.dto;
 
 public class TokenRequest {
-    private String email;
+
+    private String name;
     private String password;
 
-    public TokenRequest() {
+    private TokenRequest() {
     }
 
-    public TokenRequest(String email, String password) {
-        this.email = email;
+    public TokenRequest(String name, String password) {
+        this.name = name;
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getName() {
+        return name;
     }
 
     public String getPassword() {
