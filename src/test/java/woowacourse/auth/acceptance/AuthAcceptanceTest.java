@@ -1,20 +1,21 @@
 package woowacourse.auth.acceptance;
 
-import io.restassured.RestAssured;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.fixture.SimpleResponse;
+import woowacourse.fixture.SimpleRestAssured;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -28,23 +29,15 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        String accessToken = RestAssured.given().log().all()
-                .body(new TokenRequest("forky", "forky@1234"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all()
-                .extract()
-                .as(TokenResponse.class)
+        TokenRequest tokenRequest = new TokenRequest("forky", "forky@1234");
+        String accessToken = SimpleRestAssured.post("/login", tokenRequest)
+                .toObject(TokenResponse.class)
                 .getAccessToken();
+
         // when
-        CustomerResponse actual = RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/customers/me")
-                .then().log().all()
-                .extract()
-                .as(CustomerResponse.class);
+        CustomerResponse actual = SimpleRestAssured.getWithToken("/customers/me", accessToken)
+                .toObject(CustomerResponse.class);
+
         // then
         assertAll(
                 () -> assertThat(actual.getUserName()).isEqualTo("forky"),
@@ -55,53 +48,34 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인에 실패하는 경우는 토큰 발급 요청이 거부된다.")
     @Test
     void myInfoWithBadBearerAuth() {
-        // when
-        RestAssured.given().log().all()
-                .body(new TokenRequest("forky", "kth@990303"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/login")
-                .then().log().all()
-                // then
-                // 토큰 발급 요청이 거부된다
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .extract()
-                .as(IllegalArgumentException.class);
+        //given
+        TokenRequest tokenRequest = new TokenRequest("forky", "kth@990303");
+
+        //when
+        SimpleResponse response = SimpleRestAssured.post("/login", tokenRequest);
+
+        //then
+        response.assertStatus(HttpStatus.BAD_REQUEST);
+        response.containsExceptionMessage("비밀번호");
     }
 
     @DisplayName("유효하지 않은 토큰으로 회원 관련 기능에 접근할 경우 요청이 거부된다.")
     @Test
     void myInfoWithWrongBearerAuth() {
-        // when then
-        RestAssured.given().log().all()
-                .auth().oauth2("invalidToken")
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/customers/me")
-                .then().log().all()
-                .extract()
-                .as(AuthorizationException.class);
+        SimpleRestAssured.getWithToken("/customers/me", "invalidToken")
+                .toObject(AuthorizationException.class);
     }
 
     @DisplayName("토큰 없이 회원 관련 기능에 접근할 경우 요청이 거부된다.")
     @Test
     void myInfoWithNoAuth() {
-        // when then
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/customers/me")
-                .then().log().all()
-                .extract()
-                .as(AuthorizationException.class);
+        SimpleRestAssured.get("/customers/me")
+                .toObject(AuthorizationException.class);
     }
 
     private void signUpCustomer() {
         CustomerRequest customerRequest =
                 new CustomerRequest("forky", "forky@1234", "복희", 26);
-        RestAssured.given().log().all()
-                .body(customerRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers")
-                .then().log().all();
+        SimpleRestAssured.post("/customers", customerRequest);
     }
 }
