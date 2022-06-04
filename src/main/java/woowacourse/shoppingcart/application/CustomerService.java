@@ -40,7 +40,8 @@ public class CustomerService {
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
         return new CustomerResponse(customer);
     }
-    
+
+    @Transactional
     public void update(Long id, CustomerUpdateRequest customerUpdateRequest) {
         Customer saveCustomer = customerDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
