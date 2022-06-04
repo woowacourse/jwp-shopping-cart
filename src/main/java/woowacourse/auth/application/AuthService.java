@@ -1,14 +1,12 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
-@Transactional
 @Service
 public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
@@ -26,12 +24,12 @@ public class AuthService {
     }
 
     private void checkInvalidLogin(String principal, String credentials) {
-        Customer customer = customerDao.findCustomerByUserName(principal);
+        Customer customer = customerDao.getCustomerByUserName(principal);
         customer.validatePassword(credentials);
     }
 
-    public Customer findCustomer(String token) {
+    public Customer getCustomer(String token) {
         String userName = jwtTokenProvider.getPayload(token);
-        return customerDao.findCustomerByUserName(userName);
+        return customerDao.getCustomerByUserName(userName);
     }
 }

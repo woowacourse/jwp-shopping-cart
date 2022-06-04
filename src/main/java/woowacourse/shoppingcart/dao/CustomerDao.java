@@ -45,7 +45,7 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long getIdByUserName(final String userName) {
         try {
             final String query = "SELECT id FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
@@ -59,7 +59,7 @@ public class CustomerDao {
         return jdbcTemplate.queryForList(sql, String.class);
     }
 
-    public Customer findCustomerByUserName(String userName) {
+    public Customer getCustomerByUserName(String userName) {
         try {
             final String sql = "SELECT username, password, nickname, age FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, userName);

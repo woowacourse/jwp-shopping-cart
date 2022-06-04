@@ -37,7 +37,7 @@ class CustomerServiceTest {
     @Test
     void addCustomer() {
         customerService.addCustomer(customerRequest1);
-        Customer actual = customerDao.findCustomerByUserName(customerRequest1.getUserName());
+        Customer actual = customerDao.getCustomerByUserName(customerRequest1.getUserName());
         assertThat(actual.getUserName()).isEqualTo(customerRequest1.getUserName());
     }
 
@@ -70,7 +70,7 @@ class CustomerServiceTest {
         PasswordRequest passwordRequest = new PasswordRequest(customer.getPassword(), newPassword);
         customerService.updatePassword(customer, passwordRequest);
 
-        Customer actual = customerDao.findCustomerByUserName(customerRequest1.getUserName());
+        Customer actual = customerDao.getCustomerByUserName(customerRequest1.getUserName());
         assertThat(actual.getPassword()).isEqualTo(newPassword);
     }
 
@@ -87,7 +87,7 @@ class CustomerServiceTest {
 
         customerService.updateInfo(originCustomer, updateCustomer);
 
-        Customer actual = customerDao.findCustomerByUserName(customerRequest1.getUserName());
+        Customer actual = customerDao.getCustomerByUserName(customerRequest1.getUserName());
 
         assertAll(
                 () -> assertThat(actual.getNickName()).isEqualTo(newNickName),
@@ -106,7 +106,7 @@ class CustomerServiceTest {
         customerService.deleteCustomer(customer);
 
         assertThatExceptionOfType(InvalidCustomerException.class)
-                .isThrownBy(() -> customerDao.findCustomerByUserName(customer.getUserName()))
+                .isThrownBy(() -> customerDao.getCustomerByUserName(customer.getUserName()))
                 .withMessageContaining("존재");
     }
 }

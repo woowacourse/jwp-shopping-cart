@@ -48,7 +48,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.getIdByUserName(userName);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -62,7 +62,7 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.getIdByUserName(userName);
 
         // then
         assertThat(customerId).isEqualTo(16L);
@@ -78,7 +78,7 @@ public class CustomerDaoTest {
         customerDao.save(given);
         customerDao.updatePassword(expected);
 
-        Customer actual = customerDao.findCustomerByUserName(userName);
+        Customer actual = customerDao.getCustomerByUserName(userName);
         assertThat(actual.getPassword()).isEqualTo(expected.getPassword());
     }
 
@@ -92,7 +92,7 @@ public class CustomerDaoTest {
         customerDao.save(given);
         customerDao.updateInfo(expected);
 
-        Customer actual = customerDao.findCustomerByUserName(userName);
+        Customer actual = customerDao.getCustomerByUserName(userName);
         assertAll(
                 () -> assertThat(actual.getNickName()).isEqualTo(expected.getNickName()),
                 () -> assertThat(actual.getAge()).isEqualTo(expected.getAge())
@@ -108,7 +108,7 @@ public class CustomerDaoTest {
         customerDao.delete(given);
 
         assertThatExceptionOfType(InvalidCustomerException.class)
-                .isThrownBy(() -> customerDao.findCustomerByUserName(given.getUserName()))
+                .isThrownBy(() -> customerDao.getCustomerByUserName(given.getUserName()))
                 .withMessageContaining("존재");
     }
 }
