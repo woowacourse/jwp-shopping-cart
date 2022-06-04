@@ -1,4 +1,4 @@
-package woowacourse.common.exception;
+package woowacourse.common.ui;
 
 import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -7,7 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.shoppingcart.dto.response.ErrorResponse;
+import woowacourse.common.dto.ErrorResponse;
+import woowacourse.common.exception.AuthenticationException;
+import woowacourse.common.exception.ForbiddenException;
+import woowacourse.common.exception.InvalidRequestException;
+import woowacourse.common.exception.NotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {

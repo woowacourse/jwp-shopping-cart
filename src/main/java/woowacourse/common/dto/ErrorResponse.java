@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto.response;
+package woowacourse.common.dto;
 
 public class ErrorResponse {
 
