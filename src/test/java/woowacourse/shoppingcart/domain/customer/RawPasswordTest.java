@@ -22,7 +22,7 @@ class RawPasswordTest {
     void construct_blank() {
         assertThatExceptionOfType(InvalidArgumentRequestException.class)
                 .isThrownBy(() -> new RawPassword(" "))
-                .withMessageContaining("공백");
+                .withMessageContaining("8자 이상 20자 이하");
     }
 
     @DisplayName("비밀번호가 8글자 미만이거나 20글자 초과이면 예외가 발생한다")

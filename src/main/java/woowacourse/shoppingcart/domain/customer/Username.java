@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import org.springframework.util.StringUtils;
 import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 import java.util.Objects;
@@ -16,7 +17,7 @@ public class Username {
     }
 
     private void validateUserName(String username) {
-        if (username.isBlank()) {
+        if (!StringUtils.hasText(username)) {
             throw new InvalidArgumentRequestException("아이디는 공백일 수 없습니다.");
         }
         if (username.length() < MIN_USERNAME_LENGTH || username.length() > MAX_USERNAME_LENGTH) {

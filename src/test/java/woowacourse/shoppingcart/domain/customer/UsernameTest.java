@@ -10,6 +10,14 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class UsernameTest {
 
+    @DisplayName("아이디가 null이면 예외가 발생한다.")
+    @Test
+    void construct_null() {
+        assertThatExceptionOfType(InvalidArgumentRequestException.class)
+                .isThrownBy(() -> new Username(null))
+                .withMessageContaining("공백");
+    }
+
     @DisplayName("아이디가 공백이면 예외가 발생한다")
     @Test
     void construct_blank() {

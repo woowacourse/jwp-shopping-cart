@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import org.springframework.util.StringUtils;
 import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 public class Nickname {
@@ -8,12 +9,12 @@ public class Nickname {
     private final String nickname;
 
     public Nickname(String nickname) {
-        validateNickName(nickname);
+        validateNickname(nickname);
         this.nickname = nickname;
     }
 
-    private void validateNickName(String nickname) {
-        if (nickname.isBlank()) {
+    private void validateNickname(String nickname) {
+        if (!StringUtils.hasText(nickname)) {
             throw new InvalidArgumentRequestException("이름은 공백일 수 없습니다.");
         }
         if (nickname.length() > MAX_NICKNAME_LENGTH) {
