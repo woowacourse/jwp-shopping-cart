@@ -3,9 +3,9 @@ package woowacourse.shoppingcart.domain;
 public class Customer {
 
     private final Long id;
-    private final String name;
+    private String name;
     private final Email email;
-    private final Password password;
+    private Password password;
 
     public Customer(final Long id, final String name, final Email email, final Password password) {
         this.id = id;
@@ -19,11 +19,13 @@ public class Customer {
     }
 
     public Customer updateName(final String newName) {
-        return new Customer(id, newName, email, password);
+        this.name = newName;
+        return this;
     }
 
     public Customer updatePassword(final Password newPassword) {
-        return new Customer(id, name, email, newPassword);
+        this.password = newPassword;
+        return this;
     }
 
     public boolean isSamePassword(final String password) {
