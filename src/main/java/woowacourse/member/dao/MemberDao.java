@@ -45,7 +45,7 @@ public class MemberDao {
         }
     }
 
-    public boolean existMemberByEmail(String email) {
+    public boolean isAlreadyExistEmail(String email) {
         String SQL = "SELECT EXISTS (SELECT * FROM MEMBER WHERE email = ?)";
         return jdbcTemplate.queryForObject(SQL, Boolean.class, email);
     }
@@ -65,12 +65,12 @@ public class MemberDao {
         }
     }
 
-    public void updateName(long id, String name) {
+    public void updateNameById(long id, String name) {
         String SQL = "UPDATE member SET name = ? WHERE id = ?";
         jdbcTemplate.update(SQL, name, id);
     }
 
-    public void updatePassword(long id, String password) {
+    public void updatePasswordById(long id, String password) {
         String SQL = "UPDATE member SET password = ? WHERE id = ?";
         jdbcTemplate.update(SQL, password, id);
     }
@@ -80,7 +80,7 @@ public class MemberDao {
         jdbcTemplate.update(SQL, id);
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByMemberName(final String userName) {
         try {
             final String query = "SELECT id FROM member WHERE name = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));

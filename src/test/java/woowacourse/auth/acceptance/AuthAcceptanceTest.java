@@ -52,8 +52,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String token = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
                 .extract().as(TokenResponse.class).getAccessToken();
 
-        token = token.toLowerCase();
-        RestAssuredConvenienceMethod.getRequestWithToken(token, "/api/members/me")
+        String invalidToken = token.toLowerCase();
+        RestAssuredConvenienceMethod.getRequestWithToken(invalidToken, "/api/members/me")
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .assertThat().body("message", equalTo("유효하지 않은 토큰입니다."));
     }

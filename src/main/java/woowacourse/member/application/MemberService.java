@@ -57,7 +57,7 @@ public class MemberService {
             throw new InvalidMemberNameException("현재 이름과 같은 이름으로 변경할 수 없습니다.");
         }
 
-        memberDao.updateName(id, request.getName());
+        memberDao.updateNameById(id, request.getName());
     }
 
     public void updatePassword(long id, UpdatePasswordRequest request) {
@@ -65,7 +65,7 @@ public class MemberService {
         validateUpdatePassword(request, member);
 
         Password newPassword = Password.withEncrypt(request.getNewPassword());
-        memberDao.updatePassword(id, newPassword.getValue());
+        memberDao.updatePasswordById(id, newPassword.getValue());
     }
 
     public void deleteMemberById(long id, DeleteMemberRequest request) {
@@ -85,7 +85,7 @@ public class MemberService {
     }
 
     private void validateDuplicateEmail(String email) {
-        if (memberDao.existMemberByEmail(email)) {
+        if (memberDao.isAlreadyExistEmail(email)) {
             throw new DuplicateEmailException("중복되는 이메일이 존재합니다.");
         }
     }

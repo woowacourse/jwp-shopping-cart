@@ -42,13 +42,13 @@ class MemberDaoTest {
     @Test
     @DisplayName("해당 이메일이 존재한다면 true를 반환한다.")
     void existMemberByEmailWhenTrue() {
-        assertThat(memberDao.existMemberByEmail("ari@wooteco.com")).isTrue();
+        assertThat(memberDao.isAlreadyExistEmail("ari@wooteco.com")).isTrue();
     }
 
     @Test
     @DisplayName("해당 이메일이 존재하지 않는다면 false를 반환한다.")
     void existMemberByEmailWhenFalse() {
-        assertThat(memberDao.existMemberByEmail("woni@wooteco.com")).isFalse();
+        assertThat(memberDao.isAlreadyExistEmail("woni@wooteco.com")).isFalse();
     }
 
     @DisplayName("회원을 저장한다.")
@@ -57,7 +57,7 @@ class MemberDaoTest {
         String email = "wooteco@naver.com";
         Member member = Member.withEncrypt(email, "wooteco", "Wooteco1!");
         memberDao.save(member);
-        assertThat(memberDao.existMemberByEmail(email)).isTrue();
+        assertThat(memberDao.isAlreadyExistEmail(email)).isTrue();
     }
 
     @DisplayName("id로 회원을 찾아 반환한다.")
@@ -77,7 +77,7 @@ class MemberDaoTest {
     @DisplayName("id를 통해 회원을 찾아 회원 이름을 변경한다.")
     @Test
     void updateName() {
-        memberDao.updateName(1L, "메아리");
+        memberDao.updateNameById(1L, "메아리");
 
         Optional<Member> result = memberDao.findMemberById(1L);
         assertThat(result.get().getName()).isEqualTo("메아리");
@@ -86,7 +86,7 @@ class MemberDaoTest {
     @DisplayName("id를 통해 회원을 찾아 회원 비밀번호를 변경한다.")
     @Test
     void updatePassword() {
-        memberDao.updatePassword(1L, "NewPassword!");
+        memberDao.updatePasswordById(1L, "NewPassword!");
 
         Optional<Member> result = memberDao.findMemberById(1L);
         assertThat(result.get().getPassword()).isEqualTo("NewPassword!");
