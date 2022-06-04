@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.PlainPassword;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -30,8 +30,8 @@ public class CustomerService {
     public Customer save(final SignupRequest signupRequest) {
         validateDuplicateUsername(signupRequest.getUsername());
 
-        final Password rawPassword = new Password(signupRequest.getPassword());
-        final Customer customer = signupRequest.toCustomer(passwordEncoder.encode(rawPassword.getValue()));
+        final PlainPassword plainPassword = new PlainPassword(signupRequest.getPassword());
+        final Customer customer = signupRequest.toCustomer(passwordEncoder.encode(plainPassword.getValue()));
 
         return customerDao.save(customer);
     }
@@ -62,8 +62,8 @@ public class CustomerService {
 
     public void updatePassword(final String username, final UpdateCustomerRequest updateCustomerRequest) {
         final Customer customer = findByUsername(username);
-        final Password password = new Password(updateCustomerRequest.getPassword());
-        customer.updatePassword(passwordEncoder.encode(password.getValue()));
+        final PlainPassword plainPassword = new PlainPassword(updateCustomerRequest.getPassword());
+        customer.updatePassword(passwordEncoder.encode(plainPassword.getValue()));
         customerDao.update(customer);
     }
 

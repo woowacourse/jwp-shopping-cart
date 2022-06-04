@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.regex.Pattern;
 
-public class Password {
+public class PlainPassword {
 
     private static final int MIN_LENGTH = 8;
     private static final int MAX_LENGTH = 20;
@@ -10,7 +10,7 @@ public class Password {
 
     private final String value;
 
-    public Password(final String value) {
+    public PlainPassword(final String value) {
         validateLength(value);
         validatePattern(value);
 
