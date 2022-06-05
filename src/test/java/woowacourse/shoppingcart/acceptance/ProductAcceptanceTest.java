@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Product;
 
 @DisplayName("상품 관련 기능")
+@SuppressWarnings("NonAsciiCharacters")
 public class ProductAcceptanceTest extends AcceptanceShoppingCartTest {
 
     @DisplayName("상품을 추가한다")

@@ -21,6 +21,7 @@ import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
 @DisplayName("주문 관련 기능")
+@SuppressWarnings("NonAsciiCharacters")
 public class OrderAcceptanceTest extends AcceptanceShoppingCartTest {
 
     private static final String USER = "puterism";

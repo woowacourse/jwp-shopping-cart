@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.PasswordFixture.plainBasicPassword;
+import static woowacourse.fixture.PasswordFixture.plainReversePassword;
 import static woowacourse.fixture.TokenFixture.BEARER;
 
 import io.restassured.RestAssured;
@@ -19,29 +20,25 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
 import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 
 @DisplayName("회원 관련 기능")
+@SuppressWarnings("NonAsciiCharacters")
 public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
 
     @DisplayName("회원가입 성공하면 201 CREATED를 반환한다.")
     @Test
     void signUpCustomer() {
         // given
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("giron",
-                plainBasicPassword);
+        CustomerRequest.UserNameAndPassword signUpRequest =
+                new CustomerRequest.UserNameAndPassword("giron", plainBasicPassword);
 
         // when
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> response = 회원가입_요청(signUpRequest);
 
         // then
         Long id = Long.parseLong(response.header("Location").split("/")[3]);
@@ -61,14 +58,8 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
                 new CustomerRequest.UserNameAndPassword("giron", password);
 
         // when
-        final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpRequest)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        ExtractableResponse<Response> response = 회원가입_요청(signUpRequest);
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
 
         // then
         assertAll(
@@ -87,14 +78,8 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
                 new CustomerRequest.UserNameAndPassword(userName, plainBasicPassword);
 
         // when
-        final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpRequest)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        ExtractableResponse<Response> response = 회원가입_요청(signUpRequest);
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
 
         // then
         assertAll(
@@ -107,39 +92,21 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @Test
     void getMe() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
-                plainBasicPassword);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpRequest)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        CustomerRequest.UserNameAndPassword signUpRequest =
+                new CustomerRequest.UserNameAndPassword("giron", plainBasicPassword);
+        회원가입_요청(signUpRequest);
 
-        final TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
-        final TokenResponse tokenResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract()
-                .as(TokenResponse.class);
+        TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
+        TokenResponse tokenResponse = 로그인_요청_토큰_생성됨(tokenRequest);
 
         // when
-        ExtractableResponse<Response> extractableResponse = RestAssured
-                .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .extract();
-        final CustomerResponse response = extractableResponse.as(CustomerResponse.class);
+        ExtractableResponse<Response> extractableCustomerResponse = 내_정보_조회_요청(tokenResponse);
+        CustomerResponse customerResponse = extractableCustomerResponse.as(CustomerResponse.class);
 
         // then
         assertAll(
-                () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.getUserName()).isEqualTo("giron")
+                () -> assertThat(extractableCustomerResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(customerResponse.getUserName()).isEqualTo("giron")
         );
     }
 
@@ -147,41 +114,22 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @Test
     void updateMe() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
-                plainBasicPassword);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpRequest)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        CustomerRequest.UserNameAndPassword signUpRequest =
+                new CustomerRequest.UserNameAndPassword("giron", plainBasicPassword);
+        회원가입_요청(signUpRequest);
 
-        final TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
-        final TokenResponse tokenResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract()
-                .as(TokenResponse.class);
+        TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
+        TokenResponse tokenResponse = 로그인_요청_토큰_생성됨(tokenRequest);
 
         // when
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("giron", "87654321");
-        ExtractableResponse<Response> extractableResponse = RestAssured
-                .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().put("/api/customers/me")
-                .then().log().all()
-                .extract();
-        final CustomerResponse response = extractableResponse.as(CustomerResponse.class);
+        CustomerRequest.UserNameAndPassword request =
+                new CustomerRequest.UserNameAndPassword("giron", plainReversePassword);
+        ExtractableResponse<Response> extractableUpdateResponse = 내_정보_수정_요청(tokenResponse, request);
+        CustomerResponse response = extractableUpdateResponse.as(CustomerResponse.class);
 
         // then
         assertAll(
-                () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(extractableUpdateResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.getUserName()).isEqualTo("giron")
         );
     }
@@ -190,45 +138,21 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @Test
     void deleteMe() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
-                plainBasicPassword);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpRequest)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        CustomerRequest.UserNameAndPassword signUpRequest =
+                new CustomerRequest.UserNameAndPassword("giron", plainBasicPassword);
+        회원가입_요청(signUpRequest);
 
-        final TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
-        final TokenResponse tokenResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract()
-                .as(TokenResponse.class);
+        TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
+        TokenResponse tokenResponse = 로그인_요청_토큰_생성됨(tokenRequest);
 
         // when
-        ExtractableResponse<Response> extractableResponse = RestAssured
-                .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
-                .when().delete("/api/customers/me")
-                .then().log().all()
-                .extract();
-
-        ExtractableResponse<Response> findResponse = RestAssured
-                .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> extractableDeleteResponse = 회원탈퇴_요청(tokenResponse);
+        ExtractableResponse<Response> extractableCustomerResponse = 내_정보_조회_요청(tokenResponse);
 
         // then
         assertAll(
-                () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(findResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
+                () -> assertThat(extractableDeleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(extractableCustomerResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
         );
     }
 
@@ -236,49 +160,93 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @Test
     void getMeWithInvalidToken() {
         // given
-        final String invalidToken = "invalidToken";
+        TokenResponse tokenResponse = new TokenResponse("invalidToken");
 
         // when
-        ExtractableResponse<Response> extractableResponse = RestAssured
-                .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, BEARER + invalidToken)
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> extractableCustomerResponse = 내_정보_조회_요청(tokenResponse);
 
         // then
-        assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(extractableCustomerResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("중복된 이름이 있는지 확인하여 200-OK를 반환한다.")
     @Test
     void isDuplicatedUserName() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
-                plainBasicPassword);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpRequest)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        CustomerRequest.UserNameAndPassword signUpRequest =
+                new CustomerRequest.UserNameAndPassword("giron", plainBasicPassword);
+        회원가입_요청(signUpRequest);
 
         // when
         CustomerRequest.UserNameOnly request = new UserNameOnly("giron");
-        ExtractableResponse<Response> extractableResponse = RestAssured
+        ExtractableResponse<Response> extractableDuplicateResponse = 유저_중복_검사_요청(request);
+        DuplicateResponse duplicateResponse = extractableDuplicateResponse.as(DuplicateResponse.class);
+
+        // then
+        assertAll(
+                () -> assertThat(extractableDuplicateResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(duplicateResponse.getIsDuplicate()).isTrue()
+        );
+    }
+
+    private ExtractableResponse<Response> 회원가입_요청(final UserNameAndPassword request) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    private TokenResponse 로그인_요청_토큰_생성됨(final TokenRequest tokenRequest) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .when().post("/api/login")
+                .then().log().all()
+                .extract()
+                .as(TokenResponse.class);
+    }
+
+    private ExtractableResponse<Response> 내_정보_조회_요청(final TokenResponse tokenResponse) {
+        return RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 내_정보_수정_요청(
+            final TokenResponse tokenResponse, final UserNameAndPassword request) {
+        return RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/api/customers/me")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 회원탈퇴_요청(final TokenResponse tokenResponse) {
+        return RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
+                .when().delete("/api/customers/me")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 유저_중복_검사_요청(final UserNameOnly request) {
+        return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().post("/api/customers/duplication")
                 .then().log().all()
                 .extract();
-        final DuplicateResponse duplicateResponse = extractableResponse.as(DuplicateResponse.class);
-
-        // then
-        assertAll(
-                () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(duplicateResponse.getIsDuplicate()).isTrue()
-        );
     }
 }

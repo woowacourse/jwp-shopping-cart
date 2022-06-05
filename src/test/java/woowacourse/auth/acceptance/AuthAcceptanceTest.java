@@ -23,6 +23,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 
 @DisplayName("인증 관련 기능")
+@SuppressWarnings("NonAsciiCharacters")
 public class AuthAcceptanceTest extends AcceptanceAuthTest {
 
     @DisplayName("등록된 회원이 로그인을 하면 토큰을 발급받는다.")
@@ -30,24 +31,12 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     void loginReturnBearerToken() {
         // given
         UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        회원가입_요청(request);
 
         // when
-        final TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract();
-        final TokenResponse tokenResponse = extract.as(TokenResponse.class);
+        TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
+        ExtractableResponse<Response> extract = 토큰_요청(tokenRequest);
+        TokenResponse tokenResponse = extract.as(TokenResponse.class);
 
         // then
         assertThat(tokenResponse.getAccessToken()).isNotNull();
@@ -58,32 +47,20 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     void myInfoWithBearerAuth() {
         // given
         UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        회원가입_요청(request);
 
-        final TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract();
-        final TokenResponse tokenResponse = extract.as(TokenResponse.class);
+        TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
+        ExtractableResponse<Response> extract = 토큰_요청(tokenRequest);
+        TokenResponse tokenResponse = extract.as(TokenResponse.class);
 
         // when
-        final ExtractableResponse<Response> responseMe = RestAssured
+        ExtractableResponse<Response> responseMe = RestAssured
                 .given().log().all()
                 .header("Authorization", BEARER + tokenResponse.getAccessToken())
                 .when().get("/api/customers/me")
                 .then().log().all()
                 .extract();
-        final CustomerResponse customerResponse = responseMe.as(CustomerResponse.class);
+        CustomerResponse customerResponse = responseMe.as(CustomerResponse.class);
 
         // then
         assertThat(customerResponse.getUserName()).isEqualTo("giron");
@@ -94,24 +71,12 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     void loginFailureWithWrongUserName() {
         // given
         UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        회원가입_요청(request);
 
         // when
-        final TokenRequest tokenRequest = new TokenRequest("티키", plainBasicPassword);
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract();
-        final ErrorResponse errorResponse = extract.as(ErrorResponse.class);
+        TokenRequest tokenRequest = new TokenRequest("티키", plainBasicPassword);
+        ExtractableResponse<Response> extract = 토큰_요청(tokenRequest);
+        ErrorResponse errorResponse = extract.as(ErrorResponse.class);
 
         // then
         assertAll(
@@ -126,24 +91,12 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     void loginFailureWithWrongPassword() {
         // given
         UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        회원가입_요청(request);
 
         // when
-        final TokenRequest tokenRequest = new TokenRequest("giron", "wrongPassword");
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract();
-        final ErrorResponse errorResponse = extract.as(ErrorResponse.class);
+        TokenRequest tokenRequest = new TokenRequest("giron", "wrongPassword");
+        ExtractableResponse<Response> extract = 토큰_요청(tokenRequest);
+        ErrorResponse errorResponse = extract.as(ErrorResponse.class);
 
         // then
         assertAll(
@@ -158,22 +111,11 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     void myInfoWithWrongBearerAuth() {
         // given
         UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
+        회원가입_요청(request);
 
         // when
-        final ExtractableResponse<Response> responseMe = RestAssured
-                .given().log().all()
-                .header("Authorization", BEARER + "wrongAccessToken")
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .extract();
-        final ErrorResponse errorResponse = responseMe.as(ErrorResponse.class);
+        ExtractableResponse<Response> responseMe = 내_정보_조회_요청("wrongToken");
+        ErrorResponse errorResponse = responseMe.as(ErrorResponse.class);
 
         // then
         assertAll(
@@ -191,18 +133,12 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
         TokenRequest tokenRequest = new TokenRequest(userName, plainBasicPassword);
 
         // when
-        final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract();
-        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        ExtractableResponse<Response> extract = 토큰_요청(tokenRequest);
+        ErrorResponse errorResponse = extract.as(ErrorResponse.class);
 
         // then
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(extract.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름은 빈칸일 수 없습니다.")
         );
     }
@@ -216,18 +152,12 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
         TokenRequest tokenRequest = new TokenRequest("giron", password);
 
         // when
-        final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract();
-        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        ExtractableResponse<Response> extract = 토큰_요청(tokenRequest);
+        ErrorResponse errorResponse = extract.as(ErrorResponse.class);
 
         // then
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(extract.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호는 빈칸일 수 없습니다.")
         );
     }
@@ -236,17 +166,50 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     @Test
     void withoutAuthorizationHeader() {
         // when
-        final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .extract();
-        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        ExtractableResponse<Response> response = 인증_헤더가_없는_내_정보_조회_요청();
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
 
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(errorResponse.getMessage()).isEqualTo("로그인이 필요합니다.")
         );
+    }
+
+    private void 회원가입_요청(final UserNameAndPassword request) {
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 토큰_요청(final TokenRequest tokenRequest) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .when().post("/api/login")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 내_정보_조회_요청(final String token) {
+        return RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 인증_헤더가_없는_내_정보_조회_요청() {
+        return RestAssured
+                .given().log().all()
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .extract();
     }
 }
