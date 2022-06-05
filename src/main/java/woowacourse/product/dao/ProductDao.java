@@ -1,5 +1,6 @@
 package woowacourse.product.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -39,6 +40,11 @@ public class ProductDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
+    public List<Product> findProducts() {
+        final String sql = "SELECT id, name, price, stock, imageURL FROM product";
+        return jdbcTemplate.query(sql, rowMapper());
+    }
+
     public Optional<Product> findProductById(final Long id) {
         final String sql = "SELECT id, name, price, stock, imageURL FROM product WHERE id = :id";
         final SqlParameterSource params = new MapSqlParameterSource("id", id);
@@ -59,19 +65,7 @@ public class ProductDao {
             rs.getString("imageURL")
         );
     }
-    //
-    // public List<Product> findProducts() {
-    //     final String query = "SELECT id, name, price, image_url FROM product";
-    //     return jdbcTemplate.query(query,
-    //             (resultSet, rowNumber) ->
-    //                     new Product(
-    //                             resultSet.getLong("id"),
-    //                             resultSet.getString("name"),
-    //                             resultSet.getInt("price"),
-    //                             resultSet.getString("image_url")
-    //                     ));
-    // }
-    //
+
     public void delete(final Long id) {
         final String sql = "DELETE FROM product WHERE id = :id";
         final SqlParameterSource params = new MapSqlParameterSource("id", id);

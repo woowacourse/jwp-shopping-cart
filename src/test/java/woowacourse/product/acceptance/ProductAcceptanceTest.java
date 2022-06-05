@@ -13,9 +13,9 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.product.domain.Product;
 import woowacourse.product.dto.ProductRequest;
 import woowacourse.product.dto.ProductResponse;
+import woowacourse.product.dto.ProductsResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("상품 관련 기능")
@@ -45,18 +45,20 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         조회_응답됨(response);
         상품_조회됨(response, productId);
     }
-    // @DisplayName("상품 목록을 조회한다")
-    // @Test
-    // void getProducts() {
-    //     Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-    //     Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-    //
-    //     ExtractableResponse<Response> response = 상품_목록_조회_요청();
-    //
-    //     조회_응답됨(response);
-    //     상품_목록_포함됨(productId1, productId2, response);
-    // }
-    //
+
+    @DisplayName("상품 목록을 조회한다")
+    @Test
+    void getProducts() {
+        final ProductRequest productRequest2 = new ProductRequest("짱아", price, stock, "http://example.com/jjanga.jpg");
+        final Long productId1 = 상품_등록되어_있음(productRequest);
+        final Long productId2 = 상품_등록되어_있음(productRequest2);
+
+        final ExtractableResponse<Response> response = 상품_목록_조회_요청();
+
+        조회_응답됨(response);
+        상품_목록_포함됨(productId1, productId2, response);
+    }
+
     @DisplayName("상품을 삭제한다")
     @Test
     void deleteProduct() {
@@ -118,9 +120,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
-            .map(Product::getId)
+    public static void 상품_목록_포함됨(final Long productId1, final Long productId2,
+        final ExtractableResponse<Response> response) {
+        final List<Long> resultProductIds = response.as(ProductsResponse.class).getProducts().stream()
+            .map(ProductResponse::getId)
             .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
     }

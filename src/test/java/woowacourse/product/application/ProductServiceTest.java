@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.product.dto.ProductRequest;
 import woowacourse.product.dto.ProductResponse;
+import woowacourse.product.dto.ProductsResponse;
 
 @Transactional
 @SpringBootTest
@@ -33,6 +37,26 @@ public class ProductServiceTest {
         final Long id = productService.addProduct(productRequest);
 
         assertThat(id).isNotNull();
+    }
+
+    @DisplayName("상품 전체를 조회한다.")
+    @Test
+    void findProducts() {
+        final ProductRequest productRequest1 = new ProductRequest(name, price, stock, imageURL);
+        final Long id1 = productService.addProduct(productRequest1);
+        final ProductRequest productRequest2 = new ProductRequest("짱아", price, stock, imageURL);
+        final Long id2 = productService.addProduct(productRequest2);
+
+        final ProductsResponse findProducts = productService.findProducts();
+
+        final List<Long> findIds = findProducts.getProducts().stream()
+            .map(ProductResponse::getId)
+            .collect(Collectors.toList());
+
+        assertAll(
+            () -> assertThat(findIds).hasSize(2),
+            () -> assertThat(findIds).containsExactly(id1, id2)
+        );
     }
 
     @DisplayName("입력한 id에 맞는 단일 상품을 조회한다.")

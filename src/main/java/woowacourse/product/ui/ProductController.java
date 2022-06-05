@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.product.application.ProductService;
 import woowacourse.product.dto.ProductRequest;
 import woowacourse.product.dto.ProductResponse;
+import woowacourse.product.dto.ProductsResponse;
 
 @RequestMapping("/api/products")
 @RestController
@@ -33,11 +34,11 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/api/products/" + id)).build();
     }
 
-    // @GetMapping
-    // public ResponseEntity<List<Product>> products() {
-    //     return ResponseEntity.ok(productService.findProducts());
-    // }
-    //
+    @GetMapping
+    public ResponseEntity<ProductsResponse> products() {
+        return ResponseEntity.ok(productService.findProducts());
+    }
+
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
         return ResponseEntity.ok(productService.findProductById(productId));
