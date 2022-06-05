@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class JwtTokenProvider {
 
     private static final String ID_KEY = "id";
+
     private final Key secretKey;
     private final long validityInMilliseconds;
 
