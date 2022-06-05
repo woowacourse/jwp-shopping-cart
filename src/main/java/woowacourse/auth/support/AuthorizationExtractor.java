@@ -10,7 +10,6 @@ import woowacourse.auth.exception.InvalidTokenException;
 @Component
 public class AuthorizationExtractor {
 
-    public static final String AUTHORIZATION = "Authorization";
     public static String BEARER_TYPE = "Bearer ";
 
     public String extract(HttpServletRequest request) {

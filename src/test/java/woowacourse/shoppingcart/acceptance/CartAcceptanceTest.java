@@ -11,12 +11,15 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import io.restassured.RestAssured;
+import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.application.dto.CartItemResponse;
 
@@ -24,14 +27,20 @@ import woowacourse.shoppingcart.application.dto.CartItemResponse;
 public class CartAcceptanceTest extends AcceptanceTest {
 
     private static final String USER = "puterism";
+
+    @Autowired
+    private JwtTokenProvider provider;
+
     private Long productId1;
     private Long productId2;
+    private String token;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
 
+        token = "Bearer " + provider.createToken(USER);
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }
@@ -40,7 +49,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Test
     void addCartItem() {
         CustomerAcceptanceFixture.saveCustomerWithName(USER);
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, productId1);
 
         장바구니_아이템_추가됨(response);
     }
@@ -49,10 +58,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Test
     void getCartItems() {
         CustomerAcceptanceFixture.saveCustomerWithName(USER);
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
+        장바구니_아이템_추가되어_있음(token, productId1);
+        장바구니_아이템_추가되어_있음(token, productId2);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token);
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
@@ -62,40 +71,43 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteCartItem() {
         CustomerAcceptanceFixture.saveCustomerWithName(USER);
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        Long cartId = 장바구니_아이템_추가되어_있음(token, productId1);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(token, cartId);
 
         장바구니_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String name, Long productId) {
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);
 
         return RestAssured
             .given().log().all()
+            .header(new Header("Authorization", token))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(requestBody)
-            .when().post("/api/customers/{customerName}/carts", name)
+            .when().post("/api/customers/me/cart-items")
             .then().log().all()
             .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String name) {
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token) {
         return RestAssured
             .given().log().all()
+            .header(new Header("Authorization", token))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/api/customers/{customerName}/carts", name)
+            .when().get("/api/customers/me/cart-items")
             .then().log().all()
             .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String name, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, Long cartId) {
         return RestAssured
             .given().log().all()
+            .header(new Header("Authorization", token))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().delete("/api/customers/{customerName}/carts/{cartId}", name, cartId)
+            .when().delete("/api/customers/me/cart-items/{cartId}", cartId)
             .then().log().all()
             .extract();
     }
@@ -105,9 +117,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String name, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(name, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
+    public static Long 장바구니_아이템_추가되어_있음(String token, Long productId) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, productId);
+        return Long.parseLong(response.header("Location").split("/cart-items/")[1]);
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {

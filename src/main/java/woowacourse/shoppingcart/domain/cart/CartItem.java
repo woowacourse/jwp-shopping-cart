@@ -19,6 +19,10 @@ public class CartItem {
         return id;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
     public Long getProductId() {
         return product.getId();
     }

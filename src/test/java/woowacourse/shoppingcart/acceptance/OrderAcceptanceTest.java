@@ -13,12 +13,14 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
@@ -27,6 +29,10 @@ import woowacourse.shoppingcart.ui.dto.OrderRequest;
 public class OrderAcceptanceTest extends AcceptanceTest {
 
     private static final String USER = "puterism";
+
+    @Autowired
+    private JwtTokenProvider provider;
+
     private Long cartId1;
     private Long cartId2;
 
@@ -38,8 +44,9 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        final String token = "Bearer " + provider.createToken(USER);
+        cartId1 = 장바구니_아이템_추가되어_있음(token, productId1);
+        cartId2 = 장바구니_아이템_추가되어_있음(token, productId2);
     }
 
     @DisplayName("주문하기")
