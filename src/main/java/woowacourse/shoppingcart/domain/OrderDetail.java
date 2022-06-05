@@ -1,10 +1,11 @@
 package woowacourse.shoppingcart.domain;
 
 public class OrderDetail {
+    private Long id;
     private Long productId;
-    private int quantity;
-    private int price;
     private String name;
+    private int price;
+    private int quantity;
     private String imageUrl;
 
     public OrderDetail() {
@@ -28,23 +29,27 @@ public class OrderDetail {
         this.quantity = quantity;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Long getId() {
+        return id;
     }
 
-    public int getPrice() {
-        return price;
+    public Long getProductId() {
+        return productId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public int getPrice() {
+        return price;
     }
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

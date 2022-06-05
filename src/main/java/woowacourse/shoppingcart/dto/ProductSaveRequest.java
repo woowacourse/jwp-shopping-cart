@@ -12,7 +12,7 @@ public class ProductSaveRequest {
     private ProductSaveRequest() {
     }
 
-    private ProductSaveRequest(final String name, final int price, final int stock, final String imageURL) {
+    public ProductSaveRequest(final String name, final int price, final int stock, final String imageURL) {
         this.name = name;
         this.price = price;
         this.stock = stock;
