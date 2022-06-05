@@ -3,25 +3,26 @@ package woowacourse.shoppingcart.dto.order;
 import java.util.List;
 import java.util.stream.Collectors;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.order.OrderResponse.OrderResponseNested;
 
 public class OrderResponses {
 
-    private List<OrderResponse> orders;
+    private List<OrderResponseNested> orders;
 
     private OrderResponses() {
     }
 
-    private OrderResponses(final List<OrderResponse> orders) {
+    private OrderResponses(final List<OrderResponseNested> orders) {
         this.orders = orders;
     }
 
     public static OrderResponses from(final List<Orders> orders) {
         return new OrderResponses(orders.stream()
-                .map(OrderResponse::from)
+                .map(OrderResponseNested::from)
                 .collect(Collectors.toList()));
     }
 
-    public List<OrderResponse> getOrders() {
+    public List<OrderResponseNested> getOrders() {
         return orders;
     }
 }

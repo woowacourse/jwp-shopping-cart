@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,6 @@ import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
 import woowacourse.shoppingcart.dto.order.OrderResponses;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
-import woowacourse.shoppingcart.dto.order.OrderSaveRequests;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -63,8 +63,8 @@ public class OrderControllerTest {
         final Long cartId = 1L;
         final Long cartId2 = 1L;
         final String customerName = "pobi";
-        final OrderSaveRequests requestDtos =
-                new OrderSaveRequests(Arrays.asList(new OrderSaveRequest(cartId), new OrderSaveRequest(cartId2)));
+        final List<OrderSaveRequest> requestDtos =
+                Arrays.asList(new OrderSaveRequest(cartId), new OrderSaveRequest(cartId2));
 
         final Long expectedOrderId = 1L;
         when(authenticationContext.getPrincipal()).thenReturn(customerName);
@@ -129,18 +129,18 @@ public class OrderControllerTest {
         mockMvc.perform(get("/api/orders/")
         ).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("orders[0].order.id").value(1L))
-                .andExpect(jsonPath("orders[0].order.orderDetails[0].productId").value(1L))
-                .andExpect(jsonPath("orders[0].order.orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("orders[0].order.orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("orders[0].order.orderDetails[0].imageURL").value("imageUrl"))
-                .andExpect(jsonPath("orders[0].order.orderDetails[0].quantity").value(2))
+                .andExpect(jsonPath("orders[0].id").value(1L))
+                .andExpect(jsonPath("orders[0].orderDetails[0].productId").value(1L))
+                .andExpect(jsonPath("orders[0].orderDetails[0].price").value(1_000))
+                .andExpect(jsonPath("orders[0].orderDetails[0].name").value("banana"))
+                .andExpect(jsonPath("orders[0].orderDetails[0].imageURL").value("imageUrl"))
+                .andExpect(jsonPath("orders[0].orderDetails[0].quantity").value(2))
 
-                .andExpect(jsonPath("orders[1].order.id").value(2L))
-                .andExpect(jsonPath("orders[1].order.orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("orders[1].order.orderDetails[0].price").value(2_000))
-                .andExpect(jsonPath("orders[1].order.orderDetails[0].name").value("apple"))
-                .andExpect(jsonPath("orders[1].order.orderDetails[0].imageURL").value("imageUrl2"))
-                .andExpect(jsonPath("orders[1].order.orderDetails[0].quantity").value(4));
+                .andExpect(jsonPath("orders[1].id").value(2L))
+                .andExpect(jsonPath("orders[1].orderDetails[0].productId").value(2L))
+                .andExpect(jsonPath("orders[1].orderDetails[0].price").value(2_000))
+                .andExpect(jsonPath("orders[1].orderDetails[0].name").value("apple"))
+                .andExpect(jsonPath("orders[1].orderDetails[0].imageURL").value("imageUrl2"))
+                .andExpect(jsonPath("orders[1].orderDetails[0].quantity").value(4));
     }
 }

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +13,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
 import woowacourse.shoppingcart.dto.order.OrderResponses;
-import woowacourse.shoppingcart.dto.order.OrderSaveRequests;
+import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -25,7 +26,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final String customerName,
-                                         @RequestBody final OrderSaveRequests orderSaveRequests) {
+                                         @RequestBody final List<OrderSaveRequest> orderSaveRequests) {
         final Long orderId = orderService.addOrder(orderSaveRequests, customerName);
         return ResponseEntity.created(
                 URI.create("/api/" + customerName + "/orders/" + orderId)).build();

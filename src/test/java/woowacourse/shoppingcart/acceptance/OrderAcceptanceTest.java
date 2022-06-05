@@ -20,8 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.cartitem.CartItemSaveRequest;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
+import woowacourse.shoppingcart.dto.order.OrderResponse.OrderResponseNested;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
-import woowacourse.shoppingcart.dto.order.OrderSaveRequests;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
@@ -45,9 +45,9 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        OrderSaveRequests orderRequests = new OrderSaveRequests(Stream.of(cartId1, cartId2)
+        List<OrderSaveRequest> orderRequests = Stream.of(cartId1, cartId2)
                 .map(OrderSaveRequest::new)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
 
         ExtractableResponse<Response> response = 주문하기_요청(accessToken, orderRequests);
 
@@ -57,8 +57,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, new OrderSaveRequests(Collections.singletonList(new OrderSaveRequest(cartId1))));
-        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, new OrderSaveRequests(Collections.singletonList(new OrderSaveRequest(cartId2))));
+        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderSaveRequest(cartId1)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderSaveRequest(cartId2)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(accessToken);
 
@@ -69,10 +69,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 단일 조회")
     @Test
     void getOrder() {
-        Long orderId = 주문하기_요청_성공되어_있음(accessToken, new OrderSaveRequests(Arrays.asList(
+        Long orderId = 주문하기_요청_성공되어_있음(accessToken, Arrays.asList(
                 new OrderSaveRequest(cartId1),
                 new OrderSaveRequest(cartId2)
-        )));
+        ));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(accessToken, orderId);
 
@@ -80,7 +80,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         주문_조회됨(response, orderId);
     }
 
-    public static ExtractableResponse<Response> 주문하기_요청(String accessToken, OrderSaveRequests orderRequests) {
+    public static ExtractableResponse<Response> 주문하기_요청(String accessToken, List<OrderSaveRequest> orderRequests) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -116,7 +116,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 주문하기_요청_성공되어_있음(String userName, OrderSaveRequests orderRequests) {
+    public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderSaveRequest> orderRequests) {
         ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
         return Long.parseLong(response.header("Location").split("/orders/")[1]);
     }
@@ -126,14 +126,14 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList("orders.", OrderResponse.class).stream()
-                .map(OrderResponse::getId)
+        List<Long> resultOrderIds = response.jsonPath().getList("orders.", OrderResponseNested.class).stream()
+                .map(OrderResponseNested::getId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }
 
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
         OrderResponse resultOrder = response.as(OrderResponse.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
+        assertThat(resultOrder.getOrder().getId()).isEqualTo(orderId);
     }
 }

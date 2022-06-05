@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.product.ProductResponse;
+import woowacourse.shoppingcart.dto.product.ProductResponse.ProductResponseNested;
 import woowacourse.shoppingcart.dto.product.ProductSaveRequest;
 
 @DisplayName("상품 관련 기능")
@@ -111,16 +112,16 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList("products.", ProductResponse.class)
+        List<Long> resultProductIds = response.jsonPath().getList("products.", ProductResponseNested.class)
                 .stream()
-                .map(ProductResponse::getId)
+                .map(ProductResponseNested::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
     }
 
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
         ProductResponse resultProduct = response.as(ProductResponse.class);
-        assertThat(resultProduct.getId()).isEqualTo(productId);
+        assertThat(resultProduct.getProduct().getId()).isEqualTo(productId);
     }
 
     public static void 상품_삭제됨(ExtractableResponse<Response> response) {
