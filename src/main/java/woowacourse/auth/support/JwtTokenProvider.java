@@ -39,12 +39,18 @@ public class JwtTokenProvider {
     }
 
     public String getPayload(String token) {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey).build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
     public void validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey).build()
+                    .parseClaimsJws(token);
         } catch (ExpiredJwtException e) {
             throw new AuthException("만료된 토큰입니다.");
         } catch (JwtException | IllegalArgumentException e) {
