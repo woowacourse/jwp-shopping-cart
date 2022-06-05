@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
@@ -31,10 +32,11 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        final int stockQuantity = 10;
+        final Image image = new Image("url", "alt");
 
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, stockQuantity, image));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -46,9 +48,11 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        final int stockQuantity = 10;
+        final Image image = new Image("url", "alt");
+
+        final Long productId = productDao.save(new Product(name, price, stockQuantity, image));
+        final Product expectedProduct = new Product(productId, name, price, stockQuantity, image);
 
         // when
         final Product product = productDao.findProductById(productId);
@@ -77,9 +81,10 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        final int stockQuantity = 10;
+        final Image image = new Image("url", "alt");
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, stockQuantity, image));
         final int beforeSize = productDao.findProducts().size();
 
         // when

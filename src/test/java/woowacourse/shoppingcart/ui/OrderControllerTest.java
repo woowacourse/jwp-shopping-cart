@@ -1,6 +1,19 @@
 package woowacourse.shoppingcart.ui;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,22 +22,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.application.OrderService;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import woowacourse.shoppingcart.domain.Image;
+import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.OrderRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -74,8 +76,9 @@ public class OrderControllerTest {
         // given
         final String customerName = "pobi";
         final Long orderId = 1L;
+        final Image image= new Image("url", "alt");
         final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
+                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", image, 2)));
 
         when(orderService.findOrderById(customerName, orderId))
                 .thenReturn(expected);
@@ -88,7 +91,8 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("orderDetails[0].productId").value(2L))
                 .andExpect(jsonPath("orderDetails[0].price").value(1_000))
                 .andExpect(jsonPath("orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("orderDetails[0].imageUrl").value("imageUrl"))
+                .andExpect(jsonPath("orderDetails[0].image.url").value(image.getUrl()))
+                .andExpect(jsonPath("orderDetails[0].image.alt").value(image.getAlt()))
                 .andExpect(jsonPath("orderDetails[0].quantity").value(2));
     }
 
@@ -97,11 +101,14 @@ public class OrderControllerTest {
     void findOrders() throws Exception {
         // given
         final String customerName = "pobi";
+        final Image firstImage= new Image("url", "alt");
+        final Image secondImage= new Image("url", "alt");
+
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
+                        new OrderDetail(1L, 1_000, "banana", firstImage, 2))),
                 new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
+                        new OrderDetail(2L, 2_000, "apple", secondImage, 4)))
         );
 
         when(orderService.findOrdersByCustomerName(customerName))
@@ -115,14 +122,16 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))
                 .andExpect(jsonPath("$[0].orderDetails[0].price").value(1_000))
                 .andExpect(jsonPath("$[0].orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("$[0].orderDetails[0].imageUrl").value("imageUrl"))
+                .andExpect(jsonPath("$[0].orderDetails[0].image.url").value(firstImage.getUrl()))
+                .andExpect(jsonPath("$[0].orderDetails[0].image.alt").value(firstImage.getAlt()))
                 .andExpect(jsonPath("$[0].orderDetails[0].quantity").value(2))
 
                 .andExpect(jsonPath("$[1].id").value(2L))
                 .andExpect(jsonPath("$[1].orderDetails[0].productId").value(2L))
                 .andExpect(jsonPath("$[1].orderDetails[0].price").value(2_000))
                 .andExpect(jsonPath("$[1].orderDetails[0].name").value("apple"))
-                .andExpect(jsonPath("$[1].orderDetails[0].imageUrl").value("imageUrl2"))
+                .andExpect(jsonPath("$[0].orderDetails[0].image.url").value(secondImage.getUrl()))
+                .andExpect(jsonPath("$[0].orderDetails[0].image.alt").value(secondImage.getAlt()))
                 .andExpect(jsonPath("$[1].orderDetails[0].quantity").value(4));
     }
 }
