@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -33,23 +34,19 @@ public class ProductDaoTest {
         // then
         assertThat(productId).isPositive();
     }
-//
-//    @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
-//    @Test
-//    void findProductById() {
-//        // given
-//        final String name = "초콜렛";
-//        final int price = 1_000;
-//        final String imageUrl = "www.test.com";
-//        final Long productId = productDao.save(new Product(name, price, imageUrl));
-//        final Product expectedProduct = new Product(productId, name, price, imageUrl);
-//
-//        // when
-//        final Product product = productDao.findProductById(productId);
-//
-//        // then
-//        assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
-//    }
+
+    @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
+    @Test
+    void findProductById() {
+        // given
+        final Long productId = productDao.save(PRODUCT_1);
+
+        // when
+        final Product product = productDao.findProductById(productId);
+
+        // then
+        assertThat(product).isEqualTo(PRODUCT_1);
+    }
 //
 //    @DisplayName("상품 목록 조회")
 //    @Test

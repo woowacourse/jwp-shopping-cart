@@ -41,21 +41,17 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public Product findProductById(final Long productId) {
-        try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"),
-                            resultSet.getInt("price"),
-                            resultSet.getString("image_url"),
-                            resultSet.getString("description"),
-                            resultSet.getInt("image_url")
-                    ), productId
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
-        }
+        final String query = "SELECT name, price, image_url, description, stock FROM product WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
+                new Product(
+                        productId,
+                        resultSet.getString("name"),
+                        resultSet.getInt("price"),
+                        resultSet.getString("image_url"),
+                        resultSet.getString("description"),
+                        resultSet.getInt("stock")
+                ), productId
+        );
     }
 
     @Override

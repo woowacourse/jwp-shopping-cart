@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.fixture;
 
-import org.springframework.security.core.parameters.P;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 
@@ -16,7 +15,7 @@ public class ProductFixtures {
             "개매움", 80);
 
 
-    public static final Product PRODUCT_1 = new Product(PRODUCT_REQUEST_1.getName(), PRODUCT_REQUEST_1.getPrice(),
+    public static final Product PRODUCT_1 = new Product(1L, PRODUCT_REQUEST_1.getName(), PRODUCT_REQUEST_1.getPrice(),
             PRODUCT_REQUEST_1.getImageUrl(), PRODUCT_REQUEST_1.getDescription(), PRODUCT_REQUEST_1.getStock());
 
 }
