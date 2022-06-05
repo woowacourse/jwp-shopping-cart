@@ -25,16 +25,13 @@ import woowacourse.shoppingcart.exception.InvalidLoginException;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
+    private static MockedStatic<BCrypt> bcrypt;
     @InjectMocks
     private AuthService authService;
-
     @Mock
     private CustomerService customerService;
-
     @Mock
     private JwtTokenProvider jwtTokenProvider;
-
-    private static MockedStatic<BCrypt> bcrypt;
 
     @BeforeEach
     void setUp() {
