@@ -35,7 +35,7 @@ public class CartItemDaoTest {
     @Test
     void addCartItem() {
         // given
-        final Long customerId = (long) customerDao.save(CUSTOMER_1);
+        final int customerId = customerDao.save(CUSTOMER_1);
         final Long productId = productDao.save(PRODUCT_1);
         final int quantity = 3;
 

@@ -25,7 +25,7 @@ public class JdbcCartItemDao implements CartItemDao{
 //    }
 
     @Override
-    public Long addCartItem(final Long customerId, final Long productId, int quantity) {
+    public Long addCartItem(final int customerId, final Long productId, int quantity) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
