@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerTest {
 

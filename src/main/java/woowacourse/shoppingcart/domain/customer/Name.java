@@ -1,10 +1,11 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
-public class UserName {
+public class Name {
     private static final String BLANK = " ";
+    private static final int UPPER_BOUND_LENGTH = 32;
     private final String name;
 
-    public UserName(String name) {
+    public Name(String name) {
         checkValid(name);
         this.name = name;
     }
@@ -14,8 +15,12 @@ public class UserName {
             throw new IllegalArgumentException("[ERROR] 이름에는 공백이 포함될 수 없습니다.");
         }
 
-        if (name.length() > 32) {
+        if (name.length() > UPPER_BOUND_LENGTH) {
             throw new IllegalArgumentException("[ERROR] 이름의 길이는 32자를 초과할 수 없습니다.");
         }
+    }
+
+    public String get() {
+        return name;
     }
 }
