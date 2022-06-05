@@ -1,11 +1,12 @@
 package woowacourse.shoppingcart.exception;
 
-public class NotInCustomerCartItemException extends RuntimeException {
-    public NotInCustomerCartItemException() {
-        this("장바구니 아이템이 없습니다.");
-    }
+import org.springframework.http.HttpStatus;
 
-    public NotInCustomerCartItemException(final String msg) {
-        super(msg);
+public class NotInCustomerCartItemException extends ClientRuntimeException {
+
+    private static final String MESSAGE = "장바구니 아이템이 없습니다.";
+
+    public NotInCustomerCartItemException() {
+        super(HttpStatus.BAD_REQUEST, MESSAGE);
     }
 }
