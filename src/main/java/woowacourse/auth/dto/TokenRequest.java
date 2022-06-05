@@ -1,10 +1,14 @@
 package woowacourse.auth.dto;
 
+import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.Password;
 
 public class TokenRequest {
+
+    @javax.validation.constraints.Email
     private String email;
+    @NotBlank
     private String password;
 
     public TokenRequest() {
