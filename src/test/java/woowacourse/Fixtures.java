@@ -68,7 +68,7 @@ public class Fixtures {
             ZONE_CODE_VALUE_1);
 
     // etc
-    public static final String EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU0MDExOTk1LCJleHAiOjE2NTQwMTE5OTV9.L5pnN2Dorp20abb75HFXbYTLxhfFqP4pSfUFu5Rqyzs";
+    public static final String EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJodWRpIiwiaWF0IjoxNjU0NDA1NDkzLCJleHAiOjE2NTQ0MDU0OTN9.azYu1VAO1BkS9u1tfZGK6VlHwi9CPA-CAIgWH5KF1bM\n";
 
     // invalid fixtures
     public static CustomerRequest CUSTOMER_INVALID_REQUEST_1 = new CustomerRequest("seongwoo0513", "string&123",
