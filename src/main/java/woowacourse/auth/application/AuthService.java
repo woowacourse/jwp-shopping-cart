@@ -6,9 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.support.passwordencoder.PasswordEncoder;
+import woowacourse.customer.application.CustomerService;
+import woowacourse.customer.domain.Customer;
+import woowacourse.customer.support.passwordencoder.PasswordEncoder;
 
 @Transactional
 @Service

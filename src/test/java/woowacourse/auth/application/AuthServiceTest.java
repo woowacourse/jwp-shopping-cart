@@ -12,9 +12,9 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.customer.application.CustomerService;
+import woowacourse.customer.domain.Customer;
+import woowacourse.customer.dto.SignupRequest;
 import woowacourse.shoppingcart.exception.PasswordMisMatchException;
 import woowacourse.shoppingcart.exception.UserNotFoundException;
 

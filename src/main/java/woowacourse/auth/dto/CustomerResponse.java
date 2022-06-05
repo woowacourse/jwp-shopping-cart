@@ -1,6 +1,6 @@
 package woowacourse.auth.dto;
 
-import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.customer.domain.Customer;
 
 public class CustomerResponse {
     private String username;
