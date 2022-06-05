@@ -49,6 +49,8 @@ public class CartItemService {
     @Transactional
     public Long addCart(final CartItemSaveRequest request, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
+        final Product product = productDao.findProductById(request.getProductId());
+        product.purchaseProduct(request.getQuantity());
         try {
             return cartItemDao.addCartItem(customerId, request.getProductId(), request.getQuantity());
         } catch (Exception e) {

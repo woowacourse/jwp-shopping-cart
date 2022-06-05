@@ -20,10 +20,10 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Transactional
 class CustomerServiceTest {
 
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password123";
-    private static final String PHONE_NUMBER = "01012345678";
-    private static final String ADDRESS = "성담빌딩";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password123";
+    public static final String PHONE_NUMBER = "01012345678";
+    public static final String ADDRESS = "성담빌딩";
 
     @Autowired
     private CustomerService customerService;
