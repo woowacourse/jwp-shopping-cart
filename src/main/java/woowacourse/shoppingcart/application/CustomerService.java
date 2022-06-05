@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.PermissionCustomerRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.NotFoundException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
@@ -60,7 +61,7 @@ public class CustomerService {
         try {
             return customerDao.findIdByEmail(email);
         } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("가입하지 않은 유저입니다.");
+            throw new NotFoundException("가입하지 않은 유저입니다.");
         }
     }
 
@@ -73,6 +74,14 @@ public class CustomerService {
         }
     }
 
+    public CustomerResponse findCustomerById(Long customerId) {
+        try {
+            return customerDao.findByCustomerId(customerId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("회원을 조회할 수 없습니다.");
+        }
+    }
+
     public void updateCustomer(final Long customerId, final ModifiedCustomerDto modifiedCustomerDto) {
         final Customer modifiedCustomer = ModifiedCustomerDto.toModifiedCustomerDto(modifiedCustomerDto);
         final int affectedRows = customerDao.updateCustomer(customerId, modifiedCustomer);
@@ -81,23 +90,10 @@ public class CustomerService {
         }
     }
 
-    public CustomerResponse findCustomerByEmail(PermissionCustomerRequest email) {
-        return customerDao.findByUserEmail(new Email(email.getEmail()));
-    }
-
     public void deleteCustomer(final Long customerId) {
         final int affectedRows = customerDao.deleteCustomer(customerId);
         if (affectedRows != 1) {
             throw new IllegalArgumentException("삭제가 되지 않았습니다.");
         }
-    }
-
-    public CustomerResponse findCustomerById(Long customerId) {
-        try {
-            return customerDao.findByCustomerId(customerId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("회원을 조회할 수 없습니다.");
-        }
-
     }
 }

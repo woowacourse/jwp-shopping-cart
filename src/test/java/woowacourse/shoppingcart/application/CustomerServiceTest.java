@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.NotFoundException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
@@ -91,7 +92,7 @@ class CustomerServiceTest {
         void noSignUpCustomer() {
             final String email = "her0807@naver.com";
             assertThatThrownBy(() -> customerService.signIn(new SignInDto(email, "password1!")))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(NotFoundException.class)
                     .hasMessage("가입하지 않은 유저입니다.");
         }
     }
@@ -112,7 +113,7 @@ class CustomerServiceTest {
         @DisplayName("회원 가입을 하지 않은 유저면 에러가 발생한다.")
         void noSignUpCustomer() {
             assertThatThrownBy(() -> customerService.findCustomerById(111L))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(NotFoundException.class)
                     .hasMessage("회원을 조회할 수 없습니다.");
         }
     }

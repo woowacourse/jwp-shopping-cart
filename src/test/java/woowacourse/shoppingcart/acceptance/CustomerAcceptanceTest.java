@@ -93,7 +93,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             ExtractableResponse<Response> response = 회원_조회(
                     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
                     1L);
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
         }
     }
 
@@ -144,7 +144,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
         회원_탈퇴(signInResponse.getAccessToken(), signInResponse.getCustomerId());
         ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(), signInResponse.getCustomerId());
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     private ExtractableResponse<Response> 회원_탈퇴(final String accessToken, final Long customerId) {

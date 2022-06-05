@@ -20,7 +20,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String header = request.getHeader(AUTHORIZATION);
         if (header == null) {
-            throw new UnauthorizedException("유효하지 않은 사용자 입니다.");
+            throw new UnauthorizedException("유효하지 않은 토큰입니다");
         }
         return authService.isValid(header);
     }

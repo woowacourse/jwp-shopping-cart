@@ -8,6 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import woowacourse.auth.exception.UnauthorizedException;
 
 @Component
 public class JwtTokenProvider {
@@ -44,9 +45,9 @@ public class JwtTokenProvider {
 
             claims.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
-            throw new IllegalArgumentException("만료된 토큰입니다.");
+            throw new UnauthorizedException("토큰이 만료되었습니다.");
         } catch (Exception e) {
-            throw new IllegalArgumentException("발급하지 않은 토큰입니다.");
+            throw new UnauthorizedException("유효하지 않은 토큰입니다");
         }
     }
 }

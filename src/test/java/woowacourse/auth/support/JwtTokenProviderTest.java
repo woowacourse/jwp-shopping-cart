@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import woowacourse.auth.exception.UnauthorizedException;
 
 @DisplayName("JwtTokenProvider 는")
 class JwtTokenProviderTest {
@@ -45,8 +46,8 @@ class JwtTokenProviderTest {
             final String payload = "\"email\":\"example@example.com\"";
             final String accessToken = invalidJwtTokenProvider.createToken(payload);
             assertThatThrownBy(() -> invalidJwtTokenProvider.validateToken(accessToken))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("만료된 토큰입니다.");
+                    .isInstanceOf(UnauthorizedException.class)
+                    .hasMessage("토큰이 만료되었습니다.");
         }
 
         @DisplayName("토큰이 발급되지 않은 토큰이면 에러를 던진다.")
@@ -54,8 +55,8 @@ class JwtTokenProviderTest {
         void invalidToken() {
             final String unissuedAccessToken = "유효하지 않은 토큰";
             assertThatThrownBy(() -> jwtTokenProvider.validateToken(unissuedAccessToken))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("발급하지 않은 토큰입니다.");
+                    .isInstanceOf(UnauthorizedException.class)
+                    .hasMessage("유효하지 않은 토큰입니다");
         }
     }
 }

@@ -49,7 +49,7 @@ public class CustomerDaoTest {
     @Test
     void updateCustomer() {
         Long customerId = customerDao.createCustomer(CustomerFixture.tommy);
-        customerDao.updateCustomer(customerId,CustomerFixture.updatedTommyDto);
+        customerDao.updateCustomer(customerId, CustomerFixture.updatedTommyDto);
         CustomerResponse updatedCustomer = customerDao.findByUserEmail(new Email(CustomerFixture.tommy.getEmail()));
         assertThat(updatedCustomer.getContact())
                 .isEqualTo(CustomerFixture.updatedTommyDto.getContact());
