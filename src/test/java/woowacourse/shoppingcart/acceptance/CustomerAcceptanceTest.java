@@ -20,8 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -102,7 +102,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         //when
         CustomerResponse updateResponse = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
-                .body(new CustomerRequest(페퍼_아이디, "newName", 페퍼_비밀번호))
+                .body(new CustomerUpdateRequest("newName", 페퍼_비밀번호))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .put("/customers/me")
