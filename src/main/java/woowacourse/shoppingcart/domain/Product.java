@@ -21,10 +21,15 @@ public class Product {
         this(null, name, price, stock, imageUrl);
     }
 
-    public void purchaseProduct(final int purchaseQuantity) {
+    public Product(final Product product, final int stock) {
+        this(product.getId(), product.getName(), product.getPrice(), stock, product.getImageUrl());
+    }
+
+    public Product purchaseProduct(final int purchaseQuantity) {
         if (stock < purchaseQuantity) {
             throw new InvalidProductException("제품의 수량보다 더 주문할 수 없습니다.");
         }
+        return new Product(this, stock - purchaseQuantity);
     }
 
     public Long getId() {
