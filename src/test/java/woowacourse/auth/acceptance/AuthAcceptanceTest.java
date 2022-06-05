@@ -66,7 +66,7 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
         assertThat(customerResponse.getUserName()).isEqualTo("giron");
     }
 
-    @DisplayName("Bearer Auth 로그인 실패 - 유저 이름이 잘못된 경우 404-NOT_FOUND를 반환한다.")
+    @DisplayName("Bearer Auth 로그인 실패 - 유저 이름이 잘못된 경우 400-BAD_REQUEST를 반환한다.")
     @Test
     void loginFailureWithWrongUserName() {
         // given
@@ -81,8 +81,8 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
         // then
         assertAll(
                 () -> assertThat(extract.header(HttpHeaders.AUTHORIZATION)).isNull(),
-                () -> assertThat(extract.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("존재하지 않는 유저입니다.")
+                () -> assertThat(extract.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("일치하는 회원이 없거나 비밀번호가 일치하지 않습니다.")
         );
     }
 
@@ -102,7 +102,7 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
         assertAll(
                 () -> assertThat(extract.header(HttpHeaders.AUTHORIZATION)).isNull(),
                 () -> assertThat(extract.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호가 일치하지 않습니다.")
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("일치하는 회원이 없거나 비밀번호가 일치하지 않습니다.")
         );
     }
 

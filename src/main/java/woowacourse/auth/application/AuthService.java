@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidTokenException;
-import woowacourse.auth.exception.NotMatchPasswordException;
+import woowacourse.auth.exception.LoginFailureException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -38,7 +38,7 @@ public class AuthService {
 
     public TokenResponse login(final TokenRequest tokenRequest) {
         final Customer customer = customerDao.findByUserName(tokenRequest.getUserName())
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(LoginFailureException::new);
         validatePassword(tokenRequest, customer);
         final String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
         return new TokenResponse(token);
@@ -46,7 +46,7 @@ public class AuthService {
 
     private void validatePassword(final TokenRequest tokenRequest, final Customer customer) {
         if (!customer.matchesPassword(passwordEncryptor, tokenRequest.getPassword())) {
-            throw new NotMatchPasswordException();
+            throw new LoginFailureException();
         }
     }
 }

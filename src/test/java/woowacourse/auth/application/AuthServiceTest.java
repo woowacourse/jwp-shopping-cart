@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidTokenException;
-import woowacourse.auth.exception.NotMatchPasswordException;
+import woowacourse.auth.exception.LoginFailureException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -67,6 +67,26 @@ class AuthServiceTest {
         );
     }
 
+    @DisplayName("잘못된 유저이름으로 로그인 하면 예외가 발생한다.")
+    @Test
+    void loginWithWrongUserName() {
+        // given
+        String userName = "giron";
+        given(customerDao.findByUserName(userName))
+                .willThrow(new LoginFailureException());
+
+        // when
+        TokenRequest request = new TokenRequest(userName, plainReversePassword);
+
+        // then
+        assertAll(
+                () -> assertThatThrownBy(() -> authService.login(request))
+                        .isExactlyInstanceOf(LoginFailureException.class)
+                        .hasMessageContaining("일치하는 회원이 없거나 비밀번호가 일치하지 않습니다."),
+                () -> verify(customerDao).findByUserName(userName)
+        );
+    }
+
     @DisplayName("잘못된 비밀번호로 로그인 하면 예외가 발생한다.")
     @Test
     void loginWithWrongPassword() {
@@ -84,8 +104,8 @@ class AuthServiceTest {
         // then
         assertAll(
                 () -> assertThatThrownBy(() -> authService.login(request))
-                        .isExactlyInstanceOf(NotMatchPasswordException.class)
-                        .hasMessageContaining("비밀번호가 일치하지 않습니다."),
+                        .isExactlyInstanceOf(LoginFailureException.class)
+                        .hasMessageContaining("일치하는 회원이 없거나 비밀번호가 일치하지 않습니다."),
                 () -> verify(customerDao).findByUserName(userName),
                 () -> verify(passwordEncryptor).matches(plainReversePassword, encryptedBasicPassword.getValue())
         );
