@@ -1,12 +1,18 @@
 package woowacourse.shoppingcart.dto.product;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.domain.Product;
 
 public class ProductSaveRequest {
 
+    @NotBlank
     private String name;
+    @Min(0)
     private int price;
+    @Min(0)
     private int stock;
+    @NotBlank
     private String imageURL;
 
     private ProductSaveRequest() {
