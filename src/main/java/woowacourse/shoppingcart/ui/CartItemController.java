@@ -18,8 +18,8 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.application.dto.CartItemResponse;
 import woowacourse.shoppingcart.application.dto.CartResponse;
+import woowacourse.shoppingcart.ui.dto.CartItemRequest;
 import woowacourse.shoppingcart.ui.dto.FindCustomerRequest;
-import woowacourse.shoppingcart.ui.dto.ProductRequest;
 import woowacourse.shoppingcart.ui.dto.Request;
 
 @RestController
@@ -33,16 +33,18 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal FindCustomerRequest customerRequest) {
+    public ResponseEntity<List<CartItemResponse>> getCartItems(
+        @AuthenticationPrincipal FindCustomerRequest customerRequest) {
         final CartResponse cartsResponse = cartService.findCartsByCustomerName(customerRequest.getName());
         return ResponseEntity.ok().body(cartsResponse.getItemResponses());
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(
-        @Validated(Request.id.class) @RequestBody final ProductRequest request,
+        @Validated(Request.id.class) @RequestBody final CartItemRequest request,
         @AuthenticationPrincipal FindCustomerRequest customerRequest) {
-        final Long cartId = cartService.addCart(request.getId(), customerRequest.getName());
+        final Long cartId = cartService.addCart(request.getProductId(), request.getQuantity(),
+            customerRequest.getName());
         final URI responseLocation = ServletUriComponentsBuilder
             .fromCurrentRequest()
             .path("/{cartId}")

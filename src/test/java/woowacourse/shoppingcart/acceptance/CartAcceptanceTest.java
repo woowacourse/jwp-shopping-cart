@@ -80,7 +80,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
+        requestBody.put("productId", productId);
+        requestBody.put("quantity", 10);
 
         return RestAssured
             .given().log().all()

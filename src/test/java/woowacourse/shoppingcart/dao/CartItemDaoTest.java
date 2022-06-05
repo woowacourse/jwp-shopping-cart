@@ -3,12 +3,14 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.support.test.ExtendedJdbcTest;
 
@@ -21,8 +23,8 @@ public class CartItemDaoTest {
 
     public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
+        cartItemDao = new CartItemDao(productDao, jdbcTemplate);
     }
 
     @BeforeEach
@@ -30,8 +32,8 @@ public class CartItemDaoTest {
         productDao.save(new Product("banana", 1_000, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 5L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 10L);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
@@ -41,9 +43,10 @@ public class CartItemDaoTest {
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
+        final Integer quantity = 10;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity);
 
         // then
         assertThat(cartId).isEqualTo(3L);
@@ -63,7 +66,7 @@ public class CartItemDaoTest {
         assertThat(productsIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("Customer Id를 넣으면, 해당 장바구니 아이템들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
 
@@ -71,10 +74,11 @@ public class CartItemDaoTest {
         final Long customerId = 1L;
 
         // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        final List<CartItem> items = cartItemDao.findCartItemsByCustomerId(customerId);
 
         // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        final List<Long> ids = items.stream().map(CartItem::getId).collect(Collectors.toList());
+        assertThat(ids).containsExactly(1L, 2L);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")

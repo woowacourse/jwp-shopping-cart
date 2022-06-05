@@ -4,19 +4,26 @@ import woowacourse.shoppingcart.domain.product.Product;
 
 public class CartItem {
 
-    private Long id;
-    private Product product;
+    private final Long id;
+    private final Quantity quantity;
+    private final Product product;
 
     public CartItem() {
+        this(null, null, null);
     }
 
-    public CartItem(Long id, Product product) {
+    public CartItem(Long id, Quantity quantity, Product product) {
         this.id = id;
+        this.quantity = quantity;
         this.product = product;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Integer getQuantity() {
+        return quantity.getAmount();
     }
 
     public Product getProduct() {

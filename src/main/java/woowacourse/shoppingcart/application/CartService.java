@@ -21,36 +21,27 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
     public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
     @Transactional(readOnly = true)
     public CartResponse findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        Cart cart = new Cart(cartIds.stream()
-            .map(cartId -> new CartItem(
-                cartId,
-                productDao.findProductById(cartItemDao.findProductIdById(cartId))
-            ))
-            .collect(Collectors.toList()));
+        final Cart cart = new Cart(findCartItemsByCustomerName(customerName));
         return CartResponse.from(cart);
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
+    private List<CartItem> findCartItemsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+        return cartItemDao.findCartItemsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
+    public Long addCart(final Long productId, Integer quantity, final String customerName) {
         final Long customerId = customerDao.findIdByName(customerName);
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.addCartItem(customerId, productId, quantity);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -62,10 +53,10 @@ public class CartService {
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
+        final List<CartItem> cartItems = findCartItemsByCustomerName(customerName);
+        if (cartItems.stream()
+            .noneMatch(item -> item.getId().equals(cartId))) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
     }
 }
