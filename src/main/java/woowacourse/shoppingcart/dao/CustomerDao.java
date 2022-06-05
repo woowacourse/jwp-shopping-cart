@@ -32,10 +32,10 @@ public class CustomerDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByUserName(final String name) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            final String query = "SELECT id FROM customer WHERE name = ?";
+            return jdbcTemplate.queryForObject(query, Long.class, name.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }

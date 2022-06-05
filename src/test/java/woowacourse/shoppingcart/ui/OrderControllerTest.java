@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ import woowacourse.shoppingcart.dto.OrderRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Disabled
 public class OrderControllerTest {
 
     @Autowired
@@ -60,10 +58,10 @@ public class OrderControllerTest {
 
         // when // then
         mockMvc.perform(post("/api/customers/" + customerName + "/orders")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(requestDtos))
-                ).andDo(print())
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(requestDtos))
+        ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
@@ -85,7 +83,7 @@ public class OrderControllerTest {
 
         // when // then
         mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
-                ).andDo(print())
+        ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
                 .andExpect(jsonPath("orderDetails[0].productId").value(2L))
@@ -112,7 +110,7 @@ public class OrderControllerTest {
 
         // when // then
         mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
-                ).andDo(print())
+        ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))
