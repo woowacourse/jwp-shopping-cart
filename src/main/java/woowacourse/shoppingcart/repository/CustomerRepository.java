@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.domain.customer.password.ExistedPasswordStrategy;
 import woowacourse.shoppingcart.domain.customer.password.Password;
 import woowacourse.shoppingcart.domain.customer.password.PasswordFactory;
 import woowacourse.shoppingcart.domain.customer.password.PasswordType;

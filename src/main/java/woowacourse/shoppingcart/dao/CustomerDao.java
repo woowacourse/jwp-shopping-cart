@@ -61,8 +61,8 @@ public class CustomerDao {
     }
 
     private Customer getCustomer(Long id, String email, String password, String profileImageUrl, String name,
-                                String gender, String birthDay, String contact, String address,
-                                String detailAddress, String zoneCode) {
+                                 String gender, String birthDay, String contact, String address,
+                                 String detailAddress, String zoneCode) {
         return new Customer(id, new Email(email), PasswordFactory.of(PasswordType.EXISTED, password),
                 profileImageUrl, new Name(name), Gender.form(gender),
                 new Birthday(birthDay), new Contact(contact),

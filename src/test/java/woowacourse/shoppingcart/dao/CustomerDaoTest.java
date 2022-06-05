@@ -15,7 +15,6 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

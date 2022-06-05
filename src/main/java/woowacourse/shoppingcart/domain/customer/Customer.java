@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.domain.customer;
 import java.util.Objects;
 import woowacourse.shoppingcart.domain.address.FullAddress;
 import woowacourse.shoppingcart.domain.customer.password.Password;
-import woowacourse.shoppingcart.domain.customer.password.PasswordType;
 
 public class Customer {
 

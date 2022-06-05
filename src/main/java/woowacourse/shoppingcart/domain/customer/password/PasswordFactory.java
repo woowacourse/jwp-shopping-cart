@@ -15,7 +15,7 @@ public class PasswordFactory {
     }
 
     public static Password of(final PasswordType type, final String targetPassword) {
-        final PasswordCreationStrategy strategy =  Optional.ofNullable(cache.get(type))
+        final PasswordCreationStrategy strategy = Optional.ofNullable(cache.get(type))
                 .orElseThrow(IllegalArgumentException::new);
         return strategy.createPassword(targetPassword);
     }
