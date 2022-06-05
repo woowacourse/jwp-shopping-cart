@@ -28,7 +28,7 @@ public class AuthService {
         final Customer customer = customerDao.findByAccount(tokenRequest.getAccount())
                 .orElseThrow(LoginFailException::new);
 
-        if (!passwordEncoder.matches(tokenRequest.getPassword(), customer.getPassword())) {
+        if (customer.getPassword().isNotMatch(passwordEncoder, tokenRequest.getPassword())) {
             throw new LoginFailException();
         }
 

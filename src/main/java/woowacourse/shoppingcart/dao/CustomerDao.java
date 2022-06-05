@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Account;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.EncodedPassword;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class CustomerDao {
                     rs.getLong("id"),
                     new Account(rs.getString("account")),
                     rs.getString("nickname"),
-                    rs.getString("password"),
+                    new EncodedPassword(rs.getString("password")),
                     rs.getString("address"),
                     rs.getString("phone_number")
             );
@@ -42,7 +43,7 @@ public class CustomerDao {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("account", customer.getAccount().getValue());
         parameters.put("nickname", customer.getNickname());
-        parameters.put("password", customer.getPassword());
+        parameters.put("password", customer.getPassword().getValue());
         parameters.put("address", customer.getAddress());
         parameters.put("phone_number", customer.getPhoneNumber());
 

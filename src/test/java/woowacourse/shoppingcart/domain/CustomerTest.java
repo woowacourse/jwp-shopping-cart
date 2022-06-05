@@ -16,7 +16,7 @@ class CustomerTest {
     void throwWhenNicknameNullOrEmpty(String nickname) {
         assertThatThrownBy(() ->
                 new Customer(new Account("hamcheeseburger"),
-                        nickname, "password",
+                        nickname, new EncodedPassword("password"),
                         "address", "01012345678"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("닉네임은 비어있을 수 없습니다.");
@@ -28,10 +28,10 @@ class CustomerTest {
     void throwWhenInvalidNicknameLength(String nickname) {
         assertThatThrownBy(() ->
                 new Customer(new Account("hamcheeseburger"),
-                        nickname, "password",
+                        nickname, new EncodedPassword("password"),
                         "address", "01012345678"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("닉네임 길이는 2~10자 이어야 합니다.");
+                .hasMessage("닉네임 길이는 2~10자를 만족해야 합니다.");
     }
 
     @DisplayName("비밀번호가 비어있으면 예외를 발생한다.")
@@ -40,7 +40,7 @@ class CustomerTest {
     void throwWhenPasswordNullOrEmpty(String password) {
         assertThatThrownBy(() ->
                 new Customer(new Account("hamcheeseburger"),
-                        "nickname", password,
+                        "nickname", new EncodedPassword(password),
                         "address", "01012345678"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호는 비어있을 수 없습니다.");
@@ -52,7 +52,7 @@ class CustomerTest {
     void throwWhenAddressNullOrEmpty(String address) {
         assertThatThrownBy(() ->
                 new Customer(new Account("hamcheeseburger"),
-                        "nickname", "password",
+                        "nickname", new EncodedPassword("password"),
                         address, "01012345678"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("주소는 비어있을 수 없습니다.");
@@ -64,10 +64,10 @@ class CustomerTest {
         final String address = "a".repeat(256);
         assertThatThrownBy(() ->
                 new Customer(new Account("hamcheeseburger"),
-                        "nickname", "password",
+                        "nickname", new EncodedPassword("password"),
                         address, "01012345678"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("주소는 255자를 초과할 수 없습니다.");
+                .hasMessage("주소 길이는 255자를 초과할 수 없습니다.");
     }
 
     @DisplayName("핸드폰 번호가 비어있으면 예외를 발생한다.")
@@ -76,7 +76,7 @@ class CustomerTest {
     void throwWhenPhoneNumberNullOrEmpty(String phoneNumber) {
         assertThatThrownBy(() ->
                 new Customer(new Account("hamcheeseburger"),
-                        "nickname", "password",
+                        "nickname", new EncodedPassword("password"),
                         "address", phoneNumber))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("핸드폰 번호는 비어있을 수 없습니다.");
@@ -88,7 +88,7 @@ class CustomerTest {
     void throwWhenInvalidPhoneLength(String phoneNumber) {
         assertThatThrownBy(() ->
                 new Customer(new Account("hamcheeseburger"),
-                        "nickname", "password",
+                        "nickname", new EncodedPassword("password"),
                         "address", phoneNumber))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("핸드폰 번호 길이는 11자 이어야 합니다.");

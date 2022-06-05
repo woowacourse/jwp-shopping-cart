@@ -8,6 +8,8 @@ import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Account;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.EncodedPassword;
+import woowacourse.shoppingcart.domain.PlainPassword;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
@@ -40,9 +42,11 @@ public class CustomerService {
     }
 
     private Customer toCustomer(final SignupRequest signupRequest) {
+        final PlainPassword plainPassword = new PlainPassword(signupRequest.getPassword());
+        final String encode = plainPassword.encode(passwordEncoder);
         return new Customer(new Account(signupRequest.getAccount()),
                 signupRequest.getNickname(),
-                passwordEncoder.encode(signupRequest.getPassword()),
+                new EncodedPassword(encode),
                 signupRequest.getAddress(),
                 signupRequest.getPhoneNumber().appendNumbers());
     }
@@ -71,7 +75,7 @@ public class CustomerService {
     }
 
     private void validatePasswordMatch(final DeleteCustomerRequest deleteCustomerRequest, final Customer customer) {
-        if (!passwordEncoder.matches(deleteCustomerRequest.getPassword(), customer.getPassword())) {
+        if (customer.getPassword().isNotMatch(passwordEncoder, deleteCustomerRequest.getPassword())) {
             throw new WrongPasswordException();
         }
     }

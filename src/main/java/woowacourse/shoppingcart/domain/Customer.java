@@ -10,17 +10,16 @@ public class Customer {
     private final long id;
     private final Account account;
     private final String nickname;
-    private final String password;
+    private final EncodedPassword password;
     private final String address;
     private final String phoneNumber;
 
-    public Customer(final Account account, final String nickname, final String password, final String address, final String phoneNumber) {
+    public Customer(final Account account, final String nickname, final EncodedPassword password, final String address, final String phoneNumber) {
         this(0, account, nickname, password, address, phoneNumber);
     }
 
-    public Customer(final long id, final Account account, final String nickname, final String password, final String address, final String phoneNumber) {
+    public Customer(final long id, final Account account, final String nickname, final EncodedPassword password, final String address, final String phoneNumber) {
         validateNickname(nickname);
-        validatePassword(password);
         validateAddress(address);
         validatePhoneNumber(phoneNumber);
         this.id = id;
@@ -36,13 +35,7 @@ public class Customer {
             throw new IllegalArgumentException("닉네임은 비어있을 수 없습니다.");
         }
         if (nickname.length() < NICKNAME_MINIMUM_LENGTH || nickname.length() > NICKNAME_MAXIMUM_LENGTH) {
-            throw new IllegalArgumentException("닉네임 길이는 " + NICKNAME_MINIMUM_LENGTH + "~" + NICKNAME_MAXIMUM_LENGTH + "자 이어야 합니다.");
-        }
-    }
-
-    private void validatePassword(String password) {
-        if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("비밀번호는 비어있을 수 없습니다.");
+            throw new IllegalArgumentException("닉네임 길이는 " + NICKNAME_MINIMUM_LENGTH + "~" + NICKNAME_MAXIMUM_LENGTH + "자를 만족해야 합니다.");
         }
     }
 
@@ -51,7 +44,7 @@ public class Customer {
             throw new IllegalArgumentException("주소는 비어있을 수 없습니다.");
         }
         if (address.length() > ADDRESS_MAXIMUM_LENGTH) {
-            throw new IllegalArgumentException("주소는 " + ADDRESS_MAXIMUM_LENGTH + "자를 초과할 수 없습니다.");
+            throw new IllegalArgumentException("주소 길이는 " + ADDRESS_MAXIMUM_LENGTH + "자를 초과할 수 없습니다.");
         }
     }
 
@@ -76,7 +69,7 @@ public class Customer {
         return nickname;
     }
 
-    public String getPassword() {
+    public EncodedPassword getPassword() {
         return password;
     }
 
