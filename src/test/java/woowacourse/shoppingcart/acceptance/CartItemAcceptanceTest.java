@@ -40,6 +40,15 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_추가됨(response);
     }
 
+    @DisplayName("장바구니 아이템 추가 수량 초과 시 실패")
+    @Test
+    void addCartItemLargeQuantity_fail() {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, new CartItemSaveRequest(productId1, 21));
+
+        장바구니_아이템_추가_실패함(response);
+    }
+
+
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
@@ -117,6 +126,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
+    }
+
+    public static void 장바구니_아이템_추가_실패함(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     public static Long 장바구니_아이템_추가되어_있음(String userName, CartItemSaveRequest request) {
