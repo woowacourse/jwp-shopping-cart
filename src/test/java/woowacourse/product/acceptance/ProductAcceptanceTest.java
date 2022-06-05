@@ -15,6 +15,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.product.domain.Product;
 import woowacourse.product.dto.ProductRequest;
+import woowacourse.product.dto.ProductResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("상품 관련 기능")
@@ -24,16 +25,26 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     private final int price = 100_000_000;
     private final int stock = 1;
     private final String imageURL = "http://example.com/jjanggu.jpg";
+    private final ProductRequest productRequest = new ProductRequest(name, price, stock, imageURL);
 
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
-        final ProductRequest productRequest = new ProductRequest(name, price, stock, imageURL);
-        ExtractableResponse<Response> response = 상품_등록_요청(productRequest);
+        final ExtractableResponse<Response> response = 상품_등록_요청(productRequest);
 
         상품_추가됨(response);
     }
 
+    @DisplayName("상품을 조회한다")
+    @Test
+    void getProduct() {
+        final Long productId = 상품_등록되어_있음(productRequest);
+
+        final ExtractableResponse<Response> response = 상품_조회_요청(productId);
+
+        조회_응답됨(response);
+        상품_조회됨(response, productId);
+    }
     // @DisplayName("상품 목록을 조회한다")
     // @Test
     // void getProducts() {
@@ -46,16 +57,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     //     상품_목록_포함됨(productId1, productId2, response);
     // }
     //
-    // @DisplayName("상품을 조회한다")
-    // @Test
-    // void getProduct() {
-    //     Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-    //
-    //     ExtractableResponse<Response> response = 상품_조회_요청(productId);
-    //
-    //     조회_응답됨(response);
-    //     상품_조회됨(response, productId);
-    // }
     //
     // @DisplayName("상품을 삭제한다")
     // @Test
@@ -86,7 +87,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
+    public static ExtractableResponse<Response> 상품_조회_요청(final Long productId) {
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -110,11 +111,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static Long 상품_등록되어_있음(final ProductRequest productRequest) {
-        ExtractableResponse<Response> response = 상품_등록_요청(productRequest);
+        final ExtractableResponse<Response> response = 상품_등록_요청(productRequest);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 
-    public static void 조회_응답됨(ExtractableResponse<Response> response) {
+    public static void 조회_응답됨(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
@@ -125,8 +126,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(resultProductIds).contains(productId1, productId2);
     }
 
-    public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
-        Product resultProduct = response.as(Product.class);
+    public static void 상품_조회됨(final ExtractableResponse<Response> response, final Long productId) {
+        final ProductResponse resultProduct = response.as(ProductResponse.class);
         assertThat(resultProduct.getId()).isEqualTo(productId);
     }
 

@@ -1,14 +1,20 @@
 package woowacourse.product.dao;
 
+import java.util.Optional;
+
 import javax.sql.DataSource;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.product.domain.Price;
 import woowacourse.product.domain.Product;
+import woowacourse.product.domain.Stock;
 
 @Repository
 public class ProductDao {
@@ -33,20 +39,26 @@ public class ProductDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    // public Product findProductById(final Long productId) {
-    //     try {
-    //         final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-    //         return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-    //                 new Product(
-    //                         productId,
-    //                         resultSet.getString("name"), resultSet.getInt("price"),
-    //                         resultSet.getString("image_url")
-    //                 ), productId
-    //         );
-    //     } catch (EmptyResultDataAccessException e) {
-    //         throw new InvalidProductException();
-    //     }
-    // }
+    public Optional<Product> findProductById(final Long id) {
+        final String sql = "SELECT id, name, price, stock, imageURL FROM product WHERE id = :id";
+        final SqlParameterSource params = new MapSqlParameterSource("id", id);
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, rowMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    private RowMapper<Product> rowMapper() {
+        return (rs, rowNum) -> new Product(
+            rs.getLong("id"),
+            rs.getString("name"),
+            new Price(rs.getInt("price")),
+            new Stock(rs.getInt("stock")),
+            rs.getString("imageURL")
+        );
+    }
     //
     // public List<Product> findProducts() {
     //     final String query = "SELECT id, name, price, image_url FROM product";

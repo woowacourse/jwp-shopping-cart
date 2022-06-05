@@ -5,6 +5,8 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.product.application.ProductService;
 import woowacourse.product.dto.ProductRequest;
+import woowacourse.product.dto.ProductResponse;
 
 @RequestMapping("/api/products")
 @RestController
@@ -34,10 +37,10 @@ public class ProductController {
     //     return ResponseEntity.ok(productService.findProducts());
     // }
     //
-    // @GetMapping("/{productId}")
-    // public ResponseEntity<Product> product(@PathVariable final Long productId) {
-    //     return ResponseEntity.ok(productService.findProductById(productId));
-    // }
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> product(@PathVariable final Long id) {
+        return ResponseEntity.ok(productService.findProductById(id));
+    }
     //
     // @DeleteMapping("/{productId}")
     // public ResponseEntity<Void> delete(@PathVariable final Long productId) {

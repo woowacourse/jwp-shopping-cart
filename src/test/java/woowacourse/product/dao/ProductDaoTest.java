@@ -33,6 +33,7 @@ public class ProductDaoTest {
     private final Price price = new Price(100_000_000);
     private final Stock stock = new Stock(1);
     private final String imageURL = "http://example.com/jjanggu.jpg";
+    private final Product product = new Product(name, price, stock, imageURL);
 
     @BeforeEach
     void setUp() {
@@ -43,7 +44,6 @@ public class ProductDaoTest {
     @Test
     void save() {
         // given
-        final Product product = new Product(name, price, stock, imageURL);
 
         // when
         final Long id = productDao.save(product);
@@ -52,22 +52,19 @@ public class ProductDaoTest {
         assertThat(id).isNotNull();
     }
 
-    // @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
-    // @Test
-    // void findProductById() {
-    //     // given
-    //     final String name = "초콜렛";
-    //     final int price = 1_000;
-    //     final String imageUrl = "www.test.com";
-    //     final Long productId = productDao.save(new Product(name, price, imageUrl));
-    //     final Product expectedProduct = new Product(productId, name, price, imageUrl);
-    //
-    //     // when
-    //     final Product product = productDao.findProductById(productId);
-    //
-    //     // then
-    //     assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
-    // }
+    @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
+    @Test
+    void findProductById() {
+        // given
+        final Long productId = productDao.save(product);
+        final Product expectedProduct = new Product(productId, name, price, stock, imageURL);
+
+        // when
+        final Product product = productDao.findProductById(productId).get();
+
+        // then
+        assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
+    }
     //
     // @DisplayName("상품 목록 조회")
     // @Test
