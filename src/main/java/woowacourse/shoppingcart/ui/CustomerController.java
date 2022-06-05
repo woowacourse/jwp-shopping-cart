@@ -36,7 +36,7 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerResponse> findByToken(@LoginMemberPrincipal LoginMember loginMember) {
+    public ResponseEntity<CustomerResponse> findById(@LoginMemberPrincipal LoginMember loginMember) {
         final Customer customer = customerService.getById(loginMember.getId());
         return ResponseEntity.ok().body(toCustomerResponse(customer));
     }
