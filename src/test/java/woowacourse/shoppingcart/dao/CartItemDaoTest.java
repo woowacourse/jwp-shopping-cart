@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_2;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.entity.CartItemEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -59,11 +61,16 @@ public class CartItemDaoTest {
         final Long cartId2 = cartItemDao.addCartItem(customerId, productId2, 2);
 
         // when
-        List<Long> productIds = cartItemDao.findCartIdsByCustomerId(customerId);
+        List<CartItemEntity> cartItemEntities = cartItemDao.findCartByCustomerId(customerId);
 
 
         // then
-        assertThat(productIds).containsExactly(cartId1, cartId2);
+        assertThat(cartItemEntities)
+                .extracting("id", "customerId", "productId", "quantity")
+                .containsExactly(
+                        tuple(cartId1, customerId, productId1, 1),
+                        tuple(cartId2, customerId, productId2, 2)
+                );
     }
 //
 //    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
