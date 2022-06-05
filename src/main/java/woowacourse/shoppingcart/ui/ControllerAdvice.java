@@ -9,8 +9,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.auth.application.exception.AuthException;
-import woowacourse.shoppingcart.application.exception.ShoppingCartException;
+import woowacourse.auth.application.exception.InvalidTokenException;
+import woowacourse.shoppingcart.application.exception.BusinessException;
+import woowacourse.shoppingcart.application.exception.ValidatedException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 
 import javax.validation.ConstraintViolationException;
@@ -36,27 +37,28 @@ public class ControllerAdvice {
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
+            BusinessException.class
     })
-    public ResponseEntity<ErrorResponse> handleInvalidRequest(final RuntimeException e) {
+    public ResponseEntity<ErrorResponse> handleBadRequest(final RuntimeException e) {
         final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler(ShoppingCartException.class)
-    public ResponseEntity<ErrorResponse> handleShoppingCartException(final ShoppingCartException e) {
+    @ExceptionHandler(ValidatedException.class)
+    public ResponseEntity<ErrorResponse> handleValidatedException(final ValidatedException e) {
         final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-        return new ResponseEntity<>(errorResponse, e.getHttpStatus());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-    @ExceptionHandler(AuthException.class)
-    public ResponseEntity<ErrorResponse> handleAuthException(final AuthException e) {
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorResponse> handleAuthException(final InvalidTokenException e) {
         final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-        return new ResponseEntity<>(errorResponse, e.getHttpStatus());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleInternalException() {
         final ErrorResponse errorResponse = new ErrorResponse("서버 내부 에러입니다.");
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.internalServerError().body(errorResponse);
     }
 }

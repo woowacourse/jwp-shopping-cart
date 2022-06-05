@@ -1,13 +1,11 @@
 package woowacourse.shoppingcart.application.exception;
 
-import org.springframework.http.HttpStatus;
-
-public final class NotInCustomerCartItemException extends ShoppingCartException {
+public final class NotInCustomerCartItemException extends ValidatedException {
     public NotInCustomerCartItemException() {
         this("장바구니 아이템이 없습니다.");
     }
 
     public NotInCustomerCartItemException(final String msg) {
-        super(msg, HttpStatus.NOT_FOUND);
+        super(msg);
     }
 }

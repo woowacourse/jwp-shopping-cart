@@ -1,7 +1,6 @@
 package woowacourse.auth.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 public class TokenRequest {
     @NotBlank(message = "유저 이름은 빈칼일 수 없습니다.")
