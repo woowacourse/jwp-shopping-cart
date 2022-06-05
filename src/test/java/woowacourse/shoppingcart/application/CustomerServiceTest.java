@@ -10,9 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.support.Encoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.auth.support.PasswordEncoder;
+import woowacourse.auth.support.Sha256Encoder;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
@@ -24,7 +25,6 @@ class CustomerServiceTest {
 
     private static final String EMAIL = "tonic@email.com";
     private static final String PASSWORD = "12345678a";
-    private static final String ENCRYPT_PASSWORD = PasswordEncoder.encrypt(PASSWORD);
     private static final String NICKNAME = "토닉";
     private static final String NOT_FOUND_EMAIL = "notFoundEmail@email.com";
 
@@ -32,6 +32,8 @@ class CustomerServiceTest {
     private CustomerService customerService;
     @Autowired
     private CustomerDao customerDao;
+    @Autowired
+    private Encoder encoder;
 
     @BeforeEach
     void setUp() {
@@ -45,7 +47,7 @@ class CustomerServiceTest {
         Customer customer = customerService.findByEmail(EMAIL);
         assertAll(
                 () -> assertThat(customer.getEmail()).isEqualTo(EMAIL),
-                () -> assertThat(customer.getPassword()).isEqualTo(ENCRYPT_PASSWORD),
+                () -> assertThat(customer.getPassword()).isEqualTo(encoder.encrypt(PASSWORD)),
                 () -> assertThat(customer.getNickname()).isEqualTo(NICKNAME),
                 () -> assertThat(customer.getId()).isNotNull()
         );
@@ -67,7 +69,7 @@ class CustomerServiceTest {
         assertAll(
                 () -> assertThat(customer.getEmail()).isEqualTo(EMAIL),
                 () -> assertThat(customer.getNickname()).isEqualTo(NICKNAME),
-                () -> assertThat(customer.getPassword()).isEqualTo(ENCRYPT_PASSWORD));
+                () -> assertThat(customer.getPassword()).isEqualTo(encoder.encrypt(PASSWORD)));
     }
 
     @DisplayName("가입하지 않은 email로 회원 조회 시 예외 발생")
@@ -108,7 +110,7 @@ class CustomerServiceTest {
         customerService.updateCustomer(EMAIL, new CustomerUpdateRequest(newNickname, newPassword));
         Customer customer = customerService.findByEmail(EMAIL);
 
-        assertThat(customer.getPassword()).isEqualTo(PasswordEncoder.encrypt(newPassword));
+        assertThat(customer.getPassword()).isEqualTo(encoder.encrypt(newPassword));
         assertThat(customer.getNickname()).isEqualTo(newNickname);
     }
 }

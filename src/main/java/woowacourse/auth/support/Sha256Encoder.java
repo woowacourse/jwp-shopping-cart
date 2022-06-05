@@ -2,12 +2,17 @@ package woowacourse.auth.support;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
-public class PasswordEncoder {
+@Primary
+@Component
+public class Sha256Encoder implements Encoder {
 
-    private PasswordEncoder() { }
+    private Sha256Encoder() { }
 
-    public static String encrypt(String rawPassword) {
+    @Override
+    public String encrypt(String rawPassword) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(rawPassword.getBytes());
@@ -17,7 +22,7 @@ public class PasswordEncoder {
         }
     }
 
-    private static String bytesToHex(byte[] bytes) {
+    private String bytesToHex(byte[] bytes) {
         StringBuilder builder = new StringBuilder();
         for (byte b : bytes) {
             builder.append(String.format("%02x", b));

@@ -1,9 +1,10 @@
 package woowacourse.shoppingcart.application;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import woowacourse.auth.support.Encoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
@@ -13,16 +14,18 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final Encoder encoder;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(CustomerDao customerDao, Encoder encoder) {
         this.customerDao = customerDao;
+        this.encoder = encoder;
     }
 
     public Long registerCustomer(SignUpRequest request) {
         if (customerDao.existByEmail(request.getEmail())) {
             throw new DuplicateCustomerException();
         }
-        String encryptPassword = PasswordEncoder.encrypt(request.getPassword());
+        String encryptPassword = encoder.encrypt(request.getPassword());
         Customer customer = customerDao.save(
                 new Customer(request.getEmail(), encryptPassword, request.getNickname()));
         return customer.getId();
@@ -42,7 +45,7 @@ public class CustomerService {
 
     public void updateCustomer(String email, CustomerUpdateRequest request) {
         Customer customer = findByEmail(email);
-        String encryptPassword = PasswordEncoder.encrypt(request.getPassword());
+        String encryptPassword = encoder.encrypt(request.getPassword());
         customerDao.update(new Customer(customer.getId(), customer.getEmail(), encryptPassword,
                 request.getNickname()));
     }
