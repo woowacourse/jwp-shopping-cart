@@ -1,15 +1,20 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -17,37 +22,36 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 
-    private final CustomerDao customerDao;
+    @Autowired
+    private DataSource dataSource;
 
-    public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
-        customerDao = new CustomerDao(jdbcTemplate);
+    private CustomerDao customerDao;
+
+    @BeforeEach
+    public void setUp() {
+        customerDao = new CustomerDao(dataSource);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
+    @DisplayName("전달받은 데이터로 소비자 데이터를 생성한다.")
     @Test
-    void findIdByUserNameTest() {
-
-        // given
-        final String userName = "puterism";
-
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(1L);
+    void createCustomer() {
+        assertThatNoException().isThrownBy(() -> customerDao.createCustomer(CustomerFixture.tommy));
     }
 
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
+    @DisplayName("전달 받은 이메일로 사용자 정보를 반환한다.")
     @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
+    void findByUserEmail() {
+        final Customer tokenPayloadDto = customerDao.findByUserEmail(new Email("puterism@example.com"));
+        assertThat(tokenPayloadDto.getId()).isNotNull();
+    }
 
-        // given
-        final String userName = "gwangyeol-iM";
-
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(16L);
+    @DisplayName("전달받은 데이터를 소비자 데이터를 업데이트한다.")
+    @Test
+    void updateCustomer() {
+        customerDao.createCustomer(CustomerFixture.tommy);
+        customerDao.updateCustomer(CustomerFixture.updatedTommyDto);
+        Customer updatedCustomer = customerDao.findByUserEmail(new Email(CustomerFixture.tommy.getEmail()));
+        assertThat(updatedCustomer.getContact())
+                .isEqualTo(CustomerFixture.updatedTommyDto.getContact());
     }
 }
