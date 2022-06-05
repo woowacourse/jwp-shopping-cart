@@ -49,13 +49,13 @@ public class CustomerDaoTest {
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
         // given
-        final String userName = "gwangyeol-iM";
+        final String userName = "puterisM";
 
         // when
         final Long customerId = customerDao.findIdByUserName(userName);
 
         // then
-        assertThat(customerId).isEqualTo(16L);
+        assertThat(customerId).isEqualTo(1L);
     }
 
     @DisplayName("유저를 저장한다.")

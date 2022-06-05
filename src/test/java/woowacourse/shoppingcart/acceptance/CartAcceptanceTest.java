@@ -18,7 +18,7 @@ import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Cart;
 
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+public class CartAcceptanceTest extends AcceptanceShoppingCartTest {
 
     private static final String USER = "puterism";
     private Long productId1;

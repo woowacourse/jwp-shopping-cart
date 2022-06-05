@@ -25,7 +25,7 @@ import woowacourse.shoppingcart.dto.DuplicateResponse;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 
 @DisplayName("회원 관련 기능")
-public class CustomerAcceptanceTest extends AcceptanceTest {
+public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
 
     @DisplayName("회원가입 성공하면 201 CREATED를 반환한다.")
     @Test

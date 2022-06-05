@@ -18,13 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 
 @DisplayName("인증 관련 기능")
-public class AuthAcceptanceTest extends AcceptanceTest {
+public class AuthAcceptanceTest extends AcceptanceAuthTest {
 
     @DisplayName("등록된 회원이 로그인을 하면 토큰을 발급받는다.")
     @Test

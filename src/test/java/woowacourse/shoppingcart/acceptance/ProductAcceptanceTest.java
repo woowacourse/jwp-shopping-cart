@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Product;
 
 @DisplayName("상품 관련 기능")
-public class ProductAcceptanceTest extends AcceptanceTest {
+public class ProductAcceptanceTest extends AcceptanceShoppingCartTest {
 
     @DisplayName("상품을 추가한다")
     @Test

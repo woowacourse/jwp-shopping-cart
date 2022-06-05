@@ -21,7 +21,7 @@ import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
 @DisplayName("주문 관련 기능")
-public class OrderAcceptanceTest extends AcceptanceTest {
+public class OrderAcceptanceTest extends AcceptanceShoppingCartTest {
 
     private static final String USER = "puterism";
     private Long cartId1;
