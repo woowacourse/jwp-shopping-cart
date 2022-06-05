@@ -1,8 +1,8 @@
 package woowacourse;
 
-import io.micrometer.core.instrument.util.IOUtils;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +59,7 @@ public class TestSupport {
         accessToken = jwtTokenProvider.createToken("sunhpark42@gmail.com");
     }
 
-    protected String readJson(final String path) throws IOException {
-        return IOUtils.toString(resourceLoader.getResource("classpath:" + path).getInputStream(),
-            StandardCharsets.UTF_8);
+    protected static String readJson(final String path) throws IOException {
+        return new String(Files.readAllBytes(Paths.get("src/test/resources", path)));
     }
 }
