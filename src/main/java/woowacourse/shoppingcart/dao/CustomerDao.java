@@ -21,7 +21,8 @@ public class CustomerDao {
         String password = rs.getString("password");
         String nickname = rs.getString("nickname");
         Long id = rs.getLong("id");
-        return new Customer(id, email, password, nickname);
+        boolean isAdmin = rs.getBoolean("is_admin");
+        return new Customer(id, email, password, nickname, isAdmin);
     };
     private final JdbcTemplate jdbcTemplate;
 
@@ -30,7 +31,7 @@ public class CustomerDao {
     }
 
     public Customer save(Customer customer) {
-        final String query = "INSERT INTO customer (email, password, nickname) VALUES (?, ?, ?)";
+        final String query = "INSERT INTO customer (email, password, nickname, is_admin) VALUES (?, ?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
@@ -38,6 +39,7 @@ public class CustomerDao {
             preparedStatement.setString(1, customer.getEmail());
             preparedStatement.setString(2, customer.getPassword());
             preparedStatement.setString(3, customer.getNickname());
+            preparedStatement.setBoolean(4, customer.isAdmin());
             return preparedStatement;
         }, keyHolder);
 
@@ -56,7 +58,7 @@ public class CustomerDao {
 
     public Optional<Customer> findByEmail(String email) {
         try {
-            final String query = "SELECT email, password, nickname, id FROM customer WHERE email = ?";
+            final String query = "SELECT email, password, nickname, id, is_admin FROM customer WHERE email = ?";
             Customer customer = jdbcTemplate.queryForObject(query, ROW_MAPPER, email);
             return Optional.of(customer);
         } catch (final EmptyResultDataAccessException e) {

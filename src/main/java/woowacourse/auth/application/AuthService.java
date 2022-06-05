@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.exception.InvalidLoginFormException;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -22,7 +22,7 @@ public class AuthService {
 
     public String createToken(TokenRequest tokenRequest) {
         Customer customer = customerDao.findByEmail(tokenRequest.getEmail())
-                .orElseThrow(InvalidCustomerException::new);
+            .orElseThrow(InvalidCustomerException::new);
 
         String encryptPassword = PasswordEncoder.encrypt(tokenRequest.getPassword());
         if (!customer.isValidPassword(encryptPassword)) {
@@ -31,5 +31,4 @@ public class AuthService {
 
         return jwtTokenProvider.createToken(tokenRequest.getEmail());
     }
-
 }

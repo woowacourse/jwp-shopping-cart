@@ -30,7 +30,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final Product product) {
+    public Product save(final Product product) {
         final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -42,7 +42,9 @@ public class ProductDao {
             return preparedStatement;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        return new Product(id, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Optional<Product> findProductById(Long productId) {

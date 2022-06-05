@@ -16,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
@@ -27,11 +28,11 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
     @Override
     @BeforeEach
-    public void setUp() {
-        super.setUp();
+    public void setUp(RestDocumentationContextProvider restDocumentation) {
+        super.setUp(restDocumentation);
 
-        Long productId1 = 1L;
-        Long productId2 = 2L;
+        Long productId1 = 상품_추가("치약", 1600, "image 치약").jsonPath().getLong("id");
+        Long productId2 = 상품_추가("칫솔", 4300, "image 칫솔").jsonPath().getLong("id");
 
         cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
         cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);

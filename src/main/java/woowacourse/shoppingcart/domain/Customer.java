@@ -6,16 +6,26 @@ public class Customer {
     private final String email;
     private final String password;
     private final String nickname;
+    private final boolean isAdmin;
 
     public Customer(String email, String password, String nickname) {
-        this(null, email, password, nickname);
+        this(null, email, password, nickname, false);
+    }
+
+    public Customer(String email, String password, String nickname, boolean isAdmin) {
+        this(null, email, password, nickname, isAdmin);
     }
 
     public Customer(Long id, String email, String password, String nickname) {
+        this(id, email, password, nickname, false);
+    }
+
+    public Customer(Long id, String email, String password, String nickname, boolean isAdmin) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.isAdmin = isAdmin;
     }
 
     public String getEmail() {
@@ -32,6 +42,10 @@ public class Customer {
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
     public boolean isValidPassword(String password) {

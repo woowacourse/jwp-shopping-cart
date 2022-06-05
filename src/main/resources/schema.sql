@@ -8,6 +8,16 @@ drop table if exists product;
 
 drop table if exists customer;
 
+drop table if exists admin_users;
+
+create table admin_users
+(
+    id bigint not null auto_increment,
+    email varchar(255) unique not null,
+    password varchar(128) not null,
+    primary key (id)
+) engine=InnoDB default charset=utf8mb4;
+
 create table customer
 (
     id       bigint       not null auto_increment,
@@ -15,6 +25,7 @@ create table customer
     email varchar(255),
     password varchar(128),
     nickname varchar(255),
+    is_admin boolean,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 

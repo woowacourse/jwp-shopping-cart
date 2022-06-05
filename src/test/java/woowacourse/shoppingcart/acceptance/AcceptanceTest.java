@@ -10,6 +10,9 @@ import io.restassured.specification.RequestSpecification;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
@@ -18,10 +21,11 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.config.SaveAdminRunner;
 
 @ExtendWith({RestDocumentationExtension.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/init.sql")
+@Sql("/data.sql")
 @ActiveProfiles("test")
 public class AcceptanceTest {
 
@@ -29,21 +33,30 @@ public class AcceptanceTest {
     protected static final int DUPLICATE_EMAIL_ERROR_CODE = 1001;
     protected static final int INVALID_LOGIN_ERROR_CODE = 1002;
 
+    @Value("${shopping.admin.email}")
+    protected String adminEmail;
+
+    @Value("${shopping.admin.password}")
+    protected String adminPassword;
+
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private SaveAdminRunner saveAdminRunner;
+
+    @Autowired
+    private ApplicationArguments arguments;
 
     protected RequestSpecification spec;
 
     @BeforeEach
-    public void setUp(RestDocumentationContextProvider restDocumentation) {
+    void setUp(RestDocumentationContextProvider restDocumentation) {
+        RestAssured.port = port;
+        saveAdminRunner.run(arguments);
         spec = new RequestSpecBuilder()
             .addFilter(documentationConfiguration(restDocumentation))
             .build();
-    }
-
-    @BeforeEach
-    public void setUp() {
-        RestAssured.port = port;
     }
 
     protected ExtractableResponse<Response> 회원가입_요청(String email, String password, String nickname) {
@@ -104,5 +117,28 @@ public class AcceptanceTest {
                 .put("/users/me")
                 .then().log().all().extract();
         return response;
+    }
+
+    protected ExtractableResponse<Response> 상품_조회(long productId) {
+        return RestAssured
+            .given().log().all()
+            .when().log().all().get("/products/{productId}", productId)
+            .then().log().all()
+            .extract();
+    }
+
+    protected ExtractableResponse<Response> 상품_추가(String name, int price, String imageUrl) {
+        String adminToken = 토큰_요청(adminEmail, adminPassword);
+        Map<String, Object> body = Map.of("name", name, "price", price, "imageUrl", imageUrl);
+
+        return RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + adminToken)
+            .body(body)
+            .when().log().all()
+            .post("/products")
+            .then().log().all()
+            .extract();
     }
 }
