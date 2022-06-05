@@ -56,7 +56,7 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
+        final String query = "SELECT id, name, price, image_url, description, stock FROM product";
         return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
                         new Product(
@@ -65,7 +65,7 @@ public class JdbcProductDao implements ProductDao {
                                 resultSet.getInt("price"),
                                 resultSet.getString("image_url"),
                                 resultSet.getString("description"),
-                                resultSet.getInt("image_url")
+                                resultSet.getInt("stock")
                         ));
     }
 

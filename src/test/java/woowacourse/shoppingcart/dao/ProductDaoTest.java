@@ -2,7 +2,9 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
+import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_2;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -47,20 +49,23 @@ public class ProductDaoTest {
         // then
         assertThat(product).isEqualTo(PRODUCT_1);
     }
-//
-//    @DisplayName("상품 목록 조회")
-//    @Test
-//    void getProducts() {
-//
-//        // given
-//        final int size = 0;
-//
-//        // when
-//        final List<Product> products = productDao.findProducts();
-//
-//        // then
-//        assertThat(products).size().isEqualTo(size);
-//    }
+
+    @DisplayName("상품 목록 조회")
+    @Test
+    void getProducts() {
+        // given
+        productDao.save(PRODUCT_1);
+        productDao.save(PRODUCT_2);
+
+        final int size = 2;
+
+        // when
+        final List<Product> products = productDao.findProducts();
+
+        // then
+
+        assertThat(products).hasSize(2);
+    }
 //
 //    @DisplayName("싱품 삭제")
 //    @Test
