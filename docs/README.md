@@ -74,7 +74,7 @@
 <summary>소니의 1단계 첫번째 리뷰</summary>
 
 - dto
-  - [ ] @Valid 어노테이션을 적절히 활용했는지 확인하기
+  - [x] @Valid 어노테이션을 적절히 활용했는지 확인하기
 - service
   - [ ] 도메인과 적절한 책임 분배가 이루어졌는지 확인하기  
         ex. AuthService 의 validateCustomer - 비밀번호 검증을 customer 역할로

@@ -1,5 +1,7 @@
 package woowacourse.auth.ui;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +21,7 @@ public class AuthController {
     }
 
     @PostMapping("/api/auth/token")
-    public ResponseEntity<TokenResponse> createToken(@RequestBody TokenRequest tokenRequest) {
+    public ResponseEntity<TokenResponse> createToken(@Valid @RequestBody TokenRequest tokenRequest) {
         TokenResponse tokenResponse = authService.createToken(tokenRequest);
         return ResponseEntity.ok(tokenResponse);
     }
