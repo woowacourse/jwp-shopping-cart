@@ -17,6 +17,8 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
 public class CustomerController {
@@ -28,7 +30,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         SignUpResponse signUpresponse = customerService.addCustomer(signUpRequest);
         return ResponseEntity.created(URI.create("/users/me"))
                 .body(signUpresponse);
@@ -41,14 +43,14 @@ public class CustomerController {
 
     @PatchMapping("/me")
     public ResponseEntity<Void> updateMe(@AuthenticationPrincipal String userNameByToken,
-                                                     @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+                                         @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         customerService.updateMe(userNameByToken, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal String userNameByToken,
-                                         @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
+                                         @Valid @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
         customerService.deleteMe(userNameByToken, deleteCustomerRequest);
         return ResponseEntity.noContent().build();
     }
