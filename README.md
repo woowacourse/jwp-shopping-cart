@@ -207,16 +207,15 @@ empty body
 - http request
 
 ```json
-{
-  "orders" : [
-    {
-      "cartItemId" : 1
-    },
-    {
-      "cartItemId" : 2
-    }
-  ]
-}
+[
+  {
+    "cartItemId" : 1
+  },
+  {
+    "cartItemId" : 2
+  }
+]
+
 ```
 
 - http response
