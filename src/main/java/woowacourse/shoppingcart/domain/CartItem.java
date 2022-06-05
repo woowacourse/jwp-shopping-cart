@@ -2,12 +2,12 @@ package woowacourse.shoppingcart.domain;
 
 public class CartItem {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private int quantity;
-    private String imageUrl;
+    private final Long id;
+    private final Long productId;
+    private final String name;
+    private final int price;
+    private final int quantity;
+    private final String imageUrl;
 
     public CartItem(final Long id, final Product product, final int quentity) {
         this(id, product.getId(), product.getName(), product.getPrice(), quentity, product.getImageUrl());
