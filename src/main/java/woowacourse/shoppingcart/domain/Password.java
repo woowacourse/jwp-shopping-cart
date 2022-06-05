@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import woowacourse.shoppingcart.exception.IllegalPasswordException;
 
 public class Password {
@@ -9,14 +11,40 @@ public class Password {
 
     private final String value;
 
-    public Password(String value) {
-        validate(value);
+    private Password(String value) {
         this.value = value;
     }
 
-    private void validate(String value) {
+    public static Password defaultPassword(String value) {
+        return new Password(value);
+    }
+
+    public static Password hashPassword(String value) {
         if (!Pattern.matches(REGEX, value)) {
             throw new IllegalPasswordException();
         }
+        String encryptedPassword = BCrypt.hashpw(value, BCrypt.gensalt());
+        return new Password(encryptedPassword);
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Password password = (Password) o;
+        return Objects.equals(value, password.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

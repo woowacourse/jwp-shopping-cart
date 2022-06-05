@@ -1,45 +1,43 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class Customer {
 
     private final Long id;
-    private final String nickname;
-    private final String email;
-    private final String password;
+    private final Nickname nickname;
+    private final Email email;
+    private final Password password;
 
-    public Customer(Long id, String nickname, String email, String password) {
+    public Customer(Long id, String nickname, String email, Password password) {
         this.id = id;
-        this.nickname = nickname;
-        this.email = email;
+        this.nickname = new Nickname(nickname);
+        this.email = new Email(email);
         this.password = password;
     }
 
+    public Customer(Long id, String nickname, String email, String password) {
+        this(id, nickname, email, Password.defaultPassword(password));
+    }
+
     public Customer(String nickname, String email, String password) {
-        this(null, nickname, email, hash(password));
+        this(null, nickname, email, Password.hashPassword(password));
     }
-
-    private static String hash(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
-
 
     public Long getId() {
         return id;
     }
 
     public String getNickname() {
-        return nickname;
+        return nickname.getValue();
     }
 
     public String getEmail() {
-        return email;
+        return email.getValue();
     }
 
     public String getPassword() {
-        return password;
+        return password.getValue();
     }
 
     @Override
