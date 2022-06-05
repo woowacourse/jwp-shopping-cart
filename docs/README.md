@@ -80,7 +80,7 @@
       ex. AuthService 의 validateCustomer - 비밀번호 검증을 customer 역할로
 - Auth
     - [x] springframework에서 제공하는 HTTP 상수 Authorization 사용하기
-    - [ ] config에서 jwtTokenProvider bean 등록 후 주입해주기
+    - [x] config에서 jwtTokenProvider bean 등록 후 주입해주기
     - [ ] Interceptor 사용하지 않은 이유찾기 / 사용하기
 - Error
     - [ ] API 명세에 맞게 에러 코드를 세부적으로 나누어 사용하기

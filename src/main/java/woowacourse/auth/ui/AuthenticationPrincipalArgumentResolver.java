@@ -9,17 +9,17 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.TokenProvider;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
 import woowacourse.shoppingcart.exception.NoAuthorizationHeaderException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenProvider tokenProvider;
 
-    public AuthenticationPrincipalArgumentResolver(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthenticationPrincipalArgumentResolver(TokenProvider tokenProvider) {
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
@@ -36,11 +36,11 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         }
         String accessToken = AuthorizationExtractor.extract(authorizationHeader);
 
-        if (!jwtTokenProvider.validateToken(accessToken)) {
+        if (!tokenProvider.validateToken(accessToken)) {
             throw new InvalidTokenException();
         }
 
-        String username = jwtTokenProvider.getPayload(accessToken);
+        String username = tokenProvider.getPayload(accessToken);
         return new LoginCustomer(username);
     }
 }
