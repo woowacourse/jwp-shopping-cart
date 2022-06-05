@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidTokenException;
@@ -12,6 +13,7 @@ import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
