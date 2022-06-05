@@ -24,15 +24,15 @@ public class AcceptanceTest {
     protected static final int INVALID_LOGIN_ERROR_CODE = 1002;
 
     @LocalServerPort
-    int port;
+        int port;
 
-    @BeforeEach
-    public void setUp() {
-        RestAssured.port = port;
-    }
+        @BeforeEach
+        public void setUp() {
+            RestAssured.port = port;
+        }
 
-    protected ExtractableResponse<Response> 회원가입_요청(SignUpRequest signUpRequest) {
-        return RestAssured.given().log().all()
+        protected ExtractableResponse<Response> 회원가입_요청(SignUpRequest signUpRequest) {
+            return RestAssured.given().log().all()
                 .body(signUpRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/users")
