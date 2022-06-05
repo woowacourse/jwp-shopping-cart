@@ -8,7 +8,7 @@ public class Cart {
     private int price;
     private String imageUrl;
 
-    public Cart() {
+    private Cart() {
     }
 
     public Cart(final Long id, final Product product) {
