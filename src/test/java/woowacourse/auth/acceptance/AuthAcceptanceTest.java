@@ -1,46 +1,81 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.fixture.SimpleResponse;
+import woowacourse.fixture.SimpleRestAssured;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.exception.AuthorizationException;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
-    @DisplayName("Bearer Auth 로그인 성공")
+
+    @BeforeEach
+    void init() {
+        signUpCustomer();
+    }
+
+    @DisplayName("로그인에 성공할 때 토큰을 발급한다.")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+        TokenRequest tokenRequest = new TokenRequest("forky", "forky@1234");
+        String accessToken = SimpleRestAssured.post("/login", tokenRequest)
+                .toObject(TokenResponse.class)
+                .getAccessToken();
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        CustomerResponse actual = SimpleRestAssured.getWithToken("/customers/me", accessToken)
+                .toObject(CustomerResponse.class);
 
         // then
-        // 내 정보가 조회된다
+        assertAll(
+                () -> assertThat(actual.getUserName()).isEqualTo("forky"),
+                () -> assertThat(actual.getPassword()).isEqualTo("forky@1234")
+        );
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
+    @DisplayName("로그인에 실패하는 경우는 토큰 발급 요청이 거부된다.")
     @Test
     void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
+        //given
+        TokenRequest tokenRequest = new TokenRequest("forky", "kth@990303");
 
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+        //when
+        SimpleResponse response = SimpleRestAssured.post("/login", tokenRequest);
 
-        // then
-        // 토큰 발급 요청이 거부된다
+        //then
+        response.assertStatus(HttpStatus.BAD_REQUEST);
+        response.containsExceptionMessage("비밀번호");
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @DisplayName("유효하지 않은 토큰으로 회원 관련 기능에 접근할 경우 요청이 거부된다.")
     @Test
     void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        SimpleRestAssured.getWithToken("/customers/me", "invalidToken")
+                .toObject(AuthorizationException.class);
+    }
 
-        // then
-        // 내 정보 조회 요청이 거부된다
+    @DisplayName("토큰 없이 회원 관련 기능에 접근할 경우 요청이 거부된다.")
+    @Test
+    void myInfoWithNoAuth() {
+        SimpleRestAssured.get("/customers/me")
+                .toObject(AuthorizationException.class);
+    }
+
+    private void signUpCustomer() {
+        CustomerRequest customerRequest =
+                new CustomerRequest("forky", "forky@1234", "복희", 26);
+        SimpleRestAssured.post("/customers", customerRequest);
     }
 }
