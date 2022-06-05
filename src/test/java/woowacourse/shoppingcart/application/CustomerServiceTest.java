@@ -90,6 +90,26 @@ class CustomerServiceTest {
         );
     }
 
+    @DisplayName("잘못된 형식의 이름으로 회원가입을 하면 예외가 발생한다.")
+    @Test
+    void signUpWithWrongUserName() {
+        // given
+        final String userName = "기론";
+        given(customerDao.existsByUserName(userName)).willReturn(false);
+
+        // when
+        final CustomerRequest.UserNameAndPassword request =
+                new CustomerRequest.UserNameAndPassword(userName, plainBasicPassword);
+
+        // then
+        assertAll(
+                () -> assertThatThrownBy(() -> customerService.signUp(request))
+                        .isExactlyInstanceOf(IllegalFormException.class)
+                        .hasMessageContaining("이름의 입력 형식에 맞지 않습니다."),
+                () -> verify(customerDao).existsByUserName(userName)
+        );
+    }
+
     @DisplayName("잘못된 형식의 비밀번호로 회원가입을 하면 예외가 발생한다.")
     @Test
     void signUpWithWrongPassword() {

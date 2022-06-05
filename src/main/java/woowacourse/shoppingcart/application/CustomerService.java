@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.EncryptPassword;
 import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
 import woowacourse.shoppingcart.domain.customer.PlainPassword;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
 import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
@@ -29,9 +30,10 @@ public class CustomerService {
 
     public Long signUp(final UserNameAndPassword customerRequest) {
         validateDuplicateName(customerRequest.getUserName());
+        UserName userName = new UserName(customerRequest.getUserName());
         PlainPassword plainPassword = new PlainPassword(customerRequest.getPassword());
         EncryptPassword encryptPassword = plainPassword.toEncryptPassword(passwordEncryptor);
-        return customerDao.save(customerRequest.getUserName(), encryptPassword.getValue());
+        return customerDao.save(userName.getValue(), encryptPassword.getValue());
     }
 
     private void validateDuplicateName(final String name) {
