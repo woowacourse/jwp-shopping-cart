@@ -19,7 +19,6 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.application.dto.CartItemResponse;
-import woowacourse.shoppingcart.application.dto.CartResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -40,7 +39,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        CustomerAcceptanceFixture.saveCustomer(USER);
+        CustomerAcceptanceFixture.saveCustomerWithName(USER);
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
 
         장바구니_아이템_추가됨(response);
@@ -49,7 +48,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        CustomerAcceptanceFixture.saveCustomer(USER);
+        CustomerAcceptanceFixture.saveCustomerWithName(USER);
         장바구니_아이템_추가되어_있음(USER, productId1);
         장바구니_아이템_추가되어_있음(USER, productId2);
 
@@ -62,7 +61,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        CustomerAcceptanceFixture.saveCustomer(USER);
+        CustomerAcceptanceFixture.saveCustomerWithName(USER);
         Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
 
         ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
@@ -116,10 +115,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getObject(".", CartResponse.class)
-            .getItemResponses()
+        final List<Long> resultProductIds = response.jsonPath().getList(".", CartItemResponse.class)
             .stream()
-            .map(CartItemResponse::getProductId)
+            .map(cartItemResponse -> cartItemResponse.getProductResponse().getId())
             .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }

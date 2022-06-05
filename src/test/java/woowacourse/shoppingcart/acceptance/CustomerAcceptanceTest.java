@@ -15,7 +15,11 @@ import io.restassured.response.Response;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
+import woowacourse.shoppingcart.application.dto.EmailDuplicationResponse;
+import woowacourse.shoppingcart.application.dto.UserNameDuplicationResponse;
+import woowacourse.shoppingcart.ui.dto.EmailDuplicationRequest;
 import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
+import woowacourse.shoppingcart.ui.dto.UserNameDuplicationRequest;
 import woowacourse.support.SimpleRestAssured;
 
 @DisplayName("회원 관련 기능")
@@ -99,5 +103,52 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertThat(deletedResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         assertThat(foundResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @DisplayName("회원이름이 중복인지 확인한다")
+    @Test
+    void isUserNameDuplicated() {
+        // given
+        final String username = "duplication";
+        CustomerAcceptanceFixture.saveCustomerWithName(username);
+
+        // when
+        final ExtractableResponse<Response> response =
+            SimpleRestAssured.post(
+                "/api/customers/duplication/username", new UserNameDuplicationRequest(username)
+            );
+        final UserNameDuplicationResponse duplicationResponse = SimpleRestAssured.toObject(response,
+            UserNameDuplicationResponse.class);
+
+        // then
+        Assertions.assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+            () -> assertThat(duplicationResponse.getUsername()).isEqualTo(username),
+            () -> assertThat(duplicationResponse.getDuplicated()).isTrue()
+        );
+    }
+
+    @DisplayName("이메일이 중복인지 확인한다")
+    @Test
+    void isEmailDuplicated() {
+        // given
+        final String email = "duplication@email.com";
+        CustomerAcceptanceFixture.saveCustomerWithEmail(email);
+
+        // when
+        final ExtractableResponse<Response> response =
+            SimpleRestAssured.post(
+                "/api/customers/duplication/email", new EmailDuplicationRequest(email)
+            );
+        final EmailDuplicationResponse duplicationResponse = SimpleRestAssured.toObject(response,
+            EmailDuplicationResponse.class);
+
+        // then
+        Assertions.assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+            () -> assertThat(duplicationResponse.getEmail()).isEqualTo(email),
+            () -> assertThat(duplicationResponse.getDuplicated()).isTrue()
+        );
+
     }
 }

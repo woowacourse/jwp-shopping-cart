@@ -20,6 +20,9 @@ import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
 @Repository
 public class CustomerDao {
 
+    public static final String COLUMN_USERNAME = "name";
+    public static final String COLUMN_EMAIL = "email";
+
     private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = (resultSet, rowNum) ->
         Customer.fromSaved(
             resultSet.getLong("id"),
@@ -95,5 +98,11 @@ public class CustomerDao {
     public boolean deleteById(Long id) {
         final String query = "DELETE FROM customer WHERE id = ?";
         return isUpdated(jdbcTemplate.update(query, id));
+    }
+
+    public boolean isDuplicated(String column, String value) {
+        // TODO : try-catch exception
+        final String query = String.format("SELECT EXISTS(SELECT 1 FROM customer WHERE %s = ?)", column);
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, value));
     }
 }

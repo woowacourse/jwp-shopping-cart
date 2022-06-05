@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.ui.dto.CustomerRequest;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
+import woowacourse.shoppingcart.application.dto.EmailDuplicationResponse;
+import woowacourse.shoppingcart.application.dto.UserNameDuplicationResponse;
+import woowacourse.shoppingcart.ui.dto.CustomerRequest;
+import woowacourse.shoppingcart.ui.dto.EmailDuplicationRequest;
+import woowacourse.shoppingcart.ui.dto.UserNameDuplicationRequest;
 import woowacourse.shoppingcart.ui.dto.FindCustomerRequest;
 import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
 
@@ -52,5 +56,15 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal FindCustomerRequest findCustomerRequest) {
         service.deleteCustomer(findCustomerRequest);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/duplication/username")
+    public ResponseEntity<UserNameDuplicationResponse> isUserNameDuplicated(@RequestBody UserNameDuplicationRequest request) {
+        return ResponseEntity.ok(service.isUserNameDuplicated(request.getUsername()));
+    }
+
+    @PostMapping("/duplication/email")
+    public ResponseEntity<EmailDuplicationResponse> isEmailDuplicated(@RequestBody EmailDuplicationRequest request) {
+        return ResponseEntity.ok(service.isEmailDuplicated(request.getEmail()));
     }
 }
