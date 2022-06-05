@@ -21,7 +21,9 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         final String token = AuthorizationExtractor.extract(request);
-        validateTokenIsNull(token);
+        if (Objects.isNull(token) || token.isBlank()) {
+            throw new UnauthorizedException();
+        }
         request.setAttribute(TOKEN, token);
         return true;
     }
@@ -33,9 +35,4 @@ public class AuthInterceptor implements HandlerInterceptor {
         return (requestURI.equals("/api/customer")) && (requestMethod.equals(postMethod));
     }
 
-    private void validateTokenIsNull(String token) {
-        if (Objects.isNull(token) || token.isBlank()) {
-            throw new UnauthorizedException();
-        }
-    }
 }
