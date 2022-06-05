@@ -17,13 +17,13 @@ class CustomerTest {
 
     @DisplayName("비밀번호가 일치하는지 확인한다.")
     @ParameterizedTest
-    @CsvSource(value = {"12345678:true", "1312321312323:false"}, delimiter = ':')
+    @CsvSource(value = {"12345678:false", "1312321312323:true"}, delimiter = ':')
     void isSamePassword(final String password, final boolean expected) {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
 
         // when
-        final boolean actual = customer.isSamePassword(password);
+        final boolean actual = customer.unMatchPasswordWith(password);
 
         // then
         assertThat(actual).isEqualTo(expected);

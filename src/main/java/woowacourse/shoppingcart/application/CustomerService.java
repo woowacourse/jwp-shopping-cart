@@ -63,7 +63,7 @@ public class CustomerService {
     }
 
     private void validatePassword(final Customer customer, final String password) {
-        if (!customer.isSamePassword(password)) {
+        if (customer.unMatchPasswordWith(password)) {
             throw new PasswordNotMatchException();
         }
     }

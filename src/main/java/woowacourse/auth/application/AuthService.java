@@ -23,7 +23,7 @@ public class AuthService {
     public String certify(final LoginServiceRequest loginServiceRequest) {
         final Customer customer = customerDao.findByEmail(new Email(loginServiceRequest.getEmail()))
                 .orElseThrow(NoSuchEmailException::new);
-        if (!customer.isSamePassword(loginServiceRequest.getPassword())) {
+        if (customer.unMatchPasswordWith(loginServiceRequest.getPassword())) {
             throw new PasswordNotMatchException();
         }
 

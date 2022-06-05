@@ -26,8 +26,8 @@ public class Customer {
         return new Customer(id, name, email, newPassword);
     }
 
-    public boolean isSamePassword(final String password) {
-        return this.password.isSamePassword(password);
+    public boolean unMatchPasswordWith(final String password) {
+        return !this.password.isSamePassword(password);
     }
 
     public Long getId() {
