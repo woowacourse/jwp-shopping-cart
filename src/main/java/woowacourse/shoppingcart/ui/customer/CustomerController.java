@@ -1,6 +1,7 @@
-package woowacourse.shoppingcart.ui;
+package woowacourse.shoppingcart.ui.customer;
 
 import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
-import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
-import woowacourse.shoppingcart.dto.CustomerDetailResponse;
-import woowacourse.shoppingcart.dto.CustomerPasswordUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerProfileUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.ui.customer.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.ui.customer.dto.response.CustomerDetailResponse;
+import woowacourse.shoppingcart.ui.customer.dto.request.CustomerPasswordUpdateRequest;
+import woowacourse.shoppingcart.ui.customer.dto.request.CustomerProfileUpdateRequest;
+import woowacourse.shoppingcart.ui.customer.dto.request.CustomerRegisterRequest;
 
 @RestController
 @RequestMapping("/api/customer")

@@ -1,7 +1,8 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.ui.customer.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
 import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.domain.Password;
 

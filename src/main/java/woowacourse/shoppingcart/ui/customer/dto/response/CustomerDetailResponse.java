@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.ui.customer.dto.response;
 
 import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
 

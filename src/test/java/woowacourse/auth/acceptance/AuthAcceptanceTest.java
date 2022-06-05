@@ -15,8 +15,8 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
-import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.ui.customer.dto.request.CustomerRegisterRequest;
+import woowacourse.shoppingcart.ui.error.dto.response.ErrorResponse;
 
 @DisplayName("인증 관련 기능")
 class AuthAcceptanceTest extends AcceptanceTest {

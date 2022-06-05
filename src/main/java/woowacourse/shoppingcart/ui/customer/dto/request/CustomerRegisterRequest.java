@@ -1,8 +1,9 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.ui.customer.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 import woowacourse.shoppingcart.domain.Password;
 
