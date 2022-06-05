@@ -73,6 +73,24 @@ public class ProductDaoTest {
         assertThat(products).size().isEqualTo(size);
     }
 
+    @DisplayName("상품 수량 업데이트")
+    @Test
+    void updateProductStock() {
+        // given
+        final String name = "초콜렛";
+        final int price = 1_000;
+        final int stock = 20;
+        final String imageUrl = "www.test.com";
+
+        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
+
+        // when
+        productDao.updateProductStock(new Product(productId, name, price, 5, imageUrl));
+
+        // then
+        assertThat(productDao.findProductById(productId).getStock()).isEqualTo(5);
+    }
+
     @DisplayName("싱품 삭제")
     @Test
     void deleteProduct() {
