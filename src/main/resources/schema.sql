@@ -12,7 +12,7 @@ create table customer
 (
     id              bigint       not null auto_increment,
     email           varchar(255)  not null,
-    password        varchar(65) not null,
+    password        varchar(255) not null,
     profileImageUrl varchar(2000)  not null,
     name            varchar(10) not null,
     gender          varchar(10)           default 'undefined',

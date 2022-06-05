@@ -97,8 +97,9 @@
 ### 리팩터링
 - [x] 권한 체크 여부의 역할을 interceptor 로 분리
 - [ ] 상황에 맞는 exception 처리 
+  - [ ] bedRequestException 처리
+- [ ] 로그인 시 검증 로직 확인하기 
 - [x] customerId 사용하는 로직으로 변경
 - [ ] repository 계층 도입
-- [ ] 예외 처리 계층 정하기 
 
 
