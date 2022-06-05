@@ -1,40 +1,44 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
-
-import woowacourse.auth.acceptance.RestUtils;
-import woowacourse.shoppingcart.domain.Cart;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import com.ori.acceptancetest.SpringBootAcceptanceTest;
+
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import woowacourse.auth.acceptance.RestUtils;
+import woowacourse.shoppingcart.ProductInsertUtil;
+import woowacourse.shoppingcart.domain.Cart;
 
 @DisplayName("장바구니 관련 기능")
 @SpringBootAcceptanceTest
 public class CartAcceptanceTest {
+
     private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
 
+    @Autowired
+    private ProductInsertUtil productInsertUtil;
+
     @BeforeEach
     public void setUp() {
         RestUtils.signUp("a@gmailcom", "!puterism1", "puterism");
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        productId1 = productInsertUtil.insert("치킨", 10000, "https://example.com/chicken.jpg");
+        productId2 = productInsertUtil.insert("맥주", 20000, "https://example.com/beer.jpg");
     }
 
     @DisplayName("장바구니 아이템 추가")

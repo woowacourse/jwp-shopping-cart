@@ -9,11 +9,15 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+
+import woowacourse.shoppingcart.ProductInsertUtil;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import javax.sql.DataSource;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -21,19 +25,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
+    private final ProductInsertUtil productInsertUtil;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+        productInsertUtil = new ProductInsertUtil(dataSource);
     }
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        productInsertUtil.insert("banana", 1_000, "woowa1.com");
+        productInsertUtil.insert("apple", 2_000, "woowa2.com");
 
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);

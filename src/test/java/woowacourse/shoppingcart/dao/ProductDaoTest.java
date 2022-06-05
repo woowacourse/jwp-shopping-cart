@@ -8,11 +8,15 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+
+import woowacourse.shoppingcart.ProductInsertUtil;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import javax.sql.DataSource;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -21,24 +25,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ProductDaoTest {
 
     private final ProductDao productDao;
+    private final ProductInsertUtil productInsertUtil;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
+    public ProductDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.productDao = new ProductDao(jdbcTemplate);
-    }
-
-    @DisplayName("Product를 저장하면, id를 반환한다.")
-    @Test
-    void save() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
-        // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-
-        // then
-        assertThat(productId).isEqualTo(1L);
+        this.productInsertUtil = new ProductInsertUtil(dataSource);
     }
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
@@ -48,7 +39,7 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productInsertUtil.insert(name, price, imageUrl);
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
@@ -70,24 +61,5 @@ public class ProductDaoTest {
 
         // then
         assertThat(products).size().isEqualTo(size);
-    }
-
-    @DisplayName("싱품 삭제")
-    @Test
-    void deleteProduct() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts().size();
-
-        // when
-        productDao.delete(productId);
-
-        // then
-        final int afterSize = productDao.findProducts().size();
-        assertThat(beforeSize - 1).isEqualTo(afterSize);
     }
 }

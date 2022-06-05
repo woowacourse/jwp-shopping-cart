@@ -20,21 +20,6 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
-            return preparedStatement;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
     public Product findProductById(final Long productId) {
         try {
             final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
@@ -60,10 +45,5 @@ public class ProductDao {
                                 resultSet.getInt("price"),
                                 resultSet.getString("image_url")
                         ));
-    }
-
-    public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
     }
 }

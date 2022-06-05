@@ -1,39 +1,45 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Product;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import com.ori.acceptancetest.SpringBootAcceptanceTest;
 
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import woowacourse.shoppingcart.ProductInsertUtil;
+import woowacourse.shoppingcart.domain.Product;
+
 @DisplayName("상품 관련 기능")
+@SuppressWarnings("NonAsciiCharacters")
 @SpringBootAcceptanceTest
 public class ProductAcceptanceTest {
 
-    @DisplayName("상품을 추가한다")
-    @Test
-    void addProduct() {
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
+    private Long productId1;
+    private Long productId2;
 
-        상품_추가됨(response);
+    @Autowired
+    private ProductInsertUtil productInsertUtil;
+
+    @BeforeEach
+    void init() {
+        productId1 = productInsertUtil.insert("치킨", 10000, "https://example.com/chicken.jpg");
+        productId2 = productInsertUtil.insert("맥주", 20000, "https://example.com/beer.jpg");
     }
 
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-
         ExtractableResponse<Response> response = 상품_목록_조회_요청();
 
         조회_응답됨(response);
@@ -43,71 +49,28 @@ public class ProductAcceptanceTest {
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-
-        ExtractableResponse<Response> response = 상품_조회_요청(productId);
+        ExtractableResponse<Response> response = 상품_조회_요청(productId1);
 
         조회_응답됨(response);
-        상품_조회됨(response, productId);
-    }
-
-    @DisplayName("상품을 삭제한다")
-    @Test
-    void deleteProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-
-        ExtractableResponse<Response> response = 상품_삭제_요청(productId);
-
-        상품_삭제됨(response);
-    }
-
-    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when().post("/api/products")
-                .then().log().all()
-                .extract();
+        상품_조회됨(response, productId1);
     }
 
     public static ExtractableResponse<Response> 상품_목록_조회_요청() {
         return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/products")
+            .then().log().all()
+            .extract();
     }
 
     public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
         return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static void 상품_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
-        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl);
-        return Long.parseLong(response.header("Location").split("/products/")[1]);
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/products/{productId}", productId)
+            .then().log().all()
+            .extract();
     }
 
     public static void 조회_응답됨(ExtractableResponse<Response> response) {
@@ -116,8 +79,8 @@ public class ProductAcceptanceTest {
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
         List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
-                .map(Product::getId)
-                .collect(Collectors.toList());
+            .map(Product::getId)
+            .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
     }
 
@@ -125,8 +88,5 @@ public class ProductAcceptanceTest {
         Product resultProduct = response.as(Product.class);
         assertThat(resultProduct.getId()).isEqualTo(productId);
     }
-
-    public static void 상품_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
 }
+
