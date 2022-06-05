@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 
@@ -22,6 +23,7 @@ import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구�
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 @DisplayName("주문 관련 기능")
+@Sql("classpath:addCustomers.sql")
 public class OrderAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
     private Long cartId1;

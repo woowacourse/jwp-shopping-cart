@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 
 @SpringBootTest
-@Sql("classpath:customerData.sql")
+@Sql("classpath:resetTables.sql")
 class CustomerControllerTest {
 
     private static final String NAME = "클레이";

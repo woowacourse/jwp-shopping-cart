@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 
 @SpringBootTest
-@Sql("classpath:data.sql")
+@Sql("classpath:addCustomers.sql")
 class AuthControllerTest {
 
     private static final String NAME = "klay";

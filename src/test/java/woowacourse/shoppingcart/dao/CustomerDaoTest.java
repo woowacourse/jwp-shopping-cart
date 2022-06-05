@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.domain.Password;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:addCustomers.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 

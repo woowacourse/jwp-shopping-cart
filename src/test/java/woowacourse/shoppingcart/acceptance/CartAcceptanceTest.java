@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
 
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 @DisplayName("장바구니 관련 기능")
+@Sql("classpath:addCustomers.sql")
 public class CartAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
     private Long productId1;
