@@ -1,5 +1,7 @@
 package woowacourse.auth.dto;
 
+import woowacourse.shoppingcart.domain.Customer;
+
 public class SignInResponse {
 
     private final String username;
@@ -10,6 +12,13 @@ public class SignInResponse {
         this.username = username;
         this.email = email;
         this.token = token;
+    }
+
+    public static SignInResponse from(Customer customer, String token) {
+        return new SignInResponse(
+                customer.getUsername().getValue(),
+                customer.getEmail().getValue(),
+                token);
     }
 
     public String getUsername() {

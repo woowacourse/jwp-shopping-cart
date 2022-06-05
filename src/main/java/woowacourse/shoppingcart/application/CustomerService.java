@@ -37,6 +37,7 @@ public class CustomerService {
         String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
         Customer customer = new Customer(signUpRequest.getUsername(), signUpRequest.getEmail(), encodedPassword);
         Customer foundCustomer = customerDao.save(customer);
+
         return SignUpResponse.from(foundCustomer);
     }
 

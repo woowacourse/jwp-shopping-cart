@@ -17,25 +17,22 @@ import woowacourse.shoppingcart.exception.InvalidPasswordException;
 @Transactional(readOnly = true)
 public class AuthService {
 
+    private final CustomerDao customerDao;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final CustomerDao customerDao;
 
-    public AuthService(JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder, CustomerDao customerDao) {
+    public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
+        this.customerDao = customerDao;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
-        this.customerDao = customerDao;
     }
 
     public SignInResponse signIn(SignInRequest signInRequest) {
         Customer customer = customerDao.findByEmail(new Email(signInRequest.getEmail()));
         validatePassword(signInRequest.getPassword(), customer.getPassword().getValue());
+        String token = jwtTokenProvider.createToken(customer.getUsername().getValue());
 
-        return new SignInResponse(
-                customer.getUsername().getValue(),
-                customer.getEmail().getValue(),
-                jwtTokenProvider.createToken(customer.getUsername().getValue())
-        );
+        return SignInResponse.from(customer, token);
     }
 
     private void validatePassword(String rawPassword, String encodedPassword) {
