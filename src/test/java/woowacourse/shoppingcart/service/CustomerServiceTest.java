@@ -11,8 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.exception.LoginException;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.Username;
 
 @SpringBootTest
 @Sql(scripts = "classpath:truncate.sql")
@@ -34,8 +36,8 @@ public class CustomerServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(customer.getEmail()).isEqualTo(email),
-                () -> assertThat(customer.getUsername()).isEqualTo(username)
+                () -> assertThat(customer.getEmail()).isEqualTo(Email.of(email)),
+                () -> assertThat(customer.getUsername()).isEqualTo(Username.of(username))
         );
     }
 
@@ -67,7 +69,7 @@ public class CustomerServiceTest {
 
         // then
         Customer updatedCustomer = customerDao.findByEmail(email);
-        assertThat(updatedCustomer.getUsername()).isEqualTo(newUsername);
+        assertThat(updatedCustomer.getUsername()).isEqualTo(Username.of(newUsername));
     }
 
     @DisplayName("회원탈퇴")

@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.exception.InputFormatException;
+import woowacourse.shoppingcart.domain.customer.Password;
 
 public class PasswordTest {
 

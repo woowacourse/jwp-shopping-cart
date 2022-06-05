@@ -6,8 +6,8 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
 
 @Service
 public class AuthService {
@@ -26,7 +26,7 @@ public class AuthService {
             throw new LoginException("패스워드가 일치하지 않습니다.", ErrorResponse.LOGIN_FAIL);
         }
 
-        final String token = jwtTokenProvider.createToken(customer.getEmail());
+        final String token = jwtTokenProvider.createToken(customer.getEmail().getValue());
         return new TokenResponse(token);
     }
 }

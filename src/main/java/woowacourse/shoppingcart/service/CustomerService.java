@@ -5,8 +5,10 @@ import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.Username;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
@@ -22,9 +24,9 @@ public class CustomerService {
         if (customerDao.existsByEmail(email)) {
             throw new JoinException("이미 존재하는 이메일입니다.", ErrorResponse.DUPLICATED_EMAIL);
         }
-        final Long newId = customerDao.save(new Customer(email, Password.ofWithEncryption(password), username));
+        final Long newId = customerDao.save(new Customer(Email.of(email), Password.ofWithEncryption(password), Username.of(username)));
 
-        return new Customer(newId, email, Password.ofWithEncryption(password), username);
+        return new Customer(newId, Email.of(email), Password.ofWithEncryption(password), Username.of(username));
     }
 
     public void changePassword(Customer customer, String oldPassword, String newPassword) {
@@ -37,8 +39,8 @@ public class CustomerService {
 
     public CustomerResponse changeGeneralInfo(Customer customer, String username) {
         customerDao.updateGeneralInfo(customer.getId(), username);
-        final Customer updatedCustomer = customerDao.findByEmail(customer.getEmail());
-        return new CustomerResponse(updatedCustomer.getEmail(), updatedCustomer.getUsername());
+        final Customer updatedCustomer = customerDao.findByEmail(customer.getEmail().getValue());
+        return new CustomerResponse(updatedCustomer.getEmail().getValue(), updatedCustomer.getUsername().getValue());
     }
 
     public void delete(Customer customer, String password) {

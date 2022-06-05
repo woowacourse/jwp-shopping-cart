@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.service.CustomerService;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.ChangeGeneralInfoRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -40,7 +40,7 @@ public class CustomerController {
     @GetMapping("/me")
     public ResponseEntity<CustomerResponse> showCustomer(
             @AuthenticationPrincipal Customer customer) {
-        return ResponseEntity.ok(new CustomerResponse(customer.getEmail(), customer.getUsername()));
+        return ResponseEntity.ok(new CustomerResponse(customer.getEmail().getValue(), customer.getUsername().getValue()));
     }
 
     @PatchMapping(value = "/me", params = "target=password")

@@ -9,8 +9,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.Username;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -36,8 +38,8 @@ public class CustomerDao {
                 .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
         Map<String, Object> params = new HashMap<>();
-        params.put("email", customer.getEmail());
-        params.put("username", customer.getUsername());
+        params.put("email", customer.getEmail().getValue());
+        params.put("username", customer.getUsername().getValue());
         params.put("password", customer.getPassword().getValue());
 
         return (Long) simpleJdbcInsert.executeAndReturnKey(params);
@@ -48,9 +50,9 @@ public class CustomerDao {
         try {
             return jdbcTemplate.queryForObject(sql, ((rs, rowNum) ->
                     new Customer(rs.getLong("id"),
-                            rs.getString("email"),
+                            Email.of(rs.getString("email")),
                             Password.ofWithoutEncryption(rs.getString("password")),
-                            rs.getString("username"))), email);
+                            Username.of(rs.getString("username")))), email);
         } catch (EmptyResultDataAccessException e) {
             throw new LoginException("존재하지 않는 이메일입니다.", ErrorResponse.LOGIN_FAIL);
         }
