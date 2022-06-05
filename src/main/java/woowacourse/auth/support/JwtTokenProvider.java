@@ -20,7 +20,7 @@ public class JwtTokenProvider {
     private final long validityInMilliseconds;
 
     public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String secretKey,
-        @Value("${security.jwt.token.expire-length}") final long validityInMilliseconds) {
+      @Value("${security.jwt.token.expire-length}") final long validityInMilliseconds) {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.validityInMilliseconds = validityInMilliseconds;
     }
@@ -30,11 +30,11 @@ public class JwtTokenProvider {
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
-            .setSubject(payload)
-            .setIssuedAt(now)
-            .setExpiration(validity)
-            .signWith(key, SignatureAlgorithm.HS256)
-            .compact();
+          .setSubject(payload)
+          .setIssuedAt(now)
+          .setExpiration(validity)
+          .signWith(key, SignatureAlgorithm.HS256)
+          .compact();
     }
 
     public String getPayload(String token) {
@@ -44,12 +44,19 @@ public class JwtTokenProvider {
         if (!isValidToken(token)) {
             throw new UnAuthorizedException("유효하지 않은 토큰입니다.");
         }
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+
+        return Jwts.parserBuilder()
+          .setSigningKey(key).build()
+          .parseClaimsJws(token)
+          .getBody()
+          .getSubject();
     }
 
     public boolean isValidToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parserBuilder()
+              .setSigningKey(key).build()
+              .parseClaimsJws(token);
 
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
