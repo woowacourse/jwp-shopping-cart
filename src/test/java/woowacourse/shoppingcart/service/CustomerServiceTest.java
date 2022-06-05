@@ -7,6 +7,8 @@ import static woowacourse.ShoppingCartFixture.잉_회원탈퇴요청;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,9 +24,10 @@ import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 
-@JdbcTest
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Sql("/truncate.sql")
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+@JdbcTest
 class CustomerServiceTest {
     public final SpringCustomerService customerService;
 

@@ -10,3 +10,7 @@ spring:
     url: jdbc:h2:mem:testdb;MODE=MYSQL
     username: sa
     password:
+
+  h2:
+    console:
+      enabled: true
