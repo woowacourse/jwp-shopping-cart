@@ -7,36 +7,38 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartItemResponses;
 import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class CartService {
+public class CartItemService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartItemService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public CartItemResponses findCartsByCustomerName(final String customerName) {
+        final List<Long> cartItemIds = findCartIdsByCustomerName(customerName);
 
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
+        final List<CartItem> cartItems = new ArrayList<>();
+        for (final Long cartItemId : cartItemIds) {
+            final Long productId = cartItemDao.findProductIdById(cartItemId);
+            final int quantity = cartItemDao.findQuantityById(cartItemId);
             final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            cartItems.add(new CartItem(cartItemId, product, quantity));
         }
-        return carts;
+        return CartItemResponses.from(cartItems);
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
