@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class CartItemService {
 
     private final CartItemDao cartItemDao;
@@ -46,6 +46,7 @@ public class CartItemService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
+    @Transactional
     public Long addCart(final CartItemSaveRequest request, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         try {
@@ -55,6 +56,13 @@ public class CartItemService {
         }
     }
 
+    @Transactional
+    public void updateCartItemQuantity(final String customerName, final Long cartItemId, final int quantity) {
+        validateCustomerCart(cartItemId, customerName);
+        cartItemDao.updateCartItemQuantity(cartItemId, quantity);
+    }
+
+    @Transactional
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
