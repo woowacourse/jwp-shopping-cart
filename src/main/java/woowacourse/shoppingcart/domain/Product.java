@@ -1,26 +1,32 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.InvalidProductPriceException;
+
 import java.util.Objects;
 
 public class Product {
 
-    private Long id;
-    private String name;
-    private Integer price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
-    public Product() {
-    }
-
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
+    public Product(Long id, String name, int price, String imageUrl) {
+        validatePrice(price);
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(final String name, final int price, final String imageUrl) {
+    public Product(String name, int price, String imageUrl) {
         this(null, name, price, imageUrl);
+    }
+
+    private void validatePrice(int price) {
+        if (price <= 0) {
+            throw new InvalidProductPriceException("상품 가격은 양의 정수가 되어야 합니다.");
+        }
     }
 
     public String getName() {
