@@ -9,9 +9,11 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInMemberCartItemException;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -33,7 +35,7 @@ public class CartService {
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
+            final Product product = validateExistProduct(productDao.findProductById(productId));
             carts.add(new Cart(cartId, product));
         }
         return carts;
@@ -64,5 +66,9 @@ public class CartService {
             return;
         }
         throw new NotInMemberCartItemException();
+    }
+
+    private Product validateExistProduct(Optional<Product> product) {
+        return product.orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
     }
 }
