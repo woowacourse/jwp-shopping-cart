@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse.CustomerResponseNested;
 import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
@@ -61,7 +62,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String accessToken = 회원_가입_후_로그인();
 
         ExtractableResponse<Response> response = 내_정보_조회(accessToken);
-        정보_조회_성공(response, new CustomerResponse(USERNAME, PHONE_NUMBER, ADDRESS));
+        정보_조회_성공(response, new CustomerResponse(new CustomerResponseNested(USERNAME, PHONE_NUMBER, ADDRESS)));
     }
 
     @DisplayName("내 정보 수정")

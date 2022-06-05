@@ -1,39 +1,59 @@
 package woowacourse.shoppingcart.dto.customer;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
-@JsonTypeName("customer")
-@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class CustomerResponse {
 
-    private String username;
-    private String phoneNumber;
-    private String address;
+    private CustomerResponseNested customer;
 
     private CustomerResponse() {
     }
 
-    public CustomerResponse(final String username, final String phoneNumber, final String address) {
-        this.username = username;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
+    public CustomerResponse(final CustomerResponseNested customer) {
+        this.customer = customer;
     }
 
     public static CustomerResponse from(final Customer customer) {
-        return new CustomerResponse(customer.getUsername(), customer.getPhoneNumber(), customer.getAddress());
+        return new CustomerResponse(CustomerResponseNested.from(customer));
     }
 
-    public String getUsername() {
-        return username;
+    public CustomerResponseNested getCustomer() {
+        return customer;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+    public static class CustomerResponseNested {
 
-    public String getAddress() {
-        return address;
+        private String username;
+        private String phoneNumber;
+        private String address;
+
+        private CustomerResponseNested() {
+        }
+
+        public CustomerResponseNested(final String username, final String phoneNumber, final String address) {
+            this.username = username;
+            this.phoneNumber = phoneNumber;
+            this.address = address;
+        }
+
+        public static CustomerResponseNested from(final Customer customer) {
+            return new CustomerResponseNested(
+                    customer.getUsername(),
+                    customer.getPhoneNumber(),
+                    customer.getAddress()
+            );
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public String getAddress() {
+            return address;
+        }
     }
 }
