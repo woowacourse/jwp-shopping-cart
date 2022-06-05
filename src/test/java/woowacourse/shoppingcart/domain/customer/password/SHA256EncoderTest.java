@@ -10,22 +10,22 @@ class SHA256EncoderTest {
     @DisplayName("인코딩을 거치면 기존의 password와 다른 password가 반환된다.")
     @Test
     void encode() {
-        String rawPassword = "q1w2e3r4!";
+        RawPassword rawPassword = new RawPassword("q1w2e3r4!");
 
         SHA256Encoder encoder = new SHA256Encoder();
-        String encodedPassword = encoder.encode(rawPassword);
+        EncodedPassword encodedPassword = encoder.encode(rawPassword);
 
-        assertThat(rawPassword).isNotEqualTo(encodedPassword);
+        assertThat(rawPassword.getValue()).isNotEqualTo(encodedPassword.getValue());
     }
 
     @DisplayName("같은 password 를 인코딩하면 항상 같은 password 가 반환된다.")
     @Test
     void encode_alwaysSame() {
-        String rawPassword = "q1w2e3r4!";
+        RawPassword rawPassword = new RawPassword("q1w2e3r4!");
 
         SHA256Encoder encoder = new SHA256Encoder();
-        String firstEncodedPassword = encoder.encode(rawPassword);
-        String secondEncodedPassword = encoder.encode(rawPassword);
+        EncodedPassword firstEncodedPassword = encoder.encode(rawPassword);
+        EncodedPassword secondEncodedPassword = encoder.encode(rawPassword);
 
         assertThat(firstEncodedPassword).isEqualTo(secondEncodedPassword);
     }
@@ -33,10 +33,10 @@ class SHA256EncoderTest {
     @DisplayName("인코딩 전 password 가 인코딩 된 password 와 같은지 확인한다.")
     @Test
     void matches() {
-        String rawPassword = "q1w2e3r4!";
+        RawPassword rawPassword = new RawPassword("q1w2e3r4!");
 
         SHA256Encoder encoder = new SHA256Encoder();
-        String encodedPassword = encoder.encode(rawPassword);
+        EncodedPassword encodedPassword = encoder.encode(rawPassword);
 
         assertThat(encoder.matches(rawPassword, encodedPassword)).isTrue();
     }

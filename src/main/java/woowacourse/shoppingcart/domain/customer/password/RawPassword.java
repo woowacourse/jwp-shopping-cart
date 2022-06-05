@@ -4,47 +4,35 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Password {
+public class RawPassword {
 
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(
             "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()])[A-Za-z\\d!@#$%^&*()]{8,16}$");
 
     private String value;
 
-    private Password(String value) {
+    public RawPassword(String value) {
+        validatePassword(value);
         this.value = value;
     }
 
-    public static Password createEncoded(String value) {
-        return new Password(value);
-    }
-
-    public static Password createRaw(String value) {
-        validatePassword(value);
-        return new Password(value);
-    }
-
-    private static void validatePassword(String value) {
+    private void validatePassword(String value) {
         checkNull(value);
         checkFormat(value);
     }
 
-    private static void checkNull(String value) {
+    private void checkNull(String value) {
         if (value == null) {
             throw new NullPointerException("비밀번호는 필수 입력 사항입니다.");
         }
     }
 
-    private static void checkFormat(String value) {
+    private void checkFormat(String value) {
         Matcher matcher = PASSWORD_PATTERN.matcher(value);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("비밀번호 형식이 올바르지 않습니다. "
                     + "(영문자, 숫자, 특수문자!, @, #, $, %, ^, &, *, (, )를 모두 사용, 8자 이상 16자 이내)");
         }
-    }
-
-    public void encode(PasswordEncoder passwordEncoder) {
-        this.value = passwordEncoder.encode(this.value);
     }
 
     public String getValue() {
@@ -57,7 +45,7 @@ public class Password {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Password password = (Password)o;
+        RawPassword password = (RawPassword)o;
         return Objects.equals(value, password.value);
     }
 

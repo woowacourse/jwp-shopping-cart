@@ -1,20 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static Fixture.CustomerFixtures.MAT;
-import static Fixture.CustomerFixtures.MAT_ADDRESS;
-import static Fixture.CustomerFixtures.MAT_EMAIL;
-import static Fixture.CustomerFixtures.MAT_PASSWORD;
-import static Fixture.CustomerFixtures.MAT_PHONE_NUMBER;
-import static Fixture.CustomerFixtures.MAT_USERNAME;
-import static Fixture.CustomerFixtures.UPDATE_ADDRESS;
-import static Fixture.CustomerFixtures.UPDATE_PHONE_NUMBER;
-import static Fixture.CustomerFixtures.YAHO;
-import static Fixture.CustomerFixtures.YAHO_USERNAME;
+import static Fixture.CustomerFixtures.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -22,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
+
 import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
@@ -38,15 +30,13 @@ public class CustomerDaoTest {
     @DisplayName("customer를 생성한다.")
     @Test
     void saveCustomer() {
-        Customer customer = MAT;
-
-        Customer savedCustomer = customerDao.save(customer);
+        Customer savedCustomer = customerDao.save(MAT);
 
         assertAll(() -> {
             assertThat(savedCustomer.getId()).isNotNull();
             assertThat(savedCustomer.getUsername()).isEqualTo(MAT_USERNAME);
             assertThat(savedCustomer.getEmail()).isEqualTo(MAT_EMAIL);
-            assertThat(savedCustomer.getPassword()).isEqualTo(MAT_PASSWORD);
+            assertThat(savedCustomer.getPassword()).isEqualTo(MAT_ENCODED_PASSWORD);
             assertThat(savedCustomer.getAddress()).isEqualTo(MAT_ADDRESS);
             assertThat(savedCustomer.getPhoneNumber()).isEqualTo(MAT_PHONE_NUMBER);
         });
@@ -55,8 +45,7 @@ public class CustomerDaoTest {
     @DisplayName("username을 이용해 customer 를 조회한다.")
     @Test
     void findCustomerByUsername() {
-        Customer customer = YAHO;
-        customerDao.save(customer);
+        customerDao.save(YAHO);
 
         Optional<Customer> foundCustomer = customerDao.findByUsername(YAHO_USERNAME);
 

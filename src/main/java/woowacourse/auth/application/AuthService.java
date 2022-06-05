@@ -9,15 +9,21 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.password.EncodedPassword;
+import woowacourse.shoppingcart.domain.customer.password.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.password.RawPassword;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 public class AuthService {
 
+    private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomerDao customerDao;
 
-    public AuthService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
+    public AuthService(PasswordEncoder passwordEncoder,
+            JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
+        this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.customerDao = customerDao;
     }
@@ -38,7 +44,9 @@ public class AuthService {
             throw new InvalidCustomerException();
         }
         Customer customer = optionalCustomer.get();
-        if (!customer.isPassword(password)) {
+        RawPassword rawPassword = new RawPassword(password);
+        EncodedPassword encodedPassword = customer.getPassword();
+        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
             throw new InvalidCustomerException();
         }
     }

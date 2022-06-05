@@ -2,19 +2,33 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 
-import woowacourse.shoppingcart.domain.customer.password.Password;
-import woowacourse.shoppingcart.domain.customer.password.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.password.EncodedPassword;
 
 public class Customer {
 
     private final Long id;
     private final Username username;
     private final Email email;
-    private final Password password;
+    private final EncodedPassword password;
     private Address address;
     private PhoneNumber phoneNumber;
 
-    private Customer(Long id, Username username, Email email, Password password, Address address,
+    public Customer(Long id, Customer customer) {
+        this(id, customer.username, customer.email, customer.password, customer.address, customer.phoneNumber);
+    }
+
+    public Customer(String username, String email, EncodedPassword password, String address, String phoneNumber) {
+        this(null, new Username(username), new Email(email), password, new Address(address),
+                new PhoneNumber(phoneNumber));
+    }
+
+    public Customer(Long id, String username, String email, EncodedPassword password, String address,
+            String phoneNumber) {
+        this(id, new Username(username), new Email(email), password, new Address(address),
+                new PhoneNumber(phoneNumber));
+    }
+
+    public Customer(Long id, Username username, Email email, EncodedPassword password, Address address,
             PhoneNumber phoneNumber) {
         this.id = id;
         this.username = username;
@@ -22,32 +36,6 @@ public class Customer {
         this.password = password;
         this.address = address;
         this.phoneNumber = phoneNumber;
-    }
-
-    public static Customer createWithRawPassword(String username, String email, String password, String address,
-            String phoneNumber) {
-        return new Customer(null, new Username(username), new Email(email), Password.createRaw(password),
-                new Address(address),
-                new PhoneNumber(phoneNumber));
-    }
-
-    public static Customer createWithEncodedPassword(Long id, Customer customer) {
-        return new Customer(id, new Username(customer.getUsername()),
-                new Email(customer.getEmail()),
-                Password.createEncoded(customer.getPassword()),
-                new Address(customer.getAddress()),
-                new PhoneNumber(customer.getPhoneNumber()));
-    }
-
-    public static Customer createWithEncodedPassword(Long id, String username, String email, String password,
-            String address, String phoneNumber) {
-        return new Customer(id, new Username(username), new Email(email), Password.createEncoded(password),
-                new Address(address),
-                new PhoneNumber(phoneNumber));
-    }
-
-    public void encodePassword(PasswordEncoder passwordEncoder) {
-        this.password.encode(passwordEncoder);
     }
 
     public void modify(String address, String phoneNumber) {
@@ -67,8 +55,8 @@ public class Customer {
         return email.getValue();
     }
 
-    public String getPassword() {
-        return password.getValue();
+    public EncodedPassword getPassword() {
+        return password;
     }
 
     public String getAddress() {
@@ -94,9 +82,5 @@ public class Customer {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public boolean isPassword(String password) {
-        return this.getPassword().equals(password);
     }
 }

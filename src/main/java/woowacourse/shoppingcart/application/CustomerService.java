@@ -24,10 +24,8 @@ public class CustomerService {
     }
 
     public CustomerResponse save(CustomerSaveRequest customerSaveRequest) {
-        Customer customer = customerSaveRequest.toCustomer();
-        customer.encodePassword(passwordEncoder);
-
-        Customer savedCustomer = customerDao.save(customerSaveRequest.toCustomer());
+        Customer customer = customerSaveRequest.toCustomer(passwordEncoder);
+        Customer savedCustomer = customerDao.save(customer);
         return new CustomerResponse(savedCustomer);
     }
 

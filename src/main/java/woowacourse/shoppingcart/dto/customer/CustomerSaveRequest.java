@@ -5,6 +5,9 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.password.EncodedPassword;
+import woowacourse.shoppingcart.domain.customer.password.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.password.RawPassword;
 
 public class CustomerSaveRequest {
 
@@ -40,8 +43,10 @@ public class CustomerSaveRequest {
         this.phoneNumber = phoneNumber;
     }
 
-    public Customer toCustomer() {
-        return Customer.createWithRawPassword(username, email, password, address, phoneNumber);
+    public Customer toCustomer(PasswordEncoder passwordEncoder) {
+        RawPassword rawPassword = new RawPassword(password);
+        EncodedPassword encodedPassword = passwordEncoder.encode(rawPassword);
+        return new Customer(username, email, encodedPassword, address, phoneNumber);
     }
 
     public String getUsername() {

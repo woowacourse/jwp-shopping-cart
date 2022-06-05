@@ -11,11 +11,13 @@ import org.springframework.stereotype.Component;
 public class SHA256Encoder implements PasswordEncoder {
 
     @Override
-    public String encode(String rawPassword) {
+    public EncodedPassword encode(RawPassword rawPassword) {
         MessageDigest messageDigest = getMessageDigest();
-        messageDigest.update(rawPassword.getBytes(StandardCharsets.UTF_8));
+        String rawValue = rawPassword.getValue();
+        messageDigest.update(rawValue.getBytes(StandardCharsets.UTF_8));
 
-        return Arrays.toString(messageDigest.digest());
+        String encodedValue = Arrays.toString(messageDigest.digest());
+        return new EncodedPassword(encodedValue);
     }
 
     private MessageDigest getMessageDigest() {
@@ -27,7 +29,8 @@ public class SHA256Encoder implements PasswordEncoder {
     }
 
     @Override
-    public boolean matches(String rawPassword, String encodedPassword) {
-        return encode(rawPassword).equals(encodedPassword);
+    public boolean matches(RawPassword rawPassword, EncodedPassword encodedPassword) {
+        EncodedPassword encodedRawPassword = encode(rawPassword);
+        return encodedPassword.equals(encodedRawPassword);
     }
 }

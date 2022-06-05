@@ -21,6 +21,7 @@ public class SimpleRestAssured {
                 .body(customerSaveRequest)
                 .when().post("/api/customers")
                 .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
                 .extract();
     }
 

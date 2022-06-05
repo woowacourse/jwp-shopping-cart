@@ -1,7 +1,7 @@
 package woowacourse.auth.acceptance;
 
-import static org.assertj.core.api.Assertions.*;
 import static Fixture.CustomerFixtures.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         String accessToken = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD))
+                .body(new TokenRequest(YAHO_USERNAME, YAHO_RAW_PASSWORD.getValue()))
                 .when().post("/api/auth/token")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -57,7 +57,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when & then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD))
+                .body(new TokenRequest(YAHO_USERNAME, YAHO_ENCODED_PASSWORD.getValue()))
                 .when().post("/api/auth/token")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())

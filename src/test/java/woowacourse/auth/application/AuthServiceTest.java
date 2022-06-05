@@ -31,9 +31,8 @@ class AuthServiceTest {
     @Test
     void createToken() {
         customerService.save(YAHO_SAVE_REQUEST);
-        TokenRequest tokenRequest = new TokenRequest(YAHO_USERNAME, YAHO_PASSWORD);
 
-        TokenResponse tokenResponse = authService.createToken(tokenRequest);
+        TokenResponse tokenResponse = authService.createToken(YAHO_TOKEN_REQUEST);
 
         assertThat(tokenResponse.getAccessToken()).isNotEmpty();
     }
@@ -42,7 +41,7 @@ class AuthServiceTest {
     @Test
     void createToken_error_notExistUsername() {
         customerService.save(YAHO_SAVE_REQUEST);
-        TokenRequest tokenRequest = new TokenRequest(MAT_USERNAME, YAHO_PASSWORD);
+        TokenRequest tokenRequest = new TokenRequest(MAT_USERNAME, YAHO_ENCODED_PASSWORD.getValue());
 
         assertThatThrownBy(() -> authService.createToken(tokenRequest))
                 .isInstanceOf(InvalidCustomerException.class);
@@ -52,7 +51,7 @@ class AuthServiceTest {
     @Test
     void createToken_error_wrongPassword() {
         customerService.save(YAHO_SAVE_REQUEST);
-        TokenRequest tokenRequest = new TokenRequest(YAHO_USERNAME, MAT_PASSWORD);
+        TokenRequest tokenRequest = new TokenRequest(YAHO_USERNAME, MAT_RAW_PASSWORD.getValue());
 
         assertThatThrownBy(() -> authService.createToken(tokenRequest))
                 .isInstanceOf(InvalidCustomerException.class);

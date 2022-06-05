@@ -12,7 +12,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.shoppingcart.dao.dto.CustomerDto;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.password.EncodedPassword;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -32,10 +34,10 @@ public class CustomerDao {
     }
 
     public Customer save(Customer customer) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
+        CustomerDto customerDto = new CustomerDto(customer);
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customerDto);
         Long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
-
-        return Customer.createWithEncodedPassword(id, customer);
+        return new Customer(id, customer);
     }
 
     public Long findIdByUsername(String username) {
@@ -62,14 +64,17 @@ public class CustomerDao {
 
     private RowMapper<Customer> generateCustomerMapper() {
         return (resultSet, rowNum) ->
-                Customer.createWithEncodedPassword(
-                        resultSet.getLong("id"),
-                        resultSet.getString("username"),
-                        resultSet.getString("email"),
-                        resultSet.getString("password"),
-                        resultSet.getString("address"),
-                        resultSet.getString("phone_number")
-                );
+        {
+            String password = resultSet.getString("password");
+            return new Customer(
+                    resultSet.getLong("id"),
+                    resultSet.getString("username"),
+                    resultSet.getString("email"),
+                    new EncodedPassword(password),
+                    resultSet.getString("address"),
+                    resultSet.getString("phone_number")
+            );
+        };
     }
 
     public void update(Customer customer) {

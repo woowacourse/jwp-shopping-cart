@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class PasswordTest {
+class RawPasswordTest {
     @DisplayName("고객이 입력한 password가 null이면 예외를 던진다.")
     @Test
     void create_error_null() {
-        assertThatThrownBy(() -> Password.createRaw(null))
+        assertThatThrownBy(() -> new RawPassword(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("비밀번호는 필수 입력 사항입니다.");
     }
@@ -21,7 +21,7 @@ class PasswordTest {
     @ParameterizedTest
     @ValueSource(strings = {"test", "testtesttesttesttesttest"})
     void create_error_passwordLength(String password) {
-        assertThatThrownBy(() -> Password.createRaw(password))
+        assertThatThrownBy(() -> new RawPassword(password))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호 형식이 올바르지 않습니다. (영문자, 숫자, 특수문자!, @, #, $, %, ^, &, *, (, )를 모두 사용, 8자 이상 16자 이내)");
     }
@@ -30,7 +30,7 @@ class PasswordTest {
     @ParameterizedTest
     @ValueSource(strings = {"testtest", "12345678", "test1234", "test123?", "!!!!!!!!", "test!!!!", "1234567!"})
     void create_error_passwordFormat(String password) {
-        assertThatThrownBy(() -> Password.createRaw(password))
+        assertThatThrownBy(() -> new RawPassword(password))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호 형식이 올바르지 않습니다. (영문자, 숫자, 특수문자!, @, #, $, %, ^, &, *, (, )를 모두 사용, 8자 이상 16자 이내)");
     }
@@ -39,6 +39,6 @@ class PasswordTest {
     @ParameterizedTest
     @ValueSource(strings = {"test123!", "q1w2e3r4!"})
     void create(String password) {
-        assertDoesNotThrow(() -> Password.createRaw(password));
+        assertDoesNotThrow(() -> new RawPassword(password));
     }
 }
