@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.util.PasswordEncryptor;
 public class Password {
 
     public static final int MIN_RAW_VALUE_LENGTH = 8;
+    private static final int MAX_RAW_VALUE_LENGTH = 255;
 
     private final String hashedValue;
 
@@ -21,7 +22,7 @@ public class Password {
 
     private static void validateRawValue(final String rawValue) {
         Objects.requireNonNull(rawValue);
-        if (rawValue.length() < MIN_RAW_VALUE_LENGTH) {
+        if (rawValue.length() < MIN_RAW_VALUE_LENGTH || rawValue.length() > MAX_RAW_VALUE_LENGTH) {
             throw new InvalidPasswordLengthException();
         }
     }
