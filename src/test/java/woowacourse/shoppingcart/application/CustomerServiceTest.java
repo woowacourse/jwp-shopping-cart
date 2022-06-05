@@ -87,9 +87,11 @@ class CustomerServiceTest {
         // given
         CustomerUpdateRequest request = new CustomerUpdateRequest("thor", password, "b1234!");
         Customer customer = new Customer(1L, nickname, password, nickname);
+        given(customerDao.findByEmail(any(String.class)))
+                .willReturn(Optional.of(customer));
 
         // when
-        Customer update = customerService.update(customer, request);
+        Customer update = customerService.update(email, request);
 
         // then
         assertThat(update.getNickname()).isEqualTo("thor");
@@ -101,9 +103,10 @@ class CustomerServiceTest {
         // given
         CustomerUpdateRequest request = new CustomerUpdateRequest("thor", password, "b1234!");
         Customer customer = new Customer(1L, nickname, "a123456!", nickname);
-
+        given(customerDao.findByEmail(any(String.class)))
+                .willReturn(Optional.of(customer));
         // when
-        assertThatThrownBy(() -> customerService.update(customer, request))
+        assertThatThrownBy(() -> customerService.update("other@gmail.com", request))
                 .isInstanceOf(InvalidAuthException.class);
     }
 }

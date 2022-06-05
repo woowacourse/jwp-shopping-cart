@@ -47,7 +47,7 @@ public class AuthControllerAdvice {
             InvalidCustomerException.class,
     })
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
     @ExceptionHandler

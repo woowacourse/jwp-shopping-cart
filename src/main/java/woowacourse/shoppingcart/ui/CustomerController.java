@@ -38,20 +38,21 @@ public class CustomerController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> signOut(@Login Customer customer, @RequestBody @Valid SignoutRequest request) {
-        customerService.delete(customer, request);
+    public ResponseEntity<Void> signOut(@Login String email, @RequestBody @Valid SignoutRequest request) {
+        customerService.delete(email, request);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping
-    public ResponseEntity<CustomerUpdateResponse> update(@Login Customer customer,
+    public ResponseEntity<CustomerUpdateResponse> update(@Login String email,
                                                          @RequestBody @Valid CustomerUpdateRequest request) {
-        Customer updatedCustomer = customerService.update(customer, request);
+        Customer updatedCustomer = customerService.update(email, request);
         return ResponseEntity.ok(new CustomerUpdateResponse(updatedCustomer.getNickname()));
     }
 
     @GetMapping
-    public ResponseEntity<SignupResponse> find(@Login Customer customer) {
+    public ResponseEntity<SignupResponse> find(@Login String email) {
+        Customer customer = customerService.findByEmail(email);
         return ResponseEntity.ok(new SignupResponse(customer));
     }
 

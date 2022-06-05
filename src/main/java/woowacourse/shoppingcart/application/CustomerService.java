@@ -31,12 +31,14 @@ public class CustomerService {
                 .orElseThrow(() -> new InvalidCustomerException("이메일에 해당하는 회원이 존재하지 않습니다"));
     }
 
-    public void delete(Customer customer, SignoutRequest request) {
+    public void delete(String email, SignoutRequest request) {
+        Customer customer = findByEmail(email);
         validatePassword(customer, request.getPassword());
         customerDao.delete(customer.getId());
     }
 
-    public Customer update(Customer customer, CustomerUpdateRequest request) {
+    public Customer update(String email, CustomerUpdateRequest request) {
+        Customer customer = findByEmail(email);
         validatePassword(customer, request.getPassword());
         Customer updatedCustomer = new Customer(customer.getId(),
                 customer.getEmail(),

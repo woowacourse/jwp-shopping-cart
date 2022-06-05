@@ -12,14 +12,14 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Configuration
-public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
+public class LoginConfig implements WebMvcConfigurer {
 
     public static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH";
 
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomerService customerService;
 
-    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider, CustomerService customerService) {
+    public LoginConfig(JwtTokenProvider jwtTokenProvider, CustomerService customerService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.customerService = customerService;
     }
@@ -41,8 +41,8 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider, customerService);
+    public LoginArgumentResolver authenticationPrincipalArgumentResolver() {
+        return new LoginArgumentResolver(jwtTokenProvider);
     }
 
     @Override
