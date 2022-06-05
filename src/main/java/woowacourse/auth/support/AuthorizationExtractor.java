@@ -1,14 +1,18 @@
 package woowacourse.auth.support;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
+import woowacourse.auth.domain.BearerExtractor;
 
-public class AuthorizationExtractor {
-    public static final String AUTHORIZATION = "Authorization";
-    public static String BEARER_TYPE = "Bearer";
-    public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
+@Component
+public class AuthorizationExtractor implements BearerExtractor {
+    private static final String AUTHORIZATION = "Authorization";
+    private static String BEARER_TYPE = "Bearer";
+    private static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
 
-    public static String extract(HttpServletRequest request) {
+    @Override
+    public String extract(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
