@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -62,13 +63,31 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("장바구니 수량 수정")
-    @Test
-    void updateCartItemQuantity() {
-        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, new CartItemSaveRequest(productId1, 5));
+    @Nested
+    class UpdateCartItemQuantity extends AcceptanceTest {
 
-        ExtractableResponse<Response> response = 장바구니_수량_변경_요청(accessToken, cartItemId, 50);
+        private Long cartItemId;
 
-        장바구니_수량_변경됨(response);
+        @BeforeEach
+        void prepare() {
+            cartItemId = 장바구니_아이템_추가되어_있음(accessToken, new CartItemSaveRequest(productId1, 5));
+        }
+
+        @DisplayName("장바구니 수량 수정")
+        @Test
+        void sucess() {
+            ExtractableResponse<Response> response = 장바구니_수량_변경_요청(accessToken, cartItemId, 10);
+
+            장바구니_수량_변경됨(response);
+        }
+
+        @DisplayName("장바구니 수량 수정 수량 초과 시 실패")
+        @Test
+        void LargeQuantity_fail() {
+            ExtractableResponse<Response> response = 장바구니_수량_변경_요청(accessToken, cartItemId, 21);
+
+            장바구니_수량_변경_실패함(response);
+        }
     }
 
     @DisplayName("장바구니 삭제")
@@ -150,6 +169,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_수량_변경됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    public static void 장바구니_수량_변경_실패함(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
