@@ -20,7 +20,6 @@ import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberResponse;
 import woowacourse.shoppingcart.dto.SigninRequest;
 import woowacourse.shoppingcart.dto.TokenResponse;
-import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Service
@@ -53,7 +52,7 @@ public class CustomerService {
                 request.getPhoneNumber().toPhoneNumber());
     }
 
-    public TokenResponse signin(SigninRequest signinRequest) {
+    public TokenResponse signIn(SigninRequest signinRequest) {
         String account = signinRequest.getAccount();
         Customer customer = getCustomerBy(account);
         validatePassword(signinRequest.getPassword(), customer.getPassword().getValue());

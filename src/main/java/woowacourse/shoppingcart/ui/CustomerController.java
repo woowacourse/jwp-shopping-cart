@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.shoppingcart.dto.TokenResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.SigninRequest;
 
 @RestController
+@RequestMapping
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -33,11 +33,6 @@ public class CustomerController {
         customerService.create(customerRequest);
         URI uri = URI.create("/signin");
         return ResponseEntity.created(uri).build();
-    }
-
-    @PostMapping("/signin")
-    public TokenResponse signin(@RequestBody SigninRequest signinRequest) {
-        return customerService.signin(signinRequest);
     }
 
     @GetMapping("/customers")
