@@ -11,7 +11,9 @@ drop table if exists customer;
 create table customer
 (
     id       bigint       not null auto_increment,
-    username varchar(255) not null,
+    email   varchar(320) not null,
+    password    varchar(255) not null,
+    username    varchar(30) not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 

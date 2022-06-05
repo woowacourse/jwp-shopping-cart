@@ -24,45 +24,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private Long productId1;
     private Long productId2;
 
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-    }
-
-    @DisplayName("장바구니 아이템 추가")
-    @Test
-    void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
-
-        장바구니_아이템_추가됨(response);
-    }
-
-    @DisplayName("장바구니 아이템 목록 조회")
-    @Test
-    void getCartItems() {
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
-
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
-
-        장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, productId1, productId2);
-    }
-
-    @DisplayName("장바구니 삭제")
-    @Test
-    void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
-
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-
-        장바구니_삭제됨(response);
-    }
-
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);
@@ -117,5 +78,44 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Override
+    @BeforeEach
+    public void setUp() {
+        super.setUp();
+
+        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+    }
+
+    @DisplayName("장바구니 아이템 추가")
+    @Test
+    void addCartItem() {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
+
+        장바구니_아이템_추가됨(response);
+    }
+
+    @DisplayName("장바구니 아이템 목록 조회")
+    @Test
+    void getCartItems() {
+        장바구니_아이템_추가되어_있음(USER, productId1);
+        장바구니_아이템_추가되어_있음(USER, productId2);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+
+        장바구니_아이템_목록_응답됨(response);
+        장바구니_아이템_목록_포함됨(response, productId1, productId2);
+    }
+
+    @DisplayName("장바구니 삭제")
+    @Test
+    void deleteCartItem() {
+        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+
+        장바구니_삭제됨(response);
     }
 }

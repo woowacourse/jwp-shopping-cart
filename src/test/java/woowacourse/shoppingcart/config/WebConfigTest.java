@@ -22,10 +22,10 @@ public class WebConfigTest {
     @Test
     public void cors() throws Exception {
         mockMvc.perform(
-                        options("/api/products")
-                                .header(HttpHeaders.ORIGIN, "http://localhost:8080")
-                                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
-                )
+                options("/api/products")
+                        .header(HttpHeaders.ORIGIN, "http://localhost:8080")
+                        .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
+        )
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
                 .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
