@@ -21,7 +21,7 @@ public class SignUpRequest {
     @Size(min = 6)
     private String password;
 
-    public SignUpRequest() {
+    private SignUpRequest() {
     }
 
     public SignUpRequest(String username, String email, String password) {

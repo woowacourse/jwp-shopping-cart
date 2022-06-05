@@ -11,7 +11,7 @@ public class DeleteCustomerRequest {
     @Size(min = 6)
     private String password;
 
-    public DeleteCustomerRequest() {
+    private DeleteCustomerRequest() {
     }
 
     public DeleteCustomerRequest(String password) {

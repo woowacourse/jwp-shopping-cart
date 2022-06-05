@@ -15,7 +15,7 @@ public class UpdatePasswordRequest {
     @Size(min = 6)
     private String newPassword;
 
-    public UpdatePasswordRequest() {
+    private UpdatePasswordRequest() {
     }
 
     public UpdatePasswordRequest(String password, String newPassword) {

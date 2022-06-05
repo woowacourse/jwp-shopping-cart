@@ -16,7 +16,7 @@ public class LogInRequest {
     @Size(min = 6)
     private String password;
 
-    public LogInRequest() {
+    private LogInRequest() {
     }
 
     public LogInRequest(String email, String password) {
