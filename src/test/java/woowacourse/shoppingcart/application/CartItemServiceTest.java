@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static woowacourse.shoppingcart.application.CustomerServiceTest.ADDRESS;
 import static woowacourse.shoppingcart.application.CustomerServiceTest.PASSWORD;
 import static woowacourse.shoppingcart.application.CustomerServiceTest.PHONE_NUMBER;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
@@ -31,6 +33,9 @@ class CartItemServiceTest {
 
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private CartItemDao cartItemDao;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -65,5 +70,23 @@ class CartItemServiceTest {
     void addCart() {
         CartItemSaveRequest request = new CartItemSaveRequest(productId, 10);
         assertThat(cartItemService.addCart(request, USERNAME)).isNotNull();
+    }
+
+    @Test
+    @DisplayName("카트 수정 시 존재 수량보다 크게 수정할 경우 예외 발생")
+    void updateCartItemQuantityLargeQuantity_throwException() {
+        Long cartItemId = cartItemService.addCart(new CartItemSaveRequest(productId, 10), USERNAME);
+
+        assertThatThrownBy(() -> cartItemService.updateCartItemQuantity(USERNAME, cartItemId, 11))
+                .isInstanceOf(InvalidProductException.class)
+                .hasMessage("제품의 수량보다 더 주문할 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("정상적으로 카트 수량 수정")
+    void updateCartItemQuantity() {
+        Long cartItemId = cartItemService.addCart(new CartItemSaveRequest(productId, 10), USERNAME);
+
+        assertDoesNotThrow(() -> cartItemService.updateCartItemQuantity(USERNAME, cartItemId, 8));
     }
 }

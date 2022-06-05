@@ -41,16 +41,10 @@ public class CartItemService {
         return CartItemResponses.from(cartItems);
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
     @Transactional
     public Long addCart(final CartItemSaveRequest request, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
-        final Product product = productDao.findProductById(request.getProductId());
-        product.purchaseProduct(request.getQuantity());
+        checkAvaliableForPurchaseProduct(request.getProductId(), request.getQuantity());
         try {
             return cartItemDao.addCartItem(customerId, request.getProductId(), request.getQuantity());
         } catch (Exception e) {
@@ -61,6 +55,7 @@ public class CartItemService {
     @Transactional
     public void updateCartItemQuantity(final String customerName, final Long cartItemId, final int quantity) {
         validateCustomerCart(cartItemId, customerName);
+        checkAvaliableForPurchaseProduct(cartItemDao.findProductIdById(cartItemId), quantity);
         cartItemDao.updateCartItemQuantity(cartItemId, quantity);
     }
 
@@ -68,6 +63,16 @@ public class CartItemService {
     public void deleteCart(final String customerName, final Long cartItemId) {
         validateCustomerCart(cartItemId, customerName);
         cartItemDao.deleteCartItem(cartItemId);
+    }
+
+    private List<Long> findCartIdsByCustomerName(final String customerName) {
+        final Long customerId = customerDao.findIdByUserName(customerName);
+        return cartItemDao.findIdsByCustomerId(customerId);
+    }
+
+    private void checkAvaliableForPurchaseProduct(final Long productId, final int quantity) {
+        final Product product = productDao.findProductById(productId);
+        product.purchaseProduct(quantity);
     }
 
     private void validateCustomerCart(final Long cartItemId, final String customerName) {
