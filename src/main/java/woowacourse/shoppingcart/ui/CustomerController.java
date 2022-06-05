@@ -1,4 +1,4 @@
-package woowacourse.auth.ui;
+package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import javax.validation.Valid;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.auth.application.CustomerService;
+import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateResponse;

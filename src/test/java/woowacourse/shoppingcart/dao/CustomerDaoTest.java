@@ -1,4 +1,4 @@
-package woowacourse.auth.dao;
+package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
 
 @JdbcTest

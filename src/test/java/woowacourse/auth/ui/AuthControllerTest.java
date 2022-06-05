@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.application.CustomerService;
+import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.utils.AcceptanceTest;

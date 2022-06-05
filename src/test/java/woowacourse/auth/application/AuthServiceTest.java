@@ -20,6 +20,7 @@ import woowacourse.auth.dto.token.TokenResponse;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.application.CustomerService;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
