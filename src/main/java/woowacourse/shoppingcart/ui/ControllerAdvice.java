@@ -11,10 +11,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationFailureException;
-import woowacourse.auth.exception.NoSuchEmailException;
-import woowacourse.auth.exception.PasswordNotMatchException;
+import woowacourse.shoppingcart.domain.exception.ExpectedException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.*;
+import woowacourse.shoppingcart.exception.ClientRuntimeException;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse("존재하지 않는 데이터 요청입니다."));
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final String errorMessage = fieldErrors.stream()
@@ -45,22 +44,19 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({
-            InvalidCustomerException.class,
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
-            NoSuchEmailException.class,
-            PasswordNotMatchException.class,
-    })
-    public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
-    }
-
     @ExceptionHandler(AuthorizationFailureException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationFailureException(final AuthorizationFailureException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ExpectedException.class)
+    public ResponseEntity<ErrorResponse> handleExceptedException(final ExpectedException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ClientRuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

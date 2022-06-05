@@ -1,11 +1,16 @@
 package woowacourse.shoppingcart.exception;
 
-public class InvalidOrderException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class InvalidOrderException extends ClientRuntimeException {
+
+    private static final String MESSAGE = "유효하지 않은 주문입니다.";
+
     public InvalidOrderException() {
-        this("유효하지 않은 주문입니다.");
+        this(MESSAGE);
     }
 
     public InvalidOrderException(final String msg) {
-        super(msg);
+        super(HttpStatus.BAD_REQUEST, msg);
     }
 }
