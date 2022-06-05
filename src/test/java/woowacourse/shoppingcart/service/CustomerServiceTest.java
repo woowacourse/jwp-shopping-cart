@@ -46,7 +46,7 @@ class CustomerServiceTest {
 
         // when
         customerService.updateProfile(1L, 잉_이름변경요청.toServiceRequest());
-        final Customer 수정된_잉 = customerService.findById(1L);
+        final Customer 수정된_잉 = customerService.getById(1L);
 
         // then
         assertThat(수정된_잉.getName()).isEqualTo(잉_이름변경요청.getName());
@@ -101,7 +101,7 @@ class CustomerServiceTest {
 
         // when then
         customerService.delete(id, 잉회원탈퇴요청.toServiceRequest());
-        assertThatThrownBy(() -> customerService.findById(id))
+        assertThatThrownBy(() -> customerService.getById(id))
                 .isInstanceOf(CustomerNotFoundException.class);
     }
 

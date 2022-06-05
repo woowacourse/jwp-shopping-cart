@@ -106,7 +106,7 @@ public class CustomerControllerTest extends ControllerTest {
         final String token = TOKEN;
 
         when(jwtTokenProvider.getPayload(token)).thenReturn(Map.of("id", 101L));
-        when(customerService.findById(101L)).thenThrow(new CustomerNotFoundException());
+        when(customerService.getById(101L)).thenThrow(new CustomerNotFoundException());
 
         // when then
         mockMvc.perform(getWithToken("/api/customer", token)).andDo(print()).andExpect(status().isBadRequest());

@@ -43,19 +43,19 @@ public class SpringCustomerService implements CustomerService {
     }
 
     @Override
-    public Customer findById(Long id) {
+    public Customer getById(Long id) {
         return customerRepository.findById(id)
                 .orElseThrow(CustomerNotFoundException::new);
     }
 
     @Override
-    public Customer findByEmail(String email) {
+    public Customer getByEmail(String email) {
         return customerRepository.findByEmail(email)
                 .orElseThrow(CustomerNotFoundException::new);
     }
 
     @Override
-    public Customer findByName(String name) {
+    public Customer getByName(String name) {
         return customerRepository.findByName(name)
                 .orElseThrow(CustomerNotFoundException::new);
     }

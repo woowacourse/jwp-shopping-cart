@@ -24,7 +24,7 @@ public class AuthService implements AuthenticationService {
 
     @Override
     public String getToken(TokenRequest tokenRequest) {
-        final Customer customer = customerService.findByEmail(tokenRequest.getEmail());
+        final Customer customer = customerService.getByEmail(tokenRequest.getEmail());
         validatePassword(tokenRequest, customer);
 
         return tokenProvider.createToken(Map.of("id", customer.getId()));
