@@ -144,7 +144,7 @@ public class CustomerDaoTest {
 
         // when
         final Customer updatedCustomer = savedCustomer.updateName(newName);
-        customerDao.updateById(updatedCustomer);
+        customerDao.update(updatedCustomer);
         final Customer actual = customerDao.findById(updatedCustomer.getId()).get();
 
         // then
@@ -161,7 +161,7 @@ public class CustomerDaoTest {
 
         // when
         final Customer updatedCustomer = new Customer(savedCustomer.getId(), NAME, EMAIL, newPassword);
-        customerDao.updateById(updatedCustomer);
+        customerDao.update(updatedCustomer);
         final Customer actual = customerDao.findById(updatedCustomer.getId()).get();
 
         // then

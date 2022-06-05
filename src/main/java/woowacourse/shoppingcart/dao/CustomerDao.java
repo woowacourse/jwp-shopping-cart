@@ -90,7 +90,7 @@ public class CustomerDao {
         }
     }
 
-    public int updateById(final Customer customer) {
+    public int update(final Customer customer) {
         final String sql = "UPDATE customer SET name = :name, password = :password WHERE id = :id";
         final HashMap<String, Object> params = new HashMap<>();
         params.put("id", customer.getId());

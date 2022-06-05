@@ -53,7 +53,7 @@ public class CustomerService {
     public void updateName(final CustomerProfileUpdateServiceRequest request) {
         final Customer customer = findCustomerById(request.getId());
         final Customer updatedCustomer = customer.updateName(request.getName());
-        customerDao.updateById(updatedCustomer);
+        customerDao.update(updatedCustomer);
     }
 
     public void delete(final CustomerDeleteServiceRequest request) {
@@ -73,6 +73,6 @@ public class CustomerService {
         validatePassword(customer, request.getOldPassword());
         final String newPassword = request.getNewPassword();
         final Customer updatedCustomer = customer.updatePassword(Password.fromRawValue(newPassword));
-        customerDao.updateById(updatedCustomer);
+        customerDao.update(updatedCustomer);
     }
 }

@@ -126,7 +126,7 @@ class CustomerServiceTest {
         // given
         when(customerDao.findById(1L))
                 .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
-        when(customerDao.updateById(any(Customer.class)))
+        when(customerDao.update(any(Customer.class)))
                 .thenReturn(1);
 
         // when, then
@@ -141,7 +141,7 @@ class CustomerServiceTest {
         // given
         when(customerDao.findById(1L))
                 .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
-        when(customerDao.updateById(any(Customer.class)))
+        when(customerDao.update(any(Customer.class)))
                 .thenReturn(1);
 
         // when, then
