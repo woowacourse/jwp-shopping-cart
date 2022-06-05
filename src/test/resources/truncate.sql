@@ -1,3 +1,11 @@
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE orders_detail;
+TRUNCATE TABLE cart_item;
+TRUNCATE TABLE orders;
+TRUNCATE TABLE product;
+TRUNCATE TABLE customer;
+SET FOREIGN_KEY_CHECKS = 1;
+
 insert into customer (email, password, username)
 values ('puterism@email.com', 'password1!','puterism'),
        ('tanney-102@email.com', 'password1!', 'tanney-102'),
