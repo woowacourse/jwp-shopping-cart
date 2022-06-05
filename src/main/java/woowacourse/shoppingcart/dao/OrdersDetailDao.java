@@ -2,11 +2,13 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Product;
 
 @Repository
 public class OrdersDetailDao {
@@ -27,13 +29,20 @@ public class OrdersDetailDao {
             preparedStatement.setLong(3, quantity);
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
+        final String sql = "SELECT od.product_id, p.name, p.price, p.image_url ,od.quantity "
+                + "FROM orders_detail od, product p "
+                + "WHERE od.product_id = p.id and od.orders_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-                rs.getLong("product_id"),
+                new Product(
+                        rs.getLong("product_id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        rs.getString("image_url")
+                ),
                 rs.getInt("quantity")
         ), orderId);
     }

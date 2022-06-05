@@ -25,11 +25,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class OrderControllerTest {
+class OrderControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -58,10 +59,10 @@ public class OrderControllerTest {
 
         // when // then
         mockMvc.perform(post("/api/customers/" + customerName + "/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(requestDtos))
-        ).andDo(print())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(requestDtos))
+                ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
@@ -76,20 +77,20 @@ public class OrderControllerTest {
         final String customerName = "pobi";
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
+                Collections.singletonList(new OrderDetail(new Product(2L, "banana", 1_000, "imageUrl"), 2)));
 
         when(orderService.findOrderById(customerName, orderId))
                 .thenReturn(expected);
 
         // when // then
         mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
-        ).andDo(print())
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
-                .andExpect(jsonPath("orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("orderDetails[0].imageUrl").value("imageUrl"))
+                .andExpect(jsonPath("orderDetails[0].product.id").value(2L))
+                .andExpect(jsonPath("orderDetails[0].product.price").value(1_000))
+                .andExpect(jsonPath("orderDetails[0].product.name").value("banana"))
+                .andExpect(jsonPath("orderDetails[0].product.imageUrl").value("imageUrl"))
                 .andExpect(jsonPath("orderDetails[0].quantity").value(2));
     }
 
@@ -100,9 +101,9 @@ public class OrderControllerTest {
         final String customerName = "pobi";
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
+                        new OrderDetail(new Product(1L, "banana", 1_000, "imageUrl"), 2))),
                 new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
+                        new OrderDetail(new Product(2L, "apple", 2_000, "imageUrl2"), 4)))
         );
 
         when(orderService.findOrdersByCustomerName(customerName))
@@ -110,20 +111,20 @@ public class OrderControllerTest {
 
         // when // then
         mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
-        ).andDo(print())
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))
-                .andExpect(jsonPath("$[0].orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("$[0].orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("$[0].orderDetails[0].imageUrl").value("imageUrl"))
+                .andExpect(jsonPath("$[0].orderDetails[0].product.id").value(1L))
+                .andExpect(jsonPath("$[0].orderDetails[0].product.price").value(1_000))
+                .andExpect(jsonPath("$[0].orderDetails[0].product.name").value("banana"))
+                .andExpect(jsonPath("$[0].orderDetails[0].product.imageUrl").value("imageUrl"))
                 .andExpect(jsonPath("$[0].orderDetails[0].quantity").value(2))
 
                 .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("$[1].orderDetails[0].price").value(2_000))
-                .andExpect(jsonPath("$[1].orderDetails[0].name").value("apple"))
-                .andExpect(jsonPath("$[1].orderDetails[0].imageUrl").value("imageUrl2"))
+                .andExpect(jsonPath("$[1].orderDetails[0].product.id").value(2L))
+                .andExpect(jsonPath("$[1].orderDetails[0].product.price").value(2_000))
+                .andExpect(jsonPath("$[1].orderDetails[0].product.name").value("apple"))
+                .andExpect(jsonPath("$[1].orderDetails[0].product.imageUrl").value("imageUrl2"))
                 .andExpect(jsonPath("$[1].orderDetails[0].quantity").value(4));
     }
 }

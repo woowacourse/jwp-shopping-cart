@@ -9,7 +9,6 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
@@ -24,15 +23,13 @@ public class OrderService {
     private final OrdersDetailDao ordersDetailDao;
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
-    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public OrderService(OrderDao orderDao, OrdersDetailDao ordersDetailDao,
+                        CartItemDao cartItemDao, CustomerDao customerDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
@@ -69,14 +66,14 @@ public class OrderService {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+                .map(this::findOrderResponseDtoByOrderId)
                 .collect(Collectors.toList());
     }
 
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
+            final Product product = productQuantity.getProduct();
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }
