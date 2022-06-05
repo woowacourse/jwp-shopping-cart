@@ -27,7 +27,7 @@ public class CustomerService {
         validateEmailDuplication(request.getEmail());
         request.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        return customerDao.save(request.toEntity());
+        return customerDao.save(request);
     }
 
     public Customer findById(long id) {

@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -87,7 +88,7 @@ public class CustomerDao {
         }
     }
 
-    public Long save(final Customer customer) {
+    public Long save(final CustomerCreateRequest customer) {
         return insertActor.executeAndReturnKey(new MapSqlParameterSource()
                 .addValue("email", customer.getEmail())
                 .addValue("username", customer.getUsername())

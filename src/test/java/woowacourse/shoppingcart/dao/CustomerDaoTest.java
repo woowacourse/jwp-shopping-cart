@@ -14,6 +14,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -34,7 +35,7 @@ public class CustomerDaoTest {
     @Test
     void save() {
         // given
-        Customer customer = new Customer("roma@naver.com", "roma", "12345678");
+        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma", "12345678");
 
         // when
         Long savedId = customerDao.save(customer);
@@ -117,7 +118,7 @@ public class CustomerDaoTest {
     @Test
     void update() {
         // given
-        Customer customer = new Customer("roma@naver.com", "roma", "12345678");
+        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma", "12345678");
 
         // when
         Long savedId = customerDao.save(customer);
@@ -132,7 +133,7 @@ public class CustomerDaoTest {
     @Test
     void delete() {
         // given
-        Customer customer = new Customer("roma@naver.com", "roma", "12345678");
+        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma", "12345678");
 
         // when
         Long savedId = customerDao.save(customer);
