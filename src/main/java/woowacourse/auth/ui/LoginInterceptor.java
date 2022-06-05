@@ -2,12 +2,12 @@ package woowacourse.auth.ui;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 
-public class LoginInterceptor extends HandlerInterceptorAdapter {
+public class LoginInterceptor implements HandlerInterceptor {
 
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     private final JwtTokenProvider jwtTokenProvider;
@@ -23,7 +23,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         validateToken(token);
         request.setAttribute(ACCESS_TOKEN, token);
 
-        return super.preHandle(request, response, handler);
+        return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
     private void validateToken(String token) {
