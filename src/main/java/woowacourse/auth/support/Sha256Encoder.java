@@ -9,16 +9,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class Sha256Encoder implements Encoder {
 
+    private static final String ALGORITHM = "SHA-256";
+
     private Sha256Encoder() { }
 
     @Override
     public String encrypt(String rawPassword) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            MessageDigest md = MessageDigest.getInstance(ALGORITHM);
             md.update(rawPassword.getBytes());
             return bytesToHex(md.digest());
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("암호화에 실패했습니다.");
         }
     }
 
