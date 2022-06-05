@@ -97,7 +97,7 @@ class CustomerServiceTest {
             assertThatThrownBy(
                     () -> customerService.update(loginCustomer, customerUpdateRequest)
             ).isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("비밀번호는 변경할 수 없습니다.");
+                    .hasMessage("비밀번호가 일치하지 않습니다.");
         }
 
         @Test

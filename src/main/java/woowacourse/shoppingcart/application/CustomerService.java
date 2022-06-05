@@ -33,9 +33,7 @@ public class CustomerService {
 
     public CustomerResponse update(LoginCustomer loginCustomer, CustomerUpdateRequest request) {
         Customer savedCustomer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        if (!savedCustomer.isSamePassword(request.getPassword())) {
-            throw new IllegalArgumentException("비밀번호는 변경할 수 없습니다.");
-        }
+        checkPassword(savedCustomer, request.getPassword());
 
         Customer customer = request.toCustomerWith(savedCustomer.getLoginId());
         customerDao.update(customer);
@@ -45,9 +43,13 @@ public class CustomerService {
 
     public void delete(LoginCustomer loginCustomer, CustomerDeleteRequest customerDeleteRequest) {
         Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        if (!customer.isSamePassword(customerDeleteRequest.getPassword())) {
+        checkPassword(customer, customerDeleteRequest.getPassword());
+        customerDao.delete(loginCustomer.getLoginId());
+    }
+
+    private void checkPassword(Customer customer, String requestedPassword) {
+        if (!customer.isSamePassword(requestedPassword)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        customerDao.delete(loginCustomer.getLoginId());
     }
 }
