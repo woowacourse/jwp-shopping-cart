@@ -89,7 +89,7 @@
     - [x] 현재 password를 RawPassword로 수정하고, EncodedPassword 를 따로 만들기
         + Customer 에서는 EncodedPassword 만 받을 수 있도록 수정하기
 - test
-    - [ ] JwtTokenProvider 에 대한 테스트 추가하기
+    - [x] JwtTokenProvider 에 대한 테스트 추가하기
 - 개인적으로 리팩터링 하고싶은 부분
     - [x] Authorization 자체가 없는 경우 커스텀 예외 처리
 
