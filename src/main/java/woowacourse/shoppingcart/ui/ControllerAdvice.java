@@ -34,7 +34,7 @@ public class ControllerAdvice {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<ErrorResponse> handleEmptyResultDataAccess() {
         final ErrorResponse errorResponse = new ErrorResponse("존재하지 않는 데이터 요청입니다.");
-        return ResponseEntity.badRequest().body(errorResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
