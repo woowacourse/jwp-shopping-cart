@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.exception.AuthorizationException;
 
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
+    private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     private final JwtTokenProvider jwtTokenProvider;
 
     public LoginInterceptor(JwtTokenProvider jwtTokenProvider) {
@@ -19,14 +20,18 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         String token = AuthorizationExtractor.extract(request);
+        validateToken(token);
+        request.setAttribute(ACCESS_TOKEN, token);
+
+        return super.preHandle(request, response, handler);
+    }
+
+    private void validateToken(String token) {
         if (token == null || token.isEmpty()) {
             throw new AuthorizationException("토큰이 존재하지 않습니다.");
         }
-
         if (!jwtTokenProvider.validateToken(token)) {
             throw new AuthorizationException("인증되지 않은 회원입니다.");
         }
-
-        return super.preHandle(request, response, handler);
     }
 }
