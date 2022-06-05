@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.domain.Cart;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
+    private static final String USER = "아리";
     private Long productId1;
     private Long productId2;
 
@@ -71,7 +72,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
+                .when().post("/api/members/{memberName}/carts", userName)
                 .then().log().all()
                 .extract();
     }
@@ -80,7 +81,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
+                .when().get("/api/members/{memberName}/carts", userName)
                 .then().log().all()
                 .extract();
     }
@@ -89,7 +90,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
+                .when().delete("/api/members/{memberName}/carts/{cartId}", userName, cartId)
                 .then().log().all()
                 .extract();
     }

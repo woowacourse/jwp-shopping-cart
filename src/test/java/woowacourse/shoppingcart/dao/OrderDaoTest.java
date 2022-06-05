@@ -31,28 +31,28 @@ class OrderDaoTest {
     @Test
     void addOrders() {
         //given
-        final Long customerId = 1L;
+        final Long memberId = 1L;
 
         //when
-        final Long orderId = orderDao.addOrders(customerId);
+        final Long orderId = orderDao.addOrders(memberId);
 
         //then
         assertThat(orderId).isNotNull();
     }
 
-    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
+    @DisplayName("MemberId 집합을 이용하여 OrderId 집합을 얻는 기능")
     @Test
-    void findOrderIdsByCustomerId() {
+    void findOrderIdsByMemberId() {
         //given
-        final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        final Long memberId = 1L;
+        jdbcTemplate.update("INSERT INTO ORDERS (member_id) VALUES (?)", memberId);
+        jdbcTemplate.update("INSERT INTO ORDERS (member_id) VALUES (?)", memberId);
 
         //when
-        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
+        final List<Long> orderIdsByMemberId = orderDao.findOrderIdsByMemberId(memberId);
 
         //then
-        assertThat(orderIdsByCustomerId).hasSize(2);
+        assertThat(orderIdsByMemberId).hasSize(2);
     }
 
 }

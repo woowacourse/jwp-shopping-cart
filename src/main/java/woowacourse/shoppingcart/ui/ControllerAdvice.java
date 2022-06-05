@@ -8,7 +8,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.shoppingcart.exception.*;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotInMemberCartItemException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -26,14 +29,6 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity handleInvalidRequest(final BindingResult bindingResult) {
-        final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        final FieldError mainError = fieldErrors.get(0);
-
-        return ResponseEntity.badRequest().body(mainError.getDefaultMessage());
-    }
-
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
@@ -43,11 +38,10 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
+            NotInMemberCartItemException.class,
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
