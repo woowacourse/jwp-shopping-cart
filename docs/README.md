@@ -57,6 +57,7 @@ Location: /customers/100
 DELETE /customers
 Authorization : ????
 ```
+
 ```json
 {
   "password": "1234"
@@ -151,33 +152,246 @@ Content-Type: application/json
 ```
 
 ### Response (예외)
+
 - 유효성 검사(서버)
     - 존재하지 않는 이메일의 경우
     - 해당 이메일에 비밀번호가 일치하지 않는 경우
+
 ```
 401 Unauthorized
 ```
+
 ---
 
 ## 로그아웃
 
 ### Request
+
 - 논의 중
 - 토큰을 서버에서 만료시킬 방법이 없음
 - 리프레시 토큰? 블랙리스트?
+
 ```
 POST /auth/logout
 Authorization : ????
 ```
+
 ### Response
+
 ```
 204 no-content
 ```
 
 ## 회원 조회
+
 ```
 GET /customers
 Authorization : ????
+```
+
+### Response
+
+```
+200 Ok
+Content-Type: application/json
+```
+
+```json
+{
+  "nickname": "Movie",
+  "email": "adsf@adsf.com"
+}
+```
+
+## 상품 목록 가져오기
+
+### Request
+
+```
+GET/products
+```
+
+### Response
+
+```
+200 ok
+Content-Type: application/json
+```
+
+```json
+[
+  {
+    "id": 1,
+    "name": "우유",
+    "price": 3000,
+    "image": "https://img1.com/img.jpg"
+  },
+  {
+    "id": 2,
+    "name": "식빵",
+    "price": 4000,
+    "image": "https://img2.com/img.jpg"
+  }
+]
+```
+
+## 특정 상품 가져오기
+
+### Request
+
+```
+GET /products/{id}
+```
+
+### Response
+
+```
+200 ok
+Content-Type: application/json
+```
+
+```json
+{
+  "id": 1,
+  "name": "우유",
+  "price": 3000,
+  "image": "https://img1.com/img.jpg"
+}
+```
+
+## 장바구니 목록 가져오기
+
+### Request
+
+```
+GET /cart
+Authorization: `Bearer ${accessToken}`
+```
+
+### Response
+
+```json
+[
+  {
+    "id": 1,
+    "name": "우유",
+    "price": 3000,
+    "image": "https://img1.com/img.jpg",
+    "quantity": 2
+  },
+  {
+    "id": 2,
+    "name": "식빵",
+    "price": 4000,
+    "image": "https://img2.com/img.jpg",
+    "quantity": 3
+  }
+]
+```
+
+## 장바구니에 상품 추가 및 수량 수정
+### Request
+```
+PUT /cart/products/{id}
+Authorization: `Bearer ${accessToken}`
+```
+
+```json
+{
+  "quantity": 2
+}
+```
+### Response
+장바구니에 해당 상품이 없던 경우 새로 생성
+```
+201 Created
+Content-Type: application/json
+Location: /cartItem/1
+```
+```json
+ {
+  "productId": 1,
+  "name": "우유",
+  "price": 3000,
+  "image": "https://img1.com/img.jpg",
+  "quantity": 2
+}
+```
+
+이미 장바구니에 해당 상품이 있으면 수정
+```
+200 Ok
+Content-Type: application/json
+```
+```json
+ {
+  "productId": 1,
+  "name": "우유",
+  "price": 3000,
+  "image": "https://img1.com/img.jpg",
+  "quantity": 2
+}
+```
+
+## 장바구니 내 상품 삭제
+### Request
+```
+DELETE /cart
+Authorization: `Bearer ${accessToken}`
+```
+```json
+{
+  "productIds": [3, 5]
+}
+```
+
+### Response
+```
+204 no-content
+```
+
+## 주문하기
+
+### Request
+```
+POST /orders
+Authorization: `Bearer ${accessToken}
+```
+
+### Response
+```
+201 Created
+Content-Type: application/json
+Content-length: 
+Location: /orders/5
+```
+```json
+{
+  "id": 5,
+  "orderDetails": [
+    {
+      "productId": 4, 
+      "name": "우유", 
+      "quantity": 3, 
+      "price": 1000, 
+      "imgUrl": "http://img."},
+    {
+      "productId": 4, 
+      "name": "우유", 
+      "quantity": 3, 
+      "price": 1000, 
+      "imgUrl": "http://img."}
+    ],
+  "totalPrice": 53200,
+  "orderDate": "2022-03-20 12:23:33"
+}
+```
+
+## 주문 단건 조회
+### Request
+```
+GET /orders/5
+Authorization: `Bearer ${accessToken}
 ```
 ### Response
 ```
@@ -186,7 +400,34 @@ Content-Type: application/json
 ```
 ```json
 {
-"nickname" : "Movie",
-"email" : "adsf@adsf.com"
+  "id": 5,
+  "orderDetails": [
+    {
+      "productId": 4, 
+      "name": "우유", 
+      "quantity": 3, 
+      "price": 1000, 
+      "imgUrl": "http://img."},
+    {
+      "productId": 4, 
+      "name": "우유", 
+      "quantity": 3, 
+      "price": 1000, 
+      "imgUrl": "http://img."}
+    ],
+  "totalPrice": 53200,
+  "orderDate": "2022-03-20 12:23:33"
 }
+```
+
+## 공통 에러
+```
+// 수량 형식이 잘못됨(양수여야 한다)
+400 Bad Request
+
+// 토큰 유효하지 않음
+401 Unauthorized
+
+// 상품id 존재하지 않음
+404 Not Found
 ```
