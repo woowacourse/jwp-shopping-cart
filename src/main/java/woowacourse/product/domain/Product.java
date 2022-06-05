@@ -22,6 +22,10 @@ public class Product {
         this(null, name, price, stock, imageURL);
     }
 
+    public void checkProductAvailableForPurchase(final int quantity) {
+        stock.checkAvailableForPurchase(quantity);
+    }
+
     public Long getId() {
         return id;
     }

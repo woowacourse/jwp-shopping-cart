@@ -16,10 +16,10 @@ import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.customer.dto.ConfirmPasswordRequest;
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.ExceptionResponse;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
+import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.ExceptionResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -34,10 +34,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final SignupRequest signupRequest = new SignupRequest(username, password, "01001012323", "인천 서구 검단로");
 
         // when
-        final ExtractableResponse<Response> response = signup(signupRequest);
+        final ExtractableResponse<Response> response = 회원_가입_요청(signupRequest);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        회원_가입됨(response);
     }
 
     @DisplayName("회원가입 시 username은 3자 이상 ~ 15자 이하로만 이루어져 있어야 된다.")
@@ -47,7 +47,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final SignupRequest signupRequest = new SignupRequest("do", password, "01012123434", "인천 서구 검단로");
 
         // when
-        final ExtractableResponse<Response> response = signup(signupRequest);
+        final ExtractableResponse<Response> response = 회원_가입_요청(signupRequest);
         final ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
 
         // then
@@ -66,7 +66,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final SignupRequest signupRequest = new SignupRequest("do", "a", "1", "인천 서구");
 
         // when
-        final ExtractableResponse<Response> response = signup(signupRequest);
+        final ExtractableResponse<Response> response = 회원_가입_요청(signupRequest);
         final ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
 
         // then
@@ -82,10 +82,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void validateUniqueUsername() {
         // given
         final SignupRequest signupRequest = new SignupRequest("jjang9", "password1234", "01012121212", "서울시 여러분");
-        signup(signupRequest);
+        회원_가입_요청(signupRequest);
 
         // when
-        final ExtractableResponse<Response> response = signup(signupRequest);
+        final ExtractableResponse<Response> response = 회원_가입_요청(signupRequest);
         final ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
 
         // then
@@ -102,10 +102,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void getMe() {
         // given
         final SignupRequest signupRequest = new SignupRequest(username, password, "01022728572", "인천 서구 검단로");
-        signup(signupRequest);
+        회원_가입_요청(signupRequest);
 
         final LoginRequest loginRequest = new LoginRequest(username, password);
-        final String accessToken = login(loginRequest);
+        final String accessToken = 로그인되어_토큰_가져옴(loginRequest);
 
         // when
         final CustomerResponse customerResponse = findCustomerInfo(accessToken);
@@ -122,10 +122,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void confirmPassword() {
         final SignupRequest signupRequest = new SignupRequest(username, password, "01022728572", "인천 서구 검단로");
-        signup(signupRequest);
+        회원_가입_요청(signupRequest);
 
         final LoginRequest loginRequest = new LoginRequest(username, password);
-        final String accessToken = login(loginRequest);
+        final String accessToken = 로그인되어_토큰_가져옴(loginRequest);
 
         final ConfirmPasswordRequest confirmPasswordRequest = new ConfirmPasswordRequest(password);
         RestAssured.given().log().all()
@@ -143,10 +143,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updateMe() {
         // given
         final SignupRequest signupRequest = new SignupRequest(username, password, "01022728572", "인천 서구 검단로");
-        signup(signupRequest);
+        회원_가입_요청(signupRequest);
 
         final LoginRequest loginRequest = new LoginRequest(username, password);
-        final String accessToken = login(loginRequest);
+        final String accessToken = 로그인되어_토큰_가져옴(loginRequest);
 
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01011112222", "서울시 강남구");
         ValidatableResponse validatableResponse = RestAssured
@@ -172,10 +172,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updatePassword() {
         // given
         final SignupRequest signupRequest = new SignupRequest(username, password, "01022728572", "인천 서구 검단로");
-        signup(signupRequest);
+        회원_가입_요청(signupRequest);
 
         final LoginRequest loginRequest = new LoginRequest(username, password);
-        final String accessToken = login(loginRequest);
+        final String accessToken = 로그인되어_토큰_가져옴(loginRequest);
 
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("password1234");
         RestAssured
@@ -193,10 +193,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void deleteMe() {
         // given
         final SignupRequest signupRequest = new SignupRequest(username, password, "01022728572", "인천 서구 검단로");
-        signup(signupRequest);
+        회원_가입_요청(signupRequest);
 
         final LoginRequest loginRequest = new LoginRequest(username, password);
-        final String accessToken = login(loginRequest);
+        final String accessToken = 로그인되어_토큰_가져옴(loginRequest);
 
         RestAssured.given().log().all()
             .auth().oauth2(accessToken)
@@ -215,17 +215,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    private ExtractableResponse<Response> signup(final SignupRequest signupRequest) {
-        return RestAssured.given().log().all()
-            .body(signupRequest)
+    public static ExtractableResponse<Response> 회원_가입_요청(final SignupRequest signupRequest) {
+        return RestAssured
+            .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
+            .body(signupRequest)
+            .when().post("/api/customers/signup")
             .then().log().all()
             .extract();
     }
 
-    private String login(final LoginRequest loginRequest) {
+    public static String 로그인되어_토큰_가져옴(final LoginRequest loginRequest) {
         return RestAssured
             .given().log().all()
             .body(loginRequest)
@@ -243,5 +243,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .when().get("/api/customers")
             .then().log().all()
             .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+    }
+
+    public static void 회원_가입됨(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 }

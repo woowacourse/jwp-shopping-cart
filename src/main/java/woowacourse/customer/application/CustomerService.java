@@ -8,9 +8,9 @@ import woowacourse.customer.domain.Customer;
 import woowacourse.customer.domain.PlainPassword;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
+import woowacourse.customer.support.passwordencoder.PasswordEncoder;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.UserNotFoundException;
-import woowacourse.customer.support.passwordencoder.PasswordEncoder;
 
 @Transactional
 @Service
@@ -46,6 +46,11 @@ public class CustomerService {
     public Customer findByUsername(final String username) {
         return customerDao.findByUsername(username)
             .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Long findIdByUsername(final String username) {
+        return customerDao.findIdByUserName(username);
     }
 
     public void updateInfo(final String username, final UpdateCustomerRequest updateCustomerRequest) {

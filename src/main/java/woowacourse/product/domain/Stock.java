@@ -3,6 +3,7 @@ package woowacourse.product.domain;
 import java.util.Objects;
 
 import woowacourse.product.exception.InvalidStockException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 public class Stock {
 
@@ -16,6 +17,12 @@ public class Stock {
     private void validatePositive(final int value) {
         if (value <= 0) {
             throw new InvalidStockException("재고는 0 이하의 수가 입력될 수 없습니다.");
+        }
+    }
+
+    public void checkAvailableForPurchase(final int quantity) {
+        if (value < quantity) {
+            throw new InvalidProductException("남아있는 재고보다 많은 수량을 카트에 담을 수 없습니다.");
         }
     }
 
