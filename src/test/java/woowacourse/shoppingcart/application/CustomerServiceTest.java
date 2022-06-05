@@ -11,10 +11,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerPasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.util.HashTool;
 
 @SuppressWarnings("NonAsciiChracters")
 @SpringBootTest
@@ -60,8 +63,9 @@ class CustomerServiceTest {
             customerService.addCustomer(customerRequest);
 
             CustomerUpdateRequest updateCustomerRequest = new CustomerUpdateRequest("seungpapang", "12345678aA!");
+            Customer customer = new Customer("angie", "angel", HashTool.hashing("12345678aA!"));
 
-            CustomerResponse actual = customerService.updateCustomer(updateCustomerRequest, "angie");
+            CustomerResponse actual = customerService.updateCustomer(updateCustomerRequest, customer);
 
             assertThat(actual).extracting("loginId", "name")
                     .containsExactly("angie", "seungpapang");
@@ -70,9 +74,10 @@ class CustomerServiceTest {
         @Test
         void 존재하지_않는_회원일_경우_예외발생() {
             CustomerUpdateRequest updateCustomerRequest = new CustomerUpdateRequest("angel", "12345678aA!");
+            Customer customer = new Customer("angie", "angel", HashTool.hashing("12345678aA!"));
 
-            assertThatThrownBy(() -> customerService.updateCustomer(updateCustomerRequest, "angie"))
-                .isInstanceOf(InvalidCustomerException.class);
+            assertThatThrownBy(() -> customerService.updateCustomer(updateCustomerRequest, customer))
+                    .isInstanceOf(InvalidCustomerException.class);
         }
 
         @Test
@@ -95,10 +100,11 @@ class CustomerServiceTest {
         void 존재하지_않는_회원일_경우_예외발생() {
             CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
             customerService.addCustomer(customerRequest);
+            Customer deletingCustomer = new Customer("seungpapang", "seungpapang", HashTool.hashing("12345678aA!"));
+            CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("123456789aA!");
 
-            assertThatThrownBy(() -> customerService.deleteCustomer("seungpapang"))
+            assertThatThrownBy(() -> customerService.deleteCustomer(deletingCustomer, customerPasswordRequest))
                     .isInstanceOf(InvalidCustomerException.class);
         }
     }
-
 }

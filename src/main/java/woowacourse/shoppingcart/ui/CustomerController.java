@@ -48,17 +48,15 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> updateMe(
             @AuthenticationPrincipal LoginCustomer loginCustomer,
             @RequestBody CustomerUpdateRequest customerUpdateRequest) {
-        authService.checkPassword(loginCustomer.toCustomer(), customerUpdateRequest.getPassword());
         CustomerResponse customerResponse = customerService.updateCustomer(customerUpdateRequest,
-                loginCustomer.getLoginId());
+                loginCustomer.toCustomer());
         return ResponseEntity.ok().body(customerResponse);
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal LoginCustomer loginCustomer,
             @RequestBody CustomerPasswordRequest customerPasswordRequest) {
-        authService.checkPassword(loginCustomer.toCustomer(), customerPasswordRequest.getPassword());
-        customerService.deleteCustomer(loginCustomer.getLoginId());
+        customerService.deleteCustomer(loginCustomer.toCustomer(), customerPasswordRequest);
         return ResponseEntity.noContent().build();
     }
 }
