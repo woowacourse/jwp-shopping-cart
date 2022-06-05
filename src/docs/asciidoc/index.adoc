@@ -105,3 +105,21 @@ include::{snippets}/query-product/path-parameters.adoc[]
 
 ==== 응답 필드
 include::{snippets}/query-product/response-fields.adoc[]
+
+[[create-product]]
+=== 상품 추가
+
+==== HTTP 요청
+include::{snippets}/create-product/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/create-product/http-response.adoc[]
+
+==== 요청 헤더
+include::{snippets}/create-product/request-headers.adoc[]
+
+==== 요청 필드
+include::{snippets}/create-product/request-fields.adoc[]
+
+==== 응답 필드
+include::{snippets}/create-product/response-fields.adoc[]
