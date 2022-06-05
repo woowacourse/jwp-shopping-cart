@@ -75,8 +75,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         postMethodRequest(customerRequest, "/api/customers");
 
         final LoginRequest loginRequest = new LoginRequest(email, password);
-        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest,
-                "/api/auth/login");
+        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest, "/api/auth/login");
 
         final String token = tokenResponse.jsonPath().getString("accessToken");
         final ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(password,

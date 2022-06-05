@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -30,24 +31,26 @@ public class CustomerDao {
         }
     }
 
-    public Customer save(Customer customer) {
+    public Long save(Customer customer) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
         Map<String, Object> params = new HashMap<>();
         params.put("email", customer.getEmail());
         params.put("username", customer.getUsername());
-        params.put("password", customer.getPassword());
-        Long newId = (Long) simpleJdbcInsert.executeAndReturnKey(params);
+        params.put("password", customer.getPassword().getValue());
 
-        return new Customer(newId, customer.getEmail(), customer.getPassword(), customer.getUsername());
+        return (Long) simpleJdbcInsert.executeAndReturnKey(params);
     }
 
     public Customer findByEmail(String email) {
         final String sql = "SELECT id, email, password, username FROM customer WHERE email = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> new Customer(rs.getLong("id"
-            ), rs.getString("email"), rs.getString("password"), rs.getString("username"))), email);
+            return jdbcTemplate.queryForObject(sql, ((rs, rowNum) ->
+                    new Customer(rs.getLong("id"),
+                            rs.getString("email"),
+                            Password.ofWithoutEncryption(rs.getString("password")),
+                            rs.getString("username"))), email);
         } catch (EmptyResultDataAccessException e) {
             throw new LoginException("존재하지 않는 이메일입니다.", ErrorResponse.LOGIN_FAIL);
         }

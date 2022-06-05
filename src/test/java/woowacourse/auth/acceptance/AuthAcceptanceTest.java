@@ -26,12 +26,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final String password = "password0!";
         final String username = "테스트";
         final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
-
         postMethodRequest(customerRequest, "/api/customers");
 
         final LoginRequest loginRequest = new LoginRequest(email, password);
-        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest,
-                "/api/auth/login");
+        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest, "/api/auth/login");
 
         final String token = tokenResponse.jsonPath().getString("accessToken");
 

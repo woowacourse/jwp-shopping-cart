@@ -16,10 +16,13 @@ public class Password {
         this.password = password;
     }
 
-    public static Password from(String password) {
+    public static Password ofWithEncryption(String password) {
         validatePassword(password);
-        String encryptedPassword = encrypt(password);
-        return new Password(encryptedPassword);
+        return new Password(encrypt(password));
+    }
+
+    public static Password ofWithoutEncryption(String password) {
+        return new Password(password);
     }
 
     private static void validatePassword(String password) {
@@ -46,11 +49,11 @@ public class Password {
         return builder.toString();
     }
 
-    public static boolean isSameEncryptedPassword(String encryptedPassword, String password) {
-        return encryptedPassword.equals(encrypt(password));
+    public boolean isSame(Password it) {
+        return password.equals(it.password);
     }
 
-    public String getPassword() {
+    public String getValue() {
         return password;
     }
 
@@ -59,7 +62,7 @@ public class Password {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Password)) {
             return false;
         }
         Password password1 = (Password) o;

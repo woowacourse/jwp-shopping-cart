@@ -19,20 +19,20 @@ public class CustomerService {
     }
 
     public Customer register(String email, String password, String username) {
-        final Password encryptedPassword = Password.from(password);
         if (customerDao.existsByEmail(email)) {
             throw new JoinException("이미 존재하는 이메일입니다.", ErrorResponse.DUPLICATED_EMAIL);
         }
+        final Long newId = customerDao.save(new Customer(email, Password.ofWithEncryption(password), username));
 
-        return customerDao.save(new Customer(email, encryptedPassword.getPassword(), username));
+        return new Customer(newId, email, Password.ofWithEncryption(password), username);
     }
 
     public void changePassword(Customer customer, String oldPassword, String newPassword) {
-        if (customer.isDifferentPassword(oldPassword)) {
+        if (customer.isDifferentPassword(Password.ofWithEncryption(oldPassword))) {
             throw new AuthException("기존 비밀번호와 맞지 않습니다.", ErrorResponse.INCORRECT_PASSWORD);
         }
-        final Password encryptedPassword = Password.from(newPassword);
-        customerDao.updatePassword(customer.getId(), encryptedPassword.getPassword());
+        final Password encryptedPassword = Password.ofWithEncryption(newPassword);
+        customerDao.updatePassword(customer.getId(), encryptedPassword.getValue());
     }
 
     public CustomerResponse changeGeneralInfo(Customer customer, String username) {
@@ -42,7 +42,7 @@ public class CustomerService {
     }
 
     public void delete(Customer customer, String password) {
-        if (customer.isDifferentPassword(password)) {
+        if (customer.isDifferentPassword(Password.ofWithEncryption(password))) {
             throw new AuthException("기존 비밀번호와 맞지 않습니다.", ErrorResponse.INCORRECT_PASSWORD);
         }
         customerDao.delete(customer.getId());

@@ -51,8 +51,8 @@ public class CustomerServiceTest {
 
         // then
         Customer updatedCustomer = customerDao.findByEmail(email);
-        assertThat(Password.isSameEncryptedPassword(updatedCustomer.getPassword(),
-                newPassword)).isTrue();
+        Password updatedPassword = updatedCustomer.getPassword();
+        assertThat(updatedPassword).isEqualTo(Password.ofWithEncryption(newPassword));
     }
 
     @DisplayName("회원 일반 정보 수정")

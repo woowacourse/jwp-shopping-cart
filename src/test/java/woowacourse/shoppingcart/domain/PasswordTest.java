@@ -19,7 +19,7 @@ public class PasswordTest {
     @ValueSource(strings = {"asdasd", "password0", "password01234"})
     void InputWrongLengthPassword(String value) {
         //then
-        assertThatThrownBy(() -> Password.from(value))
+        assertThatThrownBy(() -> Password.ofWithEncryption(value))
                 .isInstanceOf(InputFormatException.class);
     }
 
@@ -28,7 +28,7 @@ public class PasswordTest {
     @ValueSource(strings = {"password1!", "Password012="})
     void InputWrightPassword(String value) {
         //then
-        assertThatCode(() -> Password.from(value))
+        assertThatCode(() -> Password.ofWithEncryption(value))
                 .doesNotThrowAnyException();
     }
 
@@ -38,7 +38,7 @@ public class PasswordTest {
     @ValueSource(strings = {"pwdpwdpwd", "pwdPWD12", "PWDpwd!!!"})
     void InputWrongPatternPassword(String value) {
         //then
-        assertThatThrownBy(() -> Password.from(value))
+        assertThatThrownBy(() -> Password.ofWithEncryption(value))
                 .isInstanceOf(InputFormatException.class);
     }
 
@@ -46,8 +46,8 @@ public class PasswordTest {
     @Test
     void encryptSamePassword() {
         //given
-        final Password password1 = Password.from("password0!");
-        final Password password2 = Password.from("password0!");
+        final Password password1 = Password.ofWithEncryption("password0!");
+        final Password password2 = Password.ofWithEncryption("password0!");
 
         //then
         assertThat(password1).isEqualTo(password2);
@@ -57,8 +57,8 @@ public class PasswordTest {
     @Test
     void encryptDifferentPassword() {
         //given
-        final Password password1 = Password.from("password0!");
-        final Password password2 = Password.from("password1!");
+        final Password password1 = Password.ofWithEncryption("password0!");
+        final Password password2 = Password.ofWithEncryption("password1!");
 
         //then
         assertThat(password1).isNotEqualTo(password2);

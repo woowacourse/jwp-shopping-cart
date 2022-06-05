@@ -4,14 +4,14 @@ public class Customer {
 
     private final Long id;
     private final String email;
-    private final String password;
+    private final Password password;
     private final String username;
 
-    public Customer(String email, String password, String username) {
+    public Customer(String email, Password password, String username) {
         this(null, email, password, username);
     }
 
-    public Customer(Long id, String email, String password, String username) {
+    public Customer(Long id, String email, Password password, String username) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -30,11 +30,11 @@ public class Customer {
         return username;
     }
 
-    public String getPassword() {
+    public Password getPassword() {
         return password;
     }
 
-    public boolean isDifferentPassword(String password) {
-        return !Password.isSameEncryptedPassword(this.password, password);
+    public boolean isDifferentPassword(Password other) {
+        return !this.password.isSame(other);
     }
 }

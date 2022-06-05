@@ -7,6 +7,7 @@ import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 
 @Service
 public class AuthService {
@@ -21,7 +22,7 @@ public class AuthService {
 
     public TokenResponse login(String email, String password) {
         final Customer customer = customerDao.findByEmail(email);
-        if (customer.isDifferentPassword(password)) {
+        if (customer.isDifferentPassword(Password.ofWithEncryption(password))) {
             throw new LoginException("패스워드가 일치하지 않습니다.", ErrorResponse.LOGIN_FAIL);
         }
 
