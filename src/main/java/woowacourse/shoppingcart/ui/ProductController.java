@@ -1,14 +1,13 @@
 package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.Request;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final ProductRequest request) {
+    public ResponseEntity<Void> add(@Valid @RequestBody ProductRequest request) {
         final Long productId = productService.add(request);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
