@@ -78,7 +78,7 @@ public class OrderControllerTest {
         final String customerName = "pobi";
         final Long orderId = 1L;
         final OrderResponse expected = OrderResponse.from(new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2))));
+                Collections.singletonList(new OrderDetail(1L, 2L, "banana", 1_000, 2, "imageUrl"))));
 
         when(orderService.findOrderById(customerName, orderId))
                 .thenReturn(expected);
@@ -102,9 +102,9 @@ public class OrderControllerTest {
         final String customerName = "pobi";
         final OrderResponses expected = OrderResponses.from(Arrays.asList(
                 new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
+                        new OrderDetail(1L, 1L, "banana", 1_000, 2, "imageUrl"))),
                 new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
+                        new OrderDetail(2L, 2L, "apple", 2_000, 4, "imageUrl2")))
         ));
 
         when(orderService.findOrdersByCustomerName(customerName))

@@ -79,10 +79,9 @@ public class OrderService {
 
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
-            final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
+        for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
+            final Product product = productDao.findProductById(orderDetail.getProductId());
+            ordersDetails.add(new OrderDetail(orderDetail, product));
         }
 
         return new Orders(orderId, ordersDetails);

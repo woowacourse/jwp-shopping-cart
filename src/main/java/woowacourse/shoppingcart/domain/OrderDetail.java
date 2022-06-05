@@ -8,25 +8,24 @@ public class OrderDetail {
     private int quantity;
     private String imageUrl;
 
-    public OrderDetail() {
-    }
-
-    public OrderDetail(final Long productId, final int quantity) {
+    public OrderDetail(final Long id, final Long productId, final int quantity) {
+        this.id = id;
         this.productId = productId;
         this.quantity = quantity;
     }
 
-    public OrderDetail(final Product product, final int quantity) {
-        this(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
+    public OrderDetail(final OrderDetail orderDetail, final Product product) {
+        this(orderDetail.id, product.getId(), product.getName(), product.getPrice(), orderDetail.quantity, product.getImageUrl());
     }
 
-    public OrderDetail(final Long productId, final int price, final String name,
-                       final String imageUrl, final int quantity) {
+    public OrderDetail(final Long id, final Long productId, final String name, final int price, final int quantity,
+                       final String imageUrl) {
+        this.id = id;
         this.productId = productId;
-        this.price = price;
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.price = price;
         this.quantity = quantity;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
