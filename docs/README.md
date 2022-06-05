@@ -1,5 +1,8 @@
 # 장바구니 - 협업 미션
 
+<details>
+<summary>매트와 페어 규칙 및 목표</summary>
+
 ## 페어 규칙
 
 - 교대 시간은 10분으로 지정한다.
@@ -25,6 +28,11 @@
 
 - ATDD 를 중심으로 개발하기
 - auth 에 대한 대략적인 흐름을 파악해보기
+
+</details>
+
+<details>
+<summary>1단계 기능 목록</summary>
 
 ### 기능 목록
 
@@ -57,48 +65,29 @@
 - [x] 동작하는 코드를 우선적으로 개발하기
 - [x] customer 생성 및 수정에 관한 validation 추가
 - [x] test fixture 만들기
-- [ ] id 기반으로 payload 저장
 - [x] token validate 추가
-- [ ] BindingResult에 Error가 복수 개인 경우 어떻게 보여지게 할지 고민
 - [x] customer 생성자를 정적 팩터리 메서드로 수정
 
-### 일정
+</details>
 
-- 05/29
-    - [x] 회원가입
-    - [x] 로그인
+<details>
+<summary>소니의 1단계 첫번째 리뷰</summary>
 
-- 05/30
-    - [x] 로그인
-    - [x] 회원 정보 조회
-    - [x] 회원 정보 수정
-    - [x] 회원 정보 삭제
-
-- 05/31
-    - [x] jjwt 버전 변경
-    - [x] token validate 추가
-    - 도메인 검증 추가
-        - [x] username
-            - username은 `유일`하다.
-            - `5`이상 `20`이하 여야 한다.
-            - `영문 소문자`, `숫자`와 `특수기호(_), (-)`만 사용 가능하다.
-        - [x] email
-            - 형식은 `example@email.com`
-            - `@`이전에는 `영문 소문자`, `숫자`와 `특수기호(_), (-), (.)`만 사용 가능하다.
-            - `@`이후에는 영문 소문자로만 이루어져야 한다.
-            - `.`이후에는 영문 소문자 `2~3`글자로 이루어져야 한다.
-        - [x] address
-            - 길이가 `0 ~ 255` 여야 한다.
-        - [x] phoneNumber
-            - `010`으로 시작해야 한다.
-            - 형식은 `010-0000-0000`이여야 한다.
-            - `숫자`만 가능하다.
-    - [x] dto validation 추가
-
-- 06/01
-    - [x] 원시값 포장
-    - [x] acceptance test 에서 중복되는 부분을 test fixture 로 만들기
-    - [x] password 검증 추가
-        - 비밀번호는 `8 ~ 16자`여야 하고 `영문자`, `숫자`, `특수문자!, @, #, $, %, ^, &, *, (, )`를 모두 사용해야 한다.
-    - [x] password 암호화
-    - [x] tokenRequest 가 유효하지 않은 경우 validation 추가
+- dto
+  - [ ] @Valid 어노테이션을 적절히 활용했는지 확인하기
+- service
+  - [ ] 도메인과 적절한 책임 분배가 이루어졌는지 확인하기  
+        ex. AuthService 의 validateCustomer - 비밀번호 검증을 customer 역할로
+- Auth
+  - [ ] springframework에서 제공하는 HTTP 상수 Authorization 사용하기 
+  - [ ] config에서 jwtTokenProvider bean 등록 후 주입해주기
+  - [ ] Interceptor 사용하지 않은 이유찾기 / 사용하기
+- Error
+  - [ ] API 명세에 맞게 에러 코드를 세부적으로 나누어 사용하기
+    - ex. InvalidCustomerException, NotInCustomerCartItemException
+- domain
+  - [ ] 현재 password를 RawPassword로 수정하고, EncodedPassword 를 따로 만들기  
+        + Customer 에서는 EncodedPassword 만 받을 수 있도록 수정하기
+- test
+  - [ ] JwtTokenProvider 에 대한 테스트 추가하기
+</details>
