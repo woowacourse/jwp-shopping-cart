@@ -8,8 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.OrderRequest;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,7 +24,7 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
+    private static final String USER = "렉스";
     private Long cartId1;
     private Long cartId2;
 
@@ -82,7 +83,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(orderRequests)
-                .when().post("/api/customers/{customerName}/orders", userName)
+                .when().post("/api/members/{memberName}/orders", userName)
                 .then().log().all()
                 .extract();
     }
@@ -91,7 +92,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders", userName)
+                .when().get("/api/members/{memberName}/orders", userName)
                 .then().log().all()
                 .extract();
     }
@@ -100,7 +101,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
+                .when().get("/api/members/{memberName}/orders/{orderId}", userName, orderId)
                 .then().log().all()
                 .extract();
     }
