@@ -1,4 +1,23 @@
 package woowacourse.auth.ui;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.application.AuthService;
+import woowacourse.auth.dto.SignInRequest;
+import woowacourse.shoppingcart.dto.TokenResponse;
+
+@RestController
 public class AuthController {
+
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/signin")
+    public TokenResponse signIn(@RequestBody SignInRequest signinRequest) {
+        return authService.login(signinRequest);
+    }
 }
