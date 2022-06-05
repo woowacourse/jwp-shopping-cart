@@ -9,9 +9,6 @@ public class CartItem {
     private int quantity;
     private String imageUrl;
 
-    public CartItem() {
-    }
-
     public CartItem(final Long id, final Product product, final int quentity) {
         this(id, product.getId(), product.getName(), product.getPrice(), quentity, product.getImageUrl());
     }
