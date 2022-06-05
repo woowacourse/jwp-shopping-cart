@@ -50,18 +50,22 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidPasswordException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
+            IllegalArgumentException.class
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({InvalidCustomerException.class, AuthorizationException.class})
-    public ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException exception) {
+    @ExceptionHandler(NotInCustomerCartItemException.class)
+    public ResponseEntity<ErrorResponse> handleNoItem(final NotInCustomerCartItemException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler({InvalidCustomerException.class, InvalidPasswordException.class, AuthorizationException.class})
+    public ResponseEntity<ErrorResponse> handleAuthorizationException(final AuthorizationException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
     }
 

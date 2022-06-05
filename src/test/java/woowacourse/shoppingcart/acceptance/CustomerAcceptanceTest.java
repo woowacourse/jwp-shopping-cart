@@ -283,7 +283,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         //when & then
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("123567");
-        RestAssuredFixture.delete(deleteCustomerRequest, token, "/users/me", HttpStatus.BAD_REQUEST.value());
+        RestAssuredFixture.delete(deleteCustomerRequest, token, "/users/me", HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("토큰이 없으면 탈퇴할 수 없다")

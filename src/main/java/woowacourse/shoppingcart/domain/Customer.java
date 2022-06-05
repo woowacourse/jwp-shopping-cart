@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 import java.util.regex.Pattern;
 
@@ -66,7 +67,7 @@ public class Customer {
 
     public void isValidPassword(String password) {
         if (!this.password.equals(password)) {
-                throw new InvalidCustomerException("로그인 실패");
+                throw new InvalidPasswordException();
         }
     }
 

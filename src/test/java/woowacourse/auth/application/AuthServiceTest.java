@@ -13,6 +13,7 @@ import woowacourse.auth.dto.LogInResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -48,7 +49,7 @@ class AuthServiceTest {
         customerService.addCustomer(new SignUpRequest("레넌", "rennon@woowa.com", "123456"));
 
         assertThatThrownBy(() -> authService.signIn(new LogInRequest("rennon@woowa.com", "123578")))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("로그인 실패");
+                .isInstanceOf(InvalidPasswordException.class)
+                .hasMessageContaining("비밀번호가 틀렸습니다.");
     }
 }
