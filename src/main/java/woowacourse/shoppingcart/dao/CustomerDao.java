@@ -30,7 +30,7 @@ public class CustomerDao {
         }
     }
 
-    public void save(Customer customer) {
+    public Customer save(Customer customer) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
@@ -38,8 +38,9 @@ public class CustomerDao {
         params.put("email", customer.getEmail());
         params.put("username", customer.getUsername());
         params.put("password", customer.getPassword());
+        Long newId = (Long) simpleJdbcInsert.executeAndReturnKey(params);
 
-        simpleJdbcInsert.execute(params);
+        return new Customer(newId, customer.getEmail(), customer.getPassword(), customer.getUsername());
     }
 
     public Customer findByEmail(String email) {

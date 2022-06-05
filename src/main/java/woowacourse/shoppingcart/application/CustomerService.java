@@ -18,12 +18,13 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public void register(String email, String password, String username) {
+    public Customer register(String email, String password, String username) {
         final Password encryptedPassword = Password.from(password);
         if(customerDao.existsByEmail(email)){
             throw new JoinException("이미 존재하는 이메일입니다.", ErrorResponse.DUPLICATED_EMAIL);
         }
-        customerDao.save(new Customer(email, encryptedPassword.getPassword(), username));
+
+        return customerDao.save(new Customer(email, encryptedPassword.getPassword(), username));
     }
 
     public void changePassword(Customer customer, String oldPassword, String newPassword) {
@@ -45,6 +46,5 @@ public class CustomerService {
             throw new AuthException("기존 비밀번호와 맞지 않습니다.", ErrorResponse.INCORRECT_PASSWORD);
         }
         customerDao.delete(customer.getId());
-
     }
 }

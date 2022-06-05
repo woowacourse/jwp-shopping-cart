@@ -21,13 +21,19 @@ import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
+
+    private final String email = "test@gmail.com";
+    private final String password = "password0!";
+    private final String username = "루나";
+
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
+        // when
         final CustomerRequest customerRequest = new CustomerRequest("test@gmail.com", "password0!", "루나");
-
         final ExtractableResponse<Response> response = postMethodRequest(customerRequest, "/api/customers");
 
+        // then
         assertAll(
                 ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
                 ()-> assertThat(response.header("location")).isEqualTo("/login")
@@ -37,22 +43,21 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
-        final String email = "test@gmail.com";
-        final String password = "password0!";
-        final String username = "루나";
+        // given
         final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
         postMethodRequest(customerRequest, "/api/customers");
 
         final LoginRequest loginRequest = new LoginRequest(email, password);
         final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest,
                 "/api/auth/login");
-
         final String token = tokenResponse.jsonPath().getString("accessToken");
+
+        // when
         final ExtractableResponse<Response> response = getMethodRequestWithBearerAuth(token,
                 "/api/customers/me");
-
         final CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
 
+        // then
         assertAll(
                 ()-> assertThat(customerResponse.getEmail()).isEqualTo(email),
                 ()-> assertThat(customerResponse.getUsername()).isEqualTo(username),
@@ -63,9 +68,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("비밀번호 수정")
     @Test
     void updatePassword() {
-        final String email = "test@gmail.com";
-        final String password = "password0!";
-        final String username = "루나";
         final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
         postMethodRequest(customerRequest, "/api/customers");
 
@@ -87,9 +89,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 일반 정보 수정")
     @Test
     void updateGeneralInformation() {
-        final String email = "test@gmail.com";
-        final String password = "password0!";
-        final String username = "루나";
         final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
         postMethodRequest(customerRequest, "/api/customers");
 
@@ -118,9 +117,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
-        final String email = "test@gmail.com";
-        final String password = "password0!";
-        final String username = "루나";
         final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
         postMethodRequest(customerRequest, "/api/customers");
 
