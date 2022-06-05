@@ -1,28 +1,22 @@
 package woowacourse.auth.config;
 
-import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
-import woowacourse.auth.application.AuthService;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import java.util.List;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
-    private final AuthService authService;
+    private final AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;
 
-    public AuthenticationPrincipalConfig(AuthService authService) {
-        this.authService = authService;
+    public AuthenticationPrincipalConfig(
+            final AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver) {
+        this.authenticationPrincipalArgumentResolver = authenticationPrincipalArgumentResolver;
     }
 
     @Override
-    public void addArgumentResolvers(List argumentResolvers) {
-        argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
-    }
-
-    @Bean
-    public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService);
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(authenticationPrincipalArgumentResolver);
     }
 }
