@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.acceptance;
+package woowacourse.fixture;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -10,7 +10,7 @@ import woowacourse.shoppingcart.ui.dto.CustomerChangePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerSignUpRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerChangeRequest;
 
-public class ResponseCreator {
+public class RestAssuredFixture {
 
     public static ExtractableResponse<Response> postCustomers(String email, String password, String nickname) {
         CustomerSignUpRequest request = new CustomerSignUpRequest(email, password, nickname);

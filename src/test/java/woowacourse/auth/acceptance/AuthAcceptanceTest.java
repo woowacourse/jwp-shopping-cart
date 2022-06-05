@@ -1,8 +1,8 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.getCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.postLogin;
+import static woowacourse.fixture.RestAssuredFixture.getCustomers;
+import static woowacourse.fixture.RestAssuredFixture.postLogin;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.application.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.acceptance.ResponseCreator;
+import woowacourse.fixture.RestAssuredFixture;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -21,7 +21,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        ResponseCreator.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
+        RestAssuredFixture.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
 
         // when
         ExtractableResponse<Response> 로그인_응답됨 = postLogin("wishoon@gmail.com", "qwer1234@Q");
@@ -34,7 +34,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBadBearerAuth() {
         // given
-        ResponseCreator.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
+        RestAssuredFixture.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
 
         // when
         ExtractableResponse<Response> 로그인_응답됨 = postLogin("wishoon1@gmail.com", "qwer1234@Q");
@@ -47,7 +47,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // given
-        ResponseCreator.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
+        RestAssuredFixture.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
         TokenResponse 위변조_토큰 = new TokenResponse("Forgery_Token");
 
         // when

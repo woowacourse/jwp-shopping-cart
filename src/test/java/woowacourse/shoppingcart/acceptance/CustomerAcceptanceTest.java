@@ -2,12 +2,12 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.deleteCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.getCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.patchCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.patchPasswordCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.postCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.postLogin;
+import static woowacourse.fixture.RestAssuredFixture.deleteCustomers;
+import static woowacourse.fixture.RestAssuredFixture.getCustomers;
+import static woowacourse.fixture.RestAssuredFixture.patchCustomers;
+import static woowacourse.fixture.RestAssuredFixture.patchPasswordCustomers;
+import static woowacourse.fixture.RestAssuredFixture.postCustomers;
+import static woowacourse.fixture.RestAssuredFixture.postLogin;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
