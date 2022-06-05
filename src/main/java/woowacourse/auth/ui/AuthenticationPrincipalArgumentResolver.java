@@ -12,6 +12,7 @@ import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
+import woowacourse.shoppingcart.exception.NoAuthorizationHeaderException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -28,8 +29,11 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String authorizationHeader = webRequest.getHeader(AUTHORIZATION_HEADER_NAME);
+            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        String authorizationHeader = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authorizationHeader == null) {
+            throw new NoAuthorizationHeaderException();
+        }
         String accessToken = AuthorizationExtractor.extract(authorizationHeader);
 
         if (!jwtTokenProvider.validateToken(accessToken)) {
