@@ -2,6 +2,7 @@ package woowacourse.product.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,5 +50,14 @@ public class ProductServiceTest {
             () -> assertThat(findProduct.getStock()).isEqualTo(stock),
             () -> assertThat(findProduct.getImageURL()).isEqualTo(imageURL)
         );
+    }
+
+    @DisplayName("입력한 id에 맞는 상품을 삭제한다.")
+    @Test
+    void deleteProduct() {
+        final ProductRequest productRequest = new ProductRequest(name, price, stock, imageURL);
+        final Long id = productService.addProduct(productRequest);
+
+        assertDoesNotThrow(() -> productService.deleteProductById(id));
     }
 }

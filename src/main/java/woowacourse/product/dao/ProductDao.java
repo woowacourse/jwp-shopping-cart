@@ -72,8 +72,10 @@ public class ProductDao {
     //                     ));
     // }
     //
-    // public void delete(final Long productId) {
-    //     final String query = "DELETE FROM product WHERE id = ?";
-    //     jdbcTemplate.update(query, productId);
-    // }
+    public void delete(final Long id) {
+        final String sql = "DELETE FROM product WHERE id = :id";
+        final SqlParameterSource params = new MapSqlParameterSource("id", id);
+
+        jdbcTemplate.update(sql, params);
+    }
 }

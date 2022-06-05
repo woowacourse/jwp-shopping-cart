@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,14 +38,14 @@ public class ProductController {
     //     return ResponseEntity.ok(productService.findProducts());
     // }
     //
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> product(@PathVariable final Long id) {
-        return ResponseEntity.ok(productService.findProductById(id));
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
+        return ResponseEntity.ok(productService.findProductById(productId));
     }
-    //
-    // @DeleteMapping("/{productId}")
-    // public ResponseEntity<Void> delete(@PathVariable final Long productId) {
-    //     productService.deleteProductById(productId);
-    //     return ResponseEntity.noContent().build();
-    // }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long productId) {
+        productService.deleteProductById(productId);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -57,16 +57,15 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     //     상품_목록_포함됨(productId1, productId2, response);
     // }
     //
-    //
-    // @DisplayName("상품을 삭제한다")
-    // @Test
-    // void deleteProduct() {
-    //     Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-    //
-    //     ExtractableResponse<Response> response = 상품_삭제_요청(productId);
-    //
-    //     상품_삭제됨(response);
-    // }
+    @DisplayName("상품을 삭제한다")
+    @Test
+    void deleteProduct() {
+        final Long productId = 상품_등록되어_있음(productRequest);
+
+        final ExtractableResponse<Response> response = 상품_삭제_요청(productId);
+
+        상품_삭제됨(response);
+    }
 
     public static ExtractableResponse<Response> 상품_등록_요청(final ProductRequest productRequest) {
         return RestAssured
@@ -96,7 +95,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
+    public static ExtractableResponse<Response> 상품_삭제_요청(final Long productId) {
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -131,7 +130,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(resultProduct.getId()).isEqualTo(productId);
     }
 
-    public static void 상품_삭제됨(ExtractableResponse<Response> response) {
+    public static void 상품_삭제됨(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

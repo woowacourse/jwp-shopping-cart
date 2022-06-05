@@ -30,13 +30,14 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
+    public void deleteProductById(final Long id) {
+        productDao.delete(id);
+    }
+
     // public List<Product> findProducts() {
     //     return productDao.findProducts();
     // }
     //
     //
     //
-    // public void deleteProductById(final Long productId) {
-    //     productDao.delete(productId);
-    // }
 }
