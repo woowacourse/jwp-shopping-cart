@@ -74,20 +74,20 @@
 <summary>소니의 1단계 첫번째 리뷰</summary>
 
 - dto
-  - [x] @Valid 어노테이션을 적절히 활용했는지 확인하기
+    - [x] @Valid 어노테이션을 적절히 활용했는지 확인하기
 - service
-  - [x] 도메인과 적절한 책임 분배가 이루어졌는지 확인하기  
-        ex. AuthService 의 validateCustomer - 비밀번호 검증을 customer 역할로
+    - [x] 도메인과 적절한 책임 분배가 이루어졌는지 확인하기  
+      ex. AuthService 의 validateCustomer - 비밀번호 검증을 customer 역할로
 - Auth
-  - [ ] springframework에서 제공하는 HTTP 상수 Authorization 사용하기 
-  - [ ] config에서 jwtTokenProvider bean 등록 후 주입해주기
-  - [ ] Interceptor 사용하지 않은 이유찾기 / 사용하기
+    - [x] springframework에서 제공하는 HTTP 상수 Authorization 사용하기
+    - [ ] config에서 jwtTokenProvider bean 등록 후 주입해주기
+    - [ ] Interceptor 사용하지 않은 이유찾기 / 사용하기
 - Error
-  - [ ] API 명세에 맞게 에러 코드를 세부적으로 나누어 사용하기
-    - ex. InvalidCustomerException, NotInCustomerCartItemException
+    - [ ] API 명세에 맞게 에러 코드를 세부적으로 나누어 사용하기
+        - ex. InvalidCustomerException, NotInCustomerCartItemException
 - domain
-  - [ ] 현재 password를 RawPassword로 수정하고, EncodedPassword 를 따로 만들기  
-        + Customer 에서는 EncodedPassword 만 받을 수 있도록 수정하기
+    - [ ] 현재 password를 RawPassword로 수정하고, EncodedPassword 를 따로 만들기  
+      + Customer 에서는 EncodedPassword 만 받을 수 있도록 수정하기
 - test
   - [ ] JwtTokenProvider 에 대한 테스트 추가하기
 </details>
