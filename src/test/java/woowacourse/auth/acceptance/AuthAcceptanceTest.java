@@ -1,46 +1,59 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.fixture.RestAssuredFixture.getCustomers;
+import static woowacourse.fixture.RestAssuredFixture.postLogin;
+
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.http.HttpStatus;
+import woowacourse.auth.application.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.fixture.RestAssuredFixture;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+        RestAssuredFixture.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        ExtractableResponse<Response> 로그인_응답됨 = postLogin("wishoon@gmail.com", "qwer1234@Q");
 
         // then
-        // 내 정보가 조회된다
+        assertThat(로그인_응답됨.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
     @Test
     void myInfoWithBadBearerAuth() {
         // given
-        // 회원이 등록되어 있고
+        RestAssuredFixture.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
 
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+        ExtractableResponse<Response> 로그인_응답됨 = postLogin("wishoon1@gmail.com", "qwer1234@Q");
 
         // then
-        // 토큰 발급 요청이 거부된다
+        assertThat(로그인_응답됨.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
+        // given
+        RestAssuredFixture.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
+        TokenResponse 위변조_토큰 = new TokenResponse("Forgery_Token");
+
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        ExtractableResponse<Response> 회원_조회_응답됨 = getCustomers(위변조_토큰);
 
         // then
-        // 내 정보 조회 요청이 거부된다
+        assertThat(회원_조회_응답됨.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }

@@ -15,7 +15,7 @@ create table customer
     password varchar(50) not null,
     nickname varchar(50) not null unique,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+);
 
 create table product
 (

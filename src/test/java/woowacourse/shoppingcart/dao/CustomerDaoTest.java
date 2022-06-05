@@ -1,53 +1,123 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.domain.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@Sql(scripts = {"classpath:schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class CustomerDaoTest {
 
-    private final CustomerDao customerDao;
+    private CustomerDao customerDao;
 
-    public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
-        customerDao = new CustomerDao(jdbcTemplate);
+    public CustomerDaoTest(DataSource dataSource) {
+        this.customerDao = new CustomerDao(dataSource);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
-    void findIdByUserNameTest() {
-
+    @DisplayName("회원을 저장한다.")
+    void saveCustomer() {
         // given
-        final String userName = "puterism";
+        Customer customer = new Customer("email@email.com", "password123!A", "rookie");
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        Long id = customerDao.save(customer);
 
         // then
-        assertThat(customerId).isEqualTo(1L);
+        assertThat(id).isEqualTo(1L);
     }
 
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
+    @DisplayName("이메일과 패스워드를 통해서 회원을 조회할 수 있다.")
+    void findByEmailAndPassword() {
         // given
-        final String userName = "gwangyeol-iM";
+        customerDao.save(new Customer("email@email.com", "password123!A", "rookie"));
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        Customer customer = customerDao.findByEmailAndPassword("email@email.com", "password123!A").get();
 
         // then
-        assertThat(customerId).isEqualTo(16L);
+        assertThat(customer).usingRecursiveComparison()
+                .isEqualTo(new Customer(1L, "email@email.com", "password123!A", "rookie"));
     }
+
+    @Test
+    @DisplayName("비밀번호와 닉네임을 변경할 수 있다.")
+    void update() {
+        // given
+        customerDao.save(new Customer("email@email.com", "password123!A", "rookie"));
+
+        // when
+        customerDao.update(new Customer(1L, "email@email.com", "password123@Q", "zero"));
+
+        // then
+        Customer customer = customerDao.findById(1L).get();
+        assertThat(customer).usingRecursiveComparison()
+                .isEqualTo(new Customer(1L, "email@email.com", "password123@Q", "zero"));
+    }
+
+    @Test
+    @DisplayName("닉네임 중복을 확인할 수 있다.")
+    void checkDuplicatedNickname() {
+        // given
+        customerDao.save(new Customer("email1@email.com", "password123!A", "rookie"));
+        customerDao.save(new Customer("email2@email.com", "password123!A", "zero"));
+
+        // when & then
+        assertAll(
+                () -> assertThat(customerDao.existByNicknameExcludedId(1L, "rookie")).isFalse(),
+                () -> assertThat(customerDao.existByNicknameExcludedId(2L, "rookie")).isTrue()
+        );
+    }
+
+    @Test
+    @DisplayName("회원을 삭제할 수 있다.")
+    void delete() {
+        // given
+        customerDao.save(new Customer("email1@email.com", "password123!A", "rookie"));
+
+        // when
+        customerDao.delete(1L);
+
+        // then
+        assertThat(customerDao.findById(1L)).isEmpty();
+    }
+
+//    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
+//    @Test
+//    void findIdByUserNameTest() {
+//
+//        // given
+//        final String userName = "puterism";
+//
+//        // when
+//        final Long customerId = customerDao.findIdByUserName(userName);
+//
+//        // then
+//        assertThat(customerId).isEqualTo(1L);
+//    }
+//
+//    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
+//    @Test
+//    void findIdByUserNameTestIgnoreUpperLowerCase() {
+//        // given
+//        final String userName = "gwangyeol-iM";
+//
+//        // when
+//        final Long customerId = customerDao.findIdByUserName(userName);
+//
+//        // then
+//        assertThat(customerId).isEqualTo(16L);
+//    }
 }
