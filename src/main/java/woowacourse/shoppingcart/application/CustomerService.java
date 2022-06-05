@@ -33,7 +33,7 @@ public class CustomerService {
     public CustomerLoginResponse login(final CustomerLoginRequest request) {
         Customer customer = customerRepository.findValidUser(request.getUserId(), request.getPassword());
         String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
-        return CustomerLoginResponse.ofToken(customer, token);
+        return CustomerLoginResponse.of(customer, token);
     }
 
     public CustomerResponse findById(final TokenRequest request) {
