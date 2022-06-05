@@ -7,7 +7,8 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.Gender;
 import woowacourse.shoppingcart.domain.customer.Name;
-import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.password.PasswordFactory;
+import woowacourse.shoppingcart.domain.customer.password.PasswordType;
 import woowacourse.shoppingcart.dto.AddressRequest;
 import woowacourse.shoppingcart.dto.ModifiedCustomerRequest;
 
@@ -44,7 +45,7 @@ public class ModifiedCustomerDto {
 
     public static Customer toModifiedCustomerDto(final ModifiedCustomerDto modifiedCustomerDto) {
         return new Customer(new Email(modifiedCustomerDto.getEmail()),
-                new Password(modifiedCustomerDto.getPassword()),
+                PasswordFactory.of(PasswordType.HASHED, modifiedCustomerDto.getPassword()),
                 modifiedCustomerDto.getProfileImageUrl(), new Name(modifiedCustomerDto.getName()),
                 Gender.form(modifiedCustomerDto.getGender()),
                 new Birthday(modifiedCustomerDto.getBirthday()), new Contact(modifiedCustomerDto.getContact()),

@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 import woowacourse.shoppingcart.domain.address.FullAddress;
+import woowacourse.shoppingcart.domain.customer.password.Password;
+import woowacourse.shoppingcart.domain.customer.password.PasswordType;
 
 public class Customer {
 
@@ -34,10 +36,11 @@ public class Customer {
         this.terms = terms;
     }
 
-    public Customer(Long id, Email email, Password password, String profileImageUrl,
-                    Name name, Gender gender, Birthday birthday, Contact contact,
+    public Customer(Long id, Email email, Password password, String profileImageUrl, Name name,
+                    Gender gender, Birthday birthday, Contact contact,
                     FullAddress fullAddress) {
-        this(id, email, password, profileImageUrl, name, gender, birthday, contact, fullAddress, new Terms(true));
+        this(id, email, password, profileImageUrl, name, gender,
+                birthday, contact, fullAddress, new Terms(true));
     }
 
     public Customer(Email email, Password password, String profileImageUrl,
@@ -55,7 +58,7 @@ public class Customer {
     }
 
     public String getPassword() {
-        return password.getPassword();
+        return password.getValue();
     }
 
     public String getProfileImageUrl() {

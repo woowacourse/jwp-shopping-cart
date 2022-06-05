@@ -1,20 +1,22 @@
-package woowacourse.shoppingcart.domain.customer;
+package woowacourse.shoppingcart.domain.customer.password;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
-public class Password {
+public class HashedPasswordStrategy implements PasswordCreationStrategy {
 
     private static final String REGULAR_EXPRESSION = "^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
     private static final Pattern compiledPattern = Pattern.compile(REGULAR_EXPRESSION);
-    static final String INVALID_PASSWORD_FORMAT = "올바르지 않은 비밀번호입니다.";
+    private static final String INVALID_PASSWORD_FORMAT = "올바르지 않은 비밀번호입니다.";
 
-    private final String value;
+    HashedPasswordStrategy() {
+    }
 
-    public Password(String rawPassword) {
+    @Override
+    public Password createPassword(final String rawPassword) {
         validatePassword(rawPassword);
-        value = encryptPassword(rawPassword);
+        return new Password(encryptPassword(rawPassword));
     }
 
     private void validatePassword(String rawPassword) {
@@ -41,11 +43,4 @@ public class Password {
         return stringBuilder.toString();
     }
 
-    public boolean isSamePassword(final String hashedPassword) {
-        return this.value.equals(hashedPassword);
-    }
-
-    public String getPassword() {
-        return value;
-    }
 }

@@ -19,6 +19,10 @@ public class AddressDto {
         return new AddressDto(request.getAddress(), request.getDetailAddress(), request.getZoneCode());
     }
 
+    public static AddressDto fromFullAddress(final FullAddress address) {
+        return new AddressDto(address.getAddress(), address.getDetailAddress(), address.getZoneCode());
+    }
+
     public static FullAddress toFullAddress(final AddressDto request) {
         return new FullAddress(request.getAddress(), request.getDetailAddress(), request.getZoneCode());
     }

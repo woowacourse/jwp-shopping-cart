@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.application.dto.CustomerDto;
+import woowacourse.shoppingcart.domain.customer.Customer;
+
 public class CustomerResponse {
 
     private Long id;
@@ -33,6 +36,12 @@ public class CustomerResponse {
                 request.getName(),
                 request.getGender(), request.getBirthday(), request.getContact(), request.getFullAddress().getAddress(),
                 request.getFullAddress().getDetailAddress(), request.getFullAddress().getZoneCode());
+    }
+
+    public static CustomerResponse fromCustomer(final Customer customer) {
+        return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getProfileImageUrl(),
+                customer.getName(), customer.getGender(), customer.getBirthday(), customer.getContact(),
+                customer.getAddress(), customer.getDetailAddress(), customer.getZoneCode());
     }
 
     public static class AddressResponse {
