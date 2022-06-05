@@ -44,12 +44,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final String accessToken = loginAndGetToken();
 
         // when 내 정보를 조회하면
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customer")
-                .then().log().all()
-                .extract();
+        final ExtractableResponse<Response> response = showDetail(accessToken);
 
         // then 성공적으로 정보를 조회한다.
         assertAll(
@@ -57,6 +52,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.as(CustomerDetailResponse.class)).usingRecursiveComparison()
                         .isEqualTo(new CustomerDetailResponse(NAME, EMAIL))
         );
+    }
+
+    private ExtractableResponse<Response> showDetail(final String accessToken) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customer")
+                .then().log().all()
+                .extract();
     }
 
     @DisplayName("내 정보 수정")

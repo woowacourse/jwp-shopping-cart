@@ -32,6 +32,17 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void login() {
         // given 회원이 등록되어 있고
+        registerCustomer();
+
+        // when id, password를 사용해 로그인 시도를 하면
+        final String accessToken = loginCustomer(new TokenRequest(EMAIL, PASSWORD))
+                .as(TokenResponse.class).getAccessToken();
+
+        // then 요청이 성공하고 토큰이 발급된다.
+        assertThat(jwtTokenProvider.validateToken(accessToken)).isTrue();
+    }
+
+    private void registerCustomer() {
         CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
         RestAssured.given().log().all()
                 .body(request)
@@ -40,41 +51,17 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .post("/api/customer")
                 .then().log().all()
                 .extract();
-
-        // when id, password를 사용해 로그인 시도를 하면
-        String accessToken = RestAssured
-                .given().log().all()
-                .body(new TokenRequest(EMAIL, PASSWORD))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login")
-                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
-
-        // then 요청이 성공하고 토큰이 발급된다.
-        assertThat(jwtTokenProvider.validateToken(accessToken)).isTrue();
     }
 
     @DisplayName("Bearer Auth 로그인 실패 - 존재하지 않는 이메일")
     @Test
     void login_wrongEmail_badRequest() {
         // given 회원이 등록되어 있고
-        CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
-        RestAssured.given().log().all()
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/customer")
-                .then().log().all()
-                .extract();
+        registerCustomer();
 
         // when 존재하지 않는 이메일을 사용해 토큰을 요청하면
-        CustomerRegisterRequest invalidRequest = new CustomerRegisterRequest(NAME, "lalala@gamil.com", PASSWORD);
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .body(invalidRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login")
-                .then().log().all().extract();
+        TokenRequest invalidRequest = new TokenRequest("lalala@gamil.com", PASSWORD);
+        final ExtractableResponse<Response> response = loginCustomer(invalidRequest);
 
         // then 토큰 발급 요청이 거부된다
         assertAll(
@@ -84,27 +71,24 @@ class AuthAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("Bearer Auth 로그인 실패 - 일치하지 않는 비밀번호")
-    @Test
-    void login_wrongPassword_badRequest() {
-        // given 회원이 등록되어 있고
-        CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
-        RestAssured.given().log().all()
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/customer")
-                .then().log().all()
-                .extract();
-
-        // when 이메일에 일치하지 않는 비밀번호를 사용해 토큰을 요청하면
-        CustomerRegisterRequest invalidRequest = new CustomerRegisterRequest(NAME, EMAIL, "1111111111");
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+    private ExtractableResponse<Response> loginCustomer(final TokenRequest invalidRequest) {
+        return RestAssured.given().log().all()
                 .body(invalidRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
                 .then().log().all().extract();
+    }
+
+    @DisplayName("Bearer Auth 로그인 실패 - 일치하지 않는 비밀번호")
+    @Test
+    void login_wrongPassword_badRequest() {
+        // given 회원이 등록되어 있고
+        registerCustomer();
+
+        // when 이메일에 일치하지 않는 비밀번호를 사용해 토큰을 요청하면
+        TokenRequest invalidRequest = new TokenRequest(EMAIL, "1111111111");
+        final ExtractableResponse<Response> response = loginCustomer(invalidRequest);
 
         // then 토큰 발급 요청이 거부된다
         assertAll(
