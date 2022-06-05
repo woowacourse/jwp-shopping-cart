@@ -13,9 +13,9 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.order.OrderRequest;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
 import woowacourse.shoppingcart.dto.order.OrderResponses;
+import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequests;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
@@ -42,11 +42,10 @@ public class OrderService {
         final Long customerId = customerDao.findIdByUserName(customerName);
         final Long ordersId = orderDao.addOrders(customerId);
 
-        List<OrderRequest> orderDetailRequests = orderSaveRequests.getOrders();
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
+        for (final OrderSaveRequest orderSaveRequest : orderSaveRequests.getOrders()) {
+            final Long cartId = orderSaveRequest.getCartItemId();
             final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
+            final int quantity = cartItemDao.findQuantityById(cartId);
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
             cartItemDao.deleteCartItem(cartId);

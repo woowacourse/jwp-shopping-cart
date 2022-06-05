@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.cartitem.CartItemSaveRequest;
-import woowacourse.shoppingcart.dto.order.OrderRequest;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
+import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequests;
 
 @DisplayName("주문 관련 기능")
@@ -46,7 +46,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void addOrder() {
         OrderSaveRequests orderRequests = new OrderSaveRequests(Stream.of(cartId1, cartId2)
-                .map(cartId -> new OrderRequest(cartId, 10))
+                .map(OrderSaveRequest::new)
                 .collect(Collectors.toList()));
 
         ExtractableResponse<Response> response = 주문하기_요청(accessToken, orderRequests);
@@ -57,8 +57,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, new OrderSaveRequests(Collections.singletonList(new OrderRequest(cartId1, 2))));
-        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, new OrderSaveRequests(Collections.singletonList(new OrderRequest(cartId2, 5))));
+        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, new OrderSaveRequests(Collections.singletonList(new OrderSaveRequest(cartId1))));
+        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, new OrderSaveRequests(Collections.singletonList(new OrderSaveRequest(cartId2))));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(accessToken);
 
@@ -70,8 +70,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void getOrder() {
         Long orderId = 주문하기_요청_성공되어_있음(accessToken, new OrderSaveRequests(Arrays.asList(
-                new OrderRequest(cartId1, 2),
-                new OrderRequest(cartId2, 4)
+                new OrderSaveRequest(cartId1),
+                new OrderSaveRequest(cartId2)
         )));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(accessToken, orderId);

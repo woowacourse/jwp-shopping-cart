@@ -4,16 +4,16 @@ import java.util.List;
 
 public class OrderSaveRequests {
 
-    private List<OrderRequest> orders;
+    private List<OrderSaveRequest> orders;
 
     private OrderSaveRequests() {
     }
 
-    public OrderSaveRequests(final List<OrderRequest> orders) {
+    public OrderSaveRequests(final List<OrderSaveRequest> orders) {
         this.orders = orders;
     }
 
-    public List<OrderRequest> getOrders() {
+    public List<OrderSaveRequest> getOrders() {
         return orders;
     }
 }

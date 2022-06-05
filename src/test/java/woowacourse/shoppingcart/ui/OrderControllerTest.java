@@ -27,9 +27,9 @@ import woowacourse.auth.ui.LoginInterceptor;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.order.OrderRequest;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
 import woowacourse.shoppingcart.dto.order.OrderResponses;
+import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequests;
 
 @SpringBootTest
@@ -61,12 +61,10 @@ public class OrderControllerTest {
     void addOrder() throws Exception {
         // given
         final Long cartId = 1L;
-        final int quantity = 5;
         final Long cartId2 = 1L;
-        final int quantity2 = 5;
         final String customerName = "pobi";
         final OrderSaveRequests requestDtos =
-                new OrderSaveRequests(Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2)));
+                new OrderSaveRequests(Arrays.asList(new OrderSaveRequest(cartId), new OrderSaveRequest(cartId2)));
 
         final Long expectedOrderId = 1L;
         when(authenticationContext.getPrincipal()).thenReturn(customerName);
