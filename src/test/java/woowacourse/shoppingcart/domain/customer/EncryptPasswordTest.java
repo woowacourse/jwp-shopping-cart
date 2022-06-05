@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 class EncryptPasswordTest {
 
-    @DisplayName("비밀 번호가 일치하는지를 반환한다.")
+    @DisplayName("비밀번호가 일치하는지를 반환한다.")
     @Test
     void matches() {
         final EncryptPassword encryptPassword = new EncryptPassword(plainBasicPassword);
