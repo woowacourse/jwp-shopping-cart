@@ -18,12 +18,6 @@ public class JdbcCartItemDao implements CartItemDao{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-//    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-//        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
-//
-//        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
-//    }
-
     @Override
     public Long addCartItem(final int customerId, final Long productId, int quantity) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
@@ -37,13 +31,16 @@ public class JdbcCartItemDao implements CartItemDao{
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
-//
-//    public List<Long> findIdsByCustomerId(final Long customerId) {
-//        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-//
-//        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
 
-//    }
+    @Override
+    public List<Long> findCartIdsByCustomerId(int customerId) {
+        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+
+    }
+
+
 //    public Long findProductIdById(final Long cartId) {
 //        try {
 //            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";

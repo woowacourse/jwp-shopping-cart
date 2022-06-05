@@ -3,7 +3,9 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
+import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_2;
 
+import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,6 +47,24 @@ public class CartItemDaoTest {
         // then
         assertThat(cartId).isPositive();
     }
+
+    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @Test
+    void findIdsByCustomerId() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long productId2 = productDao.save(PRODUCT_2);
+        final Long cartId1 = cartItemDao.addCartItem(customerId, productId1, 1);
+        final Long cartId2 = cartItemDao.addCartItem(customerId, productId2, 2);
+
+        // when
+        List<Long> productIds = cartItemDao.findCartIdsByCustomerId(customerId);
+
+
+        // then
+        assertThat(productIds).containsExactly(cartId1, cartId2);
+    }
 //
 //    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
 //    @Test
@@ -60,19 +80,6 @@ public class CartItemDaoTest {
 //        assertThat(productsIds).containsExactly(1L, 2L);
 //    }
 //
-//    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-//    @Test
-//    void findIdsByCustomerId() {
-//
-//        // given
-//        final Long customerId = 1L;
-//
-//        // when
-//        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-//
-//        // then
-//        assertThat(cartIds).containsExactly(1L, 2L);
-//    }
 //
 //    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
 //    @Test

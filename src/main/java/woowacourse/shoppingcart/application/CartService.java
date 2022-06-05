@@ -35,7 +35,7 @@ public class CartService {
 //        }
 //        return carts;
 //    }
-//
+////
 //    private List<Long> findCartIdsByCustomerName(final String email) {
 //        final int customerId = customerDao.findByEmail(email).getId();
 //        return cartItemDao.findIdsByCustomerId((long) customerId);
