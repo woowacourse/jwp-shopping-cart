@@ -15,9 +15,9 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.service.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.exception.shoppingcart.InvalidCustomerException;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.service.CustomerService;
 
 @SpringBootTest
 @Transactional
@@ -56,8 +56,8 @@ class AuthServiceTest {
 
         // when & then
         assertThatThrownBy(() -> authService.login(tokenRequest))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("유효하지 않은 고객입니다");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
     }
 
     @Test
@@ -68,7 +68,7 @@ class AuthServiceTest {
 
         // when & then
         assertThatThrownBy(() -> authService.login(tokenRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("비밀번호가 일치하지 않습니다.");
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("유효하지 않은 고객입니다");
     }
 }
