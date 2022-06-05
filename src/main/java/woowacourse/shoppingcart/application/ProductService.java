@@ -3,12 +3,12 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductResponses;
+import woowacourse.shoppingcart.dto.ProductSaveRequest;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class ProductService {
     private final ProductDao productDao;
 
@@ -16,18 +16,20 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public ProductResponses findProducts() {
+        return ProductResponses.from(productDao.findProducts());
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    @Transactional
+    public Long addProduct(final ProductSaveRequest productSaveRequest) {
+        return productDao.save(productSaveRequest.toProduct());
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponse findProductById(final Long productId) {
+        return ProductResponse.from(productDao.findProductById(productId));
     }
 
+    @Transactional
     public void deleteProductById(final Long productId) {
         productDao.delete(productId);
     }
