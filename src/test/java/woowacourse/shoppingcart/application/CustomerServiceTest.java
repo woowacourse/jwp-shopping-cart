@@ -24,8 +24,8 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUserNameRequest;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
 import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
 import woowacourse.shoppingcart.exception.DuplicatedNameException;
@@ -57,8 +57,7 @@ class CustomerServiceTest {
                 .willReturn(1L);
 
         // when
-        final CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword(userName,
-                plainBasicPassword);
+        final CustomerRequest request = new CustomerRequest(userName, plainBasicPassword);
         final Long id = customerService.signUp(request);
 
         // then
@@ -78,8 +77,7 @@ class CustomerServiceTest {
         given(customerDao.existsByUserName(userName)).willReturn(true);
 
         // when
-        final CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword(userName,
-                plainBasicPassword);
+        final CustomerRequest request = new CustomerRequest(userName, plainBasicPassword);
 
         // then
         assertAll(
@@ -98,8 +96,7 @@ class CustomerServiceTest {
         given(customerDao.existsByUserName(userName)).willReturn(false);
 
         // when
-        final CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword(userName, plainBasicPassword);
+        final CustomerRequest request = new CustomerRequest(userName, plainBasicPassword);
 
         // then
         assertAll(
@@ -118,8 +115,7 @@ class CustomerServiceTest {
         given(customerDao.existsByUserName(userName)).willReturn(false);
 
         // when
-        final CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword(userName, "123");
+        final CustomerRequest request = new CustomerRequest(userName, "123");
 
         // then
         assertAll(
@@ -177,8 +173,7 @@ class CustomerServiceTest {
         given(customerDao.update(id, userName, plainReversePassword)).willReturn(updatedCustomer);
 
         // when
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("giron",
-                plainReversePassword);
+        CustomerRequest request = new CustomerRequest("giron", plainReversePassword);
         CustomerResponse response = customerService.updateById(id, request);
 
         // then
@@ -197,7 +192,7 @@ class CustomerServiceTest {
         given(customerDao.findById(id)).willReturn(Optional.empty());
 
         // when
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("giron", "87654321");
+        CustomerRequest request = new CustomerRequest("giron", plainReversePassword);
 
         // then
         assertAll(
@@ -218,7 +213,7 @@ class CustomerServiceTest {
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
         // when
-        CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("티키", "87654321");
+        CustomerRequest request = new CustomerRequest("티키", plainBasicPassword);
 
         // then
         assertAll(
@@ -256,8 +251,8 @@ class CustomerServiceTest {
                 .willReturn(true);
 
         // when
-        CustomerRequest.UserNameOnly customerRequest = new UserNameOnly(userName);
-        final DuplicateResponse isDuplicateUserName = customerService.isDuplicateUserName(customerRequest);
+        CustomerUserNameRequest customerUserNameRequest = new CustomerUserNameRequest(userName);
+        final DuplicateResponse isDuplicateUserName = customerService.isDuplicateUserName(customerUserNameRequest);
 
         // then
         assertAll(

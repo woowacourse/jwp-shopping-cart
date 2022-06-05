@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
+import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 
@@ -30,7 +30,7 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     @Test
     void loginReturnBearerToken() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
+        CustomerRequest request = new CustomerRequest("giron", plainBasicPassword);
         회원가입_요청(request);
 
         // when
@@ -46,7 +46,7 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
+        CustomerRequest request = new CustomerRequest("giron", plainBasicPassword);
         회원가입_요청(request);
 
         TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
@@ -70,7 +70,7 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     @Test
     void loginFailureWithWrongUserName() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
+        CustomerRequest request = new CustomerRequest("giron", plainBasicPassword);
         회원가입_요청(request);
 
         // when
@@ -90,7 +90,7 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     @Test
     void loginFailureWithWrongPassword() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
+        CustomerRequest request = new CustomerRequest("giron", plainBasicPassword);
         회원가입_요청(request);
 
         // when
@@ -110,7 +110,7 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
+        CustomerRequest request = new CustomerRequest("giron", plainBasicPassword);
         회원가입_요청(request);
 
         // when
@@ -176,7 +176,7 @@ public class AuthAcceptanceTest extends AcceptanceAuthTest {
         );
     }
 
-    private void 회원가입_요청(final UserNameAndPassword request) {
+    private void 회원가입_요청(final CustomerRequest request) {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

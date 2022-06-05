@@ -15,6 +15,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUserNameRequest;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
 
 @RestController
@@ -29,7 +30,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Void> createCustomer(
-            @Valid @RequestBody final CustomerRequest.UserNameAndPassword customerRequest) {
+            @Valid @RequestBody final CustomerRequest customerRequest) {
         Long id = customerService.signUp(customerRequest);
 
         return ResponseEntity.created(URI.create("/api/customers/" + id)).build();
@@ -44,7 +45,7 @@ public class CustomerController {
     @PutMapping("/me")
     public ResponseEntity<CustomerResponse> updateCustomer(
             @AuthenticationPrincipal final LoginCustomer loginCustomer,
-            @Valid @RequestBody final CustomerRequest.UserNameAndPassword customerRequest) {
+            @Valid @RequestBody final CustomerRequest customerRequest) {
         CustomerResponse response = customerService.updateById(loginCustomer.getId(), customerRequest);
         return ResponseEntity.ok(response);
     }
@@ -57,8 +58,8 @@ public class CustomerController {
 
     @PostMapping("/duplication")
     public ResponseEntity<DuplicateResponse> duplicateUserName(
-            @Valid @RequestBody final CustomerRequest.UserNameOnly customerRequest) {
-        final DuplicateResponse response = customerService.isDuplicateUserName(customerRequest);
+            @Valid @RequestBody final CustomerUserNameRequest customerUserNameRequest) {
+        final DuplicateResponse response = customerService.isDuplicateUserName(customerUserNameRequest);
         return ResponseEntity.ok(response);
     }
 }

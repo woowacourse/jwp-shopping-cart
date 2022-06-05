@@ -9,9 +9,8 @@ import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
 import woowacourse.shoppingcart.domain.customer.PlainPassword;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
-import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUserNameRequest;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
 import woowacourse.shoppingcart.exception.DuplicatedNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -28,7 +27,7 @@ public class CustomerService {
         this.passwordEncryptor = passwordEncryptor;
     }
 
-    public Long signUp(final UserNameAndPassword customerRequest) {
+    public Long signUp(final CustomerRequest customerRequest) {
         validateDuplicateName(customerRequest.getUserName());
         UserName userName = new UserName(customerRequest.getUserName());
         PlainPassword plainPassword = new PlainPassword(customerRequest.getPassword());
@@ -48,7 +47,7 @@ public class CustomerService {
         return new CustomerResponse(customer);
     }
 
-    public CustomerResponse updateById(final Long id, final CustomerRequest.UserNameAndPassword customerRequest) {
+    public CustomerResponse updateById(final Long id, final CustomerRequest customerRequest) {
         final Customer customer = getCustomerById(id);
         customer.validateUserNameChange(customerRequest.getUserName());
 
@@ -67,8 +66,8 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerException::new);
     }
 
-    public DuplicateResponse isDuplicateUserName(final UserNameOnly customerRequest) {
-        final boolean isDuplicated = customerDao.existsByUserName(customerRequest.getUserName());
+    public DuplicateResponse isDuplicateUserName(final CustomerUserNameRequest customerUserNameRequest) {
+        final boolean isDuplicated = customerDao.existsByUserName(customerUserNameRequest.getUserName());
         return new DuplicateResponse(isDuplicated);
     }
 }

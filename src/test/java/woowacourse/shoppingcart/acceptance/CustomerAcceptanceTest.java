@@ -20,9 +20,8 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
-import woowacourse.shoppingcart.dto.CustomerRequest.UserNameOnly;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUserNameRequest;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 
@@ -34,8 +33,7 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @Test
     void signUpCustomer() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword("giron", plainBasicPassword);
+        CustomerRequest signUpRequest = new CustomerRequest("giron", plainBasicPassword);
 
         // when
         ExtractableResponse<Response> response = 회원가입_요청(signUpRequest);
@@ -54,8 +52,7 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @NullSource
     void signUpWithShortPassword(String password) {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword("giron", password);
+        CustomerRequest signUpRequest = new CustomerRequest("giron", password);
 
         // when
         ExtractableResponse<Response> response = 회원가입_요청(signUpRequest);
@@ -74,8 +71,7 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @NullSource
     void signUpWithWrongUserName(String userName) {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword(userName, plainBasicPassword);
+        CustomerRequest signUpRequest = new CustomerRequest(userName, plainBasicPassword);
 
         // when
         ExtractableResponse<Response> response = 회원가입_요청(signUpRequest);
@@ -92,8 +88,7 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @Test
     void getMe() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword("giron", plainBasicPassword);
+        CustomerRequest signUpRequest = new CustomerRequest("giron", plainBasicPassword);
         회원가입_요청(signUpRequest);
 
         TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
@@ -114,16 +109,14 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @Test
     void updateMe() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword("giron", plainBasicPassword);
+        CustomerRequest signUpRequest = new CustomerRequest("giron", plainBasicPassword);
         회원가입_요청(signUpRequest);
 
         TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
         TokenResponse tokenResponse = 로그인_요청_토큰_생성됨(tokenRequest);
 
         // when
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("giron", plainReversePassword);
+        CustomerRequest request = new CustomerRequest("giron", plainReversePassword);
         ExtractableResponse<Response> extractableUpdateResponse = 내_정보_수정_요청(tokenResponse, request);
         CustomerResponse response = extractableUpdateResponse.as(CustomerResponse.class);
 
@@ -138,8 +131,7 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @Test
     void deleteMe() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword("giron", plainBasicPassword);
+        CustomerRequest signUpRequest = new CustomerRequest("giron", plainBasicPassword);
         회원가입_요청(signUpRequest);
 
         TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
@@ -173,12 +165,11 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     @Test
     void isDuplicatedUserName() {
         // given
-        CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword("giron", plainBasicPassword);
+        CustomerRequest signUpRequest = new CustomerRequest("giron", plainBasicPassword);
         회원가입_요청(signUpRequest);
 
         // when
-        CustomerRequest.UserNameOnly request = new UserNameOnly("giron");
+        CustomerUserNameRequest request = new CustomerUserNameRequest("giron");
         ExtractableResponse<Response> extractableDuplicateResponse = 유저_중복_검사_요청(request);
         DuplicateResponse duplicateResponse = extractableDuplicateResponse.as(DuplicateResponse.class);
 
@@ -189,7 +180,7 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
         );
     }
 
-    private ExtractableResponse<Response> 회원가입_요청(final UserNameAndPassword request) {
+    private ExtractableResponse<Response> 회원가입_요청(final CustomerRequest request) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -220,7 +211,7 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
     }
 
     private ExtractableResponse<Response> 내_정보_수정_요청(
-            final TokenResponse tokenResponse, final UserNameAndPassword request) {
+            final TokenResponse tokenResponse, final CustomerRequest request) {
         return RestAssured
                 .given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, BEARER + tokenResponse.getAccessToken())
@@ -240,7 +231,7 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> 유저_중복_검사_요청(final UserNameOnly request) {
+    private ExtractableResponse<Response> 유저_중복_검사_요청(final CustomerUserNameRequest request) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
