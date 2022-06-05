@@ -26,7 +26,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         validateToken(token);
 
         ServletContext servletContext = request.getServletContext();
-        servletContext.setAttribute("token", jwtTokenProvider.getPayload(token));
+        servletContext.setAttribute("payload", jwtTokenProvider.getPayload(token));
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
