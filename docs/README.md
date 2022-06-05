@@ -76,7 +76,7 @@
 - dto
   - [x] @Valid 어노테이션을 적절히 활용했는지 확인하기
 - service
-  - [ ] 도메인과 적절한 책임 분배가 이루어졌는지 확인하기  
+  - [x] 도메인과 적절한 책임 분배가 이루어졌는지 확인하기  
         ex. AuthService 의 validateCustomer - 비밀번호 검증을 customer 역할로
 - Auth
   - [ ] springframework에서 제공하는 HTTP 상수 Authorization 사용하기 

@@ -38,7 +38,7 @@ public class AuthService {
             throw new InvalidCustomerException();
         }
         Customer customer = optionalCustomer.get();
-        if (!customer.getPassword().equals(password)) {
+        if (!customer.isPassword(password)) {
             throw new InvalidCustomerException();
         }
     }

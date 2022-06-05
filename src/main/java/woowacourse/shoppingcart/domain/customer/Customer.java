@@ -95,4 +95,8 @@ public class Customer {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public boolean isPassword(String password) {
+        return this.getPassword().equals(password);
+    }
 }
