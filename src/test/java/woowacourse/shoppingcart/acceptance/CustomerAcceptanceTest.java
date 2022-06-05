@@ -136,7 +136,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    private ExtractableResponse<Response> createCustomer(CustomerRequest customerRequest) {
+    public static ExtractableResponse<Response> createCustomer(CustomerRequest customerRequest) {
         Map<String, Object> params = new HashMap<>();
         params.put("email", customerRequest.getEmail());
         params.put("password", customerRequest.getPassword());
@@ -159,12 +159,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private TokenResponse getTokenResponse(String email, String password) {
+    public static TokenResponse getTokenResponse(String email, String password) {
         ExtractableResponse<Response> response = getSignInResponse(email, password);
         return response.jsonPath().getObject(".", TokenResponse.class);
     }
 
-    private ExtractableResponse<Response> getSignInResponse(String email, String password) {
+    public static ExtractableResponse<Response> getSignInResponse(String email, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);
