@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartItemService;
 import woowacourse.shoppingcart.dto.cartitem.CartItemResponses;
 import woowacourse.shoppingcart.dto.cartitem.CartItemSaveRequest;
 
 @RestController
-@RequestMapping("/api/customers/{customerName}/cartItems")
+@RequestMapping("/api/cartItems")
 public class CartItemController {
     private final CartItemService cartItemService;
 
@@ -26,13 +27,13 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<CartItemResponses> getCartItems(@PathVariable final String customerName) {
+    public ResponseEntity<CartItemResponses> getCartItems(@AuthenticationPrincipal final String customerName) {
         return ResponseEntity.ok().body(cartItemService.findCartsByCustomerName(customerName));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(@RequestBody final CartItemSaveRequest cartItemSaveRequest,
-                                            @PathVariable final String customerName) {
+                                            @AuthenticationPrincipal String customerName) {
         final Long cartId = cartItemService.addCart(cartItemSaveRequest, customerName);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -43,15 +44,15 @@ public class CartItemController {
     }
 
     @PatchMapping({"/{cartItemId}"})
-    public ResponseEntity<Void> updateCartItemQuantity(@RequestParam final int quantity,
-                                                       @PathVariable final String customerName,
+    public ResponseEntity<Void> updateCartItemQuantity(@AuthenticationPrincipal String customerName,
+                                                       @RequestParam final int quantity,
                                                        @PathVariable final long cartItemId) {
         cartItemService.updateCartItemQuantity(customerName, cartItemId, quantity);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String customerName,
                                                @PathVariable final Long cartItemId) {
         cartItemService.deleteCart(customerName, cartItemId);
         return ResponseEntity.noContent().build();

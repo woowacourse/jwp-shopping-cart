@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import woowacourse.auth.ui.AuthenticationContext;
+import woowacourse.auth.ui.LoginInterceptor;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
@@ -40,7 +43,18 @@ public class OrderControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
+    private LoginInterceptor loginInterceptor;
+
+    @MockBean
+    private AuthenticationContext authenticationContext;
+
+    @MockBean
     private OrderService orderService;
+
+    @BeforeEach
+    void setUp() {
+        when(loginInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+    }
 
     @DisplayName("CREATED와 Location을 반환한다.")
     @Test
@@ -55,11 +69,12 @@ public class OrderControllerTest {
                 new OrderSaveRequests(Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2)));
 
         final Long expectedOrderId = 1L;
+        when(authenticationContext.getPrincipal()).thenReturn(customerName);
         when(orderService.addOrder(any(), eq(customerName)))
                 .thenReturn(expectedOrderId);
 
         // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
+        mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(requestDtos))
@@ -80,11 +95,12 @@ public class OrderControllerTest {
         final OrderResponse expected = OrderResponse.from(new Orders(orderId,
                 Collections.singletonList(new OrderDetail(1L, 2L, "banana", 1_000, 2, "imageUrl"))));
 
+        when(authenticationContext.getPrincipal()).thenReturn(customerName);
         when(orderService.findOrderById(customerName, orderId))
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
+        mockMvc.perform(get("/api/orders/" + orderId)
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("order.id").value(orderId))
@@ -107,11 +123,12 @@ public class OrderControllerTest {
                         new OrderDetail(2L, 2L, "apple", 2_000, 4, "imageUrl2")))
         ));
 
+        when(authenticationContext.getPrincipal()).thenReturn(customerName);
         when(orderService.findOrdersByCustomerName(customerName))
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
+        mockMvc.perform(get("/api/orders/")
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("orders[0].order.id").value(1L))
