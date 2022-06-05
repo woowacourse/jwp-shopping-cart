@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.domain.customer.NewPassword;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
@@ -50,7 +50,7 @@ public class CustomerService {
     }
 
     private void verifyPassword(final String password, final String hashedPassword) {
-        final NewPassword newPassword = new NewPassword(password);
+        final Password newPassword = new Password(password);
         if (!newPassword.isSamePassword(hashedPassword)) {
             throw new IllegalArgumentException("올바르지 않은 비밀번호입니다.");
         }
@@ -75,7 +75,7 @@ public class CustomerService {
 
     public void updateCustomer(final Long customerId, final ModifiedCustomerDto modifiedCustomerDto) {
         final Customer modifiedCustomer = ModifiedCustomerDto.toModifiedCustomerDto(modifiedCustomerDto);
-        final int affectedRows = customerDao.updateCustomer(customerId,modifiedCustomer);
+        final int affectedRows = customerDao.updateCustomer(customerId, modifiedCustomer);
         if (affectedRows != 1) {
             throw new IllegalArgumentException("업데이트가 되지 않았습니다.");
         }
