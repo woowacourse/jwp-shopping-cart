@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
 import woowacourse.shoppingcart.exception.InvalidPasswordLengthException;
-import woowacourse.shoppingcart.util.PasswordEncryptor;
 
 public class Password {
 
@@ -15,9 +14,9 @@ public class Password {
         this.hashedValue = hashedValue;
     }
 
-    public static Password fromRawValue(final String rawValue) {
+    public static Password fromRawValue(final String rawValue, final PasswordConvertor passwordConvertor) {
         validateRawValue(rawValue);
-        return new Password(PasswordEncryptor.encrypt(rawValue));
+        return new Password(passwordConvertor.encode(rawValue));
     }
 
     private static void validateRawValue(final String rawValue) {
@@ -31,8 +30,8 @@ public class Password {
         return new Password(hashedValue);
     }
 
-    public boolean isSamePassword(final String rawValue) {
-        return PasswordEncryptor.checkPassword(rawValue, hashedValue);
+    public boolean isSamePassword(final String rawValue, final PasswordConvertor passwordConvertor) {
+        return passwordConvertor.isSamePassword(rawValue, this.hashedValue);
     }
 
     public String getHashedValue() {

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import woowacourse.shoppingcart.util.BcryptConvertor;
 
 class CustomerTest {
 
@@ -13,7 +14,8 @@ class CustomerTest {
     private static final String RAW_EMAIL = "clay@gmail.com";
     private static final Email EMAIL = new Email(RAW_EMAIL);
     private static final String RAW_PASSWORD = "12345678";
-    private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD);
+    private static final PasswordConvertor PASSWORD_CONVERTOR = new BcryptConvertor();
+    private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD, PASSWORD_CONVERTOR);
 
     @DisplayName("비밀번호가 일치하는지 확인한다.")
     @ParameterizedTest
@@ -23,7 +25,7 @@ class CustomerTest {
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
 
         // when
-        final boolean actual = customer.unMatchPasswordWith(password);
+        final boolean actual = customer.unMatchPasswordWith(password, PASSWORD_CONVERTOR);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -48,7 +50,7 @@ class CustomerTest {
     void updatePassword() {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
-        final Password newPassword = Password.fromRawValue("1234567890");
+        final Password newPassword = Password.fromRawValue("1234567890", PASSWORD_CONVERTOR);
 
         // when
         final Customer actual = customer.updatePassword(newPassword);

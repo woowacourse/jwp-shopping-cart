@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.util.BcryptConvertor;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -24,7 +25,7 @@ public class CustomerDaoTest {
     private static final String RAW_EMAIL = "sunyong@gmail.com";
     private static final Email EMAIL = new Email(RAW_EMAIL);
     private static final String RAW_PASSWORD = "12345678";
-    private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD);
+    private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD, new BcryptConvertor());
 
     private final CustomerDao customerDao;
 
@@ -157,7 +158,7 @@ public class CustomerDaoTest {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
         final Customer savedCustomer = customerDao.save(customer);
-        final Password newPassword = Password.fromRawValue("newpassword123");
+        final Password newPassword = Password.fromRawValue("newpassword123", new BcryptConvertor());
 
         // when
         final Customer updatedCustomer = new Customer(savedCustomer.getId(), NAME, EMAIL, newPassword);
