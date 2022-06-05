@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,8 +10,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -31,7 +31,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.getIdByUsername(userName);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -45,7 +45,7 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.getIdByUsername(userName);
 
         // then
         assertThat(customerId).isEqualTo(16L);
