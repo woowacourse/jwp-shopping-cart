@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
@@ -27,8 +28,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
+    public ResponseEntity<List<ProductResponse>> products() {
+        List<ProductResponse> productResponses = productService.findProducts();
+        return ResponseEntity.ok(productResponses);
     }
 
     @PostMapping
@@ -42,8 +44,9 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> product(@PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.findProductById(productId));
+    public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
+        ProductResponse productResponse = productService.findProductById(productId);
+        return ResponseEntity.ok(productResponse);
     }
 
     @DeleteMapping("/{productId}")
