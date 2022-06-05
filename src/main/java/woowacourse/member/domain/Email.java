@@ -5,7 +5,7 @@ import woowacourse.member.exception.EmailNotValidException;
 
 public class Email {
 
-    private final String EMAIL_REGEX = "^(.+)@(.+)$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^(.+)@(.+)$");
 
     private final String email;
 
@@ -15,7 +15,7 @@ public class Email {
     }
 
     private void validateEmail(final String email) {
-        if (!Pattern.matches(EMAIL_REGEX, email)) {
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
             throw new EmailNotValidException();
         }
     }
