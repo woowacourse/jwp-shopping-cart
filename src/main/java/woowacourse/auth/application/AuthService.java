@@ -1,6 +1,5 @@
 package woowacourse.auth.application;
 
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -23,15 +22,9 @@ public class AuthService {
     public String login(TokenRequest request) {
         try {
             Customer customer = customerService.getByEmail(request.getEmail());
-            checkPassword(request, customer);
+            customer.checkPassword(request.getPassword());
             return jwtTokenProvider.createToken(request.getEmail());
         } catch (NotFoundCustomerException exception) {
-            throw new InvalidLoginException();
-        }
-    }
-
-    private void checkPassword(TokenRequest request, Customer customer) {
-        if (!BCrypt.checkpw(request.getPassword(), customer.getPassword())) {
             throw new InvalidLoginException();
         }
     }

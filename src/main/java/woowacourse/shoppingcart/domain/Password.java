@@ -3,7 +3,9 @@ package woowacourse.shoppingcart.domain;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.exception.IllegalPasswordException;
+import woowacourse.shoppingcart.exception.InvalidLoginException;
 
 public class Password {
 
@@ -29,6 +31,10 @@ public class Password {
 
     public String getValue() {
         return value;
+    }
+
+    public boolean isSamePassword(String password) {
+        return BCrypt.checkpw(password, this.value);
     }
 
     @Override

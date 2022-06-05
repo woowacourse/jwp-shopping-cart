@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.exception.InvalidLoginException;
 
 public class Customer {
 
@@ -22,6 +23,12 @@ public class Customer {
 
     public Customer(String nickname, String email, String password) {
         this(null, nickname, email, Password.hashPassword(password));
+    }
+
+    public void checkPassword(String value) {
+        if (!password.isSamePassword(value)) {
+            throw new InvalidLoginException();
+        }
     }
 
     public Long getId() {
