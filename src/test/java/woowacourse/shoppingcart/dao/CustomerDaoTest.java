@@ -48,8 +48,8 @@ public class CustomerDaoTest {
     @DisplayName("전달받은 데이터를 소비자 데이터를 업데이트한다.")
     @Test
     void updateCustomer() {
-        customerDao.createCustomer(CustomerFixture.tommy);
-        customerDao.updateCustomer(CustomerFixture.updatedTommyDto);
+        Long customerId = customerDao.createCustomer(CustomerFixture.tommy);
+        customerDao.updateCustomer(customerId,CustomerFixture.updatedTommyDto);
         CustomerResponse updatedCustomer = customerDao.findByUserEmail(new Email(CustomerFixture.tommy.getEmail()));
         assertThat(updatedCustomer.getContact())
                 .isEqualTo(CustomerFixture.updatedTommyDto.getContact());

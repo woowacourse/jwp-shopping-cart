@@ -73,9 +73,9 @@ public class CustomerService {
         }
     }
 
-    public void updateCustomer(ModifiedCustomerDto modifiedCustomerDto) {
+    public void updateCustomer(final Long customerId, final ModifiedCustomerDto modifiedCustomerDto) {
         final Customer modifiedCustomer = ModifiedCustomerDto.toModifiedCustomerDto(modifiedCustomerDto);
-        final int affectedRows = customerDao.updateCustomer(modifiedCustomer);
+        final int affectedRows = customerDao.updateCustomer(customerId,modifiedCustomer);
         if (affectedRows != 1) {
             throw new IllegalArgumentException("업데이트가 되지 않았습니다.");
         }
@@ -85,10 +85,19 @@ public class CustomerService {
         return customerDao.findByUserEmail(new Email(email.getEmail()));
     }
 
-    public void deleteCustomer(final PermissionCustomerRequest emailDto) {
-        final int affectedRows = customerDao.deleteCustomer(new Email(emailDto.getEmail()));
+    public void deleteCustomer(final Long customerId) {
+        final int affectedRows = customerDao.deleteCustomer(customerId);
         if (affectedRows != 1) {
             throw new IllegalArgumentException("삭제가 되지 않았습니다.");
         }
+    }
+
+    public CustomerResponse findCustomerById(Long customerId) {
+        try {
+            return customerDao.findByCustomerId(customerId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("회원을 조회할 수 없습니다.");
+        }
+
     }
 }
