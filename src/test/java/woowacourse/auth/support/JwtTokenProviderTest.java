@@ -34,15 +34,7 @@ class JwtTokenProviderTest {
     }
 
     @Test
-    void validateToken() {
-        String payload = "email@email.com";
-        String token = jwtTokenProvider.createToken(payload);
-
-        assertDoesNotThrow(() -> jwtTokenProvider.validateToken(token));
-    }
-
-    @Test
-    void validateTokenExpiredToken() {
+    void getPayloadExpiredToken() {
         String payload = "email@email.com";
         Date validity = new Date(new Date().getTime() - 1);
         String token = Jwts.builder()
@@ -51,16 +43,16 @@ class JwtTokenProviderTest {
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
                 .compact();
 
-        assertThatThrownBy(() -> jwtTokenProvider.validateToken(token))
+        assertThatThrownBy(() -> jwtTokenProvider.getPayload(token))
                 .isInstanceOf(AuthException.class)
                 .hasMessage("만료된 토큰입니다.");
     }
 
     @Test
-    void validateTokenErrorToken() {
+    void getPayloadErrorToken() {
         String token = "error.token.anything";
 
-        assertThatThrownBy(() -> jwtTokenProvider.validateToken(token))
+        assertThatThrownBy(() -> jwtTokenProvider.getPayload(token))
                 .isInstanceOf(AuthException.class)
                 .hasMessage("유효하지 않은 인증입니다.");
     }

@@ -20,7 +20,8 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String accessToken = AuthorizationExtractor.extract(Objects.requireNonNull(request));
-        jwtTokenProvider.validateToken(accessToken);
+        String payload = jwtTokenProvider.getPayload(accessToken);
+        request.setAttribute("principal", payload);
         return true;
     }
 }
