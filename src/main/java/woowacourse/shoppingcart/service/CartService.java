@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.shoppingcart.service;
 
 import java.util.ArrayList;
 import java.util.List;

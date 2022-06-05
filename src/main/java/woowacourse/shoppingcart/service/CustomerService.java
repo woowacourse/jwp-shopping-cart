@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
 import woowacourse.exception.AuthException;

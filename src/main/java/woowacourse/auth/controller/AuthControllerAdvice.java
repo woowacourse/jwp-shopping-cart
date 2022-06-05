@@ -1,4 +1,4 @@
-package woowacourse.auth.ui;
+package woowacourse.auth.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

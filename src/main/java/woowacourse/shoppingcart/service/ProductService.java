@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.shoppingcart.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;

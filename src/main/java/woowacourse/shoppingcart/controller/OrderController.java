@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.ui;
+package woowacourse.shoppingcart.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.service.OrderService;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
