@@ -20,6 +20,13 @@ public class CustomerFixture {
             "12345678910",
             new AddressDto("a", "b", "12345"), true);
 
+    public static final CustomerDto connieDto = new CustomerDto("her0807@naver.com", "password1!",
+            "example.com", "코니", "female", "1988-08-07",
+            "12345678910",
+            new AddressDto("a", "b", "12345"), true);
+
+
+
     public static final Customer updatedTommyDto = new Customer(1L, new Email("her0807@naver.com"),
             new NewPassword("password1!"),
             "example.com", new Name("토미"), Gender.MALE, new Birthday("1988-08-07"),

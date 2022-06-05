@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.shoppingcart.dao.CustomerFixture.connieDto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +21,6 @@ import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
-import woowacourse.shoppingcart.dao.CustomerFixture;
 import woowacourse.shoppingcart.dto.AddressRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -100,11 +100,11 @@ class CustomerServiceTest {
     @Nested
     class CustomerFindTest {
 
-        @DisplayName("유효한 화원이면 데이터를 반환한다.")
+        @DisplayName("유효한 회원이면 데이터를 반환한다.")
         @Test
         void foundCustomer() {
             Long 코니_id = 코니_회원_가입();
-            CustomerResponse response = customerService.findCustomerById(코니_id);
+            CustomerResponse response = 회원_조회(코니_id);
             assertThat(response.getId()).isEqualTo(코니_id);
         }
 
@@ -117,11 +117,102 @@ class CustomerServiceTest {
         }
     }
 
-    //:todo 유효하지 않은 케이스 전부 검증
+    @DisplayName("회원 수정을 할 때")
+    @Nested
+    class UpdateTest {
+
+        @DisplayName("유효한 회원과 데이터가 들어오면, 업데이트 한다.")
+        @Test
+        void updateCustomer() {
+
+            Long 코니_id = 코니_회원_가입();
+            ModifiedCustomerDto modifiedCustomerDto = new ModifiedCustomerDto("her0807@naver.com", "password1!",
+                    "example.com", "코니", "male", "1988-08-07",
+                    "01987654321",
+                    new AddressRequest("d", "e", "54321"), true);
+            assertThatNoException().isThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto));
+        }
+
+        @DisplayName("Email 은 업데이트가 되지 않는다.")
+        @Test
+        void noUpdateCauseEmail() {
+            Long 코니_id = 코니_회원_가입();
+
+            ModifiedCustomerDto modifiedCustomerDto = new ModifiedCustomerDto("connie@naver.com", "password1!",
+                    "example.com", "코니", "female", "1988-08-07",
+                    "01987654321",
+                    new AddressRequest("d", "e", "54321"), true);
+            customerService.updateCustomer(코니_id, modifiedCustomerDto);
+            CustomerResponse response = 회원_조회(코니_id);
+
+            assertThat(response.getEmail()).isEqualTo(connieDto.getEmail());
+        }
+
+        @DisplayName("유효하지 않은 PW 는 업데이트가 되지 않는다.")
+        @Test
+        void noUpdateCausePw() {
+            Long 코니_id = 코니_회원_가입();
+
+            ModifiedCustomerDto modifiedCustomerDto = new ModifiedCustomerDto("her0807@naver.com", "유효하지않음",
+                    "example.com", "코니", "female", "1988-08-07",
+                    "01987654321",
+                    new AddressRequest("d", "e", "54321"), true);
+
+            assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("비밀번호는 8글자 이상 20글자 이하, 영문, 특수문자, 숫자 최소 1개씩 으로 이뤄져야합니다.");
+        }
+
+        @DisplayName("유효하지 않은 name 는 업데이트가 되지 않는다.")
+        @Test
+        void noUpdateCauseName() {
+            Long 코니_id = 코니_회원_가입();
+
+            ModifiedCustomerDto modifiedCustomerDto = new ModifiedCustomerDto("her0807@naver.com", "password1!",
+                    "example.com", "connie", "female", "1988-08-07",
+                    "01987654321",
+                    new AddressRequest("d", "e", "54321"), true);
+
+            assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("이름은 최대 5글자, 한글로 이뤄져야합니다.");
+        }
+
+        @DisplayName("유효하지 않은 birthday 는 업데이트가 되지 않는다.")
+        @Test
+        void noUpdateCauseBirthday() {
+            Long 코니_id = 코니_회원_가입();
+
+            ModifiedCustomerDto modifiedCustomerDto = new ModifiedCustomerDto("her0807@naver.com", "password1!",
+                    "example.com", "코니", "female", "11111-08-07",
+                    "01987654321",
+                    new AddressRequest("d", "e", "54321"), true);
+
+            assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("올바르지 않은 생년월일입니다.");
+        }
+
+        @DisplayName("유효하지 않은 Contact 는 업데이트가 되지 않는다.")
+        @Test
+        void noUpdateCauseContact() {
+            Long 코니_id = 코니_회원_가입();
+
+            ModifiedCustomerDto modifiedCustomerDto = new ModifiedCustomerDto("her0807@naver.com", "password1!",
+                    "example.com", "코니", "female", "1988-08-07",
+                    "123456789101",
+                    new AddressRequest("d", "e", "54321"), true);
+
+            assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("핸드폰 양식의 전화번호를 입력해야합니다.");
+        }
+    }
 
     @DisplayName("사용자 정보를 업데이트 한다.")
     @Test
     void updateCustomer() {
+
         Long 코니_id = 코니_회원_가입();
         ModifiedCustomerDto modifiedCustomerDto = new ModifiedCustomerDto("her0807@naver.com", "password1!",
                 "example.com", "코니", "male", "1988-08-07",
@@ -148,11 +239,17 @@ class CustomerServiceTest {
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("삭제가 되지 않았습니다.");
         }
+
     }
 
     private Long 코니_회원_가입() {
-        CustomerDto newCustomer = CustomerFixture.tommyDto;
+        CustomerDto newCustomer = connieDto;
         final Long customerId = customerService.createCustomer(newCustomer);
         return customerId;
+    }
+
+    private CustomerResponse 회원_조회(Long id) {
+        CustomerResponse response = customerService.findCustomerById(id);
+        return response;
     }
 }
