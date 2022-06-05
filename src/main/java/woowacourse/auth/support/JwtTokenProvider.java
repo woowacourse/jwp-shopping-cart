@@ -35,22 +35,28 @@ public class JwtTokenProvider {
     }
 
     public String getPayload(final String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKeyProvider.generateKey())
-                .build()
-                .parseClaimsJws(token).getBody().getSubject();
+        return getClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
     public boolean validateToken(final String token) {
         try {
-            final Jws<Claims> claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKeyProvider.generateKey())
-                    .build()
-                    .parseClaimsJws(token);
-            return !claims.getBody().getExpiration().before(new Date());
+            final Jws<Claims> claims = getClaimsJws(token);
+            return !claims
+                    .getBody()
+                    .getExpiration()
+                    .before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    private Jws<Claims> getClaimsJws(final String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKeyProvider.generateKey())
+                .build()
+                .parseClaimsJws(token);
     }
 }
 

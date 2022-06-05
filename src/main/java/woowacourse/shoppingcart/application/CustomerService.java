@@ -44,15 +44,12 @@ public class CustomerService {
 
     @Transactional(readOnly = true)
     public CustomerResponse getMeById(final Long id) {
-        final Customer customer = customerDao.findById(id)
-                .orElseThrow(InvalidCustomerException::new);
+        final Customer customer = getCustomerById(id);
         return new CustomerResponse(customer);
     }
 
     public CustomerResponse updateById(final Long id, final CustomerRequest.UserNameAndPassword customerRequest) {
-        final Customer customer = customerDao.findById(id)
-                .orElseThrow(InvalidCustomerException::new);
-
+        final Customer customer = getCustomerById(id);
         customer.validateUserNameChange(customerRequest.getUserName());
 
         final Customer updatedCustomer = customerDao.update(
@@ -61,10 +58,13 @@ public class CustomerService {
     }
 
     public void deleteById(final Long id) {
-        final Customer customer = customerDao.findById(id)
-                .orElseThrow(InvalidCustomerException::new);
-
+        final Customer customer = getCustomerById(id);
         customerDao.deleteById(customer.getId());
+    }
+
+    private Customer getCustomerById(final Long id) {
+        return customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
     }
 
     public DuplicateResponse isDuplicateUserName(final UserNameOnly customerRequest) {
