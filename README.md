@@ -27,6 +27,17 @@
     - [X] JWT Access Token을 발급한다.
     - [X] JWT Access Token을 이용하여 유효성을 검증한다.
 
+## 회원 기능 API 명세
+
+| Method | Url                        | Description |
+|--------|----------------------------|-------------|
+| POST   | /api/customers             | 회원 가입       |
+| GET    | /api/customers/me          | 내 정보 조회     |
+| PUT    | /api/customers/me          | 내 정보 수정     |
+| DELETE | /api/customers/me          | 회원 탈퇴       |
+| POST   | /api/customers/duplication | 회원 중복 확인    |
+| POST   | /api/login                 | 로그인         |
+
 ## ✏️ Code Review Process
 
 [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
