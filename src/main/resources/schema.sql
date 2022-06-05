@@ -16,7 +16,7 @@ create table customer
     profileImageUrl varchar(2000)  not null,
     name            varchar(10) not null,
     gender          varchar(10)           default 'undefined',
-    birthday        date                  default '',
+    birthday        date                 default (current_date),
     contact         varchar(11)  not null,
     address         varchar(100) not null,
     detailAddress   varchar(50)           default '',
