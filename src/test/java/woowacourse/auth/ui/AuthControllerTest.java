@@ -16,11 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.config.LoginCustomerResolver;
+import woowacourse.shoppingcart.config.WebConfig;
 import woowacourse.shoppingcart.exception.InvalidLoginException;
 
 @WebMvcTest(controllers = {AuthController.class})
-@MockBean(value = {LoginCustomerResolver.class})
+@MockBean(value = {WebConfig.class})
 public class AuthControllerTest {
 
     @Autowired
