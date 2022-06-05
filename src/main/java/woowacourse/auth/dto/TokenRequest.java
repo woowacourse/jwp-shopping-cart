@@ -3,10 +3,10 @@ package woowacourse.auth.dto;
 import javax.validation.constraints.NotBlank;
 
 public class TokenRequest {
-    @NotBlank
+    @NotBlank(message = "이메일은 빈 값일 수 없습니다.")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "비밀번호는 빈 값일 수 없습니다.")
     private String password;
 
     public TokenRequest() {
