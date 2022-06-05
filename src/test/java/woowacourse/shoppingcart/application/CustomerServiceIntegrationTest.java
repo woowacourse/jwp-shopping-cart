@@ -17,7 +17,6 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
-import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @SpringBootTest
 @Transactional
@@ -73,7 +72,8 @@ public class CustomerServiceIntegrationTest {
 
         // when, then
         assertThatThrownBy(() -> customerService.getByEmail(email))
-                .isInstanceOf(NotFoundCustomerException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이메일이 존재하지 않습니다.");
     }
 
     @Test
@@ -110,7 +110,7 @@ public class CustomerServiceIntegrationTest {
                 () -> assertThatCode(() -> customerService.delete(loginCustomer))
                         .doesNotThrowAnyException(),
                 () -> assertThatThrownBy(() -> customerService.getByEmail(loginCustomer.getEmail()))
-                        .isInstanceOf(NotFoundCustomerException.class)
+                        .isInstanceOf(IllegalArgumentException.class)
         );
     }
 }

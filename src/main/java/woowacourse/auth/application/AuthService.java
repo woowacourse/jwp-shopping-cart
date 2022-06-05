@@ -6,7 +6,6 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidLoginException;
-import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @Service
 public class AuthService {
@@ -24,7 +23,7 @@ public class AuthService {
             Customer customer = customerService.getByEmail(request.getEmail());
             customer.checkPassword(request.getPassword());
             return jwtTokenProvider.createToken(request.getEmail());
-        } catch (NotFoundCustomerException exception) {
+        } catch (IllegalArgumentException exception) {
             throw new InvalidLoginException();
         }
     }

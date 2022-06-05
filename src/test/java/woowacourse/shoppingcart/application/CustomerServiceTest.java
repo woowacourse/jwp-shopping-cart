@@ -18,7 +18,6 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
-import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -75,11 +74,12 @@ class CustomerServiceTest {
         String email = "asdf@email.com";
 
         given(customerDao.findByEmail(email))
-                .willThrow(NotFoundCustomerException.class);
+                .willThrow(new IllegalArgumentException("이메일이 존재하지 않습니다."));
 
         // when, then
         assertThatThrownBy(() -> customerService.getByEmail(email))
-                .isInstanceOf(NotFoundCustomerException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이메일이 존재하지 않습니다.");
     }
 
     @Test
@@ -120,14 +120,15 @@ class CustomerServiceTest {
         Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
 
         given(customerDao.findByEmail(customer.getEmail()))
-                .willThrow(NotFoundCustomerException.class);
+                .willThrow(new IllegalArgumentException("이메일이 존재하지 않습니다."));
 
         // when, then
         assertAll(
                 () -> assertThatCode(() -> customerService.delete(customer))
                         .doesNotThrowAnyException(),
                 () -> assertThatThrownBy(() -> customerService.getByEmail(customer.getEmail()))
-                        .isInstanceOf(NotFoundCustomerException.class)
+                        .isInstanceOf(IllegalArgumentException.class)
+                        .hasMessage("이메일이 존재하지 않습니다.")
         );
     }
 }

@@ -21,7 +21,6 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidLoginException;
-import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -54,7 +53,7 @@ class AuthServiceTest {
         TokenRequest request = new TokenRequest("email@email.com", "1q2w3e4r");
 
         given(customerService.getByEmail(request.getEmail()))
-                .willThrow(NotFoundCustomerException.class);
+                .willThrow(IllegalArgumentException.class);
 
         // when, then
         assertThatThrownBy(() -> authService.login(request))

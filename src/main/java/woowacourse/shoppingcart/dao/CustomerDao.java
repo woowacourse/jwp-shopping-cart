@@ -10,7 +10,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @Repository
 public class CustomerDao {
@@ -61,7 +60,7 @@ public class CustomerDao {
             final String query = "SELECT * FROM customer WHERE email = ?";
             return jdbcTemplate.queryForObject(query, rowMapper, email);
         } catch (EmptyResultDataAccessException exception) {
-            throw new NotFoundCustomerException();
+            throw new IllegalArgumentException("이메일이 존재하지 않습니다.");
         }
     }
 

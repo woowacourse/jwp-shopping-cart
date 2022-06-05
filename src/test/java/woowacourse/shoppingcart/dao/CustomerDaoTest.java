@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -101,7 +100,8 @@ public class CustomerDaoTest {
 
         // when, then
         assertThatThrownBy(() -> customerDao.findByEmail(email))
-                .isInstanceOf(NotFoundCustomerException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이메일이 존재하지 않습니다.");
     }
 
     @Test
@@ -148,6 +148,6 @@ public class CustomerDaoTest {
 
         // then
         assertThatThrownBy(() -> customerDao.findByEmail(email))
-                .isInstanceOf(NotFoundCustomerException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

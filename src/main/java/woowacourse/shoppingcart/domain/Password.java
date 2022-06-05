@@ -3,9 +3,7 @@ package woowacourse.shoppingcart.domain;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.exception.IllegalPasswordException;
-import woowacourse.shoppingcart.exception.InvalidLoginException;
 
 public class Password {
 
