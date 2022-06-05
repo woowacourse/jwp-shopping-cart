@@ -10,18 +10,18 @@ drop table if exists customer;
 
 create table customer
 (
-    id              bigint       not null auto_increment,
+    id              bigint        not null auto_increment,
     email           varchar(255)  not null,
-    password        varchar(255) not null,
-    profileImageUrl varchar(2000)  not null,
-    name            varchar(10) not null,
-    gender          varchar(10)           default 'undefined',
-    birthday        date                 default (current_date),
-    contact         varchar(11)  not null,
-    address         varchar(100) not null,
-    detailAddress   varchar(50)           default '',
-    zoneCode        varchar(5)   not null,
-    terms           boolean      not null default true,
+    password        varchar(255)  not null,
+    profileImageUrl varchar(2000) not null,
+    name            varchar(10)   not null,
+    gender          varchar(10)            default 'undefined',
+    birthday        date                   default (current_date),
+    contact         varchar(11)   not null,
+    address         varchar(100)  not null,
+    detailAddress   varchar(50)            default '',
+    zoneCode        varchar(5)    not null,
+    terms           boolean       not null default true,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 

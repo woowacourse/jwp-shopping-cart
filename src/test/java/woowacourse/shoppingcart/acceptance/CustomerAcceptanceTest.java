@@ -44,21 +44,37 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertEquals(response.response().statusCode(), HttpStatus.CREATED.value());
     }
 
-    @DisplayName("로그인")
-    @Test
-    void signIn() {
-        회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
-                "희봉", "male", "1998-08-07", "12345678910",
-                "address", "detailAddress", "12345", true));
+    @DisplayName("로그인을 시도할 때")
+    @Nested
+    class SignInTest {
 
-        TokenResponse response =
-                로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
+        @DisplayName("이메일과 비밀번호가 유효할 경우, 로그인을 시킨다.")
+        @Test
+        void succeedSignIn() {
+            회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
+                    "희봉", "male", "1998-08-07", "12345678910",
+                    "address", "detailAddress", "12345", true));
 
-        assertAll(
-                () -> assertThat(response.getAccessToken()).isNotNull(),
-                () -> assertThat(response.getCustomerId()).isNotNull()
-        );
+            TokenResponse response =
+                    로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
 
+            assertAll(
+                    () -> assertThat(response.getAccessToken()).isNotNull(),
+                    () -> assertThat(response.getCustomerId()).isNotNull()
+            );
+        }
+
+        @DisplayName("이메일과 비밀번호가 유효하지 않을 경우, 로그인에 실패한다..")
+        @Test
+        void falseSignIn() {
+            회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
+                    "희봉", "male", "1998-08-07", "12345678910",
+                    "address", "detailAddress", "12345", true));
+
+            ExtractableResponse<Response> response = 로그인(로그인_정보("sudal@example.com", "example123!"));
+
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        }
     }
 
     @DisplayName("내 정보를 조회하려할 때")
@@ -202,6 +218,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     private TokenRequest 로그인_정보(final String email, final String password) {
         return new TokenRequest(email, password);
+    }
+
+    private ExtractableResponse<Response> 로그인(TokenRequest request) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .post("/api/customer/authentication/sign-in")
+                .then().log().all()
+                .extract();
     }
 
     private TokenResponse 로그인_후_토큰_발급(TokenRequest request) {

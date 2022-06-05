@@ -45,10 +45,18 @@ public class CustomerService {
     public TokenResponse signIn(final SignInDto signInDto) {
         final Email email = new Email(signInDto.getEmail());
         final Long customerId = checkSignUpCustomer(email);
-        final String foundPassword = customerDao.findPasswordByEmail(email);
-        verifyPassword(signInDto.getPassword(), foundPassword);
+        checkSignUpPassword(email, signInDto.getPassword());
         String payload = createPayload(new PermissionCustomerRequest(email.getValue()));
         return new TokenResponse(customerId, provider.createToken(payload));
+    }
+
+    private void checkSignUpPassword(Email email, String targetPassword) {
+        try {
+            String foundPassword = customerDao.findPasswordByEmail(email);
+            verifyPassword(targetPassword, foundPassword);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("가입하지 않은 유저입니다.");
+        }
     }
 
     private void verifyPassword(final String password, final String hashedPassword) {
