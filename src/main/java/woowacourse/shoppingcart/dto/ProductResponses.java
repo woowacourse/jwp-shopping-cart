@@ -3,7 +3,10 @@ package woowacourse.shoppingcart.dto;
 import java.util.List;
 
 public class ProductResponses {
-    private final List<ProductResponse> products;
+    private List<ProductResponse> products;
+
+    public ProductResponses() {
+    }
 
     public ProductResponses(List<ProductResponse> products) {
         this.products = products;

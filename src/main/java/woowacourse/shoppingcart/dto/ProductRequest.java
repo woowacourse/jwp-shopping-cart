@@ -1,11 +1,14 @@
 package woowacourse.shoppingcart.dto;
 
 public class ProductRequest {
-    private final String name;
-    private final int price;
-    private final String imageUrl;
-    private final String description;
-    private final int stock;
+    private String name;
+    private int price;
+    private String imageUrl;
+    private String description;
+    private int stock;
+
+    public ProductRequest() {
+    }
 
     public ProductRequest(String name, int price, String imageUrl, String description, int stock) {
         this.name = name;

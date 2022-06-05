@@ -24,11 +24,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<ProductResponses> products() {
-        return ResponseEntity.ok(productService.findProducts());
-    }
-
     @PostMapping
     public ResponseEntity<Void> add(@RequestBody final ProductRequest productRequest) {
         final Long productId = productService.addProduct(productRequest);
@@ -37,6 +32,11 @@ public class ProductController {
                 .path("/" + productId)
                 .build().toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<ProductResponses> products() {
+        return ResponseEntity.ok(productService.findProducts());
     }
 
     @GetMapping("/{productId}")

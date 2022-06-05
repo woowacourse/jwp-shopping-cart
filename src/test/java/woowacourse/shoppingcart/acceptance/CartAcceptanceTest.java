@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_REQUEST_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_REQUEST_2;
+import static woowacourse.shoppingcart.fixture.ProductFixtures.getProductRequestParam;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -87,8 +88,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
 
-        productId1 = 상품_등록되어_있음(PRODUCT_REQUEST_1);
-        productId2 = 상품_등록되어_있음(PRODUCT_REQUEST_2);
+        productId1 = 상품_등록되어_있음(getProductRequestParam(PRODUCT_REQUEST_1));
+        productId2 = 상품_등록되어_있음(getProductRequestParam(PRODUCT_REQUEST_2));
     }
 
     @DisplayName("장바구니 아이템 추가")

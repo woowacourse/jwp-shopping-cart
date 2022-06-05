@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.fixture;
 
+import java.util.HashMap;
+import java.util.Map;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 
@@ -21,4 +23,14 @@ public class ProductFixtures {
     public static final Product PRODUCT_2 = new Product(2L, PRODUCT_REQUEST_2.getName(), PRODUCT_REQUEST_2.getPrice(),
             PRODUCT_REQUEST_2.getImageUrl(), PRODUCT_REQUEST_2.getDescription(), PRODUCT_REQUEST_2.getStock());
 
+    public static Map<String, Object> getProductRequestParam(ProductRequest productRequest) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", productRequest.getName());
+        params.put("price", productRequest.getPrice());
+        params.put("imageUrl", productRequest.getImageUrl());
+        params.put("description", productRequest.getDescription());
+        params.put("stock", productRequest.getStock());
+
+        return params;
+    }
 }

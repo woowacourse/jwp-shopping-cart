@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.stream.Collectors;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductResponses;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -39,7 +41,11 @@ public class ProductService {
     }
 
     public ProductResponse findProductById(final Long productId) {
-        return convertResponseToProduct(productDao.findProductById(productId));
+        try {
+            return convertResponseToProduct(productDao.findProductById(productId));
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundProductException();
+        }
     }
 
     public void deleteProductById(final Long productId) {
@@ -52,7 +58,7 @@ public class ProductService {
     }
 
     private ProductResponse convertResponseToProduct(Product product) {
-        return new ProductResponse(product.getName(), product.getPrice(), product.getImageUrl(),
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(),
                 product.getDescription(), product.getStock());
     }
 }

@@ -1,18 +1,27 @@
 package woowacourse.shoppingcart.dto;
 
 public class ProductResponse {
-    private final String name;
-    private final int price;
-    private final String imageUrl;
-    private final String description;
-    private final int stock;
+    private Long id;
+    private String name;
+    private int price;
+    private String imageUrl;
+    private String description;
+    private int stock;
 
-    public ProductResponse(String name, int price, String imageUrl, String description, int stock) {
+    public ProductResponse() {
+    }
+
+    public ProductResponse(Long id, String name, int price, String imageUrl, String description, int stock) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.description = description;
         this.stock = stock;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -38,7 +47,8 @@ public class ProductResponse {
     @Override
     public String toString() {
         return "ProductResponse{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", price=" + price +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", description='" + description + '\'' +
