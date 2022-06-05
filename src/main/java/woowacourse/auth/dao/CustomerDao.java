@@ -14,11 +14,11 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.domain.Password;
 import woowacourse.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 	private final SimpleJdbcInsert jdbcInsert;
 

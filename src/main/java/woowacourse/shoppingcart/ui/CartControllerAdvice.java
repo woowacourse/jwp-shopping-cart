@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.ConstraintViolationException;
 
@@ -48,6 +49,12 @@ public class CartControllerAdvice {
     })
     public ResponseEntity<ExceptionResponse> handleInvalidAccess(final RuntimeException exception) {
         return ResponseEntity.badRequest()
+            .body(new ExceptionResponse(exception));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleNotFound(NoSuchElementException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(new ExceptionResponse(exception));
     }
 

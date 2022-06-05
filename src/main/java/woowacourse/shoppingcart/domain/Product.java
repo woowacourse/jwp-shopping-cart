@@ -1,39 +1,25 @@
 package woowacourse.shoppingcart.domain;
 
+import static lombok.EqualsAndHashCode.*;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
 public class Product {
 
+    @Include
     private Long id;
     private String name;
     private Integer price;
     private String imageUrl;
 
-    public Product() {
-    }
-
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
     public Product(final String name, final int price, final String imageUrl) {
         this(null, name, price, imageUrl);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public Long getId() {
-        return id;
     }
 }
