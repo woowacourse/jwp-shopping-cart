@@ -32,8 +32,8 @@ class CustomerServiceTest {
     @DisplayName("이메일이 중복되는지 확인한다.")
     @ParameterizedTest
     @CsvSource(value = {"email@email.com, false", "distinctemail@email.com, true"})
-    void isDistinctEmail(final String email, final Boolean expected) {
-        assertThat(customerService.isDistinctEmail(email)).isEqualTo(expected);
+    void isUniqueEmail(final String email, final Boolean expected) {
+        assertThat(customerService.isUniqueEmail(email)).isEqualTo(expected);
     }
 
     @DisplayName("회원가입을 진행한다.")

@@ -32,9 +32,9 @@ public class CustomerController {
 
     @GetMapping("/check-email")
     public ResponseEntity<EmailUniqueCheckResponse> checkDuplicateEmail(@RequestParam final String email) {
-        final EmailUniqueCheckResponse emailDuplicateCheckResponse =
-                new EmailUniqueCheckResponse(customerService.isDistinctEmail(email));
-        return ResponseEntity.ok().body(emailDuplicateCheckResponse);
+        final EmailUniqueCheckResponse emailUniqueCheckResponse =
+                new EmailUniqueCheckResponse(customerService.isUniqueEmail(email));
+        return ResponseEntity.ok().body(emailUniqueCheckResponse);
     }
 
     @PostMapping

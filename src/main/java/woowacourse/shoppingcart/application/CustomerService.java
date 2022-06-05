@@ -21,7 +21,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public boolean isDistinctEmail(final String email) {
+    public boolean isUniqueEmail(final String email) {
         return !customerDao.existEmail(new Email(email));
     }
 
