@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.LoginFailureException;
@@ -123,11 +124,11 @@ class AuthServiceTest {
                 .willReturn(Optional.of(customer));
 
         // when
-        final Customer authenticatedCustomer = authService.getAuthenticatedCustomer(token);
+        final LoginCustomer loginCustomer = authService.getAuthenticatedCustomer(token);
 
         // then
         assertAll(
-                () -> assertThat(authenticatedCustomer).isEqualTo(customer),
+                () -> assertThat(loginCustomer.getId()).isEqualTo(customer.getId()),
                 () -> verify(jwtTokenProvider).getPayload(token),
                 () -> verify(customerDao).findById(1L)
         );

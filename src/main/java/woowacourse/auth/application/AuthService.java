@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.LoginFailureException;
@@ -26,10 +27,11 @@ public class AuthService {
         this.customerDao = customerDao;
     }
 
-    public Customer getAuthenticatedCustomer(final String token) {
+    public LoginCustomer getAuthenticatedCustomer(final String token) {
         Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
-        return customerDao.findById(id)
+        final Customer customer = customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
+        return new LoginCustomer(customer.getId());
     }
 
     public TokenResponse login(final TokenRequest tokenRequest) {

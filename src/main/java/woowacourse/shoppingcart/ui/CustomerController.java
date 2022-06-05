@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
@@ -36,22 +36,22 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal final Customer customer) {
-        CustomerResponse response = customerService.getMeById(customer.getId());
+    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal final LoginCustomer loginCustomer) {
+        CustomerResponse response = customerService.getMeById(loginCustomer.getId());
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/me")
     public ResponseEntity<CustomerResponse> updateCustomer(
-            @AuthenticationPrincipal final Customer customer,
+            @AuthenticationPrincipal final LoginCustomer loginCustomer,
             @Valid @RequestBody final CustomerRequest.UserNameAndPassword customerRequest) {
-        CustomerResponse response = customerService.updateById(customer.getId(), customerRequest);
+        CustomerResponse response = customerService.updateById(loginCustomer.getId(), customerRequest);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal final Customer customer) {
-        customerService.deleteById(customer.getId());
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal final LoginCustomer loginCustomer) {
+        customerService.deleteById(loginCustomer.getId());
         return ResponseEntity.noContent().build();
     }
 
