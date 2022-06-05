@@ -44,7 +44,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> handleUnhandledException(RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ExceptionResponse("서버 내부 오류가 발생하였습니다."));
+        return ResponseEntity.internalServerError().body(new ExceptionResponse("서버 내부 오류가 발생하였습니다."));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
