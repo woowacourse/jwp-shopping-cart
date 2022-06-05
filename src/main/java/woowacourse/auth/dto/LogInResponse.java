@@ -12,6 +12,9 @@ public class LogInResponse {
         this.token = token;
     }
 
+    private LogInResponse() {
+    }
+
     public String getUsername() {
         return username;
     }
