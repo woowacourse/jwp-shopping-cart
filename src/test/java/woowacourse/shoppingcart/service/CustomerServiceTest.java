@@ -28,8 +28,8 @@ class CustomerServiceTest {
     @Autowired
     public CustomerServiceTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         CustomerDao customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
-        PrivacyDao privacyDao = new JdbcPrivacyDao(jdbcTemplate);
-        AddressDao addressDao = new JdbcAddressDao(jdbcTemplate);
+        PrivacyDao privacyDao = new JdbcPrivacyDao(jdbcTemplate, dataSource);
+        AddressDao addressDao = new JdbcAddressDao(jdbcTemplate, dataSource);
 
         this.customerService = new CustomerService(customerDao, privacyDao, addressDao);
     }

@@ -1,7 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.entity.AddressEntity;
 
@@ -15,16 +19,19 @@ public class JdbcAddressDao implements AddressDao {
     );
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public JdbcAddressDao(JdbcTemplate jdbcTemplate) {
+    public JdbcAddressDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
-    public void save(int customerId, AddressEntity addressEntity) {
-        String sql = "INSERT INTO FULL_ADDRESS (customer_id, address, detail_address, zone_code) VALUES(?, ?, ?,?)";
-        jdbcTemplate.update(sql, customerId, addressEntity.getAddress(), addressEntity.getDetailAddress(),
-                addressEntity.getZoneCode());
+    public void save(AddressEntity addressEntity) {
+        String sql = "INSERT INTO FULL_ADDRESS (customer_id, address, detail_address, zone_code) VALUES(:customerId, :address, :detailAddress, :zoneCode)";
+
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(addressEntity);
+        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
 
     @Override
@@ -34,10 +41,11 @@ public class JdbcAddressDao implements AddressDao {
     }
 
     @Override
-    public void update(int customerId, AddressEntity addressEntity) {
-        String sql = "UPDATE FULL_ADDRESS SET address = ?, detail_address = ?, zone_code = ? WHERE customer_id = ?";
-        jdbcTemplate.update(sql, addressEntity.getAddress(), addressEntity.getDetailAddress(),
-                addressEntity.getZoneCode(), customerId);
+    public void update(AddressEntity addressEntity) {
+        String sql = "UPDATE FULL_ADDRESS SET address = :address, detail_address = :detailAddress, zone_code = :zoneCode WHERE customer_id = :customerId";
+
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(addressEntity);
+        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
 
     @Override

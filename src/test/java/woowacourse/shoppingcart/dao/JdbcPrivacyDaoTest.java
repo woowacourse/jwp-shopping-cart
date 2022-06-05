@@ -2,8 +2,11 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.Fixtures.BIRTHDAY_VALUE_1;
+import static woowacourse.Fixtures.CONTACT_VALUE_1;
 import static woowacourse.Fixtures.CUSTOMER_ENTITY_1;
-import static woowacourse.Fixtures.PRIVACY_ENTITY_1;
+import static woowacourse.Fixtures.GENDER_MALE;
+import static woowacourse.Fixtures.NAME_VALUE_1;
 
 import java.time.LocalDate;
 import javax.sql.DataSource;
@@ -22,7 +25,7 @@ class JdbcPrivacyDaoTest {
 
     @Autowired
     public JdbcPrivacyDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        privacyDao = new JdbcPrivacyDao(jdbcTemplate);
+        privacyDao = new JdbcPrivacyDao(jdbcTemplate, dataSource);
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
     }
 
@@ -31,13 +34,15 @@ class JdbcPrivacyDaoTest {
     void save() {
         // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
+                CONTACT_VALUE_1);
 
         // when
-        privacyDao.save(customerId, PRIVACY_ENTITY_1);
-        PrivacyEntity privacyEntity = privacyDao.findById(customerId);
+        privacyDao.save(privacyEntity);
+        PrivacyEntity actual = privacyDao.findById(customerId);
 
         // then
-        assertThat(privacyEntity).isNotNull();
+        assertThat(actual).isNotNull();
     }
 
     @DisplayName("Customer id를 전달받아 해당하는 객체를 조회하여 PrivacyEntity를 반환한다.")
@@ -45,15 +50,17 @@ class JdbcPrivacyDaoTest {
     void findById() {
         // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        privacyDao.save(customerId, PRIVACY_ENTITY_1);
+        PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
+                CONTACT_VALUE_1);
+        privacyDao.save(privacyEntity);
 
         // when
         PrivacyEntity actual = privacyDao.findById(customerId);
 
         // then
         assertThat(actual).extracting("customerId", "name", "gender", "birthday", "contact")
-                .containsExactly(customerId, PRIVACY_ENTITY_1.getName(), PRIVACY_ENTITY_1.getGender(),
-                        PRIVACY_ENTITY_1.getBirthday(), PRIVACY_ENTITY_1.getContact());
+                .containsExactly(customerId, privacyEntity.getName(), privacyEntity.getGender(),
+                        privacyEntity.getBirthday(), privacyEntity.getContact());
     }
 
     @DisplayName("PrivacyEntity와 Customer id를 전달받아 해당하는 Privacy를 수정한다.")
@@ -61,12 +68,14 @@ class JdbcPrivacyDaoTest {
     void update() {
         // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        privacyDao.save(customerId, PRIVACY_ENTITY_1);
+        PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
+                CONTACT_VALUE_1);
+        privacyDao.save(privacyEntity);
 
         // when
-        PrivacyEntity newPrivacyEntity = new PrivacyEntity("새로운 이름", "female", LocalDate.of(1999, 12, 21),
+        PrivacyEntity newPrivacyEntity = new PrivacyEntity(customerId, "새로운 이름", "female", LocalDate.of(1999, 12, 21),
                 "01033334444");
-        privacyDao.update(customerId, newPrivacyEntity);
+        privacyDao.update(newPrivacyEntity);
 
         PrivacyEntity actual = privacyDao.findById(customerId);
 
@@ -81,7 +90,9 @@ class JdbcPrivacyDaoTest {
     void delete() {
         // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        privacyDao.save(customerId, PRIVACY_ENTITY_1);
+        PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
+                CONTACT_VALUE_1);
+        privacyDao.save(privacyEntity);
 
         // when
         privacyDao.delete(customerId);

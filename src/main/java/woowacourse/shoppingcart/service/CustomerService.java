@@ -35,12 +35,13 @@ public class CustomerService {
     public int create(CustomerRequest customerRequest) {
         Customer customer = convertRequestToCustomer(customerRequest);
         CustomerEntity customerEntity = convertCustomerToEntity(customer);
-        PrivacyEntity privacyEntity = convertPrivacyToEntity(customer.getPrivacy());
-        AddressEntity addressEntity = convertAddressToEntity(customer.getFullAddress());
-
         int customerId = customerDao.save(customerEntity);
-        privacyDao.save(customerId, privacyEntity);
-        addressDao.save(customerId, addressEntity);
+
+        PrivacyEntity privacyEntity = convertPrivacyToEntity(customerId, customer.getPrivacy());
+        AddressEntity addressEntity = convertAddressToEntity(customerId, customer.getFullAddress());
+
+        privacyDao.save(privacyEntity);
+        addressDao.save(addressEntity);
 
         return customerId;
     }
@@ -61,12 +62,12 @@ public class CustomerService {
 
         Customer customer = convertRequestToCustomer(customerRequest);
         CustomerEntity customerEntity = convertCustomerToEntity(customer);
-        PrivacyEntity privacyEntity = convertPrivacyToEntity(customer.getPrivacy());
-        AddressEntity addressEntity = convertAddressToEntity(customer.getFullAddress());
+        PrivacyEntity privacyEntity = convertPrivacyToEntity(customerId, customer.getPrivacy());
+        AddressEntity addressEntity = convertAddressToEntity(customerId, customer.getFullAddress());
 
         customerDao.update(customerId, customerEntity);
-        privacyDao.update(customerId, privacyEntity);
-        addressDao.update(customerId, addressEntity);
+        privacyDao.update(privacyEntity);
+        addressDao.update(addressEntity);
     }
 
     public void deleteCustomer(int customerId) {
@@ -106,13 +107,14 @@ public class CustomerService {
                 customer.getProfileImageUrl().getValue(), customer.isTerms());
     }
 
-    private PrivacyEntity convertPrivacyToEntity(Privacy privacy) {
-        return new PrivacyEntity(privacy.getName().getValue(), privacy.getGender().getValue(),
+    private PrivacyEntity convertPrivacyToEntity(int customerId, Privacy privacy) {
+        return new PrivacyEntity(customerId, privacy.getName().getValue(), privacy.getGender().getValue(),
                 privacy.getBirthday().getValue(), privacy.getContact().getValue());
     }
 
-    private AddressEntity convertAddressToEntity(FullAddress fullAddress) {
-        return new AddressEntity(fullAddress.getAddress().getValue(), fullAddress.getDetailAddress().getValue(),
+    private AddressEntity convertAddressToEntity(int customerId, FullAddress fullAddress) {
+        return new AddressEntity(customerId, fullAddress.getAddress().getValue(),
+                fullAddress.getDetailAddress().getValue(),
                 fullAddress.getZoneCode().getValue());
     }
 

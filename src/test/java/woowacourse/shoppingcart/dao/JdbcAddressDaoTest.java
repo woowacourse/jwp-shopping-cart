@@ -2,8 +2,10 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static woowacourse.Fixtures.ADDRESS_ENTITY_1;
+import static woowacourse.Fixtures.ADDRESS_VALUE_1;
 import static woowacourse.Fixtures.CUSTOMER_ENTITY_1;
+import static woowacourse.Fixtures.DETAIL_ADDRESS_VALUE_1;
+import static woowacourse.Fixtures.ZONE_CODE_VALUE_1;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +23,7 @@ class JdbcAddressDaoTest {
 
     @Autowired
     public JdbcAddressDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        addressDao = new JdbcAddressDao(jdbcTemplate);
+        addressDao = new JdbcAddressDao(jdbcTemplate, dataSource);
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
     }
 
@@ -30,13 +32,15 @@ class JdbcAddressDaoTest {
     void save() {
         // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        AddressEntity addressEntity = new AddressEntity(customerId, ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
+                ZONE_CODE_VALUE_1);
 
         // when
-        addressDao.save(customerId, ADDRESS_ENTITY_1);
-        AddressEntity addressEntity = addressDao.findById(customerId);
+        addressDao.save(addressEntity);
+        AddressEntity actual = addressDao.findById(customerId);
 
         // then
-        assertThat(addressEntity).isNotNull();
+        assertThat(actual).isNotNull();
     }
 
     @DisplayName("Customer id를 전달받아 해당하는 객체를 조회하여 PrivacyEntity를 반환한다.")
@@ -44,7 +48,9 @@ class JdbcAddressDaoTest {
     void findById() {
         // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        addressDao.save(customerId, ADDRESS_ENTITY_1);
+        AddressEntity addressEntity = new AddressEntity(customerId, ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
+                ZONE_CODE_VALUE_1);
+        addressDao.save(addressEntity);
 
         // when
         AddressEntity actual = addressDao.findById(customerId);
@@ -60,11 +66,13 @@ class JdbcAddressDaoTest {
     void update() {
         // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        addressDao.save(customerId, ADDRESS_ENTITY_1);
+        AddressEntity addressEntity = new AddressEntity(customerId, ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
+                ZONE_CODE_VALUE_1);
+        addressDao.save(addressEntity);
 
         // when
-        AddressEntity newAddressEntity = new AddressEntity("경기도 양주시", "옥정동 배카라하우스", "12312");
-        addressDao.update(customerId, newAddressEntity);
+        AddressEntity newAddressEntity = new AddressEntity(customerId, "경기도 양주시", "옥정동 배카라하우스", "12312");
+        addressDao.update(newAddressEntity);
 
         AddressEntity actual = addressDao.findById(customerId);
 
@@ -79,7 +87,9 @@ class JdbcAddressDaoTest {
     void delete() {
         // given
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        addressDao.save(customerId, ADDRESS_ENTITY_1);
+        AddressEntity addressEntity = new AddressEntity(customerId, ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
+                ZONE_CODE_VALUE_1);
+        addressDao.save(addressEntity);
 
         // when
         addressDao.delete(customerId);

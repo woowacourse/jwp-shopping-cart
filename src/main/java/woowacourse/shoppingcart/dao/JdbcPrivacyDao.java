@@ -1,7 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
 
@@ -16,16 +20,19 @@ public class JdbcPrivacyDao implements PrivacyDao {
     );
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public JdbcPrivacyDao(JdbcTemplate jdbcTemplate) {
+    public JdbcPrivacyDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
-    public void save(int customerId, PrivacyEntity privacyEntity) {
-        String sql = "INSERT INTO PRIVACY (customer_id, name, gender, birth_day, contact) VALUES(?, ?, ?, ? ,?)";
-        jdbcTemplate.update(sql, customerId, privacyEntity.getName(), privacyEntity.getGender(),
-                privacyEntity.getBirthday(), privacyEntity.getContact());
+    public void save(PrivacyEntity privacyEntity) {
+        String sql = "INSERT INTO PRIVACY (customer_id, name, gender, birth_day, contact) VALUES(:customerId, :name, :gender, :birthday ,:contact)";
+
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(privacyEntity);
+        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
 
     @Override
@@ -35,10 +42,11 @@ public class JdbcPrivacyDao implements PrivacyDao {
     }
 
     @Override
-    public void update(int customerId, PrivacyEntity privacyEntity) {
-        String sql = "UPDATE PRIVACY SET name = ?, gender = ?, birth_day = ?, contact = ? WHERE customer_id = ?";
-        jdbcTemplate.update(sql, privacyEntity.getName(), privacyEntity.getGender(), privacyEntity.getBirthday(),
-                privacyEntity.getContact(), customerId);
+    public void update(PrivacyEntity privacyEntity) {
+        String sql = "UPDATE PRIVACY SET name = :name, gender = :gender, birth_day = :birthday, contact = :contact WHERE customer_id = :customerId";
+
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(privacyEntity);
+        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
 
     @Override
