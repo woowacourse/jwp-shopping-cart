@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
@@ -35,6 +36,9 @@ public class OrderControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private JwtTokenProvider provider;
 
     @MockBean
     private OrderService orderService;
@@ -56,7 +60,9 @@ public class OrderControllerTest {
             .thenReturn(expectedOrderId);
 
         // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
+        final String token = "Bearer " + provider.createToken(customerName);
+        mockMvc.perform(post("/api/customers/me/orders")
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(requestDtos))
@@ -64,7 +70,8 @@ public class OrderControllerTest {
             .andExpect(status().isCreated())
             .andExpect(header().exists("Location"))
             .andExpect(header().string("Location",
-                "/api/" + customerName + "/orders/" + expectedOrderId));
+                "/api/customers/me/orders/" + expectedOrderId));
+
     }
 
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
@@ -75,20 +82,22 @@ public class OrderControllerTest {
         final String customerName = "pobi";
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
-            Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
+            Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "http://example.com", 2)));
+        final String token = "Bearer " + provider.createToken(customerName);
 
         when(orderService.findOrderById(customerName, orderId))
             .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
+        mockMvc.perform(get("/api/customers/me/orders/" + orderId)
+                .header("Authorization", token)
             ).andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("id").value(orderId))
             .andExpect(jsonPath("orderDetails[0].productId").value(2L))
             .andExpect(jsonPath("orderDetails[0].price").value(1_000))
             .andExpect(jsonPath("orderDetails[0].name").value("banana"))
-            .andExpect(jsonPath("orderDetails[0].imageUrl").value("imageUrl"))
+            .andExpect(jsonPath("orderDetails[0].imageUrl").value("http://example.com"))
             .andExpect(jsonPath("orderDetails[0].quantity").value(2));
     }
 
@@ -103,12 +112,14 @@ public class OrderControllerTest {
             new Orders(2L, Collections.singletonList(
                 new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
+        final String token = "Bearer " + provider.createToken(customerName);
 
         when(orderService.findOrdersByCustomerName(customerName))
             .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
+        mockMvc.perform(get("/api/customers/me/orders/")
+                .header("Authorization", token)
             ).andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].id").value(1L))
