@@ -21,6 +21,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
@@ -33,8 +35,13 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
 
-        Long productId1 = getAddedProductId("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = getAddedProductId("맥주", 20_000, "http://example.com/beer.jpg");
+        ProductRequest productRequest1 = new ProductRequest("치킨", 10_000, 10,
+            new ThumbnailImageDto("http://example.com/chicken.jpg", "이미지입니다."));
+        ProductRequest productRequest2 = new ProductRequest("맥주", 20_000, 10,
+            new ThumbnailImageDto("http://example.com/beer.jpg", "이미지입니다."));
+
+        Long productId1 = getAddedProductId(productRequest1);
+        Long productId2 = getAddedProductId(productRequest2);
 
         cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
         cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);

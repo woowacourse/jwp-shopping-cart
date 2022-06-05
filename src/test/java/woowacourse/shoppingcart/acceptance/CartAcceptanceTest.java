@@ -18,6 +18,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -29,9 +31,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
+        ProductRequest productRequest1 = new ProductRequest("치킨", 10_000, 10,
+            new ThumbnailImageDto("http://example.com/chicken.jpg", "이미지입니다."));
+        ProductRequest productRequest2 = new ProductRequest("맥주", 20_000, 10,
+            new ThumbnailImageDto("http://example.com/beer.jpg", "이미지입니다."));
 
-        productId1 = getAddedProductId("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = getAddedProductId("맥주", 20_000, "http://example.com/beer.jpg");
+        productId1 = getAddedProductId(productRequest1);
+        productId2 = getAddedProductId(productRequest2);
     }
 
     @DisplayName("장바구니 아이템 추가")

@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -19,7 +21,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     void addProduct() {
         // given & when
-        ExtractableResponse<Response> response = requestToAddProduct("치킨", 10_000, "http://example.com/chicken.jpg");
+        ProductRequest productRequest = new ProductRequest("치킨", 10_000, 10,
+            new ThumbnailImageDto("http://example.com/chicken.jpg", "이미지입니다."));
+        ExtractableResponse<Response> response = requestToAddProduct(productRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -30,17 +34,22 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     void getProducts() {
         // given
-        Long productId1 = getAddedProductId("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = getAddedProductId("맥주", 20_000, "http://example.com/beer.jpg");
+        ProductRequest productRequest1 = new ProductRequest("치킨", 10_000, 10,
+            new ThumbnailImageDto("http://example.com/chicken.jpg", "이미지입니다."));
+        ProductRequest productRequest2 = new ProductRequest("맥주", 20_000, 10,
+            new ThumbnailImageDto("http://example.com/beer.jpg", "이미지입니다."));
+
+        Long productId1 = getAddedProductId(productRequest1);
+        Long productId2 = getAddedProductId(productRequest2);
 
         // when
-        ExtractableResponse<Response> response = AcceptanceFixture.get("/api/products");
-        List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
-            .map(Product::getId)
+        ExtractableResponse<Response> productsResponse = AcceptanceFixture.get("/api/products");
+        List<Long> resultProductIds = productsResponse.jsonPath().getList(".", ProductResponse.class).stream()
+            .map(ProductResponse::getId)
             .collect(Collectors.toList());
 
         //then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(productsResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(resultProductIds).contains(productId1, productId2);
     }
 
@@ -48,38 +57,40 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     void getProduct() {
         // given
-        Long productId = getAddedProductId("치킨", 10_000, "http://example.com/chicken.jpg");
+        ProductRequest productRequest = new ProductRequest("치킨", 10_000, 10,
+            new ThumbnailImageDto("http://example.com/chicken.jpg", "이미지입니다."));
+        Long productId = getAddedProductId(productRequest);
 
         // when
-        ExtractableResponse<Response> response = AcceptanceFixture.get("/api/products/" + productId);
-        Product resultProduct = response.as(Product.class);
+        ExtractableResponse<Response> productFoundByIdResponse = AcceptanceFixture.get("/api/products/" + productId);
+        ProductResponse productResponse = productFoundByIdResponse.as(ProductResponse.class);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(resultProduct.getId()).isEqualTo(productId);
+        assertThat(productFoundByIdResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(productResponse.getId()).isEqualTo(productId);
     }
 
     @DisplayName("상품을 삭제한다")
     @Test
     void deleteProduct() {
         // given
-        Long productId = getAddedProductId("치킨", 10_000, "http://example.com/chicken.jpg");
+        ProductRequest productRequest = new ProductRequest("치킨", 10_000, 10,
+            new ThumbnailImageDto("http://example.com/chicken.jpg", "이미지입니다."));
+        Long productId = getAddedProductId(productRequest);
 
         // when
-        ExtractableResponse<Response> response = AcceptanceFixture.delete("/api/products/" + productId);
+        ExtractableResponse<Response> deleteResponse = AcceptanceFixture.delete("/api/products/" + productId);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    private static ExtractableResponse<Response> requestToAddProduct(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
-
+    private static ExtractableResponse<Response> requestToAddProduct(ProductRequest productRequest) {
         return AcceptanceFixture.post(productRequest, "/api/products");
     }
 
-    public static Long getAddedProductId(String name, int price, String imageUrl) {
-        ExtractableResponse<Response> response = requestToAddProduct(name, price, imageUrl);
+    public static Long getAddedProductId(ProductRequest productRequest) {
+        ExtractableResponse<Response> response = requestToAddProduct(productRequest);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 }
