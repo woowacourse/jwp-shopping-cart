@@ -1,13 +1,16 @@
 package woowacourse.auth.support;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
-import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.util.Date;
+import javax.crypto.SecretKey;
+import org.springframework.stereotype.Component;
+import woowacourse.auth.config.TokenProperty;
 
 @Component
 public class JwtTokenProvider {
@@ -15,10 +18,9 @@ public class JwtTokenProvider {
     private final SecretKey key;
     private final long validityInMilliseconds;
 
-    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String secretKey,
-                            @Value("${security.jwt.token.expire-length}") final long validityInMilliseconds) {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-        this.validityInMilliseconds = validityInMilliseconds;
+    public JwtTokenProvider(TokenProperty tokenProperty) {
+        this.key = Keys.hmacShaKeyFor(tokenProperty.getSecretKey().getBytes(StandardCharsets.UTF_8));
+        this.validityInMilliseconds = tokenProperty.getExpireLength();
     }
 
     public String createToken(String payload) {
