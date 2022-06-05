@@ -37,7 +37,7 @@ public class AuthService {
     public void validateLogin(LoginRequest loginRequest) {
         try {
             Customer customer = customerService.findByUsername(loginRequest.getUsername());
-            customer.matchPassword(loginRequest.getPassword());
+            customer.matchPassword(customerService.convertPassword(loginRequest.getPassword()));
         } catch (EmptyResultException exception) {
             throw new UserNotFoundException("해당하는 username이 없습니다.");
         }

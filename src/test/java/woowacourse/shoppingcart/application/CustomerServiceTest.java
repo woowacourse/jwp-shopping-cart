@@ -5,13 +5,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.DuplicatedUsernameException;
 import woowacourse.shoppingcart.exception.EmptyResultException;
 
@@ -34,7 +36,7 @@ class CustomerServiceTest {
         assertAll(
             () -> assertThat(customer.getId()).isNotNull(),
             () -> assertThat(customer.getUsername().getValue()).isEqualTo(signupRequest.getUsername()),
-            () -> assertThat(customer.getPassword().getValue()).isEqualTo(signupRequest.getPassword()),
+            () -> assertThat(customer.getPassword().getValue()).isEqualTo(customerService.convertPassword(signupRequest.getPassword())),
             () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(signupRequest.getPhoneNumber()),
             () -> assertThat(customer.getAddress()).isEqualTo(signupRequest.getAddress())
         );
@@ -122,5 +124,21 @@ class CustomerServiceTest {
         // then
         assertThatThrownBy(() -> customerService.findByUsername(username))
             .isInstanceOf(EmptyResultException.class);
+    }
+
+    @DisplayName("길이가 맞지 않는 password를 생성한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"abcd123", "abcdefghijklmnop12345"})
+    void createInvalidLengthUsername(String value) {
+        assertThatThrownBy(() -> customerService.convertPassword(value))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("패턴이 맞지 않는 password을 생성한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"한글비밀번호에요", "@!&@#&!@"})
+    void createInvalidPatternUsername(String value) {
+        assertThatThrownBy(() -> customerService.convertPassword(value))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

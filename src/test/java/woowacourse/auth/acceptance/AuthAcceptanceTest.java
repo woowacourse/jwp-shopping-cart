@@ -110,7 +110,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         ValidatableResponse validatableResponse = RestAssured
             .given().log().all()
-            .body(new LoginRequest("dongho108", "password"))
+            .body(new LoginRequest("dongho108", "password1234"))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when().post("/api/customers/login")

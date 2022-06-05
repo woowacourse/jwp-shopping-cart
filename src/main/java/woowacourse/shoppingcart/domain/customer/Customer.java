@@ -20,7 +20,7 @@ public class Customer {
         return new Customer(
             null,
             new Username(username),
-            new Password(password),
+            Password.from(password),
             new PhoneNumber(phoneNumber),
             address);
     }
@@ -29,7 +29,7 @@ public class Customer {
         return new Customer(
             id,
             new Username(username),
-            new Password(password),
+            Password.from(password),
             new PhoneNumber(phoneNumber),
             address);
     }
