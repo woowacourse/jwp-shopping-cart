@@ -1,16 +1,20 @@
 package woowacourse.auth.support;
 
 import java.util.Enumeration;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class AuthorizationExtractor {
     public static final String AUTHORIZATION = "Authorization";
-    public static String BEARER_TYPE = "Bearer";
+    public static final String BEARER_TYPE = "Bearer";
     public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
 
-    public static String extract(HttpServletRequest request) {
-        Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
+    private AuthorizationExtractor() {
+    }
+
+    public static Optional<String> extract(final HttpServletRequest request) {
+        final Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
             if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
@@ -20,10 +24,10 @@ public class AuthorizationExtractor {
                 if (commaIndex > 0) {
                     authHeaderValue = authHeaderValue.substring(0, commaIndex);
                 }
-                return authHeaderValue;
+                return Optional.of(authHeaderValue);
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 }
