@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerLoginException;
-import woowacourse.shoppingcart.exception.InvalidTokenException;
 import woowacourse.shoppingcart.util.HashTool;
 
 @Service
@@ -39,9 +38,6 @@ public class AuthService {
     }
 
     public LoginCustomer findCustomerByToken(String token) {
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException();
-        }
         String payload = jwtTokenProvider.getPayload(token);
 
         return new LoginCustomer(customerDao.findByLoginId(payload));

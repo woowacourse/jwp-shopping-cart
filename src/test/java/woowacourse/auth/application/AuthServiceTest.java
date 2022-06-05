@@ -17,7 +17,6 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerLoginException;
-import woowacourse.shoppingcart.exception.InvalidTokenException;
 import woowacourse.shoppingcart.util.HashTool;
 
 @SuppressWarnings("NonAsciiChracters")
@@ -73,12 +72,6 @@ class AuthServiceTest {
             assertThat(loginCustomer)
                 .extracting("loginId", "username")
                 .containsExactly("sunhpark42@gmail.com", "sunhpark42");
-        }
-
-        @Test
-        void 토큰_정보가_올바르지_않은_경우_예외발생() {
-            assertThatThrownBy(() -> authService.findCustomerByToken("InvalidToken"))
-                .isInstanceOf(InvalidTokenException.class);
         }
     }
 

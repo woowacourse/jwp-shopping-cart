@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.auth.config.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerPasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -32,30 +32,31 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerResponse> addCustomer(
-        @RequestBody CustomerRequest customerRequest) {
+            @RequestBody CustomerRequest customerRequest) {
         CustomerResponse customerResponse = customerService.addCustomer(customerRequest);
         return ResponseEntity.created(URI.create("/customers/me")).body(customerResponse);
     }
 
     @GetMapping("/me")
     public ResponseEntity<CustomerResponse> getMe(
-        @AuthenticationPrincipal LoginCustomer loginCustomer) {
+            @AuthenticationPrincipal LoginCustomer loginCustomer) {
         CustomerResponse customerResponse = CustomerResponse.of(loginCustomer);
         return ResponseEntity.ok().body(customerResponse);
     }
 
     @PutMapping("/me")
     public ResponseEntity<CustomerResponse> updateMe(
-        @AuthenticationPrincipal LoginCustomer loginCustomer,
-        @RequestBody CustomerUpdateRequest customerUpdateRequest) {
+            @AuthenticationPrincipal LoginCustomer loginCustomer,
+            @RequestBody CustomerUpdateRequest customerUpdateRequest) {
         authService.checkPassword(loginCustomer.toCustomer(), customerUpdateRequest.getPassword());
-        CustomerResponse customerResponse = customerService.updateCustomer(customerUpdateRequest, loginCustomer.getLoginId());
+        CustomerResponse customerResponse = customerService.updateCustomer(customerUpdateRequest,
+                loginCustomer.getLoginId());
         return ResponseEntity.ok().body(customerResponse);
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal LoginCustomer loginCustomer,
-        @RequestBody CustomerPasswordRequest customerPasswordRequest) {
+            @RequestBody CustomerPasswordRequest customerPasswordRequest) {
         authService.checkPassword(loginCustomer.toCustomer(), customerPasswordRequest.getPassword());
         customerService.deleteCustomer(loginCustomer.getLoginId());
         return ResponseEntity.noContent().build();
