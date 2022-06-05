@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import woowacourse.shoppingcart.domain.Password;
-
 public class Customer {
     private final Name name;
     private final Email email;

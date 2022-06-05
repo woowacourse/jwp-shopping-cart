@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.service;
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.dto.AuthorizedCustomer;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
@@ -28,6 +29,8 @@ public class CustomerService {
         String email = signUpRequest.getEmail();
         String password = signUpRequest.getPassword();
 
+        convertCustomer(signUpRequest);
+
         validateDuplicatedName(name);
 
         validatedDuplicatedEmail(email);
@@ -35,6 +38,14 @@ public class CustomerService {
         customerDao.saveCustomer(name, email, password);
 
         return new SignUpResponse(name, email);
+    }
+
+    private Customer convertCustomer(SignUpRequest signUpRequest) {
+        return new Customer(
+                signUpRequest.getUsername(),
+                signUpRequest.getEmail(),
+                signUpRequest.getPassword()
+        );
     }
 
     private void validatedDuplicatedEmail(String email) {
@@ -49,17 +60,17 @@ public class CustomerService {
         }
     }
 
-//    public CustomerResponse findCustomerInformation(String username) {
-//        var customer = customerDao.findCustomerByUserName(username);
-//        String email = customer.getEmail();
-//        return new CustomerResponse(username, email);
-//    }
-
     public void changePassword(AuthorizedCustomer authorizedCustomer, ChangePasswordRequest changePasswordRequest) {
-        String password = changePasswordRequest.getOldPassword();
         var customer = convertCustomer(authorizedCustomer);
+
+        var password = changePasswordRequest.getOldPassword();
+        new Password(password);
+        var newPassword = changePasswordRequest.getNewPassword();
+        new Password(newPassword);
+
         validateSamePassword(password, customer);
-        customerDao.updatePassword(customer.getUsername(), changePasswordRequest.getNewPassword());
+
+        customerDao.updatePassword(customer.getUsername(), newPassword);
     }
 
     private Customer convertCustomer(AuthorizedCustomer authorizedCustomer) {
@@ -78,6 +89,8 @@ public class CustomerService {
 
     public void deleteUser(AuthorizedCustomer authorizedCustomer, DeleteCustomerRequest deleteCustomerRequest) {
         String password = deleteCustomerRequest.getPassword();
+        new Password(password);
+
         var customer = convertCustomer(authorizedCustomer);
         validateSamePassword(password, customer);
         customerDao.deleteByName(customer.getUsername());

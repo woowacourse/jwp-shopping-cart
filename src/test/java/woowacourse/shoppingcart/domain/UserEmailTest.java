@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 public class UserEmailTest {
     @Test
@@ -11,7 +12,7 @@ public class UserEmailTest {
         var invalidEmail = "0123456789012345678901234567890123456789012345678901234@naver.com";
 
         assertThatThrownBy(() -> new Email(invalidEmail))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("64자");
     }
 }

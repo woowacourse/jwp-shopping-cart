@@ -27,7 +27,7 @@ public class CustomerServiceTest {
 
     @Test
     void 회원가입() {
-        var signUpRequest = new SignUpRequest("alpha", "bcc0830@naver.com", "123");
+        var signUpRequest = new SignUpRequest("alpha", "bcc0830@naver.com", "012345");
 
         var signUpResponse = customerService.signUp(signUpRequest);
 
@@ -39,7 +39,7 @@ public class CustomerServiceTest {
 
     @Test
     void 중복된_이름으로_회원가입을_하는_경우() {
-        var signUpRequest = new SignUpRequest("puterism", "crew10@naver.com", "123");
+        var signUpRequest = new SignUpRequest("puterism", "crew10@naver.com", "012345");
 
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(InvalidCustomerException.class)
@@ -48,45 +48,35 @@ public class CustomerServiceTest {
 
     @Test
     void 중복된_이메일로_회원가입을_하는_경우() {
-        var signUpRequest = new SignUpRequest("chicChoc", "crew01@naver.com", "123");
+        var signUpRequest = new SignUpRequest("chicChoc", "crew01@naver.com", "012345");
 
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("[ERROR] 이미 존재하는 이메일입니다.");
     }
 
-//    @Test
-//    void 회원정보_조회() {
-//        var customerResponse = customerService.findCustomerInformation("puterism");
-//
-//        assertAll(
-//                () -> assertThat(customerResponse.getUsername()).isEqualTo("puterism"),
-//                () -> assertThat(customerResponse.getEmail()).isEqualTo("crew01@naver.com")
-//        );
-//    }
-
     @Test
     void 비밀번호를_수정하는_경우() {
         var username = "puterism";
         var authorizedCustomer = new AuthorizedCustomer(username, "crew01@naver.com", "a12345");
-        var changePasswordRequest = new ChangePasswordRequest("a12345", "a1234");
+        var changePasswordRequest = new ChangePasswordRequest("a12345", "a123456");
 
         customerService.changePassword(authorizedCustomer, changePasswordRequest);
 
         var customer = customerDao.findCustomerByUserName(username);
 
-        assertThat(customer.getPassword()).isEqualTo("a1234");
+        assertThat(customer.getPassword()).isEqualTo("a123456");
     }
 
     @Test
     void 비밀번호를_수정할때_현재_비밀번호가_일치하지_않는_경우() {
         var username = "puterism";
         var authorizedCustomer = new AuthorizedCustomer(username, "crew01@naver.com", "a12345");
-        var changePasswordRequest = new ChangePasswordRequest("1231", "a1234");
+        var changePasswordRequest = new ChangePasswordRequest("a1234567", "a123456");
 
         assertThatThrownBy(
-                () -> customerService.changePassword(authorizedCustomer, changePasswordRequest)).isInstanceOf(
-                InvalidCustomerException.class);
+                () -> customerService.changePassword(authorizedCustomer, changePasswordRequest))
+                .isInstanceOf(InvalidCustomerException.class);
     }
 
     @Test

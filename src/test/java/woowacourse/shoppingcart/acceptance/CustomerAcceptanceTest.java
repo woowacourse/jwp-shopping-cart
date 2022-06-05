@@ -8,6 +8,7 @@ import java.util.Date;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
@@ -78,7 +79,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         var extract = createSignUpResult(signUpRequest);
 
         assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 이메일의 길이는 64자를 넘을수 없습니다.");
+                .isEqualTo("[ERROR] 이메일의 길이는 64자를 넘을 수 없습니다.");
     }
 
     @ParameterizedTest
@@ -100,7 +101,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         var extract = createSignUpResult(signUpRequest);
 
         assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 이름에 공백이 존재할 수 없습니다.");
+                .isEqualTo("[ERROR] 이름에는 공백이 포함될 수 없습니다.");
     }
 
     @Test
@@ -111,7 +112,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         var extract = createSignUpResult(signUpRequest);
 
         assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 이름은 32자를 넘을수 없습니다.");
+                .isEqualTo("[ERROR] 이름의 길이는 32자를 초과할 수 없습니다.");
     }
 
     @ParameterizedTest
@@ -133,23 +134,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         var extract = createSignUpResult(signUpRequest);
 
         assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 6자를 넘을수 없습니다.");
+                .isEqualTo("[ERROR] 비밀번호의 길이는 6자 이상이어야 합니다.");
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"칙촉1234", "a b1234"})
-    void 회원가입시_비밀번호에_한글_또는_공백이_포함되는_경우(String invalidPassword) {
-        SignUpRequest signUpRequest = new SignUpRequest(NEW_USERNAME, NEW_EMAIL, invalidPassword);
+    @CsvSource(value = {"칙촉1234,한글", "a b1234,공백"})
+    void 회원가입시_비밀번호에_한글_또는_공백이_포함되는_경우(String invalidPassword, String message) {
+        var signUpRequest = new SignUpRequest(NEW_USERNAME, NEW_EMAIL, invalidPassword);
 
         var extract = createSignUpResult(signUpRequest);
 
         assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 한글이나 공백을 포함할 수 없습니다.");
+                .contains(message);
     }
 
     @Test
     void 회원가입시_이미_존재하는_이메일인_경우() {
-        SignUpRequest signUpRequest = new SignUpRequest(NEW_USERNAME, EMAIL, VALID_PASSWORD);
+        var signUpRequest = new SignUpRequest(NEW_USERNAME, EMAIL, VALID_PASSWORD);
 
         var extract = createSignUpResult(signUpRequest);
 
@@ -238,38 +239,25 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         var response = createChangePasswordResult(accessToken, changePasswordRequest, HttpStatus.BAD_REQUEST);
 
         assertThat(response.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 6자 이상 이어야 합니다.");
+                .isEqualTo("[ERROR] 비밀번호의 길이는 6자 이상이어야 합니다.");
     }
 
-    @Test
-    void 비밀번호_변경_시_바꿀_비밀번호가_6자_미만인_경우() {
-        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+    @ParameterizedTest
+    @CsvSource(value = {"칙촉1234,한글", "a b1234,공백"})
+    void 비밀번호_변경_시_바꿀_비밀번호에_한글_또는_공백이_포함된_경우(String invalidPassword, String message) {
+        var accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
 
-        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(VALID_PASSWORD, "a1234");
+        var changePasswordRequest = new ChangePasswordRequest(VALID_PASSWORD, invalidPassword);
 
         var response = createChangePasswordResult(accessToken, changePasswordRequest, HttpStatus.BAD_REQUEST);
 
         assertThat(response.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 6자 이상 이어야 합니다.");
-    }
-
-
-    @ParameterizedTest
-    @ValueSource(strings = {"칙촉1234", "a b1234"})
-    void 비밀번호_변경_시_바꿀_비밀번호에_한글_또는_공백이_포함된_경우(String invalidPassword) {
-        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
-
-        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(VALID_PASSWORD, invalidPassword);
-
-        var response = createChangePasswordResult(accessToken, changePasswordRequest, HttpStatus.BAD_REQUEST);
-
-        assertThat(response.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 한글이나 공백을 포함할 수 없습니다.");
+                .contains(message);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"칙촉1234", "a b1234"})
-    void 비밀번호_변경_시_기존_비밀번호에_한글_또는_공백이_포함된_경우(String invalidPassword) {
+    @CsvSource(value = {"칙촉1234,한글", "a b1234,공백"})
+    void 비밀번호_변경_시_기존_비밀번호에_한글_또는_공백이_포함된_경우(String invalidPassword, String message) {
         String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
 
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(invalidPassword, VALID_PASSWORD);
@@ -277,7 +265,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         var response = createChangePasswordResult(accessToken, changePasswordRequest, HttpStatus.BAD_REQUEST);
 
         assertThat(response.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 한글이나 공백을 포함할 수 없습니다.");
+                .contains(message);
     }
 
     @Test
@@ -340,12 +328,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         var response = createDeleteCustomerResult(accessToken, deleteCustomerRequest, HttpStatus.BAD_REQUEST);
 
         assertThat(response.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 6자 이상으로 입력해주세요.");
+                .isEqualTo("[ERROR] 비밀번호의 길이는 6자 이상이어야 합니다.");
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"칙촉1234", "a b1234"})
-    void 회원탈퇴시_비밀번호에_한글_또는_공백이_포함된_경우(String invalidPassword) {
+    @CsvSource(value = {"칙촉1234,한글", "a b1234,공백"})
+    void 회원탈퇴시_비밀번호에_한글_또는_공백이_포함된_경우(String invalidPassword, String message) {
         String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
 
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest(invalidPassword);
@@ -353,7 +341,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         var response = createDeleteCustomerResult(accessToken, deleteCustomerRequest, HttpStatus.BAD_REQUEST);
 
         assertThat(response.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 한글이나 공백을 포함할 수 없습니다.");
+                .contains(message);
     }
 
     @Test
@@ -378,19 +366,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.body().jsonPath().getString("message"))
                 .isEqualTo("[ERROR] 비밀번호가 일치하지 않습니다.");
     }
-
-    @Test
-    void 회원탈퇴시_기존_비밀번호에_한글이_포함된_경우_다른_경우() {
-        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
-
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("칙촉1234");
-
-        var response = createDeleteCustomerResult(accessToken, deleteCustomerRequest, HttpStatus.BAD_REQUEST);
-
-        assertThat(response.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 한글이나 공백을 포함할 수 없습니다.");
-    }
-
 
     @Test
     void 회원탈퇴() {
