@@ -22,11 +22,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
-        return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
-    }
-
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<ErrorResponse> handle() {
         return ResponseEntity.badRequest().body(new ErrorResponse("존재하지 않는 데이터 요청입니다."));
@@ -66,5 +61,10 @@ public class ControllerAdvice {
     @ExceptionHandler(AuthorizationFailureException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationFailureException(final AuthorizationFailureException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleServerException() {
+        return ResponseEntity.internalServerError().body(new ErrorResponse("서버에 오류가 발생했습니다."));
     }
 }

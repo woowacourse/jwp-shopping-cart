@@ -11,12 +11,18 @@ public class Password {
     private final String hashedValue;
 
     private Password(final String hashedValue) {
+        validateHashed(hashedValue);
         this.hashedValue = hashedValue;
     }
 
     public static Password fromRawValue(final String rawValue) {
         validateRawValue(rawValue);
+        validateNotHashed(rawValue);
         return new Password(PasswordEncryptor.encrypt(rawValue));
+    }
+
+    public static Password fromHashedValue(final String hashedValue) {
+        return new Password(hashedValue);
     }
 
     private static void validateRawValue(final String rawValue) {
@@ -26,8 +32,16 @@ public class Password {
         }
     }
 
-    public static Password fromHashedValue(final String hashedValue) {
-        return new Password(hashedValue);
+    private static void validateNotHashed(final String value) {
+        if (PasswordEncryptor.isHashed(value)) {
+            throw new IllegalArgumentException("평문 비밀번호가 입력되어야 합니다.");
+        }
+    }
+
+    private static void validateHashed(final String value) {
+        if (!PasswordEncryptor.isHashed(value)) {
+            throw new IllegalArgumentException("암호화된 비밀번호가 입력되어야 합니다.");
+        }
     }
 
     public boolean isSamePassword(final String rawValue) {
