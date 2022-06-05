@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -44,7 +45,11 @@ public class CustomerDao {
 
     public void deleteByName(UserName customerName) {
         final String query = "DELETE FROM customer WHERE username = ?";
-        jdbcTemplate.update(query, customerName.value());
+        try {
+            jdbcTemplate.update(query, customerName.value());
+        } catch (RuntimeException exception) {
+            throw new RuntimeException("삭제에 실패했습니다.");
+        }
     }
 
     public Customer findCustomerByName(UserName customerName) {
@@ -64,7 +69,11 @@ public class CustomerDao {
 
     public void updateByName(UserName customerName, Customer customer) {
         final String query = "UPDATE customer SET password = ? WHERE username = ?";
-        jdbcTemplate.update(query, customer.getPassword().value(), customerName.value());
+        try {
+            jdbcTemplate.update(query, customer.getPassword().value(), customerName.value());
+        } catch (DataAccessException exception) {
+            throw new RuntimeException("갱신에 실패했습니다.");
+        }
     }
 
     public boolean existsCustomer(Customer customer) {
