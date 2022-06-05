@@ -14,7 +14,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -23,7 +25,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @MethodSource("provideInvalidLoginForm")
     void invalidLoginFormatRequest(String email, String password) {
-        ExtractableResponse<Response> response = 로그인_요청(email, password);
+        ExtractableResponse<Response> response = 로그인_요청(new TokenRequest(email, password));
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -44,7 +46,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("존재하지 않는 아이디로 요청이 왔을 때 400에러를 응답")
     @Test
     void notFoundCustomerLoginRequest() {
-        ExtractableResponse<Response> response = 로그인_요청("email@email.com", "12345678a");
+        ExtractableResponse<Response> response = 로그인_요청(new TokenRequest("email@email.com", "12345678a"));
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -59,9 +61,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String email = "email@email.com";
         String password = "12345678a";
         String nickname = "tonic";
-        회원가입_요청(email, password, nickname);
+        회원가입_요청(new SignUpRequest(email, password, nickname));
 
-        ExtractableResponse<Response> response = 로그인_요청(email, "12345678b");
+        ExtractableResponse<Response> response = 로그인_요청(new TokenRequest(email, "12345678b"));
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -78,9 +80,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String password = "12345678a";
         String nickname = "tonic";
 
-        회원가입_요청(email, password, nickname);
+        회원가입_요청(new SignUpRequest(email, password, nickname));;
 
-        ExtractableResponse<Response> response = 로그인_요청(email, password);
+        ExtractableResponse<Response> response = 로그인_요청(new TokenRequest(email, password));
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
@@ -110,8 +112,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("유효한 토큰인 경우 200을 응답")
     @Test
     void requestGetMeWithValidToken() {
-        회원가입_요청("email@email.com", "12345678a","tonic");
-        String accessToken = 토큰_요청("email@email.com", "12345678a");
+        회원가입_요청(new SignUpRequest("email@email.com", "12345678a", "tonic"));
+        String accessToken = 토큰_요청(new TokenRequest("email@email.com", "12345678a"));
 
         ExtractableResponse<Response> response = 회원정보_요청(accessToken);
 

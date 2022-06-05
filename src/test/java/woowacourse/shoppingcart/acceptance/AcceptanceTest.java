@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -11,6 +10,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql("/init.sql")
@@ -29,35 +31,24 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    protected ExtractableResponse<Response> 회원가입_요청(String email, String password, String nickname) {
-        Map<String, String> body = Map.of(
-                "email", email,
-                "password", password,
-                "nickname", nickname
-        );
-
+    protected ExtractableResponse<Response> 회원가입_요청(SignUpRequest signUpRequest) {
         return RestAssured.given().log().all()
-                .body(body)
+                .body(signUpRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/users")
                 .then().log().all().extract();
     }
 
-    protected ExtractableResponse<Response> 로그인_요청(String email, String password) {
-        Map<String, String> body = Map.of(
-                "email", email,
-                "password", password
-        );
-
+    protected ExtractableResponse<Response> 로그인_요청(TokenRequest tokenRequest) {
         return RestAssured.given().log().all()
-                .body(body)
+                .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/login")
                 .then().log().all().extract();
     }
 
-    protected String 토큰_요청(String email, String password) {
-        return 로그인_요청(email, password).jsonPath().getString("accessToken");
+    protected String 토큰_요청(TokenRequest tokenRequest) {
+        return 로그인_요청(tokenRequest).jsonPath().getString("accessToken");
     }
 
     protected ExtractableResponse<Response> 회원정보_요청(String token) {
@@ -76,14 +67,13 @@ public class AcceptanceTest {
                 .then().log().all().extract();
     }
 
-    protected ExtractableResponse<Response> 회원정보_수정_요청(String nickname, String password, String token) {
-        Map<String, String> body = Map.of("nickname", nickname, "password", password);
+    protected ExtractableResponse<Response> 회원정보_수정_요청(CustomerUpdateRequest customerUpdateRequest, String token) {
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .when().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(body)
+                .body(customerUpdateRequest)
                 .put("/users/me")
                 .then().log().all().extract();
         return response;

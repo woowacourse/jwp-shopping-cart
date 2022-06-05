@@ -14,6 +14,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -25,7 +28,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String password = "12345678a";
         String nickname = "토닉";
 
-        ExtractableResponse<Response> response = 회원가입_요청(email, password, nickname);
+        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));;
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -34,7 +37,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @MethodSource("provideInvalidSignUpForm")
     void invalidSignUpFormatRequest(String email, String password, String nickname) {
-        ExtractableResponse<Response> response = 회원가입_요청(email, password, nickname);
+        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));;
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(INVALID_FORMAT_ERROR_CODE);
@@ -58,9 +61,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String email = "tonic@email.com";
         String password = "12345678a";
         String nickname = "토닉";
-        회원가입_요청(email, password, nickname);
+        회원가입_요청(new SignUpRequest(email, password, nickname));
 
-        ExtractableResponse<Response> response = 회원가입_요청(email, password, nickname);
+        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));;
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(DUPLICATE_EMAIL_ERROR_CODE);
@@ -73,8 +76,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String email = "email@email.com";
         String password = "12345678a";
         String nickname = "tonic";
-        회원가입_요청(email, password, nickname);
-        String token = 토큰_요청(email, password);
+        회원가입_요청(new SignUpRequest(email, password, nickname));
+        String token = 토큰_요청(new TokenRequest(email, password));
 
         ExtractableResponse<Response> response = 회원정보_요청(token);
 
@@ -96,8 +99,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("존재하는 회원 탈퇴 시 204 반환")
     @Test
     void deleteByValidToken() {
-        회원가입_요청("email@email.com", "12345678a", "tonic");
-        String token = 토큰_요청("email@email.com", "12345678a");
+        회원가입_요청(new SignUpRequest("email@email.com", "12345678a", "tonic"));
+        String token = 토큰_요청(new TokenRequest("email@email.com", "12345678a"));
 
         ExtractableResponse<Response> 회원탈퇴_응답 = 회원탈퇴_요청(token);
         ExtractableResponse<Response> 회원정보_응답 = 회원정보_요청(token);
@@ -127,10 +130,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @MethodSource("provideInvalidUpdateForm")
     void updateByInvalidFormat(String password, String nickname) {
-        회원가입_요청("email@email.com", "12345678a", "tonic");
-        String token = 토큰_요청("email@email.com", "12345678a");
+        회원가입_요청(new SignUpRequest("email@email.com", "12345678a", "tonic"));
+        String token = 토큰_요청(new TokenRequest("email@email.com", "12345678a"));
 
-        ExtractableResponse<Response> response = 회원정보_수정_요청(nickname, password, token);
+        ExtractableResponse<Response> response = 회원정보_수정_요청(new CustomerUpdateRequest(nickname, password), token);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -152,15 +155,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateCustomer() {
         String email = "email@email.com";
-        회원가입_요청(email, "12345678a", "tonic");
-        String token = 토큰_요청(email, "12345678a");
+        회원가입_요청(new SignUpRequest(email, "12345678a", "tonic"));
+        String token = 토큰_요청(new TokenRequest(email, "12345678a"));
 
         String newNickName = "토닉";
         String newPassword = "newpassword1";
 
-        ExtractableResponse<Response> 회원정보_수정_응답 = 회원정보_수정_요청(newNickName, newPassword, token);
+        ExtractableResponse<Response> 회원정보_수정_응답 = 회원정보_수정_요청(new CustomerUpdateRequest(newNickName, newPassword), token);
         ExtractableResponse<Response> 수정후_회원정보_응답 = 회원정보_요청(token);
-        ExtractableResponse<Response> 수정후_로그인_응답 = 로그인_요청(email, newPassword);
+        ExtractableResponse<Response> 수정후_로그인_응답 = 로그인_요청(new TokenRequest(email, newPassword));
 
         assertAll(
                 () -> assertThat(회원정보_수정_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
