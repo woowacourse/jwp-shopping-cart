@@ -66,23 +66,19 @@ public class ProductDaoTest {
 
         assertThat(products).hasSize(2);
     }
-//
-//    @DisplayName("싱품 삭제")
-//    @Test
-//    void deleteProduct() {
-//        // given
-//        final String name = "초콜렛";
-//        final int price = 1_000;
-//        final String imageUrl = "www.test.com";
-//
-//        final Long productId = productDao.save(new Product(name, price, imageUrl));
-//        final int beforeSize = productDao.findProducts().size();
-//
-//        // when
-//        productDao.delete(productId);
-//
-//        // then
-//        final int afterSize = productDao.findProducts().size();
-//        assertThat(beforeSize - 1).isEqualTo(afterSize);
-//    }
+
+    @DisplayName("싱품 삭제")
+    @Test
+    void deleteProduct() {
+        // given
+        final Long productId = productDao.save(PRODUCT_1);
+        final int beforeSize = productDao.findProducts().size();
+
+        // when
+        productDao.delete(productId);
+
+        // then
+        final int afterSize = productDao.findProducts().size();
+        assertThat(beforeSize - 1).isEqualTo(afterSize);
+    }
 }
