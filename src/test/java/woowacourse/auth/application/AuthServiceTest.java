@@ -26,7 +26,6 @@ class AuthServiceTest {
 
     @Autowired
     private AuthService authService;
-
     @Autowired
     private CustomerService customerService;
 

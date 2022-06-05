@@ -1,33 +1,41 @@
 package woowacourse.shoppingcart.domain;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.InvalidEmailException;
+import woowacourse.shoppingcart.exception.InvalidUsernameException;
 
 public class CustomerTest {
 
     @Test
-    @DisplayName("비밀번호가 일치하는지 확인한다.")
-    void validatePassword() {
+    @DisplayName("회원을 생성할 수 있다.")
+    void construct() {
         // given
-        Customer customer = new Customer(1L, new Username("레넌"), new Email("rennon@woowa.com"), new Password("123456"));
+        String username = "레넌";
+        String email = "rennon@woowa.com";
+        String password = "123456";
 
         // when & then
-        assertThatCode(() -> customer.validatePassword(new Password("123456")))
+        assertThatCode(() -> new Customer(username, email, password))
                 .doesNotThrowAnyException();
     }
 
     @Test
-    @DisplayName("비밀번호가 일치하지 않으면 예외가 발생한다..")
-    void validatePasswordThrowException() {
-        // given
-        Customer customer = new Customer(1L, new Username("레넌"), new Email("rennon@woowa.com"), new Password("123456"));
+    @DisplayName("회원이름이 적절하지 않으면 생성할 수 없다.")
+    void constructThrowInvalidUsernameException() {
+        assertThatThrownBy(() -> new Customer("레 넌", "rennon@woowa.com", "123456"))
+                .isInstanceOf(InvalidUsernameException.class)
+                .hasMessage("회원 이름에는 공백이 들어갈 수 없습니다.");
+    }
 
-        // when & then
-        assertThatCode(() -> customer.validatePassword(new Password("1234567")))
-                .isInstanceOf(InvalidPasswordException.class)
-                .hasMessage("비밀번호가 틀렸습니다.");
+    @Test
+    @DisplayName("이메일이 적절하지 않으면 생성할 수 없다.")
+    void constructThrowInvalidEmailException() {
+        assertThatThrownBy(() -> new Customer("레넌", "rennonwoowa.com", "123456"))
+                .isInstanceOf(InvalidEmailException.class)
+                .hasMessage("이메일 형식이 올바르지 않습니다.");
     }
 }

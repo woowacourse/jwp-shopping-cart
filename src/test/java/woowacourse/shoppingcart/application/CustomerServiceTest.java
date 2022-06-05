@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -27,9 +28,10 @@ import woowacourse.shoppingcart.exception.InvalidPasswordException;
 public class CustomerServiceTest {
     @Autowired
     private CustomerService customerService;
-
     @Autowired
     private CustomerDao customerDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     @DisplayName("회원을 저장하고 회원 정보를 반환할 수 있다.")
@@ -113,8 +115,9 @@ public class CustomerServiceTest {
         // when
         customerService.updateCustomer(name, new UpdatePasswordRequest("123456", "567890"));
         Customer customer = customerDao.findByUsername(new Username(name));
+
         // then
-        assertThat(customer.getPassword().getValue()).isEqualTo("567890");
+        assertThat(passwordEncoder.matches("567890", customer.getPassword().getValue())).isTrue();
     }
 
     @Test
@@ -163,6 +166,5 @@ public class CustomerServiceTest {
         assertThatThrownBy(() -> customerService.deleteCustomer(name, new DeleteCustomerRequest("123567")))
                 .isInstanceOf(InvalidPasswordException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
-
     }
 }

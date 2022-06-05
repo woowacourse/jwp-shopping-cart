@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.application;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -14,15 +15,18 @@ import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
+import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @Service
 @Transactional(readOnly = true)
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(CustomerDao customerDao, PasswordEncoder passwordEncoder) {
         this.customerDao = customerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -30,8 +34,10 @@ public class CustomerService {
         validateDuplicateUsername(signUpRequest.getUsername());
         validateDuplicateEmail(signUpRequest.getEmail());
 
-        Customer customer = customerDao.save(signUpRequest.toCustomer());
-        return SignUpResponse.from(customer);
+        String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
+        Customer customer = new Customer(signUpRequest.getUsername(), signUpRequest.getEmail(), encodedPassword);
+        Customer foundCustomer = customerDao.save(customer);
+        return SignUpResponse.from(foundCustomer);
     }
 
     private void validateDuplicateUsername(String username) {
@@ -54,16 +60,21 @@ public class CustomerService {
     @Transactional
     public void updateCustomer(String username, UpdatePasswordRequest updatePasswordRequest) {
         Customer customer = customerDao.findByUsername(new Username(username));
-        Password password = new Password(updatePasswordRequest.getPassword());
-        customer.validatePassword(password);
-        customerDao.updatePassword(customer.getId(), new Password(updatePasswordRequest.getNewPassword()));
+        validatePassword(updatePasswordRequest.getPassword(), customer.getPassword().getValue());
+        String newEncodePassword = passwordEncoder.encode(updatePasswordRequest.getNewPassword());
+        customerDao.updatePassword(customer.getId(), new Password(newEncodePassword));
     }
 
     @Transactional
     public void deleteCustomer(String username, DeleteCustomerRequest deleteCustomerRequest) {
         Customer customer = customerDao.findByUsername(new Username(username));
-        Password password = new Password(deleteCustomerRequest.getPassword());
-        customer.validatePassword(password);
+        validatePassword(deleteCustomerRequest.getPassword(), customer.getPassword().getValue());
         customerDao.deleteByUsername(new Username(username));
+    }
+
+    private void validatePassword(String rawPassword, String encodedPassword) {
+        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+            throw new InvalidPasswordException();
+        }
     }
 }
