@@ -8,14 +8,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
+import woowacourse.shoppingcart.dao.CustomerDao;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
 
-    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider,
+      AuthService authService) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.authService = authService;
     }
 
     @Override
@@ -25,6 +29,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
+        return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider, authService);
     }
 }

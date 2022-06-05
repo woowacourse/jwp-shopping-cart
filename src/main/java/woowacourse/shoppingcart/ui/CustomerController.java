@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import java.net.URI;
+import woowacourse.shoppingcart.dto.LoginCustomer;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -28,26 +29,27 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> showCustomer(@AuthenticationPrincipal String email) {
-        CustomerResponse customerResponse = customerService.findCustomerByEmail(email);
+    public ResponseEntity<CustomerResponse> showCustomer(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        CustomerResponse customerResponse = customerService.findCustomerByEmail(
+          loginCustomer.getEmail());
         return ResponseEntity.ok(customerResponse);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal String email) {
-        customerService.deleteCustomer(email);
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        customerService.deleteCustomer(loginCustomer.getEmail());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal String email, @RequestBody ChangePasswordRequest request) {
-        customerService.changePassword(email, request);
+    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal LoginCustomer loginCustomer, @RequestBody ChangePasswordRequest request) {
+        customerService.changePassword(loginCustomer.getEmail(), request);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping
-    public ResponseEntity<Void> changeNickname(@AuthenticationPrincipal String email, @RequestBody ChangeCustomerRequest request) {
-        customerService.changeNickname(email, request);
+    public ResponseEntity<Void> changeNickname(@AuthenticationPrincipal LoginCustomer loginCustomer, @RequestBody ChangeCustomerRequest request) {
+        customerService.changeNickname(loginCustomer.getEmail(), request);
         return ResponseEntity.ok().build();
     }
 }
