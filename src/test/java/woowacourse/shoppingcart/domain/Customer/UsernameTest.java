@@ -18,10 +18,6 @@ class UsernameTest {
     static Stream<String> blankNames() {
         return Stream.of("   ", null);
     }
-    static Stream<String> invalidLengthNames() {
-            return Stream.of("tooLongUsername", "");
-        }
-
 
     @ParameterizedTest
     @MethodSource("blankNames")
@@ -32,11 +28,10 @@ class UsernameTest {
                 .hasMessage("닉네임에는 공백이 들어가면 안됩니다.");
     }
 
-    @ParameterizedTest
-    @MethodSource("invalidLengthNames")
+    @Test
     @DisplayName("닉네임이 규약보다 긴 경우 예외를 반환한다.")
-    void Username_Length(String blankNames){
-        assertThatThrownBy(() -> new Username(blankNames))
+    void Username_Length(){
+        assertThatThrownBy(() -> new Username("tooLongUsername"))
                 .isInstanceOf(UsernameValidationException.class)
                 .hasMessage("닉네임은 1자 이상 10자 이하여야합니다.");
     }

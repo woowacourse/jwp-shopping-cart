@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +22,8 @@ import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
 import woowacourse.shoppingcart.service.CustomerService;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,6 +46,10 @@ class CustomerControllerTest extends ControllerTest {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     private String accessToken;
+
+    static Stream<UpdateCustomerDto> invalidParams() {
+        return Stream.of(null ,new UpdateCustomerDto(" "));
+    }
 
     @BeforeEach
     void setUp() {
@@ -89,6 +97,23 @@ class CustomerControllerTest extends ControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @ParameterizedTest
+    @MethodSource("invalidParams")
+    @DisplayName("파라미터가 공백이거나 null인 경우 예외를 발생시킨다.")
+    void updateCustomer_invalidParams(UpdateCustomerDto updateCustomerDto) throws Exception {
+
+        final MockHttpServletResponse response = mockMvc.perform(put("/api/customers/" + CUSTOMER_ID)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(updateCustomerDto)))
+                .andDo(print())
+                .andReturn()
+                .getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @Test
     @DisplayName("URI path에 id를 받아 일치하는 회원을 삭제한다.")
     void deleteCustomer() throws Exception {
@@ -99,6 +124,7 @@ class CustomerControllerTest extends ControllerTest {
         when(authService.login(any(SignInDto.class))).thenReturn(
                 new TokenResponseDto(accessToken, 1000000L, customerDto));
         final DeleteCustomerDto deleteCustomerDto = new DeleteCustomerDto(TEST_PASSWORD);
+
         final MockHttpServletResponse response = mockMvc.perform(post("/api/customers/" + CUSTOMER_ID)
                 .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
