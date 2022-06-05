@@ -6,19 +6,9 @@ drop table if exists cart_item;
 
 drop table if exists product;
 
-drop table if exists customer;
+drop table if exists accounts;
 
-drop table if exists admin_users;
-
-create table admin_users
-(
-    id bigint not null auto_increment,
-    email varchar(255) unique not null,
-    password varchar(128) not null,
-    primary key (id)
-) engine=InnoDB default charset=utf8mb4;
-
-create table customer
+create table accounts
 (
     id       bigint       not null auto_increment,
     username varchar(255),
@@ -29,7 +19,7 @@ create table customer
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-alter table customer
+alter table accounts
     add unique key (username);
 
 create table product
@@ -51,7 +41,7 @@ create table cart_item
 
 alter table cart_item
     add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references customer (id);
+        foreign key (customer_id) references accounts (id);
 
 alter table cart_item
     add constraint fk_cart_item_to_product
@@ -66,7 +56,7 @@ create table orders
 
 alter table orders
     add constraint fk_orders_to_customer
-        foreign key (customer_id) references customer (id);
+        foreign key (customer_id) references accounts (id);
 
 create table orders_detail
 (

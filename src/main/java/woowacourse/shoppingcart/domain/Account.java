@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
-public class Customer {
+public class Account {
 
     private final Long id;
     private final String email;
@@ -8,19 +8,19 @@ public class Customer {
     private final String nickname;
     private final boolean isAdmin;
 
-    public Customer(String email, String password, String nickname) {
+    public Account(String email, String password, String nickname) {
         this(null, email, password, nickname, false);
     }
 
-    public Customer(String email, String password, String nickname, boolean isAdmin) {
+    public Account(String email, String password, String nickname, boolean isAdmin) {
         this(null, email, password, nickname, isAdmin);
     }
 
-    public Customer(Long id, String email, String password, String nickname) {
+    public Account(Long id, String email, String password, String nickname) {
         this(id, email, password, nickname, false);
     }
 
-    public Customer(Long id, String email, String password, String nickname, boolean isAdmin) {
+    public Account(Long id, String email, String password, String nickname, boolean isAdmin) {
         this.id = id;
         this.email = email;
         this.password = password;

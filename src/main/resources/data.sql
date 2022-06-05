@@ -1,4 +1,4 @@
-insert into customer (username)
+insert into accounts (username)
 values ('puterism'),
        ('tanney-102'),
        ('jho2301'),

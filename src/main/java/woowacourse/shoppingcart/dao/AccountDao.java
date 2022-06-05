@@ -8,76 +8,76 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.domain.Account;
+import woowacourse.shoppingcart.exception.InvalidAccountException;
 
 import java.util.Locale;
 
 @Repository
-public class CustomerDao {
+public class AccountDao {
 
-    private static final RowMapper<Customer> ROW_MAPPER = (rs, rowNum) -> {
+    private static final RowMapper<Account> ROW_MAPPER = (rs, rowNum) -> {
         String email = rs.getString("email");
         String password = rs.getString("password");
         String nickname = rs.getString("nickname");
         Long id = rs.getLong("id");
         boolean isAdmin = rs.getBoolean("is_admin");
-        return new Customer(id, email, password, nickname, isAdmin);
+        return new Account(id, email, password, nickname, isAdmin);
     };
     private final JdbcTemplate jdbcTemplate;
 
-    public CustomerDao(final JdbcTemplate jdbcTemplate) {
+    public AccountDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Customer save(Customer customer) {
-        final String query = "INSERT INTO customer (email, password, nickname, is_admin) VALUES (?, ?, ?, ?)";
+    public Account save(Account account) {
+        final String query = "INSERT INTO accounts (email, password, nickname, is_admin) VALUES (?, ?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, customer.getEmail());
-            preparedStatement.setString(2, customer.getPassword());
-            preparedStatement.setString(3, customer.getNickname());
-            preparedStatement.setBoolean(4, customer.isAdmin());
+            preparedStatement.setString(1, account.getEmail());
+            preparedStatement.setString(2, account.getPassword());
+            preparedStatement.setString(3, account.getNickname());
+            preparedStatement.setBoolean(4, account.isAdmin());
             return preparedStatement;
         }, keyHolder);
 
         long customerId = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return new Customer(customerId, customer.getEmail(), customer.getPassword(), customer.getNickname());
+        return new Account(customerId, account.getEmail(), account.getPassword(), account.getNickname());
     }
 
     public Long findIdByUserName(final String userName) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
+            final String query = "SELECT id FROM accounts WHERE username = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new InvalidAccountException();
         }
     }
 
-    public Optional<Customer> findByEmail(String email) {
+    public Optional<Account> findByEmail(String email) {
         try {
-            final String query = "SELECT email, password, nickname, id, is_admin FROM customer WHERE email = ?";
-            Customer customer = jdbcTemplate.queryForObject(query, ROW_MAPPER, email);
-            return Optional.of(customer);
+            final String query = "SELECT email, password, nickname, id, is_admin FROM accounts WHERE email = ?";
+            Account account = jdbcTemplate.queryForObject(query, ROW_MAPPER, email);
+            return Optional.of(account);
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
     public boolean existByEmail(String email) {
-        final String query = "SELECT EXISTS(SELECT id FROM customer WHERE email = ?)";
+        final String query = "SELECT EXISTS(SELECT id FROM accounts WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);
     }
 
     public void deleteByEmail(String email) {
-        final String query = "DELETE FROM customer WHERE email = ?";
+        final String query = "DELETE FROM accounts WHERE email = ?";
         jdbcTemplate.update(query, email);
     }
 
-    public void update(Customer customer) {
-        final String query = "UPDATE customer SET password = ?, nickname = ? WHERE id = ?";
-        jdbcTemplate.update(query, customer.getPassword(), customer.getNickname(), customer.getId());
+    public void update(Account account) {
+        final String query = "UPDATE accounts SET password = ?, nickname = ? WHERE id = ?";
+        jdbcTemplate.update(query, account.getPassword(), account.getNickname(), account.getId());
     }
 }

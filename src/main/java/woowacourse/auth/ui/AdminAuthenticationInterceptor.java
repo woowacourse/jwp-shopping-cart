@@ -8,19 +8,19 @@ import woowacourse.auth.exception.ForbiddenException;
 import woowacourse.auth.exception.UnauthorizedException;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dao.AccountDao;
+import woowacourse.shoppingcart.domain.Account;
 
 @Component
 public class AdminAuthenticationInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CustomerDao customerDao;
+    private final AccountDao accountDao;
 
     public AdminAuthenticationInterceptor(JwtTokenProvider jwtTokenProvider,
-                                          CustomerDao customerDao) {
+                                          AccountDao accountDao) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.customerDao = customerDao;
+        this.accountDao = accountDao;
     }
 
     @Override
@@ -34,9 +34,9 @@ public class AdminAuthenticationInterceptor implements HandlerInterceptor {
 
     private void validateIsAdmin(HttpServletRequest request) {
         String email = getPayload(request);
-        Customer customer = customerDao.findByEmail(email).orElseThrow(UnauthorizedException::new);
+        Account account = accountDao.findByEmail(email).orElseThrow(UnauthorizedException::new);
 
-        if (!customer.isAdmin()) {
+        if (!account.isAdmin()) {
             throw new ForbiddenException();
         }
     }

@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.dto;
 
-public class CustomerResponse {
+public class AccountResponse {
     private String email;
     private String nickname;
 
-    public CustomerResponse() {
+    public AccountResponse() {
     }
 
-    public CustomerResponse(String email, String nickname) {
+    public AccountResponse(String email, String nickname) {
         this.email = email;
         this.nickname = nickname;
     }

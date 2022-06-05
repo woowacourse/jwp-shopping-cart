@@ -3,12 +3,12 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.AccountDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.NotInAccountCartItemException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +18,12 @@ import java.util.List;
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
+    private final AccountDao accountDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final AccountDao accountDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
+        this.accountDao = accountDao;
         this.productDao = productDao;
     }
 
@@ -41,12 +41,12 @@ public class CartService {
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = accountDao.findIdByUserName(customerName);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
     public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = accountDao.findIdByUserName(customerName);
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
@@ -64,6 +64,6 @@ public class CartService {
         if (cartIds.contains(cartId)) {
             return;
         }
-        throw new NotInCustomerCartItemException();
+        throw new NotInAccountCartItemException();
     }
 }

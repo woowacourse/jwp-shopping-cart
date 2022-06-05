@@ -8,11 +8,11 @@ truncate table cart_item;
 
 truncate table product;
 
-truncate table customer;
+truncate table accounts;
 
 set foreign_key_checks = 1;
 
-insert into customer (username)
+insert into accounts (username)
 values ('puterism'),
        ('tanney-102'),
        ('jho2301'),

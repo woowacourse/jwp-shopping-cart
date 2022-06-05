@@ -21,20 +21,20 @@ public class OrderService {
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
+    private final AccountDao accountDao;
     private final ProductDao productDao;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+                        final CartItemDao cartItemDao, final AccountDao accountDao, final ProductDao productDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
+        this.accountDao = accountDao;
         this.productDao = productDao;
     }
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = accountDao.findIdByUserName(customerName);
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
@@ -55,7 +55,7 @@ public class OrderService {
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = accountDao.findIdByUserName(customerName);
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
@@ -63,7 +63,7 @@ public class OrderService {
     }
 
     public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = accountDao.findIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()

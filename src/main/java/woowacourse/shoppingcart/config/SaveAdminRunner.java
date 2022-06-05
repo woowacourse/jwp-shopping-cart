@@ -5,8 +5,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import woowacourse.auth.support.PasswordEncoder;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dao.AccountDao;
+import woowacourse.shoppingcart.domain.Account;
 
 @Component
 public class SaveAdminRunner implements ApplicationRunner {
@@ -20,14 +20,15 @@ public class SaveAdminRunner implements ApplicationRunner {
     @Value("${shopping.admin.password}")
     private String adminPassword;
 
-    private final CustomerDao customerDao;
+    private final AccountDao accountDao;
 
-    public SaveAdminRunner(CustomerDao customerDao) {
-        this.customerDao = customerDao;
+    public SaveAdminRunner(AccountDao accountDao) {
+        this.accountDao = accountDao;
     }
 
     @Override
     public void run(ApplicationArguments args) {
-        customerDao.save(new Customer(adminEmail, PasswordEncoder.encrypt(adminPassword), adminNickname, true));
+        accountDao
+            .save(new Account(adminEmail, PasswordEncoder.encrypt(adminPassword), adminNickname, true));
     }
 }

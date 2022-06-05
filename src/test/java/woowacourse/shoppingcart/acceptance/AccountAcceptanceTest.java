@@ -28,7 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @DisplayName("회원 관련 기능")
-public class CustomerAcceptanceTest extends AcceptanceTest {
+public class AccountAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("정상적인 회원가입")
     @Test
