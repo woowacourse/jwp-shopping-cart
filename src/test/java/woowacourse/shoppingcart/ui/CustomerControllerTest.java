@@ -8,13 +8,14 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.shoppingcart.config.RestDocsConfig;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.config.RestDocsConfig;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -23,8 +24,7 @@ import woowacourse.shoppingcart.dto.DuplicateResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -85,12 +85,16 @@ class CustomerControllerTest {
         given(customerService.getMeById(any())).willReturn(response);
 
         ResultActions results = mvc.perform(get("/api/customers/me")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
 
         results.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("customer-get-me",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 뒤에 accessToken이 들어있습니다")
+                        ),
                         responseFields(
                                 fieldWithPath("userName").type(JsonFieldType.STRING).description("유저의 이름")
                         )
@@ -110,6 +114,7 @@ class CustomerControllerTest {
         given(customerService.updateById(any(), any())).willReturn(response);
 
         ResultActions results = mvc.perform(put("/api/customers/me")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(request)));
@@ -117,6 +122,9 @@ class CustomerControllerTest {
         results.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("customer-update-me",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 뒤에 accessToken이 들어있습니다")
+                        ),
                         requestFields(
                                 fieldWithPath("userName").type(JsonFieldType.STRING).description("유저의 이름"),
                                 fieldWithPath("password").type(JsonFieldType.STRING).description("변경하려는 비밀번호")
@@ -136,12 +144,17 @@ class CustomerControllerTest {
         willDoNothing().given(customerService).deleteById(any());
 
         ResultActions results = mvc.perform(delete("/api/customers/me")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
 
         results.andExpect(status().isNoContent())
                 .andDo(print())
-                .andDo(document("customer-delete-me"));
+                .andDo(document("customer-delete-me",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 뒤에 accessToken이 들어있습니다")
+                        )
+                ));
     }
 
     @DisplayName("중복 이름 확인 문서화")
@@ -155,6 +168,7 @@ class CustomerControllerTest {
         given(customerService.isDuplicateUserName(any())).willReturn(response);
 
         ResultActions results = mvc.perform(get("/api/customers/duplication")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
                 .param("userName", "giron")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
@@ -162,6 +176,9 @@ class CustomerControllerTest {
         results.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("customer-duplication-check-name",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 뒤에 accessToken이 들어있습니다")
+                        ),
                         requestParameters(
                                 parameterWithName("userName").description("중복검사 확인 할 유저 이름")
                         ),

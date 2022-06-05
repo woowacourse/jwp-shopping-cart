@@ -32,6 +32,10 @@ include::{snippets}/customer-sign-up/response-headers.adoc[]
 
 include::{snippets}/customer-get-me/http-request.adoc[]
 
+요청 헤더
+
+include::{snippets}/customer-get-me/request-headers.adoc[]
+
 성공 응답 HTTP
 
 include::{snippets}/customer-get-me/http-response.adoc[]
@@ -44,6 +48,10 @@ include::{snippets}/customer-get-me/response-fields.adoc[]
 요청 HTTP
 
 include::{snippets}/customer-update-me/http-request.adoc[]
+
+요청 헤더
+
+include::{snippets}/customer-update-me/request-headers.adoc[]
 
 성공 응답 HTTP
 
@@ -58,6 +66,11 @@ include::{snippets}/customer-update-me/response-fields.adoc[]
 
 include::{snippets}/customer-delete-me/http-request.adoc[]
 
+요청 헤더
+
+include::{snippets}/customer-delete-me/request-headers.adoc[]
+
+
 성공 응답 HTTP
 
 include::{snippets}/customer-delete-me/http-response.adoc[]
@@ -70,6 +83,10 @@ include::{snippets}/customer-delete-me/http-response.adoc[]
 
 include::{snippets}/customer-duplication-check-name/http-request.adoc[]
 include::{snippets}/customer-duplication-check-name/request-parameters.adoc[]
+
+요청 헤더
+
+include::{snippets}/customer-duplication-check-name/request-headers.adoc[]
 
 성공 응답 HTTP
 
