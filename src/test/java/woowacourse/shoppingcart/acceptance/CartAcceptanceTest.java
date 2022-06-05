@@ -12,12 +12,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Cart;
 
 @DisplayName("장바구니 관련 기능")
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 public class CartAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
     private Long productId1;
@@ -109,7 +113,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
         List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
+                .map(cart -> cart.getProduct().getId())
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }
