@@ -46,6 +46,9 @@ public class OrderService {
             final Long cartId = orderSaveRequest.getCartItemId();
             final Long productId = cartItemDao.findProductIdById(cartId);
             final int quantity = cartItemDao.findQuantityById(cartId);
+            final Product purchaseProduct = productDao.findProductById(productId)
+                    .purchaseProduct(quantity);
+            productDao.updateProductStock(purchaseProduct);
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
             cartItemDao.deleteCartItem(cartId);
