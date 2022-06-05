@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -23,9 +25,11 @@ public class CustomerDao {
         rs.getString("password")
     );
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CustomerDao(final JdbcTemplate jdbcTemplate) {
+    public CustomerDao(final JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public Long findIdByNickname(final String nickname) {
@@ -39,18 +43,15 @@ public class CustomerDao {
     }
 
     public Long save(Customer customer) {
-        String query = "INSERT INTO customer (email, nickname, password) VALUES (?, ?, ?)";
+        String query = "INSERT INTO customer (email, nickname, password) VALUES (:email, :nickname, :password)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(query,
-                new String[]{"id"});
-            preparedStatement.setString(1, customer.getEmail());
-            preparedStatement.setString(2, customer.getNickname());
-            preparedStatement.setString(3, customer.getPassword());
-            return preparedStatement;
-        }, keyHolder);
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+          .addValue("email", customer.getEmail())
+          .addValue("nickname", customer.getNickname())
+          .addValue("password", customer.getPassword());
 
+        namedParameterJdbcTemplate.update(query, parameters, keyHolder,  new String[]{"id"});
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 

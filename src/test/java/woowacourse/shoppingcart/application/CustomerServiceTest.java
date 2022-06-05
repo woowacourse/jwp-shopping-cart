@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
@@ -25,12 +26,15 @@ public class CustomerServiceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     private CustomerService customerService;
     private CustomerDao customerDao;
 
     @BeforeEach
     void setUp() {
-        customerDao = new CustomerDao(jdbcTemplate);
+        customerDao = new CustomerDao(jdbcTemplate, namedParameterJdbcTemplate);
         customerService = new CustomerService(customerDao);
     }
 
