@@ -9,8 +9,9 @@ import woowacourse.exception.dto.ErrorResponse;
 
 @RestControllerAdvice
 public class AuthControllerAdvice {
+
     @ExceptionHandler(AuthException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidTokenException(final AuthException e){
+    public ResponseEntity<ErrorResponse> handleInvalidTokenException(final AuthException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getErrorResponse());
     }
 }

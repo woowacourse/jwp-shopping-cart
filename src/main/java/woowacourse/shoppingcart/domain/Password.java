@@ -9,8 +9,8 @@ import woowacourse.exception.dto.ErrorResponse;
 
 public class Password {
 
-    private String password;
     private static final Pattern PATTERN = Pattern.compile("^.*(?=^.{8,12}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$");
+    private String password;
 
     private Password(String password) {
         this.password = password;

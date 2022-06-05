@@ -18,15 +18,13 @@ import woowacourse.shoppingcart.domain.Password;
 @Sql(scripts = "classpath:truncate.sql")
 public class CustomerServiceTest {
 
-    @Autowired
-    private CustomerService customerService;
-
-    @Autowired
-    private CustomerDao customerDao;
-
     private final String email = "test@gmail.com";
     private final String password = "password0!";
     private final String username = "루나";
+    @Autowired
+    private CustomerService customerService;
+    @Autowired
+    private CustomerDao customerDao;
 
     @DisplayName("회원가입")
     @Test
@@ -53,7 +51,8 @@ public class CustomerServiceTest {
 
         // then
         Customer updatedCustomer = customerDao.findByEmail(email);
-        assertThat(Password.isSameEncryptedPassword(updatedCustomer.getPassword(), newPassword)).isTrue();
+        assertThat(Password.isSameEncryptedPassword(updatedCustomer.getPassword(),
+                newPassword)).isTrue();
     }
 
     @DisplayName("회원 일반 정보 수정")

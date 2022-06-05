@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 public class ChangePasswordRequest {
+
     private String oldPassword;
     private String newPassword;
 

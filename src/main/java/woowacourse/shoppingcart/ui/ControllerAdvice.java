@@ -60,12 +60,12 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(LoginException.class)
-    public ResponseEntity<ErrorResponse> handleLoginException(LoginException e){
+    public ResponseEntity<ErrorResponse> handleLoginException(LoginException e) {
         return ResponseEntity.badRequest().body(e.getErrorResponse());
     }
 
     @ExceptionHandler(JoinException.class)
-    public ResponseEntity<ErrorResponse> handleJoinException(JoinException e){
+    public ResponseEntity<ErrorResponse> handleJoinException(JoinException e) {
         return ResponseEntity.badRequest().body(e.getErrorResponse());
     }
 }

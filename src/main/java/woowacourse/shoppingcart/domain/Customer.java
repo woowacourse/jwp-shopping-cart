@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 public class Customer {
+
     private final Long id;
     private final String email;
     private final String password;

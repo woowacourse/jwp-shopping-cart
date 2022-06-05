@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
+
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomerDao customerDao;
 
@@ -30,11 +31,12 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public Customer resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                    NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        final HttpServletRequest nativeRequest = webRequest.getNativeRequest(HttpServletRequest.class);
+            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        final HttpServletRequest nativeRequest = webRequest.getNativeRequest(
+                HttpServletRequest.class);
         final String token = AuthorizationExtractor.extract(nativeRequest);
 
-        if(!jwtTokenProvider.validateToken(token)){
+        if (!jwtTokenProvider.validateToken(token)) {
             throw new AuthException("유효하지 않은 토큰입니다.", ErrorResponse.INVALID_TOKEN);
         }
         final String email = jwtTokenProvider.getPayload(token);

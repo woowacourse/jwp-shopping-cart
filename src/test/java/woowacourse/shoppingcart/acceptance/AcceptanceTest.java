@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql(scripts = "classpath:truncate.sql")
 @ActiveProfiles("test")
 public class AcceptanceTest {
+
     @LocalServerPort
     int port;
 

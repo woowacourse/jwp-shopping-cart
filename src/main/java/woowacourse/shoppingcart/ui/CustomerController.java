@@ -38,28 +38,31 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> showCustomer(@AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<CustomerResponse> showCustomer(
+            @AuthenticationPrincipal Customer customer) {
         return ResponseEntity.ok(new CustomerResponse(customer.getEmail(), customer.getUsername()));
     }
 
-    @PatchMapping(value = "/me",params = "target=password")
-    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal Customer customer, @RequestBody
-                                                           ChangePasswordRequest changePasswordRequest) {
-        customerService.changePassword(customer, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+    @PatchMapping(value = "/me", params = "target=password")
+    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal Customer customer,
+            @RequestBody ChangePasswordRequest changePasswordRequest) {
+        customerService.changePassword(customer, changePasswordRequest.getOldPassword(),
+                changePasswordRequest.getNewPassword());
         return ResponseEntity.ok().location(URI.create("/login")).build();
     }
 
-    @PatchMapping(value = "/me",params = "target=generalInfo")
-    public ResponseEntity<CustomerResponse> changeGeneral(@AuthenticationPrincipal Customer customer, @RequestBody
-            ChangeGeneralInfoRequest changeGeneralInfoRequest) {
+    @PatchMapping(value = "/me", params = "target=generalInfo")
+    public ResponseEntity<CustomerResponse> changeGeneral(
+            @AuthenticationPrincipal Customer customer,
+            @RequestBody ChangeGeneralInfoRequest changeGeneralInfoRequest) {
         final CustomerResponse customerResponse = customerService
                 .changeGeneralInfo(customer, changeGeneralInfoRequest.getUsername());
         return ResponseEntity.ok().body(customerResponse);
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<CustomerResponse> delete(@AuthenticationPrincipal Customer customer, @RequestBody
-            DeleteCustomerRequest deleteCustomerRequest) {
+    public ResponseEntity<CustomerResponse> delete(@AuthenticationPrincipal Customer customer,
+            @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
         customerService.delete(customer, deleteCustomerRequest.getPassword());
         return ResponseEntity.noContent().location(URI.create("/")).build();
     }

@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
@@ -29,7 +30,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         postMethodRequest(customerRequest, "/api/customers");
 
         final LoginRequest loginRequest = new LoginRequest(email, password);
-        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest, "/api/auth/login");
+        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest,
+                "/api/auth/login");
 
         final String token = tokenResponse.jsonPath().getString("accessToken");
 
@@ -37,7 +39,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = getMethodRequestWithBearerAuth(token, "/api/customers/me");
 
         // then
-        final CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
+        final CustomerResponse customerResponse = response.jsonPath()
+                .getObject(".", CustomerResponse.class);
         assertAll(
                 () -> assertThat(customerResponse.getEmail()).isEqualTo(email),
                 () -> assertThat(customerResponse.getUsername()).isEqualTo(username)
@@ -62,8 +65,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                ()-> assertThat(errorCode).isEqualTo(2001),
-                ()-> assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+                () -> assertThat(errorCode).isEqualTo(2001),
+                () -> assertThat(tokenResponse.statusCode()).isEqualTo(
+                        HttpStatus.BAD_REQUEST.value())
         );
     }
 
@@ -76,8 +80,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                ()-> assertThat(errorCode).isEqualTo(3002),
-                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+                () -> assertThat(errorCode).isEqualTo(3002),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         );
     }
 }

@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
+
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomerDao customerDao;
 
