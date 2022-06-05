@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,11 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -23,23 +21,18 @@ public class ProductDaoTest {
     private final ProductDao productDao;
 
     public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+        this.productDao = new JdbcProductDao(jdbcTemplate);
     }
 
-//    @DisplayName("Product를 저장하면, id를 반환한다.")
-//    @Test
-//    void save() {
-//        // given
-//        final String name = "초콜렛";
-//        final int price = 1_000;
-//        final String imageUrl = "www.test.com";
-//
-//        // when
-//        final Long productId = productDao.save(new Product(name, price, imageUrl));
-//
-//        // then
-//        assertThat(productId).isEqualTo(1L);
-//    }
+    @DisplayName("Product를 저장하면, id를 반환한다.")
+    @Test
+    void save() {
+        // when
+        final Long productId = productDao.save(PRODUCT_1);
+
+        // then
+        assertThat(productId).isPositive();
+    }
 //
 //    @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
 //    @Test
