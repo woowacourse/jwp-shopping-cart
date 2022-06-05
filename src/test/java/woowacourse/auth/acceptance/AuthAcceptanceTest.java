@@ -67,7 +67,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(response.body().as(ErrorResponse.class).getMessage())
-                        .isEqualTo("존재하지 않는 이메일입니다.")
+                        .isEqualTo("입력된 사용자 정보가 일치하지 않습니다.")
         );
     }
 
@@ -94,7 +94,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(response.body().as(ErrorResponse.class).getMessage())
-                        .isEqualTo("비밀번호가 일치하지 않습니다.")
+                        .isEqualTo("입력된 사용자 정보가 일치하지 않습니다.")
         );
     }
 

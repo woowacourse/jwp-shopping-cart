@@ -14,21 +14,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationFailureException;
-import woowacourse.auth.exception.NoSuchEmailException;
-import woowacourse.auth.exception.PasswordNotMatchException;
+import woowacourse.auth.exception.CustomerInfoNotMatchException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.DomainException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException() {
-        return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
+        return ResponseEntity.internalServerError().body(new ErrorResponse("예상하지 못한 예외가 발생했습니다."));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
@@ -55,13 +50,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidCustomerException.class,
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
-            NoSuchEmailException.class,
-            PasswordNotMatchException.class,
+            DomainException.class,
+            CustomerInfoNotMatchException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
