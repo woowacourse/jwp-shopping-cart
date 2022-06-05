@@ -1,11 +1,22 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,20 +25,34 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("정상적인 회원가입")
     @Test
-    void successSignUp() {
-        String email = "tonic@email.com";
-        String password = "12345678a";
-        String nickname = "토닉";
-
-        ExtractableResponse<Response> response = 회원가입_요청(email, password, nickname);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    void registerCustomer() {
+        RestAssured
+            .given(spec).log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(Map.of("email", "email@email.com", "password", "12345678a", "nickname", "tonic"))
+            .filter(document("create-me",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Content-Type").description("컨텐츠 타입")
+                ),
+                requestFields(
+                    fieldWithPath("email").description("사용자 이메일"),
+                    fieldWithPath("password").description("사용자 비밀번호"),
+                    fieldWithPath("nickname").description("사용자 닉네임")
+                )
+            ))
+            .when().log().all()
+            .post("/users")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("회원정보 양식이 잘못됐을 때 400에러를 응답한다.")
@@ -73,16 +98,32 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String email = "email@email.com";
         String password = "12345678a";
         String nickname = "tonic";
+
         회원가입_요청(email, password, nickname);
         String token = 토큰_요청(email, password);
 
-        ExtractableResponse<Response> response = 회원정보_요청(token);
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getString("email")).isEqualTo(email),
-                () -> assertThat(response.jsonPath().getString("nickname")).isEqualTo(nickname)
-        );
+        RestAssured
+            .given(spec).log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .filter(document("query-me",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Content-Type").description("컨텐츠 타입"),
+                    headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 토큰")
+                ),
+                responseFields(
+                    fieldWithPath("email").description("사용자 이메일"),
+                    fieldWithPath("nickname").description("사용자 닉네임")
+                )
+            ))
+            .when().log().all()
+            .get("/users/me")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.OK.value())
+            .assertThat().body("email", is(email))
+            .assertThat().body("nickname", is(nickname));
     }
 
     @DisplayName("잘못된 토큰으로 회원 탈퇴 시 401 반환")
@@ -99,11 +140,25 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         회원가입_요청("email@email.com", "12345678a", "tonic");
         String token = 토큰_요청("email@email.com", "12345678a");
 
-        ExtractableResponse<Response> 회원탈퇴_응답 = 회원탈퇴_요청(token);
-        ExtractableResponse<Response> 회원정보_응답 = 회원정보_요청(token);
+        RestAssured
+            .given(spec).log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .filter(document("delete-me",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Content-Type").description("컨텐츠 타입"),
+                    headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 토큰")
+                )
+            ))
+            .when().log().all()
+            .delete("/users/me")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.NO_CONTENT.value());
 
+        ExtractableResponse<Response> 회원정보_응답 = 회원정보_요청(token);
         assertAll(
-                () -> assertThat(회원탈퇴_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
                 () -> assertThat(회원정보_응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(회원정보_응답.body().jsonPath().getInt("errorCode")).isEqualTo(INVALID_LOGIN_ERROR_CODE)
         );
@@ -158,12 +213,32 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String newNickName = "토닉";
         String newPassword = "newpassword1";
 
-        ExtractableResponse<Response> 회원정보_수정_응답 = 회원정보_수정_요청(newNickName, newPassword, token);
+        RestAssured
+            .given(spec).log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .body(Map.of("password", newPassword, "nickname", newNickName))
+            .filter(document("update-me",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Content-Type").description("컨텐츠 타입"),
+                    headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 토큰")
+                ),
+                requestFields(
+                    fieldWithPath("password").description("사용자 비밀번호"),
+                    fieldWithPath("nickname").description("사용자 닉네임")
+                )
+            ))
+            .when().log().all()
+            .put("/users/me")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.NO_CONTENT.value());
+
         ExtractableResponse<Response> 수정후_회원정보_응답 = 회원정보_요청(token);
         ExtractableResponse<Response> 수정후_로그인_응답 = 로그인_요청(email, newPassword);
 
         assertAll(
-                () -> assertThat(회원정보_수정_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
                 () -> assertThat(수정후_회원정보_응답.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(수정후_회원정보_응답.body().jsonPath().getString("nickname")).isEqualTo(newNickName),
                 () -> assertThat(수정후_로그인_응답.statusCode()).isEqualTo(HttpStatus.OK.value())

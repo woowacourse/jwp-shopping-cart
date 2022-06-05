@@ -1,17 +1,25 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
+
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+@ExtendWith({RestDocumentationExtension.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql("/init.sql")
 @ActiveProfiles("test")
@@ -22,7 +30,16 @@ public class AcceptanceTest {
     protected static final int INVALID_LOGIN_ERROR_CODE = 1002;
 
     @LocalServerPort
-    int port;
+    private int port;
+
+    protected RequestSpecification spec;
+
+    @BeforeEach
+    public void setUp(RestDocumentationContextProvider restDocumentation) {
+        spec = new RequestSpecBuilder()
+            .addFilter(documentationConfiguration(restDocumentation))
+            .build();
+    }
 
     @BeforeEach
     public void setUp() {
