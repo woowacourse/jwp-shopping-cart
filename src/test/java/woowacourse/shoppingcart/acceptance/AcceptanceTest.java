@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.UserUpdateRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -67,13 +67,13 @@ public class AcceptanceTest {
                 .then().log().all().extract();
     }
 
-    protected ExtractableResponse<Response> 회원정보_수정_요청(CustomerUpdateRequest customerUpdateRequest, String token) {
+    protected ExtractableResponse<Response> 회원정보_수정_요청(UserUpdateRequest userUpdateRequest, String token) {
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .when().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(customerUpdateRequest)
+                .body(userUpdateRequest)
                 .put("/users/me")
                 .then().log().all().extract();
         return response;

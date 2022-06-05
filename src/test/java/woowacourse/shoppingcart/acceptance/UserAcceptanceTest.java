@@ -15,11 +15,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.UserUpdateRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @DisplayName("회원 관련 기능")
-public class CustomerAcceptanceTest extends AcceptanceTest {
+public class UserAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("정상적인 회원가입")
     @Test
@@ -133,7 +133,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         회원가입_요청(new SignUpRequest("email@email.com", "12345678a", "tonic"));
         String token = 토큰_요청(new TokenRequest("email@email.com", "12345678a"));
 
-        ExtractableResponse<Response> response = 회원정보_수정_요청(new CustomerUpdateRequest(nickname, password), token);
+        ExtractableResponse<Response> response = 회원정보_수정_요청(new UserUpdateRequest(nickname, password), token);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -153,7 +153,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("정상적인 회원 정보 수정 시 204 반환")
     @Test
-    void updateCustomer() {
+    void updateUser() {
         String email = "email@email.com";
         회원가입_요청(new SignUpRequest(email, "12345678a", "tonic"));
         String token = 토큰_요청(new TokenRequest(email, "12345678a"));
@@ -161,7 +161,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String newNickName = "토닉";
         String newPassword = "newpassword1";
 
-        ExtractableResponse<Response> 회원정보_수정_응답 = 회원정보_수정_요청(new CustomerUpdateRequest(newNickName, newPassword), token);
+        ExtractableResponse<Response> 회원정보_수정_응답 = 회원정보_수정_요청(new UserUpdateRequest(newNickName, newPassword), token);
         ExtractableResponse<Response> 수정후_회원정보_응답 = 회원정보_요청(token);
         ExtractableResponse<Response> 수정후_로그인_응답 = 로그인_요청(new TokenRequest(email, newPassword));
 

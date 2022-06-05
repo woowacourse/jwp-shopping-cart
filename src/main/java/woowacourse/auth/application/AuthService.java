@@ -8,7 +8,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.user.Customer;
 import woowacourse.shoppingcart.domain.user.Password;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidUserException;
 
 @Service
 public class AuthService {
@@ -26,7 +26,7 @@ public class AuthService {
 
     public String createToken(TokenRequest tokenRequest) {
         Customer customer = customerDao.findByEmail(tokenRequest.getEmail())
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(InvalidUserException::new);
 
         String encryptPassword = encoder.encrypt(tokenRequest.getPassword());
         if (!customer.isValidPassword(new Password(encryptPassword))) {
