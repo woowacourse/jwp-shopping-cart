@@ -37,7 +37,7 @@ public class CustomerController {
     @GetMapping
     public ResponseEntity<CustomerResponse> findByToken(@AuthenticationPrincipal Long id) {
         final CustomerResponse customerResponse = customerService.findById(id);
-        return ResponseEntity.ok().body(customerResponse);
+        return ResponseEntity.ok(customerResponse);
     }
 
     @PutMapping("/profile")
