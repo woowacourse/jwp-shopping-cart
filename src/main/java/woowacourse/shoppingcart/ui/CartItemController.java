@@ -1,18 +1,17 @@
 package woowacourse.shoppingcart.ui;
 
+import java.net.URI;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.application.CartService;
-
-import java.net.URI;
-import java.util.List;
+import woowacourse.shoppingcart.dto.CartItemResponses;
+import woowacourse.shoppingcart.dto.CartRequest;
 
 @RestController
 @RequestMapping("/api/customers/cart")
@@ -24,7 +23,7 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal int customerId, @RequestBody final CartRequest cartRequest) {
+    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final int customerId, @RequestBody final CartRequest cartRequest) {
         final Long cartId = cartService.addCart(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -34,10 +33,10 @@ public class CartItemController {
         return ResponseEntity.created(responseLocation).build();
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-//        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
-//    }
+    @GetMapping
+    public ResponseEntity<CartItemResponses> getCartItems(@AuthenticationPrincipal final int customerId) {
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
+    }
 //
 //
 //    @DeleteMapping("/{cartId}")
