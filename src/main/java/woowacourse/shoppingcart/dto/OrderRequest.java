@@ -4,9 +4,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
-    @NotNull
+
+    @NotNull(message = "값이 존재하지 않습니다.")
     private final Long cartId;
-    @Min(0)
+    @Min(value = 0, message = "음수가 들어올 수 없습니다.")
     private final int quantity;
 
     public OrderRequest(final Long cartId, final int quantity) {

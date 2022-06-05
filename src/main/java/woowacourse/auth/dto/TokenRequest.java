@@ -6,9 +6,9 @@ import woowacourse.shoppingcart.domain.customer.Password;
 
 public class TokenRequest {
 
-    @javax.validation.constraints.Email
+    @javax.validation.constraints.Email(message = "이메일 형식이 잘못되었습니다.")
     private String email;
-    @NotBlank
+    @NotBlank(message = "공백이 들어올 수 없습니다.")
     private String password;
 
     public TokenRequest() {
