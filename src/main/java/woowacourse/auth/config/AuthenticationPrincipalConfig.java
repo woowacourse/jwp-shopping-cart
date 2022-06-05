@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import woowacourse.auth.interceptor.AuthInterceptor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
-import woowacourse.auth.interceptor.AuthInterceptor;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
@@ -26,7 +26,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthInterceptor())
+        registry.addInterceptor(createAuthInterceptor())
                 .addPathPatterns("/api/customer/**");
     }
 
