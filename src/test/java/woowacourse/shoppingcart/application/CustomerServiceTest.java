@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.BadRequestException;
 import woowacourse.auth.exception.NotFoundException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.AddressResponse;
@@ -65,7 +66,7 @@ class CustomerServiceTest {
         void duplicatedCustomer() {
             코니_회원_가입();
             assertThatThrownBy(() -> 코니_회원_가입())
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("이미 가입한 사용자입니다.");
         }
     }
@@ -237,7 +238,7 @@ class CustomerServiceTest {
         @DisplayName("회원 가입을 하지 않은 유저면 에러가 발생한다.")
         void noDeleteCustomer() {
             assertThatThrownBy(() -> customerService.deleteCustomer(111L))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("삭제가 되지 않았습니다.");
         }
 

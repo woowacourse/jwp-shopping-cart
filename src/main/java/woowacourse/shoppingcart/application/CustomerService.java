@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.PermissionCustomerRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.BadRequestException;
 import woowacourse.auth.exception.NotFoundException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
@@ -37,7 +38,7 @@ public class CustomerService {
         try {
             return customerDao.createCustomer(customer);
         } catch (DuplicateKeyException e) {
-            throw new IllegalArgumentException("이미 가입한 사용자입니다.");
+            throw new BadRequestException("이미 가입한 사용자입니다.");
         }
     }
 
@@ -53,7 +54,7 @@ public class CustomerService {
     private void verifyPassword(final String password, final String hashedPassword) {
         final Password newPassword = new Password(password);
         if (!newPassword.isSamePassword(hashedPassword)) {
-            throw new IllegalArgumentException("올바르지 않은 비밀번호입니다.");
+            throw new BadRequestException("올바르지 않은 비밀번호입니다.");
         }
     }
 
@@ -86,14 +87,14 @@ public class CustomerService {
         final Customer modifiedCustomer = ModifiedCustomerDto.toModifiedCustomerDto(modifiedCustomerDto);
         final int affectedRows = customerDao.updateCustomer(customerId, modifiedCustomer);
         if (affectedRows != 1) {
-            throw new IllegalArgumentException("업데이트가 되지 않았습니다.");
+            throw new BadRequestException("업데이트가 되지 않았습니다.");
         }
     }
 
     public void deleteCustomer(final Long customerId) {
         final int affectedRows = customerDao.deleteCustomer(customerId);
         if (affectedRows != 1) {
-            throw new IllegalArgumentException("삭제가 되지 않았습니다.");
+            throw new BadRequestException("삭제가 되지 않았습니다.");
         }
     }
 }
