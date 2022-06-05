@@ -3,7 +3,9 @@ package woowacourse.shoppingcart.ui;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
@@ -22,8 +24,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.helper.restdocs.RestDocsTest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
@@ -76,6 +78,21 @@ public class ProductControllerTest extends RestDocsTest {
                 )));
     }
 
+    @DisplayName("새 상품 추가시 가격이 맞지 않아 실패한다.")
+    @Test
+    void addPriceNotRight() throws Exception {
+        ProductRequest productRequest = new ProductRequest("김치", -10, "image.com");
+
+        given(productService.addProduct(any(ProductRequest.class))).willReturn(1L);
+        ErrorResponse response = new ErrorResponse("0원 이상의 금액을 입력해주세요.");
+        final ResultActions resultActions = mockMvc.perform(post("/api/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(response)));
+    }
+
     @DisplayName("단일 상품을 조회한다.")
     @Test
     void product() throws Exception {
@@ -95,5 +112,14 @@ public class ProductControllerTest extends RestDocsTest {
                         fieldWithPath("price").type(NUMBER).description("가격"),
                         fieldWithPath("imageUrl").type(STRING).description("이미지 url")
                 )));
+    }
+
+    @DisplayName("상품을 삭제한다.")
+    @Test
+    void deleteProduct() throws Exception {
+        doNothing().when(productService).deleteProductById(anyLong());
+        mockMvc.perform(delete("/api/products/1"))
+                .andExpect(status().isNoContent())
+                .andDo(document("products-delete"));
     }
 }

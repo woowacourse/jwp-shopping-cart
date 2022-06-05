@@ -2,11 +2,12 @@ package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import woowacourse.shoppingcart.domain.Product;
 
 public class ProductRequest {
 
-    @NotBlank(message = "제품명에는 공백이 허용되지 않습니다.")
+    @NotEmpty(message = "제품명을 입력해주세요.")
     private String name;
 
     @Min(value = 0, message = "0원 이상의 금액을 입력해주세요.")

@@ -40,14 +40,14 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/api/products/" + productId)).build();
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.findProductById(productId));
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> product(@PathVariable final Long id) {
+        return ResponseEntity.ok(productService.findProductById(id));
     }
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long productId) {
-        productService.deleteProductById(productId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
+        productService.deleteProductById(id);
         return ResponseEntity.noContent().build();
     }
 }
