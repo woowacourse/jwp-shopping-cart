@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.CartItemService;
-import woowacourse.shoppingcart.dto.CartItemResponses;
-import woowacourse.shoppingcart.dto.CartItemSaveRequest;
+import woowacourse.shoppingcart.dto.cartitem.CartItemResponses;
+import woowacourse.shoppingcart.dto.cartitem.CartItemSaveRequest;
 
 @RestController
 @RequestMapping("/api/customers/{customerName}/cartItems")

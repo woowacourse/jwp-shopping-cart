@@ -3,9 +3,9 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductResponses;
-import woowacourse.shoppingcart.dto.ProductSaveRequest;
+import woowacourse.shoppingcart.dto.product.ProductResponse;
+import woowacourse.shoppingcart.dto.product.ProductResponses;
+import woowacourse.shoppingcart.dto.product.ProductSaveRequest;
 
 @Service
 @Transactional(readOnly = true)

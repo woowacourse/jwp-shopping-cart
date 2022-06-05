@@ -24,10 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.dto.OrderResponses;
-import woowacourse.shoppingcart.dto.OrderSaveRequests;
+import woowacourse.shoppingcart.dto.order.OrderRequest;
+import woowacourse.shoppingcart.dto.order.OrderResponse;
+import woowacourse.shoppingcart.dto.order.OrderResponses;
+import woowacourse.shoppingcart.dto.order.OrderSaveRequests;
 
 @SpringBootTest
 @AutoConfigureMockMvc

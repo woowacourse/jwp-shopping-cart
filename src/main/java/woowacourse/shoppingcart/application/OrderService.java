@@ -13,10 +13,10 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.dto.OrderResponses;
-import woowacourse.shoppingcart.dto.OrderSaveRequests;
+import woowacourse.shoppingcart.dto.order.OrderRequest;
+import woowacourse.shoppingcart.dto.order.OrderResponse;
+import woowacourse.shoppingcart.dto.order.OrderResponses;
+import woowacourse.shoppingcart.dto.order.OrderSaveRequests;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service

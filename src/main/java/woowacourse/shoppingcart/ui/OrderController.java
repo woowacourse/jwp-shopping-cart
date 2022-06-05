@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.dto.OrderResponses;
-import woowacourse.shoppingcart.dto.OrderSaveRequests;
+import woowacourse.shoppingcart.dto.order.OrderResponse;
+import woowacourse.shoppingcart.dto.order.OrderResponses;
+import woowacourse.shoppingcart.dto.order.OrderSaveRequests;
 
 @RestController
 @RequestMapping("/api/customers/{customerName}/orders")

@@ -13,8 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.dto.CartItemSaveRequest;
+import woowacourse.shoppingcart.dto.cartitem.CartItemResponse;
+import woowacourse.shoppingcart.dto.cartitem.CartItemSaveRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartItemAcceptanceTest extends AcceptanceTest {
