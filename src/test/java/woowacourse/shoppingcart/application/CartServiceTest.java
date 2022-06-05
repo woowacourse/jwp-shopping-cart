@@ -1,9 +1,14 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
+import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_2;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +21,9 @@ import woowacourse.shoppingcart.dao.JdbcCartItemDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.dao.JdbcProductDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemResponses;
+import woowacourse.shoppingcart.dto.ProductResponse;
 
 @JdbcTest
 class CartServiceTest {
@@ -28,7 +36,7 @@ class CartServiceTest {
         productDao = new JdbcProductDao(jdbcTemplate);
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
         final CartItemDao cartItemDao = new JdbcCartItemDao(jdbcTemplate);
-        this.cartService = new CartService(cartItemDao,customerDao,productDao);
+        this.cartService = new CartService(cartItemDao, new ProductService(productDao));
     }
 
     @DisplayName("카트 아이템을 저장한다.")
@@ -43,5 +51,38 @@ class CartServiceTest {
 
         // then
         assertThat(id).isPositive();
+    }
+
+    @DisplayName("카트 아이템을 조회한다.")
+    @Test
+    public void findCartsByCustomerId() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long productId2 = productDao.save(PRODUCT_2);
+        final Long cartId1 = cartService.addCart(customerId, productId1, 3);
+        final Long cartId2 = cartService.addCart(customerId, productId2, 4);
+
+        // when
+        final CartItemResponses cartResponses = cartService.findCartsByCustomerId(customerId);
+        final List<ProductResponse> productResponses = cartResponses.getCart()
+                .stream()
+                .map(CartItemResponse::getProductResponse).collect(
+                        Collectors.toList());
+        final List<Integer> quantities = cartResponses.getCart().stream().map(CartItemResponse::getQuantity)
+                .collect(Collectors.toList());
+        // then
+        assertAll(
+                () -> assertThat(productResponses).extracting("name", "price", "imageUrl", "description", "stock")
+                        .containsExactly(
+                                tuple(PRODUCT_1.getName(), PRODUCT_1.getPrice(),
+                                        PRODUCT_1.getImageUrl(), PRODUCT_1.getDescription(),
+                                        PRODUCT_1.getStock()),
+                                tuple(PRODUCT_2.getName(), PRODUCT_2.getPrice(),
+                                        PRODUCT_2.getImageUrl(), PRODUCT_2.getDescription(),
+                                        PRODUCT_2.getStock())
+                        ),
+                () -> assertThat(quantities).hasSize(2).containsExactly(3, 4)
+        );
     }
 }

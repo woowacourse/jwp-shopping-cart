@@ -1,46 +1,44 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemResponses;
+import woowacourse.shoppingcart.entity.CartItemEntity;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final ProductService productService) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
+        this.productService = productService;
     }
 
     public Long addCart(final int customerId, final Long productId, final int quantity) {
         return cartItemDao.addCartItem(customerId, productId, quantity);
     }
 
-//    public List<Cart> findCartsByCustomerName(final String customerName) {
-//        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-//
-//        final List<Cart> carts = new ArrayList<>();
-//        for (final Long cartId : cartIds) {
-//            final Long productId = cartItemDao.findProductIdById(cartId);
-//            final Product product = productDao.findProductById(productId);
-//            carts.add(new Cart(cartId, product));
-//        }
-//        return carts;
-//    }
-////
-//    private List<Long> findCartIdsByCustomerName(final String email) {
-//        final int customerId = customerDao.findByEmail(email).getId();
-//        return cartItemDao.findIdsByCustomerId((long) customerId);
-//    }
-//
+    public CartItemResponses findCartsByCustomerId(final int customerId) {
+        final List<CartItemEntity> cartItemEntities = cartItemDao.findCartByCustomerId(customerId);
+
+        return new CartItemResponses(cartItemEntities.stream()
+                .map(this::convertCartItemResponse)
+                .collect(Collectors.toList()));
+    }
+
+    private CartItemResponse convertCartItemResponse(CartItemEntity cartItemEntity) {
+        return new CartItemResponse(
+                productService.findProductById(cartItemEntity.getProductId()),
+                cartItemEntity.getQuantity()
+        );
+    }
 
 //    public void deleteCart(final String customerName, final Long cartId) {
 //        validateCustomerCart(cartId, customerName);
