@@ -85,8 +85,6 @@ public class CustomerService {
     private void validateExists(int customerId) {
         try {
             customerDao.findById(customerId);
-            privacyDao.findById(customerId);
-            addressDao.findById(customerId);
         } catch (EmptyResultDataAccessException e) {
             throw new CustomerNotFoundException();
         }
