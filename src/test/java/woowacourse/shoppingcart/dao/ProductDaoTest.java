@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,7 +53,8 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(productId)
+            .orElseThrow(InvalidProductException::new);
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
