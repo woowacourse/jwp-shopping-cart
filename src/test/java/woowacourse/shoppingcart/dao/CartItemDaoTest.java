@@ -1,7 +1,12 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_1;
+import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
 
+import javax.sql.DataSource;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -15,38 +20,31 @@ import org.springframework.test.context.jdbc.Sql;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
+    private final CustomerDao customerDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
+        cartItemDao = new JdbcCartItemDao(jdbcTemplate);
         productDao = new JdbcProductDao(jdbcTemplate);
+        this.customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
     }
 
-//    @BeforeEach
-//    void setUp() {
-//        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-//        productDao.save(new Product("apple", 2_000, "woowa2.com"));
-//
-//        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-//        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
-//    }
-//
-//    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
-//    @Test
-//    void addCartItem() {
-//
-//        // given
-//        final Long customerId = 1L;
-//        final Long productId = 1L;
-//
-//        // when
-//        final Long cartId = cartItemDao.addCartItem(customerId, productId);
-//
-//        // then
-//        assertThat(cartId).isEqualTo(3L);
-//    }
+    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")
+    @Test
+    void addCartItem() {
+        // given
+        final Long customerId = (long) customerDao.save(CUSTOMER_1);
+        final Long productId = productDao.save(PRODUCT_1);
+        final int quantity = 3;
+
+        // when
+        final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity);
+
+        // then
+        assertThat(cartId).isPositive();
+    }
 //
 //    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
 //    @Test

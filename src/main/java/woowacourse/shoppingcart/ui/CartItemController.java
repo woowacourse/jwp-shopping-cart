@@ -21,27 +21,27 @@ public class CartItemController {
         this.cartService = cartService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
-    }
-
-    @PostMapping
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                      @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
-        return ResponseEntity.created(responseLocation).build();
-    }
-
-    @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                         @PathVariable final Long cartId) {
-        cartService.deleteCart(customerName, cartId);
-        return ResponseEntity.noContent().build();
-    }
+//    @GetMapping
+//    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
+//        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+//    }
+//
+//    @PostMapping
+//    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
+//                                      @PathVariable final String customerName) {
+//        final Long cartId = cartService.addCart(product.getId(), customerName);
+//        final URI responseLocation = ServletUriComponentsBuilder
+//                .fromCurrentRequest()
+//                .path("/{cartId}")
+//                .buildAndExpand(cartId)
+//                .toUri();
+//        return ResponseEntity.created(responseLocation).build();
+//    }
+//
+//    @DeleteMapping("/{cartId}")
+//    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
+//                                         @PathVariable final Long cartId) {
+//        cartService.deleteCart(customerName, cartId);
+//        return ResponseEntity.noContent().build();
+//    }
 }
