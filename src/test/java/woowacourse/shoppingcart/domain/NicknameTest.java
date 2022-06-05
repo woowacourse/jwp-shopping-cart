@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Nickname;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 class NicknameTest {
@@ -22,7 +22,7 @@ class NicknameTest {
             "안녕하십니까"
     })
     void createByInvalidNickname(final String invalidNickname) {
-        assertThatThrownBy(() -> new Customer("email@email.com", invalidNickname, "password123!"))
+        assertThatThrownBy(() -> new Nickname(invalidNickname))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("잘못된 닉네임 형식입니다.");
     }

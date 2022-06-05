@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 class PasswordTest {
@@ -27,7 +27,7 @@ class PasswordTest {
             "password123{"
     })
     void createByInvalidPassword(final String invalidPassword) {
-        assertThatThrownBy(() -> new Customer("email@email.com", "쿼리치", invalidPassword))
+        assertThatThrownBy(() -> new Password(invalidPassword))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("잘못된 비밀번호 형식입니다.");
     }
