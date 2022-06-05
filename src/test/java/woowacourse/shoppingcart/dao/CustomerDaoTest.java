@@ -3,9 +3,10 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.auth.utils.Fixture.email;
-import static woowacourse.auth.utils.Fixture.nickname;
-import static woowacourse.auth.utils.Fixture.password;
+import static woowacourse.utils.Fixture.customer;
+import static woowacourse.utils.Fixture.email;
+import static woowacourse.utils.Fixture.nickname;
+import static woowacourse.utils.Fixture.password;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import woowacourse.auth.dao.CustomerDao;
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
 class CustomerDaoTest {
@@ -33,9 +34,6 @@ class CustomerDaoTest {
     @DisplayName("Customer를 저장한다.")
     @Test
     void save() {
-        // given
-        Customer customer = new Customer(email, password, nickname);
-
         // when
         Customer saved = customerDao.save(customer);
 
@@ -47,7 +45,6 @@ class CustomerDaoTest {
     @Test
     void existByName() {
         // given
-        Customer customer = new Customer(email, password, nickname);
         customerDao.save(customer);
 
         // when
@@ -60,9 +57,6 @@ class CustomerDaoTest {
     @DisplayName("저장된 이메일이 없는지 확인한다.")
     @Test
     void existByNameFalse() {
-        // given
-        Customer customer = new Customer(email, password, nickname);
-
         // when
         boolean result = customerDao.existByEmail(customer.getEmail());
 
@@ -74,7 +68,6 @@ class CustomerDaoTest {
     @Test
     void findByEmail() {
         // given
-        Customer customer = new Customer(email, password, nickname);
         customerDao.save(customer);
 
         // when
@@ -100,7 +93,7 @@ class CustomerDaoTest {
     @DisplayName("회원을 삭제한다")
     @Test
     void delete() {
-        Customer save = customerDao.save(new Customer(email, password, nickname));
+        Customer save = customerDao.save(customer);
         customerDao.delete(save.getId());
 
         assertThat(customerDao.findByEmail(save.getEmail()))
@@ -111,10 +104,10 @@ class CustomerDaoTest {
     @Test
     void update() {
         // given
-        Customer save = customerDao.save(new Customer(email, password, nickname));
+        Customer save = customerDao.save(customer);
 
         // when
-        customerDao.update(new Customer(save.getId(), save.getEmail(), "b1234!", "thor"));
+        customerDao.update(new Customer(save.getId(), save.getEmail(), "thor", "b1234!"));
 
         // then
         Optional<Customer> update = customerDao.findByEmail(save.getEmail());
@@ -135,7 +128,7 @@ class CustomerDaoTest {
     void updateException() {
         // when
         assertThatThrownBy(() -> customerDao.update(
-                new Customer(1L, "123$gmail.com", "b1234!", "thor")))
+                new Customer(1L, "123@gmail.com", "thor", "b1234!")))
                 .isInstanceOf(NoSuchElementException.class);
     }
 }

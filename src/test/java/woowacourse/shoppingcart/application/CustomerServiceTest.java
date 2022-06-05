@@ -4,10 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static woowacourse.auth.utils.Fixture.email;
-import static woowacourse.auth.utils.Fixture.nickname;
-import static woowacourse.auth.utils.Fixture.password;
-import static woowacourse.auth.utils.Fixture.signupRequest;
+import static woowacourse.utils.Fixture.customer;
+import static woowacourse.utils.Fixture.email;
+import static woowacourse.utils.Fixture.nickname;
+import static woowacourse.utils.Fixture.password;
+import static woowacourse.utils.Fixture.signupRequest;
 
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -17,10 +18,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.dao.CustomerDao;
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
+import woowacourse.utils.Fixture;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -34,7 +36,6 @@ class CustomerServiceTest {
     @Test
     void sighUp() {
         // given
-        Customer customer = new Customer(1L, email, password, nickname);
         given(customerDao.save(any(Customer.class)))
                 .willReturn(customer);
 
@@ -61,7 +62,6 @@ class CustomerServiceTest {
     @Test
     void findByEmail() {
         // given
-        Customer customer = new Customer(1L, email, password, nickname);
         given(customerDao.findByEmail(email))
                 .willReturn(Optional.of(customer));
 
@@ -86,7 +86,6 @@ class CustomerServiceTest {
     void updateCustomer() {
         // given
         CustomerUpdateRequest request = new CustomerUpdateRequest("thor", password, "b1234!");
-        Customer customer = new Customer(1L, nickname, password, nickname);
         given(customerDao.findByEmail(any(String.class)))
                 .willReturn(Optional.of(customer));
 
@@ -101,8 +100,7 @@ class CustomerServiceTest {
     @Test
     void updateCustomerPasswordFail() {
         // given
-        CustomerUpdateRequest request = new CustomerUpdateRequest("thor", password, "b1234!");
-        Customer customer = new Customer(1L, nickname, "a123456!", nickname);
+        CustomerUpdateRequest request = new CustomerUpdateRequest("thor", "differ!1", "b1234!");
         given(customerDao.findByEmail(any(String.class)))
                 .willReturn(Optional.of(customer));
         // when

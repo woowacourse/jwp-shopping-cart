@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @Repository
 public class CustomerDao {
@@ -28,16 +28,12 @@ public class CustomerDao {
     public Customer save(Customer customer) {
         long id = jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(customer))
                 .longValue();
-        return new Customer(id, customer.getEmail(), customer.getPassword(), customer.getNickname());
+        return new Customer(id, customer.getEmail(), customer.getNickname(), customer.getPassword());
     }
 
     public Boolean existByEmail(String email) {
         String sql = "select exists (select * from customer where email = :email)";
         return jdbcTemplate.queryForObject(sql, Map.of("email", email), Boolean.class);
-    }
-
-    public Long findIdByUserName(String nickname) {
-        return null;
     }
 
     public Optional<Customer> findByEmail(String email) {
@@ -55,8 +51,9 @@ public class CustomerDao {
         return (rs, rowNum) -> new Customer(
                 rs.getLong("id"),
                 rs.getString("email"),
-                rs.getString("password"),
-                rs.getString("nickname"));
+                rs.getString("nickname"),
+                rs.getString("password")
+        );
     }
 
     public void delete(Long id) {
@@ -73,5 +70,9 @@ public class CustomerDao {
         if (jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer)) == 0) {
             throw new NoSuchElementException("수정하려는 Customer가 없습니다.");
         }
+    }
+
+    public Long findIdByUserName(String customerName) {
+        return null;
     }
 }

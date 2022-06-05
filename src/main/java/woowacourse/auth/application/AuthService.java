@@ -1,7 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
 import woowacourse.auth.exception.InvalidAuthException;

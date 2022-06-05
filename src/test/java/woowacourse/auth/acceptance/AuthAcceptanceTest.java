@@ -2,10 +2,10 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.auth.utils.Fixture.email;
-import static woowacourse.auth.utils.Fixture.nickname;
-import static woowacourse.auth.utils.Fixture.signupRequest;
-import static woowacourse.auth.utils.Fixture.tokenRequest;
+import static woowacourse.utils.Fixture.email;
+import static woowacourse.utils.Fixture.nickname;
+import static woowacourse.utils.Fixture.signupRequest;
+import static woowacourse.utils.Fixture.tokenRequest;
 import static woowacourse.utils.RestAssuredUtils.httpPost;
 
 import io.restassured.response.ExtractableResponse;
