@@ -1,15 +1,19 @@
 package woowacourse.auth.ui;
 
+import java.util.Map;
+import java.util.Objects;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import org.springframework.web.servlet.HandlerMapping;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.support.AuthorizationExtractor;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
-    private AuthService authService;
+    private final AuthService authService;
 
     public AuthenticationPrincipalArgumentResolver(AuthService authService) {
         this.authService = authService;
@@ -20,10 +24,14 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
     }
 
-    // parameter에 @AuthenticationPrincipal이 붙어있는 경우 동작
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        // TODO: 유효한 로그인인 경우 로그인한 사용자 객체를 만들어서 응답하기
-        return null;
+        final String accessToken = AuthorizationExtractor.extract(Objects.requireNonNull(webRequest.getHeader(AuthorizationExtractor.AUTHORIZATION)));
+        authService.validateToken(accessToken);
+
+        int customerId = authService.getCustomerId(accessToken);
+        authService.validateCustomerId(customerId);
+
+        return customerId;
     }
 }

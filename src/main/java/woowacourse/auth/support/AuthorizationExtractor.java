@@ -1,7 +1,9 @@
 package woowacourse.auth.support;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import org.springframework.web.context.request.WebRequest;
 
 public class AuthorizationExtractor {
     public static final String AUTHORIZATION = "Authorization";
@@ -21,6 +23,19 @@ public class AuthorizationExtractor {
                 }
                 return authHeaderValue;
             }
+        }
+
+        return null;
+    }
+
+    public static String extract(String token) {
+        if ((token.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
+            String authHeaderValue = token.substring(BEARER_TYPE.length()).trim();
+            int commaIndex = authHeaderValue.indexOf(',');
+            if (commaIndex > 0) {
+                authHeaderValue = authHeaderValue.substring(0, commaIndex);
+            }
+            return authHeaderValue;
         }
 
         return null;

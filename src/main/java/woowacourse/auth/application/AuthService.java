@@ -1,10 +1,13 @@
 package woowacourse.auth.application;
 
+import java.util.Map;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.HandlerMapping;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.LoginFailedException;
+import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.password.Password;
@@ -46,5 +49,17 @@ public class AuthService {
         if (!encryptedPassword.matches(password)) {
             throw new LoginFailedException();
         }
+    }
+
+    public void validateToken(String accessToken) {
+        jwtTokenProvider.validateToken(accessToken);
+    }
+
+    public void validateCustomerId(int customerId) {
+        customerDao.findById(customerId);
+    }
+
+    public int getCustomerId(String accessToken) {
+        return Integer.parseInt(jwtTokenProvider.getPayload(accessToken));
     }
 }

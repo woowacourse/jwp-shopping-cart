@@ -1,5 +1,6 @@
 package woowacourse.auth.config;
 
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 import woowacourse.auth.application.AuthService;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +18,8 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addArgumentResolvers(List argumentResolvers) {
-        argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(createAuthenticationPrincipalArgumentResolver());
     }
 
     @Bean
