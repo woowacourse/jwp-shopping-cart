@@ -23,12 +23,8 @@ public class AuthConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/api/customers")
-                .addPathPatterns("/api/cartItems")
-                .addPathPatterns("/api/cartItems/**")
-                .addPathPatterns("/api/orders")
-                .addPathPatterns("/api/orders/**")
-                .addPathPatterns("/api/customers/password")
+                .addPathPatterns("/api/**")
+                .excludePathPatterns("/api/products", "/api/products/**")
                 .excludePathPatterns("/api/customers/signup", "/api/customers/login");
     }
 
