@@ -58,6 +58,14 @@ public class CustomerDaoImplTest {
     }
 
     @Test
+    @DisplayName("유저 이름이 존재하지 않으면?")
+    void existByUserNameFalse() {
+        customerDao.save(new Customer("레넌", "rennon@woowa.com", "12345678"));
+
+        assertThat(customerDao.existByUsername("그린론")).isFalse();
+    }
+
+    @Test
     @DisplayName("비밀번호가 일치한다.")
     void isValidPassword() {
         customerDao.save(new Customer("레넌", "rennon@woowa.com", "12345678"));

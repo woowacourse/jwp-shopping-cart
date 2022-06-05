@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 
 @SpringBootTest
 @Sql(value = "/sql/ClearTableCustomer.sql")
@@ -147,7 +148,7 @@ public class CustomerServiceTest {
 
         // given
         assertThatThrownBy(() -> customerDao.findByUsername(name))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(NoSuchCustomerException.class);
     }
 
     @Test

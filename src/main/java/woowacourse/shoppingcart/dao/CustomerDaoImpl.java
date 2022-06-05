@@ -52,7 +52,7 @@ public class CustomerDaoImpl implements CustomerDao {
             final String query = "SELECT id, username, email, password FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, customerRowMapper, username.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new NoSuchCustomerException();
         }
     }
 
@@ -66,21 +66,13 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     public boolean existByUsername(String username) {
-        try {
-            String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
-            return jdbcTemplate.queryForObject(query, Boolean.class, username);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
+        String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, username);
     }
 
     public boolean existByEmail(String email) {
-        try {
-            String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ?)";
-            return jdbcTemplate.queryForObject(query, Boolean.class, email);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
+        String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, email);
     }
 
     public boolean isValidPasswordByUsername(String username, String password) {
