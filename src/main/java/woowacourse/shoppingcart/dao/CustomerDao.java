@@ -1,27 +1,23 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.domain.Customer;
 
-import java.util.Locale;
+public interface CustomerDao {
+    Customer save(Customer customer);
 
-@Repository
-public class CustomerDao {
+    Customer findByUsername(String username);
 
-    private final JdbcTemplate jdbcTemplate;
+    Customer findByEmail(String email);
 
-    public CustomerDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    boolean existByUsername(String username);
 
-    public Long findIdByUserName(final String userName) {
-        try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
-    }
+    boolean existByEmail(String email);
+
+    boolean isValidPasswordByUsername(String username, String password);
+
+    boolean isValidPasswordByEmail(String email, String password);
+
+    void updatePassword(Long id, String password);
+
+    void deleteByUsername(String username);
 }
