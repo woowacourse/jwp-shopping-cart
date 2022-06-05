@@ -21,7 +21,7 @@ public class ProductDao {
     }
 
     public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
+        final String query = "INSERT INTO product (name, price, image_url, description, ) VALUES (?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
@@ -41,8 +41,11 @@ public class ProductDao {
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                     new Product(
                             productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
+                            resultSet.getString("name"),
+                            resultSet.getInt("price"),
+                            resultSet.getString("image_url"),
+                            resultSet.getString("description"),
+                            resultSet.getInt("image_url")
                     ), productId
             );
         } catch (EmptyResultDataAccessException e) {
@@ -58,7 +61,9 @@ public class ProductDao {
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
                                 resultSet.getInt("price"),
-                                resultSet.getString("image_url")
+                                resultSet.getString("image_url"),
+                                resultSet.getString("description"),
+                                resultSet.getInt("image_url")
                         ));
     }
 
