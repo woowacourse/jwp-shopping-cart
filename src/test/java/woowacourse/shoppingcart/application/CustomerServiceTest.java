@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.Fixture.다른_비밀번호;
-import static woowacourse.Fixture.다른_아이디;
 import static woowacourse.Fixture.다른_이름;
 import static woowacourse.Fixture.페퍼_비밀번호;
 import static woowacourse.Fixture.페퍼_아이디;
@@ -20,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -76,27 +76,13 @@ class CustomerServiceTest {
         void success() {
             // given
             customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
-            CustomerRequest customerRequest = new CustomerRequest(페퍼_아이디, 다른_이름, 페퍼_비밀번호);
+            CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(다른_이름, 페퍼_비밀번호);
 
             // when
-            CustomerResponse response = customerService.update(new LoginCustomer(페퍼_아이디), customerRequest);
+            CustomerResponse response = customerService.update(new LoginCustomer(페퍼_아이디), customerUpdateRequest);
 
             // then
             assertThat(response.getName()).isEqualTo(다른_이름);
-        }
-
-        @Test
-        @DisplayName("회원 정보의 로그인 아이디를 수정하려고 하면, 예외를 던진다.")
-        void fail_changeLoginId() {
-            // given
-            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
-            CustomerRequest customerRequest = new CustomerRequest(다른_아이디, 페퍼_이름, 페퍼_비밀번호);
-            LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
-
-            // when & then
-            assertThatThrownBy(() -> customerService.update(loginCustomer, customerRequest))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("아이디는 변경할 수 없습니다.");
         }
 
         @Test
@@ -104,12 +90,12 @@ class CustomerServiceTest {
         void fail_changePassword() {
             // given
             customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
-            CustomerRequest customerRequest = new CustomerRequest(페퍼_아이디, 페퍼_이름, 다른_비밀번호);
+            CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(페퍼_이름, 다른_비밀번호);
             LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
 
             // when & then
             assertThatThrownBy(
-                    () -> customerService.update(loginCustomer, customerRequest)
+                    () -> customerService.update(loginCustomer, customerUpdateRequest)
             ).isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("비밀번호는 변경할 수 없습니다.");
         }
@@ -118,12 +104,12 @@ class CustomerServiceTest {
         @DisplayName("존재하지 않는 회원 정보를 수정하려고 하면, 예외를 던진다.")
         void fail_notExistCustomer() {
             // given
-            CustomerRequest customerRequest = new CustomerRequest(페퍼_아이디, 페퍼_이름, 다른_비밀번호);
+            CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(페퍼_이름, 다른_비밀번호);
             LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
 
             // when & then
             assertThatThrownBy(
-                    () -> customerService.update(loginCustomer, customerRequest)
+                    () -> customerService.update(loginCustomer, customerUpdateRequest)
             ).isInstanceOf(InvalidCustomerException.class)
                     .hasMessage("유효하지 않은 고객입니다");
         }

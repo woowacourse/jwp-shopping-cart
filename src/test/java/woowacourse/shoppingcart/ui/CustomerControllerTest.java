@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -104,31 +105,11 @@ class CustomerControllerTest {
     @DisplayName("update 메서드는")
     class update {
         @ParameterizedTest
-        @ValueSource(strings = {"testwoowacoursecom", "test@woowacoursecom", "testwoowacourse.com", "@", ".", "@.",
-                ".@wo.com", "test.woowacourse@com", "", " "})
-        @DisplayName("로그인 아이디가 이메일 형식이 아니면, Bad Request를 던진다")
-        void loginId_notEmail(String loginId) throws Exception {
-            // given
-            CustomerRequest request = new CustomerRequest(loginId, 페퍼_이름, 페퍼_비밀번호);
-            String requestContent = objectMapper.writeValueAsString(request);
-
-            // when
-            final ResultActions response = mockMvc.perform(put("/customers/me")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtTokenProvider.createToken(페퍼_아이디))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
-
-            // then
-            response.andExpect(status().isBadRequest());
-        }
-
-        @ParameterizedTest
         @ValueSource(strings = {"", " "})
         @DisplayName("이름이 공백이면, Bad Request를 던진다.")
         void name_blank(String name) throws Exception {
             // given
-            CustomerRequest request = new CustomerRequest(페퍼_아이디, name, 페퍼_비밀번호);
+            CustomerUpdateRequest request = new CustomerUpdateRequest(name, 페퍼_비밀번호);
             String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -147,7 +128,7 @@ class CustomerControllerTest {
         @DisplayName("비밀번호가 공백이면, Bad Request를 던진다.")
         void password_blank(String password) throws Exception {
             // given
-            CustomerRequest request = new CustomerRequest(페퍼_아이디, 페퍼_이름, password);
+            CustomerUpdateRequest request = new CustomerUpdateRequest(페퍼_이름, password);
             String requestContent = objectMapper.writeValueAsString(request);
 
             // when

@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 
 @RestController
@@ -40,7 +41,7 @@ public class CustomerController {
 
     @PutMapping("/me")
     public ResponseEntity<CustomerResponse> updateMe(@AuthenticationPrincipal LoginCustomer loginCustomer,
-                                                     @RequestBody @Valid CustomerRequest request) {
+                                                     @RequestBody @Valid CustomerUpdateRequest request) {
         CustomerResponse response = customerService.update(loginCustomer, request);
         return ResponseEntity.ok(response);
     }
