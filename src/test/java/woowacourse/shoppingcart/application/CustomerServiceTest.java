@@ -33,7 +33,7 @@ public class CustomerServiceTest {
     @DisplayName("회원 가입에 성공한다.")
     void addCustomer() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
 
         // when
         SignUpResponse signUpResponse = customerService.addCustomer(signUpRequest);
@@ -48,7 +48,7 @@ public class CustomerServiceTest {
     @Test
     @DisplayName("회원 가입에 실패한다. - 중복된 이름 저장")
     void signUpFail() {
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
         customerService.addCustomer(signUpRequest);
 
         assertThatThrownBy(() -> customerService.addCustomer(signUpRequest))
@@ -60,7 +60,7 @@ public class CustomerServiceTest {
     @DisplayName("나의 정보를 반환한다.")
     void findMe() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
         customerService.addCustomer(signUpRequest);
 
         // when
@@ -74,26 +74,26 @@ public class CustomerServiceTest {
     @DisplayName("나의 정보를 수정한다.")
     void updateMe() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
         customerService.addCustomer(signUpRequest);
 
         // when
-        customerService.updateMe("greenlawn", new UpdatePasswordRequest("1234", "5678"));
+        customerService.updateMe("greenlawn", new UpdatePasswordRequest("123456", "5678910"));
 
         // then
-        assertThat(customerDao.isValidPasswordByUsername("greenlawn", "5678")).isTrue();
+        assertThat(customerDao.isValidPasswordByUsername("greenlawn", "5678910")).isTrue();
     }
 
     @Test
     @DisplayName("비밀번호가 틀리면 나의 정보를 수정할 수 없다.")
     void updateMeThrowException() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
         customerService.addCustomer(signUpRequest);
 
         // when & then
         assertThatThrownBy(() ->
-                customerService.updateMe("greenlawn", new UpdatePasswordRequest("1235", "5678")))
+                customerService.updateMe("greenlawn", new UpdatePasswordRequest("123578", "125678")))
                 .isInstanceOf(InvalidPasswordException.class)
                 .hasMessage("비밀번호가 틀렸습니다.");
     }
@@ -102,11 +102,11 @@ public class CustomerServiceTest {
     @DisplayName("회원을 탈퇴한다.")
     void deleteMe() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "1234");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
         customerService.addCustomer(signUpRequest);
 
         // when
-        customerService.deleteMe("greenlawn", new DeleteCustomerRequest("1234"));
+        customerService.deleteMe("greenlawn", new DeleteCustomerRequest("123456"));
 
         // given
         assertThatThrownBy(() -> customerDao.findByUsername("greenlawn"))
@@ -119,13 +119,13 @@ public class CustomerServiceTest {
         // given
         String name1 = "greenlawn";
         String email1 = "green@woowa.com";
-        SignUpRequest signUpRequest1 = new SignUpRequest(name1, email1, "1234");
+        SignUpRequest signUpRequest1 = new SignUpRequest(name1, email1, "123456");
         customerService.addCustomer(signUpRequest1);
 
         // when & then
         String name2 = "rennon";
         String email2 = "green@woowa.com";
-        SignUpRequest signUpRequest2 = new SignUpRequest(name2, email2, "1234");
+        SignUpRequest signUpRequest2 = new SignUpRequest(name2, email2, "123456");
         assertThatThrownBy(() -> customerService.addCustomer(signUpRequest2))
                 .isInstanceOf(DuplicateEmailException.class)
                 .hasMessage("중복된 이메일입니다.");

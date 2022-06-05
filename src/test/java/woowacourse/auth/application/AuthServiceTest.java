@@ -27,8 +27,8 @@ class AuthServiceTest {
     @Test
     @DisplayName("로그인에 성공한다.")
     void signIn() {
-        customerService.addCustomer(new SignUpRequest("레넌", "rennon@woowa.com", "1234"));
-        LogInResponse logInResponse = authService.signIn(new LogInRequest("rennon@woowa.com", "1234"));
+        customerService.addCustomer(new SignUpRequest("레넌", "rennon@woowa.com", "123456"));
+        LogInResponse logInResponse = authService.signIn(new LogInRequest("rennon@woowa.com", "123456"));
 
         assertThat(logInResponse.getUsername()).isEqualTo("레넌");
         assertThat(logInResponse.getToken()).isNotNull();
@@ -37,7 +37,7 @@ class AuthServiceTest {
     @Test
     @DisplayName("로그인에 실패한다. - 유저가 존재하지 않는 경우")
     void signInFailIfNotExistUser() {
-        assertThatThrownBy(() -> authService.signIn(new LogInRequest("rennon@woowa.com", "1234")))
+        assertThatThrownBy(() -> authService.signIn(new LogInRequest("rennon@woowa.com", "123456")))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("존재하지 않는 유저입니다.");
     }
@@ -45,9 +45,9 @@ class AuthServiceTest {
     @Test
     @DisplayName("로그인 실패 - 비밀번호가 맞지 않는 경우")
     void signInFailIfWrongPassword() {
-        customerService.addCustomer(new SignUpRequest("레넌", "rennon@woowa.com", "1234"));
+        customerService.addCustomer(new SignUpRequest("레넌", "rennon@woowa.com", "123456"));
 
-        assertThatThrownBy(() -> authService.signIn(new LogInRequest("rennon@woowa.com", "1235")))
+        assertThatThrownBy(() -> authService.signIn(new LogInRequest("rennon@woowa.com", "123578")))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("로그인 실패");
     }
