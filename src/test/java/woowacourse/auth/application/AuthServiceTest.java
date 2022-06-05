@@ -68,7 +68,7 @@ class AuthServiceTest {
 
         // when & then
         assertThatThrownBy(() -> authService.login(tokenRequest))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("유효하지 않은 고객입니다");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
     }
 }

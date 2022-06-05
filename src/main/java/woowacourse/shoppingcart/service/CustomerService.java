@@ -38,24 +38,17 @@ public class CustomerService {
 
     public CustomerResponse update(LoginCustomer loginCustomer, CustomerUpdateRequest request) {
         Customer savedCustomer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        String encryptedPassword = CryptoUtils.encrypt(request.getPassword());
-        checkUpdatable(savedCustomer, encryptedPassword);
+        savedCustomer.checkPasswordWithEncryption(request.getPassword());
 
-        customerDao.update(new Customer(loginCustomer.getLoginId(), request.getName(), encryptedPassword));
+        customerDao.update(new Customer(loginCustomer.getLoginId(), request.getName(),
+                CryptoUtils.encrypt(request.getPassword())));
         Customer updatedCustomer = customerDao.findByLoginId(loginCustomer.getLoginId());
         return CustomerResponse.of(updatedCustomer);
     }
 
     public void delete(LoginCustomer loginCustomer, CustomerDeleteRequest customerDeleteRequest) {
         Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        String encryptedPassword = CryptoUtils.encrypt(customerDeleteRequest.getPassword());
-        checkUpdatable(customer, encryptedPassword);
+        customer.checkPasswordWithEncryption(customerDeleteRequest.getPassword());
         customerDao.delete(loginCustomer.getLoginId());
-    }
-
-    private void checkUpdatable(Customer customer, String password) {
-        if (!customer.isSamePassword(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
     }
 }
