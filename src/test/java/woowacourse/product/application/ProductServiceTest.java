@@ -53,10 +53,7 @@ public class ProductServiceTest {
             .map(ProductResponse::getId)
             .collect(Collectors.toList());
 
-        assertAll(
-            () -> assertThat(findIds).hasSize(2),
-            () -> assertThat(findIds).containsExactly(id1, id2)
-        );
+        assertThat(findIds).contains(id1, id2);
     }
 
     @DisplayName("입력한 id에 맞는 단일 상품을 조회한다.")
