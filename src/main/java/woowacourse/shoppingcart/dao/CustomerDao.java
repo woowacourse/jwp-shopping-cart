@@ -15,7 +15,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 
 @Repository
@@ -31,7 +30,7 @@ public class CustomerDao {
         return new Customer(
                 rs.getLong("id"),
                 rs.getString("name"),
-                new Email(rs.getString("email")),
+                rs.getString("email"),
                 Password.fromHashedValue(rs.getString("password"))
         );
     }
@@ -46,7 +45,7 @@ public class CustomerDao {
 
         namedJdbcTemplate.update(sql, new MapSqlParameterSource(params), keyHolder);
         final long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return new Customer(id, customer.getName(), customer.getEmail(), customer.getPassword());
+        return new Customer(id, customer.getName(), customer.getEmail().getValue(), customer.getPassword());
     }
 
     public boolean existsByEmail(final Customer customer) {
@@ -66,10 +65,10 @@ public class CustomerDao {
         return Optional.ofNullable(DataAccessUtils.singleResult(customerIds));
     }
 
-    public Optional<Customer> findByEmail(final Email email) {
+    public Optional<Customer> findByEmail(final String email) {
         final String sql = "SELECT id, name, email, password FROM customer WHERE email = :email";
         final HashMap<String, Object> params = new HashMap<>();
-        params.put("email", email.getValue());
+        params.put("email", email);
 
         return findCustomer(sql, params);
     }

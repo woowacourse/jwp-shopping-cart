@@ -24,7 +24,6 @@ import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequ
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.PasswordConvertor;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
@@ -104,7 +103,7 @@ class CustomerServiceTest {
         return new Customer(
                 id,
                 request.getName(),
-                new Email(request.getEmail()),
+                request.getEmail(),
                 Password.fromRawValue(request.getPassword(), passwordConvertor)
         );
     }
@@ -116,11 +115,11 @@ class CustomerServiceTest {
         final CustomerDeleteServiceRequest request
                 = new CustomerDeleteServiceRequest(1L, RAW_PASSWORD_VALUE);
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), PASSWORD)));
-        when(customerDao.deleteById(1L))
-                .thenReturn(1);
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
         when(passwordConvertor.isSamePassword(RAW_PASSWORD_VALUE, PASSWORD.getHashedValue()))
                 .thenReturn(true);
+        when(customerDao.deleteById(1L))
+                .thenReturn(1);
 
         // when
         assertThatCode(() -> customerService.delete(request))
@@ -134,7 +133,7 @@ class CustomerServiceTest {
         final CustomerDeleteServiceRequest request
                 = new CustomerDeleteServiceRequest(1L, "1111111111");
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), PASSWORD)));
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
 
         // when, then
         assertThatThrownBy(() -> customerService.delete(request))
@@ -146,7 +145,7 @@ class CustomerServiceTest {
     void updateName() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), PASSWORD)));
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
         when(customerDao.update(any(Customer.class)))
                 .thenReturn(1);
 
@@ -161,7 +160,7 @@ class CustomerServiceTest {
     void updatePassword() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), PASSWORD)));
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
         when(customerDao.update(any(Customer.class)))
                 .thenReturn(1);
         when(passwordConvertor.isSamePassword(RAW_PASSWORD_VALUE, PASSWORD.getHashedValue()))
@@ -180,7 +179,7 @@ class CustomerServiceTest {
     void updatePassword_passwordNotMatch_throwsException() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), PASSWORD)));
+                .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
 
         // when
         final CustomerPasswordUpdateServiceRequest request = new CustomerPasswordUpdateServiceRequest(1L,
@@ -195,7 +194,7 @@ class CustomerServiceTest {
     @DisplayName("존재하지 않는 이메일로 사용자를 인증할 경우 예외가 발생한다.")
     void certify_invalidEmail_throwsException() {
         // given
-        when(customerDao.findByEmail(new Email(EMAIL)))
+        when(customerDao.findByEmail(EMAIL))
                 .thenReturn(Optional.empty());
 
         // when, then
@@ -208,8 +207,8 @@ class CustomerServiceTest {
     void certify_passwordNotMatch_throwsException() {
         // given
         final LoginServiceRequest loginServiceRequest = new LoginServiceRequest(EMAIL, "11111111");
-        when(customerDao.findByEmail(new Email(loginServiceRequest.getEmail())))
-                .thenReturn(Optional.of(new Customer(1L, "클레이", new Email(EMAIL), PASSWORD)));
+        when(customerDao.findByEmail(loginServiceRequest.getEmail()))
+                .thenReturn(Optional.of(new Customer(1L, "클레이", EMAIL, PASSWORD)));
 
         // when, then
         assertThatThrownBy(() -> customerService.validateCustomer(EMAIL, "1111111111"))

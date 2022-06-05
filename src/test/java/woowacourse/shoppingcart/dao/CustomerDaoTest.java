@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.util.BcryptConvertor;
 
@@ -23,7 +22,7 @@ public class CustomerDaoTest {
 
     private static final String NAME = "썬";
     private static final String RAW_EMAIL = "sunyong@gmail.com";
-    private static final Email EMAIL = new Email(RAW_EMAIL);
+    private static final String EMAIL = RAW_EMAIL;
     private static final String RAW_PASSWORD = "12345678";
     private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD, new BcryptConvertor());
 
@@ -98,7 +97,7 @@ public class CustomerDaoTest {
         customerDao.save(customer);
 
         // when
-        Customer actual = customerDao.findByEmail(customer.getEmail()).get();
+        Customer actual = customerDao.findByEmail(customer.getEmail().getValue()).get();
 
         // then
         assertThat(actual).usingRecursiveComparison()

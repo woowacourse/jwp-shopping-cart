@@ -11,8 +11,7 @@ import woowacourse.shoppingcart.util.BcryptConvertor;
 class CustomerTest {
 
     private static final String NAME = "클레이";
-    private static final String RAW_EMAIL = "clay@gmail.com";
-    private static final Email EMAIL = new Email(RAW_EMAIL);
+    private static final String EMAIL = "clay@gmail.com";
     private static final String RAW_PASSWORD = "12345678";
     private static final PasswordConvertor PASSWORD_CONVERTOR = new BcryptConvertor();
     private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD, PASSWORD_CONVERTOR);
