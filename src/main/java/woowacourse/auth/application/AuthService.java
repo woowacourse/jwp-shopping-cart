@@ -4,9 +4,10 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.utils.Encryptor;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -22,11 +23,11 @@ public class AuthService {
     }
 
     public TokenResponse login(TokenRequest tokenRequest) {
-        Customer customer = customerDao.findByEmail(tokenRequest.getEmail());
-        if (!customer.checkPassword(Encryptor.encrypt(tokenRequest.getPassword()))) {
+        final Customer customer = customerDao.findByEmail(new Email(tokenRequest.getEmail()));
+        if (!customer.isSame(Password.of(tokenRequest.getPassword()))) {
             throw new InvalidCustomerException("비밀번호가 일치하지 않습니다.");
         }
-        final String accessToken = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
+        final String accessToken = jwtTokenProvider.createToken(String.valueOf(customer.getId().getValue()));
         return new TokenResponse(accessToken);
     }
 }

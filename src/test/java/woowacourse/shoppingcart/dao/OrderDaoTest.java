@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.customer.Id;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ class OrderDaoTest {
     @Test
     void addOrders() {
         //given
-        final Long customerId = 1L;
+        final Id customerId = new Id(1L);
 
         //when
         final Long orderId = orderDao.addOrders(customerId);
@@ -44,9 +45,9 @@ class OrderDaoTest {
     @Test
     void findOrderIdsByCustomerId() {
         //given
-        final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        final Id customerId = new Id(1L);
+        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId.getValue());
+        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId.getValue());
 
         //when
         final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);

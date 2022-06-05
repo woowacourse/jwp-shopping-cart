@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.customer.Id;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -17,25 +18,25 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrders(final Long customerId) {
+    public Long addOrders(final Id customerId) {
         final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
+            preparedStatement.setLong(1, customerId.getValue());
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
-    public List<Long> findOrderIdsByCustomerId(final Long customerId) {
+    public List<Long> findOrderIdsByCustomerId(final Id customerId) {
         final String sql = "SELECT id FROM orders WHERE customer_id = ? ";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId.getValue());
     }
 
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
+    public boolean isValidOrderId(final Id customerId, final Long orderId) {
         final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
+        return jdbcTemplate.queryForObject(query, Boolean.class, customerId.getValue(), orderId);
     }
 }

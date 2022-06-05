@@ -25,9 +25,4 @@ public class AuthControllerAdvice {
     public ResponseEntity<ErrorResponse> handleInvalidTokenException(Exception e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Void> handle() {
-        return ResponseEntity.badRequest().build();
-    }
  }

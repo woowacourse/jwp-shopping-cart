@@ -1,16 +1,14 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.EmailRequest;
-import woowacourse.shoppingcart.dto.EmailResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.utils.Encryptor;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.*;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.EmailRequest;
+import woowacourse.shoppingcart.dto.customer.EmailResponse;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
-import woowacourse.shoppingcart.utils.CustomerInformationValidator;
 
 @Service
 public class CustomerService {
@@ -25,34 +23,32 @@ public class CustomerService {
     }
 
     public CustomerResponse register(CustomerRequest customerRequest) {
-        CustomerInformationValidator.validatePassword(customerRequest.getPassword());
-        final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getName(), customerRequest.getPhone(), customerRequest.getAddress(), Encryptor.encrypt(customerRequest.getPassword()));
+        final Customer customer = new Customer(new Email(customerRequest.getEmail()), new Name(customerRequest.getName()), new Phone(customerRequest.getPhone()), new Address(customerRequest.getAddress()), Password.of(customerRequest.getPassword()));
         final Customer savedCustomer = customerDao.save(customer);
-        return new CustomerResponse(savedCustomer.getId(), savedCustomer.getEmail(), savedCustomer.getName(), savedCustomer.getPhone(), savedCustomer.getAddress());
+        return new CustomerResponse(savedCustomer.getId().getValue(), savedCustomer.getEmail().getValue(), savedCustomer.getName().getValue(), savedCustomer.getPhone().getValue(), savedCustomer.getAddress().getValue());
     }
 
     public CustomerResponse findCustomerByToken(String token) {
         validateToken(token);
-        final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
+        final Id id = new Id(Long.parseLong(jwtTokenProvider.getPayload(token)));
         final Customer customer = customerDao.findById(id);
-        return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getName(), customer.getPhone(), customer.getAddress());
+        return new CustomerResponse(customer.getId().getValue(), customer.getEmail().getValue(), customer.getName().getValue(), customer.getPhone().getValue(), customer.getAddress().getValue());
     }
 
-    public EmailResponse isDuplication(EmailRequest emailRequest) {
-        return new EmailResponse(!customerDao.isDuplication(emailRequest.getEmail()));
+    public EmailResponse checkValidEmail(EmailRequest emailRequest) {
+        return new EmailResponse(!customerDao.isDuplication(new Email(emailRequest.getEmail())));
     }
 
     public void edit(String token, CustomerRequest customerRequest) {
         validateToken(token);
-        final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
-        CustomerInformationValidator.validatePassword(customerRequest.getPassword());
-        final Customer customer = new Customer(id, customerRequest.getEmail(), customerRequest.getName(), customerRequest.getPhone(), customerRequest.getAddress(), Encryptor.encrypt(customerRequest.getPassword()));
+        final Id id = new Id(Long.parseLong(jwtTokenProvider.getPayload(token)));
+        final Customer customer = new Customer(id, new Email(customerRequest.getEmail()), new Name(customerRequest.getName()), new Phone(customerRequest.getPhone()), new Address(customerRequest.getAddress()), Password.of(customerRequest.getPassword()));
         customerDao.save(customer);
     }
 
     public void delete(String token) {
         validateToken(token);
-        final Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
+        final Id id = new Id(Long.parseLong(jwtTokenProvider.getPayload(token)));
         customerDao.delete(id);
     }
 

@@ -2,19 +2,16 @@ package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.*;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Locale;
 import java.util.Objects;
 
 @Repository
@@ -29,62 +26,75 @@ public class CustomerDao {
     public Customer save(final Customer customer) {
         final String sql = "insert into customer(email, name, phone, address, password) values (:email, :name, :phone, :address, :password)" +
                 " on duplicate key update email = :email, name = :name, phone = :phone, address = :address, password = :password";
-        KeyHolder keyholder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer), keyholder, new String[]{"id"});
+        final KeyHolder keyholder = new GeneratedKeyHolder();
+        final MapSqlParameterSource query = new MapSqlParameterSource();
+        query.addValue("email", customer.getEmail().getValue());
+        query.addValue("name", customer.getName().getValue());
+        query.addValue("phone", customer.getPhone().getValue());
+        query.addValue("address", customer.getAddress().getValue());
+        query.addValue("password", customer.getPassword().getValue());
+        jdbcTemplate.update(sql, query, keyholder, new String[]{"id"});
         try {
-            return new Customer(Objects.requireNonNull(keyholder.getKey()).longValue(), customer);
+            return new Customer(new Id(Objects.requireNonNull(keyholder.getKey()).longValue()), customer);
         } catch (NullPointerException e) {
             return customer;
         }
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Id findIdByUserName(final Name name) {
         try {
             final String sql = "SELECT id FROM customer WHERE name = :name";
-            final SqlParameterSource query = new MapSqlParameterSource("name", userName.toLowerCase(Locale.ROOT));
-            return jdbcTemplate.queryForObject(sql, query, Long.class);
+            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("name", name.getValue()), new IdMapper());
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }
 
-    public Customer findByEmail(final String email) {
+    public Customer findByEmail(final Email email) {
         final String sql = "select * from customer where email = :email";
         try {
-            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email), new CustomerMapper());
+            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email.getValue()), new CustomerMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException("존재하지 않는 이메일 입니다.");
         }
     }
 
-    public Customer findById(Long id) {
+    public Customer findById(Id id) {
         final String sql = "select * from customer where id = :id";
         try {
-            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), new CustomerMapper());
+            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id.getValue()), new CustomerMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException("존재하지 않는 아이디 입니다.");
         }
     }
 
-    public void delete(Long id) {
+    public void delete(Id id) {
         final String sql = "delete from customer where id = :id";
-        jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
+        jdbcTemplate.update(sql, new MapSqlParameterSource("id", id.getValue()));
     }
 
-    public Boolean isDuplication(String email) {
+    public Boolean isDuplication(Email email) {
         final String sql = "select exists(select * from customer where email = :email)";
-        return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email), Boolean.class);
+        return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email.getValue()), Boolean.class);
     }
 
     private static class CustomerMapper implements RowMapper<Customer> {
+        @Override
         public Customer mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             return new Customer(
-                    rs.getLong("id"),
-                    rs.getString("email"),
-                    rs.getString("name"),
-                    rs.getString("phone"),
-                    rs.getString("address"),
-                    rs.getString("password"));
+                    new Id(rs.getLong("id")),
+                    new Email(rs.getString("email")),
+                    new Name(rs.getString("name")),
+                    new Phone(rs.getString("phone")),
+                    new Address(rs.getString("address")),
+                    Password.ofEncrypted(rs.getString("password")));
+        }
+    }
+
+    private static class IdMapper implements RowMapper<Id> {
+        @Override
+        public Id mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Id(rs.getLong("id"));
         }
     }
 }

@@ -1,27 +1,27 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.customer;
 
-public class CustomerRequest {
+public class CustomerResponse {
 
+    private final Long id;
     private final String email;
-    private final String password;
     private final String name;
     private final String phone;
     private final String address;
 
-    public CustomerRequest(final String email, final String password, final String name, final String phone, final String address) {
+    public CustomerResponse(Long id, String email, String name, String phone, String address) {
+        this.id = id;
         this.email = email;
-        this.password = password;
         this.name = name;
         this.phone = phone;
         this.address = address;
     }
 
-    public String getEmail() {
-        return email;
+    public Long getId() {
+        return id;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
     public String getName() {
