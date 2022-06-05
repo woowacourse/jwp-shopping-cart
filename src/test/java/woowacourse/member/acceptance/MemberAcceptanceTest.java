@@ -9,7 +9,6 @@ import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
 import woowacourse.member.dto.*;
 
-@DisplayName("회원 관련 기능")
 public class MemberAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("회원가입에 성공한 경우 201 Created가 반환된다.")
@@ -19,15 +18,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
         RestAssuredConvenienceMethod.postRequest(request, "/api/members")
                 .statusCode(HttpStatus.CREATED.value());
-    }
-
-    @DisplayName("회원가입에 성공한 경우 201 Created가 반환된다.")
-    @Test
-    void signUpMemberWithNullName() {
-        SignUpRequest request = new SignUpRequest("woowacourse12@naver.com", null, "Woowacourse1!");
-
-        RestAssuredConvenienceMethod.postRequest(request, "/api/members")
-                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("회원가입에 실패한 경우 400 Bad Request를 반환한다.")
