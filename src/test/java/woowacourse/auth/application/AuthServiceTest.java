@@ -78,34 +78,4 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.certify(loginServiceRequest))
                 .isInstanceOf(PasswordNotMatchException.class);
     }
-
-    @Test
-    @DisplayName("토큰을 ID로 변환한다.")
-    void parseToLong() {
-        // given
-        final Long expected = 1L;
-        when(jwtTokenProvider.getPayload("mytoken"))
-                .thenReturn(String.valueOf(expected));
-
-        // when
-        final Long id = authService.parseToId("mytoken");
-
-        // then
-        assertThat(id).isEqualTo(expected);
-    }
-
-    @Test
-    @DisplayName("토큰의 유효성을 검사한다.")
-    void isInvalidToken() {
-        // given
-        final String token = "validToken";
-        when(jwtTokenProvider.validateToken(token))
-                .thenReturn(true);
-
-        // when
-        final boolean actual = authService.isValidToken(token);
-
-        // then
-        assertThat(actual).isTrue();
-    }
 }

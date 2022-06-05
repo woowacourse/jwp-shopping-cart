@@ -25,12 +25,4 @@ public class AuthService {
         customer.checkPasswordMatch(loginServiceRequest.getPassword());
         return jwtTokenProvider.createToken(String.valueOf(customer.getId()));
     }
-
-    public Long parseToId(final String token) {
-        return Long.parseLong(jwtTokenProvider.getPayload(token));
-    }
-
-    public boolean isValidToken(final String token) {
-        return jwtTokenProvider.validateToken(token);
-    }
 }

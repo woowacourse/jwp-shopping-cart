@@ -1,19 +1,21 @@
 package woowacourse.auth.ui;
 
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.auth.application.AuthService;
 import woowacourse.auth.exception.AuthorizationFailureException;
 import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.support.JwtTokenProvider;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component
 public class LoginInterceptor implements HandlerInterceptor {
 
-    private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public LoginInterceptor(final AuthService authService) {
-        this.authService = authService;
+    public LoginInterceptor(final JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -25,7 +27,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         final String token = AuthorizationExtractor.extract(request);
-        if (token == null || !authService.isValidToken(token)) {
+        if (token == null || !jwtTokenProvider.validateToken(token)) {
             throw new AuthorizationFailureException();
         }
 
