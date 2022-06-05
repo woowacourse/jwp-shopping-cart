@@ -5,6 +5,9 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,10 +18,10 @@ public class JwtTokenProvider {
     @Value("${security.jwt.token.expire-length}")
     private long validityInMilliseconds;
 
-    private final SecretKeyProvider secretKeyProvider;
+    private final Key secretKey;
 
-    public JwtTokenProvider(final SecretKeyProvider secretKeyProvider) {
-        this.secretKeyProvider = secretKeyProvider;
+    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String secretKey) {
+        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     public String createToken(final String payload) {
@@ -30,7 +33,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(secretKeyProvider.generateKey(), SignatureAlgorithm.HS256)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -54,7 +57,7 @@ public class JwtTokenProvider {
 
     private Jws<Claims> getClaimsJws(final String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKeyProvider.generateKey())
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token);
     }
