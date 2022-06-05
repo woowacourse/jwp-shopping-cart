@@ -15,10 +15,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (isPreflight(request)) {
-            return true;
-        }
-
         if (request.getMethod().equals("POST") && request.getRequestURI().equals("/api/customers")) {
             return true;
         }
@@ -29,9 +25,5 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         throw new InvalidTokenException();
-    }
-
-    private boolean isPreflight(HttpServletRequest request) {
-        return request.getMethod().equals("OPTIONS");
     }
 }

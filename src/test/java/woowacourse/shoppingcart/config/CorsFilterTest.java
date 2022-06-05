@@ -4,7 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static woowacourse.shoppingcart.config.WebConfig.ALLOWED_METHOD_NAMES;
+import static woowacourse.shoppingcart.filter.CorsFilter.ALLOWED_METHOD_NAMES;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +15,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class WebConfigTest {
+public class CorsFilterTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void cors() throws Exception {
+    void cors() throws Exception {
         mockMvc.perform(
-                        options("/api/products")
+                        options("/api/customers/1")
                                 .header(HttpHeaders.ORIGIN, "http://localhost:8080")
                                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
                 )
