@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.user;
 
 import java.util.Objects;
 
@@ -8,6 +8,10 @@ public class Password {
 
     public Password(String password) {
         this.password = password;
+    }
+
+    public String value() {
+        return password;
     }
 
     @Override

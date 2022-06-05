@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.domain;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import woowacourse.shoppingcart.domain.user.Email;
 import woowacourse.shoppingcart.exception.InvalidEmailException;
 
 public class EmailTest {

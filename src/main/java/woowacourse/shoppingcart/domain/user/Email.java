@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.user;
 
 import woowacourse.shoppingcart.exception.InvalidEmailException;
 
@@ -16,5 +16,9 @@ public class Email {
         if(!email.matches(EMAIL_FORM)) {
             throw new InvalidEmailException();
         }
+    }
+
+    public String value() {
+        return email;
     }
 }

@@ -6,8 +6,8 @@ import woowacourse.auth.exception.InvalidLoginFormException;
 import woowacourse.auth.support.Encoder;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.auth.support.Sha256Encoder;
+import woowacourse.shoppingcart.domain.user.Customer;
+import woowacourse.shoppingcart.domain.user.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -29,7 +29,7 @@ public class AuthService {
                 .orElseThrow(InvalidCustomerException::new);
 
         String encryptPassword = encoder.encrypt(tokenRequest.getPassword());
-        if (!customer.isValidPassword(encryptPassword)) {
+        if (!customer.isValidPassword(new Password(encryptPassword))) {
             throw new InvalidLoginFormException();
         }
 
