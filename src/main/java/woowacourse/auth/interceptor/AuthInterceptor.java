@@ -10,13 +10,15 @@ import woowacourse.exception.auth.UnauthorizedException;
 
 public class AuthInterceptor implements HandlerInterceptor {
 
+    private static final String POST_METHOD = HttpMethod.POST.name();
+    private static final String SIGN_UP_URI = "/api/customer";
     public static final String TOKEN = "token";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
 
-        if (validateRequestIsSignUp(request)) {
+        if (isSignUpWithNoToken(request)) {
             return true;
         }
 
@@ -28,11 +30,10 @@ public class AuthInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private boolean validateRequestIsSignUp(HttpServletRequest request) {
+    private boolean isSignUpWithNoToken(HttpServletRequest request) {
         final String requestURI = request.getRequestURI();
         final String requestMethod = request.getMethod();
-        final String postMethod = HttpMethod.POST.name();
-        return (requestURI.equals("/api/customer")) && (requestMethod.equals(postMethod));
+        return (requestURI.equals(SIGN_UP_URI)) && (requestMethod.equals(POST_METHOD));
     }
 
 }
