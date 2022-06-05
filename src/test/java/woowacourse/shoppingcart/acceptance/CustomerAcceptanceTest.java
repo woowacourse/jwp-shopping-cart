@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
+import static woowacourse.fixture.PasswordFixture.plainBasicPassword;
 import static woowacourse.fixture.TokenFixture.BEARER;
 
 import io.restassured.RestAssured;
@@ -29,10 +29,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("회원가입 성공하면 201 CREATED를 반환한다.")
     @Test
-    void addCustomer() {
+    void signUpCustomer() {
         // given
         CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword("giron",
-                rowBasicPassword);
+                plainBasicPassword);
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -51,12 +51,64 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("회원 가입할 때 패스워드가 잘못된 경우 400-BAD_REQUEST를 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    @NullSource
+    void signUpWithShortPassword(String password) {
+        // given
+        CustomerRequest.UserNameAndPassword signUpRequest =
+                new CustomerRequest.UserNameAndPassword("giron", password);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signUpRequest)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호는 빈칸일 수 없습니다.")
+        );
+    }
+
+    @DisplayName("회원 가입할 때 유저 이름이 잘못된 경우 400-BAD_REQUEST를 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    @NullSource
+    void signUpWithWrongUserName(String userName) {
+        // given
+        CustomerRequest.UserNameAndPassword signUpRequest =
+                new CustomerRequest.UserNameAndPassword(userName, plainBasicPassword);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signUpRequest)
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름은 빈칸일 수 없습니다.")
+        );
+    }
+
     @DisplayName("로그인 한 유저가 내 정보 조회하면 200 OK를 반환한다.")
     @Test
     void getMe() {
         // given
         CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
-                rowBasicPassword);
+                plainBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +117,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        final TokenRequest tokenRequest = new TokenRequest("giron", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
         final TokenResponse tokenResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -96,7 +148,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updateMe() {
         // given
         CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
-                rowBasicPassword);
+                plainBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -105,7 +157,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        final TokenRequest tokenRequest = new TokenRequest("giron", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
         final TokenResponse tokenResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -139,7 +191,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void deleteMe() {
         // given
         CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
-                rowBasicPassword);
+                plainBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -148,7 +200,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        final TokenRequest tokenRequest = new TokenRequest("giron", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
         final TokenResponse tokenResponse = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -203,7 +255,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void isDuplicatedUserName() {
         // given
         CustomerRequest.UserNameAndPassword signUpRequest = new CustomerRequest.UserNameAndPassword("giron",
-                rowBasicPassword);
+                plainBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -227,57 +279,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(extractableResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(duplicateResponse.getIsDuplicate()).isTrue()
-        );
-    }
-
-    @DisplayName("회원 가입할 때 패스워드가 잘못된 경우 400-BAD_REQUEST를 반환한다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"1234567", "", "1"})
-    void signUpWithShortPassword(String password) {
-        // given
-        CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword("giron", password);
-
-        // when
-        final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpRequest)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
-
-        // then
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호는 8자리 이상이어야 합니다.")
-        );
-    }
-
-    @DisplayName("회원 가입할 때 유저 이름이 잘못된 경우 400-BAD_REQUEST를 반환한다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"", " "})
-    @NullSource
-    void signUpWithWrongUserName(String userName) {
-        // given
-        CustomerRequest.UserNameAndPassword signUpRequest =
-                new CustomerRequest.UserNameAndPassword(userName, rowBasicPassword);
-
-        // when
-        final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(signUpRequest)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
-
-        // then
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름은 빈칸일 수 없습니다.")
         );
     }
 }

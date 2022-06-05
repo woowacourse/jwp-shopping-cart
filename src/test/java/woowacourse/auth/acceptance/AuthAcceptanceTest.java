@@ -2,7 +2,7 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
+import static woowacourse.fixture.PasswordFixture.plainBasicPassword;
 import static woowacourse.fixture.TokenFixture.BEARER;
 
 import io.restassured.RestAssured;
@@ -30,7 +30,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginReturnBearerToken() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("giron", rowBasicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +40,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // when
-        final TokenRequest tokenRequest = new TokenRequest("giron", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +58,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("giron", rowBasicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -67,7 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
 
-        final TokenRequest tokenRequest = new TokenRequest("giron", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -94,7 +94,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginFailureWithWrongUserName() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("giron", rowBasicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -104,7 +104,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // when
-        final TokenRequest tokenRequest = new TokenRequest("티키", rowBasicPassword);
+        final TokenRequest tokenRequest = new TokenRequest("티키", plainBasicPassword);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -126,7 +126,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginFailureWithWrongPassword() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("giron", rowBasicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -158,7 +158,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // given
-        UserNameAndPassword request = new UserNameAndPassword("giron", rowBasicPassword);
+        UserNameAndPassword request = new UserNameAndPassword("giron", plainBasicPassword);
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -189,7 +189,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @NullSource
     void loginWithWrongUserName(String userName) {
         // given
-        TokenRequest tokenRequest = new TokenRequest(userName, rowBasicPassword);
+        TokenRequest tokenRequest = new TokenRequest(userName, plainBasicPassword);
 
         // when
         final ExtractableResponse<Response> response = RestAssured

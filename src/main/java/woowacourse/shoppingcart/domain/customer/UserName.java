@@ -1,14 +1,15 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
 import woowacourse.shoppingcart.exception.IllegalFormException;
 
 public class UserName {
 
-    private final String value;
-
     private static final Pattern USER_NAME_PATTERN = Pattern.compile("^[a-z0-9_]{5,20}$");
+
+    private final String value;
 
     public UserName(final String value) {
         validatePattern(value);
@@ -29,5 +30,22 @@ public class UserName {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final UserName userName = (UserName) o;
+        return Objects.equals(value, userName.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

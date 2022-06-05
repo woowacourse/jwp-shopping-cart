@@ -2,9 +2,9 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static woowacourse.fixture.PasswordFixture.rowBasicPassword;
+import static woowacourse.fixture.PasswordFixture.plainBasicPassword;
+import static woowacourse.fixture.PasswordFixture.plainReversePassword;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncryptPassword;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.CannotDeleteException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -93,11 +95,8 @@ public class CustomerDaoTest {
         final Customer customer = customerDao.findById(id).get();
 
         // then
-        assertAll(
-                () -> assertThat(customer.getId()).isEqualTo(id),
-                () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
-                () -> assertThat(customer.getPassword()).isEqualTo(rowBasicPassword)
-        );
+        assertThat(customer)
+                .isEqualTo(new Customer(id, new UserName("puterism"), new EncryptPassword(plainBasicPassword)));
     }
 
     @DisplayName("유저의 정보를 수정한다.")
@@ -106,17 +105,13 @@ public class CustomerDaoTest {
         // given
         final Long id = 1L;
         final String userName = "puterism";
-        final String password = "87654321";
 
         // when
-        final Customer customer = customerDao.update(id, userName, password);
+        final Customer customer = customerDao.update(id, userName, plainReversePassword);
 
         // then
-        assertAll(
-                () -> assertThat(customer.getId()).isEqualTo(id),
-                () -> assertThat(customer.getUserName()).isEqualTo("puterism"),
-                () -> assertThat(customer.getPassword()).isEqualTo("87654321")
-        );
+        assertThat(customer)
+                .isEqualTo(new Customer(id, new UserName("puterism"), new EncryptPassword(plainReversePassword)));
     }
 
     @DisplayName("유저의 정보를 수정할 때 해당 id로 유저가 존재하지 않으면 예외가 발생한다.")
@@ -125,10 +120,9 @@ public class CustomerDaoTest {
         // given
         final Long id = 0L;
         final String userName = "puterism";
-        final String password = "321";
 
         // when // then
-        assertThatThrownBy(() -> customerDao.update(id, userName, password))
+        assertThatThrownBy(() -> customerDao.update(id, userName, plainReversePassword))
                 .isExactlyInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("존재하지 않는 유저입니다.");
     }
@@ -165,9 +159,7 @@ public class CustomerDaoTest {
         final Customer customer = customerDao.findByUserName(userName).get();
 
         // then
-        assertAll(
-                () -> assertThat(customer.getUserName()).isEqualTo(userName),
-                () -> assertThat(customer.getPassword()).isEqualTo(rowBasicPassword)
-        );
+        assertThat(customer)
+                .isEqualTo(new Customer(1L, new UserName("puterism"), new EncryptPassword(plainBasicPassword)));
     }
 }

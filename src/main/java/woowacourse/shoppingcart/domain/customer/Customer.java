@@ -6,9 +6,9 @@ public class Customer {
 
     private final Long id;
     private final UserName userName;
-    private final String password;
+    private final EncryptPassword password;
 
-    public Customer(final Long id, final UserName userName, final String password) {
+    public Customer(final Long id, final UserName userName, final EncryptPassword password) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -18,16 +18,16 @@ public class Customer {
         this.userName.validateChange(userName);
     }
 
+    public boolean matchesPassword(final PasswordEncryptor passwordEncryptor, final String plainPassword) {
+        return this.password.matches(passwordEncryptor, plainPassword);
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getUserName() {
         return userName.getValue();
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override
