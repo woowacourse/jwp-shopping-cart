@@ -26,13 +26,13 @@ import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-    @ExceptionHandler({LoginFailureException.class, EmailDuplicateException.class, PasswordIncorrectException.class,
+    @ExceptionHandler({EmailDuplicateException.class, PasswordIncorrectException.class,
             CustomerNotFoundException.class})
     public ResponseEntity<ExceptionResponse> handleLoginFailureException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(TokenInvalidException.class)
+    @ExceptionHandler({TokenInvalidException.class, LoginFailureException.class})
     public ResponseEntity<ExceptionResponse> handleTokenInvalidException(TokenInvalidException e) {
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
