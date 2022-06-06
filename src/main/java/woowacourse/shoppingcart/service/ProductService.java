@@ -23,6 +23,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findProducts() {
         List<ProductStock> products = productDao.findProductStocks();
         return products.stream()
@@ -37,7 +38,8 @@ public class ProductService {
         ProductStock addedProductStock = productDao.save(product, productRequest.getStockQuantity());
         return ProductResponse.from(addedProductStock);
     }
-
+    
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         ProductStock product = productDao.findProductStockById(productId);
         return ProductResponse.from(product);
