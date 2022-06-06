@@ -18,9 +18,9 @@ import woowacourse.shoppingcart.application.dto.EmailDuplicationResponse;
 import woowacourse.shoppingcart.application.dto.UserNameDuplicationResponse;
 import woowacourse.shoppingcart.ui.dto.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.EmailDuplicationRequest;
-import woowacourse.shoppingcart.ui.dto.UserNameDuplicationRequest;
 import woowacourse.shoppingcart.ui.dto.FindCustomerRequest;
 import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
+import woowacourse.shoppingcart.ui.dto.UserNameDuplicationRequest;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -59,7 +59,8 @@ public class CustomerController {
     }
 
     @PostMapping("/duplication/username")
-    public ResponseEntity<UserNameDuplicationResponse> isUserNameDuplicated(@RequestBody UserNameDuplicationRequest request) {
+    public ResponseEntity<UserNameDuplicationResponse> isUserNameDuplicated(
+        @RequestBody UserNameDuplicationRequest request) {
         return ResponseEntity.ok(service.isUserNameDuplicated(request.getUsername()));
     }
 

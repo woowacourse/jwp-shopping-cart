@@ -122,7 +122,7 @@ public class OrderControllerTest {
         final String customerName = "pobi123";
         final List<OrderResponse> expected = Arrays.asList(
             new OrderResponse(1L, Collections.singletonList(
-                new OrderDetailResponse(1L, 2, 1L,  "banana", 1000, "http://imageUrl.com"))),
+                new OrderDetailResponse(1L, 2, 1L, "banana", 1000, "http://imageUrl.com"))),
             new OrderResponse(2L, Collections.singletonList(
                 new OrderDetailResponse(2L, 4, 2L, "apple", 2000, "http://imageUrl2.com")))
         );

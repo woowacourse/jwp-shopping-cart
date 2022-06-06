@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.EmailDuplicationResponse;
 import woowacourse.shoppingcart.application.dto.UserNameDuplicationResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -10,12 +11,11 @@ import woowacourse.shoppingcart.domain.customer.BcryptPasswordEncryptor;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.UserName;
+import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
+import woowacourse.shoppingcart.exception.domain.DuplicateCustomerException;
 import woowacourse.shoppingcart.ui.dto.CustomerRequest;
-import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.FindCustomerRequest;
 import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
-import woowacourse.shoppingcart.exception.domain.DuplicateCustomerException;
-import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -60,10 +60,12 @@ public class CustomerService {
     }
 
     public UserNameDuplicationResponse isUserNameDuplicated(String username) {
-        return new UserNameDuplicationResponse(username, customerDao.isDuplicated(CustomerDao.COLUMN_USERNAME, new UserName(username)));
+        return new UserNameDuplicationResponse(username,
+            customerDao.isDuplicated(CustomerDao.COLUMN_USERNAME, new UserName(username)));
     }
 
     public EmailDuplicationResponse isEmailDuplicated(String email) {
-        return new EmailDuplicationResponse(email, customerDao.isDuplicated(CustomerDao.COLUMN_EMAIL, new Email(email)));
+        return new EmailDuplicationResponse(email,
+            customerDao.isDuplicated(CustomerDao.COLUMN_EMAIL, new Email(email)));
     }
 }

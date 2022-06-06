@@ -1,6 +1,5 @@
 package woowacourse.auth.support;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 

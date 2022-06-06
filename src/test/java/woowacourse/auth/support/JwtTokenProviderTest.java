@@ -10,7 +10,6 @@ class JwtTokenProviderTest {
     private static final String KEY_STRING = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.ih1aovtQShabQ7l0cINw4k1fagApg3qLWiB8Kt59Lno";
     private final JwtTokenProvider provider = new JwtTokenProvider(JwtAttribute.of(KEY_STRING, 1000L));
 
-
     @DisplayName("토큰을 생성한다.")
     @Test
     void createToken() {

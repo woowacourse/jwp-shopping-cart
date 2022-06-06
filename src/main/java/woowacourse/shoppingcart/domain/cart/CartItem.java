@@ -8,10 +8,6 @@ public class CartItem {
     private final Quantity quantity;
     private final Product product;
 
-    public CartItem() {
-        this(null, null, null);
-    }
-
     public CartItem(Long id, Quantity quantity, Product product) {
         this.id = id;
         this.quantity = quantity;

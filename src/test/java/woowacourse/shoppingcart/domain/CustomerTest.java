@@ -39,7 +39,8 @@ class CustomerTest {
     @Test
     void encryptCustomerPassword() {
         // given
-        final Customer customer = Customer.fromInput("chleeslow", "1234abc!@", "woote@email.com", "선릉역", "010-9999-1111");
+        final Customer customer = Customer.fromInput("chleeslow", "1234abc!@", "woote@email.com", "선릉역",
+            "010-9999-1111");
         // when
         final Customer encrypted = customer.encryptPassword(new BcryptPasswordEncryptor());
         // then
@@ -52,7 +53,7 @@ class CustomerTest {
         // given
         final Customer customer =
             Customer.fromInput("chleeslow", "1234abc!@", "woote@email.com", "선릉역", "010-9999-1111")
-            .encryptPassword(new BcryptPasswordEncryptor());
+                .encryptPassword(new BcryptPasswordEncryptor());
 
         // when
         final boolean isMatch = customer.isPasswordMatch("1234abc!@", new BcryptPasswordMatcher());
