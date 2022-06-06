@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class CartService {
 
     private final CartItemDao cartItemDao;
@@ -18,6 +17,7 @@ public class CartService {
         this.productService = productService;
     }
 
+    @Transactional
     public void addCart(long memberId, long productId, int quantity) {
         checkStock(productId, quantity);
         if (cartItemDao.isExistsMemberIdAndProductId(memberId, productId)) {
