@@ -8,24 +8,27 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.cart.Quantity;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
 
 @Repository
-public class OrdersDetailDao {
+public class OrderDetailDao {
 
+    private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {
+    public OrderDetailDao(ProductDao productDao, JdbcTemplate jdbcTemplate) {
+        this.productDao = productDao;
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrdersDetail(final Long ordersId, final Long productId, final int quantity) {
-        final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)";
+    public Long addOrdersDetail(final Long orderId, final Long productId, final int quantity) {
+        final String sql = "INSERT INTO order_detail (order_id, product_id, quantity) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[] {"id"});
-            preparedStatement.setLong(1, ordersId);
+            preparedStatement.setLong(1, orderId);
             preparedStatement.setLong(2, productId);
             preparedStatement.setLong(3, quantity);
             return preparedStatement;
@@ -33,11 +36,12 @@ public class OrdersDetailDao {
         return keyHolder.getKey().longValue();
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
+    public List<OrderDetail> findOrderDetailsByOrderId(final Long orderId) {
+        final String sql = "SELECT * FROM order_detail WHERE order_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-            rs.getLong("product_id"),
-            rs.getInt("quantity")
+            rs.getLong("id"),
+            new Quantity(rs.getInt("quantity")),
+            productDao.findProductById(rs.getLong("product_id"))
         ), orderId);
     }
 }

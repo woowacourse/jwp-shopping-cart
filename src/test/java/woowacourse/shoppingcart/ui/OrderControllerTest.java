@@ -27,9 +27,9 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Order;
-import woowacourse.shoppingcart.ui.dto.OrderRequest;
+import woowacourse.shoppingcart.application.dto.OrderDetailResponse;
+import woowacourse.shoppingcart.application.dto.OrderResponse;
+import woowacourse.shoppingcart.ui.dto.OrderDetailRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -60,8 +60,8 @@ public class OrderControllerTest {
         final Long cartId2 = 1L;
         final int quantity2 = 5;
         final String customerName = "pobi123";
-        final List<OrderRequest> requestDtos =
-            Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
+        final List<OrderDetailRequest> requestDtos =
+            Arrays.asList(new OrderDetailRequest(cartId, quantity), new OrderDetailRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
         final Long customerId = customerService.createCustomer(
@@ -92,8 +92,8 @@ public class OrderControllerTest {
         // given
         final String customerName = "pobi123";
         final Long orderId = 1L;
-        final Order expected = new Order(orderId,
-            Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "http://example.com", 2)));
+        final OrderResponse expected = new OrderResponse(orderId,
+            Collections.singletonList(new OrderDetailResponse(2L, 2, 2L, "banana", 1000, "http://example.com")));
 
         final Long customerId = customerService.createCustomer(
             CustomerAcceptanceFixture.createRequest(customerName, null));
@@ -120,11 +120,11 @@ public class OrderControllerTest {
     void findOrders() throws Exception {
         // given
         final String customerName = "pobi123";
-        final List<Order> expected = Arrays.asList(
-            new Order(1L, Collections.singletonList(
-                new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
-            new Order(2L, Collections.singletonList(
-                new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
+        final List<OrderResponse> expected = Arrays.asList(
+            new OrderResponse(1L, Collections.singletonList(
+                new OrderDetailResponse(1L, 2, 1L,  "banana", 1000, "http://imageUrl.com"))),
+            new OrderResponse(2L, Collections.singletonList(
+                new OrderDetailResponse(2L, 4, 2L, "apple", 2000, "http://imageUrl2.com")))
         );
 
         final Long customerId = customerService.createCustomer(
@@ -143,14 +143,14 @@ public class OrderControllerTest {
             .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))
             .andExpect(jsonPath("$[0].orderDetails[0].price").value(1_000))
             .andExpect(jsonPath("$[0].orderDetails[0].name").value("banana"))
-            .andExpect(jsonPath("$[0].orderDetails[0].imageUrl").value("imageUrl"))
+            .andExpect(jsonPath("$[0].orderDetails[0].imageUrl").value("http://imageUrl.com"))
             .andExpect(jsonPath("$[0].orderDetails[0].quantity").value(2))
 
             .andExpect(jsonPath("$[1].id").value(2L))
             .andExpect(jsonPath("$[1].orderDetails[0].productId").value(2L))
             .andExpect(jsonPath("$[1].orderDetails[0].price").value(2_000))
             .andExpect(jsonPath("$[1].orderDetails[0].name").value("apple"))
-            .andExpect(jsonPath("$[1].orderDetails[0].imageUrl").value("imageUrl2"))
+            .andExpect(jsonPath("$[1].orderDetails[0].imageUrl").value("http://imageUrl2.com"))
             .andExpect(jsonPath("$[1].orderDetails[0].quantity").value(4));
     }
 }

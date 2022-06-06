@@ -9,31 +9,31 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.support.test.ExtendedJdbcTest;
 
 @ExtendedJdbcTest
 class OrderDetailDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
-    private final OrdersDetailDao ordersDetailDao;
-    private long ordersId;
+    private final OrderDetailDao orderDetailDao;
+    private long orderId;
     private long productId;
     private long customerId;
 
     public OrderDetailDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
+        this.orderDetailDao = new OrderDetailDao(new ProductDao(jdbcTemplate), jdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
         customerId = 1L;
         jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
-        ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        orderId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 
         jdbcTemplate.update("INSERT INTO product (name, price, image_url, is_deleted) VALUES (?, ?, ?, 0)"
-            , "name", 1000, "imageUrl");
+            , "name", 1000, "http://imageUrl.com");
         productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
     }
 
@@ -44,8 +44,8 @@ class OrderDetailDaoTest {
         int quantity = 5;
 
         //when
-        Long orderDetailId = ordersDetailDao
-            .addOrdersDetail(ordersId, productId, quantity);
+        Long orderDetailId = orderDetailDao
+            .addOrdersDetail(orderId, productId, quantity);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);
@@ -58,15 +58,14 @@ class OrderDetailDaoTest {
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
             jdbcTemplate
-                .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-                    ordersId, productId, 3);
+                .update("INSERT INTO order_detail (order_id, product_id, quantity) VALUES (?, ?, ?)",
+                    orderId, productId, 3);
         }
 
         //when
-        final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-            .findOrdersDetailsByOrderId(ordersId);
+        final List<OrderDetail> orderDetails = orderDetailDao.findOrderDetailsByOrderId(orderId);
 
         //then
-        assertThat(ordersDetailsByOrderId).hasSize(insertCount);
+        assertThat(orderDetails).hasSize(insertCount);
     }
 }

@@ -44,14 +44,14 @@ create table orders
 ) engine = InnoDB
   default charset = utf8mb4;
 
-create table orders_detail
+create table order_detail
 (
     id         bigint  not null auto_increment,
-    orders_id  bigint  not null,
+    order_id  bigint  not null,
     product_id bigint  not null,
     quantity   integer not null,
     primary key (id),
-    foreign key (orders_id) references orders (id),
+    foreign key (order_id) references orders (id),
     foreign key (product_id) references product (id)
 ) engine = InnoDB
   default charset = utf8mb4;
