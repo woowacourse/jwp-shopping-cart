@@ -36,6 +36,14 @@ public class ProductRequest {
         return stockQuantity;
     }
 
+    public String getThumbnailImageUrl() {
+        return thumbnailImage.getUrl();
+    }
+
+    public String getThumbnailImageAlt() {
+        return thumbnailImage.getAlt();
+    }
+
     public ThumbnailImageDto getThumbnailImage() {
         return thumbnailImage;
     }

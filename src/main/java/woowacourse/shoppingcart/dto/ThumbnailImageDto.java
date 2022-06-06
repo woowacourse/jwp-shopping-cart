@@ -1,11 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
-import javax.validation.constraints.NotBlank;
-
 public class ThumbnailImageDto {
-    @NotBlank
     private String alt;
-    @NotBlank
     private String url;
 
     public ThumbnailImageDto() {
