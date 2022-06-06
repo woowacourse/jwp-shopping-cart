@@ -179,6 +179,79 @@ Location : "/api/products/{productId}"
 
 `204 no content`  
 
+
+### 카트  
+
+#### 카트 전체 아이템 조회  
+
+- request
+
+`GET /api/cartItems`  
+
+- response  
+
+`200 ok`
+
+```json
+{
+  "cartItems" : [
+    {
+      "id" : 1,
+      "productId" : 5,
+      "name" : "음식1",
+      "price" : 1000,
+      "quantity" : 2,
+      "imageURL" : "http:..."
+    } , 
+    {
+      "id" : 2,
+      "productId" : 7,
+      "name" : "음식2",
+      "price" : 1000,
+      "quantity" : 3,
+      "imageURL" : "http:..."
+    }
+  ]
+}
+```
+
+#### 아이템 추가  
+
+- request  
+
+`POST /api/cartItems`  
+
+```json
+{
+  "productId" : 1, 
+  "quantity" : 2
+}
+```
+
+- response
+
+`201 created`  
+
+#### 아이템 수량 수정  
+
+- request
+
+`PATCH /api/cartItems/{cartItemId}?quantity={quantity}`  
+
+- response  
+
+`200 ok`
+
+#### 아이템 삭제  
+
+- request  
+
+`DELETE /api/cartItems/{cartItemId}`  
+
+- response  
+
+`204 no content`
+
 ### Error point
 - 에러 메시지 전달
 - 에러 코드 전달
