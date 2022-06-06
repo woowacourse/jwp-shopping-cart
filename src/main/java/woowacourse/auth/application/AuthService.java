@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.application.PasswordEncoderAdapter;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
 @Service
 public class AuthService {
@@ -25,7 +24,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public TokenResponse getToken(TokenRequest tokenRequest) {
         final Customer customer = customerDao.findByEmail(tokenRequest.getEmail())
-                .orElseThrow(CustomerNotFoundException::new);
+                .orElseThrow(LoginFailureException::new);
 
         validatePassword(tokenRequest, customer);
         final String accessToken = jwtTokenProvider.createToken(customer.getId());

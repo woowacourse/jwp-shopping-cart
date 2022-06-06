@@ -68,6 +68,6 @@ class AuthServiceTest {
 
         // when then
         assertThatThrownBy(() -> authService.getToken(로그인요청))
-                .isInstanceOf(CustomerNotFoundException.class);
+                .isInstanceOf(LoginFailureException.class);
     }
 }

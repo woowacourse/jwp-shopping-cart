@@ -83,7 +83,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(로그인실패응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(로그인실패응답.as(ExceptionResponse.class).getMessage())
-                        .isEqualTo("요청하신 회원을 찾을 수 없습니다")
+                        .isEqualTo("로그인에 실패했습니다")
         );
     }
 
