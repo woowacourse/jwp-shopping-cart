@@ -9,7 +9,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.PasswordEncrypter;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest.UserNameAndPassword;
+import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
 
@@ -25,7 +25,7 @@ public class CustomerService {
         this.passwordEncrypter = passwordEncrypter;
     }
 
-    public Long signUp(UserNameAndPassword customerRequest) {
+    public Long signUp(CustomerRequest customerRequest) {
         validateDuplicateName(customerRequest.getUserName());
 
         Password password = passwordEncrypter.encode(customerRequest.getPassword());
@@ -47,7 +47,7 @@ public class CustomerService {
         return new CustomerResponse(customer);
     }
 
-    public CustomerResponse updateById(final Long id, final CustomerRequest.UserNameAndPassword customerRequest) {
+    public CustomerResponse updateById(final Long id, final CustomerRequest customerRequest) {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
 

@@ -67,8 +67,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         final TokenResponse tokenResponse = 로그인을_한다("giron", RAW_BASIC_PASSWORD).as(TokenResponse.class);
         // when
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("giron", "87654321");
+        CustomerRequest request =
+                new CustomerRequest("giron", "87654321");
 
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()

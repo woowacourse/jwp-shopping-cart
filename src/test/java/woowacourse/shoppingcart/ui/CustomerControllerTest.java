@@ -56,8 +56,8 @@ class CustomerControllerTest {
     @DisplayName("유저 회원가입 문서화")
     @Test
     void createCustomer() throws Exception {
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("giron", "pas1@A!sword");
+        CustomerRequest request =
+                new CustomerRequest("giron", "pas1@A!sword");
 
         given(customerService.signUp(request)).willReturn(1L);
 
@@ -113,8 +113,8 @@ class CustomerControllerTest {
         Customer customer = new Customer(1L, "giron", "paA@14sswordd");
 
         CustomerResponse response = new CustomerResponse(customer);
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("giron", "updatePa!sD@");
+        CustomerRequest request =
+                new CustomerRequest("giron", "updatePa!sD@");
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);

@@ -24,7 +24,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Void> createCustomer(
-            @Valid @RequestBody CustomerRequest.UserNameAndPassword customerRequest) {
+            @Valid @RequestBody CustomerRequest customerRequest) {
         Long id = customerService.signUp(customerRequest);
 
         return ResponseEntity.created(URI.create("/api/customers/" + id)).build();
@@ -38,7 +38,7 @@ public class CustomerController {
 
     @PutMapping("/me")
     public ResponseEntity<CustomerResponse> updateCustomer(@AuthenticationPrincipal final Customer customer,
-                                                           @Valid @RequestBody CustomerRequest.UserNameAndPassword customerRequest) {
+                                                           @Valid @RequestBody CustomerRequest customerRequest) {
         CustomerResponse response = customerService.updateById(customer.getId(), customerRequest);
         return ResponseEntity.ok(response);
     }

@@ -39,8 +39,8 @@ public class AcceptanceTest {
     }
 
     protected ExtractableResponse<Response> 회원가입을_한다(final String userName, final String password) {
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword(userName, password);
+        CustomerRequest request =
+                new CustomerRequest(userName, password);
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
