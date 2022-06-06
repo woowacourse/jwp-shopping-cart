@@ -3,7 +3,10 @@ package woowacourse.acceptance;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +65,53 @@ public class CartAcceptanceTest {
         );
     }
 
-    @DisplayName("장바구니 아이템 목록 조회")
+    // todo
+    @DisplayName("장바구니에 이미 있는 상품에 수량 변경을 한다.")
+    @Disabled
+    @Test
+    void addCartItemTwice() {
+        // given
+        RestUtils.addCartItem(token, productId1, 2);
+
+        // when
+        int quantity = 4;
+        ExtractableResponse<Response> response = RestUtils.addCartItem(token, productId1, quantity);
+
+        // then
+        CartItemResponse result = response.as(CartItemResponse.class);
+        assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+            () -> assertThat(result.getProductId()).isEqualTo(productId1),
+            () -> assertThat(result.getName()).isEqualTo("치킨"),
+            () -> assertThat(result.getImage()).isEqualTo("https://example.com/chicken.jpg"),
+            () -> assertThat(result.getPrice()).isEqualTo(10000),
+            () -> assertThat(result.getQuantity()).isEqualTo(quantity)
+        );
+    }
+
+    @DisplayName("로그인한 후 장바구니를 조회한다.")
     @Test
     void getCartItems() {
+        // given
+        RestUtils.addCartItem(token, productId1, 2);
+        RestUtils.addCartItem(token, productId2, 3);
 
+        // when
+        ExtractableResponse<Response> response = RestUtils.getCartItems(token);
+
+        // then
+        List<CartItemResponse> result = response.jsonPath()
+            .getList(".", CartItemResponse.class);
+        assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+            () -> assertThat(result.size()).isEqualTo(2),
+            () -> assertThat(result)
+                .map(CartItemResponse::getQuantity)
+                .containsOnly(2, 3),
+            () -> assertThat(result)
+                .map(CartItemResponse::getProductId)
+                .containsOnly(productId1, productId2)
+        );
     }
 
     @DisplayName("장바구니 삭제")

@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +31,7 @@ public class CartItemDaoTest {
     private final CustomerDao customerDao;
 
     public CartItemDaoTest(DataSource dataSource) {
-        cartItemDao = new CartItemDao(dataSource);
+        cartItemDao = new CartItemDao(dataSource, new ProductDao(dataSource));
         productInsertUtil = new ProductInsertUtil(dataSource);
         customerDao = new CustomerDao(dataSource);
     }
@@ -59,48 +61,23 @@ public class CartItemDaoTest {
         assertThat(saved.getId()).isNotNull();
     }
 
-    // @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
-    // @Test
-    // void findProductIdsByCustomerId() {
-    //
-    //     // given
-    //     final Long customerId = 1L;
-    //
-    //     // when
-    //     final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
-    //
-    //     // then
-    //     assertThat(productsIds).containsExactly(1L, 2L);
-    // }
-    //
-    // @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    // @Test
-    // void findIdsByCustomerId() {
-    //
-    //     // given
-    //     final Long customerId = 1L;
-    //
-    //     // when
-    //     final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-    //
-    //     // then
-    //     assertThat(cartIds).containsExactly(1L, 2L);
-    // }
-    //
-    // @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    // @Test
-    // void deleteCartItem() {
-    //
-    //     // given
-    //     final Long cartId = 1L;
-    //
-    //     // when
-    //     cartItemDao.deleteCartItem(cartId);
-    //
-    //     // then
-    //     final Long customerId = 1L;
-    //     final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-    //
-    //     assertThat(productIds).containsExactly(2L);
-    // }
+    @DisplayName("customer id로 cartItem을 조회한다.")
+    @Test
+    void getItems() {
+        // given
+        cartItemDao.save(customerId, new CartItem(product, 3));
+
+        Long productId2 = productInsertUtil.insert("apple", 1_000, "woowa1.com");
+        Product product2 = new Product(productId2, "apple", 1000, "woowa1.com");
+        cartItemDao.save(customerId, new CartItem(product2, 2));
+
+        // when
+        List<CartItem> items = cartItemDao.findByCustomerId(customerId);
+
+        // then
+        assertThat(items.size()).isEqualTo(2);
+        assertThat(items)
+            .map(CartItem::getName)
+            .containsOnly("banana", "apple");
+    }
 }

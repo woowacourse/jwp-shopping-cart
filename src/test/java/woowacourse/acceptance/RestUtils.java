@@ -67,4 +67,12 @@ public class RestUtils {
 			.then().log().all()
 			.extract();
 	}
+
+	public static ExtractableResponse<Response> getCartItems(String token) {
+		return RestAssured.given().log().all()
+			.auth().oauth2(token)
+			.when().get("/cart")
+			.then().log().all()
+			.extract();
+	}
 }

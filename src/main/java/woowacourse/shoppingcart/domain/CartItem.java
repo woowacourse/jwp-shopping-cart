@@ -23,8 +23,8 @@ public class CartItem {
         this(null, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
     }
 
-    public CartItem(Long id, Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), 1);
+    public CartItem(Long id, Product product, int quantity) {
+        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
     }
 
     public CartItem createWithId(Long id) {

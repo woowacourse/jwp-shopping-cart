@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import woowacourse.auth.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
@@ -22,8 +23,6 @@ class CartServiceTest {
 
 	@Mock
 	private CartItemDao cartItemDao;
-	@Mock
-	private CustomerDao customerDao;
 	@Mock
 	private ProductDao productDao;
 	@InjectMocks
@@ -54,5 +53,19 @@ class CartServiceTest {
 			() -> verify(productDao).findById(productId),
 			() -> verify(cartItemDao).save(eq(customerId), any(CartItem.class))
 		);
+	}
+
+	@DisplayName("customer id로 장바구니를 조회한다.")
+	@Test
+	void findItemsByCustomer() {
+		// given
+		given(cartItemDao.findByCustomerId(1L))
+			.willReturn(List.of());
+
+		// when
+		cartService.findItemsByCustomer(1L);
+
+		// then
+		verify(cartItemDao).findByCustomerId(1L);
 	}
 }
