@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -54,7 +55,6 @@ public class CartItemDao {
 
     public void deleteCartItem(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
-
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
             throw new InvalidCartItemException();

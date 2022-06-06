@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,11 @@ public class ControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleUnhandledException() {
         return ResponseEntity.internalServerError().body("Unhandled Exception");
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<String> handleDatabaseException() {
+        return ResponseEntity.internalServerError().body("database error");
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)

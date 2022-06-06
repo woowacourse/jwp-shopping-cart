@@ -45,11 +45,7 @@ public class CustomerDao {
 
     public void deleteByName(UserName customerName) {
         final String query = "DELETE FROM customer WHERE username = ?";
-        try {
-            jdbcTemplate.update(query, customerName.value());
-        } catch (RuntimeException exception) {
-            throw new RuntimeException("삭제에 실패했습니다.");
-        }
+        jdbcTemplate.update(query, customerName.value());
     }
 
     public Customer findCustomerByName(UserName customerName) {
@@ -69,11 +65,7 @@ public class CustomerDao {
 
     public void updateByName(UserName customerName, Customer customer) {
         final String query = "UPDATE customer SET password = ? WHERE username = ?";
-        try {
-            jdbcTemplate.update(query, customer.getPassword().value(), customerName.value());
-        } catch (DataAccessException exception) {
-            throw new RuntimeException("갱신에 실패했습니다.");
-        }
+        jdbcTemplate.update(query, customer.getPassword().value(), customerName.value());
     }
 
     public boolean existsCustomer(Customer customer) {
