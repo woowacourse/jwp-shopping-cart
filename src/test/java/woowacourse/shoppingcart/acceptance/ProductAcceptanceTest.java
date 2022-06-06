@@ -54,7 +54,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> productsResponse = AcceptanceFixture.get("/api/products");
-        List<Long> resultProductIds = productsResponse.jsonPath().getList(".", ProductResponse.class).stream()
+        List<Long> resultProductIds = productsResponse.jsonPath()
+            .getList(".", ProductResponse.class).stream()
             .map(ProductResponse::getId)
             .collect(Collectors.toList());
 
@@ -74,10 +75,17 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> productFoundByIdResponse = AcceptanceFixture.get("/api/products/" + productId);
         ProductResponse productResponse = productFoundByIdResponse.as(ProductResponse.class);
+        ThumbnailImageDto thumbnailImage = productResponse.getThumbnailImage();
 
         // then
         assertThat(productFoundByIdResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(productResponse.getId()).isEqualTo(productId);
+        assertThat(productResponse)
+            .extracting("id", "name", "price", "stockQuantity")
+            .containsExactly(productId, productRequest.getName(), productRequest.getPrice(),
+                productRequest.getStockQuantity());
+        assertThat(thumbnailImage)
+            .extracting("url", "alt")
+            .containsExactly(productRequest.getThumbnailImage().getUrl(), productRequest.getThumbnailImage().getAlt());
     }
 
     @DisplayName("상품을 삭제한다")
