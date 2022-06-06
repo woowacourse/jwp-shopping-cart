@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import woowacourse.shoppingcart.domain.customer.password.Password;
+import woowacourse.shoppingcart.domain.customer.password.PlainPassword;
+
 public class Customer {
 
     private final Long id;
@@ -15,7 +18,7 @@ public class Customer {
     }
 
     private Customer(final Long id, final String userId, final String nickname, final String password) {
-        this(id, userId, nickname, new Password(password));
+        this(id, userId, nickname, new PlainPassword(password));
     }
 
     public static Customer from(final Long id, final String userId, final String nickname, final String password) {

@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain.customer;
+package woowacourse.shoppingcart.domain.customer.password;
 
 import java.util.regex.Pattern;
 import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
@@ -6,14 +6,14 @@ import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException
 import woowacourse.shoppingcart.exception.datanotmatch.CustomerDataNotMatchException;
 import woowacourse.shoppingcart.exception.datanotmatch.LoginDataNotMatchException;
 
-public class Password {
+public class PlainPassword implements Password {
 
     private final static Pattern PASSWORD_FORMAT = Pattern.compile(
             "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,16}$");
 
     private final String value;
 
-    public Password(final String value) {
+    public PlainPassword(final String value) {
         validatePassword(value);
         this.value = value;
     }
@@ -27,12 +27,14 @@ public class Password {
         }
     }
 
+    @Override
     public void validateMatchingLoginPassword(final String other) {
         if (!value.equals(other)) {
             throw new LoginDataNotMatchException("비밀번호가 일치하지 않습니다.");
         }
     }
 
+    @Override
     public void validateMatchingOriginalPassword(final String other) {
         if (!value.equals(other)) {
             throw new CustomerDataNotMatchException("기존 비밀번호와 입력한 비밀번호가 일치하지 않습니다.");
@@ -47,6 +49,7 @@ public class Password {
         return !PASSWORD_FORMAT.matcher(value).matches();
     }
 
+    @Override
     public String getValue() {
         return value;
     }

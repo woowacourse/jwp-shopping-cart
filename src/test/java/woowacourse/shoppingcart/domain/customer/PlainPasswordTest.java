@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import woowacourse.shoppingcart.domain.customer.password.PlainPassword;
 import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
 import woowacourse.shoppingcart.exception.datanotmatch.CustomerDataNotMatchException;
@@ -12,13 +13,13 @@ import woowacourse.shoppingcart.exception.datanotmatch.LoginDataNotMatchExceptio
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("Password 도메인 테스트")
-public class PasswordTest {
+public class PlainPasswordTest {
 
     @DisplayName("비밀번호에 null 을 입력하면 예외가 발생한다.")
     @Test
     void passwordNullException() {
         // when & then
-        assertThatThrownBy(() -> new Password(null))
+        assertThatThrownBy(() -> new PlainPassword(null))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
@@ -28,7 +29,7 @@ public class PasswordTest {
     @DisplayName("비밀번호에 빈값을 입력하면 예외가 발생한다.")
     void passwordBlankException(String password) {
         // when & then
-        assertThatThrownBy(() -> new Password(password))
+        assertThatThrownBy(() -> new PlainPassword(password))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
@@ -38,7 +39,7 @@ public class PasswordTest {
     @DisplayName("비밀번호가 영문, 한글, 숫자를 필수로 조합한 8 ~ 16 자가 아니면 예외가 발생한다.")
     void passwordFormatException(String password) {
         // when & then
-        assertThatThrownBy(() -> new Password(password))
+        assertThatThrownBy(() -> new PlainPassword(password))
                 .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
     }
@@ -47,10 +48,10 @@ public class PasswordTest {
     @Test
     void validateMatchingLoginPassword() {
         // given
-        Password password = new Password("1234asdf!");
+        PlainPassword plainPassword = new PlainPassword("1234asdf!");
 
         // when & then
-        assertThatThrownBy(() -> password.validateMatchingLoginPassword("invalidPassword"))
+        assertThatThrownBy(() -> plainPassword.validateMatchingLoginPassword("invalidPassword"))
                 .isInstanceOf(LoginDataNotMatchException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }
@@ -59,10 +60,10 @@ public class PasswordTest {
     @Test
     void validateMatchingOriginalPassword() {
         // given
-        Password password = new Password("1234asdf!");
+        PlainPassword plainPassword = new PlainPassword("1234asdf!");
 
         // when & then
-        assertThatThrownBy(() -> password.validateMatchingOriginalPassword("invalidPassword"))
+        assertThatThrownBy(() -> plainPassword.validateMatchingOriginalPassword("invalidPassword"))
                 .isInstanceOf(CustomerDataNotMatchException.class)
                 .hasMessage("기존 비밀번호와 입력한 비밀번호가 일치하지 않습니다.");
     }
