@@ -33,6 +33,13 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
+    @DisplayName("회원가입 전 이메일 중복체크에 올바르지 않은 형식을 요청하면 400 Bad Request를 반환한다.")
+    @Test
+    void failedCheckDuplicateEmailWrongFormat() {
+        ExtractableResponse<Response> response = MARU.validateDuplicateEmailWrongFormat();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("email, password, name을 입력해서 회원가입을 진행하면 201 Created를 반환한다.")
     @Test
     void register() {

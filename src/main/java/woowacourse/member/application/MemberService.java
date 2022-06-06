@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
+import woowacourse.member.domain.Email;
 import woowacourse.member.domain.Member;
-import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
@@ -34,14 +34,11 @@ public class MemberService {
         return memberDao.save(member);
     }
 
-    private void validateDuplicateEmail(final String email) {
-        if (memberDao.isEmailExist(email)) {
+    public void validateDuplicateEmail(final String email) {
+        Email memberEmail = new Email(email);
+        if (memberDao.isEmailExist(memberEmail.getEmail())) {
             throw new DuplicateMemberEmailException();
         }
-    }
-
-    public void validateDuplicateEmail(final EmailCheckRequest emailCheckRequest) {
-        validateDuplicateEmail(emailCheckRequest.getEmail());
     }
 
     @Transactional(readOnly = true)

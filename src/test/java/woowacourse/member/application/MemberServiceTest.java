@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
-import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
@@ -164,7 +163,7 @@ public class MemberServiceTest {
     @Test
     void validateDuplicateEmailExist() {
         memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
-        assertThatThrownBy(() -> memberService.validateDuplicateEmail(new EmailCheckRequest(EMAIL)))
+        assertThatThrownBy(() -> memberService.validateDuplicateEmail(EMAIL))
                 .isInstanceOf(DuplicateMemberEmailException.class);
     }
 }

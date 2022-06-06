@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.exception.dto.ErrorResponse;
-import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 
 public enum TMember {
@@ -32,7 +31,11 @@ public enum TMember {
     }
 
     public ExtractableResponse<Response> validateDuplicateEmail() {
-        return REQUEST.post(new EmailCheckRequest(email), "/api/members/duplicate-email");
+        return REQUEST.get("/api/members/duplicate-email?email=" + email);
+    }
+
+    public ExtractableResponse<Response> validateDuplicateEmailWrongFormat() {
+        return REQUEST.get("/api/members/duplicate-email?email=" + "wrong");
     }
 
     public ExtractableResponse<Response> register() {

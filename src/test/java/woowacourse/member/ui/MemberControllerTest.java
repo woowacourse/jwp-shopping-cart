@@ -41,13 +41,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.helper.restdocs.RestDocsTest;
-import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.dto.MemberResponse;
 import woowacourse.member.exception.DuplicateMemberEmailException;
+import woowacourse.member.exception.EmailNotValidException;
 
 @DisplayName("멤버 컨트롤러 단위테스트")
 public class MemberControllerTest extends RestDocsTest {
@@ -55,50 +55,39 @@ public class MemberControllerTest extends RestDocsTest {
     @DisplayName("이메일 중복 체크에 성공한다.")
     @Test
     void validateDuplicateEmail() throws Exception {
-        EmailCheckRequest emailCheckRequest = new EmailCheckRequest(EMAIL);
+        doNothing().when(memberService).validateDuplicateEmail(anyString());
 
-        doNothing().when(memberService).validateDuplicateEmail(any(EmailCheckRequest.class));
-
-        ResultActions resultActions = mockMvc.perform(post("/api/members/duplicate-email")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(emailCheckRequest)))
+        ResultActions resultActions = mockMvc.perform(get("/api/members/duplicate-email?email=" + EMAIL)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         //docs
         resultActions.andDo(document("member-duplicate-email",
                 getRequestPreprocessor(),
-                getResponsePreprocessor(),
-                requestFields(
-                        fieldWithPath("email").type(STRING).description("이메일")
-                )));
+                getResponsePreprocessor()));
     }
 
     @DisplayName("이메일이 중복되어 중복 체크에 실패한다.")
     @Test
     void failedValidateDuplicateEmail() throws Exception {
-        EmailCheckRequest emailCheckRequest = new EmailCheckRequest(EMAIL);
         doThrow(DuplicateMemberEmailException.class)
-                .when(memberService).validateDuplicateEmail(any(EmailCheckRequest.class));
+                .when(memberService).validateDuplicateEmail(anyString());
 
-        mockMvc.perform(post("/api/members/duplicate-email")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(emailCheckRequest)))
+        mockMvc.perform(get("/api/members/duplicate-email?email=" + EMAIL)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
     @DisplayName("입력이 형식에 맞지 않아 이메일 중복 체크에 실패한다.")
     @Test
     void failedValidateDuplicateEmailWrongFormat() throws Exception {
-        EmailCheckRequest emailCheckRequest = new EmailCheckRequest("email");
+        doThrow(EmailNotValidException.class)
+                .when(memberService).validateDuplicateEmail(anyString());
 
-        mockMvc.perform(post("/api/members/duplicate-email")
+        mockMvc.perform(get("/api/members/duplicate-email?email=" + "")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(emailCheckRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("올바른 이메일 형식으로 입력해주세요."));
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @DisplayName("멤버가 회원가입에 성공한다.")
