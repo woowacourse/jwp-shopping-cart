@@ -27,7 +27,7 @@ class ProductDaoTest {
 
     @DisplayName("상품 목록 조회")
     @Test
-    void getProducts() {
+    void findAll() {
         Product firstExpected = new Product(1L, "캠핑 의자", 35000,
                 100, "https://thawing-fortress-83192.herokuapp.com/static/images/camping-chair.jpg");
         Product secondExpected = new Product(2L, "그릴", 100000,
@@ -38,5 +38,13 @@ class ProductDaoTest {
         List<Product> products = productDao.findAll();
 
         assertThat(products).isEqualTo(List.of(firstExpected, secondExpected, thirdExpected));
+    }
+
+    @DisplayName("상품의 재고를 반환한다.")
+    @Test
+    void findStockById() {
+        int stock = productDao.findStockById(1L);
+
+        assertThat(stock).isEqualTo(100);
     }
 }

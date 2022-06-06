@@ -87,4 +87,19 @@ class CartAcceptanceTest extends AcceptanceTest {
                 Arguments.of(null, null)
         );
     }
+
+    @DisplayName("상품의 재고보다 많은 양을 구매하려고 하면 400을 응답한다.")
+    @Test
+    void addCartItem_badRequest_InvalidQuantity() {
+        int invalidQuantity = 101;
+        ExtractableResponse<Response> response =
+                postWithAuthorization(CART_URI, token, new CartItemAddRequest(1L, invalidQuantity));
+        String message = response.as(ErrorResponse.class)
+                .getMessage();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(message).isEqualTo("상품 재고가 부족합니다.")
+        );
+    }
 }

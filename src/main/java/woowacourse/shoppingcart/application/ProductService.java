@@ -23,4 +23,10 @@ public class ProductService {
                 .map(ProductServiceResponse::new)
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    @Transactional(readOnly = true)
+    public boolean isImpossibleQuantity(long productId, int purchasingQuantity) {
+        int stock = productDao.findStockById(productId);
+        return stock < purchasingQuantity;
+    }
 }
