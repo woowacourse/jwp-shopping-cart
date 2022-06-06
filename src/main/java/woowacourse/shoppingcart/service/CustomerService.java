@@ -35,6 +35,7 @@ public class CustomerService {
         customerDao.deleteByName(customerName);
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse findCustomerByName(final String customerName) {
         final Customer customer = customerDao.getByName(customerName);
         return new CustomerResponse(customer.getUserName());
@@ -45,6 +46,7 @@ public class CustomerService {
         customerDao.updatePasswordByName(customerName, encryptedPassword);
     }
 
+    @Transactional(readOnly = true)
     public void validateNameAndPassword(final String name, final String password) {
         final String encryptedPassword = encryptor.encrypt(password);
         if (customerDao.existsByNameAndPassword(name, encryptedPassword)) {
@@ -53,6 +55,7 @@ public class CustomerService {
         throw new AuthorizationException("로그인에 실패했습니다😤");
     }
 
+    @Transactional(readOnly = true)
     public CheckDuplicationResponse checkDuplicationByName(final String userName) {
         return new CheckDuplicationResponse(customerDao.existsByName(userName));
     }

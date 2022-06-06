@@ -48,6 +48,7 @@ public class OrderService {
         return ordersId;
     }
 
+    @Transactional(readOnly = true)
     public Orders findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
         return findOrderResponseDtoByOrderId(orderId);
@@ -61,6 +62,7 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Orders> findOrdersByCustomerName(final String customerName) {
         final Long customerId = customerDao.getIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
@@ -70,6 +72,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {

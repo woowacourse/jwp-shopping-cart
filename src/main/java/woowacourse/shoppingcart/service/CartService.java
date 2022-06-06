@@ -27,6 +27,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<Cart> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
@@ -39,6 +40,7 @@ public class CartService {
         return carts;
     }
 
+    @Transactional(readOnly = true)
     private List<Long> findCartIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.getIdByUserName(customerName);
         return cartItemDao.findIdsByCustomerId(customerId);
