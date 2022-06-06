@@ -64,6 +64,15 @@ public class CustomerDao {
         return jdbcTemplate.queryForObject(sql, Boolean.class, userName);
     }
 
+    public Customer getCustomerById(Long id) {
+        try {
+            final String sql = "SELECT username, password, nickname, age FROM customer WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, id);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
     public Customer getCustomerByUserName(String userName) {
         try {
             final String sql = "SELECT username, password, nickname, age FROM customer WHERE username = ?";
@@ -91,8 +100,8 @@ public class CustomerDao {
         }
     }
 
-    public void delete(Customer customer) {
-        final String sql = "DELETE FROM customer WHERE username = ?";
-        jdbcTemplate.update(sql, customer.getUserName());
+    public void delete(Long id) {
+        final String sql = "DELETE FROM customer WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

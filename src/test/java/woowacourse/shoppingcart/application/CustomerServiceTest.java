@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,17 +11,15 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
@@ -59,16 +61,24 @@ class CustomerServiceTest {
         assertThat(response.isUnique()).isEqualTo(expected);
     }
 
+    @DisplayName("id값으로 회원을 찾는다.")
+    @Test
+    void getCustomer() {
+        Long id = customerService.addCustomer(customerRequest1);
+        CustomerResponse actual = customerService.getCustomer(id);
+        assertThat(actual.getUserName()).isEqualTo(customerRequest1.getUserName());
+    }
+
     @DisplayName("비밀번호를 성공적으로 변경한다.")
     @Test
     void updatePassword() {
-        customerService.addCustomer(customerRequest1);
+        Long id = customerService.addCustomer(customerRequest1);
         Customer customer = Customer.of(customerRequest1.getUserName(), customerRequest1.getPassword(),
                 customerRequest1.getNickName(), customerRequest1.getAge());
 
         String newPassword = "forky@forky123";
         PasswordRequest passwordRequest = new PasswordRequest(customer.getPassword(), newPassword);
-        customerService.updatePassword(customer, passwordRequest);
+        customerService.updatePassword(id, passwordRequest);
 
         Customer actual = customerDao.getCustomerByUserName(customerRequest1.getUserName());
         assertThat(actual.getPassword()).isEqualTo(newPassword);
@@ -77,7 +87,7 @@ class CustomerServiceTest {
     @DisplayName("비밀번호를 제외한 회원 정보를 성공적으로 변경한다.")
     @Test
     void updateInfo() {
-        customerService.addCustomer(customerRequest1);
+        Long id = customerService.addCustomer(customerRequest1);
         String newNickName = "김태현";
         int newAge = 27;
         Customer originCustomer = Customer.of(customerRequest1.getUserName(), customerRequest1.getPassword(),
@@ -85,7 +95,7 @@ class CustomerServiceTest {
         CustomerRequest updateCustomer =
                 new CustomerRequest(originCustomer.getUserName(), originCustomer.getPassword(), newNickName, newAge);
 
-        customerService.updateInfo(originCustomer, updateCustomer);
+        customerService.updateInfo(id, updateCustomer);
 
         Customer actual = customerDao.getCustomerByUserName(customerRequest1.getUserName());
 
@@ -99,14 +109,11 @@ class CustomerServiceTest {
     @DisplayName("회원 정보를 삭제한다")
     @Test
     void delete() {
-        customerService.addCustomer(customerRequest1);
-
-        Customer customer = Customer.of(customerRequest1.getUserName(), customerRequest1.getPassword(),
-                customerRequest1.getNickName(), customerRequest1.getAge());
-        customerService.deleteCustomer(customer);
+        Long id = customerService.addCustomer(customerRequest1);
+        customerService.deleteCustomer(id);
 
         assertThatExceptionOfType(InvalidCustomerException.class)
-                .isThrownBy(() -> customerDao.getCustomerByUserName(customer.getUserName()))
+                .isThrownBy(() -> customerDao.getCustomerByUserName(customerRequest1.getUserName()))
                 .withMessageContaining("존재");
     }
 }

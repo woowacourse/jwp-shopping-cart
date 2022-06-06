@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
@@ -18,13 +19,13 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public void addCustomer(CustomerRequest customerRequest) {
+    public Long addCustomer(CustomerRequest customerRequest) {
         validateUserName(customerRequest);
         Customer customer = Customer.of(
                 customerRequest.getUserName(), customerRequest.getPassword(),
                 customerRequest.getNickName(), customerRequest.getAge()
         );
-        customerDao.save(customer);
+        return customerDao.save(customer);
     }
 
     private void validateUserName(CustomerRequest customerRequest) {
@@ -38,18 +39,26 @@ public class CustomerService {
         return new UserNameDuplicationResponse(isUnique);
     }
 
-    public void updatePassword(Customer customer, PasswordRequest passwordRequest) {
+    @Transactional(readOnly = true)
+    public CustomerResponse getCustomer(Long id) {
+        Customer customer = customerDao.getCustomerById(id);
+        return CustomerResponse.from(customer);
+    }
+
+    public void updatePassword(Long id, PasswordRequest passwordRequest) {
+        Customer customer = customerDao.getCustomerById(id);
         customer.validatePassword(passwordRequest.getOldPassword());
         Customer updateCustomer = customer.updatePassword(passwordRequest.getNewPassword());
         customerDao.updatePassword(updateCustomer);
     }
 
-    public void updateInfo(Customer customer, CustomerRequest customerRequest) {
+    public void updateInfo(Long id, CustomerRequest customerRequest) {
+        Customer customer = customerDao.getCustomerById(id);
         Customer updateCustomer = customer.updateInfo(customerRequest.getNickName(), customerRequest.getAge());
         customerDao.updateInfo(updateCustomer);
     }
 
-    public void deleteCustomer(Customer customer) {
-        customerDao.delete(customer);
+    public void deleteCustomer(Long id) {
+        customerDao.delete(id);
     }
 }

@@ -28,8 +28,8 @@ public class AuthService {
         customer.validatePassword(credentials);
     }
 
-    public Customer getCustomer(String token) {
+    public Long getCustomerId(String token) {
         String userName = jwtTokenProvider.getPayload(token);
-        return customerDao.getCustomerByUserName(userName);
+        return customerDao.getIdByUserName(userName);
     }
 }
