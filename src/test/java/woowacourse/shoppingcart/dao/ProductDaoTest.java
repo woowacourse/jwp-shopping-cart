@@ -3,8 +3,10 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.utils.Fixture.맥주;
 import static woowacourse.utils.Fixture.초콜렛;
+import static woowacourse.utils.Fixture.치킨;
 
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,22 +68,16 @@ public class ProductDaoTest {
                 .containsExactly(초콜렛.getName(), 맥주.getName());
     }
 
-    @DisplayName("싱품 삭제")
+    @DisplayName("상품 삭제")
     @Test
     void deleteProduct() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
-        final Product saved = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts().size();
+        final Product saved = productDao.save(치킨);
 
         // when
         productDao.delete(saved.getId());
 
         // then
-        final int afterSize = productDao.findProducts().size();
-        assertThat(beforeSize - 1).isEqualTo(afterSize);
+        Optional<Product> productById = productDao.findProductById(saved.getId());
+        assertThat(productById).isEmpty();
     }
 }

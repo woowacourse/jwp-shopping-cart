@@ -40,7 +40,7 @@ public class ProductDao {
             SqlParameterSource parameters = new MapSqlParameterSource("id", productId);
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameters, getProductMapper()));
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            return Optional.empty();
         }
     }
 
@@ -50,8 +50,9 @@ public class ProductDao {
     }
 
     public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-        //jdbcTemplate.update(query, productId);
+        final String query = "DELETE FROM product WHERE id = :id";
+        SqlParameterSource parameters = new MapSqlParameterSource("id", productId);
+        jdbcTemplate.update(query, parameters);
     }
 
     private RowMapper<Product> getProductMapper() {

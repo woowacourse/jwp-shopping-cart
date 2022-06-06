@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.utils.Fixture.맥주;
 import static woowacourse.utils.Fixture.치킨;
+import static woowacourse.utils.RestAssuredUtils.httpDelete;
 import static woowacourse.utils.RestAssuredUtils.httpGet;
 import static woowacourse.utils.RestAssuredUtils.httpPost;
 
@@ -88,5 +89,21 @@ class ProductControllerTest extends AcceptanceTest {
                         tuple(치킨.getName(), 치킨.getPrice(), 치킨.getImage()),
                         tuple(맥주.getName(), 맥주.getPrice(), 맥주.getImage())
                 );
+    }
+
+    @Test
+    @DisplayName("상품을 삭제한다.")
+    void delete_product() {
+        // given
+        ProductSaveRequest request = new ProductSaveRequest(치킨.getName(), 치킨.getPrice(), 치킨.getImage());
+        ExtractableResponse<Response> response = httpPost("/products", request);
+        String productId = response.jsonPath().getString("productId");
+
+        // when
+        httpDelete("/products/" + productId);
+
+        // then
+        ExtractableResponse<Response> response1 = httpGet("/products/" + productId);
+        assertThat(response1.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }
