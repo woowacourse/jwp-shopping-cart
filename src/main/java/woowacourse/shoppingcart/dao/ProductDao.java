@@ -51,7 +51,7 @@ public class ProductDao {
                     rowMapperToProduct(productId, resultSet), productId
             );
             return Optional.ofNullable(product);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
