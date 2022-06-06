@@ -92,7 +92,7 @@ public class CustomerDao {
         }
     }
 
-    public void update(final Long id, final String nickname) {
+    public void updateNickname(final Long id, final String nickname) {
         String query = "UPDATE customer SET nickname = ? WHERE id = ? and withdrawal = ?";
         jdbcTemplate.update(query, nickname, id, NOT_WITHDRAWAL);
     }

@@ -47,7 +47,7 @@ public class CustomerService {
         validateDuplicateNickname(customerUpdateRequest.getNickname());
         Customer customer = findCustomerById(customerIdentificationRequest.getId());
         Customer customerForUpdate = createCustomerForUpdate(customerUpdateRequest, customer);
-        customerDao.update(customerForUpdate.getId(), customerForUpdate.getNickname());
+        customerDao.updateNickname(customerForUpdate.getId(), customerForUpdate.getNickname());
     }
 
     @Transactional

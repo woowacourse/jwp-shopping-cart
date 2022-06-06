@@ -98,7 +98,7 @@ public class CustomerDaoTest {
         Long customerId = customerDao.save(savedCustomer);
 
         // when
-        customerDao.update(customerId, "test2");
+        customerDao.updateNickname(customerId, "test2");
 
         // then
         Customer customer = customerDao.findById(customerId).get();
