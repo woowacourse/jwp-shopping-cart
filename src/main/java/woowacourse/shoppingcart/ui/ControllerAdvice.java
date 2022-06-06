@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.datanotfound.DataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
-import woowacourse.shoppingcart.exception.datanotmatch.DataNotMatchException;
 import woowacourse.shoppingcart.exception.duplicateddata.DuplicatedDataException;
 import woowacourse.shoppingcart.exception.token.InvalidTokenException;
 
@@ -28,7 +27,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             DuplicatedDataException.class,
-            DataNotMatchException.class
+            IllegalArgumentException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidData(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.from(e));

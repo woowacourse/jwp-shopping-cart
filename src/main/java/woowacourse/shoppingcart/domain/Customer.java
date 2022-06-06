@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.domain;
 
-import woowacourse.shoppingcart.exception.datanotmatch.CustomerDataNotMatchException;
-
 public class Customer {
 
     private final Long id;
@@ -22,7 +20,7 @@ public class Customer {
 
     public void comparePasswordFrom(final String password) {
         if (!this.password.equals(password)) {
-            throw new CustomerDataNotMatchException("입력한 비밀번호가 올바르지 않습니다.");
+            throw new IllegalArgumentException("입력한 비밀번호가 올바르지 않습니다.");
         }
     }
 
