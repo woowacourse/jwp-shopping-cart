@@ -45,7 +45,7 @@ public class CustomerController {
     @PutMapping("/profile")
     public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal final Long id,
                                               @RequestBody @Valid final CustomerProfileUpdateRequest request) {
-        customerService.updateName(request.toServiceRequest(id));
+        customerService.updateProfile(request.toServiceRequest(id));
         return ResponseEntity.noContent().build();
     }
 

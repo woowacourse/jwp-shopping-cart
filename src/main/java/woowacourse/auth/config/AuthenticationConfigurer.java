@@ -11,11 +11,11 @@ import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 import woowacourse.auth.ui.LoginInterceptor;
 
 @Configuration
-public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
+public class AuthenticationConfigurer implements WebMvcConfigurer {
 
     private final AuthService authService;
 
-    public AuthenticationPrincipalConfig(final AuthService authService) {
+    public AuthenticationConfigurer(final AuthService authService) {
         this.authService = authService;
     }
 

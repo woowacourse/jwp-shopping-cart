@@ -66,7 +66,7 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerException::new);
     }
 
-    public void updateName(final CustomerProfileUpdateServiceRequest request) {
+    public void updateProfile(final CustomerProfileUpdateServiceRequest request) {
         final Customer customer = findCustomerById(request.getId());
         final Customer updatedCustomer = customer.updateName(request.getName());
         customerDao.update(updatedCustomer);

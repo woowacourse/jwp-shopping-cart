@@ -151,7 +151,7 @@ class CustomerServiceTest {
 
         // when, then
         final CustomerProfileUpdateServiceRequest request = new CustomerProfileUpdateServiceRequest(1L, "클레이");
-        assertThatCode(() -> customerService.updateName(request))
+        assertThatCode(() -> customerService.updateProfile(request))
                 .doesNotThrowAnyException();
     }
 
