@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.LogInResponse;
+import woowacourse.shoppingcart.domain.Product;
 
 public class RestAssuredFixture {
 
@@ -19,6 +20,17 @@ public class RestAssuredFixture {
                 .when().post(path)
                 .then().log().all()
                 .statusCode(status);
+    }
+
+    public static ValidatableResponse postCart(Object request, String token, String path, int status) {
+        return RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .header("Authorization", "Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post(path)
+                .then().log().all().statusCode(status);
     }
 
     public static ValidatableResponse get(String token, String path, int status) {

@@ -9,6 +9,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartProductRequest;
+import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -26,6 +28,15 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    public Long addCart(final CartProductRequest cartProductRequest, final String customerName) {
+        final Long customerId = customerDao.findByUsername(customerName).getId();
+        try {
+            return cartItemDao.addCartItem(customerId, cartProductRequest.getProductId());
+        } catch (Exception e) {
+            throw new InvalidProductException();
+        }
+    }
+
     public List<Cart> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
@@ -41,15 +52,6 @@ public class CartService {
     private List<Long> findCartIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findByUsername(customerName).getId();
         return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName).getId();
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
     }
 
     public void deleteCart(final String customerName, final Long cartId) {

@@ -14,43 +14,33 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 
+import javax.sql.DataSource;
+
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
+
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+    public CartItemDaoTest(DataSource dataSource) {
+        cartItemDao = new CartItemDao(dataSource);
+        productDao = new ProductDao(dataSource);
     }
 
-    @BeforeEach
-    void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
-
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
-    }
-
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("장바구니 물건 추가")
     @Test
     void addCartItem() {
-
         // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
+        Product product = productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(1L, product.getId());
 
         // then
-        assertThat(cartId).isEqualTo(3L);
+        assertThat(cartId).isNotNull();
     }
 
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")

@@ -1,20 +1,35 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+
+import javax.sql.DataSource;
 
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public CartItemDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("CART_ITEM")
+                .usingGeneratedKeyColumns("id");
+    }
+
+    public Long addCartItem(final Long customerId, final Long productId) {
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("customer_id", customerId)
+                .addValue("product_id", productId);
+
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
@@ -36,19 +51,6 @@ public class CartItemDao {
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
-    }
-
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
     }
 
     public void deleteCartItem(final Long id) {

@@ -1,16 +1,15 @@
 package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 
 public class ProductRequest {
 
-    @NotEmpty
+    @NotBlank
     private String name;
     @Positive
     private Integer price;
-    @NotEmpty
+    @NotBlank
     private String imageUrl;
 
     private ProductRequest() {

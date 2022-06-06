@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.HashMap;
@@ -16,7 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.acceptance.AcceptanceTest;
+import woowacourse.acceptance.RestAssuredFixture;
+import woowacourse.auth.dto.LogInRequest;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -28,22 +33,41 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
+        //given
+        ProductRequest productRequest = new ProductRequest("치킨", 10000, "http://example.com/chicken.jpg");
+        ProductRequest productRequest2 = new ProductRequest("피자", 20000, "http://example.com/pizza.jpg");
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        RestAssuredFixture.post(productRequest, "/products", HttpStatus.CREATED.value());
+        RestAssuredFixture.post(productRequest2, "/products", HttpStatus.CREATED.value());
+
     }
 
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
-        장바구니_아이템_추가됨(response);
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
+
+        //when & then
+        RestAssuredFixture.postCart(new Product(1L, "치킨", 10000, "http://example.com/chicken.jpg"),
+                token, "/cart", HttpStatus.CREATED.value());
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
+        /*RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/cart")
+                .then().log().all().statusCode(201);*/
+
         장바구니_아이템_추가되어_있음(USER, productId1);
         장바구니_아이템_추가되어_있음(USER, productId2);
 
