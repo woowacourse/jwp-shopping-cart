@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationException;
+import woowacourse.shoppingcart.dto.response.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -21,19 +22,14 @@ import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleUnhandledException() {
-        return ResponseEntity.internalServerError().body("관리자에게 문의해주세요🥺");
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(final RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    @ExceptionHandler(DuplicateException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicatedName(final RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleInvalidRequest(final MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().body(getErrorMessage(e));
+    public ResponseEntity<ErrorResponse> handleInvalidRequest(final MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(getErrorMessage(e)));
     }
 
     private String getErrorMessage(final MethodArgumentNotValidException e) {
@@ -48,8 +44,8 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    public ResponseEntity<String> handleInvalidRequest(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleInvalidRequest(final RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler({
@@ -60,17 +56,23 @@ public class GlobalExceptionHandler {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<String> handleUnAuthorizedAccess(final RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleUnAuthorizedAccess(final RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(DuplicateException.class)
-    public ResponseEntity<String> handleDuplicatedName(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(final RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleUnhandledException(final RuntimeException e) {
+        e.printStackTrace();
+        return ResponseEntity.internalServerError().body(new ErrorResponse("관리자에게 문의해주세요🥺"));
     }
 }
