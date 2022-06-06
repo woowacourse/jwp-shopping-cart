@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.PlainPassword;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -21,7 +21,7 @@ public class CustomerRegisterRequest {
     private String email;
 
     @NotBlank(message = INVALID_PASSWORD_LENGTH_MESSAGE)
-    @Size(min = Password.MIN_RAW_VALUE_LENGTH, message = INVALID_PASSWORD_LENGTH_MESSAGE)
+    @Size(min = PlainPassword.MIN_RAW_VALUE_LENGTH, message = INVALID_PASSWORD_LENGTH_MESSAGE)
     private String password;
 
     private CustomerRegisterRequest() {
