@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 import woowacourse.auth.domain.User;
-import woowacourse.auth.support.AuthenticatedUser;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
@@ -40,26 +39,26 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<GetMeResponse> getMe(@ApiIgnore @AuthenticatedUser User authUser) {
+    public ResponseEntity<GetMeResponse> getMe(@ApiIgnore User authUser) {
         GetMeResponse currentCustomer = customerService.getCustomer(authUser);
         return ResponseEntity.ok(currentCustomer);
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> updateMe(@ApiIgnore @AuthenticatedUser User authUser,
+    public ResponseEntity<Void> updateMe(@ApiIgnore User authUser,
                                          @Validated @RequestBody UpdateMeRequest updateMeRequest) {
         customerService.updateNicknameAndAge(authUser, updateMeRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMe(@ApiIgnore @AuthenticatedUser User authUser) {
+    public ResponseEntity<Void> deleteMe(@ApiIgnore User authUser) {
         customerService.deleteCustomer(authUser);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me/password")
-    public ResponseEntity<Void> updatePassword(@ApiIgnore @AuthenticatedUser User authUser,
+    public ResponseEntity<Void> updatePassword(@ApiIgnore User authUser,
                                                @Validated @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         customerService.updatePassword(authUser, updatePasswordRequest);
         return ResponseEntity.ok().build();

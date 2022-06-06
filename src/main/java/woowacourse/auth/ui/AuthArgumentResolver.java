@@ -8,7 +8,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.domain.User;
-import woowacourse.auth.support.AuthenticatedUser;
 import woowacourse.auth.support.RequestAttributes;
 
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
@@ -21,7 +20,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(AuthenticatedUser.class);
+        return parameter.getParameterType().equals(User.class);
     }
 
     @Override
