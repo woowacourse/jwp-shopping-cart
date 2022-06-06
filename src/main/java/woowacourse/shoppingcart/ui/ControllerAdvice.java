@@ -20,7 +20,7 @@ import woowacourse.shoppingcart.dto.ExceptionResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.cartitem.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.order.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.LoginException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
