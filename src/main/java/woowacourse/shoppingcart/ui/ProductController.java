@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.application.dto.ProductRequest;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;

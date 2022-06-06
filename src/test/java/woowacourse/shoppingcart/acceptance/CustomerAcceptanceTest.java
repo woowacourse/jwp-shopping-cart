@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.LOCATION;
+import static woowacourse.shoppingcart.acceptance.AcceptanceUtil.findValue;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -18,7 +19,7 @@ import org.springframework.http.MediaType;
 @DisplayName("회원 관련 기능")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-public class CustomerAcceptanceTest extends AcceptanceTest {
+class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 회원_가입_정상_요청() {
@@ -573,11 +574,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(response.statusCode()).isEqualTo(400);
         assertThat(findValue(response, "message")).contains("휴대폰 번호양식이 불일치 합니다.");
-    }
-
-
-    private String findValue(ExtractableResponse<Response> response, String value) {
-        return response.body().jsonPath().getString(value);
     }
 
     private String findPhoneNumberValue(ExtractableResponse<Response> response, String value) {
