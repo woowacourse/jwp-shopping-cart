@@ -94,4 +94,9 @@ public class CartItemDao {
             throw new NotFoundCartException();
         }
     }
+
+    public void updateQuantity(Cart cart) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        jdbcTemplate.update(sql, cart.getQuantity(), cart.getId());
+    }
 }

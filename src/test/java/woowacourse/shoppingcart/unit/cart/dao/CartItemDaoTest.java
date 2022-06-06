@@ -140,7 +140,8 @@ class CartItemDaoTest {
         final Long cartId = cartItemDao.addCartItem(customerId, productId);
 
         final Product product = productDao.findProductById(productId);
-        final Cart expected = new Cart(cartId, productId, product.getName(), product.getPrice(), product.getImageUrl(), 1);
+        final Cart expected = new Cart(cartId, productId, product.getName(), product.getPrice(), product.getImageUrl(),
+                1);
 
         // when
         final Cart actual = cartItemDao.findByProductAndCustomerId(productId, customerId);
@@ -159,5 +160,27 @@ class CartItemDaoTest {
         // when, then
         assertThatThrownBy(() -> cartItemDao.findByProductAndCustomerId(productId, customerId))
                 .isInstanceOf(NotFoundCartException.class);
+    }
+
+    @Test
+    @DisplayName("Cart의 수량을 변경한다.")
+    void updateQuantity() {
+        // given
+        Long customerId = 9L;
+        Long productId = 5L;
+        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+
+        final int quantity = 77;
+        final Product product = productDao.findProductById(productId);
+        final Cart cart = new Cart(cartId, productId, product.getName(), product.getPrice(), product.getImageUrl(),
+                quantity);
+
+        // when
+        cartItemDao.updateQuantity(cart);
+
+        final Cart actual = cartItemDao.findByProductAndCustomerId(productId, customerId);
+
+        // then
+        assertThat(actual.getQuantity()).isEqualTo(quantity);
     }
 }
