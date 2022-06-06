@@ -1,17 +1,27 @@
 package woowacourse.auth.support;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
+import woowacourse.exception.auth.InvalidTokenException;
 
 @Component
 public class JwtTokenProvider {
-    @Value("${security.jwt.token.secret-key}")
-    private String secretKey;
-    @Value("${security.jwt.token.expire-length}")
-    private long validityInMilliseconds;
+
+    private final SecretKey secretKey;
+    private final long validityInMilliseconds;
+
+    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
+                            @Value("${security.jwt.token.expire-length}") Long validityInMilliseconds) {
+        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        this.validityInMilliseconds = validityInMilliseconds;
+    }
 
     public String createToken(String payload) {
         Claims claims = Jwts.claims().setSubject(payload);
@@ -22,21 +32,20 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKey)
                 .compact();
     }
 
-    public String getPayload(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public boolean validateToken(String token) {
+    public String getValidatedPayload(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-
-            return !claims.getBody().getExpiration().before(new Date());
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
         } catch (JwtException | IllegalArgumentException e) {
-            return false;
+            throw new InvalidTokenException();
         }
     }
 }
