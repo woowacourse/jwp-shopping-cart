@@ -46,16 +46,16 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal String username) {
+        customerService.deleteByUsername(username);
+        return ResponseEntity.noContent().build();
+    }
+
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody CustomerUpdatePasswordRequest request,
                                                @AuthenticationPrincipal String username) {
         customerService.updatePassword(username, request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@AuthenticationPrincipal String username) {
-        customerService.deleteByUsername(username);
         return ResponseEntity.noContent().build();
     }
 }
