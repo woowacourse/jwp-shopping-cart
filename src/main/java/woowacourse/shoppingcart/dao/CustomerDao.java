@@ -62,7 +62,7 @@ public class CustomerDao {
 
     public Optional<Customer> findByAccount(String account) {
         final String sql = "SELECT id, account, nickname, password, address, phone_number " +
-                "FROM CUSTOMER WHERE account=:account";
+                "FROM customer WHERE account=:account";
 
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("account", account);
