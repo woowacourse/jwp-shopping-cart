@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 import java.util.List;
 
@@ -22,21 +23,36 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
+    private final CustomerDao customerDao;
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
+        customerDao = new CustomerDao(jdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
+        customerDao.save(new Customer("awesomeo@gmail.com", "awesome", "Password123!"));
+
         productDao.save(new Product("banana", 1_000, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+    }
+
+    @DisplayName("카트에 상품을 저장한다.")
+    @Test
+    void addProduct() {
+        Long customerId = 1L;
+        Long productId = 1L;
+        Integer quantity = 1;
+
+        Long cartItemId = cartItemDao.addCartItem(customerId, productId, quantity);
+        assertThat(cartItemId).isEqualTo(3L);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
