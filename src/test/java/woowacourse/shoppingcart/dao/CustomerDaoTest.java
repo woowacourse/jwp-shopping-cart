@@ -10,6 +10,7 @@ import static woowacourse.Fixture.페퍼_이름;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -23,6 +24,7 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@DisplayName("CustomerDao 테스트의")
 class CustomerDaoTest {
 
     private final CustomerDao customerDao;
@@ -31,105 +33,189 @@ class CustomerDaoTest {
         customerDao = new CustomerDao(dataSource);
     }
 
-    @Test
-    @DisplayName("회원을 DB에 저장한다.")
-    void save() {
-        // given
-        Customer customer = new Customer(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호);
+    @Nested
+    @DisplayName("save 메서드는")
+    class save {
 
-        // when
-        Long customerId = customerDao.save(customer);
+        @Test
+        @DisplayName("회원을 DB에 저장한다.")
+        void success() {
+            // given
+            Customer customer = new Customer(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호);
 
-        // then
-        assertThat(customerId).isEqualTo(customerDao.findIdByUserName(페퍼_이름));
+            // when
+            Long customerId = customerDao.save(customer);
+
+            // then
+            assertThat(customerId).isEqualTo(customerDao.findIdByUserName(페퍼_이름));
+        }
+
+        @Test
+        @DisplayName("이미 존재하는 회원을 저장하면, 예외를 던진다.")
+        void duplicatedLoginId() {
+            // given
+            customerDao.save(페퍼);
+
+            // when & then
+            assertThatThrownBy(() -> customerDao.save(페퍼))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("이미 존재하는 아이디입니다.");
+        }
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTest() {
+    @Nested
+    @DisplayName("findIdByUserName 메서드는")
+    class findIdByUserName {
 
-        // given
-        final String userName = "puterism";
+        @Test
+        @DisplayName("name을 통해 아이디를 찾으면, id를 반환한다.")
+        void success() {
+            // given
+            final String userName = "puterism";
 
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+            // when
+            final Long customerId = customerDao.findIdByUserName(userName);
 
-        // then
-        assertThat(customerId).isEqualTo(1L);
+            // then
+            assertThat(customerId).isEqualTo(1L);
+        }
+
+        @Test
+        @DisplayName("대소문자를 구별하지 않고 name을 통해 아이디를 찾으면, id를 반환한다.")
+        void ignoreUpperLowerCase() {
+            // given
+            final String userName = "gwangyeol-iM";
+
+            // when
+            final Long customerId = customerDao.findIdByUserName(userName);
+
+            // then
+            assertThat(customerId).isEqualTo(16L);
+        }
+
+        @Test
+        @DisplayName("저장되지 않은 name을 통해 아이디를 찾으면, 예외를 던진다.")
+        void emptyResultData() {
+            // given & when & then
+            assertThatThrownBy(() -> customerDao.findIdByUserName(페퍼_이름))
+                    .isInstanceOf(InvalidCustomerException.class);
+        }
     }
 
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
+    @Nested
+    @DisplayName("findById 메서드는")
+    class findById {
 
-        // given
-        final String userName = "gwangyeol-iM";
+        @Test
+        @DisplayName("id로 고객을 조회한다.")
+        void success() {
+            // given
+            final Long id = customerDao.save(페퍼);
 
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+            // when
+            Customer customer = customerDao.findById(id);
 
-        // then
-        assertThat(customerId).isEqualTo(16L);
+            // then
+            assertAll(
+                    () -> assertThat(customer.getLoginId()).isEqualTo(페퍼_아이디),
+                    () -> assertThat(customer.getName()).isEqualTo(페퍼_이름)
+            );
+        }
+
+        @Test
+        @DisplayName("저장되지 않은 id로 고객을 조회하면, 예외를 던진다.")
+        void emptyResultData() {
+            // given
+            final Long id = customerDao.save(페퍼);
+            customerDao.delete(페퍼_아이디);
+
+            // when & then
+            assertThatThrownBy(() -> customerDao.findById(id))
+                    .isInstanceOf(InvalidCustomerException.class);
+        }
     }
 
-    @DisplayName("id로 고객을 조회한다.")
-    @Test
-    void findById() {
-        // given
-        final Long id = customerDao.save(페퍼);
+    @Nested
+    @DisplayName("findByLoginId 메서드는")
+    class findByLoginId {
 
-        // when
-        Customer customer = customerDao.findById(id);
+        @DisplayName("LoginId로 고객을 조회한다.")
+        @Test
+        void findByLoginId() {
+            // given
+            customerDao.save(페퍼);
 
-        // then
-        assertAll(
-                () -> assertThat(customer.getLoginId()).isEqualTo(페퍼_아이디),
-                () -> assertThat(customer.getName()).isEqualTo(페퍼_이름)
-        );
+            // when
+            Customer customer = customerDao.findByLoginId(페퍼_아이디);
+
+            // then
+            assertThat(customer.getName()).isEqualTo(페퍼_이름);
+        }
+
+        @Test
+        @DisplayName("저장되지 않은 LoginId로 고객을 조회하면, 예외를 던진다.")
+        void emptyResultData() {
+            // given & when & then
+            assertThatThrownBy(() -> customerDao.findByLoginId(페퍼_아이디))
+                    .isInstanceOf(InvalidCustomerException.class);
+        }
     }
 
-    @DisplayName("LoginId로 고객을 조회한다.")
-    @Test
-    void findByLoginId() {
-        // given
-        customerDao.save(페퍼);
+    @Nested
+    @DisplayName("update 메서드는")
+    class update {
 
-        // when
-        Customer customer = customerDao.findByLoginId(페퍼_아이디);
+        @DisplayName("회원 정보를 수정한다.")
+        @Test
+        void success() {
+            //given
+            customerDao.save(페퍼);
 
-        // then
-        assertThat(customer.getName()).isEqualTo(페퍼_이름);
+            //when
+            customerDao.update(new Customer(페퍼_아이디, "바꿀 이름", 페퍼_비밀번호));
+
+            //then
+            Customer findCustomer = customerDao.findByLoginId(페퍼_아이디);
+            assertAll(
+                    () -> assertThat(findCustomer.getLoginId()).isEqualTo(페퍼_아이디),
+                    () -> assertThat(findCustomer.getName()).isEqualTo("바꿀 이름"),
+                    () -> assertThat(findCustomer.getPassword()).isEqualTo(페퍼_비밀번호)
+            );
+        }
+
+        @Test
+        @DisplayName("저장되지 않은 LoginId로 회원정보를 수정하면, 예외를 던진다.")
+        void noUpdated() {
+            // given & when & then
+            assertThatThrownBy(() -> customerDao.update(페퍼))
+                    .isInstanceOf(InvalidCustomerException.class);
+        }
     }
 
-    @DisplayName("회원 정보를 수정한다.")
-    @Test
-    void update() {
-        //given
-        customerDao.save(페퍼);
+    @Nested
+    @DisplayName("delete 메서드는")
+    class delete {
 
-        //when
-        customerDao.update(new Customer(페퍼_아이디, "바꿀 이름", 페퍼_비밀번호));
+        @DisplayName("회원 정보를 삭제한다.")
+        @Test
+        void success() {
+            // given
+            customerDao.save(페퍼);
 
-        //then
-        Customer findCustomer = customerDao.findByLoginId(페퍼_아이디);
-        assertAll(
-                () -> assertThat(findCustomer.getLoginId()).isEqualTo(페퍼_아이디),
-                () -> assertThat(findCustomer.getName()).isEqualTo("바꿀 이름"),
-                () -> assertThat(findCustomer.getPassword()).isEqualTo(페퍼_비밀번호)
-        );
-    }
+            // when
+            customerDao.delete(페퍼_아이디);
 
-    @DisplayName("회원 정보를 삭제한다.")
-    @Test
-    void delete() {
-        // given
-        customerDao.save(페퍼);
+            // then
+            assertThatThrownBy(() -> customerDao.findByLoginId(페퍼_아이디))
+                    .isInstanceOf(InvalidCustomerException.class);
+        }
 
-        // when
-        customerDao.delete(페퍼_아이디);
-
-        // then
-        assertThatThrownBy(() -> customerDao.findByLoginId(페퍼_아이디))
-                .isInstanceOf(InvalidCustomerException.class);
+        @DisplayName("저장되지 않은 LoginId로 회원정보를 삭제하면, 예외를 던진다.")
+        @Test
+        void noUpdated() {
+            // given & when & then
+            assertThatThrownBy(() -> customerDao.delete(페퍼_아이디))
+                    .isInstanceOf(InvalidCustomerException.class);
+        }
     }
 }

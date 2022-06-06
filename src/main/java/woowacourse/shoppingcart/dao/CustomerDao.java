@@ -79,7 +79,8 @@ public class CustomerDao {
             params.put("loginId", customer.getLoginId());
             params.put("name", customer.getName());
             params.put("password", customer.getPassword());
-            namedParameterJdbcTemplate.update(query, params);
+            int updatedRows = namedParameterJdbcTemplate.update(query, params);
+            checkReflected(updatedRows);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
@@ -88,8 +89,15 @@ public class CustomerDao {
     public void delete(String loginId) {
         try {
             final String query = "DELETE FROM customer WHERE loginId = :loginId";
-            namedParameterJdbcTemplate.update(query, Map.of("loginId", loginId));
+            int updatedRows = namedParameterJdbcTemplate.update(query, Map.of("loginId", loginId));
+            checkReflected(updatedRows);
         } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    private void checkReflected(int updatedRows) {
+        if (updatedRows == 0) {
             throw new InvalidCustomerException();
         }
     }
