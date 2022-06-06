@@ -1,12 +1,11 @@
 package woowacourse.shoppingcart.domain;
 
-import java.net.URL;
 import woowacourse.shoppingcart.exception.InvalidInputException;
 
 public class Product {
     private Long id;
     private String name;
-    private Integer price;
+    private int price;
     private String imageUrl;
 
     public Product(final Long id, final String name, final int price, final String imageUrl) {

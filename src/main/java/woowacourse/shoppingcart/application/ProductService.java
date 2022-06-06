@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.repository.dao.ProductDao;
 
 @Service
@@ -23,8 +24,8 @@ public class ProductService {
         return productDao.save(product);
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponse findById(final Long productId) {
+        return null;
     }
 
     public void deleteProductById(final Long productId) {
