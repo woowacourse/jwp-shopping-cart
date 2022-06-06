@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -35,7 +36,7 @@ class ProductControllerTest {
         Long productId = 1L;
 
         // when
-        when(productService.findById(1L))
+        when(productService.findById(any()))
                 .thenReturn(new ProductResponse(1L, "apple", 1000, "http://mart/apple"));
 
         // then

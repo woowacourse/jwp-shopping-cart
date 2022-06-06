@@ -19,14 +19,15 @@ public class ProductController {
     }
 
     @GetMapping("/products/{productId}")
-    public ResponseEntity<ProductResponse> get(@PathVariable final Long productId) {
+    public ResponseEntity<ProductResponse> get(final @PathVariable Long productId) {
         ProductResponse response = productService.findById(productId);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductResponse>> getProductsOfPage(@RequestParam int page, @RequestParam int limit) {
-        List<ProductResponse> productsOfPage = productService.findProductsOfPage(page, limit);
-        return ResponseEntity.ok().body(productsOfPage);
+    public ResponseEntity<List<ProductResponse>> getProductsOfPage(final @RequestParam int page,
+                                                                   final @RequestParam int limit) {
+        List<ProductResponse> productResponses = productService.findProductsOfPage(page, limit);
+        return ResponseEntity.ok().body(productResponses);
     }
 }

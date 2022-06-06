@@ -18,8 +18,8 @@ class ProductServiceTest {
     private ProductService productService;
 
     @DisplayName("조회된 상품의 정보를 반환한다.")
-    @Test
     @Sql("/setProducts.sql")
+    @Test
     void findById() {
         // given
         Long productId = 1L;
