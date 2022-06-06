@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.entity.Customer;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
 
 @JdbcTest

@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.entity;
+package woowacourse.shoppingcart.domain;
 
 import woowacourse.shoppingcart.exception.datanotmatch.CustomerDataNotMatchException;
 

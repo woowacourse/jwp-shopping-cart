@@ -11,7 +11,7 @@ import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.entity.Customer;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 @Service
