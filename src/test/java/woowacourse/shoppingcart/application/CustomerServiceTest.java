@@ -15,13 +15,13 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.dto.LoginRequest;
-import woowacourse.shoppingcart.dto.LoginResponse;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.TokenRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerProfileResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.login.LoginRequest;
+import woowacourse.shoppingcart.dto.login.LoginResponse;
+import woowacourse.shoppingcart.dto.customer.SignUpRequest;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
@@ -134,13 +134,13 @@ class CustomerServiceTest {
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
 
         // when
-        CustomerResponse customerResponse = customerService.findProfile(tokenRequest);
+        CustomerProfileResponse customerProfileResponse = customerService.findProfile(tokenRequest);
 
         // then
         assertAll(
-                () -> assertThat(customerResponse.getId()).isEqualTo(customerId),
-                () -> assertThat(customerResponse.getUserId()).isEqualTo("test@woowacourse.com"),
-                () -> assertThat(customerResponse.getNickname()).isEqualTo("test")
+                () -> assertThat(customerProfileResponse.getId()).isEqualTo(customerId),
+                () -> assertThat(customerProfileResponse.getUserId()).isEqualTo("test@woowacourse.com"),
+                () -> assertThat(customerProfileResponse.getNickname()).isEqualTo("test")
         );
     }
 

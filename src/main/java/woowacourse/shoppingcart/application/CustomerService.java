@@ -2,16 +2,18 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.dto.LoginRequest;
-import woowacourse.shoppingcart.dto.LoginResponse;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.TokenRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerProfileResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.customer.SignUpRequest;
+import woowacourse.shoppingcart.dto.login.LoginRequest;
+import woowacourse.shoppingcart.dto.login.LoginResponse;
 import woowacourse.shoppingcart.entity.Customer;
+import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
+import woowacourse.shoppingcart.exception.datanotmatch.CustomerDataNotMatchException;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 @Service
@@ -46,13 +48,16 @@ public class CustomerService {
 
     public LoginResponse login(final LoginRequest loginRequest) {
         Customer customer = customerDao.findByUserId(loginRequest.getUserId());
-        String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
-        return LoginResponse.of(token, customer);
+        if (customer.hasSamePassword(loginRequest.getPassword())) {
+            String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
+            return LoginResponse.of(token, customer);
+        }
+        throw new LoginDataNotFoundException("잘못된 비밀번호 입니다.");
     }
 
-    public CustomerResponse findProfile(final TokenRequest tokenRequest) {
+    public CustomerProfileResponse findProfile(final TokenRequest tokenRequest) {
         Customer customer = customerDao.findById(tokenRequest.getId());
-        return CustomerResponse.from(customer);
+        return CustomerProfileResponse.from(customer);
     }
 
     @Transactional
@@ -67,6 +72,9 @@ public class CustomerService {
     public void updatePassword(final TokenRequest tokenRequest,
                                final CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         Customer customer = customerDao.findById(tokenRequest.getId());
+        if (!customer.hasSamePassword(customerUpdatePasswordRequest.getOldPassword())) {
+            throw new CustomerDataNotMatchException("기존 비밀번호와 입력한 비밀번호가 일치하지 않습니다.");
+        }
         customerDao.updatePassword(customer.getId(), customerUpdatePasswordRequest.getNewPassword());
     }
 

@@ -18,6 +18,10 @@ public class Customer {
         this.password = password;
     }
 
+    public boolean hasSamePassword(final String password) {
+        return this.password.equals(password);
+    }
+
     public Long getId() {
         return id;
     }

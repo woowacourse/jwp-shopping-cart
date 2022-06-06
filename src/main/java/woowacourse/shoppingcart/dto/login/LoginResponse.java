@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.login;
 
 import woowacourse.shoppingcart.entity.Customer;
 

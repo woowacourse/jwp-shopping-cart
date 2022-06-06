@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
@@ -19,6 +20,11 @@ public class ControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException() {
         return ResponseEntity.badRequest().body(ErrorResponse.from("예상치못한 에러가 발생했습니다."));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleDataFormatError(final MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.from(e.getBindingResult()));
     }
 
     @ExceptionHandler(DataNotFoundException.class)

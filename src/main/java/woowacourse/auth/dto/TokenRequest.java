@@ -1,7 +1,10 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.auth.dto;
+
+import javax.validation.constraints.NotBlank;
 
 public class TokenRequest {
 
+    @NotBlank(message = "입력된 값이 없습니다.")
     private Long id;
 
     private TokenRequest() {

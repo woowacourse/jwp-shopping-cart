@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.dto;
 
+import java.util.stream.Collectors;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.BindingResult;
+
 public class ErrorResponse {
 
     private String message;
@@ -17,6 +21,14 @@ public class ErrorResponse {
 
     public static ErrorResponse from(final Exception exception) {
         return new ErrorResponse(exception.getMessage());
+    }
+
+    public static ErrorResponse from(final BindingResult bindingResult) {
+        return new ErrorResponse(bindingResult.getFieldErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList())
+                .get(0));
     }
 
     public String getMessage() {

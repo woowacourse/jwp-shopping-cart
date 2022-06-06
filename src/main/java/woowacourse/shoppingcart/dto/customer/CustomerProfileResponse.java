@@ -1,24 +1,24 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.customer;
 
 import woowacourse.shoppingcart.entity.Customer;
 
-public class CustomerResponse {
+public class CustomerProfileResponse {
 
     private Long id;
     private String userId;
     private String nickname;
 
-    private CustomerResponse() {
+    private CustomerProfileResponse() {
     }
 
-    private CustomerResponse(final Long id, final String userId, final String nickname) {
+    private CustomerProfileResponse(final Long id, final String userId, final String nickname) {
         this.id = id;
         this.userId = userId;
         this.nickname = nickname;
     }
 
-    public static CustomerResponse from(final Customer customer) {
-        return new CustomerResponse(customer.getId(), customer.getUserId(), customer.getNickname());
+    public static CustomerProfileResponse from(final Customer customer) {
+        return new CustomerProfileResponse(customer.getId(), customer.getUserId(), customer.getNickname());
     }
 
     public Long getId() {
