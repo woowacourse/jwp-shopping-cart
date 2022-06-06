@@ -2,7 +2,9 @@ package woowacourse.shoppingcart.dto;
 
 public class CheckDuplicateRequest {
 
-    private final String userName;
+    private String userName;
+
+    public CheckDuplicateRequest() {}
 
     public CheckDuplicateRequest(String userName) {
         this.userName = userName;

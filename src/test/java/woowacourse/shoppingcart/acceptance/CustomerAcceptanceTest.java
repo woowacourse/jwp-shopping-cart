@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.acceptance;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.mapper.ObjectMapperType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +12,9 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,6 +75,46 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    void 중복_아이디_검사() {
+        회원_가입("testx", "1a2b3c4D!");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("userName", "testx");
+
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .body(params)
+                .when().post("/api/customers/duplication")
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().jsonPath().getBoolean("result")).isTrue();
+    }
+
+    @Test
+    void 중복되지_않은_아이디_검사() {
+        회원_가입("testx", "1a2b3c4D!");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("userName", "testxy");
+
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .body(params)
+                .when().post("/api/customers/duplication")
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().jsonPath().getBoolean("result")).isFalse();
     }
 
     @Test
