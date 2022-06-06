@@ -1,13 +1,12 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -28,7 +27,8 @@ public class ProductService {
     }
 
     public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+        return productDao.findProductById(productId)
+                .orElseThrow(InvalidProductException::new);
     }
 
     public void deleteProductById(final Long productId) {

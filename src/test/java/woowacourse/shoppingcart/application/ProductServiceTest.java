@@ -1,18 +1,21 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
@@ -32,14 +35,44 @@ public class ProductServiceTest {
     void addProduct() {
         //given
         final ProductSaveServiceRequest productRequest = new ProductSaveServiceRequest(PRODUCT_NAME, PRODUCT_PRICE,
-            PRODUCT_IMAGE_URL);
+                PRODUCT_IMAGE_URL);
         when(productDao.save(any(Product.class)))
-            .thenReturn(PRODUCT_ID);
+                .thenReturn(PRODUCT_ID);
 
         //when
-        Long actual = productService.addProduct(productRequest);
+        final Long actual = productService.addProduct(productRequest);
 
         //then
         assertThat(actual).isEqualTo(PRODUCT_ID);
+    }
+
+    @Test
+    @DisplayName("id 에 해당하는 상품을 조회한다.")
+    void findProductById() {
+        //given
+        final ProductSaveServiceRequest productRequest = new ProductSaveServiceRequest(PRODUCT_NAME, PRODUCT_PRICE,
+                PRODUCT_IMAGE_URL);
+        when(productDao.save(any(Product.class)))
+                .thenReturn(PRODUCT_ID);
+        final Long productId = productService.addProduct(productRequest);
+
+        final Product expected = new Product(productId, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE_URL);
+        when(productDao.findProductById(productId))
+                .thenReturn(Optional.of(expected));
+
+        //when
+        final Product actual = productService.findProductById(productId);
+
+        //then
+        assertThat(actual).usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("id 에 해당하는 상품이 없을 경우 예외를 던진다.")
+    void findProductById_invalidProductId_throwsException() {
+        //when, then
+        assertThatThrownBy(() -> productService.findProductById(300L))
+                .isInstanceOf(InvalidProductException.class);
     }
 }

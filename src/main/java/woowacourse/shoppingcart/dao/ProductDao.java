@@ -1,15 +1,16 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class ProductDao {
@@ -18,6 +19,14 @@ public class ProductDao {
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private Product rowMapperToProduct(Long productId, ResultSet resultSet) throws SQLException {
+        return new Product(
+                productId,
+                resultSet.getString("name"), resultSet.getInt("price"),
+                resultSet.getString("image_url")
+        );
     }
 
     public Long save(final Product product) {
@@ -35,18 +44,15 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Optional<Product> findProductById(final Long productId) {
         try {
             final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
+            Product product = jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
+                    rowMapperToProduct(productId, resultSet), productId
             );
+            return Optional.ofNullable(product);
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            return Optional.empty();
         }
     }
 
@@ -54,12 +60,7 @@ public class ProductDao {
         final String query = "SELECT id, name, price, image_url FROM product";
         return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
-                        ));
+                        rowMapperToProduct(resultSet.getLong("id"), resultSet));
     }
 
     public void delete(final Long productId) {

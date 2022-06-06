@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -9,10 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -52,7 +52,8 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(productId)
+                .orElseThrow(InvalidProductException::new);
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
