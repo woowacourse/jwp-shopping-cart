@@ -38,18 +38,6 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<ErrorResponse> handle() {
-        ErrorResponse errorResponse = new ErrorResponse("존재하지 않는 데이터 요청입니다.");
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
-
-    @ExceptionHandler({FormatException.class, DisagreeToTermsException.class})
-    public ResponseEntity<ErrorResponse> handleFormatException(RuntimeException e) {
-        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
-
     @ExceptionHandler({NotFoundProductException.class, NotInCustomerCartItemException.class})
     public ResponseEntity<ErrorResponse> handleNotFoundException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
@@ -57,35 +45,38 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity handleInvalidRequest(final BindingResult bindingResult) {
+    public ResponseEntity<ErrorResponse> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
+        ErrorResponse errorResponse = new ErrorResponse(mainError.getDefaultMessage());
 
-        return ResponseEntity.badRequest().body(mainError.getDefaultMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity<ErrorResponse> handle() {
+        ErrorResponse errorResponse = new ErrorResponse("존재하지 않는 데이터 요청입니다.");
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
+            InvalidCustomerException.class,
+            InvalidCartItemException.class,
+            InvalidProductException.class,
+            InvalidOrderException.class,
+            FormatException.class,
+            DisagreeToTermsException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler({
-            InvalidCustomerException.class,
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class
-    })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException(RuntimeException e) {
-        System.out.println(e.getMessage());
-        return ResponseEntity.badRequest().body("Unhandled Exception");
+    public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse("Unhandled Exception");
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 }
