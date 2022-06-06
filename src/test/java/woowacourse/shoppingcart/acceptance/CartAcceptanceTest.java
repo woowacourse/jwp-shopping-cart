@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.helper.fixture.TMember.MARU;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 @DisplayName("장바구니 관련 기능")
@@ -50,7 +51,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_추가되어_있음(USER, productId1);
         장바구니_아이템_추가되어_있음(USER, productId2);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        MARU.register();
+        MARU.login();
+
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(MARU.getToken());
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
@@ -79,11 +83,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
+                .when().get("/api/members/me/carts")
                 .then().log().all()
                 .extract();
     }

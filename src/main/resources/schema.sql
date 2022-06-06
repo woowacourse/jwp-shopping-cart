@@ -10,15 +10,18 @@ drop table if exists member;
 
 drop table if exists customer;
 
+-- deprecated customer
 create table customer
 (
     id       bigint       not null auto_increment,
     username varchar(255) not null,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+) engine = InnoDB
+  default charset = utf8mb4;
 
 alter table customer
     add unique key (username);
+-- deprecated customer
 
 create table member
 (
@@ -27,7 +30,8 @@ create table member
     password varchar(64)  not null,
     name     varchar(10)  not null,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+) engine = InnoDB
+  default charset = utf8mb4;
 
 alter table member
     add unique key (email);
@@ -39,30 +43,53 @@ create table product
     price     integer      not null,
     image_url varchar(255),
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+) engine = InnoDB
+  default charset = utf8mb4;
 
+-- deprecated cart
 create table cart_item
 (
     id         bigint not null auto_increment,
-    customer_id  bigint not null,
+    member_id  bigint not null,
     product_id bigint not null,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+) engine = InnoDB
+  default charset = utf8mb4;
 
 alter table cart_item
     add constraint fk_cart_item_to_member
-        foreign key (customer_id) references customer (id);
+        foreign key (member_id) references member (id);
 
 alter table cart_item
     add constraint fk_cart_item_to_product
         foreign key (product_id) references product (id);
+-- deprecated cart
+
+create table carts
+(
+    id         bigint not null auto_increment,
+    member_id  bigint not null,
+    product_id bigint not null,
+    quantity   int    not null,
+    primary key (id)
+) engine = InnoDB
+  default charset = utf8mb4;
+
+alter table carts
+    add constraint fk_cart_to_member
+        foreign key (member_id) references member (id);
+
+alter table carts
+    add constraint fk_cart_to_product
+        foreign key (product_id) references product (id);
 
 create table orders
 (
-    id        bigint not null auto_increment,
+    id          bigint not null auto_increment,
     customer_id bigint not null,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+) engine = InnoDB
+  default charset = utf8mb4;
 
 alter table orders
     add constraint fk_orders_to_member
@@ -75,7 +102,8 @@ create table orders_detail
     product_id bigint  not null,
     quantity   integer not null,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+) engine = InnoDB
+  default charset = utf8mb4;
 
 alter table orders_detail
     add constraint fk_orders_detail_to_orders
