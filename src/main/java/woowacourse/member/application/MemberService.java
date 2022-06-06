@@ -6,7 +6,6 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Email;
 import woowacourse.member.domain.Member;
-import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
@@ -77,20 +76,13 @@ public class MemberService {
         memberDao.updatePassword(member);
     }
 
-    public void deleteById(final Long id, final MemberDeleteRequest memberDeleteRequest) {
-        Member member = findById(id);
-        validateWrongPassword(memberDeleteRequest, member);
+    public void deleteById(final Long id) {
+        findById(id);
         memberDao.deleteById(id);
     }
 
     private Member findById(final Long id) {
         return memberDao.findById(id)
                 .orElseThrow(NoMemberException::new);
-    }
-
-    private void validateWrongPassword(final MemberDeleteRequest memberDeleteRequest, final Member member) {
-        if (!member.authenticate(passwordEncoder.encode(memberDeleteRequest.getPassword()))) {
-            throw new WrongPasswordException();
-        }
     }
 }

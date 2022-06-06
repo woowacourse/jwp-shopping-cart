@@ -312,7 +312,7 @@ public class MemberControllerTest extends RestDocsTest {
     @Test
     void deleteMember() throws Exception {
         MemberDeleteRequest memberDeleteRequest = new MemberDeleteRequest(PASSWORD);
-        doNothing().when(memberService).deleteById(anyLong(), any(MemberDeleteRequest.class));
+        doNothing().when(memberService).deleteById(anyLong());
         given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
         given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
 
