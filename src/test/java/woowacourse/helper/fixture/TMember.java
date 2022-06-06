@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.exception.dto.ErrorResponse;
-import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 
 public enum TMember {

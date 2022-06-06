@@ -5,12 +5,12 @@ import java.util.List;
 public class Orders {
 
     private Long id;
-    private List<OrdersDetail> orderDetails;
+    private List<OrderDetail> orderDetails;
 
     private Orders() {
     }
 
-    public Orders(final Long id, final List<OrdersDetail> orderDetails) {
+    public Orders(final Long id, final List<OrderDetail> orderDetails) {
         this.id = id;
         this.orderDetails = orderDetails;
     }
@@ -19,7 +19,7 @@ public class Orders {
         return id;
     }
 
-    public List<OrdersDetail> getOrderDetails() {
+    public List<OrderDetail> getOrderDetails() {
         return orderDetails;
     }
 }

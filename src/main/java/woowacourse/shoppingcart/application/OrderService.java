@@ -5,10 +5,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartsDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
@@ -23,16 +21,13 @@ public class OrderService {
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
     private final CartsDao cartsDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
-    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartsDao cartsDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public OrderService(final OrderDao orderDao,
+                        final OrdersDetailDao ordersDetailDao,
+                        final CartsDao cartsDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartsDao = cartsDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
     public Long addOrder(final Long memberId, final List<OrderRequest> orderRequests) {
@@ -73,7 +68,8 @@ public class OrderService {
     public List<OrderResponse> findOrdersByMemberId(final Long memberId) {
         final List<Long> orderIds = orderDao.findOrdersIdsByMemberId(memberId);
         return orderIds.stream()
-                .map(id -> new OrderResponse(id, toOrderDetailResponses(ordersDetailDao.findOrdersDetailsByOrderId(id))))
+                .map(id -> new OrderResponse(id,
+                        toOrderDetailResponses(ordersDetailDao.findOrdersDetailsByOrderId(id))))
                 .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,15 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.helper.fixture.MemberFixture.EMAIL;
+import static woowacourse.helper.fixture.MemberFixture.NAME;
+import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
+import static woowacourse.helper.fixture.MemberFixture.createMember;
+import static woowacourse.helper.fixture.ProductFixture.PRODUCT_IMAGE;
+import static woowacourse.helper.fixture.ProductFixture.PRODUCT_NAME;
+import static woowacourse.helper.fixture.ProductFixture.PRODUCT_PRICE;
+import static woowacourse.helper.fixture.ProductFixture.createProduct;
+
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
@@ -12,18 +22,7 @@ import org.springframework.test.context.TestConstructor;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.shoppingcart.domain.OrderDetail;
-
 import woowacourse.shoppingcart.domain.Product;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.helper.fixture.MemberFixture.EMAIL;
-import static woowacourse.helper.fixture.MemberFixture.NAME;
-import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
-import static woowacourse.helper.fixture.MemberFixture.createMember;
-import static woowacourse.helper.fixture.ProductFixture.PRODUCT_IMAGE;
-import static woowacourse.helper.fixture.ProductFixture.PRODUCT_NAME;
-import static woowacourse.helper.fixture.ProductFixture.PRODUCT_PRICE;
-import static woowacourse.helper.fixture.ProductFixture.createProduct;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

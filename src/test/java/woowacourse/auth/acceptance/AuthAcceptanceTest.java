@@ -1,12 +1,10 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.helper.fixture.TMember.MARU;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;

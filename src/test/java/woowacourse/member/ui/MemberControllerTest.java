@@ -37,7 +37,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.helper.restdocs.RestDocsTest;
-import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;

@@ -1,5 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.helper.fixture.MemberFixture.EMAIL;
+import static woowacourse.helper.fixture.MemberFixture.NAME;
+import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
+import static woowacourse.helper.fixture.MemberFixture.createMember;
+
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,17 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
-
-import java.util.List;
-import woowacourse.helper.fixture.MemberFixture;
 import woowacourse.member.dao.MemberDao;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.helper.fixture.MemberFixture.EMAIL;
-import static woowacourse.helper.fixture.MemberFixture.NAME;
-import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
-import static woowacourse.helper.fixture.MemberFixture.createMember;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

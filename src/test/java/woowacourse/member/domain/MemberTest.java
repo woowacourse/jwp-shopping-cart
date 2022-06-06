@@ -19,7 +19,6 @@ import woowacourse.member.exception.NameNotValidException;
 import woowacourse.member.exception.PasswordChangeException;
 import woowacourse.member.exception.PasswordNotValidException;
 import woowacourse.member.exception.WrongPasswordException;
-import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 
 public class MemberTest {
 

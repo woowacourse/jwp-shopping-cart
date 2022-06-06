@@ -9,7 +9,6 @@ import static woowacourse.helper.fixture.TMember.MARU;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import javax.print.attribute.standard.MediaSize.NA;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
