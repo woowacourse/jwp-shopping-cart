@@ -57,7 +57,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+        Product productRequest = new Product(name, price, 100, imageUrl);
 
         return RestAssured
                 .given().log().all()
