@@ -57,14 +57,9 @@ public class CustomerServiceTest {
 
     @Test
     void 비밀번호를_수정하는_경우() {
-<<<<<<< HEAD
         var username = "puterism";
         var authorizedCustomer = new AuthorizedCustomer(username, "crew01@naver.com", "a12345");
         var changePasswordRequest = new ChangePasswordRequest("a12345", "a123456");
-=======
-        String username = "puterism";
-        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("a12345", "a1234");
->>>>>>> f228576108e7e02efd8fa4de8e11163aa42b935b
 
         customerService.changePassword(authorizedCustomer, changePasswordRequest);
 
@@ -100,13 +95,7 @@ public class CustomerServiceTest {
         var authorizedCustomer = new AuthorizedCustomer(username, "crew01@naver.com", "a12345");
         var deleteCustomerRequest = new DeleteCustomerRequest("a12345");
 
-<<<<<<< HEAD
         customerService.deleteUser(authorizedCustomer, deleteCustomerRequest);
-=======
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("a12345");
-
-        customerService.deleteUser(username, deleteCustomerRequest);
->>>>>>> f228576108e7e02efd8fa4de8e11163aa42b935b
 
         assertThat(customerDao.isExistName(username)).isFalse();
     }

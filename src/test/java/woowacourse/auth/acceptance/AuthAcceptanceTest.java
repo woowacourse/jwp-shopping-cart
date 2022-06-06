@@ -58,22 +58,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertThat(extract.body().jsonPath().getString("message"))
                 .isEqualTo("[ERROR] 올바른 이메일 형식이 아닙니다.");
-<<<<<<< HEAD
-=======
-    }
-
-    @Test
-    void 로그인시_이메일의_길이가_64자_초과인_경우() {
-        SignInRequest signInRequest = new SignInRequest(
-                "0123456789012345678901234567890123456789012345678901234@naver.com",
-                VALID_PASSWORD
-        );
-
-        var extract = createSignInResult(signInRequest, HttpStatus.BAD_REQUEST);
-
-        assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 이메일의 길이는 64자를 넘을수 없습니다.");
->>>>>>> f228576108e7e02efd8fa4de8e11163aa42b935b
     }
 
     @ParameterizedTest
@@ -86,30 +70,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertThat(extract.body().jsonPath().getString("message"))
                 .contains("[ERROR]", "비밀번호");
-<<<<<<< HEAD
-=======
-    }
-
-    @Test
-    void 로그인시_비밀번호가_6자_미만인_경우() {
-        SignInRequest signInRequest = new SignInRequest(VALID_EMAIL, "a1234");
-
-        var extract = createSignInResult(signInRequest, HttpStatus.BAD_REQUEST);
-
-        assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 6자 이상이어야 합니다.");
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"칙촉1234", "a b1234"})
-    void 로그인시_비밀번호에_한글이_포함된_경우(String invalidPassword) {
-        SignInRequest signInRequest = new SignInRequest(VALID_EMAIL, invalidPassword);
-
-        var extract = createSignInResult(signInRequest, HttpStatus.BAD_REQUEST);
-
-        assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 한글이나 공백을 포함할 수 없습니다.");
->>>>>>> f228576108e7e02efd8fa4de8e11163aa42b935b
     }
 
     @Test
