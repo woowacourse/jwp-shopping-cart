@@ -8,6 +8,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -27,14 +28,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
+import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.exception.badrequest.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.unit.ControllerTest;
 
 class CartItemControllerTest extends ControllerTest {
+
+    private static final String REQUEST_URL = "/users/me/carts";
 
     @Test
     @DisplayName("장바구니에 상품을 추가한다.")
@@ -49,7 +54,7 @@ class CartItemControllerTest extends ControllerTest {
 
         // when
         final ResultActions perform = mockMvc.perform(
-                post("/users/me/carts")
+                post(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
@@ -88,7 +93,7 @@ class CartItemControllerTest extends ControllerTest {
 
         // when
         final ResultActions perform = mockMvc.perform(
-                post("/users/me/carts")
+                post(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
@@ -129,7 +134,7 @@ class CartItemControllerTest extends ControllerTest {
 
         // when
         final ResultActions perform = mockMvc.perform(
-                post("/users/me/carts")
+                post(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
@@ -180,7 +185,7 @@ class CartItemControllerTest extends ControllerTest {
 
         // when
         final ResultActions perform = mockMvc.perform(
-                get("/users/me/carts")
+                get(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                         .accept(MediaType.ALL)
@@ -209,6 +214,111 @@ class CartItemControllerTest extends ControllerTest {
     }
 
     @Test
+    @DisplayName("장바구니에 들어있는 상품의 수량을 변경한다.")
+    void changeQuantity_existProduct_200() throws Exception {
+        // given
+        String accessToken = "fake-token";
+        final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
+        getLoginCustomerByToken(accessToken, customer);
+
+        final Product product = new Product(7L, "망고망고", 6500, "mangomango.go");
+
+        final QuantityChangingRequest request = new QuantityChangingRequest(3);
+        final String json = objectMapper.writeValueAsString(request);
+
+        final Cart cart = new Cart(1L, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(),
+                request.getQuantity());
+        given(cartService.changeQuantity(customer, product.getId(), request))
+                .willReturn(cart);
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                put(REQUEST_URL + "/{productId}", product.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(product.getId()))
+                .andExpect(jsonPath("quantity").value(request.getQuantity()));
+
+        // docs
+        perform.andDo(document("change-quantity-success",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                pathParameters(
+                        parameterWithName("productId").description("상품 ID")
+                ),
+                requestFields(
+                        fieldWithPath("quantity").description("변경하려는 수량")
+                ),
+                responseFields(
+                        fieldWithPath("id").description("상품 ID"),
+                        fieldWithPath("name").description("상품명"),
+                        fieldWithPath("price").description("상품 가격"),
+                        fieldWithPath("imageUrl").description("상품 사진 url"),
+                        fieldWithPath("quantity").description("변경된 수량")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("장바구니에 없는 상품을 수정하면 400을 반환한다.")
+    void changeQuantity_notExistProduct_400() throws Exception {
+        // given
+        String accessToken = "fake-token";
+        final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
+        getLoginCustomerByToken(accessToken, customer);
+
+        final Product product = new Product(7L, "망고망고", 6500, "mangomango.go");
+
+        final QuantityChangingRequest request = new QuantityChangingRequest(3);
+        final String json = objectMapper.writeValueAsString(request);
+
+        given(cartService.changeQuantity(customer, product.getId(), request))
+                .willThrow(new NoExistCartItemException());
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                put(REQUEST_URL + "/{productId}", product.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errorCode").value("1004"))
+                .andExpect(jsonPath("message").value("장바구니에 상품이 존재하지 않습니다."));
+
+        // docs
+        perform.andDo(document("change-quantity-not-exist-product",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                pathParameters(
+                        parameterWithName("productId").description("상품 ID")
+                ),
+                requestFields(
+                        fieldWithPath("quantity").description("변경하려는 수량")
+                ),
+                responseFields(
+                        fieldWithPath("errorCode").description("에러 코드"),
+                        fieldWithPath("message").description("에러 메시지")
+                )
+        ));
+    }
+
+    @Test
     @DisplayName("장바구니에 들어있는 상품을 삭제한다.")
     void deleteCartItem_existProduct_204() throws Exception {
         // given
@@ -219,7 +329,7 @@ class CartItemControllerTest extends ControllerTest {
 
         // when
         final ResultActions perform = mockMvc.perform(
-                delete("/users/me/carts/{productId}", productId)
+                delete(REQUEST_URL + "/{productId}", productId)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                         .accept(MediaType.ALL)
@@ -256,7 +366,7 @@ class CartItemControllerTest extends ControllerTest {
 
         // when
         final ResultActions perform = mockMvc.perform(
-                delete("/users/me/carts/{productId}", productId)
+                delete(REQUEST_URL + "/{productId}", productId)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                         .accept(MediaType.ALL)
