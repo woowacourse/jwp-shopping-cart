@@ -94,3 +94,47 @@
     - [x] Authorization 자체가 없는 경우 커스텀 예외 처리
 
 </details>
+
+<details>
+<summary>2단계 기능 목록</summary>
+
+### 기능 목록
+
+[링크](https://puzzled-mongoose-068.notion.site/API-7fd3d9e631e747f895ebced15b351db3)
+
+- 고객(customer) 관련 기능
+    - 회원가입
+    - 회원 정보 조회
+    - 회원 정보 수정
+    - 회원 탈퇴
+    - [ ] username 중복 확인
+    - [ ] email 중복 확인
+- 상품(product) 관련 기능
+    - 상품 조회
+    - 상품 전체 조회
+    - 상품 추가
+    - 상품 삭제
+- 장바구니(cartItem) 관련 기능
+    - 장바구니 조회
+    - 장바구니 추가
+    - 장바구니 삭제
+    - [ ] 장바구니 품목 수량 수정
+- 주문(order) 관련 기능
+    - 주문하기
+    - 주문 단건 조회
+    - 모든 주문 내역 조회
+
+### 레거시 리팩터링
+
+- [ ] cartItem 테이블에 quantity 칼럼 추가
+- [ ] product 테이블에 deleted (판매중인지) 칼럼 추가
+- [ ] 파라미터 final 제거
+- [ ] dto로 사용되고 있는 domain 패키지를 dto 패키지로 수정
+- [ ] domain 새로 만들기
+- [ ] PathVariable customerName 를 token 을 이용하도록 수정
+- api 명세 수정
+    - [ ] 팀 회의로 결정된 api 명세에 맞도록 path 수정
+    - [ ] 팀 회의로 결정된 api 명세에 맞도록 request, response 수정
+    - [ ] 팀 회의로 결정된 api 명세에 맞도록 예외처리 수정
+
+</details>
