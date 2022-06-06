@@ -56,7 +56,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
     private List<Long> 상품_id_목록(ExtractableResponse<Response> response) {
         return response.jsonPath()
-                .getList(".", ProductResponse.class)
+                .getList("products", ProductResponse.class)
                 .stream()
                 .map(ProductResponse::getId)
                 .collect(Collectors.toUnmodifiableList());

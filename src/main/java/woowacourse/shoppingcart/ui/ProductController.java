@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.application.dto.ProductRequest;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
+import woowacourse.shoppingcart.ui.dto.ProductsResponse;
 
 @RestController
 @RequestMapping("/products")
@@ -43,8 +43,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductResponse> findAll() {
-        return productService.findAll();
+    public ProductsResponse findAll() {
+        return new ProductsResponse(productService.findAll());
     }
 
     @DeleteMapping("/{productId}")
