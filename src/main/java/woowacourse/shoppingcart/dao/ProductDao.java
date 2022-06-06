@@ -4,7 +4,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.sql.PreparedStatement;

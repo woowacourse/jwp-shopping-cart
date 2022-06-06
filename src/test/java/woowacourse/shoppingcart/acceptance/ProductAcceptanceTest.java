@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.Product;
 
 import java.util.List;
 import java.util.stream.Collectors;

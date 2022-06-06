@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.dto.Product;
+
 public class Cart {
 
     private Long id;
