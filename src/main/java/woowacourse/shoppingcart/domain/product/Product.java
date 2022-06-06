@@ -1,20 +1,18 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.product;
 
 public class Product {
-    private Long id;
-    private String name;
-    private int price;
-    private int stock;
-    private String imageUrl;
 
-    public Product() {
-    }
+    private final Long id;
+    private final ProductName productName;
+    private final Price price;
+    private final Stock stock;
+    private final String imageUrl;
 
     public Product(final Long id, final String name, final int price, final int stock, final String imageUrl) {
         this.id = id;
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
+        this.productName = new ProductName(name);
+        this.price = new Price(price);
+        this.stock = new Stock(stock);
         this.imageUrl = imageUrl;
     }
 
@@ -27,15 +25,15 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return productName.getName();
     }
 
     public int getPrice() {
-        return price;
+        return price.getPrice();
     }
 
     public int getStock() {
-        return stock;
+        return stock.getStock();
     }
 
     public String getImageUrl() {
