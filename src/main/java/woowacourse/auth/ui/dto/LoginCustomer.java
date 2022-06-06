@@ -1,4 +1,4 @@
-package woowacourse.auth.ui;
+package woowacourse.auth.ui.dto;
 
 import javax.validation.constraints.Positive;
 
