@@ -22,7 +22,7 @@ public class OrderDetailDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrdersDetail(final Long orderId, final Long productId, final int quantity) {
+    public Long addOrderDetail(final Long orderId, final Long productId, final int quantity) {
         final String sql = "INSERT INTO order_detail (order_id, product_id, quantity) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 

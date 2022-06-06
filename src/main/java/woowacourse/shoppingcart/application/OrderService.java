@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.order.Order;
 import woowacourse.shoppingcart.exception.domain.InvalidOrderException;
 import woowacourse.shoppingcart.ui.dto.OrderDetailRequest;
@@ -42,8 +43,8 @@ public class OrderService {
     }
 
     private void moveCartItemToOrderDetail(Long orderId, Long cartId, int quantity) {
-        orderDetailDao.addOrdersDetail(orderId, cartItemDao.findProductIdById(cartId), quantity);
-        cartItemDao.deleteCartItem(cartId);
+        orderDetailDao.addOrderDetail(orderId, cartItemDao.findProductIdById(cartId), quantity);
+        cartItemDao.deleteById(cartId);
     }
 
     @Transactional(readOnly = true)

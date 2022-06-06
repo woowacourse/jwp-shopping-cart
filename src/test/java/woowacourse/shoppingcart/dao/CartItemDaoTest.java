@@ -77,6 +77,19 @@ public class CartItemDaoTest {
         );
     }
 
+    @DisplayName("cart의 id로 product의 id를 찾는다.")
+    @Test
+    void findProductIdById() {
+        // given
+        final long id = 1L;
+
+        // when
+        final Long productId = cartItemDao.findProductIdById(id);
+
+        // then
+        assertThat(productId).isEqualTo(1L);
+    }
+
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
@@ -114,7 +127,7 @@ public class CartItemDaoTest {
         final Long cartId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteById(cartId);
 
         // then
         final Long customerId = 1L;

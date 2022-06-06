@@ -64,7 +64,7 @@ public class CartItemDao {
         return jdbcTemplate.queryForObject(query, Long.class, customerId, productId);
     }
 
-    public void deleteCartItem(final Long id) {
+    public void deleteById(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
         final int rowCount = jdbcTemplate.update(sql, id);

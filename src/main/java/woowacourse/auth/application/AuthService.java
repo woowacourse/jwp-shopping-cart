@@ -9,6 +9,7 @@ import woowacourse.auth.exception.AuthenticationFailureException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.UserName;
 
 @Service
 public class AuthService {
@@ -22,7 +23,7 @@ public class AuthService {
     }
 
     public TokenResponse createToken(TokenRequest tokenRequest) {
-        Customer customer = customerDao.findByName(tokenRequest.getName())
+        Customer customer = customerDao.findByName(new UserName(tokenRequest.getName()))
             .orElseThrow(AuthenticationFailureException::new);
         if (!customer.isPasswordMatch(tokenRequest.getPassword(), new BcryptPasswordMatcher())) {
             throw new AuthenticationFailureException();

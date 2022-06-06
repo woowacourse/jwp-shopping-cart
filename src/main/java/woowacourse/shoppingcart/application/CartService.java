@@ -42,7 +42,7 @@ public class CartService {
 
     public void deleteCart(final Long customerId, final Long cartId) {
         validateCustomerHasCartItem(cartId, customerId);
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteById(cartId);
     }
 
     private void validateCustomerHasCartItem(final Long cartId, final Long customerId) {

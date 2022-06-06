@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.DistinctAttribute;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
 
 @Repository
@@ -39,15 +40,6 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long findIdByName(final String name) {
-        try {
-            final String query = "SELECT id FROM customer WHERE name = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, name.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new CustomerNotFoundException();
-        }
-    }
-
     public Optional<Long> save(final Customer customer) {
         final String query = "INSERT INTO customer (name, password, email, address, phone_number) "
             + "VALUES (?, ?, ?, ?, ?)";
@@ -68,10 +60,10 @@ public class CustomerDao {
         }
     }
 
-    public Optional<Customer> findByName(final String name) {
+    public Optional<Customer> findByName(final UserName userName) {
         final String query = "SELECT * FROM customer WHERE name = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, name));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, userName.getValue()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -102,7 +94,6 @@ public class CustomerDao {
     }
 
     public boolean isDuplicated(String column, DistinctAttribute attribute) {
-        // TODO : try-catch exception
         final String query = String.format("SELECT EXISTS(SELECT 1 FROM customer WHERE %s = ?)", column);
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, attribute.getDistinctive()));
     }
