@@ -319,6 +319,53 @@ class CartItemControllerTest extends ControllerTest {
     }
 
     @Test
+    @DisplayName("변경하려는 수량이 유효하지 않으면 400을 반환한다.")
+    void changeQuantity_invalidQuantity_400() throws Exception {
+        // given
+        String accessToken = "fake-token";
+        final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
+        getLoginCustomerByToken(accessToken, customer);
+
+        final Product product = new Product(7L, "망고망고", 6500, "mangomango.go");
+
+        final QuantityChangingRequest request = new QuantityChangingRequest(-1);
+        final String json = objectMapper.writeValueAsString(request);
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                put(REQUEST_URL + "/{productId}", product.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errorCode").value("1000"))
+                .andExpect(jsonPath("message").value("수량이 유효하지 않습니다."));
+
+        // docs
+        perform.andDo(document("change-quantity-invalid-quantity",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                pathParameters(
+                        parameterWithName("productId").description("상품 ID")
+                ),
+                requestFields(
+                        fieldWithPath("quantity").description("변경하려는 수량")
+                ),
+                responseFields(
+                        fieldWithPath("errorCode").description("에러 코드"),
+                        fieldWithPath("message").description("에러 메시지")
+                )
+        ));
+    }
+
+    @Test
     @DisplayName("장바구니에 들어있는 상품을 삭제한다.")
     void deleteCartItem_existProduct_204() throws Exception {
         // given

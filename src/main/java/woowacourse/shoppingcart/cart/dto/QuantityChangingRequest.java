@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.cart.dto;
 
 import java.util.Objects;
+import javax.validation.constraints.Positive;
 
 public class QuantityChangingRequest {
 
+    @Positive(message = "수량이 유효하지 않습니다.")
     private int quantity;
 
     private QuantityChangingRequest() {

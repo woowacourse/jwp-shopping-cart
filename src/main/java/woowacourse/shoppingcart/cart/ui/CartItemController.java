@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.cart.ui;
 
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +52,7 @@ public class CartItemController {
     @PutMapping("/{productId}")
     public ResponseEntity<CartItemResponse> changeQuantity(@Login final Customer customer,
                                                            @PathVariable final Long productId,
-                                                           @RequestBody final QuantityChangingRequest request) {
+                                                           @RequestBody @Valid final QuantityChangingRequest request) {
         final Cart item = cartService.changeQuantity(customer, productId, request);
         final Product product = new Product(item.getProductId(), item.getName(), item.getPrice(), item.getImageUrl());
         final CartItemResponse response = new CartItemResponse(product, request.getQuantity());
