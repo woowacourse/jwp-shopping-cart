@@ -20,14 +20,14 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.ui.dto.request.LoginRequest;
-import woowacourse.auth.ui.dto.request.MemberCreateRequest;
-import woowacourse.auth.ui.dto.request.MemberUpdateRequest;
-import woowacourse.auth.ui.dto.request.PasswordRequest;
-import woowacourse.auth.ui.dto.response.CheckResponse;
-import woowacourse.auth.ui.dto.response.ErrorResponse;
-import woowacourse.auth.ui.dto.response.LoginResponse;
-import woowacourse.auth.ui.dto.response.MemberResponse;
+import woowacourse.auth.dto.request.LoginRequest;
+import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.MemberUpdateRequest;
+import woowacourse.auth.dto.request.PasswordRequest;
+import woowacourse.auth.dto.response.CheckResponse;
+import woowacourse.auth.dto.response.ErrorResponse;
+import woowacourse.auth.dto.response.LoginResponse;
+import woowacourse.auth.dto.response.MemberResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")

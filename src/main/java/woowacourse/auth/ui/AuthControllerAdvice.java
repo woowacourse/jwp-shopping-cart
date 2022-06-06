@@ -7,7 +7,7 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationException;
-import woowacourse.auth.ui.dto.response.ErrorResponse;
+import woowacourse.auth.dto.response.ErrorResponse;
 
 @RestControllerAdvice
 public class AuthControllerAdvice {

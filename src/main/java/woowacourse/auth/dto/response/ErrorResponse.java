@@ -1,4 +1,4 @@
-package woowacourse.auth.ui.dto.response;
+package woowacourse.auth.dto.response;
 
 public class ErrorResponse {
 

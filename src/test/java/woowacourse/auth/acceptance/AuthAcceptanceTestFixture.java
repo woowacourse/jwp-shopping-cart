@@ -1,9 +1,9 @@
 package woowacourse.auth.acceptance;
 
-import woowacourse.auth.ui.dto.request.LoginRequest;
-import woowacourse.auth.ui.dto.request.MemberCreateRequest;
-import woowacourse.auth.ui.dto.request.MemberUpdateRequest;
-import woowacourse.auth.ui.dto.request.PasswordRequest;
+import woowacourse.auth.dto.request.LoginRequest;
+import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.MemberUpdateRequest;
+import woowacourse.auth.dto.request.PasswordRequest;
 
 public class AuthAcceptanceTestFixture {
 

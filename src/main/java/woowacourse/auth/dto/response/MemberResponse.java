@@ -1,13 +1,16 @@
-package woowacourse.auth.application.dto.response;
+package woowacourse.auth.dto.response;
 
 import woowacourse.auth.domain.Member;
 
-public class MemberServiceResponse {
+public class MemberResponse {
 
-    private final String email;
-    private final String nickname;
+    private String email;
+    private String nickname;
 
-    public MemberServiceResponse(Member member) {
+    public MemberResponse() {
+    }
+
+    public MemberResponse(Member member) {
         this.email = member.getEmail();
         this.nickname = member.getNickname();
     }

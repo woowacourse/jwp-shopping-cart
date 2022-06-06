@@ -15,12 +15,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.application.dto.request.LoginServiceRequest;
-import woowacourse.auth.application.dto.request.MemberCreateServiceRequest;
-import woowacourse.auth.application.dto.request.MemberUpdateServiceRequest;
-import woowacourse.auth.application.dto.response.LoginServiceResponse;
-import woowacourse.auth.application.dto.response.MemberServiceResponse;
 import woowacourse.auth.exception.AuthorizationException;
+import woowacourse.auth.dto.request.LoginRequest;
+import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.MemberUpdateRequest;
+import woowacourse.auth.dto.response.LoginResponse;
+import woowacourse.auth.dto.response.MemberResponse;
 
 @SpringBootTest
 @Sql("file:src/test/java/woowacourse/resources/memberTest.sql")
@@ -40,13 +40,13 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        authService.save(new MemberCreateServiceRequest(EMAIL, PASSWORD, NICKNAME));
+        authService.save(new MemberCreateRequest(EMAIL, PASSWORD, NICKNAME));
     }
 
     @DisplayName("이미 존재하는 이메일로 회원을 생성하려고 하면 예외를 반환한다.")
     @Test
     void saveMember_DuplicatedEmail() {
-        assertThatThrownBy(() -> authService.save(new MemberCreateServiceRequest(EMAIL, PASSWORD, NICKNAME)))
+        assertThatThrownBy(() -> authService.save(new MemberCreateRequest(EMAIL, PASSWORD, NICKNAME)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 존재하는 이메일 주소입니다.");
     }
@@ -54,13 +54,13 @@ class AuthServiceTest {
     @DisplayName("로그인에 성공하면 jwt 토큰과 닉네임을 반환한다.")
     @Test
     void login() {
-        LoginServiceRequest loginRequest = new LoginServiceRequest(EMAIL, PASSWORD);
+        LoginRequest loginRequest = new LoginRequest(EMAIL, PASSWORD);
 
-        LoginServiceResponse loginServiceResponse = authService.login(loginRequest);
+        LoginResponse loginResponse = authService.login(loginRequest);
 
         assertAll(
-                () -> assertThat(loginServiceResponse.getToken()).isNotNull(),
-                () -> assertThat(loginServiceResponse.getNickname()).isEqualTo(NICKNAME)
+                () -> assertThat(loginResponse.getToken()).isNotNull(),
+                () -> assertThat(loginResponse.getNickname()).isEqualTo(NICKNAME)
         );
     }
 
@@ -68,7 +68,7 @@ class AuthServiceTest {
     @ParameterizedTest
     @CsvSource({"abc@naver.com, 1q2w3e4r!", "abc@woowahan.com, asdas1123!", "abc@naver.com, asdas1123!"})
     void login_Invalid(String email, String password) {
-        LoginServiceRequest loginRequest = new LoginServiceRequest(email, password);
+        LoginRequest loginRequest = new LoginRequest(email, password);
 
         assertThatThrownBy(() -> authService.login(loginRequest))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -87,8 +87,8 @@ class AuthServiceTest {
     @DisplayName("이메일과 수정할 회원 정보를 받아 회원 정보를 수정한다.")
     @Test
     void updateMember() {
-        authService.updateMember(MEMBER_ID, new MemberUpdateServiceRequest(NEW_NICKNAME));
-        LoginServiceRequest loginRequest = new LoginServiceRequest(EMAIL, PASSWORD);
+        authService.updateMember(MEMBER_ID, new MemberUpdateRequest(NEW_NICKNAME));
+        LoginRequest loginRequest = new LoginRequest(EMAIL, PASSWORD);
 
         String updatedNickname = authService.login(loginRequest)
                 .getNickname();
@@ -100,7 +100,7 @@ class AuthServiceTest {
     @Test
     void updateMember_NotFoundMember() {
         assertThatThrownBy(
-                () -> authService.updateMember(NON_EXISTING_MEMBER_ID, new MemberUpdateServiceRequest(NEW_NICKNAME)))
+                () -> authService.updateMember(NON_EXISTING_MEMBER_ID, new MemberUpdateRequest(NEW_NICKNAME)))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("유효하지 않은 토큰입니다.");
     }
@@ -110,7 +110,7 @@ class AuthServiceTest {
     void updatePassword_InvalidNicknameFormat() {
         String invalidNickname = "1234";
 
-        assertThatThrownBy(() -> authService.updateMember(MEMBER_ID, new MemberUpdateServiceRequest(invalidNickname)))
+        assertThatThrownBy(() -> authService.updateMember(MEMBER_ID, new MemberUpdateRequest(invalidNickname)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("닉네임 형식이 올바르지 않습니다.");
     }
@@ -120,7 +120,7 @@ class AuthServiceTest {
     void updatePassword() {
         authService.updatePassword(MEMBER_ID, NEW_PASSWORD);
 
-        LoginServiceRequest loginRequest = new LoginServiceRequest(EMAIL, NEW_PASSWORD);
+        LoginRequest loginRequest = new LoginRequest(EMAIL, NEW_PASSWORD);
 
         assertThatCode(() -> authService.login(loginRequest))
                 .doesNotThrowAnyException();
@@ -129,11 +129,11 @@ class AuthServiceTest {
     @DisplayName("회원의 정보를 반환한다.")
     @Test
     void findMember() {
-        MemberServiceResponse memberServiceResponse = authService.findMember(MEMBER_ID);
+        MemberResponse memberResponse = authService.findMember(MEMBER_ID);
 
         assertAll(
-                () -> assertThat(memberServiceResponse.getEmail()).isEqualTo(EMAIL),
-                () -> assertThat(memberServiceResponse.getNickname()).isEqualTo(NICKNAME)
+                () -> assertThat(memberResponse.getEmail()).isEqualTo(EMAIL),
+                () -> assertThat(memberResponse.getNickname()).isEqualTo(NICKNAME)
         );
     }
 

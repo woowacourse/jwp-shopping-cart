@@ -14,15 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.application.dto.response.MemberServiceResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.ui.dto.request.LoginRequest;
-import woowacourse.auth.ui.dto.request.MemberCreateRequest;
-import woowacourse.auth.ui.dto.request.MemberUpdateRequest;
-import woowacourse.auth.ui.dto.request.PasswordRequest;
-import woowacourse.auth.ui.dto.response.CheckResponse;
-import woowacourse.auth.ui.dto.response.LoginResponse;
-import woowacourse.auth.ui.dto.response.MemberResponse;
+import woowacourse.auth.dto.request.LoginRequest;
+import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.MemberUpdateRequest;
+import woowacourse.auth.dto.request.PasswordRequest;
+import woowacourse.auth.dto.response.CheckResponse;
+import woowacourse.auth.dto.response.LoginResponse;
+import woowacourse.auth.dto.response.MemberResponse;
 
 @RestController
 @Validated
@@ -37,22 +36,20 @@ public class AuthController {
 
     @PostMapping("/members")
     public ResponseEntity<Void> signUp(@RequestBody @Valid MemberCreateRequest memberCreateRequest) {
-        authService.save(memberCreateRequest.toServiceDto());
+        authService.save(memberCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
     @GetMapping("/members/check-email")
     public ResponseEntity<CheckResponse> checkDuplicatedEmail(@RequestParam @NotBlank String email) {
-        CheckResponse checkResponse =
-                new CheckResponse(!authService.existsEmail(email));
+        CheckResponse checkResponse = new CheckResponse(!authService.existsEmail(email));
         return ResponseEntity.ok(checkResponse);
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
-        LoginResponse loginResponse = new LoginResponse(authService.login(loginRequest.toServiceDto()));
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.ok(authService.login(loginRequest));
     }
 
     @PostMapping("/members/password-check")
@@ -64,14 +61,13 @@ public class AuthController {
 
     @GetMapping("/members/me")
     public ResponseEntity<MemberResponse> showMember(@AuthenticationPrincipal long memberId) {
-        MemberServiceResponse memberServiceResponse = authService.findMember(memberId);
-        return ResponseEntity.ok(new MemberResponse(memberServiceResponse));
+        return ResponseEntity.ok(authService.findMember(memberId));
     }
 
     @PatchMapping("/members/me")
     public ResponseEntity<Void> updateMember(@AuthenticationPrincipal long memberId,
                                              @RequestBody @Valid MemberUpdateRequest memberUpdateRequest) {
-        authService.updateMember(memberId, memberUpdateRequest.toServiceDto());
+        authService.updateMember(memberId, memberUpdateRequest);
         return ResponseEntity.noContent()
                 .build();
     }

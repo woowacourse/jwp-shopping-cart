@@ -1,7 +1,6 @@
-package woowacourse.auth.ui.dto.request;
+package woowacourse.auth.dto.request;
 
 import javax.validation.constraints.NotBlank;
-import woowacourse.auth.application.dto.request.MemberCreateServiceRequest;
 
 public class MemberCreateRequest {
 
@@ -31,9 +30,5 @@ public class MemberCreateRequest {
 
     public String getNickname() {
         return nickname;
-    }
-
-    public MemberCreateServiceRequest toServiceDto() {
-        return new MemberCreateServiceRequest(email, password, nickname);
     }
 }

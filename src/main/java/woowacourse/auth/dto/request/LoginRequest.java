@@ -1,7 +1,6 @@
-package woowacourse.auth.ui.dto.request;
+package woowacourse.auth.dto.request;
 
 import javax.validation.constraints.NotBlank;
-import woowacourse.auth.application.dto.request.LoginServiceRequest;
 
 public class LoginRequest {
 
@@ -24,9 +23,5 @@ public class LoginRequest {
 
     public String getPassword() {
         return password;
-    }
-
-    public LoginServiceRequest toServiceDto() {
-        return new LoginServiceRequest(email, password);
     }
 }

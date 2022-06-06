@@ -1,7 +1,6 @@
-package woowacourse.auth.ui.dto.request;
+package woowacourse.auth.dto.request;
 
 import javax.validation.constraints.NotBlank;
-import woowacourse.auth.application.dto.request.MemberUpdateServiceRequest;
 
 public class MemberUpdateRequest {
 
@@ -17,9 +16,5 @@ public class MemberUpdateRequest {
 
     public String getNickname() {
         return nickname;
-    }
-
-    public MemberUpdateServiceRequest toServiceDto() {
-        return new MemberUpdateServiceRequest(nickname);
     }
 }

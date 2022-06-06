@@ -2,11 +2,6 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.application.dto.request.LoginServiceRequest;
-import woowacourse.auth.application.dto.request.MemberCreateServiceRequest;
-import woowacourse.auth.application.dto.request.MemberUpdateServiceRequest;
-import woowacourse.auth.application.dto.response.LoginServiceResponse;
-import woowacourse.auth.application.dto.response.MemberServiceResponse;
 import woowacourse.auth.dao.MemberDao;
 import woowacourse.auth.domain.Email;
 import woowacourse.auth.domain.Member;
@@ -14,6 +9,11 @@ import woowacourse.auth.domain.Nickname;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.support.TokenManager;
+import woowacourse.auth.dto.request.LoginRequest;
+import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.auth.dto.request.MemberUpdateRequest;
+import woowacourse.auth.dto.response.LoginResponse;
+import woowacourse.auth.dto.response.MemberResponse;
 
 @Service
 public class AuthService {
@@ -27,15 +27,15 @@ public class AuthService {
     }
 
     @Transactional
-    public void save(MemberCreateServiceRequest memberCreateServiceRequest) {
-        validateUniqueEmail(memberCreateServiceRequest);
-        Member member = new Member(memberCreateServiceRequest.getEmail(), memberCreateServiceRequest.getPassword(),
-                memberCreateServiceRequest.getNickname());
+    public void save(MemberCreateRequest memberCreateRequest) {
+        validateUniqueEmail(memberCreateRequest);
+        Member member = new Member(memberCreateRequest.getEmail(), memberCreateRequest.getPassword(),
+                memberCreateRequest.getNickname());
         memberDao.save(member);
     }
 
-    private void validateUniqueEmail(MemberCreateServiceRequest memberCreateServiceRequest) {
-        if (existsEmail(memberCreateServiceRequest.getEmail())) {
+    private void validateUniqueEmail(MemberCreateRequest memberCreateRequest) {
+        if (existsEmail(memberCreateRequest.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일 주소입니다.");
         }
     }
@@ -47,14 +47,14 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public LoginServiceResponse login(LoginServiceRequest loginServiceRequest) {
-        Member member = findByEmailAndPassword(loginServiceRequest);
+    public LoginResponse login(LoginRequest loginRequest) {
+        Member member = findByEmailAndPassword(loginRequest);
         String token = tokenManager.createToken(member.getId());
-        return new LoginServiceResponse(token, member.getNickname());
+        return new LoginResponse(token, member.getNickname());
     }
 
-    private Member findByEmailAndPassword(LoginServiceRequest loginServiceRequest) {
-        return memberDao.findByEmailAndPassword(loginServiceRequest.getEmail(), loginServiceRequest.getPassword())
+    private Member findByEmailAndPassword(LoginRequest loginRequest) {
+        return memberDao.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword())
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
     }
 
@@ -64,16 +64,16 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public MemberServiceResponse findMember(long memberId) {
+    public MemberResponse findMember(long memberId) {
         Member member = memberDao.findById(memberId)
                 .orElseThrow(() -> new AuthorizationException("유효하지 않은 토큰입니다."));
-        return new MemberServiceResponse(member);
+        return new MemberResponse(member);
     }
 
     @Transactional
-    public void updateMember(long memberId, MemberUpdateServiceRequest memberUpdateServiceRequest) {
+    public void updateMember(long memberId, MemberUpdateRequest memberUpdateRequest) {
         validateId(memberId);
-        String nickname = new Nickname(memberUpdateServiceRequest.getNickname())
+        String nickname = new Nickname(memberUpdateRequest.getNickname())
                 .getValue();
         memberDao.updateNicknameByEmail(memberId, nickname);
     }
