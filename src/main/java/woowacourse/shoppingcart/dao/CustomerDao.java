@@ -62,6 +62,16 @@ public class CustomerDao {
         }
     }
 
+    public Optional<String> findEmailByEmail(String email) {
+        try {
+            String sql = "SELECT email FROM customer WHERE email = :email";
+            SqlParameterSource parameterSource = new MapSqlParameterSource("email", email);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, String.class));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     private RowMapper<Customer> generateCustomerMapper() {
         return (resultSet, rowNum) ->
         {
