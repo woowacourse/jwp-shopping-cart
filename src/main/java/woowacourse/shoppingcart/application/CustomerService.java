@@ -53,7 +53,8 @@ public class CustomerService {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(CustomerNotFoundException::new);
 
-        customerDao.updateProfile(customer.changeName(customerUpdateProfileRequest.getName()));
+        final Customer newCustomer = customer.changeName(customerUpdateProfileRequest.getName());
+        customerDao.updateProfile(newCustomer);
         return id;
     }
 
