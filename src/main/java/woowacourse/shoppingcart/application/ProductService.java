@@ -8,19 +8,20 @@ import woowacourse.shoppingcart.application.dto.ProductDto;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
+import woowacourse.shoppingcart.repository.ProductRepository;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(final ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<ProductResponse> findProducts() {
-        final List<Product> products =  productDao.findProducts();
+        final List<Product> products = productRepository.findProducts();
         return products.stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
@@ -28,14 +29,14 @@ public class ProductService {
 
     public Long addProduct(final ProductDto productDto) {
         final Product product = ProductDto.toProduct(productDto);
-        return productDao.save(product);
+        return productRepository.save(product);
     }
 
     public ProductResponse findProductById(final Long productId) {
-        return ProductResponse.from(productDao.findProductById(productId));
+        return ProductResponse.from(productRepository.findProductById(productId));
     }
 
     public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+        productRepository.deleteProductById(productId);
     }
 }
