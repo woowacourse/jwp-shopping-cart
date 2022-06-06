@@ -5,7 +5,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class PasswordEncoder {
 
-    private PasswordEncoder() { }
+    private PasswordEncoder() {
+    }
 
     public static String encrypt(String rawPassword) {
         try {

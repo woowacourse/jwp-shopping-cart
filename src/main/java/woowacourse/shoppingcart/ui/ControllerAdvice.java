@@ -1,21 +1,18 @@
 package woowacourse.shoppingcart.ui;
 
-import javax.validation.ConstraintViolationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+
+import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE)
