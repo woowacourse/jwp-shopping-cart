@@ -1,46 +1,82 @@
 package woowacourse.auth.acceptance;
 
+import static Fixture.CustomerFixtures.*;
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
+import Fixture.SimpleRestAssured;
+import io.restassured.RestAssured;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+        SimpleRestAssured.saveCustomer(YAHO_SAVE_REQUEST);
+
+        String accessToken = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new TokenRequest(YAHO_USERNAME, YAHO_RAW_PASSWORD.getValue()))
+                .when().post("/api/auth/token")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(TokenResponse.class)
+                .getAccessToken();
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        CustomerResponse customerResponse = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(CustomerResponse.class);
 
         // then
-        // 내 정보가 조회된다
+        assertThat(customerResponse.getUsername()).isEqualTo(YAHO_USERNAME);
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
     @Test
     void myInfoWithBadBearerAuth() {
         // given
-        // 회원이 등록되어 있고
+        SimpleRestAssured.saveCustomer(MAT_SAVE_REQUEST);
 
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
-
-        // then
-        // 토큰 발급 요청이 거부된다
+        // when & then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new TokenRequest(YAHO_USERNAME, YAHO_ENCODED_PASSWORD.getValue()))
+                .when().post("/api/auth/token")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract();
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        String accessToken = "안녕나는.유효하지.않은토큰";
 
         // then
-        // 내 정보 조회 요청이 거부된다
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract();
     }
 }
