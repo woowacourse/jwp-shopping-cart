@@ -99,8 +99,8 @@
 <summary>소니의 1단계 두번째 리뷰</summary>
 
 - Service
-  - [ ] optional.get() 대신 optional.orElseThrow() 사용하기
-  - [ ] 비밀번호를 검증 로직을 customer로 이동
+  - [x] optional.get() 대신 optional.orElseThrow() 사용하기
+  - [x] 비밀번호를 검증 로직을 customer로 이동
 
 </details>
 

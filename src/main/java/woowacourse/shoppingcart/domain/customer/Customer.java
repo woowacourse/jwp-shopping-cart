@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.domain.customer;
 import java.util.Objects;
 
 import woowacourse.shoppingcart.domain.customer.password.EncodedPassword;
+import woowacourse.shoppingcart.domain.customer.password.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.password.RawPassword;
 
 public class Customer {
 
@@ -82,5 +84,9 @@ public class Customer {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public boolean matchPassword(RawPassword rawPassword, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(rawPassword, this.password);
     }
 }

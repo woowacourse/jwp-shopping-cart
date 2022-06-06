@@ -39,14 +39,10 @@ public class AuthService {
     }
 
     private void validateCustomer(String username, String password) {
-        Optional<Customer> optionalCustomer = customerDao.findByUsername(username);
-        if (optionalCustomer.isEmpty()) {
-            throw new InvalidCustomerException();
-        }
-        Customer customer = optionalCustomer.get();
+        Customer customer = customerDao.findByUsername(username)
+                .orElseThrow(InvalidCustomerException::new);
         RawPassword rawPassword = new RawPassword(password);
-        EncodedPassword encodedPassword = customer.getPassword();
-        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+        if (!customer.matchPassword(rawPassword, passwordEncoder)) {
             throw new InvalidCustomerException();
         }
     }
