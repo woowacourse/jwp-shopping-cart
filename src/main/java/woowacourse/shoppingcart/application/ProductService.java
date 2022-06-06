@@ -15,19 +15,21 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
-    }
-
-    public Long addProduct(final Product product) {
+    @Transactional
+    public Long save(final Product product) {
         return productDao.save(product);
     }
 
-    public Product findProductById(final Long productId) {
+    public List<Product> findAll() {
+        return productDao.findProducts();
+    }
+
+    public Product findById(final Long productId) {
         return productDao.findProductById(productId);
     }
 
-    public void deleteProductById(final Long productId) {
+    @Transactional
+    public void deleteById(final Long productId) {
         productDao.delete(productId);
     }
 }
