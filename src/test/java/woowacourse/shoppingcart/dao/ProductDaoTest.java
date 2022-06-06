@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@Sql(scripts = {"classpath:schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class ProductDaoTest {
 
     private final ProductDao productDao;

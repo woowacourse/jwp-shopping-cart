@@ -40,17 +40,6 @@ public class CustomerDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameter).longValue();
     }
 
-    public Long findIdByUserName(final String userName) {
-        try {
-            final String query = "SELECT id FROM customer WHERE username = :username";
-            SqlParameterSource nameParameters = new MapSqlParameterSource("username", userName);
-
-            return template.queryForObject(query, nameParameters, Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException(e.getMessage());
-        }
-    }
-
     public boolean existByEmail(String email) {
         String sql = "SELECT exists (SELECT * FROM customer WHERE email = :email)";
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("email", email);
