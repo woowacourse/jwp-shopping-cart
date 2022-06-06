@@ -4,6 +4,7 @@ import woowacourse.shoppingcart.exception.InvalidNicknameException;
 
 public class Nickname {
 
+    private static final String NICKNAME_REGEX = "^[가-힣A-Za-z0-9]{2,8}$";
     private final String nickname;
 
     public Nickname(String nickname) {
@@ -12,7 +13,7 @@ public class Nickname {
     }
 
     private void validate() {
-        if (!nickname.matches("^[가-힣A-Za-z0-9]{2,8}$")) {
+        if (!nickname.matches(NICKNAME_REGEX)) {
             throw new InvalidNicknameException();
         }
     }
