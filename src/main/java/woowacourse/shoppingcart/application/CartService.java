@@ -35,11 +35,15 @@ public class CartService {
     }
 
     public void addCart(final Long productId, final Customer customer) {
+        boolean isExist = cartItemDao.existProduct(productId);
+        if (isExist) {
+            throw new IllegalProductException("중복된 물품입니다.");
+        }
         try {
             Product product = productService.findProductById(productId);
             cartItemDao.addCartItem(customer.getId(), product.getId());
         } catch (NotFoundProductException exception) {
-            throw new IllegalProductException();
+            throw new IllegalProductException("물품이 존재하지 않습니다.");
         }
     }
 

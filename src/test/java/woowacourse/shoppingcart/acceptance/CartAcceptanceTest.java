@@ -45,17 +45,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
         @DisplayName("유효한 인가와 장바구니에 추가되지 않은 상품을 추가하면")
         @Nested
         class Context_validate_token_not_added_in_cart extends AcceptanceTest {
+
             @DisplayName("상태코드 204를 반환받는다.")
             @Test
             void it_add_product_return_200() {
-                ValidatableResponse response = RestAssured
-                        .given().log().all()
-                        .header(AuthorizationExtractor.AUTHORIZATION,
-                                AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(request)
-                        .when().post("/users/me/carts")
-                        .then().log().all();
+                ValidatableResponse response = postCart(request, accessToken);
 
                 response.statusCode(HttpStatus.NO_CONTENT.value());
             }
@@ -64,17 +58,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
         @DisplayName("유효한 인가와 장바구니에 추가되지 않은 상품을 추가하면")
         @Nested
         class Context_not_exist_product extends AcceptanceTest {
+
+
             @DisplayName("장바구니 추가에 실패하고, 상태코드 400을 반환받는다.")
             @Test
             void it_fail_return_400() {
-                ValidatableResponse response = RestAssured
-                        .given().log().all()
-                        .header(AuthorizationExtractor.AUTHORIZATION,
-                                AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(notExistProductRequest)
-                        .when().post("/users/me/carts")
-                        .then().log().all();
+                ValidatableResponse response = postCart(notExistProductRequest, accessToken);
 
                 response.statusCode(HttpStatus.BAD_REQUEST.value())
                         .body("message", equalTo("물품이 존재하지 않습니다."));
@@ -84,20 +73,41 @@ public class CartAcceptanceTest extends AcceptanceTest {
         @DisplayName("유효하지 않은 인가로 장바구니에 상품을 추가하려고 하면")
         @Nested
         class Context_invalid_token extends AcceptanceTest {
+
             @DisplayName("장바구니 추가에 실패하고, 상태코드 401을 반환받는다.")
             @Test
             void it_fail_return_401() {
-                ValidatableResponse response = RestAssured
-                        .given().log().all()
-                        .header(AuthorizationExtractor.AUTHORIZATION,
-                                AuthorizationExtractor.BEARER_TYPE + " " + "invalid-token")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(request)
-                        .when().post("/users/me/carts")
-                        .then().log().all();
+                ValidatableResponse response = postCart(request, "invalid-token");
 
                 response.statusCode(HttpStatus.UNAUTHORIZED.value());
             }
         }
+
+        @DisplayName("중복된 상품을 장바구니에 담으려고 하면")
+        @Nested
+        class Context_duplicated_product_in_cart extends AcceptanceTest {
+
+            @DisplayName("장바구니 추가에 실패하고, 상태코드 400을 반환받는다.")
+            @Test
+            void it_fail_return_400() {
+                postCart(request, accessToken);
+                ValidatableResponse duplicatedResponse = postCart(request, accessToken);
+
+                duplicatedResponse.statusCode(HttpStatus.BAD_REQUEST.value())
+                        .body("message", equalTo("중복된 물품입니다."));
+            }
+        }
+    }
+
+    private ValidatableResponse postCart(CartAdditionRequest request, String accessToken) {
+        ValidatableResponse response = RestAssured
+                .given().log().all()
+                .header(AuthorizationExtractor.AUTHORIZATION,
+                        AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/users/me/carts")
+                .then().log().all();
+        return response;
     }
 }

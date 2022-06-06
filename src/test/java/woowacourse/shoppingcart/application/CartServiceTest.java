@@ -61,6 +61,22 @@ public class CartServiceTest {
 
         // when, then
         assertThatThrownBy(() -> cartService.addCart(notExistProductId, customer))
-                .isInstanceOf(IllegalProductException.class);
+                .isInstanceOf(IllegalProductException.class)
+                .hasMessage("물품이 존재하지 않습니다.");
+    }
+
+    @DisplayName("장바구니에 등록된 물품을 중복 추가하려면 예외가 발생한다.")
+    @Test
+    void addCart_duplicatedProduct_exceptionThrown() {
+        // given
+        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
+
+        given(cartItemDao.existProduct(1L))
+                .willThrow(new IllegalProductException("중복된 물품입니다."));
+
+        // when, then
+        assertThatThrownBy(() -> cartService.addCart(1L, customer))
+                .isInstanceOf(IllegalProductException.class)
+                .hasMessage("중복된 물품입니다.");
     }
 }
