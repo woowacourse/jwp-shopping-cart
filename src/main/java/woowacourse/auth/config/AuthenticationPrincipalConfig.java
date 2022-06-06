@@ -1,19 +1,23 @@
 package woowacourse.auth.config;
 
-import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
-import woowacourse.auth.application.AuthService;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
+import woowacourse.auth.application.AuthService;
+import woowacourse.auth.ui.AuthInterceptor;
+import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
+import woowacourse.shoppingcart.dao.CustomerDao;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     private final AuthService authService;
+    private final CustomerDao customerDao;
 
-    public AuthenticationPrincipalConfig(AuthService authService) {
+    public AuthenticationPrincipalConfig(AuthService authService, CustomerDao customerDao) {
         this.authService = authService;
+        this.customerDao = customerDao;
     }
 
     @Override
@@ -21,8 +25,21 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
         argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
     }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authInterceptor())
+                .addPathPatterns("/users/me")
+                .excludePathPatterns("/login")
+                .excludePathPatterns("/api");
+    }
+
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService);
+        return new AuthenticationPrincipalArgumentResolver(authService, customerDao);
+    }
+
+    @Bean
+    public AuthInterceptor authInterceptor() {
+        return new AuthInterceptor(authService);
     }
 }

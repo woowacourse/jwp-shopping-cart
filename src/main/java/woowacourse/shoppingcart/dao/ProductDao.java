@@ -13,7 +13,6 @@ import java.util.Objects;
 
 @Repository
 public class ProductDao {
-
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {

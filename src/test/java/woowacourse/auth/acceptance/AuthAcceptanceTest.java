@@ -1,46 +1,94 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.SignInRequest;
+import woowacourse.shoppingcart.dto.SignInResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
-    @DisplayName("Bearer Auth 로그인 성공")
+
+    private static final String VALID_PASSWORD = "a12345";
+    private static final String VALID_EMAIL = "crew01@naver.com";
+    private static final String VALID_NAME = "puterism";
+    private static final String NEW_EMAIL = "bcc0830@naver.com";
+    private static final String INVALID_EMAIL = "crew10@naver.com";
+    private static final String INVALID_PASSWORD = "a123456";
+
     @Test
-    void myInfoWithBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+    void 로그인_성공() {
+        var signInRequest = new SignInRequest(VALID_EMAIL, VALID_PASSWORD);
 
-        // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        var signInResponse = createSignInResult(signInRequest, HttpStatus.OK).as(SignInResponse.class);
 
-        // then
-        // 내 정보가 조회된다
+        assertAll(
+                () -> assertThat(signInResponse.getUsername()).isEqualTo(VALID_NAME),
+                () -> assertThat(signInResponse.getEmail()).isEqualTo(VALID_EMAIL),
+                () -> assertThat(signInResponse.getToken()).isNotNull()
+        );
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", " "})
+    void 로그인_이메일이_공백인_경우(String invalidEmail) {
+        SignInRequest signInRequest = new SignInRequest(invalidEmail, VALID_PASSWORD);
 
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+        var extract = createSignInResult(signInRequest, HttpStatus.BAD_REQUEST);
 
-        // then
-        // 토큰 발급 요청이 거부된다
+        assertThat(extract.body().jsonPath().getString("message"))
+                .contains("[ERROR]", "이메일");
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+    @ParameterizedTest
+    @ValueSource(strings = {"@naver.com", "bcc0830naver.com", "bcc0830@", "bcc0830", "bcc0830#naver.com",
+            "bcc0830@navercom", "칙@naver.com", "qnfrrmfo@n aver.com"})
+    void 로그인시_이메일_형식이_아닌_경우(String invalidEmail) {
+        SignInRequest signInRequest = new SignInRequest(invalidEmail, VALID_PASSWORD);
 
-        // then
-        // 내 정보 조회 요청이 거부된다
+        var extract = createSignInResult(signInRequest, HttpStatus.BAD_REQUEST);
+
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 올바른 이메일 형식이 아닙니다.");
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", " "})
+    void 로그인시_비밀번호가_공백인_경우(String invalidPassword) {
+        SignInRequest signInRequest = new SignInRequest(NEW_EMAIL, invalidPassword);
+
+        var extract = createSignInResult(signInRequest, HttpStatus.BAD_REQUEST);
+
+        assertThat(extract.body().jsonPath().getString("message"))
+                .contains("[ERROR]", "비밀번호");
+    }
+
+    @Test
+    void 존재하지_않는_이메일로_로그인_하는_경우() {
+        SignInRequest signInRequest = new SignInRequest(INVALID_EMAIL, VALID_PASSWORD);
+
+        var extract = createSignInResult(signInRequest, HttpStatus.BAD_REQUEST);
+
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 존재하지 않는 이메일 입니다.");
+    }
+
+    @Test
+    void 틀린_비밀번호로_로그인_하는_경우() {
+        SignInRequest signInRequest = new SignInRequest(VALID_EMAIL, INVALID_PASSWORD);
+
+        var extract = createSignInResult(signInRequest, HttpStatus.BAD_REQUEST);
+
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 비밀번호가 일치하지 않습니다.");
     }
 }

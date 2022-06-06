@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public class OrderDao {
-
     private final JdbcTemplate jdbcTemplate;
 
     public OrderDao(final JdbcTemplate jdbcTemplate) {
