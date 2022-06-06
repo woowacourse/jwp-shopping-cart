@@ -23,6 +23,7 @@ public class ProductService {
     }
 
     public List<ProductResponse> findProductsOfPage(final int page, final int limit) {
+        List<Product> products = productRepository.findAll();
         return null;
     }
 }

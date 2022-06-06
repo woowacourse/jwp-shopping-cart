@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,22 @@ class ProductRepositoryTest {
                 () -> assertThat(product.getName()).isEqualTo("apple"),
                 () -> assertThat(product.getPrice()).isEqualTo(1000),
                 () -> assertThat(product.getImageUrl()).isEqualTo("http://mart/apple")
+        );
+    }
+
+    @DisplayName("모든 상품을 조회하는 기능")
+    @Sql("/setProducts.sql")
+    @Test
+    void findAll() {
+        // given when
+        List<Product> products = productRepository.findAll();
+
+        // then
+        assertAll(
+                () -> assertThat(products.size())
+                        .isEqualTo(3),
+                () -> assertThat(products.stream().map(Product::getName))
+                        .containsExactly("apple", "peach", "banana")
         );
     }
 }

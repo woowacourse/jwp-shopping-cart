@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.repository;
 
+import java.util.List;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.repository.dao.ProductDao;
@@ -15,5 +16,9 @@ public class ProductRepository {
 
     public Product findById(final Long productId) {
         return productDao.findById(productId);
+    }
+
+    public List<Product> findAll() {
+        return productDao.findAll();
     }
 }

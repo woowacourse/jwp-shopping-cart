@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.repository.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,7 +27,7 @@ public class ProductDao {
     }
 
     public Product findById(final Long productId) {
-        String query = "select id, name, price, image_url FROM product WHERE id = :id";
+        String query = "select id, name, price, image_url from product where id = :id";
         Map<String, Object> params = new HashMap<>();
         params.put("id", productId);
         try {
@@ -34,5 +35,10 @@ public class ProductDao {
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("존재하지 않는 상품입니다.");
         }
+    }
+
+    public List<Product> findAll() {
+        String query = "select id, name, price, image_url from product";
+        return namedParameterJdbcTemplate.query(query, ROW_MAPPER);
     }
 }
