@@ -14,14 +14,14 @@ import woowacourse.shoppingcart.support.Encryptor;
 
 @Service
 @Transactional(readOnly = true)
-public class AuthService {
+public class LoginService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final Encryptor encryptor;
     private final CustomerDao customerDao;
 
-    public AuthService(final JwtTokenProvider jwtTokenProvider, final Encryptor encryptor,
-                       final CustomerDao customerDao) {
+    public LoginService(final JwtTokenProvider jwtTokenProvider, final Encryptor encryptor,
+                        final CustomerDao customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.encryptor = encryptor;
         this.customerDao = customerDao;
