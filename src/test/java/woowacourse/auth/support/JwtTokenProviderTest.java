@@ -20,6 +20,7 @@ class JwtTokenProviderTest {
     void getValidatedPayload() {
         //given
         String token = jwtTokenProvider.createToken(페퍼_아이디);
+        System.out.println("token = " + token);
 
         //when
         String payload = jwtTokenProvider.getValidatedPayload(token);
@@ -30,14 +31,25 @@ class JwtTokenProviderTest {
 
     @Test
     @DisplayName("가짜 토큰을 받으면 예외를 던진다.")
-    void validateExpirationDate() {
+    void validateFakeToken() {
         //given
-        String token = "FakeToken";
+        String fakeToken = "FakeToken";
 
         //when
-        assertThatThrownBy(() -> jwtTokenProvider.getValidatedPayload(token))
+        assertThatThrownBy(() -> jwtTokenProvider.getValidatedPayload(fakeToken))
                 .isInstanceOf(InvalidTokenException.class)
                 .hasMessage("인증이 유효하지 않습니다.");
+    }
 
+    @Test
+    @DisplayName("만료기간이 지난 토큰을 받으면 예외를 던진다.")
+    void validateExpirationDate() {
+        //given
+        String expiredToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwZXBwZXJAd29vd2Fjb3Vyc2UuY29tIiwiaWF0IjoxNjU0NDkzMDM0LCJleHAiOjE2NTQ0OTMxMzR9.CiCFn0f42ro8nhoH__Fs2wXQTPi5g8GVTN7Ae4sc5k_2RQNNAx0gcxtaDcxDZgLbqk7ploc7GJxZUfXTWnq3uQ";
+
+        //when
+        assertThatThrownBy(() -> jwtTokenProvider.getValidatedPayload(expiredToken))
+                .isInstanceOf(InvalidTokenException.class)
+                .hasMessage("인증이 유효하지 않습니다.");
     }
 }
