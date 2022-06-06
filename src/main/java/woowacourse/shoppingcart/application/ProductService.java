@@ -2,9 +2,11 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.PageServiceRequest;
 import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
 import woowacourse.shoppingcart.application.dto.ProductServiceResponse;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Page;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.DataNotFoundException;
 import java.util.List;
@@ -28,8 +30,9 @@ public class ProductService {
         return ProductServiceResponse.from(product);
     }
 
-    public List<ProductServiceResponse> findAll() {
-        final List<Product> products = productDao.findProducts();
+    public List<ProductServiceResponse> findAllByPage(final PageServiceRequest request) {
+        final Page page = Page.of(request.getNumber(), request.getSize());
+        final List<Product> products = productDao.findProducts(page);
         return products.stream()
                 .map(ProductServiceResponse::from)
                 .collect(Collectors.toList());

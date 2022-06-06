@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.application.dto.ProductServiceResponse;
+import woowacourse.shoppingcart.dto.PageRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductSaveRequest;
 import javax.validation.Valid;
@@ -41,8 +42,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAll() {
-        final List<ProductServiceResponse> serviceResponses = productService.findAll();
+    public ResponseEntity<List<ProductResponse>> getAllByPage(
+            @RequestParam(value = "page", defaultValue = "1") final Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") final Integer size) {
+        final PageRequest pageRequest = new PageRequest(page, size);
+        final List<ProductServiceResponse> serviceResponses = productService.findAllByPage(pageRequest.toServiceDto());
         final List<ProductResponse> responses = serviceResponses.stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());

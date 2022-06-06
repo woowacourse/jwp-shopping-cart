@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Page;
 import woowacourse.shoppingcart.domain.Product;
 import java.util.List;
 
@@ -39,7 +40,7 @@ class OrdersDetailDaoTest {
         customerId = 1L;
         ordersId = orderDao.addOrders(customerId);
         productDao.save(new Product("name", 1000, "imageUrl"));
-        final List<Product> products = productDao.findProducts();
+        final List<Product> products = productDao.findProducts(Page.of(1, 10));
         productId = products.get(products.size() - 1).getId();
     }
 

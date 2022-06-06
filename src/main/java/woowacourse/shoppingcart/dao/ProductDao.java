@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Page;
 import woowacourse.shoppingcart.domain.Product;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,9 +53,13 @@ public class ProductDao {
         return Optional.ofNullable(product);
     }
 
-    public List<Product> findProducts() {
-        final String sql = "SELECT id, name, price, image_url FROM product";
-        return namedParameterJdbcTemplate.query(sql, ProductDao::rowMapper);
+    public List<Product> findProducts(final Page page) {
+        final String sql = "SELECT id, name, price, image_url FROM product ORDER BY id LIMIT :number, :size";
+        final Map<String, Object> params = new HashMap<>();
+        params.put("number", page.getNumber());
+        params.put("size", page.getSize());
+
+        return namedParameterJdbcTemplate.query(sql, params, ProductDao::rowMapper);
     }
 
     public void delete(final Long productId) {
