@@ -1,14 +1,13 @@
-package woowacourse.shoppingcart.dao;
+package woowacourse.shoppingcart.repository.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 
 @Repository
 public class CartItemDao {
