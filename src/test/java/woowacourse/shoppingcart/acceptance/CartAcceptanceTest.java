@@ -15,18 +15,28 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+public class CartAcceptanceTest extends AcceptanceTest2 {
+    private static final String 유효한_아이디 = "유효한_아이디";
+    private static final String 유효한_비밀번호 = "password1@";
+    private static final SignUpRequest 유효한_회원가입_요청 = new SignUpRequest(유효한_아이디, 유효한_비밀번호, "닉네임", 15);
+    private static final TokenRequest 유효한_로그인_요청 = new TokenRequest(유효한_아이디, 유효한_비밀번호);
+
+    private static String 유효한_토큰;
+
     private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
 
-    @Override
     @BeforeEach
     public void setUp() {
-        super.setUp();
+        회원가입_요청(유효한_회원가입_요청);
+        유효한_토큰 = 로그인_성공_시_토큰_반환(유효한_로그인_요청);
 
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
@@ -116,5 +126,25 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private ExtractableResponse<Response> 회원가입_요청(SignUpRequest json) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(json)
+                .when().post("/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    private String 로그인_성공_시_토큰_반환(TokenRequest tokenRequest) {
+        return RestAssured.given().log().all()
+                .body(tokenRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract()
+                .as(TokenResponse.class)
+                .getAccessToken();
     }
 }
