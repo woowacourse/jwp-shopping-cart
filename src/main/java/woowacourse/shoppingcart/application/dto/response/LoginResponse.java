@@ -4,13 +4,10 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class LoginResponse {
 
-    private String accessToken;
-    private Long id;
-    private String userId;
-    private String nickname;
-
-    private LoginResponse() {
-    }
+    private final String accessToken;
+    private final Long id;
+    private final String userId;
+    private final String nickname;
 
     private LoginResponse(final String accessToken, final Long id, final String userId, final String nickname) {
         this.accessToken = accessToken;

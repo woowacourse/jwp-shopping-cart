@@ -4,12 +4,9 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerResponse {
 
-    private Long id;
-    private String userId;
-    private String nickname;
-
-    private CustomerResponse() {
-    }
+    private final Long id;
+    private final String userId;
+    private final String nickname;
 
     private CustomerResponse(final Long id, final String userId, final String nickname) {
         this.id = id;
