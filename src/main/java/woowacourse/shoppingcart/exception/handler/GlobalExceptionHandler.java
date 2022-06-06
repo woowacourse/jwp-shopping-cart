@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.duplicate.DuplicateException;
+import woowacourse.shoppingcart.exception.invalid.InvalidException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 
 @RestControllerAdvice
@@ -52,6 +53,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
+            InvalidException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,

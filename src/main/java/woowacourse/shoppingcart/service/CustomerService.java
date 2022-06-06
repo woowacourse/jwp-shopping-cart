@@ -3,7 +3,11 @@ package woowacourse.shoppingcart.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.PlainPassword;
+import woowacourse.shoppingcart.domain.customer.UserName;
+import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
 import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
@@ -24,30 +28,30 @@ public class CustomerService {
     }
 
     public void addCustomer(final SignUpRequest request) {
-        if (customerDao.existsByName(request.getUserName())) {
+        if (customerDao.existsByName(new UserName(request.getUserName()))) {
             throw new DuplicateCustomerException();
         }
-        final String encryptedPassword = encryptor.encrypt(request.getPassword());
-        customerDao.save(new Customer(request.getUserName(), encryptedPassword));
+        final Password password = encryptor.encrypt(new PlainPassword(request.getPassword()));
+        customerDao.save(new Customer(new UserName(request.getUserName()), password));
     }
 
-    public void deleteCustomerByName(final String customerName) {
-        customerDao.deleteByName(customerName);
+    public void deleteCustomerByName(final UserName userName) {
+        customerDao.deleteByName(userName);
     }
 
     @Transactional(readOnly = true)
-    public CustomerResponse findCustomerByName(final String customerName) {
-        final Customer customer = customerDao.getByName(customerName);
+    public CustomerResponse findCustomerByName(final UserName userName) {
+        final Customer customer = customerDao.getByName(userName);
         return new CustomerResponse(customer.getUserName());
     }
 
-    public void editCustomerByName(final String customerName, final EditCustomerRequest request) {
-        final String encryptedPassword = encryptor.encrypt(request.getPassword());
-        customerDao.updatePasswordByName(customerName, encryptedPassword);
+    public void editCustomerByName(final UserName userName, final EditCustomerRequest request) {
+        final Password password = encryptor.encrypt(new PlainPassword(request.getPassword()));
+        customerDao.updatePasswordByName(userName, password);
     }
 
     @Transactional(readOnly = true)
-    public CheckDuplicationResponse checkDuplicationByName(final String userName) {
-        return new CheckDuplicationResponse(customerDao.existsByName(userName));
+    public CheckDuplicationResponse checkDuplicationByName(final CheckDuplicationRequest request) {
+        return new CheckDuplicationResponse(customerDao.existsByName(new UserName(request.getUserName())));
     }
 }

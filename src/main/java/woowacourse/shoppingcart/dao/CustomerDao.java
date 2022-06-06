@@ -9,10 +9,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 import java.util.Locale;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
 
 @Repository
@@ -38,42 +39,46 @@ public class CustomerDao {
         return inserter.executeAndReturnKey(parameters).longValue();
     }
 
-    public Customer getByName(final String name) {
+    public Customer getByName(final UserName userName) {
         try {
-            final String query = "SELECT * FROM customer WHERE username = :name";
-            return jdbcTemplate.queryForObject(query, Map.of("name", name), ROW_MAPPER);
+            final String query = "SELECT * FROM customer WHERE username = :userName";
+            return jdbcTemplate.queryForObject(query, Map.of("userName", userName.getValue()), ROW_MAPPER);
         } catch (final EmptyResultDataAccessException e) {
             throw new NotFoundCustomerException();
         }
     }
 
-    public Long getIdByUserName(final String name) {
+    public Long getIdByUserName(final String userName) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = :name";
-            return jdbcTemplate.queryForObject(query, Map.of("name", name.toLowerCase(Locale.ROOT)), Long.class);
+            final String query = "SELECT id FROM customer WHERE username = :userName";
+            return jdbcTemplate.queryForObject(query, Map.of("userName", userName.toLowerCase(Locale.ROOT)),
+                    Long.class);
         } catch (final EmptyResultDataAccessException e) {
             throw new NotFoundCustomerException();
         }
     }
 
-    public void updatePasswordByName(final String name, final String newPassword) {
-        final String query = "UPDATE customer SET password = :newPassword WHERE username = :name";
-        jdbcTemplate.update(query, Map.of("newPassword", newPassword, "name", name));
+    public void updatePasswordByName(final UserName userName, final Password newPassword) {
+        final String query = "UPDATE customer SET password = :newPassword WHERE username = :userName";
+        jdbcTemplate.update(query,
+                Map.of("newPassword", newPassword.getValue(), "userName", userName.getValue()));
     }
 
-    public void deleteByName(final String name) {
-        final String query = "DELETE FROM customer WHERE username = :name";
-        jdbcTemplate.update(query, Map.of("name", name));
+    public void deleteByName(final UserName userName) {
+        final String query = "DELETE FROM customer WHERE username = :userName";
+        jdbcTemplate.update(query, Map.of("userName", userName.getValue()));
     }
 
-    public boolean existsByNameAndPassword(final String name, final String password) {
-        final String query = "SELECT EXISTS (SELECT id FROM customer where username = :name and password = :password)";
+    public boolean existsByNameAndPassword(final UserName userName, final Password password) {
+        final String query = "SELECT EXISTS (SELECT id FROM customer where username = :userName and password = :password)";
         return Boolean.TRUE.equals(
-                jdbcTemplate.queryForObject(query, Map.of("name", name, "password", password), Boolean.class));
+                jdbcTemplate.queryForObject(query,
+                        Map.of("userName", userName.getValue(), "password", password.getValue()), Boolean.class));
     }
 
-    public boolean existsByName(final String name) {
-        final String query = "SELECT EXISTS (SELECT id FROM customer where username = :name)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Map.of("name", name), Boolean.class));
+    public boolean existsByName(final UserName userName) {
+        final String query = "SELECT EXISTS (SELECT id FROM customer where username = :userName)";
+        return Boolean.TRUE.equals(
+                jdbcTemplate.queryForObject(query, Map.of("userName", userName.getValue()), Boolean.class));
     }
 }

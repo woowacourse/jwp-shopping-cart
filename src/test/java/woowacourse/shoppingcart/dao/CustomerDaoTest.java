@@ -1,15 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
 import javax.sql.DataSource;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +33,7 @@ public class CustomerDaoTest {
         customerDao.save(new Customer("ellie", "12345678"));
 
         // then
-        final Customer customer = customerDao.getByName("ellie");
+        final Customer customer = customerDao.getByName(new UserName("ellie"));
         assertAll(
                 () -> assertThat(customer.getId()).isNotNull(),
                 () -> assertThat(customer.getUserName()).isEqualTo("ellie"),
@@ -72,10 +71,10 @@ public class CustomerDaoTest {
         customerDao.save(new Customer("ellie", "12345678"));
 
         // when
-        customerDao.deleteByName("ellie");
+        customerDao.deleteByName(new UserName("ellie"));
 
         // then
-        assertThatThrownBy(() -> customerDao.getByName("ellie"))
+        assertThatThrownBy(() -> customerDao.getByName(new UserName("ellie")))
                 .isInstanceOf(NotFoundCustomerException.class);
     }
 
@@ -85,8 +84,8 @@ public class CustomerDaoTest {
         customerDao.save(new Customer("ellie", "12345678"));
 
         // when
-        boolean isExists = customerDao.existsByName("ellie");
-        boolean isNotExists = customerDao.existsByName("haeri");
+        boolean isExists = customerDao.existsByName(new UserName("ellie"));
+        boolean isNotExists = customerDao.existsByName(new UserName("haeri"));
 
         // then
         assertAll(

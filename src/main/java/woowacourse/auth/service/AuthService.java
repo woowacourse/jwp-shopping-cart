@@ -7,6 +7,9 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.PlainPassword;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.support.Encryptor;
 
 @Service
@@ -25,8 +28,8 @@ public class AuthService {
     }
 
     public TokenResponse login(final TokenRequest request) {
-        final String encryptedPassword = encryptor.encrypt(request.getPassword());
-        if (customerDao.existsByNameAndPassword(request.getUserName(), encryptedPassword)) {
+        final Password password = encryptor.encrypt(new PlainPassword(request.getPassword()));
+        if (customerDao.existsByNameAndPassword(new UserName(request.getUserName()), password)) {
             final String token = jwtTokenProvider.createToken(request.getUserName());
             return new TokenResponse(token);
         }

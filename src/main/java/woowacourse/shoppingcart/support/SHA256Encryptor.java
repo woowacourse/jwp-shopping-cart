@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.PlainPassword;
 
 @Component
 public class SHA256Encryptor implements Encryptor {
@@ -11,11 +13,11 @@ public class SHA256Encryptor implements Encryptor {
     private static final String ALGORITHM = "SHA-256";
 
     @Override
-    public String encrypt(final String plainText) {
+    public Password encrypt(final PlainPassword plainPassword) {
         try {
             final MessageDigest messageDigest = MessageDigest.getInstance(ALGORITHM);
-            messageDigest.update(plainText.getBytes());
-            return bytesToHex(messageDigest.digest());
+            messageDigest.update(plainPassword.getValue().getBytes());
+            return new Password(bytesToHex(messageDigest.digest()));
         } catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException();
         }

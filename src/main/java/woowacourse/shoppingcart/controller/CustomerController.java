@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.auth.support.UserName;
+import woowacourse.auth.support.UserNameArgument;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
 import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
@@ -35,26 +36,26 @@ public class CustomerController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> edit(@UserName final String customerName,
+    public ResponseEntity<Void> edit(@UserNameArgument final UserName userName,
                                      @RequestBody @Valid final EditCustomerRequest request) {
-        customerService.editCustomerByName(customerName, request);
+        customerService.editCustomerByName(userName, request);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> customer(@UserName final String customerName) {
-        return ResponseEntity.ok(customerService.findCustomerByName(customerName));
+    public ResponseEntity<CustomerResponse> customer(@UserNameArgument final UserName userName) {
+        return ResponseEntity.ok(customerService.findCustomerByName(userName));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> withDraw(@UserName final String customerName) {
-        customerService.deleteCustomerByName(customerName);
+    public ResponseEntity<Void> withDraw(@UserNameArgument final UserName userName) {
+        customerService.deleteCustomerByName(userName);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/duplication")
     public ResponseEntity<CheckDuplicationResponse> checkDuplication(
             @RequestBody final CheckDuplicationRequest request) {
-        return ResponseEntity.ok(customerService.checkDuplicationByName(request.getUserName()));
+        return ResponseEntity.ok(customerService.checkDuplicationByName(request));
     }
 }
