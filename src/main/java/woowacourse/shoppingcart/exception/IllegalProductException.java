@@ -1,9 +1,8 @@
 package woowacourse.shoppingcart.exception;
 
-public class NotFoundProductException extends NotFoundException {
+public class IllegalProductException extends IllegalRequestException {
 
-    public NotFoundProductException() {
+    public IllegalProductException() {
         super("", "물품이 존재하지 않습니다.");
-
     }
 }

@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.hamcrest.Matchers.equalTo;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -38,6 +41,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Nested
     class Describe_장바구니_상품_추가 {
         CartAdditionRequest request = new CartAdditionRequest(1L);
+        CartAdditionRequest notExistProductRequest = new CartAdditionRequest(21L);
 
         @DisplayName("유효한 인가와 장바구니에 추가되지 않은 상품을 추가하면")
         @Nested
@@ -55,6 +59,26 @@ public class CartAcceptanceTest extends AcceptanceTest {
                         .then().log().all();
 
                 response.statusCode(HttpStatus.NO_CONTENT.value());
+            }
+        }
+
+        @DisplayName("유효한 인가와 장바구니에 추가되지 않은 상품을 추가하면")
+        @Nested
+        class Context_not_exist_product extends AcceptanceTest {
+            @DisplayName("장바구니 추가에 실패하고, 상태코드 400을 반환받는다.")
+            @Test
+            void it_add_product_return_200() {
+                ValidatableResponse response = RestAssured
+                        .given().log().all()
+                        .header(AuthorizationExtractor.AUTHORIZATION,
+                                AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(notExistProductRequest)
+                        .when().post("/users/me/carts")
+                        .then().log().all();
+
+                response.statusCode(HttpStatus.BAD_REQUEST.value())
+                        .body("message", equalTo("물품이 존재하지 않습니다."));
             }
         }
     }

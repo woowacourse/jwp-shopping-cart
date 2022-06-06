@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.IllegalProductException;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -38,7 +39,7 @@ public class CartService {
             Product product = productService.findProductById(productId);
             cartItemDao.addCartItem(customer.getId(), product.getId());
         } catch (NotFoundProductException exception) {
-            throw new NotFoundProductException();
+            throw new IllegalProductException();
         }
     }
 
