@@ -4,10 +4,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +20,15 @@ public class OrderService {
 
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
-    private final CartItemDao cartItemDao;
+    private final CartDao cartDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+                        final CartDao cartDao, final CustomerDao customerDao, final ProductDao productDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
-        this.cartItemDao = cartItemDao;
+        this.cartDao = cartDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
     }
@@ -37,12 +38,12 @@ public class OrderService {
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
-
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+//            final Long cartId = orderDetail.getCartId();
+//            final Long productId = cartItemDao.findProductIdsByCustomerId(customerId);
+//            final int quantity = orderDetail.getQuantity();
+//
+//            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
+//            cartItemDao.deleteCartByCustomerId(cartId);
         }
 
         return ordersId;
@@ -73,7 +74,8 @@ public class OrderService {
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
+            final Product product = productDao.findProductById(productQuantity.getProductId())
+                    .orElseThrow(() -> new InvalidProductException("존재하지 않는 상품입니다."));
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }

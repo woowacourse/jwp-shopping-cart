@@ -8,11 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.support.HashPasswordEncoder;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.domain.customer.EncodePassword;
-import woowacourse.shoppingcart.domain.customer.RawPassword;
-import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
@@ -113,11 +109,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/customers")
                 .then().log().all();
-    }
-
-    private EncodePassword encode(String rawPassword) {
-        RawPassword password = new RawPassword(rawPassword);
-        PasswordEncoder passwordEncoder = new HashPasswordEncoder();
-        return passwordEncoder.encode(password);
     }
 }

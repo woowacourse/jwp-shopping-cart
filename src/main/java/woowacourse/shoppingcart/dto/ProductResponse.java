@@ -22,6 +22,12 @@ public class ProductResponse {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getThumbnail());
     }
 
+    public static ProductResponse of(Long productId, ProductRequest productRequest) {
+        return new ProductResponse(
+                productId, productRequest.getName(), productRequest.getPrice(), productRequest.getThumbnail()
+        );
+    }
+
     public Long getId() {
         return id;
     }
