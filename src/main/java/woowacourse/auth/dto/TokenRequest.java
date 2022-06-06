@@ -1,10 +1,10 @@
 package woowacourse.auth.dto;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class TokenRequest {
 
-    @NotBlank(message = "입력된 값이 없습니다.")
+    @NotNull(message = "입력된 값이 없습니다.")
     private Long id;
 
     private TokenRequest() {

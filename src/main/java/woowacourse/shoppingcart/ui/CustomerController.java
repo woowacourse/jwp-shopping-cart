@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.customer.CustomerProfileResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
 
@@ -26,10 +26,10 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerProfileResponse> findByCustomerId(
+    public ResponseEntity<CustomerResponse> findByCustomerId(
             @AuthenticationPrincipal TokenRequest tokenRequest) {
-        CustomerProfileResponse customerProfileResponse = customerService.findProfile(tokenRequest);
-        return ResponseEntity.ok().body(customerProfileResponse);
+        CustomerResponse customerResponse = customerService.findProfile(tokenRequest);
+        return ResponseEntity.ok().body(customerResponse);
     }
 
     @DeleteMapping

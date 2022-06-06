@@ -1,9 +1,9 @@
-package woowacourse.shoppingcart.dto.login;
+package woowacourse.shoppingcart.dto.customer;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-public class LoginRequest {
+public class CustomerLoginRequest {
 
     @NotBlank(message = "이메일이 입력되지 않았습니다.")
     @Pattern(regexp = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
@@ -15,10 +15,10 @@ public class LoginRequest {
             message = "비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.")
     private String password;
 
-    private LoginRequest() {
+    private CustomerLoginRequest() {
     }
 
-    public LoginRequest(final String userId, final String password) {
+    public CustomerLoginRequest(final String userId, final String password) {
         this.userId = userId;
         this.password = password;
     }

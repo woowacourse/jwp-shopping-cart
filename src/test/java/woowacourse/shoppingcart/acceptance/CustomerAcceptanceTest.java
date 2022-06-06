@@ -131,7 +131,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = login("puterism@woowacourse.com", "invalidPassword");
 
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
                         "비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.")
         );
@@ -255,7 +255,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
-                        "기존 비밀번호와 입력한 비밀번호가 일치하지 않습니다.")
+                        "입력한 비밀번호가 올바르지 않습니다.")
         );
     }
 

@@ -5,15 +5,13 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dto.customer.CustomerProfileResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerLoginRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerLoginResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.dto.customer.SignUpRequest;
-import woowacourse.shoppingcart.dto.login.LoginRequest;
-import woowacourse.shoppingcart.dto.login.LoginResponse;
 import woowacourse.shoppingcart.entity.Customer;
-import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
-import woowacourse.shoppingcart.exception.datanotmatch.CustomerDataNotMatchException;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 @Service
@@ -27,8 +25,8 @@ public class CustomerService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public Long signUp(final SignUpRequest signUpRequest) {
-        Customer customer = signUpRequest.toEntity();
+    public Long signUp(final CustomerSignUpRequest customerSignUpRequest) {
+        Customer customer = customerSignUpRequest.toEntity();
         validateNotDuplicateUserId(customer.getUserId());
         validateNotDuplicateNickname(customer.getNickname());
         return customerDao.save(customer);
@@ -46,18 +44,16 @@ public class CustomerService {
         }
     }
 
-    public LoginResponse login(final LoginRequest loginRequest) {
-        Customer customer = customerDao.findByUserId(loginRequest.getUserId());
-        if (customer.hasSamePassword(loginRequest.getPassword())) {
-            String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
-            return LoginResponse.of(token, customer);
-        }
-        throw new LoginDataNotFoundException("잘못된 비밀번호 입니다.");
+    public CustomerLoginResponse login(final CustomerLoginRequest customerLoginRequest) {
+        Customer customer = customerDao.findByUserId(customerLoginRequest.getUserId());
+        customer.comparePasswordFrom(customerLoginRequest.getPassword());
+        String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
+        return CustomerLoginResponse.of(token, customer);
     }
 
-    public CustomerProfileResponse findProfile(final TokenRequest tokenRequest) {
+    public CustomerResponse findProfile(final TokenRequest tokenRequest) {
         Customer customer = customerDao.findById(tokenRequest.getId());
-        return CustomerProfileResponse.from(customer);
+        return CustomerResponse.from(customer);
     }
 
     @Transactional
@@ -72,9 +68,7 @@ public class CustomerService {
     public void updatePassword(final TokenRequest tokenRequest,
                                final CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         Customer customer = customerDao.findById(tokenRequest.getId());
-        if (!customer.hasSamePassword(customerUpdatePasswordRequest.getOldPassword())) {
-            throw new CustomerDataNotMatchException("기존 비밀번호와 입력한 비밀번호가 일치하지 않습니다.");
-        }
+        customer.comparePasswordFrom(customerUpdatePasswordRequest.getOldPassword());
         customerDao.updatePassword(customer.getId(), customerUpdatePasswordRequest.getNewPassword());
     }
 

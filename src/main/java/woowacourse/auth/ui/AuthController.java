@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.customer.SignUpRequest;
-import woowacourse.shoppingcart.dto.login.LoginRequest;
-import woowacourse.shoppingcart.dto.login.LoginResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerLoginRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerLoginResponse;
 
 @RestController
 @RequestMapping("/customers")
@@ -23,14 +23,14 @@ public class AuthController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
-        Long customerId = customerService.signUp(signUpRequest);
+    public ResponseEntity<Void> signUp(@Valid @RequestBody CustomerSignUpRequest customerSignUpRequest) {
+        Long customerId = customerService.signUp(customerSignUpRequest);
         return ResponseEntity.created(URI.create("/customers/" + customerId)).build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = customerService.login(loginRequest);
-        return ResponseEntity.ok().body(loginResponse);
+    public ResponseEntity<CustomerLoginResponse> login(@Valid @RequestBody CustomerLoginRequest customerLoginRequest) {
+        CustomerLoginResponse customerLoginResponse = customerService.login(customerLoginRequest);
+        return ResponseEntity.ok().body(customerLoginResponse);
     }
 }

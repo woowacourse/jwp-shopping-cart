@@ -15,12 +15,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dto.customer.CustomerProfileResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.dto.login.LoginRequest;
-import woowacourse.shoppingcart.dto.login.LoginResponse;
-import woowacourse.shoppingcart.dto.customer.SignUpRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerLoginRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerLoginResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
@@ -48,10 +48,10 @@ class CustomerServiceTest {
     @Test
     void validateDuplicateUserId() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("puterism@woowacourse.com", "유콩", "1234asdf!");
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("puterism@woowacourse.com", "유콩", "1234asdf!");
 
         // when & then
-        assertThatThrownBy(() -> customerService.signUp(signUpRequest))
+        assertThatThrownBy(() -> customerService.signUp(customerSignUpRequest))
                 .isInstanceOf(CustomerDuplicatedDataException.class)
                 .hasMessage("이미 존재하는 아이디입니다.");
     }
@@ -60,10 +60,10 @@ class CustomerServiceTest {
     @Test
     void validateDuplicateNickname() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("coobim@woowacourse.com", "nickname1", "1234asdf!");
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("coobim@woowacourse.com", "nickname1", "1234asdf!");
 
         // when & then
-        assertThatThrownBy(() -> customerService.signUp(signUpRequest))
+        assertThatThrownBy(() -> customerService.signUp(customerSignUpRequest))
                 .isInstanceOf(CustomerDuplicatedDataException.class)
                 .hasMessage("이미 존재하는 닉네임입니다.");
     }
@@ -73,10 +73,10 @@ class CustomerServiceTest {
     @DisplayName("존재하지 않은 회원 정보로 로그인하면 안된다.")
     void loginNonExistentCustomer(String userId, String password) {
         // given
-        LoginRequest loginRequest = new LoginRequest(userId, password);
+        CustomerLoginRequest customerLoginRequest = new CustomerLoginRequest(userId, password);
 
         // when & then
-        assertThatThrownBy(() -> customerService.login(loginRequest))
+        assertThatThrownBy(() -> customerService.login(customerLoginRequest))
                 .isInstanceOf(LoginDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -85,16 +85,16 @@ class CustomerServiceTest {
     @Test
     void login() {
         // given
-        LoginRequest loginRequest = new LoginRequest("puterism@woowacourse.com", "1234asdf!");
+        CustomerLoginRequest customerLoginRequest = new CustomerLoginRequest("puterism@woowacourse.com", "1234asdf!");
 
         // when
-        LoginResponse loginResponse = customerService.login(loginRequest);
+        CustomerLoginResponse customerLoginResponse = customerService.login(customerLoginRequest);
 
         // then
         assertAll(
-                () -> assertThat(loginResponse.getAccessToken()).isNotNull(),
-                () -> assertThat(loginResponse.getUserId()).isEqualTo("puterism@woowacourse.com"),
-                () -> assertThat(loginResponse.getNickname()).isEqualTo("nickname")
+                () -> assertThat(customerLoginResponse.getAccessToken()).isNotNull(),
+                () -> assertThat(customerLoginResponse.getUserId()).isEqualTo("puterism@woowacourse.com"),
+                () -> assertThat(customerLoginResponse.getNickname()).isEqualTo("nickname")
         );
     }
 
@@ -114,8 +114,8 @@ class CustomerServiceTest {
     @Test
     void findByCustomerIdWithdrawalCustomer() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
-        Long customerId = customerService.signUp(signUpRequest);
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
         customerService.withdraw(tokenRequest);
 
@@ -129,18 +129,18 @@ class CustomerServiceTest {
     @Test
     void findByCustomerId() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
-        Long customerId = customerService.signUp(signUpRequest);
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
 
         // when
-        CustomerProfileResponse customerProfileResponse = customerService.findProfile(tokenRequest);
+        CustomerResponse customerResponse = customerService.findProfile(tokenRequest);
 
         // then
         assertAll(
-                () -> assertThat(customerProfileResponse.getId()).isEqualTo(customerId),
-                () -> assertThat(customerProfileResponse.getUserId()).isEqualTo("test@woowacourse.com"),
-                () -> assertThat(customerProfileResponse.getNickname()).isEqualTo("test")
+                () -> assertThat(customerResponse.getId()).isEqualTo(customerId),
+                () -> assertThat(customerResponse.getUserId()).isEqualTo("test@woowacourse.com"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("test")
         );
     }
 
@@ -161,8 +161,8 @@ class CustomerServiceTest {
     @Test
     void updateWithdrawalCustomer() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
-        Long customerId = customerService.signUp(signUpRequest);
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
         customerService.withdraw(tokenRequest);
 
@@ -191,8 +191,8 @@ class CustomerServiceTest {
     @Test
     void updatePasswordWithdrawalCustomer() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
-        Long customerId = customerService.signUp(signUpRequest);
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
         customerService.withdraw(tokenRequest);
         CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234asdf!",
@@ -208,8 +208,8 @@ class CustomerServiceTest {
     @Test
     void withdraw() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
-        Long customerId = customerService.signUp(signUpRequest);
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
 
         // when
@@ -237,8 +237,8 @@ class CustomerServiceTest {
     @Test
     void withdrawCustomerAgain() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
-        Long customerId = customerService.signUp(signUpRequest);
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
 
         customerService.withdraw(tokenRequest);
