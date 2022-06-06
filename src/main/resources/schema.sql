@@ -8,21 +8,6 @@ drop table if exists product;
 
 drop table if exists member;
 
-drop table if exists customer;
-
--- deprecated customer
-create table customer
-(
-    id       bigint       not null auto_increment,
-    username varchar(255) not null,
-    primary key (id)
-) engine = InnoDB
-  default charset = utf8mb4;
-
-alter table customer
-    add unique key (username);
--- deprecated customer
-
 create table member
 (
     id       bigint       not null auto_increment,
