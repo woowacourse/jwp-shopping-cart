@@ -22,7 +22,7 @@ public class ProductDao {
     }
 
     public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
+        final String query = "INSERT INTO product (name, price, image_url, is_deleted) VALUES (?, ?, ?, 0)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
@@ -38,7 +38,7 @@ public class ProductDao {
 
     public Product findProductById(final Long productId) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
+            final String query = "SELECT name, price, image_url FROM product WHERE id = ? and is_deleted = 0";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                 new Product(
                     productId,
@@ -53,7 +53,7 @@ public class ProductDao {
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
+        final String query = "SELECT id, name, price, image_url FROM product WHERE is_deleted = 0";
         return jdbcTemplate.query(query,
             (resultSet, rowNumber) ->
                 new Product(
@@ -65,7 +65,7 @@ public class ProductDao {
     }
 
     public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
+        final String query = "UPDATE product SET is_deleted = 1 WHERE id = ?";
         jdbcTemplate.update(query, productId);
     }
 }
