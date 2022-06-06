@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
@@ -18,7 +19,8 @@ import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 
 @SpringBootTest
-@Sql("/init.sql")
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Transactional
 class CustomerServiceTest {
 
     @Autowired

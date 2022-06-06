@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.acceptance;
+package woowacourse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -7,12 +7,19 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 
-public class AcceptanceFixtures {
+public class Fixtures {
+    public static Product 치킨 = new Product(1L, "치킨", 10000, "http://example.com/chicken.jpg");
+    public static Product 피자 = new Product(2L, "맥주", 20000, "http://example.com/beer.jpg");
+
 
     public static ExtractableResponse<Response> 회원가입(final CustomerRequest customerRequest) {
         return RestAssured

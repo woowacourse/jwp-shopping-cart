@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.Fixtures.치킨;
+import static woowacourse.Fixtures.피자;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -18,32 +20,27 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("상품 목록을 조회한다")
     @Test
-    void getProducts() {
-        Long productId1 = 1L;
-        Long productId2 = 2L;
-
-        ExtractableResponse<Response> response = 상품_목록_조회_요청();
+    void getProductsOfPage() {
+        ExtractableResponse<Response> response = 상품_목록_조회_요청(1,5);
 
         조회_응답됨(response);
-        상품_목록_포함됨(productId1, productId2, response);
+        상품_목록_포함됨(치킨.getId(), 피자.getId(), response);
     }
 
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
-        Long productId = 1L;
-
-        ExtractableResponse<Response> response = 상품_조회_요청(productId);
+        ExtractableResponse<Response> response = 상품_조회_요청(치킨.getId());
 
         조회_응답됨(response);
-        상품_조회됨(response, productId);
+        상품_조회됨(response, 치킨.getId());
     }
 
-    public static ExtractableResponse<Response> 상품_목록_조회_요청() {
+    public static ExtractableResponse<Response> 상품_목록_조회_요청(int page, int limit) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/products")
+                .when().get("/products?page=" + page + "&limit=" + limit)
                 .then().log().all()
                 .extract();
     }
