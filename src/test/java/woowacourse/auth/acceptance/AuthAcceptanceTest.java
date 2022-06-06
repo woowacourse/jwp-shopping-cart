@@ -49,9 +49,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
+    @DisplayName("로그인시, 잘못된 비밀번호가 들어온 경우 로그인에 실패한다.")
     @Test
-    void myInfoWithBadBearerAuth() {
+    void myInfoWithIncorrectPasswordShouldFail() {
         // given
         final CustomerRequest 회원생성요청 = 잉_회원생성요청;
         post(CUSTOMER_URI, 회원생성요청);
@@ -65,6 +65,25 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(로그인실패응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThatCode(() -> 로그인실패응답.as(ExceptionResponse.class))
                         .doesNotThrowAnyException()
+        );
+    }
+
+    @DisplayName("로그인시, 잘못된 이메일이 들어온 경우 로그인에 실패한다.")
+    @Test
+    void myInfoWithIncorrectEmailShouldFail() {
+        // given
+        final CustomerRequest 회원생성요청 = 잉_회원생성요청;
+        post(CUSTOMER_URI, 회원생성요청);
+
+        // when
+        final TokenRequest 로그인요청 = new TokenRequest(잉_회원생성요청.getEmail() + "wrong", 잉_회원생성요청.getPassword());
+        final ExtractableResponse<Response> 로그인실패응답 = post(LOGIN_URI, 로그인요청);
+
+        // then
+        assertAll(
+                () -> assertThat(로그인실패응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(로그인실패응답.as(ExceptionResponse.class).getMessage())
+                        .isEqualTo("요청하신 회원을 찾을 수 없습니다")
         );
     }
 
