@@ -31,7 +31,6 @@ public class ControllerAdvice {
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
@@ -47,7 +46,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidProductException.class
+            InvalidProductException.class,
+            NotInCustomerCartItemException.class,
     })
     public ResponseEntity<ErrorResponse> handleNotFoundRequest(final RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
