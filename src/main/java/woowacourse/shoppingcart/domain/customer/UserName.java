@@ -21,7 +21,19 @@ public class UserName {
 
     private boolean isConsist() {
         return name.chars()
-                .allMatch(ch -> Validator.isUnderBar(ch) || Validator.isLowerCase(ch) || Validator.isDigit(ch));
+                .allMatch(ch -> isUnderBar(ch) || isLowerCase(ch) || isDigit(ch));
+    }
+
+    private boolean isLowerCase(int ch) {
+        return Character.isAlphabetic(ch) && Character.isLowerCase(ch);
+    }
+
+    private boolean isDigit(int ch) {
+        return Character.isDigit(ch);
+    }
+
+    private boolean isUnderBar(int ch) {
+        return ch == '_';
     }
 
     private boolean isLengthRange() {

@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.domain.customer;
 
 import woowacourse.shoppingcart.support.Encryptor;
 
+import java.util.OptionalInt;
+
 public class Password {
 
     private static final int PASSWORD_MIN_LENGTH = 8;
@@ -36,10 +38,44 @@ public class Password {
     }
 
     private boolean isContainsLetter() {
-        return Validator.isContainsLowerCase(password) &&
-                Validator.isContainsUpperCase(password) &&
-                Validator.isContainsSpecialCase(password) &&
-                Validator.isContainsNumber(password);
+        return isContainsLowerCase(password) &&
+                isContainsUpperCase(password) &&
+                isContainsSpecialCase(password) &&
+                isContainsNumber(password);
+    }
+
+
+    private boolean isContainsLowerCase(String text) {
+        OptionalInt result = text.chars()
+                .filter(ch -> Character.isAlphabetic(ch) && Character.isLowerCase(ch))
+                .findAny();
+
+        return result.isPresent();
+    }
+
+    private boolean isContainsUpperCase(String text) {
+        OptionalInt result = text.chars()
+                .filter(ch -> Character.isAlphabetic(ch) && Character.isUpperCase(ch))
+                .findAny();
+
+        return result.isPresent();
+    }
+
+    private boolean isContainsSpecialCase(String text) {
+        final String special = "!@#$%^&*-_";
+        OptionalInt result = text.chars()
+                .filter(ch -> special.indexOf(ch) != -1)
+                .findAny();
+
+        return result.isPresent();
+    }
+
+    private boolean isContainsNumber(String text) {
+        OptionalInt result = text.chars()
+                .filter(Character::isDigit)
+                .findAny();
+
+        return result.isPresent();
     }
 
     public String value() {
