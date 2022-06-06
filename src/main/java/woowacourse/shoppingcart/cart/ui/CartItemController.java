@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.cart.application.CartService;
 import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
+import woowacourse.shoppingcart.cart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.support.Login;
 
@@ -26,8 +27,12 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<CartItemsResponse> getCartItems(@Login final Customer customer) {
+        final List<Cart> carts = cartService.findCartsByCustomerName(customer.getNickname());
+        final CartItemsResponse response = CartItemsResponse.from(carts);
+        return ResponseEntity
+                .ok()
+                .body(response);
     }
 
     @PostMapping
