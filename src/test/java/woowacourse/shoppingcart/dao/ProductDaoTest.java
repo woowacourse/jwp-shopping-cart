@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 import java.util.List;
 
@@ -52,7 +53,8 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(productId)
+                .orElseThrow(()-> new InvalidArgumentRequestException("존재하지 않는 상품입니다."));
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
