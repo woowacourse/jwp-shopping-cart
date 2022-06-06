@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.exception.NoSuchEmailException;
-import woowacourse.auth.exception.PasswordNotMatchException;
+import woowacourse.shoppingcart.exception.NoSuchEmailException;
+import woowacourse.shoppingcart.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;

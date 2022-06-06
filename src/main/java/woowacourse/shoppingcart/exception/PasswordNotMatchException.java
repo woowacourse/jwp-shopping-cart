@@ -1,4 +1,4 @@
-package woowacourse.auth.exception;
+package woowacourse.shoppingcart.exception;
 
 public class PasswordNotMatchException extends CustomerInfoNotMatchException {
 
