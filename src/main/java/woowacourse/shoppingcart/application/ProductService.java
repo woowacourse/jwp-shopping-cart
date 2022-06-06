@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class ProductService {
 
     public ProductResponse findProductById(final Long productId) {
         Product product = productDao.findProductById(productId)
-                .orElseThrow(() -> new InvalidArgumentRequestException("존재하지 않는 상품입니다."));
+                .orElseThrow(() -> new InvalidProductException("존재하지 않는 상품입니다."));
         return ProductResponse.from(product);
     }
 

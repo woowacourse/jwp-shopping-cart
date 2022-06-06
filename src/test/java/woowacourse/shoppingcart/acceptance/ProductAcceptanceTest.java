@@ -20,7 +20,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
+        ExtractableResponse<Response> response =
+                상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
 
         상품_추가됨(response);
     }
@@ -46,6 +47,16 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         조회_응답됨(response);
         상품_조회됨(response, productId);
+    }
+
+    @DisplayName("올바르지 않은 아이디로 상품을 조회한다")
+    @Test
+    void getProduct_invalidProductId() {
+        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+
+        ExtractableResponse<Response> response = 상품_조회_요청(productId+1);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("상품을 삭제한다")

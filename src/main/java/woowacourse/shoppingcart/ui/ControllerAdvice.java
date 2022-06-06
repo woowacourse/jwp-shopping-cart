@@ -30,7 +30,6 @@ public class ControllerAdvice {
             InvalidArgumentRequestException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
-            InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
             HttpMessageNotReadableException.class,
@@ -45,6 +44,14 @@ public class ControllerAdvice {
     public ResponseEntity<ErrorResponse> handleUnauthorizedRequest(final AuthorizationException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler({
+            InvalidProductException.class
+    })
+    public ResponseEntity<ErrorResponse> handleNotFoundRequest(final RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(RuntimeException.class)

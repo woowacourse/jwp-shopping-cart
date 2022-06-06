@@ -9,7 +9,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ class ProductServiceTest {
         Long productId = productService.addProduct(productRequest1);
 
         Product actual = productDao.findProductById(productId)
-                .orElseThrow(() -> new InvalidArgumentRequestException("존재하지 않는 상품입니다."));
+                .orElseThrow(() -> new InvalidProductException("존재하지 않는 상품입니다."));
 
         assertThat(actual.getName()).isEqualTo(productRequest1.getName());
     }
@@ -55,7 +55,7 @@ class ProductServiceTest {
     @DisplayName("상품 아이디로 단일 상품을 조회한다.")
     @Test
     void findProduct() {
-        Long product1Id = productService.addProduct(productRequest1);
+        productService.addProduct(productRequest1);
         Long product2Id = productService.addProduct(productRequest2);
 
         ProductResponse actual = productService.findProductById(product2Id);
@@ -68,7 +68,7 @@ class ProductServiceTest {
     void findProduct_invalidProductId() {
         Long product1Id = productService.addProduct(productRequest1);
 
-        assertThatExceptionOfType(InvalidArgumentRequestException.class)
+        assertThatExceptionOfType(InvalidProductException.class)
                 .isThrownBy(() -> productService.findProductById(product1Id + 1))
                 .withMessageContaining("존재");
     }
