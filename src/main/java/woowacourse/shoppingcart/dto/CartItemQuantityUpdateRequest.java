@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.ui.dto;
+package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.NotNull;
 

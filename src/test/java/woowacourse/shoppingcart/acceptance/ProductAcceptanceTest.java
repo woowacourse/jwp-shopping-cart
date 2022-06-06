@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.ui.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.CartItemAddRequest.ProductResponse;
 import woowacourse.util.HttpRequestUtil;
 
 @DisplayName("상품 관련 기능")

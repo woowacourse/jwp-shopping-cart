@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.application.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemAddRequest.CartItemResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 
 @Service

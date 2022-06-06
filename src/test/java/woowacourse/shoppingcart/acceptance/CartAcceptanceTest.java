@@ -25,9 +25,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.ui.dto.response.ErrorResponse;
 import woowacourse.auth.ui.dto.response.LoginResponse;
-import woowacourse.shoppingcart.application.dto.CartItemResponse;
-import woowacourse.shoppingcart.ui.dto.CartItemAddRequest;
-import woowacourse.shoppingcart.ui.dto.CartItemQuantityUpdateRequest;
+import woowacourse.shoppingcart.dto.CartItemAddRequest.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemAddRequest;
+import woowacourse.shoppingcart.dto.CartItemQuantityUpdateRequest;
 
 @DisplayName("장바구니 관련 기능")
 @Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})

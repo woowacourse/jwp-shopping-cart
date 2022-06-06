@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dao.MemberDao;
 import woowacourse.auth.domain.Member;
-import woowacourse.shoppingcart.application.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemAddRequest.CartItemResponse;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})
