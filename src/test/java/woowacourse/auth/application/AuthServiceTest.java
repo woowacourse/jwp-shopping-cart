@@ -32,7 +32,7 @@ class AuthServiceTest {
     private static final EncryptedPassword 암호화된_비밀번호 = new Password(비밀번호).toEncrypted();
     private static final String 유효한_닉네임 = "닉네임";
     private static final int 유효한_나이 = 20;
-    private final Customer 유효한_고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
+    private final Customer 유효한_고객 = new Customer(1L, 유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
 
     @Autowired
     private AuthService authService;

@@ -30,7 +30,7 @@ public class CustomerService {
     public void createCustomer(SignUpRequest request) {
         Password password = new Password(request.getPassword());
         Customer customer = new Customer(request.getUsername(),
-                password, request.getNickname(), request.getAge());
+                password.toEncrypted(), request.getNickname(), request.getAge());
         customerDao.save(customer);
     }
 
@@ -39,7 +39,7 @@ public class CustomerService {
         String newNickname = request.getNickname();
         int newAge = request.getAge();
         Customer updatedCustomer = customer.updateNickname(newNickname).updateAge(newAge);
-        customerDao.updateByUsername(updatedCustomer);
+        customerDao.update(updatedCustomer);
     }
 
     @Transactional
@@ -48,7 +48,7 @@ public class CustomerService {
             throw new InvalidRequestException(InvalidExceptionType.WRONG_PASSWORD);
         }
         Customer updatedCustomer = customer.updatePassword(request.getNewPassword());
-        customerDao.updateByUsername(updatedCustomer);
+        customerDao.update(updatedCustomer);
     }
 
     @Transactional

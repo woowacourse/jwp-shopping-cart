@@ -40,8 +40,9 @@ class CustomerDaoTest extends DatabaseTest {
             databaseFixture.save(고객);
 
             Customer actual = customerDao.findByUserName(유효한_아이디).get();
+            Customer expected =  new Customer(1L, 유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
-            assertThat(actual).isEqualTo(고객);
+            assertThat(actual).isEqualTo(expected);
         }
 
         @Test
@@ -64,8 +65,9 @@ class CustomerDaoTest extends DatabaseTest {
 
             customerDao.save(신규_고객);
             Customer actual = customerDao.findByUserName(유효한_아이디).get();
+            Customer expected = new Customer(1L, 유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
-            assertThat(actual).isEqualTo(신규_고객);
+            assertThat(actual).isEqualTo(expected);
         }
 
         @Test
@@ -78,18 +80,18 @@ class CustomerDaoTest extends DatabaseTest {
         }
     }
 
-    @DisplayName("updateByUsername 메서드는 아이디(username)에 해당되는 데이터의 아이디 이외의 값들을 수정한다.")
+    @DisplayName("update 메서드는 식별자(id)에 해당되는 데이터의 아이디(username) 이외의 값들을 수정한다.")
     @Nested
     class UpdateTest {
 
         @Test
         void 유효한_데이터로_수정하려는_경우_성공() {
-            Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer 고객 = new Customer(1L, 유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
             EncryptedPassword 새로운_비밀번호 = new EncryptedPassword("새로운_비밀번호");
-            Customer 수정된_고객 = new Customer(유효한_아이디, 새로운_비밀번호, "새로운닉네임", 80);
+            Customer 수정된_고객 = new Customer(1L, 유효한_아이디, 새로운_비밀번호, "새로운닉네임", 80);
             databaseFixture.save(고객);
 
-            customerDao.updateByUsername(수정된_고객);
+            customerDao.update(수정된_고객);
             Customer actual = customerDao.findByUserName(유효한_아이디).get();
 
             assertThat(actual).isEqualTo(수정된_고객);
@@ -100,17 +102,17 @@ class CustomerDaoTest extends DatabaseTest {
             Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
             assertThatNoException()
-                    .isThrownBy(() -> customerDao.updateByUsername(고객));
+                    .isThrownBy(() -> customerDao.update(고객));
         }
     }
 
-    @DisplayName("delete 메서드는 아이디(username)에 해당되는 데이터를 제거한다.")
+    @DisplayName("delete 메서드는 식별자(id)에 해당되는 데이터를 제거한다.")
     @Nested
     class DeleteTest {
 
         @Test
         void 제거_성공() {
-            Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer 고객 = new Customer(1L, 유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
             databaseFixture.save(고객);
 
             customerDao.delete(고객);
@@ -121,7 +123,7 @@ class CustomerDaoTest extends DatabaseTest {
 
         @Test
         void 존재하지_않는_데이터를_제거하려는_경우_예외_미발생() {
-            Customer 고객 = new Customer(유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
+            Customer 고객 = new Customer(1L, 유효한_아이디, 비밀번호, 유효한_닉네임, 유효한_나이);
 
             assertThatNoException()
                     .isThrownBy(() -> customerDao.delete(고객));

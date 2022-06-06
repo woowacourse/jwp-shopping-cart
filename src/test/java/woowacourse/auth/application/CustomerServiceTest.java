@@ -29,7 +29,7 @@ class CustomerServiceTest extends DatabaseTest {
     private static final EncryptedPassword 암호화된_비밀번호 = new Password(비밀번호).toEncrypted();
     private static final String 유효한_닉네임 = "닉네임";
     private static final int 유효한_나이 = 20;
-    private final Customer 유효한_고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
+    private final Customer 유효한_고객 = new Customer(1L, 유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
 
     private final CustomerService customerService;
     private final CustomerDao customerDao;
@@ -151,7 +151,7 @@ class CustomerServiceTest extends DatabaseTest {
 
             customerService.updateNicknameAndAge(유효한_고객, 수정된_고객_정보);
             Customer actual = findCustomer(유효한_아이디);
-            Customer expected = new Customer(유효한_아이디, 암호화된_비밀번호, 새로운_닉네임, 새로운_나이);
+            Customer expected = new Customer(1L, 유효한_아이디, 암호화된_비밀번호, 새로운_닉네임, 새로운_나이);
 
             assertThat(actual).isEqualTo(expected);
         }

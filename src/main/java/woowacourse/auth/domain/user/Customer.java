@@ -11,21 +11,23 @@ public class Customer {
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9]{4,20}$");
     private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣a-zA-Z0-9]{1,10}$");
 
+    private final Long id;
     private final String username;
     private final EncryptedPassword password;
     private final String nickname;
     private final int age;
 
-    public Customer(String username, EncryptedPassword password, String nickname, int age) {
+    public Customer(Long id, String username, EncryptedPassword password, String nickname, int age) {
         validate(username, nickname, age);
+        this.id = id;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.age = age;
     }
 
-    public Customer(String username, Password password, String nickname, int age) {
-        this(username, password.toEncrypted(), nickname, age);
+    public Customer(String username, EncryptedPassword password, String nickname, int age) {
+        this(null, username, password, nickname, age);
     }
 
     private void validate(String username, String nickname, int age) {
@@ -59,15 +61,19 @@ public class Customer {
     }
 
     public Customer updatePassword(String newPassword) {
-        return new Customer(username, new Password(newPassword), nickname, age);
+        return new Customer(id, username, new Password(newPassword).toEncrypted(), nickname, age);
     }
 
     public Customer updateNickname(String newNickname) {
-        return new Customer(username, password, newNickname, age);
+        return new Customer(id, username, password, newNickname, age);
     }
 
     public Customer updateAge(int newAge) {
-        return new Customer(username, password, nickname, newAge);
+        return new Customer(id, username, password, nickname, newAge);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -100,6 +106,7 @@ public class Customer {
         }
         Customer customer = (Customer) o;
         return age == customer.age
+                && Objects.equals(id, customer.id)
                 && Objects.equals(username, customer.username)
                 && Objects.equals(password, customer.password)
                 && Objects.equals(nickname, customer.nickname);
@@ -107,13 +114,14 @@ public class Customer {
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, nickname, age);
+        return Objects.hash(id, username, password, nickname, age);
     }
 
     @Override
     public String toString() {
         return "Customer{" +
-                "username='" + username + '\'' +
+                "id=" + id +
+                ", username='" + username + '\'' +
                 ", password=" + password +
                 ", nickname='" + nickname + '\'' +
                 ", age=" + age +

@@ -14,7 +14,8 @@ import woowacourse.auth.domain.user.Customer;
 public class CustomerDao {
 
     private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) ->
-            new Customer(resultSet.getString("username"),
+            new Customer(resultSet.getLong("id"),
+                    resultSet.getString("username"),
                     new EncryptedPassword(resultSet.getString("password")),
                     resultSet.getString("nickname"),
                     resultSet.getInt("age"));
@@ -26,7 +27,7 @@ public class CustomerDao {
     }
 
     public Optional<Customer> findByUserName(String userName) {
-        final String sql = "SELECT username, password, nickname, age FROM customer "
+        final String sql = "SELECT id, username, password, nickname, age FROM customer "
                 + "WHERE username = :username";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("username", userName);
@@ -43,16 +44,16 @@ public class CustomerDao {
         jdbcTemplate.update(sql, params);
     }
 
-    public void updateByUsername(Customer customer) {
+    public void update(Customer customer) {
         final String sql = "UPDATE customer SET password = :password, "
-                + "nickname = :nickname, age = :age WHERE username = :username";
+                + "nickname = :nickname, age = :age WHERE id = :id";
         SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
 
         jdbcTemplate.update(sql, params);
     }
 
     public void delete(Customer customer) {
-        final String sql = "DELETE FROM customer WHERE username = :username";
+        final String sql = "DELETE FROM customer WHERE id = :id";
         SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
 
         jdbcTemplate.update(sql, params);
