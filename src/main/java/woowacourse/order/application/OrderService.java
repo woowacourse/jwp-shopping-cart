@@ -11,6 +11,8 @@ import woowacourse.customer.dao.CustomerDao;
 import woowacourse.order.dao.OrderDao;
 import woowacourse.order.dao.OrdersDetailDao;
 import woowacourse.order.dto.OrderAddRequest;
+import woowacourse.order.dto.OrderResponse;
+import woowacourse.order.exception.InvalidOrderException;
 import woowacourse.product.dao.ProductDao;
 
 @Transactional(rollbackFor = Exception.class)
@@ -24,7 +26,7 @@ public class OrderService {
     private final ProductDao productDao;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemService cartItemService, final CustomerDao customerDao, final ProductDao productDao) {
+        final CartItemService cartItemService, final CustomerDao customerDao, final ProductDao productDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemService = cartItemService;
@@ -45,19 +47,19 @@ public class OrderService {
 
         return ordersId;
     }
-    //
-    // public Orders findOrderById(final String customerName, final Long orderId) {
-    //     validateOrderIdByCustomerName(customerName, orderId);
-    //     return findOrderResponseDtoByOrderId(orderId);
-    // }
-    //
-    // private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-    //     final Long customerId = customerDao.findIdByUserName(customerName);
-    //
-    //     if (!orderDao.isValidOrderId(customerId, orderId)) {
-    //         throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
-    //     }
-    // }
+
+    public OrderResponse findOrderById(final String customerName, final Long orderId) {
+        validateOrderIdByCustomerName(customerName, orderId);
+        return OrderResponse.from(orderId, ordersDetailDao.findOrdersDetailsByOrderId(orderId));
+    }
+
+    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
+        final Long customerId = customerDao.findIdByUserName(customerName);
+
+        if (!orderDao.isValidOrderId(customerId, orderId)) {
+            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+        }
+    }
     //
     // public List<Orders> findOrdersByCustomerName(final String customerName) {
     //     final Long customerId = customerDao.findIdByUserName(customerName);

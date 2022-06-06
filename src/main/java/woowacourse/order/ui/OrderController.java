@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.order.application.OrderService;
 import woowacourse.order.dto.OrderAddRequest;
+import woowacourse.order.dto.OrderResponse;
 
 @RequestMapping("/api/orders")
 @RestController
@@ -32,13 +35,14 @@ public class OrderController {
         final Long orderId = orderService.addOrder(username, orderAddRequests);
         return ResponseEntity.created(URI.create("/api/orders/" + orderId)).build();
     }
-    //
-    // @GetMapping("/{orderId}")
-    // public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
-    //                                         @PathVariable final Long orderId) {
-    //     final Orders order = orderService.findOrderById(customerName, orderId);
-    //     return ResponseEntity.ok(order);
-    // }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponse> findOrder(
+        @AuthenticationPrincipal final String username,
+        @PathVariable final Long orderId
+    ) {
+        return ResponseEntity.ok(orderService.findOrderById(username, orderId));
+    }
     //
     // @GetMapping
     // public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {

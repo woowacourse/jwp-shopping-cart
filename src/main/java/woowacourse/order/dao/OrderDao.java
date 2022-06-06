@@ -31,8 +31,11 @@ public class OrderDao {
     //     return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     // }
     //
-    // public boolean isValidOrderId(final Long customerId, final Long orderId) {
-    //     final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
-    //     return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
-    // }
+    public boolean isValidOrderId(final Long customerId, final Long orderId) {
+        final String sql = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = :customer_id AND id = :id)";
+        final SqlParameterSource params = new MapSqlParameterSource("customer_id", customerId)
+            .addValue("id", orderId);
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
 }

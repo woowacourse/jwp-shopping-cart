@@ -18,6 +18,7 @@ import woowacourse.cartitem.dto.CartItemAddRequest;
 import woowacourse.customer.application.CustomerService;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.order.dto.OrderAddRequest;
+import woowacourse.order.dto.OrderResponse;
 import woowacourse.product.application.ProductService;
 import woowacourse.product.dto.ProductRequest;
 
@@ -42,6 +43,7 @@ public class OrderServiceTest {
     private Long productId2;
     private Long cartItemId1;
     private Long cartItemId2;
+    private List<OrderAddRequest> orderRequests;
 
     @BeforeEach
     void setUp() {
@@ -52,17 +54,25 @@ public class OrderServiceTest {
         productId2 = productService.addProduct(new ProductRequest("짱아", 10_000_000, 10, "jjanga.jpg"));
         cartItemId1 = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 5));
         cartItemId2 = cartItemService.addCartItem(username, new CartItemAddRequest(productId2, 5));
+        orderRequests = Stream.of(cartItemId1, cartItemId2)
+            .map(OrderAddRequest::new)
+            .collect(Collectors.toList());
     }
 
     @DisplayName("주문을 추가한다.")
     @Test
     void addOrders() {
-        final List<OrderAddRequest> orderRequests = Stream.of(cartItemId1, cartItemId2)
-            .map(OrderAddRequest::new)
-            .collect(Collectors.toList());
-
         final Long orderId = orderService.addOrder(username, orderRequests);
 
         assertThat(orderId).isNotNull();
+    }
+
+    @DisplayName("단일 주문을 조회한다.")
+    @Test
+    void findOrder() {
+        final Long orderId = orderService.addOrder(username, orderRequests);
+        final OrderResponse orderResponse = orderService.findOrderById(username, orderId);
+
+        assertThat(orderResponse.getId()).isEqualTo(orderId);
     }
 }

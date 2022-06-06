@@ -23,6 +23,7 @@ import woowacourse.auth.dto.LoginRequest;
 import woowacourse.cartitem.dto.CartItemAddRequest;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.order.dto.OrderAddRequest;
+import woowacourse.order.dto.OrderResponse;
 import woowacourse.product.dto.ProductRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
@@ -34,6 +35,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     private Long productId2;
     private Long cartItemId1;
     private Long cartItemId2;
+    private List<OrderAddRequest> orderRequests;
 
     @Override
     @BeforeEach
@@ -46,15 +48,14 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         productId2 = 상품_등록되어_있음(new ProductRequest("짱아", 10_000_000, 10, "jjanga.jpg"));
         cartItemId1 = 장바구니_아이템_추가되어_있음(accessToken, new CartItemAddRequest(productId2, 1));
         cartItemId2 = 장바구니_아이템_추가되어_있음(accessToken, new CartItemAddRequest(productId2, 1));
+        orderRequests = Stream.of(cartItemId1, cartItemId2)
+            .map(OrderAddRequest::new)
+            .collect(Collectors.toList());
     }
 
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        final List<OrderAddRequest> orderRequests = Stream.of(cartItemId1, cartItemId2)
-            .map(OrderAddRequest::new)
-            .collect(Collectors.toList());
-
         final ExtractableResponse<Response> response = 주문하기_요청(accessToken, orderRequests);
 
         주문하기_성공함(response);
@@ -74,21 +75,17 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     //     주문_내역_포함됨(response, orderId1, orderId2);
     // }
     //
-    // @DisplayName("주문 단일 조회")
-    // @Disabled
-    // @Test
-    // void getOrder() {
-    //     Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
-    //             new OrderRequest(cartId1, 2),
-    //             new OrderRequest(cartId2, 4)
-    //     ));
-    //
-    //     ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
-    //
-    //     주문_조회_응답됨(response);
-    //     주문_조회됨(response, orderId);
-    // }
-    //
+    @DisplayName("주문 단일 조회")
+    @Test
+    void getOrder() {
+        final Long orderId = 주문하기_요청_성공되어_있음(accessToken, orderRequests);
+
+        final ExtractableResponse<Response> response = 주문_단일_조회_요청(accessToken, orderId);
+
+        주문_조회_응답됨(response);
+        주문_조회됨(response, orderId);
+    }
+
     public static ExtractableResponse<Response> 주문하기_요청(final String accessToken,
         final List<OrderAddRequest> orderRequests) {
         return RestAssured
@@ -110,39 +107,40 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     //             .then().log().all()
     //             .extract();
     // }
-    //
-    // public static ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
-    //     return RestAssured
-    //             .given().log().all()
-    //             .contentType(MediaType.APPLICATION_JSON_VALUE)
-    //             .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
-    //             .then().log().all()
-    //             .extract();
-    // }
-    //
+
+    public static ExtractableResponse<Response> 주문_단일_조회_요청(final String accessToken, final Long orderId) {
+        return RestAssured
+            .given().log().all()
+            .auth().oauth2(accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/orders/{orderId}", orderId)
+            .then().log().all()
+            .extract();
+    }
+
     public static void 주문하기_성공함(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
-    //
-    // public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
-    //     ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
-    //     return Long.parseLong(response.header("Location").split("/orders/")[1]);
-    // }
-    //
-    // public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
-    //     assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    // }
-    //
+
+    public static Long 주문하기_요청_성공되어_있음(final String accessToken, final List<OrderAddRequest> orderAddRequests) {
+        final ExtractableResponse<Response> response = 주문하기_요청(accessToken, orderAddRequests);
+        return Long.parseLong(response.header("Location").split("/orders/")[1]);
+    }
+
+    public static void 주문_조회_응답됨(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
     // public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
     //     List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
     //             .map(Orders::getId)
     //             .collect(Collectors.toList());
     //     assertThat(resultOrderIds).contains(orderIds);
     // }
-    //
-    // private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-    //     Orders resultOrder = response.as(Orders.class);
-    //     assertThat(resultOrder.getId()).isEqualTo(orderId);
-    // }
+
+    private void 주문_조회됨(final ExtractableResponse<Response> response, final Long orderId) {
+        final OrderResponse resultOrder = response.as(OrderResponse.class);
+        assertThat(resultOrder.getId()).isEqualTo(orderId);
+    }
 }
