@@ -25,16 +25,16 @@ public class CartItemController {
         this.cartService = cartService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal final TokenRequest tokenRequest) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(tokenRequest.getCustomerId()));
-    }
-
     @PostMapping
     public ResponseEntity<List<CartProductInfoResponse>> addCartItem(
             @AuthenticationPrincipal final TokenRequest tokenRequest,
             @RequestBody final List<ProductIdRequest> productIdRequests) {
         return ResponseEntity.ok().body(cartService.addCart(productIdRequests, tokenRequest.getCustomerId()));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal final TokenRequest tokenRequest) {
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(tokenRequest.getCustomerId()));
     }
 
     @DeleteMapping()
