@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CreateCustomerRequest;
@@ -192,22 +191,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().extract();
     }
 
-    private String loginAndGetAccessToken(TokenRequest tokenRequest) {
-        return sendLoginRequest(tokenRequest.getEmail(), tokenRequest.getPassword())
-                .as(TokenResponse.class)
-                .getAccessToken();
-    }
-
-    private ExtractableResponse<Response> sendLoginRequest(String email, String password) {
-        return RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(email, password))
-                .when().log().all()
-                .post("/api/login")
-                .then().log().all()
-                .extract();
-    }
-
     private ExtractableResponse<Response> sendCreateCustomerRequest(CreateCustomerRequest customerCreateRequest) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -215,17 +198,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when()
                 .post("/api/customers")
                 .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> createCustomer(
-            CreateCustomerRequest customerCreateRequest) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerCreateRequest)
-                .when()
-                .post("/api/customers")
-                .then()
                 .extract();
     }
 }

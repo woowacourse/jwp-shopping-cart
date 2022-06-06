@@ -106,26 +106,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().extract();
     }
 
-    private String loginAndGetAccessToken(TokenRequest tokenRequest) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .post("/api/login")
-                .then().extract()
-                .body().jsonPath().getString("accessToken");
-    }
-
     private void createCustomer(String email, String nickname, String password) {
         sendCreateCustomerRequest(new CreateCustomerRequest(email, nickname, password));
     }
 
     private ExtractableResponse<Response> sendCreateCustomerRequest(CreateCustomerRequest customerCreateRequest) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerCreateRequest)
-                .when()
-                .post("/api/customers")
-                .then()
-                .extract();
+        return createCustomer(customerCreateRequest);
     }
 }
