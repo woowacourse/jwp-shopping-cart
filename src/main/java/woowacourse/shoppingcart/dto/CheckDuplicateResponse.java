@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.shoppingcart.dto;
 
 public class CheckDuplicateResponse {
 

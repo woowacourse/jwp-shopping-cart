@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.application.CheckDuplicateResponse;
+import woowacourse.shoppingcart.dto.CheckDuplicateResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CheckDuplicateRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
