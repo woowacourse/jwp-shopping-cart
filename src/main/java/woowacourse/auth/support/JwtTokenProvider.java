@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import woowacourse.global.exception.InvalidTokenException;
 
 import java.util.Date;
 
@@ -43,7 +44,7 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
+        } catch (JwtException | InvalidTokenException e) {
             return false;
         }
     }

@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.global.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.application.dto.CustomerUpdatePasswordRequest;
@@ -27,23 +28,24 @@ public class CustomerService {
 
     private void validateCustomerRequest(CustomerSaveRequest request) {
         if (customerDao.existByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("[ERROR] 이미 존재하는 이메일입니다.");
+            throw new InvalidCustomerException("[ERROR] 이미 존재하는 이메일입니다.");
         }
 
         if (customerDao.existByNickname(request.getNickname())) {
-            throw new IllegalArgumentException("[ERROR] 이미 존재하는 닉네임입니다.");
+            throw new InvalidCustomerException("[ERROR] 이미 존재하는 닉네임입니다.");
         }
     }
 
     public CustomerResponse findById(Long id) {
         Customer customer = customerDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
+                .orElseThrow(() -> new InvalidCustomerException("[ERROR] ID가 존재하지 않습니다."));
         return new CustomerResponse(customer);
     }
-    
+
+    @Transactional
     public void update(Long id, CustomerUpdateRequest customerUpdateRequest) {
         Customer saveCustomer = customerDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
+                .orElseThrow(() -> new InvalidCustomerException("[ERROR] ID가 존재하지 않습니다."));
         validateUpdateNickname(id, customerUpdateRequest, saveCustomer);
 
         customerDao.update(new Customer(
@@ -58,14 +60,14 @@ public class CustomerService {
         customer.validateNickname(customerUpdateRequest.getNickname());
         boolean existNickname = customerDao.existByNicknameExcludedId(id, customerUpdateRequest.getNickname());
         if (existNickname) {
-            throw new IllegalArgumentException("[ERROR] 중복되는 닉네임입니다.");
+            throw new InvalidCustomerException("[ERROR] 중복되는 닉네임입니다.");
         }
     }
 
     @Transactional
     public void updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         Customer saveCustomer = customerDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
+                .orElseThrow(() -> new InvalidCustomerException("[ERROR] ID가 존재하지 않습니다."));
         validatePasswordUpdateNickname(customerUpdatePasswordRequest, saveCustomer);
 
         customerDao.update(new Customer(
@@ -85,7 +87,7 @@ public class CustomerService {
     @Transactional
     public void delete(Long id) {
         customerDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
+                .orElseThrow(() -> new InvalidCustomerException("[ERROR] ID가 존재하지 않습니다."));
         customerDao.delete(id);
     }
 }

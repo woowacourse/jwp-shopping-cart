@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.global.exception;
 
 public class NotInCustomerCartItemException extends RuntimeException {
     public NotInCustomerCartItemException() {

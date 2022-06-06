@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.global.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.application.dto.CustomerUpdatePasswordRequest;
@@ -47,7 +48,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.save(new CustomerSaveRequest("email@email.com", "password1234A!", "zero")))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidCustomerException.class);
     }
 
     @Test
@@ -59,7 +60,7 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.save(new CustomerSaveRequest("email2@email.com", "password1234A!", "rookie")))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidCustomerException.class);
     }
 
     @Test
@@ -81,7 +82,7 @@ class CustomerServiceTest {
     void findByNotExistedId() {
         // given & when & then
         assertThatThrownBy(() -> customerService.findById(1L))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidCustomerException.class);
     }
 
     @Test
@@ -115,7 +116,7 @@ class CustomerServiceTest {
     void updateByNotExistedId() {
         // given & when & then
         assertThatThrownBy(() -> customerService.update(1L, new CustomerUpdateRequest("rookie")))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidCustomerException.class);
     }
 
     @Test
@@ -134,6 +135,6 @@ class CustomerServiceTest {
     void deleteByNotExistedId() {
         // when & then
         assertThatThrownBy(() -> customerService.delete(1L))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidCustomerException.class);
     }
 }

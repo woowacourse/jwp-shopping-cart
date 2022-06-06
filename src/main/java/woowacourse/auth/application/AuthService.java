@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.application.dto.TokenCreateRequest;
 import woowacourse.auth.application.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.global.exception.InvalidTokenException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 
@@ -22,7 +23,7 @@ public class AuthService {
 
     public TokenResponse createToken(TokenCreateRequest tokenCreateRequest) {
         Customer customer = customerDao.findByEmailAndPassword(tokenCreateRequest.getEmail(), tokenCreateRequest.getPassword())
-                .orElseThrow(() -> new IllegalArgumentException("로그인 정보가 일치하지 않습니다."));
+                .orElseThrow(() -> new InvalidTokenException("로그인 정보가 일치하지 않습니다."));
 
         String accessToken = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
         return new TokenResponse(accessToken);

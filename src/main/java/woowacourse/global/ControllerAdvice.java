@@ -1,4 +1,4 @@
-package woowacourse.global.exception;
+package woowacourse.global;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -11,17 +11,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+
+import woowacourse.global.exception.*;
 
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity handleIllegalArgumentException(final IllegalArgumentException exception) {
+    @ExceptionHandler(ShoppingCartException.class)
+    public ResponseEntity handleShoppingCartException(final InvalidTokenException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
@@ -53,7 +50,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             InvalidCustomerException.class,
-            InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,

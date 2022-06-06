@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.global.exception.InvalidCustomerException;
+
 import java.util.regex.Pattern;
 
 public class Customer {
@@ -33,31 +35,31 @@ public class Customer {
 
     private void validateEmail(String email) {
         if (email.isBlank() || !Pattern.matches(EMAIL_REGEX, email)) {
-            throw new IllegalArgumentException("[ERROR] 이메일 기본 형식에 어긋납니다.");
+            throw new InvalidCustomerException("[ERROR] 이메일 기본 형식에 어긋납니다.");
         }
     }
 
     public void validatePassword(String password) {
         if (password.isBlank() || !Pattern.matches(PASSWORD_REGEX, password)) {
-            throw new IllegalArgumentException("[ERROR] 패스워드 기본 형식에 어긋납니다.");
+            throw new InvalidCustomerException("[ERROR] 패스워드 기본 형식에 어긋납니다.");
         }
     }
 
     public void validateNickname(String nickname) {
         if (nickname.isBlank() || !Pattern.matches(NICKNAME_REGEX, nickname)) {
-            throw new IllegalArgumentException("[ERROR] 닉네임 기본 형식에 어긋납니다.");
+            throw new InvalidCustomerException("[ERROR] 닉네임 기본 형식에 어긋납니다.");
         }
     }
 
     public void equalPrevPassword(String prePassword) {
         if (!password.equals(prePassword)) {
-            throw new IllegalArgumentException("[ERROR] 이전 비밀번호와 일치하지 않습니다.");
+            throw new InvalidCustomerException("[ERROR] 이전 비밀번호와 일치하지 않습니다.");
         }
     }
 
     public void nonEqualNewPassword(String newPassword) {
         if (password.equals(newPassword)) {
-            throw new IllegalArgumentException("[ERROR] 새로운 비밀번호가 이전 비밀번호와 동일합니다.");
+            throw new InvalidCustomerException("[ERROR] 새로운 비밀번호가 이전 비밀번호와 동일합니다.");
         }
     }
 
