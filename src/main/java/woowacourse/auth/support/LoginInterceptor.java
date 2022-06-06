@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import woowacourse.auth.exception.WrongTokenException;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
@@ -20,14 +21,16 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (isRegisterExclude(request.getRequestURI(), request.getMethod())) {
             return true;
         }
         logger.info("request uri = {}, request method = {} ", request.getRequestURI(), request.getMethod());
         String token = AuthorizationExtractor.extract(request);
-        return jwtTokenProvider.validateToken(token);
+        if (jwtTokenProvider.validateToken(token)) {
+            return true;
+        }
+        throw new WrongTokenException();
     }
 
     private boolean isRegisterExclude(final String uri, final String method) {

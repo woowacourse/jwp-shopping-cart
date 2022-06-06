@@ -2,12 +2,13 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static woowacourse.helper.fixture.TMember.MARU;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.WrongTokenException;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
@@ -19,7 +20,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void login() {
         MARU.register();
         TokenResponse response = MARU.login();
-        assertThat(response.getAccessToken()).isNotNull();
+        assertAll(
+                () -> assertDoesNotThrow(WrongTokenException::new),
+                () -> assertThat(response.getAccessToken()).isNotNull()
+        );
     }
 
     @DisplayName("틀린 비밀번호를 입력할 경우 400 badRequest와 에러메시지를 반환한다.")

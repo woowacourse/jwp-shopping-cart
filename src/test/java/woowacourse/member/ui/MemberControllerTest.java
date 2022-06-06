@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -29,11 +30,16 @@ import static woowacourse.helper.fixture.MemberFixture.createMemberRegisterReque
 import static woowacourse.helper.restdocs.RestDocsUtils.getRequestPreprocessor;
 import static woowacourse.helper.restdocs.RestDocsUtils.getResponsePreprocessor;
 
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.helper.restdocs.RestDocsTest;
 import woowacourse.member.dto.EmailCheckRequest;
 import woowacourse.member.dto.MemberDeleteRequest;
@@ -41,9 +47,59 @@ import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
 import woowacourse.member.dto.MemberResponse;
+import woowacourse.member.exception.DuplicateMemberEmailException;
 
 @DisplayName("멤버 컨트롤러 단위테스트")
 public class MemberControllerTest extends RestDocsTest {
+
+    @DisplayName("이메일 중복 체크에 성공한다.")
+    @Test
+    void validateDuplicateEmail() throws Exception {
+        EmailCheckRequest emailCheckRequest = new EmailCheckRequest(EMAIL);
+
+        doNothing().when(memberService).validateDuplicateEmail(any(EmailCheckRequest.class));
+
+        ResultActions resultActions = mockMvc.perform(post("/api/members/duplicate-email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(emailCheckRequest)))
+                .andExpect(status().isOk());
+
+        //docs
+        resultActions.andDo(document("member-duplicate-email",
+                getRequestPreprocessor(),
+                getResponsePreprocessor(),
+                requestFields(
+                        fieldWithPath("email").type(STRING).description("이메일")
+                )));
+    }
+
+    @DisplayName("이메일이 중복되어 중복 체크에 실패한다.")
+    @Test
+    void failedValidateDuplicateEmail() throws Exception {
+        EmailCheckRequest emailCheckRequest = new EmailCheckRequest(EMAIL);
+        doThrow(DuplicateMemberEmailException.class)
+                .when(memberService).validateDuplicateEmail(any(EmailCheckRequest.class));
+
+        mockMvc.perform(post("/api/members/duplicate-email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(emailCheckRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("입력이 형식에 맞지 않아 이메일 중복 체크에 실패한다.")
+    @Test
+    void failedValidateDuplicateEmailWrongFormat() throws Exception {
+        EmailCheckRequest emailCheckRequest = new EmailCheckRequest("email");
+
+        mockMvc.perform(post("/api/members/duplicate-email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(emailCheckRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("올바른 이메일 형식으로 입력해주세요."));
+    }
 
     @DisplayName("멤버가 회원가입에 성공한다.")
     @Test
@@ -67,6 +123,35 @@ public class MemberControllerTest extends RestDocsTest {
                         fieldWithPath("password").type(STRING).description("비밀번호"),
                         fieldWithPath("name").type(STRING).description("이름")
                 )));
+    }
+
+    @DisplayName("멤버가 회원가입에 실패한다.")
+    @ParameterizedTest
+    @MethodSource("provideMemberRegisterRequest")
+    void failedRegister(MemberRegisterRequest request, String errorMessage) throws Exception {
+        mockMvc.perform(post("/api/members")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(errorMessage));
+    }
+
+    private static Stream<Arguments> provideMemberRegisterRequest() {
+        return Stream.of(
+                Arguments.of(
+                        createMemberRegisterRequest("email", PASSWORD, NAME),
+                        "올바른 이메일 형식으로 입력해주세요."
+                ),
+                Arguments.of(
+                        createMemberRegisterRequest(EMAIL, "password", NAME),
+                        "올바른 비밀번호 형식으로 입력해주세요."
+                ),
+                Arguments.of(
+                        createMemberRegisterRequest(EMAIL, PASSWORD, "namenamename"),
+                        "이름은 1자 이상 10자 이하여야합니다."
+                )
+        );
     }
 
     @DisplayName("멤버를 조회한다.")
@@ -96,6 +181,18 @@ public class MemberControllerTest extends RestDocsTest {
                 )));
     }
 
+    @DisplayName("멤버 조회에 실패한다.")
+    @Test
+    void failedGetMemberInformation() throws Exception {
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(false);
+        ErrorResponse errorResponse = new ErrorResponse("[ERROR] 토큰이 올바르지 않습니다.");
+
+        mockMvc.perform(get("/api/members/me")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+    }
+
     @DisplayName("이름을 수정한다.")
     @Test
     void updateName() throws Exception {
@@ -122,6 +219,40 @@ public class MemberControllerTest extends RestDocsTest {
                         fieldWithPath("name").description("수정할 이름")
                 )));
 
+    }
+
+    @DisplayName("입력 형식이 잘못되어 이름 수정에 실패한다.")
+    @Test
+    void failedUpdateName() throws Exception {
+        MemberNameUpdateRequest memberNameUpdateRequest = new MemberNameUpdateRequest("namenamename");
+
+        doNothing().when(memberService).updateName(anyLong(), any(MemberNameUpdateRequest.class));
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        mockMvc.perform(put("/api/members/me/name")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memberNameUpdateRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("이름은 1자 이상 10자 이하여야합니다."));
+    }
+
+    @DisplayName("토큰이 유효하지 않아 이름 수정에 실패한다.")
+    @Test
+    void failedUpdateNameWithNotValidToken() throws Exception {
+        MemberNameUpdateRequest memberNameUpdateRequest = new MemberNameUpdateRequest(NAME);
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(false);
+        ErrorResponse errorResponse = new ErrorResponse("[ERROR] 토큰이 올바르지 않습니다.");
+
+        mockMvc.perform(put("/api/members/me/name")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memberNameUpdateRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
     }
 
     @DisplayName("비밀번호를 수정한다.")
@@ -153,6 +284,41 @@ public class MemberControllerTest extends RestDocsTest {
                 )));
     }
 
+    @DisplayName("입력 형식이 잘못되어 비밀번호 수정을 실패한다.")
+    @Test
+    void failedUpdatePassword() throws Exception {
+        MemberPasswordUpdateRequest memberPasswordUpdateRequest =
+                new MemberPasswordUpdateRequest(PASSWORD, "wrong");
+        doNothing().when(memberService).updatePassword(anyLong(), any(MemberPasswordUpdateRequest.class));
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        mockMvc.perform(put("/api/members/me/password")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memberPasswordUpdateRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("올바른 비밀번호 형식으로 입력해주세요."));
+    }
+
+    @DisplayName("토큰이 유효하지 않아 비밀번호 수정을 실패한다.")
+    @Test
+    void failedUpdatePasswordWithNotValidToken() throws Exception {
+        MemberPasswordUpdateRequest memberPasswordUpdateRequest =
+                new MemberPasswordUpdateRequest(PASSWORD, "NewPassword1!");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+        ErrorResponse errorResponse = new ErrorResponse("[ERROR] 토큰이 올바르지 않습니다.");
+
+        mockMvc.perform(put("/api/members/me/password")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memberPasswordUpdateRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+    }
+
     @DisplayName("회원을 탈퇴한다.")
     @Test
     void deleteMember() throws Exception {
@@ -179,25 +345,19 @@ public class MemberControllerTest extends RestDocsTest {
                 )));
     }
 
-    @DisplayName("이메일 중복 체크에 성공한다.")
+    @DisplayName("회원 탈퇴에 실패한다.")
     @Test
-    void validateDuplicateEmail() throws Exception {
-        EmailCheckRequest emailCheckRequest = new EmailCheckRequest(EMAIL);
+    void failedDeleteMember() throws Exception {
+        MemberDeleteRequest memberDeleteRequest = new MemberDeleteRequest(PASSWORD);
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(false);
+        ErrorResponse errorResponse = new ErrorResponse("[ERROR] 토큰이 올바르지 않습니다.");
 
-        doNothing().when(memberService).validateDuplicateEmail(any(EmailCheckRequest.class));
-
-        ResultActions resultActions = mockMvc.perform(post("/api/members/duplicate-email")
+        mockMvc.perform(delete("/api/members/me")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(emailCheckRequest)))
-                .andExpect(status().isOk());
-
-        //docs
-        resultActions.andDo(document("member-duplicate-email",
-                getRequestPreprocessor(),
-                getResponsePreprocessor(),
-                requestFields(
-                        fieldWithPath("email").type(STRING).description("이메일")
-                )));
+                        .content(objectMapper.writeValueAsString(memberDeleteRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
     }
 }

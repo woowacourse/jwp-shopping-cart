@@ -23,6 +23,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.helper.restdocs.RestDocsTest;
+import woowacourse.member.exception.NoMemberException;
+import woowacourse.member.exception.WrongPasswordException;
 
 @DisplayName("Auth 컨트롤러 단위테스트")
 public class AuthControllerTest extends RestDocsTest {
@@ -54,5 +56,33 @@ public class AuthControllerTest extends RestDocsTest {
                 responseFields(
                         fieldWithPath("accessToken").type(STRING).description("토큰")
                 )));
+    }
+
+    @DisplayName("비밀번호가 틀려 로그인에 실패한다.")
+    @Test
+    void failedLoginWrongPassword() throws Exception {
+        TokenRequest request = new TokenRequest(EMAIL, "Wrong1234!");
+        given(authService.generateToken(ArgumentMatchers.any(TokenRequest.class)))
+                .willThrow(WrongPasswordException.class);
+
+        mockMvc.perform(post("/api/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("멤버가 없어 로그인에 실패한다.")
+    @Test
+    void failedLoginNoMember() throws Exception {
+        TokenRequest request = new TokenRequest(EMAIL, PASSWORD);
+        given(authService.generateToken(ArgumentMatchers.any(TokenRequest.class)))
+                .willThrow(NoMemberException.class);
+
+        mockMvc.perform(post("/api/auth")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
     }
 }
