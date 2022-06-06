@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.dto.ProductsPerPageRequest;
 public class ProductService {
     private final ProductDao productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 
@@ -34,11 +34,13 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    @Transactional(readOnly = true)
+    public ProductResponse findProductById(Long productId) {
+        Product product = productDao.findProductById(productId);
+        return ProductResponse.from(product);
     }
 
-    public void deleteProductById(final Long productId) {
+    public void deleteProductById(Long productId) {
         productDao.delete(productId);
     }
 }

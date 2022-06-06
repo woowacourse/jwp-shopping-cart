@@ -33,7 +33,7 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(final Product product) {
+    public Long save(Product product) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", product.getName())
                 .addValue("price", product.getPrice())
@@ -42,16 +42,10 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Product findProductById(Long productId) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
-            );
+            final String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
+            return jdbcTemplate.queryForObject(query, productRowMapper, productId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
         }
@@ -63,7 +57,7 @@ public class ProductDao {
         return new Products(products);
     }
 
-    public void delete(final Long productId) {
+    public void delete(Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
     }

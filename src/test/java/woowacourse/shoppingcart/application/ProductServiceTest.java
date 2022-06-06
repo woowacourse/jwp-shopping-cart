@@ -36,4 +36,17 @@ public class ProductServiceTest {
         // then
         assertThat(products).size().isEqualTo(3);
     }
+
+    @Test
+    @DisplayName("식별자로 상품을 찾을 수 있다.")
+    void findProductById() {
+        // given
+        Long productId = productService.addProduct(new ProductRequest("치킨", 20_000, "http://example.com/chicken.jpg"));
+
+        // when
+        ProductResponse productResponse = productService.findProductById(productId);
+
+        // then
+        assertThat(productResponse.getName()).isEqualTo("치킨");
+    }
 }

@@ -30,11 +30,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProductResponse>> products(@ModelAttribute ProductsPerPageRequest productsPerPageRequest) {
-        return ResponseEntity.ok(productService.findProducts(productsPerPageRequest));
-    }
-
     @PostMapping
     public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final ProductRequest productRequest) {
         final Long productId = productService.addProduct(productRequest);
@@ -45,13 +40,18 @@ public class ProductController {
         return ResponseEntity.created(uri).build();
     }
 
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> products(@ModelAttribute ProductsPerPageRequest productsPerPageRequest) {
+        return ResponseEntity.ok(productService.findProducts(productsPerPageRequest));
+    }
+
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> product(@PathVariable final Long productId) {
+    public ResponseEntity<ProductResponse> product(@PathVariable Long productId) {
         return ResponseEntity.ok(productService.findProductById(productId));
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long productId) {
+    public ResponseEntity<Void> delete(@PathVariable Long productId) {
         productService.deleteProductById(productId);
         return ResponseEntity.noContent().build();
     }
