@@ -23,8 +23,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        CustomerAcceptanceFixture.saveCustomer();
-        TokenRequest request = new TokenRequest("username", "password12!@");
+        final String username = "my-username";
+        CustomerAcceptanceFixture.saveCustomerWithName(username);
+        TokenRequest request = new TokenRequest(username, "password12!@");
 
         TokenResponse tokenResponse = SimpleRestAssured.toObject(
             SimpleRestAssured.post("/api/auth/token", request),
@@ -39,7 +40,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         );
 
         // then
-        assertThat(customerResponse.getName()).isEqualTo("username");
+        assertThat(customerResponse.getName()).isEqualTo("my-username");
     }
 
     @DisplayName("Bearer Auth 로그인 실패")

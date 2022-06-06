@@ -27,6 +27,6 @@ public class AuthService {
         if (!customer.isPasswordMatch(tokenRequest.getPassword(), new BcryptPasswordMatcher())) {
             throw new AuthenticationFailureException();
         }
-        return new TokenResponse(tokenProvider.createToken(customer.getName()));
+        return new TokenResponse(tokenProvider.createToken(customer.getId().toString()));
     }
 }

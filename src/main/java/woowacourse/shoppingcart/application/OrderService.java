@@ -37,8 +37,7 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByName(customerName);
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final Long customerId) {
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
@@ -54,22 +53,19 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
+    public Orders findOrderById(final Long customerId, final Long orderId) {
+        validateOrderIdByCustomerName(customerId, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByName(customerName);
-
+    private void validateOrderIdByCustomerName(final Long customerId, final Long orderId) {
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
     @Transactional(readOnly = true)
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByName(customerName);
+    public List<Orders> findOrdersByCustomerId(final Long customerId) {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()

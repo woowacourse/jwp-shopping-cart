@@ -25,6 +25,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
+import woowacourse.support.SimpleRestAssured;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
@@ -43,11 +44,11 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        CustomerAcceptanceFixture.saveCustomerWithName(USER);
+        final Long customerId = SimpleRestAssured.getId(CustomerAcceptanceFixture.saveCustomerWithName(USER));
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        token = "Bearer " + provider.createToken(USER);
+        token = "Bearer " + provider.createToken(customerId.toString());
         cartId1 = 장바구니_아이템_추가되어_있음(token, productId1);
         cartId2 = 장바구니_아이템_추가되어_있음(token, productId2);
     }

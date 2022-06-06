@@ -40,13 +40,13 @@ public class CustomerService {
 
     @Transactional(readOnly = true)
     public CustomerResponse findCustomer(FindCustomerRequest findCustomerRequest) {
-        Customer customer = customerDao.findByName(findCustomerRequest.getName())
+        Customer customer = customerDao.findById(findCustomerRequest.getId())
             .orElseThrow(CustomerNotFoundException::new);
         return CustomerResponse.from(customer);
     }
 
     public void updateCustomer(FindCustomerRequest findCustomerRequest, UpdateCustomerRequest updateCustomerRequest) {
-        Customer customer = customerDao.findByName(findCustomerRequest.getName())
+        Customer customer = customerDao.findById(findCustomerRequest.getId())
             .orElseThrow(CustomerNotFoundException::new);
         Customer updatedCustomer = customer.update(updateCustomerRequest.getAddress(),
             updateCustomerRequest.getPhoneNumber());
@@ -54,7 +54,7 @@ public class CustomerService {
     }
 
     public void deleteCustomer(FindCustomerRequest findCustomerRequest) {
-        customerDao.deleteById(customerDao.findIdByName(findCustomerRequest.getName()));
+        customerDao.deleteById(findCustomerRequest.getId());
     }
 
     public UserNameDuplicationResponse isUserNameDuplicated(String username) {

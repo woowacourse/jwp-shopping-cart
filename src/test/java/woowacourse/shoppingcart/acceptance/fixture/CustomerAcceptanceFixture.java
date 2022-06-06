@@ -25,7 +25,7 @@ public class CustomerAcceptanceFixture {
         return SimpleRestAssured.post("/api/customers", request);
     }
 
-    private static CustomerRequest createRequest(String name, String email) {
+    public static CustomerRequest createRequest(String name, String email) {
         name = name == null ? DEFAULT_NAME : name;
         email = email == null ? DEFAULT_EMAIL : email;
         return new CustomerRequest(

@@ -62,7 +62,7 @@ public class CustomerDao {
                 return statement;
             }, holder);
             return Optional.of(Objects.requireNonNull(holder.getKey()).longValue());
-        } catch (DuplicateKeyException | NullPointerException e) {
+        } catch (DuplicateKeyException e) {
             return Optional.empty();
         }
     }

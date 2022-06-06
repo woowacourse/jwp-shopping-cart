@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,18 +27,12 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public CartResponse findCartsByCustomerName(final String customerName) {
-        final Cart cart = new Cart(findCartItemsByCustomerName(customerName));
+    public CartResponse findCartsByCustomerId(final Long customerId) {
+        final Cart cart = new Cart(cartItemDao.findCartItemsByCustomerId(customerId));
         return CartResponse.from(cart);
     }
 
-    private List<CartItem> findCartItemsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByName(customerName);
-        return cartItemDao.findCartItemsByCustomerId(customerId);
-    }
-
-    public Long addCart(final Long productId, Integer quantity, final String customerName) {
-        final Long customerId = customerDao.findIdByName(customerName);
+    public Long addCart(final Long productId, Integer quantity, final Long customerId) {
         try {
             return cartItemDao.addCartItem(customerId, productId, quantity);
         } catch (Exception e) {
@@ -47,13 +40,13 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
+    public void deleteCart(final Long customerId, final Long cartId) {
+        validateCustomerHasCartItem(cartId, customerId);
         cartItemDao.deleteCartItem(cartId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<CartItem> cartItems = findCartItemsByCustomerName(customerName);
+    private void validateCustomerHasCartItem(final Long cartId, final Long customerId) {
+        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
         if (cartItems.stream()
             .noneMatch(item -> item.getId().equals(cartId))) {
             throw new NotInCustomerCartItemException();

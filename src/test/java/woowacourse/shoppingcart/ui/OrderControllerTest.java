@@ -17,11 +17,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
+import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
@@ -29,6 +32,7 @@ import woowacourse.shoppingcart.ui.dto.OrderRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Sql("classpath:schema-test.sql")
 public class OrderControllerTest {
 
     @Autowired
@@ -39,6 +43,9 @@ public class OrderControllerTest {
 
     @Autowired
     private JwtTokenProvider provider;
+
+    @Autowired
+    private CustomerService customerService;
 
     @MockBean
     private OrderService orderService;
@@ -51,16 +58,19 @@ public class OrderControllerTest {
         final int quantity = 5;
         final Long cartId2 = 1L;
         final int quantity2 = 5;
-        final String customerName = "pobi";
+        final String customerName = "pobi123";
         final List<OrderRequest> requestDtos =
             Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(customerName)))
+        final Long customerId = customerService.createCustomer(
+            CustomerAcceptanceFixture.createRequest(customerName, null));
+        final String token = "Bearer " + provider.createToken(customerId.toString());
+
+        when(orderService.addOrder(any(), eq(customerId)))
             .thenReturn(expectedOrderId);
 
         // when // then
-        final String token = "Bearer " + provider.createToken(customerName);
         mockMvc.perform(post("/api/customers/me/orders")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -79,13 +89,16 @@ public class OrderControllerTest {
     void findOrder() throws Exception {
 
         // given
-        final String customerName = "pobi";
+        final String customerName = "pobi123";
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
             Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "http://example.com", 2)));
-        final String token = "Bearer " + provider.createToken(customerName);
 
-        when(orderService.findOrderById(customerName, orderId))
+        final Long customerId = customerService.createCustomer(
+            CustomerAcceptanceFixture.createRequest(customerName, null));
+        final String token = "Bearer " + provider.createToken(customerId.toString());
+
+        when(orderService.findOrderById(customerId, orderId))
             .thenReturn(expected);
 
         // when // then
@@ -105,16 +118,19 @@ public class OrderControllerTest {
     @Test
     void findOrders() throws Exception {
         // given
-        final String customerName = "pobi";
+        final String customerName = "pobi123";
         final List<Orders> expected = Arrays.asList(
             new Orders(1L, Collections.singletonList(
                 new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
             new Orders(2L, Collections.singletonList(
                 new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
-        final String token = "Bearer " + provider.createToken(customerName);
 
-        when(orderService.findOrdersByCustomerName(customerName))
+        final Long customerId = customerService.createCustomer(
+            CustomerAcceptanceFixture.createRequest(customerName, null));
+        final String token = "Bearer " + provider.createToken(customerId.toString());
+
+        when(orderService.findOrdersByCustomerId(customerId))
             .thenReturn(expected);
 
         // when // then

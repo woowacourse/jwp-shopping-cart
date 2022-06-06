@@ -35,7 +35,7 @@ public class CartItemController {
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> getCartItems(
         @AuthenticationPrincipal FindCustomerRequest customerRequest) {
-        final CartResponse cartsResponse = cartService.findCartsByCustomerName(customerRequest.getName());
+        final CartResponse cartsResponse = cartService.findCartsByCustomerId(customerRequest.getId());
         return ResponseEntity.ok().body(cartsResponse.getItemResponses());
     }
 
@@ -44,7 +44,7 @@ public class CartItemController {
         @Validated(Request.id.class) @RequestBody final CartItemRequest request,
         @AuthenticationPrincipal FindCustomerRequest customerRequest) {
         final Long cartId = cartService.addCart(request.getProductId(), request.getQuantity(),
-            customerRequest.getName());
+            customerRequest.getId());
         final URI responseLocation = ServletUriComponentsBuilder
             .fromCurrentRequest()
             .path("/{cartId}")
@@ -56,7 +56,7 @@ public class CartItemController {
     @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal FindCustomerRequest customerRequest,
         @PathVariable final Long cartId) {
-        cartService.deleteCart(customerRequest.getName(), cartId);
+        cartService.deleteCart(customerRequest.getId(), cartId);
         return ResponseEntity.noContent().build();
     }
 }

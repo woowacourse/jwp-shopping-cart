@@ -42,9 +42,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
-        CustomerAcceptanceFixture.saveCustomer();
-
-        String token = "Bearer " + tokenProvider.createToken("username");
+        final Long customerId = SimpleRestAssured.getId(CustomerAcceptanceFixture.saveCustomer());
+        String token = "Bearer " + tokenProvider.createToken(customerId.toString());
 
         final ExtractableResponse<Response> response =
             SimpleRestAssured.get("/api/customers/me", new Header("Authorization", token));
@@ -60,7 +59,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("존재하지 않는 회원을 조회하면 예외를 발생한다.")
     @Test
     void notFoundException() {
-        String token = "Bearer " + tokenProvider.createToken("invalidUser");
+        String token = "Bearer " + tokenProvider.createToken("999");
 
         ExtractableResponse<Response> foundResponse =
             SimpleRestAssured.get("/api/customers/me", new Header("Authorization", token));
@@ -71,9 +70,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
-        CustomerAcceptanceFixture.saveCustomer();
+        final Long id = SimpleRestAssured.getId(CustomerAcceptanceFixture.saveCustomer());
 
-        String token = "Bearer " + tokenProvider.createToken("username");
+        String token = "Bearer " + tokenProvider.createToken(id.toString());
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("another-address", "010-9999-9998");
         ExtractableResponse<Response> updatedResponse =
             SimpleRestAssured.put("/api/customers/me", new Header("Authorization", token), updateCustomerRequest);
@@ -92,9 +91,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
-        CustomerAcceptanceFixture.saveCustomer();
+        final Long id = SimpleRestAssured.getId(CustomerAcceptanceFixture.saveCustomer());
 
-        String token = "Bearer " + tokenProvider.createToken("username");
+        String token = "Bearer " + tokenProvider.createToken(id.toString());
         ExtractableResponse<Response> deletedResponse =
             SimpleRestAssured.delete("/api/customers/me", new Header("Authorization", token));
 

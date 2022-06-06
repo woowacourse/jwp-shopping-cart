@@ -22,6 +22,7 @@ import io.restassured.response.Response;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.application.dto.CartItemResponse;
+import woowacourse.support.SimpleRestAssured;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -40,7 +41,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
 
-        token = "Bearer " + provider.createToken(USER);
+        final ExtractableResponse<Response> response = CustomerAcceptanceFixture.saveCustomerWithName(USER);
+        Long id = SimpleRestAssured.getId(response);
+
+        token = "Bearer " + provider.createToken(id.toString());
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }
@@ -48,7 +52,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        CustomerAcceptanceFixture.saveCustomerWithName(USER);
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, productId1);
 
         장바구니_아이템_추가됨(response);
@@ -57,7 +60,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        CustomerAcceptanceFixture.saveCustomerWithName(USER);
         장바구니_아이템_추가되어_있음(token, productId1);
         장바구니_아이템_추가되어_있음(token, productId2);
 
@@ -70,7 +72,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        CustomerAcceptanceFixture.saveCustomerWithName(USER);
         Long cartId = 장바구니_아이템_추가되어_있음(token, productId1);
 
         ExtractableResponse<Response> response = 장바구니_삭제_요청(token, cartId);
