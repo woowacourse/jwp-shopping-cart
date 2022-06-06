@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.repository.ProductRepository;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -18,12 +19,13 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao,
+            ProductRepository productRepository) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
+        this.productRepository = productRepository;
     }
 
     public List<Cart> findCartsByCustomerName(final String customerName) {
@@ -32,7 +34,7 @@ public class CartService {
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
+            final Product product = productRepository.findById(productId);
             carts.add(new Cart(cartId, product));
         }
         return carts;

@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.repository.ProductRepository;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -24,15 +25,16 @@ public class OrderService {
     private final OrdersDetailDao ordersDetailDao;
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+            final CartItemDao cartItemDao, final CustomerDao customerDao,
+            ProductRepository productRepository) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
+        this.productRepository = productRepository;
     }
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
@@ -76,7 +78,7 @@ public class OrderService {
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
+            final Product product = productRepository.findById(productQuantity.getProductId());
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }
