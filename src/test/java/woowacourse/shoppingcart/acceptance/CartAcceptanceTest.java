@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.emptyArray;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 import io.restassured.RestAssured;
@@ -16,9 +16,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
+import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
+
+    private static final String REQUEST_URL = "/users/me/carts";
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(final String token, final Long productId) {
         final Map<String, Object> requestBody = new HashMap<>();
@@ -71,6 +74,33 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .body("products.quantity", contains(1, 1));
     }
 
+    @Test
+    @DisplayName("장바구니에 들어있는 상품의 수량을 수정한다.")
+    void changeQuantity() {
+        // given
+        final Long productId = 5L;
+        postCartItem(new CartItemAdditionRequest(productId));
+
+        final int quantity = 3;
+        final QuantityChangingRequest request = new QuantityChangingRequest(quantity);
+
+        // when
+        final ValidatableResponse response = RestAssured
+                .given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .put(REQUEST_URL + "/{productId}", productId)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("id", equalTo(productId.intValue()))
+                .body("quantity", equalTo(quantity));
+    }
+
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
@@ -85,7 +115,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/users/me/carts/{productId}", productId)
+                .delete(REQUEST_URL + "/{productId}", productId)
                 .then().log().all();
 
         final ValidatableResponse cartItemsResponse = getCarts();
@@ -93,7 +123,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
         cartItemsResponse.statusCode(HttpStatus.OK.value())
-                .body("products", emptyArray());
+                .body("products", hasSize(0));
     }
 
     private ValidatableResponse postCartItem(CartItemAdditionRequest request) {
@@ -104,7 +134,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .post("/users/me/carts")
+                .post(REQUEST_URL)
                 .then().log().all();
     }
 
@@ -115,7 +145,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/users/me/carts")
+                .get(REQUEST_URL)
                 .then().log().all();
     }
 }
