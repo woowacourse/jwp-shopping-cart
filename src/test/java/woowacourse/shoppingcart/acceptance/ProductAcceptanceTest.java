@@ -21,7 +21,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProductsOfPage() {
-        ExtractableResponse<Response> response = 상품_목록_조회_요청(1,5);
+        ExtractableResponse<Response> response = 상품_목록_조회_요청(1, 5);
 
         조회_응답됨(response);
         상품_목록_포함됨(치킨.getId(), 피자.getId(), response);

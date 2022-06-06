@@ -71,7 +71,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, List<ProductIdRequest> productIdRequests) {
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken,
+                                                               List<ProductIdRequest> productIdRequests) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import java.util.List;
-
 public class ProductIdRequest {
     private Long id;
 

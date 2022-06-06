@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static woowacourse.Fixtures.치킨;
 import static woowacourse.Fixtures.피자;
 
@@ -37,7 +36,7 @@ class ProductsTest {
         Products products = new Products(List.of(치킨, 피자));
 
         // when then
-        assertThatThrownBy(() -> products.calculatePage(2,5))
+        assertThatThrownBy(() -> products.calculatePage(2, 5))
                 .isInstanceOf(InvalidInputException.class)
                 .hasMessage("올바르지 않은 포맷의 페이지 입니다.");
     }

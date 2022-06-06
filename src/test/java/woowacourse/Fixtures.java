@@ -28,27 +28,30 @@ public class Fixtures {
     public static Product 치킨 = new Product(1L, "치킨", 10000, "http://example.com/chicken.jpg");
     public static Product 피자 = new Product(2L, "맥주", 20000, "http://example.com/beer.jpg");
 
-    public static final CartEntity 헌치_치킨 = new CartEntity(헌치.getId(),치킨.getId(),1);
-    public static final CartEntity 헌치_피자 = new CartEntity(헌치.getId(),피자.getId(),1);
+    public static final CartEntity 헌치_치킨 = new CartEntity(헌치.getId(), 치킨.getId(), 1);
+    public static final CartEntity 헌치_피자 = new CartEntity(헌치.getId(), 피자.getId(), 1);
 
     public static Long 물품추가(NamedParameterJdbcTemplate namedParameterJdbcTemplate, Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(
-                "INSERT INTO product (name, price, image_url) VALUES (:name, :price, :imageUrl)", new BeanPropertySqlParameterSource(product), keyHolder);
+                "INSERT INTO product (name, price, image_url) VALUES (:name, :price, :imageUrl)",
+                new BeanPropertySqlParameterSource(product), keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public static  Long 사용자추가(NamedParameterJdbcTemplate namedParameterJdbcTemplate, Customer customer) {
+    public static Long 사용자추가(NamedParameterJdbcTemplate namedParameterJdbcTemplate, Customer customer) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update("INSERT INTO customer (username, password, nickname, withdrawal) "
-                + "VALUES (:username, :password, :nickname, false)", new BeanPropertySqlParameterSource(customer), keyHolder);
+                        + "VALUES (:username, :password, :nickname, false)", new BeanPropertySqlParameterSource(customer),
+                keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public static  Long 카트추가(NamedParameterJdbcTemplate namedParameterJdbcTemplate, CartEntity cart) {
+    public static Long 카트추가(NamedParameterJdbcTemplate namedParameterJdbcTemplate, CartEntity cart) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(
-                "INSERT INTO cart_item (customer_id, product_id, quantity) VALUES (:customerId, :productId, :quantity)", new BeanPropertySqlParameterSource(cart), keyHolder);
+                "INSERT INTO cart_item (customer_id, product_id, quantity) VALUES (:customerId, :productId, :quantity)",
+                new BeanPropertySqlParameterSource(cart), keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
