@@ -22,6 +22,7 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.format.FormatException;
 import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
+import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -48,10 +49,9 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleCustomerNotFoundException(RuntimeException e) {
-        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
+    @ExceptionHandler({CustomerNotFoundException.class, ProductNotFoundException.class})
+    public ResponseEntity<ErrorResponse> handleNotFoundException(RuntimeException e) {
+        return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
@@ -83,7 +83,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleUnhandledException(RuntimeException e) {
-        System.out.println(e);
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 }

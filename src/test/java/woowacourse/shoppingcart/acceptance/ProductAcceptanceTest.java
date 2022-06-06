@@ -71,6 +71,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    public static void 상품_찾을_수_없음(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
         List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
                 .map(Product::getId)
@@ -117,6 +121,14 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         조회_응답됨(response);
         상품_조회됨(response, productId);
+    }
+
+    @DisplayName("존재하지 않은 상품을 조회하면 404에러가 발생한다.")
+    @Test
+    void getProduct_notFound() {
+        ExtractableResponse<Response> response = 상품_조회_요청(9999L);
+
+        상품_찾을_수_없음(response);
     }
 
     @DisplayName("상품을 삭제한다")
