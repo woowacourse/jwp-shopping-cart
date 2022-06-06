@@ -44,17 +44,6 @@ public class CartItemDaoTest {
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
     }
 
-    @DisplayName("카트에 상품을 저장한다.")
-    @Test
-    void addProduct() {
-        Long customerId = 1L;
-        Long productId = 1L;
-        Integer quantity = 1;
-
-        Long cartItemId = cartItemDao.addCartItem(customerId, productId, quantity);
-        assertThat(cartItemId).isEqualTo(3L);
-    }
-
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {

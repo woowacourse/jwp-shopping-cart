@@ -61,18 +61,4 @@ public class CartItemDao {
             throw new InvalidCartItemException();
         }
     }
-
-    public Long addCartItem(Long customerId, Long productId, Integer quantity) {
-        String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            preparedStatement.setInt(3, quantity);
-            return preparedStatement;
-        }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
 }
