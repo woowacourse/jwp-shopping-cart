@@ -11,6 +11,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
@@ -33,7 +34,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         );
 
         // when
-        String accessToken = "Bearer " + tokenResponse.getAccessToken();
+        String accessToken = AuthorizationExtractor.BEARER_TYPE + tokenResponse.getAccessToken();
         CustomerResponse customerResponse = SimpleRestAssured.toObject(
             SimpleRestAssured.get("/api/customers/me", new Header("Authorization", accessToken)),
             CustomerResponse.class

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
+import static woowacourse.auth.support.AuthorizationExtractor.*;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.*;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
 
@@ -23,7 +24,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
 import woowacourse.support.SimpleRestAssured;
 
@@ -48,7 +49,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        token = "Bearer " + provider.createToken(customerId.toString());
+        token = BEARER_TYPE + provider.createToken(customerId.toString());
         cartId1 = 장바구니_아이템_추가되어_있음(token, productId1);
         cartId2 = 장바구니_아이템_추가되어_있음(token, productId2);
     }
@@ -137,14 +138,14 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-            .map(Orders::getId)
+        List<Long> resultOrderIds = response.jsonPath().getList(".", Order.class).stream()
+            .map(Order::getId)
             .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }
 
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-        Orders resultOrder = response.as(Orders.class);
+        Order resultOrder = response.as(Order.class);
         assertThat(resultOrder.getId()).isEqualTo(orderId);
     }
 }

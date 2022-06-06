@@ -13,7 +13,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.support.test.ExtendedJdbcTest;
 
 @ExtendedJdbcTest
-class OrdersDetailDaoTest {
+class OrderDetailDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
@@ -21,7 +21,7 @@ class OrdersDetailDaoTest {
     private long productId;
     private long customerId;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
+    public OrderDetailDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
     }

@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static woowacourse.auth.support.AuthorizationExtractor.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +28,7 @@ import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
 
 @SpringBootTest
@@ -65,7 +66,7 @@ public class OrderControllerTest {
         final Long expectedOrderId = 1L;
         final Long customerId = customerService.createCustomer(
             CustomerAcceptanceFixture.createRequest(customerName, null));
-        final String token = "Bearer " + provider.createToken(customerId.toString());
+        final String token = BEARER_TYPE + provider.createToken(customerId.toString());
 
         when(orderService.addOrder(any(), eq(customerId)))
             .thenReturn(expectedOrderId);
@@ -91,12 +92,12 @@ public class OrderControllerTest {
         // given
         final String customerName = "pobi123";
         final Long orderId = 1L;
-        final Orders expected = new Orders(orderId,
+        final Order expected = new Order(orderId,
             Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "http://example.com", 2)));
 
         final Long customerId = customerService.createCustomer(
             CustomerAcceptanceFixture.createRequest(customerName, null));
-        final String token = "Bearer " + provider.createToken(customerId.toString());
+        final String token = BEARER_TYPE + provider.createToken(customerId.toString());
 
         when(orderService.findOrderById(customerId, orderId))
             .thenReturn(expected);
@@ -119,16 +120,16 @@ public class OrderControllerTest {
     void findOrders() throws Exception {
         // given
         final String customerName = "pobi123";
-        final List<Orders> expected = Arrays.asList(
-            new Orders(1L, Collections.singletonList(
+        final List<Order> expected = Arrays.asList(
+            new Order(1L, Collections.singletonList(
                 new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
-            new Orders(2L, Collections.singletonList(
+            new Order(2L, Collections.singletonList(
                 new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
         final Long customerId = customerService.createCustomer(
             CustomerAcceptanceFixture.createRequest(customerName, null));
-        final String token = "Bearer " + provider.createToken(customerId.toString());
+        final String token = BEARER_TYPE + provider.createToken(customerId.toString());
 
         when(orderService.findOrdersByCustomerId(customerId))
             .thenReturn(expected);

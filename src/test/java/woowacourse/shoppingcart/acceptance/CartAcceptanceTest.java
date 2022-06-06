@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
+import static woowacourse.auth.support.AuthorizationExtractor.*;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
 
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = CustomerAcceptanceFixture.saveCustomerWithName(USER);
         Long id = SimpleRestAssured.getId(response);
 
-        token = "Bearer " + provider.createToken(id.toString());
+        token = BEARER_TYPE + provider.createToken(id.toString());
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }

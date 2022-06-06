@@ -2,6 +2,7 @@ package woowacourse.auth.support;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static woowacourse.auth.support.AuthorizationExtractor.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,7 +24,7 @@ class AuthorizationExtractorTest {
         final String token = provider.createToken("payload");
         final HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader("Authorization"))
-            .thenReturn("Bearer " + token);
+            .thenReturn(BEARER_TYPE + token);
 
         // when
         final String createdToken = extractor.extract(request);
