@@ -21,7 +21,7 @@ public class CustomerSignUpRequest {
             message = "비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.")
     private String password;
 
-    private CustomerSignUpRequest() {
+    public CustomerSignUpRequest() {
     }
 
     public CustomerSignUpRequest(final String userId, final String nickname, final String password) {
