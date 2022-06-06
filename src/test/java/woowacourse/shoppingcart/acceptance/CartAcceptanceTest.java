@@ -15,8 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.response.GetCartItemResponse;
+import woowacourse.shoppingcart.dto.response.GetCartItemsResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest2 {
@@ -51,10 +52,10 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(productId1);
-        장바구니_아이템_추가되어_있음(productId2);
+        장바구니_아이템_추가_요청(productId1);
+        장바구니_아이템_추가_요청(productId2);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청();
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
@@ -81,11 +82,12 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청() {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(유효한_토큰)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/cart", userName)
+                .when().get("/cart")
                 .then().log().all()
                 .extract();
     }
@@ -113,10 +115,12 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
+        GetCartItemsResponse getCartItemsResponse = response.jsonPath().getObject(".", GetCartItemsResponse.class);
+        List<GetCartItemResponse> getCartItemResponses = getCartItemsResponse.getProducts();
+        List<Long> ids = getCartItemResponses.stream()
+                .map(GetCartItemResponse::getId)
                 .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productIds);
+        assertThat(ids).contains(productIds);
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {

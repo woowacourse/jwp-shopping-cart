@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.ui;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
-import woowacourse.shoppingcart.domain.Cart;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.dto.response.GetCartItemResponse;
+import woowacourse.shoppingcart.dto.response.GetCartItemsResponse;
 
 @RestController
 @RequestMapping("/cart")
@@ -22,8 +24,12 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<GetCartItemsResponse> getCartItems(@AuthenticationPrincipal Long customerId) {
+        List<GetCartItemResponse> getCartItemResponses = cartService.findCartItems(customerId)
+                .stream()
+                .map(it -> new GetCartItemResponse(it.getId(), it.getName(), it.getPrice(), it.getThumbnail()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(new GetCartItemsResponse(getCartItemResponses));
     }
 
     @PostMapping("{productId}")
