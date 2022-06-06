@@ -15,7 +15,6 @@ import woowacourse.auth.domain.Customer;
 import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.domain.Token;
-import woowacourse.auth.domain.User;
 import woowacourse.auth.dto.request.TokenRequest;
 import woowacourse.auth.dto.response.TokenResponse;
 import woowacourse.common.exception.AuthenticationException;
@@ -32,7 +31,6 @@ class AuthServiceTest {
     private static final EncryptedPassword 암호화된_비밀번호 = new Password(비밀번호).toEncrypted();
     private static final String 유효한_닉네임 = "닉네임";
     private static final int 유효한_나이 = 20;
-    private static final User 유효한_사용자 = new User(유효한_아이디, 암호화된_비밀번호);
     private final Customer 유효한_고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
 
     @Autowired
@@ -50,7 +48,7 @@ class AuthServiceTest {
 
         @Test
         void 존재하는_사용자의_아이디와_비밀번호인_경우_토큰_반환() {
-            databaseFixture.save(유효한_사용자);
+            databaseFixture.save(유효한_고객);
             TokenRequest tokenRequest = new TokenRequest(유효한_아이디, 비밀번호);
 
             TokenResponse tokenResponse = authService.createToken(tokenRequest);
@@ -68,7 +66,7 @@ class AuthServiceTest {
 
         @Test
         void 존재하는_사용자의_아이디지만_비밀번호를_틀린_경우_예외발생() {
-            databaseFixture.save(유효한_사용자);
+            databaseFixture.save(유효한_고객);
             String 형식은_유효하지만_틀린_비밀번호 = "wrongpassword1!";
             TokenRequest tokenRequest = new TokenRequest(유효한_아이디, 형식은_유효하지만_틀린_비밀번호);
 
