@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.exception.badrequest.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundCartException;
 import woowacourse.shoppingcart.product.application.ProductService;
 import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
@@ -56,6 +59,21 @@ public class CartService {
             throw new DuplicateCartItemException();
         }
         return cartItemDao.addCartItem(customer.getId(), productId);
+    }
+
+    public Cart changeQuantity(Customer customer, Long productId, QuantityChangingRequest request) {
+        final Cart cart = fetchCartBy(customer.getId(), productId);
+        final Cart updatedCart = cart.changeQuantity(request.getQuantity());
+        cartItemDao.updateQuantity(updatedCart);
+        return updatedCart;
+    }
+
+    private Cart fetchCartBy(final Long customerId, final Long productId) {
+        try {
+            return cartItemDao.findByProductAndCustomerId(productId, customerId);
+        } catch (final NotFoundCartException e) {
+            throw new NoExistCartItemException();
+        }
     }
 
     public void deleteCart(final String customerName, final Long cartId) {

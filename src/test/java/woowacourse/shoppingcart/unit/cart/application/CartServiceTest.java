@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.unit.cart.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
@@ -10,9 +11,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import woowacourse.shoppingcart.cart.application.CartService;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
+import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.badrequest.NoExistCartItemException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundCartException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
@@ -81,5 +86,50 @@ class CartServiceTest extends ServiceMockTest {
         // when, then
         assertThatCode(() -> cartService.addCart(productId, customer))
                 .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("장바구니의 상품의 수량을 변경한다.")
+    void changeQuantity_existProduct_updatedCartReturned() {
+        // given
+        final Long productId = 1L;
+        final int quantity = 7;
+
+        final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
+        QuantityChangingRequest request = new QuantityChangingRequest(quantity);
+
+        final String name = "치약";
+        final int price = 1200;
+        final String imageUrl = "fake.org";
+
+        final Cart existCart = new Cart(1L, productId, name, price, imageUrl, 8);
+        given(cartItemDao.findByProductAndCustomerId(productId, customer.getId()))
+                .willReturn(existCart);
+
+        final Cart expected = new Cart(1L, productId, name, price, imageUrl, quantity);
+
+        // when
+        final Cart actual = cartService.changeQuantity(customer, productId, request);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("장바구니에 존재하지 않는 상품의 수량을 변경하면 예외를 던진다.")
+    void changeQuantity_notExistProduct_exceptionThrown() {
+        // given
+        final Long productId = 1L;
+        final int quantity = 7;
+
+        final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
+        QuantityChangingRequest request = new QuantityChangingRequest(quantity);
+
+        given(cartItemDao.findByProductAndCustomerId(productId, customer.getId()))
+                .willThrow(NotFoundCartException.class);
+
+        // when, then
+        assertThatThrownBy(() -> cartService.changeQuantity(customer, productId, request))
+                .isInstanceOf(NoExistCartItemException.class);
     }
 }
