@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import woowacourse.shoppingcart.dto.ExceptionResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.cartitem.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;

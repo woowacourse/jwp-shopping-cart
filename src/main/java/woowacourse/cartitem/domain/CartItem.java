@@ -28,6 +28,10 @@ public class CartItem {
         this(id, product.getId(), product.getName(), product.getPrice(), product.getImageURL(), quantity);
     }
 
+    public void updateQuantity(final int value) {
+        quantity = quantity.update(value);
+    }
+
     public Long getId() {
         return id;
     }

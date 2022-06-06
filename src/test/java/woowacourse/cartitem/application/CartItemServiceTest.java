@@ -1,6 +1,7 @@
 package woowacourse.cartitem.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,9 +39,11 @@ public class CartItemServiceTest {
 
     @BeforeEach
     void setUp() {
-        username = customerService.save(new SignupRequest("username", "password", "01000001111", "서울시")).getUsername().getValue();
-        productId1 = productService.addProduct(new ProductRequest("짱구", 100_000_000, 1, "jjanggu.jpg"));
-        productId2 = productService.addProduct(new ProductRequest("짱아", 10_000_000, 1, "jjanga.jpg"));
+        username = customerService.save(new SignupRequest("username", "password", "01000001111", "서울시"))
+            .getUsername()
+            .getValue();
+        productId1 = productService.addProduct(new ProductRequest("짱구", 100_000_000, 10, "jjanggu.jpg"));
+        productId2 = productService.addProduct(new ProductRequest("짱아", 10_000_000, 10, "jjanga.jpg"));
     }
 
     @DisplayName("카트에 아이템을 추가한다.")
@@ -65,5 +68,12 @@ public class CartItemServiceTest {
             .collect(Collectors.toList());
 
         assertThat(productIds).contains(productId1, productId2);
+    }
+
+    @DisplayName("카트 아이템 수량을 수정한다.")
+    @Test
+    void updateCartItem() {
+        final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1));
+        assertDoesNotThrow(() -> cartItemService.updateQuantity(username, cartItemId, 5));
     }
 }

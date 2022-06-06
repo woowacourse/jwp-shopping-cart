@@ -39,8 +39,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
         회원_가입_요청(new SignupRequest("jjanggu", "password1234", "01022223333", "서울시 여러분"));
         accessToken = 로그인되어_토큰_가져옴(new LoginRequest("jjanggu", "password1234"));
-        productId1 = 상품_등록되어_있음(new ProductRequest("짱구", 100_000_000, 1, "jjanggu.jpg"));
-        productId2 = 상품_등록되어_있음(new ProductRequest("짱아", 10_000_000, 1, "jjanga.jpg"));
+        productId1 = 상품_등록되어_있음(new ProductRequest("짱구", 100_000_000, 10, "jjanggu.jpg"));
+        productId2 = 상품_등록되어_있음(new ProductRequest("짱아", 10_000_000, 10, "jjanga.jpg"));
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
@@ -63,6 +63,18 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
         장바구니_아이템_추가됨(response);
     }
+
+    @DisplayName("장바구니 아이템 수량 수정")
+    @Test
+    void updateCartItemByQuantity() {
+        final Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, new CartItemAddRequest(productId2, 1));
+        final int updatedQuantity = 5;
+
+        final ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청(accessToken, cartItemId, updatedQuantity);
+
+        장바구니_아이템_수량_수정됨(response);
+    }
+
 
     //
     // @DisplayName("장바구니 삭제")
@@ -99,6 +111,19 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             .then().log().all()
             .extract();
     }
+
+    public static ExtractableResponse<Response> 장바구니_아이템_수량_수정_요청(
+        final String accessToken, final Long cartItemId, final int updatedQuantity
+    ) {
+        return RestAssured
+            .given().log().all()
+            .auth().oauth2(accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().patch("/api/cartItems/" + cartItemId + "?quantity=" + updatedQuantity)
+            .then().log().all()
+            .extract();
+    }
+
     //
     // public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
     //     return RestAssured
@@ -109,11 +134,11 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     //             .extract();
     // }
     //
+
     public static void 장바구니_아이템_추가됨(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
-
     public static Long 장바구니_아이템_추가되어_있음(
         final String accessToken,
         final CartItemAddRequest cartItemAddRequest
@@ -128,9 +153,14 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_목록_포함됨(final ExtractableResponse<Response> response, final Long... productIds) {
         final List<Long> resultProductIds = response.as(CartItemResponses.class).getCartItems().stream()
-                .map(CartItemResponse::getProductId)
-                .collect(Collectors.toList());
+            .map(CartItemResponse::getProductId)
+            .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
+    }
+
+    public static void 장바구니_아이템_수량_수정됨(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+
     }
     //
     // public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {

@@ -1,9 +1,11 @@
 package woowacourse.cartitem.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -47,6 +49,27 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, params, rowMapper());
     }
 
+    public Optional<CartItem> findCartItemById(final Long id) {
+        final String sql = "SELECT c.id, c.product_id, p.name, p.price, c.quantity, p.imageURL "
+            + "FROM cart_item c "
+            + "LEFT JOIN product p ON c.product_id = p.id "
+            + "WHERE c.id = :id";
+        final SqlParameterSource params = new MapSqlParameterSource("id", id);
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, rowMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public List<Long> findIdsByCustomerId(final Long customerId) {
+        final String sql = "SELECT id FROM cart_item WHERE customer_id = :customer_id";
+        final SqlParameterSource params = new MapSqlParameterSource("customer_id", customerId);
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
+    }
+
     private RowMapper<CartItem> rowMapper() {
         return (rs, rowNum) -> new CartItem(
             rs.getLong("id"),
@@ -57,6 +80,15 @@ public class CartItemDao {
             new Quantity(rs.getInt("quantity"))
         );
     }
+
+    public void update(final Long id, final CartItem cartItem) {
+        final String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
+        final SqlParameterSource params = new MapSqlParameterSource("quantity", cartItem.getQuantity().getValue())
+            .addValue("id", id);
+
+        jdbcTemplate.update(sql, params);
+    }
+
     //
     // public void deleteCartItem(final Long id) {
     //     final String sql = "DELETE FROM cart_item WHERE id = ?";

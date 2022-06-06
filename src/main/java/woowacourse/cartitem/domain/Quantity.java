@@ -17,6 +17,10 @@ public class Quantity {
         }
     }
 
+    public Quantity update(final int value) {
+        return new Quantity(value);
+    }
+
     public int getValue() {
         return value;
     }

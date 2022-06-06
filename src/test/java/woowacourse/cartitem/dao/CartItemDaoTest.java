@@ -82,6 +82,21 @@ public class CartItemDaoTest {
         // then
         assertThat(productsIds).containsExactly(productId1, productId2);
     }
+
+    @DisplayName("해당 커스터머가 담은 아이템의 수량을 수정한다.")
+    @Test
+    void updateQuantity() {
+        // given
+        final Long cartItemId = cartItemDao.addCartItem(customerId, productId1, 5);
+
+        // when
+        final CartItem cartItem = cartItemDao.findCartItemById(cartItemId).get();
+        cartItem.updateQuantity(10);
+        cartItemDao.update(cartItemId, cartItem);
+
+        // then
+        assertThat(cartItemDao.findCartItemById(cartItemId).get().getQuantity().getValue()).isEqualTo(10);
+    }
     //
     // @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     // @Test

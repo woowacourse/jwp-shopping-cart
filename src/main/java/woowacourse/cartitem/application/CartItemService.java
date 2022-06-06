@@ -10,10 +10,12 @@ import woowacourse.cartitem.domain.CartItem;
 import woowacourse.cartitem.domain.Quantity;
 import woowacourse.cartitem.dto.CartItemAddRequest;
 import woowacourse.cartitem.dto.CartItemResponses;
+import woowacourse.cartitem.exception.InvalidCartItemException;
 import woowacourse.customer.application.CustomerService;
 import woowacourse.product.dao.ProductDao;
 import woowacourse.product.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -53,17 +55,27 @@ public class CartItemService {
 
         return CartItemResponses.from(cartItems);
     }
+
+    public void updateQuantity(final String customerName, final Long cartItemId, final int quantity) {
+        validateCustomerCart(cartItemId, customerName);
+        final CartItem cartItem = cartItemDao.findCartItemById(cartItemId)
+            .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
+        cartItem.updateQuantity(quantity);
+
+        cartItemDao.update(cartItemId, cartItem);
+    }
     //
     // public void deleteCart(final String customerName, final Long cartId) {
     //     validateCustomerCart(cartId, customerName);
     //     cartItemDao.deleteCartItem(cartId);
     // }
     //
-    // private void validateCustomerCart(final Long cartId, final String customerName) {
-    //     final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-    //     if (cartIds.contains(cartId)) {
-    //         return;
-    //     }
-    //     throw new NotInCustomerCartItemException();
-    // }
+    private void validateCustomerCart(final Long cartId, final String customerName) {
+        final Long customerId = customerService.findIdByUsername(customerName);
+        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        if (cartIds.contains(cartId)) {
+            return;
+        }
+        throw new NotInCustomerCartItemException();
+    }
 }
