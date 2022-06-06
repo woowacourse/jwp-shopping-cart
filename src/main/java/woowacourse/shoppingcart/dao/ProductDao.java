@@ -45,15 +45,8 @@ public class ProductDao {
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image")
-                        ));
+        final String sql = "SELECT id, name, price, image FROM product";
+        return jdbcTemplate.query(sql, getProductMapper());
     }
 
     public void delete(final Long productId) {

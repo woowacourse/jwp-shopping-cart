@@ -17,10 +17,10 @@ public class RestAssuredUtils {
                 .then().log().all().extract();
     }
 
-    public static ExtractableResponse<Response> httpGet(String path, String pathVariable) {
+    public static ExtractableResponse<Response> httpGet(String path) {
         return RestAssured.
                 given().log().all()
-                .when().get(path + "/" + pathVariable)
+                .when().get(path)
                 .then().log().all().extract();
     }
 

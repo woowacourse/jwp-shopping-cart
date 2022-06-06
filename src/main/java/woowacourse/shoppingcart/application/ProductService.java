@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -19,10 +20,6 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
-    }
-
     public ProductSaveResponse addProduct(ProductSaveRequest request) {
         return new ProductSaveResponse(productDao.save(request.toEntity()));
     }
@@ -31,6 +28,13 @@ public class ProductService {
         Product product = productDao.findProductById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("상품이 존재하지 않습니다"));
         return new ProductFindResponse(product);
+    }
+
+    public List<ProductFindResponse> findProducts() {
+        List<Product> products = productDao.findProducts();
+        return products.stream()
+                .map(ProductFindResponse::new)
+                .collect(Collectors.toList());
     }
 
     public void deleteProductById(final Long productId) {

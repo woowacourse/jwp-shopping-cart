@@ -5,8 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static woowacourse.utils.Fixture.맥주;
 import static woowacourse.utils.Fixture.치킨;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,6 +78,19 @@ class ProductServiceTest {
         // when
         assertThatThrownBy(() -> productService.findProductById(1L))
                 .isInstanceOf(ProductNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("상품들의 목록을 반환한다.")
+    void find_products() {
+        // given
+        List<Product> saves = List.of(치킨, 맥주);
+        given(productDao.findProducts()).willReturn(saves);
+
+        // when
+        assertThat(productService.findProducts()).hasSize(2)
+                .extracting("name")
+                .containsExactly(치킨.getName(), 맥주.getName());
     }
 
 }

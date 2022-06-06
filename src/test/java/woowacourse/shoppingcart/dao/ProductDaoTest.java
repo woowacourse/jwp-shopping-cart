@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.utils.Fixture.맥주;
 import static woowacourse.utils.Fixture.초콜렛;
 
 import java.util.List;
@@ -8,12 +9,8 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.product.Product;
 
 @JdbcTest
@@ -56,15 +53,17 @@ public class ProductDaoTest {
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {
-
         // given
-        final int size = 0;
+        Product saved1 = productDao.save(초콜렛);
+        Product saved2 = productDao.save(맥주);
 
         // when
-        final List<Product> products = productDao.findProducts();
+        List<Product> products = productDao.findProducts();
 
         // then
-        assertThat(products).size().isEqualTo(size);
+        assertThat(products).hasSize(2)
+                .extracting("name")
+                .containsExactly(초콜렛.getName(), 맥주.getName());
     }
 
     @DisplayName("싱품 삭제")
