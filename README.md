@@ -52,3 +52,173 @@
 - [x] JwtProvider 설정 값 생성자 주입으로 변경
 - [ ] RestDocs 적용
 
+## 2단계 요구사항
+- [ ] DAO 레거시 코드 리팩토링
+  - [ ] jdbcTemplate 변경
+
+### 상품
+- [ ] 단일 조회 (GET, /products/{productId})
+  - Response
+    200, OK
+  ```json
+  {
+    "id": 1,
+    "name": "이름",
+    "price": 2300,
+    "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+  }
+  ```
+
+  - [ ] 목록 조회 (GET, /products)
+    - Response
+      200, OK
+    ```json
+    {
+    "products": [
+      {
+        "id": 1,
+        "name": "이름",
+        "price": 2300,
+        "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+      },
+      {
+        "id": 2,
+        "name": "이름2",
+        "price": 2300,
+        "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+      }
+      ]
+    }
+    ```
+### 장바구니
+- [ ] 물품 추가 (POST, /customers/cart)
+  - Request
+  ```json
+  {
+    "productId" : 1
+  }
+  ```
+  - Response
+    201, CREATED
+- [ ] 물품 삭제 (DELETE, /customers/cart)
+  - Request
+  ```json
+  {
+    "productId" : 1
+  }
+  ```
+  - Response
+    204, NO CONTENT
+- [ ] 물품 목록 조회 (GET, /customers/cart)
+  - Response
+    200, OK
+  ```json
+  {
+    "cart" : [
+      {
+        "id": 1,
+        "name": "이름",
+        "price": 2300,
+        "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+      },
+      {
+        "id": 2,
+        "name": "이름",
+        "price": 2300,
+        "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+      }
+    ]
+  }
+  ```
+  
+### 주문
+- [ ] 물품들 추가 (POST, /customers/orders)
+  - Request
+  ```json
+  {
+    "order" : [
+      {
+        "id": 1,
+        "qunatity" : 2
+      },
+      {
+        "id": 2,
+        "qunatity" : 10
+      }
+    ]
+  }
+  ```
+  - Response
+    201, CREATED
+- [ ] 단일 조회 (GET, /customers/orders/{orderId})
+  - Response
+    200, OK
+  ```json
+  {
+    "order" : [
+      {
+        "id": 1,
+        "name": "이름",
+        "price": 2300,
+        "quantity" : 1,
+        "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+      },
+      {
+        "id": 2,
+        "name": "이름2",
+        "price": 2300,
+        "quantity" : 1,
+        "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+      }
+    ],
+    "totalPrice" : 4600
+  }
+  ```
+  
+- [ ] 목록 조회 (GET, /customers/carts)
+  - Response
+    200, OK
+  ```json
+  {
+    "orders": [
+      {
+      "orderId": 1,
+      "order": [
+        {
+          "id": 1,
+          "name": "이름",
+          "totalPrice" : 2300,
+          "quantity": 1,
+          "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+        },
+        {
+          "id": 2,
+          "name": "이름2",
+          "totalPrice": 4600,
+          "quantity": 2,
+          "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+        }
+    ]
+    },
+    {
+      "orderId": 2,
+      "order": [
+      {
+      "id": 1,
+      "name": "이름",
+      "totalPrice": 2300,
+      "quantity": 1,
+      "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+      },
+      {
+      "id": 2,
+      "name": "이름2",
+      "totalPrice": 2300,
+      "quantity": 1,
+      "imageUrl": "https://cdn-mart.baemin.com/sellergoods/main/f7e7bed1-69d0-45b2-9e39-1399c1329211.jpg"
+      }
+      ]
+      }
+    ]
+  }
+  ```
