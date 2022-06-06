@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,10 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.OrderDetail;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -27,7 +26,7 @@ class OrdersDetailDaoTest {
     private long productId;
     private long customerId;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
+    public OrdersDetailDaoTest(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
     }
@@ -47,10 +46,10 @@ class OrdersDetailDaoTest {
     @Test
     void addOrdersDetail() {
         //given
-        int quantity = 5;
+        final int quantity = 5;
 
         //when
-        Long orderDetailId = ordersDetailDao
+        final Long orderDetailId = ordersDetailDao
                 .addOrdersDetail(ordersId, productId, quantity);
 
         //then
