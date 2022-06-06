@@ -50,7 +50,7 @@ class ProductDaoTest {
         Long id = productDao.save(new ProductEntity(name, price, imageUrl));
 
         // when
-        Optional<ProductEntity> result = productDao.findProductById(id);
+        Optional<ProductEntity> result = productDao.findById(id);
 
         // then
         assertThat(result).isPresent();
@@ -69,7 +69,7 @@ class ProductDaoTest {
         Long id2 = productDao.save(new ProductEntity("마카롱", 2_000, "https://yeonyeon.tistory.com"));
 
         // when
-        List<ProductEntity> products = productDao.findProducts();
+        List<ProductEntity> products = productDao.findAll();
 
         // then
         assertThat(상품_아이디_목록(products)).containsOnly(id1, id2);
@@ -90,7 +90,7 @@ class ProductDaoTest {
         productDao.delete(id);
 
         // then
-        Optional<ProductEntity> product = productDao.findProductById(id);
+        Optional<ProductEntity> product = productDao.findById(id);
         assertThat(product).isEmpty();
     }
 }

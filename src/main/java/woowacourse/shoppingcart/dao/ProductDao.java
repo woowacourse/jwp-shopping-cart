@@ -38,14 +38,14 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Optional<ProductEntity> findProductById(final Long productId) {
+    public Optional<ProductEntity> findById(final Long productId) {
         final String query = "SELECT id, name, price, image_url FROM product WHERE id = :productId";
         SqlParameterSource source = new MapSqlParameterSource("productId", productId);
         ProductEntity result = DataAccessUtils.singleResult(jdbcTemplate.query(query, source, ROW_MAPPER));
         return Optional.ofNullable(result);
     }
 
-    public List<ProductEntity> findProducts() {
+    public List<ProductEntity> findAll() {
         final String query = "SELECT id, name, price, image_url FROM product";
         return jdbcTemplate.query(query, ROW_MAPPER);
     }

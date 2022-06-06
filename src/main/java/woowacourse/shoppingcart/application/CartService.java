@@ -49,7 +49,7 @@ public class CartService {
     }
 
     private ProductEntity getProductEntity(Long productId) {
-        return productDao.findProductById(productId)
+        return productDao.findById(productId)
                 .orElseThrow(InvalidCustomerException::new);
     }
 
