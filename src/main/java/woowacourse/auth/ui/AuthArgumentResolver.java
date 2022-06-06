@@ -8,7 +8,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.domain.User;
-import woowacourse.auth.support.RequestAttributes;
+import woowacourse.auth.constant.RequestAttributes;
 
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 

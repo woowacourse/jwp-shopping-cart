@@ -3,7 +3,7 @@ package woowacourse.auth.ui;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.auth.support.RequestAttributes;
+import woowacourse.auth.constant.RequestAttributes;
 import woowacourse.common.exception.ForbiddenException;
 
 public class AuthorizationInterceptor implements HandlerInterceptor {

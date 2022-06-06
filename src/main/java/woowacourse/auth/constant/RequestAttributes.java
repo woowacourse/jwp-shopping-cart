@@ -1,4 +1,4 @@
-package woowacourse.auth.support;
+package woowacourse.auth.constant;
 
 public class RequestAttributes {
 
