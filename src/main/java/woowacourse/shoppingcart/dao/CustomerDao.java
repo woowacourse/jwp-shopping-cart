@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.DistinctAttribute;
 import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
 
 @Repository
@@ -100,9 +101,9 @@ public class CustomerDao {
         return isUpdated(jdbcTemplate.update(query, id));
     }
 
-    public boolean isDuplicated(String column, String value) {
+    public boolean isDuplicated(String column, DistinctAttribute attribute) {
         // TODO : try-catch exception
         final String query = String.format("SELECT EXISTS(SELECT 1 FROM customer WHERE %s = ?)", column);
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, value));
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, attribute.getDistinctive()));
     }
 }

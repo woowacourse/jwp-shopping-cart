@@ -8,6 +8,8 @@ import woowacourse.shoppingcart.application.dto.UserNameDuplicationResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.BcryptPasswordEncryptor;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.ui.dto.CustomerRequest;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.FindCustomerRequest;
@@ -58,10 +60,10 @@ public class CustomerService {
     }
 
     public UserNameDuplicationResponse isUserNameDuplicated(String username) {
-        return new UserNameDuplicationResponse(username, customerDao.isDuplicated(CustomerDao.COLUMN_USERNAME, username));
+        return new UserNameDuplicationResponse(username, customerDao.isDuplicated(CustomerDao.COLUMN_USERNAME, new UserName(username)));
     }
 
     public EmailDuplicationResponse isEmailDuplicated(String email) {
-        return new EmailDuplicationResponse(email, customerDao.isDuplicated(CustomerDao.COLUMN_EMAIL, email));
+        return new EmailDuplicationResponse(email, customerDao.isDuplicated(CustomerDao.COLUMN_EMAIL, new Email(email)));
     }
 }
