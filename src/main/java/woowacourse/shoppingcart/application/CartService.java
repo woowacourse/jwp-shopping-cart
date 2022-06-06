@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemResponses;
 import woowacourse.shoppingcart.entity.CartItemEntity;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -40,16 +41,14 @@ public class CartService {
         );
     }
 
-//    public void deleteCart(final String customerName, final Long cartId) {
-//        validateCustomerCart(cartId, customerName);
-//        cartItemDao.deleteCartItem(cartId);
-//    }
-//
-//    private void validateCustomerCart(final Long cartId, final String customerName) {
-//        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-//        if (cartIds.contains(cartId)) {
-//            return;
-//        }
-//        throw new NotInCustomerCartItemException();
-//    }
+    public void deleteCart(final Long cartId, final int customerId) {
+        validateCustomerCart(cartId, customerId);
+        cartItemDao.deleteCartItem(cartId);
+    }
+
+    private void validateCustomerCart(final Long cartId, final int customerId) {
+        if (!cartItemDao.hasCartItem(cartId, customerId)) {
+            throw new NotInCustomerCartItemException();
+        }
+    }
 }

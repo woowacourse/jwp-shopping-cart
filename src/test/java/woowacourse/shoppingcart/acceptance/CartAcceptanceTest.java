@@ -71,16 +71,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-//
-//    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
-//        return RestAssured
-//                .given().log().all()
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
 
-//                .then().log().all()
-//                .extract();
-//    }
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(Long cartId, String token) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer" + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/api/customers/cart/{cartId}", cartId)
+                .then().log().all()
+                .extract();
+    }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -128,13 +128,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
-//
+    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
 
-//    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
+    private void 장바구니_삭제_안됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
 
-//        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-
-//    }
+    }
 
     @Override
     @BeforeEach
@@ -208,16 +209,23 @@ public class CartAcceptanceTest extends AcceptanceTest {
         만료된_토큰으로_요청시_확인(response);
     }
 
+    @DisplayName("장바구니 삭제")
+    @Test
+    void deleteCartItem() {
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
 
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(cartId, token);
 
-//
-//    @DisplayName("장바구니 삭제")
-//    @Test
-//    void deleteCartItem() {
-//        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
-//
-//        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-//
-//        장바구니_삭제됨(response);
-//    }
+        장바구니_삭제됨(response);
+    }
+
+    @DisplayName("장바구니 삭제 안됨")
+    @Test
+    void deleteCartItemByInvalidCartId() {
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
+
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(cartId + 1, token);
+
+        장바구니_삭제_안됨(response);
+    }
 }

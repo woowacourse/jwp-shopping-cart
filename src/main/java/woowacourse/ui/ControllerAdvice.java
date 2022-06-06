@@ -50,7 +50,7 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler({NotFoundProductException.class})
+    @ExceptionHandler({NotFoundProductException.class, NotInCustomerCartItemException.class})
     public ResponseEntity<ErrorResponse> handleNotFoundException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -77,8 +77,7 @@ public class ControllerAdvice {
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
+            InvalidOrderException.class
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());

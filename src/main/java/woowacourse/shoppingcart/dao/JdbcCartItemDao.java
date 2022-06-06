@@ -46,19 +46,15 @@ public class JdbcCartItemDao implements CartItemDao {
 
     }
 
-//    @Override
-//    public Long findProductIdById(final Long cartId) {
-//        final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-//        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-//
-//    }`
+    @Override
+    public boolean hasCartItem(Long cartId, int customerId) {
+        final String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE id = ? and customer_id = ?)";
+        return jdbcTemplate.queryForObject(sql, boolean.class, cartId, customerId);
+    }
 
-//    public void deleteCartItem(final Long id) {
-//        final String sql = "DELETE FROM cart_item WHERE id = ?";
-//
-//        final int rowCount = jdbcTemplate.update(sql, id);
-//        if (rowCount == 0) {
-//            throw new InvalidCartItemException();
-//        }
-//    }
+    @Override
+    public void deleteCartItem(final Long cartId) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.update(sql, cartId);
+    }
 }

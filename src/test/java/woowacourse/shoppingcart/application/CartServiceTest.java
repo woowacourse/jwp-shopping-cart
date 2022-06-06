@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_1;
@@ -24,6 +26,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemResponses;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @JdbcTest
 class CartServiceTest {
@@ -84,5 +87,32 @@ class CartServiceTest {
                         ),
                 () -> assertThat(quantities).hasSize(2).containsExactly(3, 4)
         );
+    }
+
+    @DisplayName("cartItem 삭제 시 cartItem에 해당하는 customerId가 불일치할 시 예외가 발생한다.")
+    @Test
+    public void deleteByInvalidCustomerId() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long cartId1 = cartService.addCart(customerId, productId1, 3);
+
+        // when & then
+        assertThatThrownBy(() -> cartService.deleteCart(cartId1, customerId + 1))
+                .isInstanceOf(NotInCustomerCartItemException.class)
+                .hasMessage("장바구니 아이템이 없습니다.");
+    }
+
+    @DisplayName("cartItem을 삭제한다.")
+    @Test
+    public void deleteCart() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long cartId1 = cartService.addCart(customerId, productId1, 3);
+
+        // when & then
+        assertThatCode(() -> cartService.deleteCart(cartId1, customerId))
+                .doesNotThrowAnyException();
     }
 }
