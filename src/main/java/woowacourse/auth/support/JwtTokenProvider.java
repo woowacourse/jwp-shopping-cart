@@ -26,8 +26,8 @@ public class JwtTokenProvider implements TokenManager {
     }
 
     @Override
-    public String createToken(String payload) {
-        Claims claims = Jwts.claims().setSubject(payload);
+    public String createToken(Long payload) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(payload));
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 

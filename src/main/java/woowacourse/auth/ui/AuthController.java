@@ -56,37 +56,37 @@ public class AuthController {
     }
 
     @PostMapping("/members/password-check")
-    public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal String payload,
+    public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal long memberId,
                                                          @RequestBody PasswordRequest passwordRequest) {
-        boolean actual = authService.checkPassword(payload, passwordRequest.getPassword());
+        boolean actual = authService.checkPassword(memberId, passwordRequest.getPassword());
         return ResponseEntity.ok(new CheckResponse(actual));
     }
 
     @GetMapping("/members/me")
-    public ResponseEntity<MemberResponse> showMember(@AuthenticationPrincipal String payload) {
-        MemberServiceResponse memberServiceResponse = authService.findMember(payload);
+    public ResponseEntity<MemberResponse> showMember(@AuthenticationPrincipal long memberId) {
+        MemberServiceResponse memberServiceResponse = authService.findMember(memberId);
         return ResponseEntity.ok(new MemberResponse(memberServiceResponse));
     }
 
     @PatchMapping("/members/me")
-    public ResponseEntity<Void> updateMember(@AuthenticationPrincipal String payload,
+    public ResponseEntity<Void> updateMember(@AuthenticationPrincipal long memberId,
                                              @RequestBody @Valid MemberUpdateRequest memberUpdateRequest) {
-        authService.updateMember(payload, memberUpdateRequest.toServiceDto());
+        authService.updateMember(memberId, memberUpdateRequest.toServiceDto());
         return ResponseEntity.noContent()
                 .build();
     }
 
     @PatchMapping("/members/password")
-    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal String payload,
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal long memberId,
                                                @RequestBody @Valid PasswordRequest passwordRequest) {
-        authService.updatePassword(payload, passwordRequest.getPassword());
+        authService.updatePassword(memberId, passwordRequest.getPassword());
         return ResponseEntity.noContent()
                 .build();
     }
 
     @DeleteMapping("/members/me")
-    public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal String payload) {
-        authService.delete(payload);
+    public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal long memberId) {
+        authService.delete(memberId);
         return ResponseEntity.noContent()
                 .build();
     }

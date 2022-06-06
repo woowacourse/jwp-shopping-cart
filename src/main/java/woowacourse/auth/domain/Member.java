@@ -4,11 +4,17 @@ import java.util.Objects;
 
 public class Member {
 
+    private Long id;
     private final Email email;
     private final Password password;
     private final Nickname nickname;
 
     public Member(String email, String password, String nickname) {
+        this(null, email, password, nickname);
+    }
+
+    public Member(Long id, String email, String password, String nickname) {
+        this.id = id;
         this.email = new Email(email);
         this.password = new Password(password);
         this.nickname = new Nickname(nickname);
@@ -24,6 +30,10 @@ public class Member {
 
     public String getNickname() {
         return nickname.getValue();
+    }
+
+    public long getId() {
+        return id;
     }
 
     @Override

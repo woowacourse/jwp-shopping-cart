@@ -29,6 +29,6 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String token = AuthorizationExtractor.extract(Objects.requireNonNull(request));
-        return tokenManager.getPayload(token);
+        return Long.parseLong(tokenManager.getPayload(token));
     }
 }

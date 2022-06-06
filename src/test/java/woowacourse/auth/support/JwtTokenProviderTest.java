@@ -16,7 +16,7 @@ class JwtTokenProviderTest {
     @DisplayName("유효한 토큰이면 true를 반환한다.")
     @Test
     void validateToken_True() {
-        String token = jwtTokenProvider.createToken("abc");
+        String token = jwtTokenProvider.createToken(1L);
 
         boolean actual = jwtTokenProvider.validateToken(token);
 

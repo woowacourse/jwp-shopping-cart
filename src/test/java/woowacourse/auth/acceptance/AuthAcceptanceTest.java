@@ -162,8 +162,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .getToken();
 
         ExtractableResponse<Response> response =
-                postWithAuthorization(PASSWORD_CHECK_URI, token, new PasswordRequest(password)
-                );
+                postWithAuthorization(PASSWORD_CHECK_URI, token, new PasswordRequest(password));
         boolean success = response.as(CheckResponse.class)
                 .isUnique();
 

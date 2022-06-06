@@ -30,8 +30,7 @@ public class AuthService {
     public void save(MemberCreateServiceRequest memberCreateServiceRequest) {
         validateUniqueEmail(memberCreateServiceRequest);
         Member member = new Member(memberCreateServiceRequest.getEmail(), memberCreateServiceRequest.getPassword(),
-                memberCreateServiceRequest
-                        .getNickname());
+                memberCreateServiceRequest.getNickname());
         memberDao.save(member);
     }
 
@@ -50,7 +49,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public LoginServiceResponse login(LoginServiceRequest loginServiceRequest) {
         Member member = findByEmailAndPassword(loginServiceRequest);
-        String token = tokenManager.createToken(member.getEmail());
+        String token = tokenManager.createToken(member.getId());
         return new LoginServiceResponse(token, member.getNickname());
     }
 
@@ -60,42 +59,41 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public boolean checkPassword(String email, String password) {
-        return memberDao.findByEmailAndPassword(email, password)
-                .isPresent();
+    public boolean checkPassword(long memberId, String password) {
+        return memberDao.checkIdAndPassword(memberId, password);
     }
 
     @Transactional(readOnly = true)
-    public MemberServiceResponse findMember(String email) {
-        Member member = memberDao.findByEmail(email)
+    public MemberServiceResponse findMember(long memberId) {
+        Member member = memberDao.findById(memberId)
                 .orElseThrow(() -> new AuthorizationException("유효하지 않은 토큰입니다."));
         return new MemberServiceResponse(member);
     }
 
     @Transactional
-    public void updateMember(String email, MemberUpdateServiceRequest memberUpdateServiceRequest) {
-        validateExists(email);
+    public void updateMember(long memberId, MemberUpdateServiceRequest memberUpdateServiceRequest) {
+        validateId(memberId);
         String nickname = new Nickname(memberUpdateServiceRequest.getNickname())
                 .getValue();
-        memberDao.updateNicknameByEmail(email, nickname);
+        memberDao.updateNicknameByEmail(memberId, nickname);
     }
 
-    private void validateExists(String email) {
-        if (!existsEmail(email)) {
+    @Transactional
+    public void updatePassword(long memberId, String newPassword) {
+        validateId(memberId);
+        String password = new Password(newPassword).getValue();
+        memberDao.updatePasswordByEmail(memberId, password);
+    }
+
+    @Transactional
+    public void delete(long memberId) {
+        validateId(memberId);
+        memberDao.deleteById(memberId);
+    }
+
+    private void validateId(long memberId) {
+        if (!memberDao.existsId(memberId)) {
             throw new AuthorizationException("유효하지 않은 토큰입니다.");
         }
-    }
-
-    @Transactional
-    public void updatePassword(String email, String newPassword) {
-        validateExists(email);
-        String password = new Password(newPassword).getValue();
-        memberDao.updatePasswordByEmail(email, password);
-    }
-
-    @Transactional
-    public void delete(String email) {
-        validateExists(email);
-        memberDao.deleteByEmail(email);
     }
 }

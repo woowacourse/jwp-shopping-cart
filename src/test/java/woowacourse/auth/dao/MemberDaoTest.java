@@ -14,9 +14,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.domain.Member;
 
 @JdbcTest
+@Sql("file:src/test/java/woowacourse/resources/memberTest.sql")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class MemberDaoTest {
 
@@ -50,13 +52,25 @@ class MemberDaoTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("id가 존재하는지 반환한다.")
+    @ParameterizedTest
+    @CsvSource({"1, true", "2, false"})
+    void existsId(long id, boolean expected) {
+        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        memberDao.save(member);
+
+        boolean actual = memberDao.existsId(id);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
     @DisplayName("이메일로 회원정보를 조회한다.")
     @Test
     void findByEmail() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        Member foundMember = memberDao.findByEmail("abc@woowahan.com")
+        Member foundMember = memberDao.findById(1L)
                 .orElseGet(() -> fail("실패"));
 
         assertThat(foundMember).isEqualTo(member);
@@ -68,7 +82,7 @@ class MemberDaoTest {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        Optional<Member> foundMember = memberDao.findByEmail("abc@naver.com");
+        Optional<Member> foundMember = memberDao.findById(2L);
         boolean actual = foundMember.isEmpty();
 
         assertThat(actual).isTrue();
@@ -80,7 +94,7 @@ class MemberDaoTest {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        Member foundMember = memberDao.findByEmail("abc@woowahan.com")
+        Member foundMember = memberDao.findById(1L)
                 .orElseGet(() -> fail("실패"));
 
         assertThat(foundMember).isEqualTo(member);
@@ -99,14 +113,26 @@ class MemberDaoTest {
         assertThat(actual).isTrue();
     }
 
+    @DisplayName("회원 id와 비밀번호를 받아, 해당 비밀번호가 일치하는지 반환한다.")
+    @ParameterizedTest
+    @CsvSource({"1q2w3e4r!, true", "1q2w3e4r@, false"})
+    void checkIdAndPassword(String password, boolean expected) {
+        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        memberDao.save(member);
+
+        boolean actual = memberDao.checkIdAndPassword(1L, password);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
     @DisplayName("회원의 닉네임을 변경한다.")
     @Test
     void updateNicknameByEmail() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        memberDao.updateNicknameByEmail(member.getEmail(), "바꾼닉네임");
-        Member foundMember = memberDao.findByEmail("abc@woowahan.com")
+        memberDao.updateNicknameByEmail(1L, "바꾼닉네임");
+        Member foundMember = memberDao.findById(1L)
                 .orElseGet(() -> fail("실패"));
 
         assertThat(foundMember.getNickname()).isEqualTo("바꾼닉네임");
@@ -118,8 +144,8 @@ class MemberDaoTest {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        memberDao.updatePasswordByEmail(member.getEmail(), "1q2w3e4r@");
-        Member foundMember = memberDao.findByEmail("abc@woowahan.com")
+        memberDao.updatePasswordByEmail(1L, "1q2w3e4r@");
+        Member foundMember = memberDao.findById(1L)
                 .orElseGet(() -> fail("실패"));
 
         assertThat(foundMember.getPassword()).isEqualTo("1q2w3e4r@");
@@ -131,7 +157,7 @@ class MemberDaoTest {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        memberDao.deleteByEmail(member.getEmail());
+        memberDao.deleteById(1L);
         boolean actual = memberDao.existsEmail(member.getEmail());
 
         assertThat(actual).isFalse();
