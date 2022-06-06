@@ -43,8 +43,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = getAddedProductId(productRequest1);
         Long productId2 = getAddedProductId(productRequest2);
 
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        cartId1 = getAddedCartItemId(USER, productId1);
+        cartId2 = getAddedCartItemId(USER, productId2);
     }
 
     @DisplayName("주문하기")
