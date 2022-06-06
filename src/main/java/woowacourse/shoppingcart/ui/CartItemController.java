@@ -13,7 +13,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customers/{customerName}/carts")
+@RequestMapping("/cart")
 public class CartItemController {
     private final CartService cartService;
 
@@ -26,7 +26,7 @@ public class CartItemController {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
     }
 
-    @PostMapping
+    @PostMapping("{productId}")
     public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
                                       @PathVariable final String customerName) {
         final Long cartId = cartService.addCart(product.getId(), customerName);
@@ -38,7 +38,7 @@ public class CartItemController {
         return ResponseEntity.created(responseLocation).build();
     }
 
-    @DeleteMapping("/{cartId}")
+    @DeleteMapping("/products")
     public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
                                          @PathVariable final Long cartId) {
         cartService.deleteCart(customerName, cartId);
