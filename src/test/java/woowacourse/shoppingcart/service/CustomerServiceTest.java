@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.SecurityManager;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -29,7 +29,7 @@ public class CustomerServiceTest {
 
     @Test
     void 회원가입() {
-        var signUpRequest = new SignUpRequest("alpha", "bcc0830@naver.com", "123");
+        var signUpRequest = new SignUpRequest("alpha", "bcc0830@naver.com", "123456");
 
         var signUpResponse = customerService.signUp(signUpRequest);
 
@@ -41,7 +41,7 @@ public class CustomerServiceTest {
 
     @Test
     void 중복된_이름으로_회원가입을_하는_경우() {
-        var signUpRequest = new SignUpRequest("puterism", "crew10@naver.com", "123");
+        var signUpRequest = new SignUpRequest("puterism", "crew10@naver.com", "123456");
 
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(InvalidCustomerException.class)
@@ -50,7 +50,7 @@ public class CustomerServiceTest {
 
     @Test
     void 중복된_이메일로_회원가입을_하는_경우() {
-        var signUpRequest = new SignUpRequest("chicChoc", "crew01@naver.com", "123");
+        var signUpRequest = new SignUpRequest("chicChoc", "crew01@naver.com", "123456");
 
         assertThatThrownBy(() -> customerService.signUp(signUpRequest))
                 .isInstanceOf(InvalidCustomerException.class)
@@ -76,13 +76,13 @@ public class CustomerServiceTest {
 
         Customer customer = customerDao.findCustomerByUserName(username);
 
-        assertThat(SecurityManager.isSamePassword("a123456", customer.getPassword())).isTrue();
+        assertThat(new Password(customer.getPassword()).isSamePassword(new Password("a123456"))).isTrue();
     }
 
     @Test
     void 비밀번호를_수정할때_현재_비밀번호가_일치하지_않는_경우() {
         String username = "puterism";
-        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("1231", "a1234");
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("123456", "a123456");
 
         assertThatThrownBy(() -> customerService.changePassword(username, changePasswordRequest)).isInstanceOf(
                 InvalidCustomerException.class);
@@ -91,7 +91,7 @@ public class CustomerServiceTest {
     @Test
     void 회원탈퇴시_현재_비밀번호가_일치하지_않는_경우() {
         String username = "puterism";
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("1231");
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("123456");
 
         assertThatThrownBy(() -> customerService.deleteUser(username, deleteCustomerRequest)).isInstanceOf(
                 InvalidCustomerException.class);

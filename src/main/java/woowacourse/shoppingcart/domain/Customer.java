@@ -1,16 +1,51 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
+
 import java.util.Objects;
 
 public class Customer {
-    private final String username;
-    private final String email;
-    private final String password;
+    private static final String DIFFERENT_PASSWORD = "[ERROR] 비밀번호가 일치하지 않습니다.";
+    private static final NameValidation usernameValidation = new UserNameValidationImpl();
+
+    private Long id;
+
+    private Name username;
+    private Email email;
+    private Password password;
+
+    public Customer(String password) {
+        this.password = new Password(password);
+    }
+
+    public Customer(String email, String password) {
+        this(password);
+        this.email = new Email(email);
+    }
 
     public Customer(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
+        this(email, password);
+        usernameValidation.validateName(username);
+        this.username = new Name(username);
+    }
+
+    public Customer(Long id, String username, String email, String password) {
+        this(username, email, password);
+        this.id = id;
+    }
+
+    public String generateEncodedPassword() {
+        return password.generateEncodedPassword();
+    }
+
+    public void validateSamePassword(Customer other) {
+        if (!password.isSamePassword(other.password)) {
+            throw new InvalidCustomerException(DIFFERENT_PASSWORD);
+        };
+    }
+
+    public Customer changePassword(String password) {
+        return new Customer(username.getName(), email.getEmail(), password);
     }
 
     @Override
@@ -32,14 +67,14 @@ public class Customer {
     }
 
     public String getUsername() {
-        return username;
+        return username.getName();
     }
 
     public String getEmail() {
-        return email;
+        return email.getEmail();
     }
 
     public String getPassword() {
-        return password;
+        return password.getPassword();
     }
 }
