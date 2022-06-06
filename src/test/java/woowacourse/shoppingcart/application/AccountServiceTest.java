@@ -36,7 +36,7 @@ class AccountServiceTest {
     @BeforeEach
     void setUp() {
         SignUpRequest request = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
-        accountService.registerCustomer(request);
+        accountService.saveAccount(request);
     }
 
     @DisplayName("정상적으로 회원 등록")
@@ -55,7 +55,7 @@ class AccountServiceTest {
     @Test
     void duplicatedEmailCustomer() {
         SignUpRequest request = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
-        assertThatThrownBy(() -> accountService.registerCustomer(request))
+        assertThatThrownBy(() -> accountService.saveAccount(request))
                 .isInstanceOf(DuplicateAccountException.class);
     }
 

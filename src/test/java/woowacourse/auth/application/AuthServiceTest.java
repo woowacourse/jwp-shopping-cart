@@ -37,7 +37,7 @@ public class AuthServiceTest {
     @BeforeEach
     void setUp() {
         SignUpRequest signUpRequest = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
-        accountService.registerCustomer(signUpRequest);
+        accountService.saveAccount(signUpRequest);
     }
 
     @DisplayName("존재하지 않는 로그인 정보일 경우에 예외를 발생")

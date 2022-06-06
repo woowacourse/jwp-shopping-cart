@@ -18,7 +18,7 @@ public class AccountService {
         this.accountDao = accountDao;
     }
 
-    public Long registerCustomer(SignUpRequest request) {
+    public Long saveAccount(SignUpRequest request) {
         if (accountDao.existByEmail(request.getEmail())) {
             throw new DuplicateAccountException();
         }

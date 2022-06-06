@@ -26,7 +26,7 @@ public class AccountController {
 
     @PostMapping("/users")
     public ResponseEntity<Void> addCustomer(@RequestBody @Valid SignUpRequest signUpRequest) {
-        accountService.registerCustomer(signUpRequest);
+        accountService.saveAccount(signUpRequest);
         return ResponseEntity.noContent().build();
     }
 
