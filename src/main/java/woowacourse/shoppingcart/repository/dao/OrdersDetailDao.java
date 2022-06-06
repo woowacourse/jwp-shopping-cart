@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.repository.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 
 @Repository
 public class OrdersDetailDao {
@@ -28,7 +28,7 @@ public class OrdersDetailDao {
             preparedStatement.setLong(3, quantity);
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public List<OrderDetail> findByOrderId(final Long orderId) {
