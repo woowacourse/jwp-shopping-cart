@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
-
 public class PhoneNumberRequest {
 
     private String start;
@@ -15,10 +13,6 @@ public class PhoneNumberRequest {
         this.start = start;
         this.middle = middle;
         this.last = last;
-    }
-
-    public PhoneNumber toPhoneNumber() {
-        return new PhoneNumber(start, middle, last);
     }
 
     public String getStart() {

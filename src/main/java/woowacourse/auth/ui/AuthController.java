@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.SigninRequest;
+import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.TokenResponse;
 
 @RestController
@@ -17,7 +17,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public TokenResponse signIn(@RequestBody SigninRequest signinRequest) {
+    public TokenResponse signIn(@RequestBody SignInRequest signinRequest) {
         return customerService.signIn(signinRequest);
     }
 
