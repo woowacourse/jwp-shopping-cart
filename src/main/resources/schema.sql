@@ -36,6 +36,7 @@ create table product
 create table cart_item
 (
     id          bigint not null auto_increment,
+    quantity    int    not null,
     customer_id bigint not null,
     product_id  bigint not null,
     primary key (id)

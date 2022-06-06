@@ -23,31 +23,17 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
+    @DisplayName("email을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
 
         // given
-        final String userName = "puterism";
+        final String email = "puterism@email.com";
 
         // when
-        final Long customerId = customerDao.getIdByUsername(userName);
+        final Long customerId = customerDao.getIdByEmail(email);
 
         // then
         assertThat(customerId).isEqualTo(1L);
-    }
-
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
-        // given
-        final String userName = "gwangyeol-iM";
-
-        // when
-        final Long customerId = customerDao.getIdByUsername(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(16L);
     }
 }

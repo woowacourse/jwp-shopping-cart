@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.AcceptanceTestFixture.deleteMethodRequestWithBearerAuth;
+import static woowacourse.AcceptanceTestFixture.deleteMethodRequestWithBearerAuthAndBody;
 import static woowacourse.AcceptanceTestFixture.getMethodRequestWithBearerAuth;
 import static woowacourse.AcceptanceTestFixture.patchMethodRequestWithBearerAuth;
 import static woowacourse.AcceptanceTestFixture.postMethodRequest;
@@ -131,7 +131,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         final String token = tokenResponse.jsonPath().getString("accessToken");
         final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest(password);
-        final ExtractableResponse<Response> response = deleteMethodRequestWithBearerAuth(deleteCustomerRequest, token,
+        final ExtractableResponse<Response> response = deleteMethodRequestWithBearerAuthAndBody(deleteCustomerRequest, token,
                 "/api/customers/me");
 
         final ExtractableResponse<Response> responseAfterDeleted = postMethodRequest(loginRequest,

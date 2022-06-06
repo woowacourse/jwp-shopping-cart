@@ -38,8 +38,8 @@ public class CartItemDaoTest {
         productDao.save(new Product("banana", 1_000, 10, wooWaOneImg));
         productDao.save(new Product("apple", 2_000, 10, wooWaTwoImg));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, quantity,  product_id) VALUES(?, ?, ?)", 1L, 10, 1L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, quantity,  product_id) VALUES(?, ?, ?)", 1L, 10, 2L);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
@@ -48,10 +48,11 @@ public class CartItemDaoTest {
 
         // given
         final Long customerId = 1L;
+        final int quantity = 10;
         final Long productId = 1L;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(customerId, quantity, productId);
 
         // then
         assertThat(cartId).isEqualTo(3L);
