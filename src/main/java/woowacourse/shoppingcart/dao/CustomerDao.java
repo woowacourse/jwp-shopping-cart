@@ -35,15 +35,6 @@ public class CustomerDao {
                 .stream().findAny();
     }
 
-    public Long findIdByUserName(String userName) {
-        final String sql = "SELECT id FROM customer WHERE username = :username";
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("username", userName);
-
-        return jdbcTemplate.queryForObject(sql, params, Long.class);
-    }
-
     public void save(Customer customer) {
         final String sql = "INSERT INTO customer(username, password, nickname, age) "
                 + "VALUES(:username, :password, :nickname, :age)";
