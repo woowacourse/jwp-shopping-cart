@@ -1,18 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.DataNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
 public class ProductDao {
@@ -45,16 +41,15 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Product findProductById(final Long productId) {
-        try {
-            final String sql = "SELECT id, name, price, image_url FROM product WHERE id = :id";
-            final Map<String, Object> params = new HashMap<>();
-            params.put("id", productId);
+    public Optional<Product> findProductById(final Long productId) {
+        final String sql = "SELECT id, name, price, image_url FROM product WHERE id = :id";
+        final Map<String, Object> params = new HashMap<>();
+        params.put("id", productId);
 
-            return namedParameterJdbcTemplate.queryForObject(sql, params, ProductDao::rowMapper);
-        } catch (EmptyResultDataAccessException e) {
-            throw new DataNotFoundException();
-        }
+        final List<Product> products = namedParameterJdbcTemplate.query(sql, params, ProductDao::rowMapper);
+        final Product product = DataAccessUtils.singleResult(products);
+
+        return Optional.ofNullable(product);
     }
 
     public List<Product> findProducts() {

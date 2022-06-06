@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.DataNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -33,7 +34,8 @@ public class CartService {
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
+            final Product product = productDao.findProductById(productId)
+                    .orElseThrow(DataNotFoundException::new);
             carts.add(new Cart(cartId, product));
         }
         return carts;

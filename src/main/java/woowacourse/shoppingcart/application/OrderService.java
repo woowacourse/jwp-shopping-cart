@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.exception.DataNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import java.util.ArrayList;
@@ -76,7 +77,8 @@ public class OrderService {
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
+            final Product product = productDao.findProductById(productQuantity.getProductId())
+                    .orElseThrow(DataNotFoundException::new);
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }

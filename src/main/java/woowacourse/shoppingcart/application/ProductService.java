@@ -2,9 +2,13 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
+import woowacourse.shoppingcart.application.dto.ProductServiceResponse;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.DataNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -15,19 +19,29 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public Long addProduct(final ProductSaveServiceRequest request) {
+        return productDao.save(request.toEntity());
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    public ProductServiceResponse findById(final Long productId) {
+        final Product product = findProduct(productId);
+        return ProductServiceResponse.from(product);
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public List<ProductServiceResponse> findAll() {
+        final List<Product> products = productDao.findProducts();
+        return products.stream()
+                .map(ProductServiceResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public void deleteProductById(final Long productId) {
+    public void deleteById(final Long productId) {
+        findProduct(productId);
         productDao.delete(productId);
+    }
+
+    private Product findProduct(final Long productId) {
+        return productDao.findProductById(productId)
+                .orElseThrow(DataNotFoundException::new);
     }
 }

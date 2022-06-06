@@ -55,7 +55,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(ClientRuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
+    public ResponseEntity<ErrorResponse> handleInvalidAccess(final ClientRuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
