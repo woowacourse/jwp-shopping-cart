@@ -13,13 +13,13 @@ public class PhoneNumberFormat {
     @Pattern(regexp = "\\d{4}", message = errorMessage)
     private final String middle;
     @Pattern(regexp = "\\d{4}", message = errorMessage)
-    private final String end;
+    private final String last;
 
     @JsonCreator
-    public PhoneNumberFormat(final String start, final String middle, final String end) {
+    public PhoneNumberFormat(final String start, final String middle, final String last) {
         this.start = start;
         this.middle = middle;
-        this.end = end;
+        this.last = last;
     }
 
     public static PhoneNumberFormat of(final String phoneNumber) {
@@ -34,11 +34,11 @@ public class PhoneNumberFormat {
         return middle;
     }
 
-    public String getEnd() {
-        return end;
+    public String getLast() {
+        return last;
     }
 
     public String appendNumbers() {
-        return this.start + this.middle + this.end;
+        return this.start + this.middle + this.last;
     }
 }
