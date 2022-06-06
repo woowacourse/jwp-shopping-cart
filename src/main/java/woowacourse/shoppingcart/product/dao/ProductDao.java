@@ -7,7 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.exception.badrequest.InvalidProductException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.product.domain.Product;
 
 @Repository
@@ -45,7 +45,7 @@ public class ProductDao {
                     ), productId
             );
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            throw new NotFoundProductException();
         }
     }
 
