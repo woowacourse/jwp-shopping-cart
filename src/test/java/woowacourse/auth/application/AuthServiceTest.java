@@ -80,6 +80,12 @@ class AuthServiceTest {
             assertThatThrownBy(() -> authService.findCustomerByToken("InvalidToken"))
                 .isInstanceOf(InvalidTokenException.class);
         }
+
+        @Test
+        void loginId값이_존재하지_않을_경우_예외발생() {
+            assertThatThrownBy(() -> authService.findCustomerByToken("InvalidLoginId@gamail.com"))
+                .isInstanceOf(InvalidCustomerLoginException.class);
+        }
     }
 
 

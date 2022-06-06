@@ -49,6 +49,7 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             IllegalArgumentException.class,
             NotInCustomerCartItemException.class,
+            DuplicateCustomerException.class
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());

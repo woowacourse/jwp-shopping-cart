@@ -28,7 +28,8 @@ public class AuthService {
     @Transactional
     public TokenResponse createToken(TokenRequest tokenRequest) {
         try {
-            Customer customer = customerDao.findByLoginId(tokenRequest.getLoginId());
+            Customer customer = customerDao.findByLoginId(tokenRequest.getLoginId())
+                .orElseThrow(InvalidCustomerException::new);
             checkPassword(customer, tokenRequest.getPassword());
 
             String token = jwtTokenProvider.createToken(tokenRequest.getLoginId());
@@ -42,9 +43,12 @@ public class AuthService {
         if (!jwtTokenProvider.validateToken(token)) {
             throw new InvalidTokenException();
         }
-        String payload = jwtTokenProvider.getPayload(token);
 
-        return new LoginCustomer(customerDao.findByLoginId(payload));
+        String payload = jwtTokenProvider.getPayload(token);
+        Customer customer = customerDao.findByLoginId(payload)
+            .orElseThrow(InvalidCustomerException::new);
+
+        return new LoginCustomer(customer);
     }
 
     public void checkPassword(Customer customer, String password) {

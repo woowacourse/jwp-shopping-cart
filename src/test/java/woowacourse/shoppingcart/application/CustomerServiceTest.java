@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
@@ -11,10 +12,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dto.CustomerPasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.util.HashTool;
 
 @SuppressWarnings("NonAsciiChracters")
 @SpringBootTest
@@ -46,7 +51,7 @@ class CustomerServiceTest {
             customerService.addCustomer(customerRequest);
 
             assertThatThrownBy(() -> customerService.addCustomer(customerRequest))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(DuplicateCustomerException.class);
         }
     }
 
@@ -60,8 +65,9 @@ class CustomerServiceTest {
             customerService.addCustomer(customerRequest);
 
             CustomerUpdateRequest updateCustomerRequest = new CustomerUpdateRequest("seungpapang", "12345678aA!");
+            LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", HashTool.hashing("12345678aA!"));
 
-            CustomerResponse actual = customerService.updateCustomer(updateCustomerRequest, "angie");
+            CustomerResponse actual = customerService.updateCustomer(updateCustomerRequest, loginCustomer);
 
             assertThat(actual).extracting("loginId", "name")
                     .containsExactly("angie", "seungpapang");
@@ -71,7 +77,9 @@ class CustomerServiceTest {
         void 존재하지_않는_회원일_경우_예외발생() {
             CustomerUpdateRequest updateCustomerRequest = new CustomerUpdateRequest("angel", "12345678aA!");
 
-            assertThatThrownBy(() -> customerService.updateCustomer(updateCustomerRequest, "angie"))
+            LoginCustomer loginCustomer = new LoginCustomer("angel@gmail.com", "angel", HashTool.hashing("12345678aA!"));
+
+            assertThatThrownBy(() -> customerService.updateCustomer(updateCustomerRequest, loginCustomer))
                 .isInstanceOf(InvalidCustomerException.class);
         }
 
@@ -83,7 +91,7 @@ class CustomerServiceTest {
             CustomerRequest updateCustomerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
 
             assertThatThrownBy(() -> customerService.addCustomer(updateCustomerRequest))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(DuplicateCustomerException.class);
         }
     }
 
@@ -92,12 +100,25 @@ class CustomerServiceTest {
     class deletedCustomerTest {
 
         @Test
-        void 존재하지_않는_회원일_경우_예외발생() {
+        void 정상적인_데이터가_들어올_경우_성공() {
             CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
             customerService.addCustomer(customerRequest);
 
-            assertThatThrownBy(() -> customerService.deleteCustomer("seungpapang"))
-                    .isInstanceOf(InvalidCustomerException.class);
+            CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("12345678aA!");
+            LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", HashTool.hashing("12345678aA!"));
+
+            assertThatCode(() -> customerService.deleteCustomer(customerPasswordRequest, loginCustomer))
+                .doesNotThrowAnyException();
+        }
+
+        @Test
+        void 존재하지_않는_회원일_경우_예외발생() {
+            CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest(
+                "12345678aA!");
+            LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", HashTool.hashing("12345678aA!"));
+
+            assertThatThrownBy(() -> customerService.deleteCustomer(customerPasswordRequest, loginCustomer))
+                .isInstanceOf(InvalidCustomerException.class);
         }
     }
 

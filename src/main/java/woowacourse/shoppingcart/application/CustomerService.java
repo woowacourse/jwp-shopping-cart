@@ -2,11 +2,15 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerPasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.util.HashTool;
 
@@ -14,18 +18,19 @@ import woowacourse.shoppingcart.util.HashTool;
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final AuthService authService;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(CustomerDao customerDao,
+        AuthService authService) {
         this.customerDao = customerDao;
+        this.authService = authService;
     }
 
     @Transactional
     public CustomerResponse addCustomer(CustomerRequest customerRequest) {
-        if (customerDao.existByLoginId(customerRequest.getLoginId())) {
-            throw new IllegalArgumentException("이미 존재하는 id입니다.");
-        }
         Customer customer = customerRequest.toCustomer().ofHashPassword(HashTool::hashing);
-        Customer savedCustomer = customerDao.save(customer);
+        Customer savedCustomer = customerDao.save(customer)
+            .orElseThrow(DuplicateCustomerException::new);
         return toCustomerResponse(savedCustomer);
     }
 
@@ -34,24 +39,21 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerResponse updateCustomer(CustomerUpdateRequest customerUpdateRequest, String loginId) {
-        if (!customerDao.existByLoginId(loginId)) {
+    public CustomerResponse updateCustomer(CustomerUpdateRequest customerUpdateRequest,
+        LoginCustomer loginCustomer) {
+        if (!customerDao.existByLoginId(loginCustomer.getLoginId())) {
             throw new InvalidCustomerException();
         }
 
-        if (customerDao.existByUsername(customerUpdateRequest.getName())) {
-            throw new IllegalArgumentException("이미 존재하는 유저네임입니다.");
-        }
-        Customer customer = customerUpdateRequest.toCustomer(loginId);
+        authService.checkPassword(loginCustomer.toCustomer(), customerUpdateRequest.getPassword());
+        Customer customer = customerUpdateRequest.toCustomer(loginCustomer.getLoginId());
         customerDao.update(customer);
         return CustomerResponse.of(customer);
     }
 
     @Transactional
-    public void deleteCustomer(String loginId) {
-        if (!customerDao.existByLoginId(loginId)) {
-            throw new InvalidCustomerException();
-        }
-        customerDao.delete(loginId);
+    public void deleteCustomer(CustomerPasswordRequest customerPasswordRequest, LoginCustomer loginCustomer) {
+        authService.checkPassword(loginCustomer.toCustomer(), customerPasswordRequest.getPassword());
+        customerDao.delete(customerDao.findIdByUserName(loginCustomer.getUsername()));
     }
 }
