@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -25,6 +26,7 @@ public class ProductServiceTest {
     private static final String PRODUCT_NAME = "김치 치즈 볶음밥";
     private static final int PRODUCT_PRICE = 10_000;
     private static final String PRODUCT_IMAGE_URL = "www.naver.com";
+
     @InjectMocks
     private ProductService productService;
 
@@ -51,12 +53,7 @@ public class ProductServiceTest {
     @DisplayName("id 에 해당하는 상품을 조회한다.")
     void findProductById() {
         //given
-        final ProductSaveServiceRequest productRequest = new ProductSaveServiceRequest(PRODUCT_NAME, PRODUCT_PRICE,
-                PRODUCT_IMAGE_URL);
-        when(productDao.save(any(Product.class)))
-                .thenReturn(PRODUCT_ID);
-        final Long productId = productService.addProduct(productRequest);
-
+        final Long productId = saveProduct();
         final Product savedProduct = new Product(productId, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE_URL);
         when(productDao.findProductById(productId))
                 .thenReturn(Optional.of(savedProduct));
@@ -71,10 +68,40 @@ public class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("id 에 해당하는 상품이 없을 경우 예외를 던진다.")
+    @DisplayName("상품 조회시 id 에 해당하는 상품이 없을 경우 예외를 던진다.")
     void findProductById_invalidProductId_throwsException() {
         //when, then
         assertThatThrownBy(() -> productService.findProductById(300L))
                 .isInstanceOf(InvalidProductException.class);
+    }
+
+    @Test
+    @DisplayName("id 에 해당하는 상품을 삭제한다.")
+    void deleteProductById() {
+        //given
+        final Long productId = saveProduct();
+        when(productDao.delete(productId))
+                .thenReturn(1);
+
+        //when, then
+        assertThatCode(() -> productService.deleteProductById(productId))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("상품 삭제시 id 에 해당하는 상품이 없을 경우 예외를 던진다.")
+    void deleteProductById_invalidProductId_throwsException() {
+        //when, then
+        assertThatThrownBy(() -> productService.deleteProductById(300L))
+                .isInstanceOf(InvalidProductException.class);
+    }
+
+    private Long saveProduct() {
+        final ProductSaveServiceRequest productRequest = new ProductSaveServiceRequest(PRODUCT_NAME, PRODUCT_PRICE,
+                PRODUCT_IMAGE_URL);
+        when(productDao.save(any(Product.class)))
+                .thenReturn(PRODUCT_ID);
+
+        return productService.addProduct(productRequest);
     }
 }

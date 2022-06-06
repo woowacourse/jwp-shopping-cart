@@ -21,7 +21,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private Product rowMapperToProduct(Long productId, ResultSet resultSet) throws SQLException {
+    private Product rowMapperToProduct(final Long productId, final ResultSet resultSet) throws SQLException {
         return new Product(
                 productId,
                 resultSet.getString("name"), resultSet.getInt("price"),
@@ -63,8 +63,8 @@ public class ProductDao {
                         rowMapperToProduct(resultSet.getLong("id"), resultSet));
     }
 
-    public void delete(final Long productId) {
+    public int delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+        return jdbcTemplate.update(query, productId);
     }
 }

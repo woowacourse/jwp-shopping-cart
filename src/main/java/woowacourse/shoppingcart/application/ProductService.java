@@ -34,6 +34,9 @@ public class ProductService {
     }
 
     public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+        int effectedRowCount = productDao.delete(productId);
+        if (effectedRowCount == 0) {
+            throw new InvalidProductException();
+        }
     }
 }
