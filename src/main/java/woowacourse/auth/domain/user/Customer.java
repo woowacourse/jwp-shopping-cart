@@ -58,6 +58,18 @@ public class Customer {
         return !this.password.hasSamePassword(password);
     }
 
+    public Customer updatePassword(String newPassword) {
+        return new Customer(username, new Password(newPassword), nickname, age);
+    }
+
+    public Customer updateNickname(String newNickname) {
+        return new Customer(username, password, newNickname, age);
+    }
+
+    public Customer updateAge(int newAge) {
+        return new Customer(username, password, nickname, newAge);
+    }
+
     public String getUsername() {
         return username;
     }

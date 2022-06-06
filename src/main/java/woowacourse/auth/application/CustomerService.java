@@ -36,8 +36,9 @@ public class CustomerService {
 
     @Transactional
     public void updateNicknameAndAge(Customer customer, UpdateMeRequest request) {
-        Customer updatedCustomer = new Customer(customer.getUsername(),
-                customer.getEncryptedPassword(), request.getNickname(), request.getAge());
+        String newNickname = request.getNickname();
+        int newAge = request.getAge();
+        Customer updatedCustomer = customer.updateNickname(newNickname).updateAge(newAge);
         customerDao.updateByUsername(updatedCustomer);
     }
 
@@ -46,8 +47,7 @@ public class CustomerService {
         if (customer.hasDifferentPassword(request.getOldPassword())) {
             throw new InvalidRequestException(InvalidExceptionType.WRONG_PASSWORD);
         }
-        Customer updatedCustomer = new Customer(customer.getUsername(),
-                new Password(request.getNewPassword()), customer.getNickname(), customer.getAge());
+        Customer updatedCustomer = customer.updatePassword(request.getNewPassword());
         customerDao.updateByUsername(updatedCustomer);
     }
 
