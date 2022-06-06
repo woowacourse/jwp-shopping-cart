@@ -100,8 +100,7 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
     }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     public static Long 장바구니_아이템_추가되어_있음(Long productId) {
