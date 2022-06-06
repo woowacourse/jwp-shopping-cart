@@ -9,6 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.domain.LoginMemberPrincipal;
 import woowacourse.auth.ui.dto.LoginMember;
+import woowacourse.exception.UnauthorizedException;
 
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
@@ -26,7 +27,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         try {
             return LoginMember.from(id);
         } catch (Exception e) {
-            throw new IllegalArgumentException("로그인 아이디.... 리졸빙하다 오류...");
+            throw new UnauthorizedException();
         }
     }
 }
