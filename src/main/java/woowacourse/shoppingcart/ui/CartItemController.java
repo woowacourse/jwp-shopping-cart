@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.application.dto.CartResponse;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.ui.dto.Request;
 
@@ -27,13 +26,13 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public CartResponse getCartItems(@PathVariable final String customerName) {
+        return new CartResponse(cartService.findCartsByCustomerName(customerName));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                      @PathVariable final String customerName) {
+                                            @PathVariable final String customerName) {
         final Long cartId = cartService.addCart(product.getId(), customerName);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -45,7 +44,7 @@ public class CartItemController {
 
     @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                         @PathVariable final Long cartId) {
+                                               @PathVariable final Long cartId) {
         cartService.deleteCart(customerName, cartId);
         return ResponseEntity.noContent().build();
     }

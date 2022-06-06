@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.OrderDetailResponse;
+import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
-import woowacourse.shoppingcart.domain.order.Orders;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -49,7 +50,7 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
+    public OrderResponse findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
@@ -62,7 +63,7 @@ public class OrderService {
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String account) {
+    public List<OrderResponse> findOrdersByCustomerName(final String account) {
         final Long customerId = getCustomerIdByAccount(account);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
@@ -71,15 +72,15 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
+    private OrderResponse findOrderResponseDtoByOrderId(final Long orderId) {
+        final List<OrderDetailResponse> products = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
             final Product product = productQuantity.getProduct();
             final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
+            products.add(OrderDetailResponse.from(product, quantity));
         }
 
-        return new Orders(orderId, ordersDetails);
+        return new OrderResponse(orderId, products);
     }
 
     private Long getCustomerIdByAccount(String account) {

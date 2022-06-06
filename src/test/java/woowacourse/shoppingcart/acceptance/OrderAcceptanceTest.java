@@ -8,7 +8,9 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +20,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.order.Orders;
-import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
 
 @DisplayName("주문 관련 기능")
@@ -123,23 +124,27 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-                .map(Orders::getId)
+        List<Long> resultOrderIds = response.jsonPath().getList(".", OrderResponse.class).stream()
+                .map(OrderResponse::getOrderId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }
 
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-        Orders resultOrder = response.as(Orders.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
+        OrderResponse resultOrder = response.as(OrderResponse.class);
+        assertThat(resultOrder.getOrderId()).isEqualTo(orderId);
     }
 
     public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+        Map<String, Object> request = new HashMap<>();
+        request.put("name", name);
+        request.put("price", price);
+        request.put("imageUrl", imageUrl);
+
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
+                .body(request)
                 .when().post("/products")
                 .then().log().all()
                 .extract();

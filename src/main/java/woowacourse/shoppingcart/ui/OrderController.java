@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.domain.order.Orders;
+import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
 
 @Validated
@@ -27,22 +27,22 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@PathVariable final String customerName,
-                                   @RequestBody @Valid final List<OrderRequest> orderDetails) {
+                                         @RequestBody @Valid final List<OrderRequest> orderDetails) {
         final Long orderId = orderService.addOrder(orderDetails, customerName);
         return ResponseEntity.created(
                 URI.create("/api/" + customerName + "/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
-                                            @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customerName, orderId);
+    public ResponseEntity<OrderResponse> findOrder(@PathVariable final String customerName,
+                                                   @PathVariable final Long orderId) {
+        final OrderResponse order = orderService.findOrderById(customerName, orderId);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
+    public ResponseEntity<List<OrderResponse>> findOrders(@PathVariable final String customerName) {
+        final List<OrderResponse> orders = orderService.findOrdersByCustomerName(customerName);
         return ResponseEntity.ok(orders);
     }
 }

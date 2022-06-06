@@ -7,7 +7,9 @@ import static woowacourse.shoppingcart.acceptance.AcceptanceUtil.findValue;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -16,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
-import woowacourse.shoppingcart.domain.product.Product;
 
 @DisplayName("상품 관련 기능")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -121,14 +122,20 @@ class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     private ExtractableResponse<Response> 상품_등록(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
-
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
+                .body(상품_정보(name, price, imageUrl))
                 .when().post("/products")
                 .then().log().all()
                 .extract();
+    }
+
+    private Map<String, Object> 상품_정보(String name, int price, String imageUrl) {
+        Map<String, Object> request = new HashMap<>();
+        request.put("name", name);
+        request.put("price", price);
+        request.put("imageUrl", imageUrl);
+        return request;
     }
 }

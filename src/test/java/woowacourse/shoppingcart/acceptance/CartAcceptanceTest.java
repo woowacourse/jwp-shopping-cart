@@ -16,8 +16,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.cart.Cart;
-import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.application.dto.ProductResponse;
 
 @DisplayName("장바구니 관련 기능")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -112,8 +111,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(cart -> cart.getProduct().getId())
+        List<Long> resultProductIds = response.jsonPath().getList("cart", ProductResponse.class).stream()
+                .map(ProductResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }
@@ -123,11 +122,15 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+        Map<String, Object> request = new HashMap<>();
+        request.put("name", name);
+        request.put("price", price);
+        request.put("imageUrl", imageUrl);
+
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
+                .body(request)
                 .when().post("/products")
                 .then().log().all()
                 .extract();
