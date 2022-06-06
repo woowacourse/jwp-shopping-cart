@@ -12,13 +12,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.product.ProductAddRequest;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
+        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, 100, "http://example.com/chicken.jpg");
 
         상품_추가됨(response);
     }
@@ -56,17 +58,12 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = Product.builder()
-                .productName(name)
-                .price(price)
-                .imageUrl(imageUrl)
-                .build();
-
+    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, int stock, String imageUrl) {
+        ProductAddRequest request = new ProductAddRequest(name, price, stock, imageUrl);
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
+                .body(request)
                 .when().post("/api/products")
                 .then().log().all()
                 .extract();
@@ -105,7 +102,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
-        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl);
+        ExtractableResponse<Response> response = 상품_등록_요청(name, price, 100, imageUrl);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 
