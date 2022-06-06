@@ -26,23 +26,21 @@ public class ProductService {
     public List<ProductResponse> findProducts() {
         List<ProductStock> products = productDao.findProductStocks();
         return products.stream()
-            .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-                product.getStockQuantity(),
-                new ThumbnailImageDto(product.getThumbnailImageUrl(), product.getThumbnailImageAlt())))
+            .map(ProductResponse::from)
             .collect(Collectors.toList());
     }
 
-    public Long addProduct(final ProductRequest productRequest) {
+    public ProductResponse addProduct(final ProductRequest productRequest) {
+        ThumbnailImageDto thumbnailImageDto = productRequest.getThumbnailImage();
         Product product = new Product(productRequest.getName(), productRequest.getPrice(),
-            new ThumbnailImage(productRequest.getThumbnailImageUrl(), productRequest.getThumbnailImageAlt()));
-        return productDao.save(product, productRequest.getStockQuantity());
+            new ThumbnailImage(thumbnailImageDto.getUrl(), thumbnailImageDto.getAlt()));
+        ProductStock addedProductStock = productDao.save(product, productRequest.getStockQuantity());
+        return ProductResponse.from(addedProductStock);
     }
 
     public ProductResponse findProductById(final Long productId) {
         ProductStock product = productDao.findProductStockById(productId);
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getStockQuantity(),
-            new ThumbnailImageDto(product.getThumbnailImageUrl(),
-                product.getThumbnailImageAlt()));
+        return ProductResponse.from(product);
     }
 
     public void deleteProductById(final Long productId) {

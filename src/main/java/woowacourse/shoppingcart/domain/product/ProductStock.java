@@ -29,6 +29,10 @@ public class ProductStock {
         return product.getThumbnailImageAlt();
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
     public int getStockQuantity() {
         return stockQuantity;
     }

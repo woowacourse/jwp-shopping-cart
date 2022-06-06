@@ -14,6 +14,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.domain.product.ProductStock;
 import woowacourse.shoppingcart.domain.product.ThumbnailImage;
 
 @JdbcTest
@@ -37,10 +38,10 @@ public class ProductDaoTest {
         final ThumbnailImage thumbnailImage = new ThumbnailImage("www.test.com", "이미지");
 
         // when
-        final Long productId = productDao.save(new Product(name, price, thumbnailImage), 10);
+        final ProductStock product = productDao.save(new Product(name, price, thumbnailImage), 10);
 
         // then
-        assertThat(productId).isEqualTo(1L);
+        assertThat(product.getId()).isEqualTo(1L);
     }
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
@@ -50,11 +51,11 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final ThumbnailImage thumbnailImage = new ThumbnailImage("www.test.com", "이미지");
-        final Long productId = productDao.save(new Product(name, price, thumbnailImage), 10);
-        final Product expectedProduct = new Product(productId, name, price, thumbnailImage);
+        final ProductStock savedProduct = productDao.save(new Product(name, price, thumbnailImage), 10);
+        final Product expectedProduct = new Product(savedProduct.getId(), name, price, thumbnailImage);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(savedProduct.getId());
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -82,11 +83,11 @@ public class ProductDaoTest {
         final int price = 1_000;
         final ThumbnailImage thumbnailImage = new ThumbnailImage("www.test.com", "이미지");
 
-        final Long productId = productDao.save(new Product(name, price, thumbnailImage), 10);
+        final ProductStock savedProduct = productDao.save(new Product(name, price, thumbnailImage), 10);
         final int beforeSize = productDao.findProducts().size();
 
         // when
-        productDao.delete(productId);
+        productDao.delete(savedProduct.getId());
 
         // then
         final int afterSize = productDao.findProducts().size();

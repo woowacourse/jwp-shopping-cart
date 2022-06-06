@@ -20,14 +20,24 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
-        // given & when
+        // given
         ProductRequest productRequest = new ProductRequest("치킨", 10_000, 10,
             new ThumbnailImageDto("http://example.com/chicken.jpg", "이미지입니다."));
+
+        // when
         ExtractableResponse<Response> response = requestToAddProduct(productRequest);
+        ProductResponse productResponse = response.jsonPath().getObject(".", ProductResponse.class);
+        ThumbnailImageDto thumbnailImage = productResponse.getThumbnailImage();
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
+        assertThat(response.header("Location")).isEqualTo("/api/products/" + productResponse.getId());
+        assertThat(productResponse)
+            .extracting("name", "price", "stockQuantity")
+            .containsExactly(productRequest.getName(), productRequest.getPrice(), productRequest.getStockQuantity());
+        assertThat(thumbnailImage)
+            .extracting("url", "alt")
+            .containsExactly(productRequest.getThumbnailImage().getUrl(), productRequest.getThumbnailImage().getAlt());
     }
 
     @DisplayName("상품 목록을 조회한다")

@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,7 +40,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final Product product, final int stockQuantity) {
+    public ProductStock save(final Product product, final int stockQuantity) {
         final String query = "INSERT INTO product (name, price, stock_quantity, thumbnail_url, thumbnail_alt) VALUES (?, ?, ?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -54,8 +53,7 @@ public class ProductDao {
             preparedStatement.setString(5, product.getThumbnailImageAlt());
             return preparedStatement;
         }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return findProductStockById(keyHolder.getKey().longValue());
     }
 
     public Product findProductById(final Long productId) {

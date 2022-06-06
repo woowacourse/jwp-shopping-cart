@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
@@ -35,13 +34,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Valid @RequestBody ProductRequest productRequest) {
-        final Long productId = productService.addProduct(productRequest);
-        final URI uri = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/" + productId)
-            .build().toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<ProductResponse> add(@Valid @RequestBody ProductRequest productRequest) {
+        final ProductResponse productResponse = productService.addProduct(productRequest);
+        return ResponseEntity.created(URI.create("/api/products/" + productResponse.getId())).body(productResponse);
     }
 
     @GetMapping("/{productId}")
