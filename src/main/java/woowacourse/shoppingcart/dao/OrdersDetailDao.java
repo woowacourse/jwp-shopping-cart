@@ -1,40 +1,55 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import java.util.Map;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
 
 @Repository
 public class OrdersDetailDao {
-    private final JdbcTemplate jdbcTemplate;
 
-    public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private final RowMapper<OrderDetail> orderDetailRowMapper = (rs, rowNum) -> new OrderDetail(
+            rs.getLong("product_id"),
+            rs.getInt("price"),
+            rs.getString("name"),
+            rs.getString("image_url"),
+            rs.getInt("quantity")
+    );
+
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public OrdersDetailDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public Long addOrdersDetail(final Long ordersId, final Long productId, final int quantity) {
-        final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
+                .withTableName("orders_detail")
+                .usingGeneratedKeyColumns("id");
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, ordersId);
-            preparedStatement.setLong(2, productId);
-            preparedStatement.setLong(3, quantity);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("orders_id", ordersId);
+        parameters.put("product_id", productId);
+        parameters.put("quantity", quantity);
+
+        final Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return number.longValue();
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-                rs.getLong("product_id"),
-                rs.getInt("quantity")
-        ), orderId);
+    public List<OrderDetail> findOrdersDetailsByOrderId(final Long ordersId) {
+        final String sql =
+                "SELECT p.id product_id, p.price price, p.name name, p.image_url image_url, od.quantity quantity "
+                        + "FROM orders_detail od "
+                        + "JOIN product p ON od.product_id=p.id "
+                        + "WHERE orders_id = :ordersId";
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("ordersId", ordersId);
+
+        return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), orderDetailRowMapper);
     }
 }
