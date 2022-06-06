@@ -15,13 +15,13 @@ public class Customer {
     private Address address;
     private PhoneNumber phoneNumber;
 
-    public Customer(Long id, Account account, Nickname nickname, Password password, Address address,
+    public Customer(Long id, String account, String nickname, Password password, String address,
                     PhoneNumber phoneNumber) {
         this.id = id;
-        this.account = account;
-        this.nickname = nickname;
+        this.account = new Account(account);
+        this.nickname = new Nickname(nickname);
         this.password = password;
-        this.address = address;
+        this.address = new Address(address);
         this.phoneNumber = phoneNumber;
     }
 

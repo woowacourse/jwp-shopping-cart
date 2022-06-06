@@ -1,9 +1,6 @@
 package woowacourse.shoppingcart.ui.dto;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.vo.Account;
-import woowacourse.shoppingcart.domain.customer.vo.Address;
-import woowacourse.shoppingcart.domain.customer.vo.Nickname;
 import woowacourse.shoppingcart.domain.customer.vo.Password;
 
 public class CustomerRequest {
@@ -27,13 +24,8 @@ public class CustomerRequest {
     }
 
     public Customer toCustomer() {
-        return new Customer(null,
-                new Account(account),
-                new Nickname(nickname),
-                Password.plainText(password),
-                new Address(address),
-                phoneNumber.toPhoneNumber()
-        );
+        return new Customer(null, account, nickname, Password.plainText(password), address,
+                phoneNumber.toPhoneNumber());
     }
 
     public String getAccount() {
