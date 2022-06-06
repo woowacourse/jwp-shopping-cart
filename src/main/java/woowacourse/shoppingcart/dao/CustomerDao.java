@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.EncryptPassword;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.exception.CannotDeleteException;
+import woowacourse.shoppingcart.exception.CannotDeleteCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -89,7 +89,7 @@ public class CustomerDao {
         final String query = "DELETE FROM customer WHERE id = ?";
         final int update = jdbcTemplate.update(query, id);
         if (update == 0) {
-            throw new CannotDeleteException();
+            throw new CannotDeleteCustomerException();
         }
     }
 }

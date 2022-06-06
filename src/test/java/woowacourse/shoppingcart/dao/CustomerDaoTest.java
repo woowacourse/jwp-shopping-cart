@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.EncryptPassword;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.exception.CannotDeleteException;
+import woowacourse.shoppingcart.exception.CannotDeleteCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @JdbcTest
@@ -145,8 +145,8 @@ public class CustomerDaoTest {
 
         // when // then
         assertThatThrownBy(() -> customerDao.deleteById(id))
-                .isExactlyInstanceOf(CannotDeleteException.class)
-                .hasMessageContaining("해당 데이터가 존재하지 않아 삭제에 실패했습니다.");
+                .isExactlyInstanceOf(CannotDeleteCustomerException.class)
+                .hasMessageContaining("회원 데이터가 존재하지 않아 삭제에 실패했습니다.");
     }
 
     @DisplayName("존재하는 유저이름으로 유저를 찾는다.")
