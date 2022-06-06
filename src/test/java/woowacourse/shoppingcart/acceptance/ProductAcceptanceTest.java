@@ -7,10 +7,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.Product;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import woowacourse.shoppingcart.dto.ProductRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,9 +20,14 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .body(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/products")
+                .then().log().all().extract();
 
-        상품_추가됨(response);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isNotBlank();
     }
 
     @DisplayName("상품 목록을 조회한다")
@@ -64,7 +70,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
-                .when().post("/api/products")
+                .when().post("/products")
                 .then().log().all()
                 .extract();
     }
@@ -73,7 +79,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
+                .when().get("/products")
                 .then().log().all()
                 .extract();
     }
@@ -82,7 +88,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products/{productId}", productId)
+                .when().get("/products/{productId}", productId)
                 .then().log().all()
                 .extract();
     }
@@ -91,14 +97,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
+                .when().delete("/products/{productId}", productId)
                 .then().log().all()
                 .extract();
-    }
-
-    public static void 상품_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
     }
 
     public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
