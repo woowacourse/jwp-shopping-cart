@@ -19,6 +19,33 @@
   - [x] 요청으로 비밀번호와 토큰을 받는다.
   - [x] 204
 
+#2단계 요구사항 정리
+
+- [ ] 페이지별 상품 목록 조회
+  - [ ] 요청으로 페이지별 상품 갯수, 해당 페이지를 파라미터로 받는다.
+  - [ ] 응답으로 상품들의 id, name, price, imageUrl을 반환한다. 200
+- [ ] 상품 조회
+  - [ ] 요청으로 상품ID를 받는다.
+  - [ ] 응답으로 상품의 id, name, price, imageUrl을 반환한다. 200
+- [ ] 장바구니 상품 조회
+  - [ ] 요청으로 토큰을 받는다.
+  - [ ] 응답으로 상품들의 id, name, price, imageUrl, quantity, checked를 반환한다. 200
+- [ ] 장바구니 상품 제거
+  - [ ] 요청으로 상품ID와 토큰을 받는다.
+  - [ ] 204
+- [ ] 장바구니 선택 상품 제거
+  - [ ] 요청으로 상품ID들과 토큰을 받는다.
+  - [ ] 204
+- [ ] 장바구니 전체 상품 제거
+  - [ ] 요청으로 토큰을 받는다.
+  - [ ] 204
+- [ ] 장바구니 상품 정보 수정(수량, 구매체크) 단일
+  - [ ] 요청으로 상품ID와 토큰, quantity, checked를 받는다.
+  - [ ] 응답으로 상품의 id, name, price, imageUrl, quantity, chekced를 반환한다. 200
+- [ ] 장바구니 상품 정보 수정 복수
+  - [ ] 요청으로 상품들의 id, quantity, checked와 토큰을 받는다.
+  - [ ] 응답으로 상품들의 id, name, price, imageUrl, quantity, checked를 반환한다. 200
+
 [API 문서](https://www.notion.so/brorae/1-API-c10e17f6fdc940bbb2379ec7e07b1cb4)
 ## ✏️ Code Review Process
 [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
