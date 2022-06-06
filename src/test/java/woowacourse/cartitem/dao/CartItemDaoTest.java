@@ -2,6 +2,9 @@ package woowacourse.cartitem.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +18,6 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.cartitem.domain.CartItem;
-import woowacourse.cartitem.domain.Quantity;
 import woowacourse.customer.dao.CustomerDao;
 import woowacourse.customer.domain.Customer;
 import woowacourse.product.dao.ProductDao;
@@ -57,29 +59,29 @@ public class CartItemDaoTest {
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
-        // given
-        final CartItem cartItem = new CartItem(customerId, productId1, new Quantity(5));
-
         // when
-        final Long cartId = cartItemDao.addCartItem(cartItem);
+        final Long cartId = cartItemDao.addCartItem(customerId, productId1, 5);
 
         // then
         assertThat(cartId).isNotNull();
     }
-    //
-    // @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
-    // @Test
-    // void findProductIdsByCustomerId() {
-    //
-    //     // given
-    //     final Long customerId = 1L;
-    //
-    //     // when
-    //     final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
-    //
-    //     // then
-    //     assertThat(productsIds).containsExactly(1L, 2L);
-    // }
+
+    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @Test
+    void findProductIdsByCustomerId() {
+        // given
+        cartItemDao.addCartItem(customerId, productId1, 5);
+        cartItemDao.addCartItem(customerId, productId2, 5);
+
+        // when
+        final List<Long> productsIds = cartItemDao.findByCustomerId(customerId)
+            .stream()
+            .map(CartItem::getProductId)
+            .collect(Collectors.toList());
+
+        // then
+        assertThat(productsIds).containsExactly(productId1, productId2);
+    }
     //
     // @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     // @Test

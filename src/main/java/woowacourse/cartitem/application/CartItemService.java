@@ -1,10 +1,15 @@
 package woowacourse.cartitem.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.cartitem.dao.CartItemDao;
+import woowacourse.cartitem.domain.CartItem;
+import woowacourse.cartitem.domain.Quantity;
 import woowacourse.cartitem.dto.CartItemAddRequest;
+import woowacourse.cartitem.dto.CartItemResponses;
 import woowacourse.customer.application.CustomerService;
 import woowacourse.product.dao.ProductDao;
 import woowacourse.product.domain.Product;
@@ -31,7 +36,9 @@ public class CartItemService {
     public Long addCartItem(final String username, final CartItemAddRequest cartItemAddRequest) {
         final Long customerId = customerService.findIdByUsername(username);
         validateProductStock(cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity());
-        return cartItemDao.addCartItem(cartItemAddRequest.toCartItem(customerId));
+        final Quantity quantity = new Quantity(cartItemAddRequest.getQuantity());
+
+        return cartItemDao.addCartItem(customerId, cartItemAddRequest.getProductId(), quantity.getValue());
     }
 
     private void validateProductStock(final Long productId, final Integer quantity) {
@@ -40,22 +47,12 @@ public class CartItemService {
         product.checkProductAvailableForPurchase(quantity);
     }
 
-    // public List<Cart> findCartsByCustomerName(final String customerName) {
-    //     final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-    //
-    //     final List<Cart> carts = new ArrayList<>();
-    //     for (final Long cartId : cartIds) {
-    //         final Long productId = cartItemDao.findProductIdById(cartId);
-    //         // final Product product = productDao.findProductById(productId);
-    //         // carts.add(new Cart(cartId, product));
-    //     }
-    //     return carts;
-    // }
-    //
-    // private List<Long> findCartIdsByCustomerName(final String customerName) {
-    //     final Long customerId = customerDao.findIdByUserName(customerName);
-    //     return cartItemDao.findIdsByCustomerId(customerId);
-    // }
+    public CartItemResponses findCartsByCustomerName(final String customerName) {
+        final Long customerId = customerService.findIdByUsername(customerName);
+        final List<CartItem> cartItems = cartItemDao.findByCustomerId(customerId);
+
+        return CartItemResponses.from(cartItems);
+    }
     //
     // public void deleteCart(final String customerName, final Long cartId) {
     //     validateCustomerCart(cartId, customerName);
