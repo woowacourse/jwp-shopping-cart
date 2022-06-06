@@ -4,10 +4,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BcryptePasswordEncrypter implements PasswordEncrypter {
+public class BcryptPasswordEncrypter implements PasswordEncrypter {
     private final PasswordEncoder passwordEncoder;
 
-    public BcryptePasswordEncrypter(final PasswordEncoder passwordEncoder) {
+    public BcryptPasswordEncrypter(final PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
