@@ -10,8 +10,10 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.OrdersDetail;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -37,18 +39,34 @@ public class OrderService {
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
+        final Long ordersId = orderDao.save(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
             final Long productId = cartsDao.findCartById(cartId).getId();
-            final int quantity = orderDetail.getQuantity();
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
+            ordersDetailDao.addOrdersDetail(ordersId, productId, 0);
             cartsDao.delete(cartId);
         }
 
         return ordersId;
+    }
+
+    public Long addOrder(final Long memberId, final List<OrderRequest> orderRequests) {
+        final Long orderId = orderDao.save(memberId);
+        final List<Long> cartIds = orderRequests.stream()
+                .map(OrderRequest::getCartId)
+                .collect(Collectors.toList());
+        final List<Carts> carts = cartsDao.findCartsByIds(cartIds);
+        ordersDetailDao.addBatchOrderDetails(toOrderDetails(orderId, carts));
+
+        return orderId;
+    }
+
+    private List<OrderDetail> toOrderDetails(final Long orderId, final List<Carts> carts) {
+        return carts.stream()
+                .map(cart -> new OrderDetail(orderId, cart.getProduct(), cart.getQuantity()))
+                .collect(Collectors.toList());
     }
 
     public Orders findOrderById(final String customerName, final Long orderId) {
@@ -74,11 +92,11 @@ public class OrderService {
     }
 
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
+        final List<OrdersDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
+            final Product product = productDao.findProductById(productQuantity.getProduct().getId());
             final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
+            ordersDetails.add(new OrdersDetail(product, quantity));
         }
 
         return new Orders(orderId, ordersDetails);

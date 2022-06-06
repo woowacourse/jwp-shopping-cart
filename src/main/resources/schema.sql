@@ -2,8 +2,6 @@ drop table if exists orders_detail;
 
 drop table if exists orders;
 
-drop table if exists cart_item;
-
 drop table if exists carts;
 
 drop table if exists product;
@@ -48,25 +46,6 @@ create table product
 ) engine = InnoDB
   default charset = utf8mb4;
 
--- deprecated cart
-create table cart_item
-(
-    id         bigint not null auto_increment,
-    member_id  bigint not null,
-    product_id bigint not null,
-    primary key (id)
-) engine = InnoDB
-  default charset = utf8mb4;
-
-alter table cart_item
-    add constraint fk_cart_item_to_member
-        foreign key (member_id) references member (id);
-
-alter table cart_item
-    add constraint fk_cart_item_to_product
-        foreign key (product_id) references product (id);
--- deprecated cart
-
 create table carts
 (
     id         bigint not null auto_increment,
@@ -88,14 +67,14 @@ alter table carts
 create table orders
 (
     id          bigint not null auto_increment,
-    customer_id bigint not null,
+    member_id bigint not null,
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
 
 alter table orders
     add constraint fk_orders_to_member
-        foreign key (customer_id) references customer (id);
+        foreign key (member_id) references member (id);
 
 create table orders_detail
 (

@@ -16,9 +16,11 @@ import woowacourse.auth.ui.AuthController;
 import woowacourse.member.application.MemberService;
 import woowacourse.member.ui.MemberController;
 import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.ui.CartControllerTest;
 import woowacourse.shoppingcart.ui.CartItemController;
+import woowacourse.shoppingcart.ui.OrderController;
 import woowacourse.shoppingcart.ui.ProductController;
 
 @Import(MockMvcConfig.class)
@@ -28,7 +30,8 @@ import woowacourse.shoppingcart.ui.ProductController;
         MemberController.class,
         AuthController.class,
         ProductController.class,
-        CartItemController.class
+        CartItemController.class,
+        OrderController.class
 })
 public abstract class RestDocsTest {
 
@@ -52,4 +55,7 @@ public abstract class RestDocsTest {
 
     @MockBean
     protected CartService cartService;
+
+    @MockBean
+    protected OrderService orderService;
 }

@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.helper.fixture.TMember.MARU;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
@@ -28,26 +29,24 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     private Long cartId1;
     private Long cartId2;
 
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-        jdbcTemplate.update("INSERT INTO customer (username) VALUES ('"+ USER +"')");
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, new CartRequest(productId1, 1));
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, new CartRequest(productId2, 1));
-    }
-
     @DisplayName("주문하기")
     @Test
     void addOrder() {
+        MARU.register();
+        MARU.login();
+        final String token = MARU.getToken();
+
+        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+
+        Long cartId1 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 1));
+        Long cartId2 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId2, 1));
+
         List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
-                .map(cartId -> new OrderRequest(cartId, 10))
+                .map(OrderRequest::new)
                 .collect(Collectors.toList());
 
-        ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
+        ExtractableResponse<Response> response = 주문하기_요청(token, orderRequests);
 
         주문하기_성공함(response);
     }
@@ -55,8 +54,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
 
@@ -68,8 +67,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void getOrder() {
         Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
-                new OrderRequest(cartId1, 2),
-                new OrderRequest(cartId2, 4)
+                new OrderRequest(cartId1),
+                new OrderRequest(cartId2)
         ));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
@@ -78,12 +77,13 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         주문_조회됨(response, orderId);
     }
 
-    public static ExtractableResponse<Response> 주문하기_요청(String userName, List<OrderRequest> orderRequests) {
+    public static ExtractableResponse<Response> 주문하기_요청(String token, List<OrderRequest> orderRequests) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(orderRequests)
-                .when().post("/api/customers/{customerName}/orders", userName)
+                .when().post("/api/members/me/orders")
                 .then().log().all()
                 .extract();
     }

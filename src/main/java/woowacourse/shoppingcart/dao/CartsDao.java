@@ -58,6 +58,16 @@ public class CartsDao {
         namedParameterJdbcTemplate.update(sql, parameter);
     }
 
+    public List<Carts> findCartsByIds(final List<Long> cartIds) {
+        String sql = "SELECT c.id, c.member_id, p.id as product_id, p.name, p.price, p.image_url, c.quantity FROM carts c "
+                + "LEFT JOIN product p "
+                + "ON c.product_id = p.id "
+                + "WHERE c.id IN(:ids)";
+        final SqlParameterSource parameter = new MapSqlParameterSource("ids", cartIds);
+
+        return namedParameterJdbcTemplate.query(sql, parameter, joinRowMapper());
+    }
+
     private RowMapper<Carts> joinRowMapper() {
         return (rs, rowNum) -> {
             final Long id = rs.getLong("id");

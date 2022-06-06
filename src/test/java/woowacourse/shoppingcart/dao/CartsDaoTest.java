@@ -10,6 +10,7 @@ import static woowacourse.helper.fixture.ProductFixture.PRODUCT_NAME;
 import static woowacourse.helper.fixture.ProductFixture.PRODUCT_PRICE;
 import static woowacourse.helper.fixture.ProductFixture.createProduct;
 
+import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,19 @@ public class CartsDaoTest {
 
         assertThat(cartsDao.findCartById(cartId)).usingRecursiveComparison()
                 .isEqualTo(new Carts(cartId, memberId, productDao.findProductById(productId), 1));
+    }
+
+    @DisplayName("여러 카트를 조회한다.")
+    @Test
+    void findCartsByIds() {
+        final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
+        final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
+        final Long productId2 = productDao.save(createProduct("초콜릿", 1000, "choco"));
+
+        final Long cartId = cartsDao.save(new Carts(memberId, productDao.findProductById(productId), 1));
+        final Long cartId2 = cartsDao.save(new Carts(memberId, productDao.findProductById(productId2), 1));
+
+        assertThat(cartsDao.findCartsByIds(List.of(cartId, cartId2))).hasSize(2);
     }
 
     @DisplayName("카트를 삭제한다.")
