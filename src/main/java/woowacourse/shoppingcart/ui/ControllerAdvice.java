@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.ui;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -19,8 +21,15 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+    private final Logger logger;
+
+    public ControllerAdvice() {
+        logger = LoggerFactory.getLogger(this.getClass());
+    }
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException() {
+    public ResponseEntity handleUnhandledException(RuntimeException e) {
+        logger.error(e.getMessage(), e);
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 

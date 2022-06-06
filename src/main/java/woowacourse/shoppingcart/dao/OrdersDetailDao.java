@@ -27,14 +27,6 @@ public class OrdersDetailDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long addOrdersDetail(final Long ordersId, final Long productId, final int quantity) {
-        final SqlParameterSource parameters = new MapSqlParameterSource("orders_id", ordersId)
-                .addValue("product_id", productId)
-                .addValue("quantity", quantity);
-
-        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
-    }
-
     public void addBatchOrderDetails(final List<OrderDetail> orderDetails) {
         simpleJdbcInsert.executeBatch(orderDetails.stream()
                 .map(this::createOrderDetailParameterSource)
@@ -48,19 +40,19 @@ public class OrdersDetailDao {
     }
 
     public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT o.id, o.order_id, p.id as product_id, p.name, p.price, p.image_url, o.quantity "
+        final String sql = "SELECT o.id, o.orders_id, p.id as product_id, p.name, p.price, p.image_url, o.quantity "
                 + "FROM orders_detail o "
                 + "LEFT JOIN product p "
                 + "ON o.product_id = p.id "
                 + "WHERE orders_id = :orderId";
-        final SqlParameterSource parameters = new MapSqlParameterSource("orders_id", orderId);
+        final SqlParameterSource parameters = new MapSqlParameterSource("orderId", orderId);
         return namedParameterJdbcTemplate.query(sql, parameters, rowMapper());
     }
 
     private RowMapper<OrderDetail> rowMapper() {
         return (rs, rowNum) -> {
             final long id = rs.getLong("id");
-            final long orderId = rs.getLong("order_id");
+            final long orderId = rs.getLong("orders_id");
             final long productId = rs.getLong("product_id");
             final String name = rs.getString("name");
             final int price = rs.getInt("price");

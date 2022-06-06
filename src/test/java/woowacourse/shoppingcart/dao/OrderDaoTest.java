@@ -10,45 +10,43 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import woowacourse.helper.fixture.MemberFixture;
+import woowacourse.member.dao.MemberDao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.helper.fixture.MemberFixture.EMAIL;
+import static woowacourse.helper.fixture.MemberFixture.NAME;
+import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
+import static woowacourse.helper.fixture.MemberFixture.createMember;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrderDaoTest {
 
     private final OrderDao orderDao;
+    private final MemberDao memberDao;
 
     public OrderDaoTest(DataSource dataSource) {
         this.orderDao = new OrderDao(dataSource);
+        this.memberDao = new MemberDao(dataSource);
     }
 
     @DisplayName("Order를 추가하는 기능")
     @Test
     void addOrders() {
-        //given
-        final Long customerId = 1L;
+        final Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        final Long orderId = orderDao.save(id);
 
-        //when
-        final Long orderId = orderDao.save(customerId);
-
-        //then
         assertThat(orderId).isNotNull();
     }
 
-    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
+    @DisplayName("Order가 해당 멤버의 주문인지 확인")
     @Test
-    void findOrderIdsByCustomerId() {
-        //given
-        final Long customerId = 1L;
+    void isValid() {
+        final Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        final Long orderId = orderDao.save(id);
 
-        //when
-        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
-
-        //then
-        assertThat(orderIdsByCustomerId).hasSize(2);
+        assertThat(orderDao.isValidOrderId(id, orderId)).isTrue();
     }
-
 }
