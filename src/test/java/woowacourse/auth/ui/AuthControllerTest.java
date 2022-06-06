@@ -12,10 +12,11 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.shoppingcart.config.RestDocsConfig;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.config.RestDocsConfig;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -34,6 +35,9 @@ class AuthControllerTest {
     @MockBean
     private AuthService authService;
 
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+
     @Autowired
     private MockMvc mvc;
 
@@ -46,6 +50,7 @@ class AuthControllerTest {
         TokenRequest request = new TokenRequest("giron", "a1A!qe213");
         TokenResponse response = new TokenResponse("mad@asdaj$sd1314.142@ask41a4.mjs3nzs@a");
 
+        given(jwtTokenProvider.createToken(any())).willReturn("accessToken");
         given(authService.login(any())).willReturn(response);
 
         ResultActions results = mvc.perform(post("/api/login")

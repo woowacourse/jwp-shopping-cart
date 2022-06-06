@@ -84,14 +84,9 @@ include::{snippets}/customer-delete-me/http-response.adoc[]
 include::{snippets}/customer-duplication-check-name/http-request.adoc[]
 include::{snippets}/customer-duplication-check-name/request-parameters.adoc[]
 
-요청 헤더
-
-include::{snippets}/customer-duplication-check-name/request-headers.adoc[]
-
 성공 응답 HTTP
 
 include::{snippets}/customer-duplication-check-name/http-response.adoc[]
-
 include::{snippets}/customer-duplication-check-name/response-fields.adoc[]
 
 

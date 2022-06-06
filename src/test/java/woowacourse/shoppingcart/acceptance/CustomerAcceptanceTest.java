@@ -165,7 +165,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("회원 가입할 때 유저 이름이 잘못된 경우 400-BAD_REQUEST를 반환한다.")
     @ParameterizedTest
-    @ValueSource(strings = {"a","", " ", "123456678zuduihsfnsdfda"})
+    @ValueSource(strings = {"a", "", " ", "123456678zuduihsfnsdfda"})
     @NullSource
     void signUpWithWrongUserName(String userName) {
 

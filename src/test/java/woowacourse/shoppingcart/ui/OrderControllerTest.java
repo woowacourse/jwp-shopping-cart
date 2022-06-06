@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
@@ -20,11 +22,14 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static woowacourse.fixture.TokenFixture.ACCESS_TOKEN;
+import static woowacourse.fixture.TokenFixture.BEARER;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,6 +44,9 @@ public class OrderControllerTest {
     @MockBean
     private OrderService orderService;
 
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+
     @DisplayName("CREATED와 Location을 반환한다.")
     @Test
     void addOrder() throws Exception {
@@ -52,11 +60,12 @@ public class OrderControllerTest {
                 Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         when(orderService.addOrder(any(), eq(customerName)))
                 .thenReturn(expectedOrderId);
-
         // when // then
         mockMvc.perform(post("/api/customers/" + customerName + "/orders")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(requestDtos))
@@ -77,11 +86,12 @@ public class OrderControllerTest {
         final Orders expected = new Orders(orderId,
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
 
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         when(orderService.findOrderById(customerName, orderId))
                 .thenReturn(expected);
-
         // when // then
         mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
@@ -103,12 +113,13 @@ public class OrderControllerTest {
                 new Orders(2L, Collections.singletonList(
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
-
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         when(orderService.findOrdersByCustomerName(customerName))
                 .thenReturn(expected);
 
         // when // then
         mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))

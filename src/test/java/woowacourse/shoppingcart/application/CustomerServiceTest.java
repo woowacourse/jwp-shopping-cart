@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
-import static woowacourse.fixture.PasswordFixture.ENCRYPTED_BASIC_PASSWORD;
+import static woowacourse.fixture.PasswordFixture.ORIGIN_USER_1_PASSWORD;
 import static woowacourse.fixture.PasswordFixture.RAW_BASIC_PASSWORD;
 
 @ExtendWith(MockitoExtension.class)
@@ -91,7 +91,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
+        Customer customer = new Customer(id, userName, ORIGIN_USER_1_PASSWORD);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
         // when
@@ -126,7 +126,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
+        Customer customer = new Customer(id, userName, ORIGIN_USER_1_PASSWORD);
         Customer updatedCustomer = new Customer(id, userName, "321");
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
         given(customerDao.update(id, userName, "321")).willReturn(updatedCustomer);
@@ -170,7 +170,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
+        Customer customer = new Customer(id, userName, ORIGIN_USER_1_PASSWORD);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
         // when
@@ -192,7 +192,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
+        Customer customer = new Customer(id, userName, ORIGIN_USER_1_PASSWORD);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
         doNothing().when(customerDao).deleteById(id);
 

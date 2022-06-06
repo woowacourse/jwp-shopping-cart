@@ -14,6 +14,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.config.RestDocsConfig;
 import woowacourse.shoppingcart.domain.Customer;
@@ -32,6 +33,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static woowacourse.fixture.TokenFixture.ACCESS_TOKEN;
+import static woowacourse.fixture.TokenFixture.BEARER;
 
 @DisplayName("유저 API 문서화")
 @AutoConfigureRestDocs
@@ -43,6 +46,8 @@ class CustomerControllerTest {
     private CustomerService customerService;
     @MockBean
     private AuthService authService;
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
     @Autowired
     private MockMvc mvc;
     @Autowired
@@ -82,10 +87,11 @@ class CustomerControllerTest {
         CustomerResponse response = new CustomerResponse(customer);
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         given(customerService.getMeById(any())).willReturn(response);
 
         ResultActions results = mvc.perform(get("/api/customers/me")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
 
@@ -111,10 +117,11 @@ class CustomerControllerTest {
                 new CustomerRequest.UserNameAndPassword("giron", "updatePa!sD@");
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         given(customerService.updateById(any(), any())).willReturn(response);
 
         ResultActions results = mvc.perform(put("/api/customers/me")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(request)));
@@ -141,10 +148,11 @@ class CustomerControllerTest {
         Customer customer = new Customer(1L, "giron", "paA@14sswordd");
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         willDoNothing().given(customerService).deleteById(any());
 
         ResultActions results = mvc.perform(delete("/api/customers/me")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
 
@@ -164,11 +172,11 @@ class CustomerControllerTest {
 
         DuplicateResponse response = new DuplicateResponse(false);
 
-        given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         given(customerService.isDuplicateUserName(any())).willReturn(response);
 
         ResultActions results = mvc.perform(get("/api/customers/duplication")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 .param("userName", "giron")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
