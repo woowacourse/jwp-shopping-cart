@@ -33,10 +33,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleInvalidRequest(final BindingResult bindingResult) {
-        final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        final FieldError mainError = fieldErrors.get(0);
-        return ResponseEntity.badRequest().body(mainError.getDefaultMessage());
+    public ResponseEntity<String> handleInvalidRequest(final MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest().body(getErrorMessage(e));
+    }
+
+    private String getErrorMessage(final MethodArgumentNotValidException e) {
+        final StringBuilder message = new StringBuilder();
+        for (final FieldError error : e.getFieldErrors()) {
+            message.append(error.getDefaultMessage()).append("\n");
+        }
+        return message.toString();
     }
 
     @ExceptionHandler({
