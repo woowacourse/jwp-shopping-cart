@@ -5,21 +5,52 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Objects;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import woowacourse.shoppingcart.Entity.CartEntity;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 
 public class Fixtures {
+
+    public static CustomerRequest 조조그린_요청 = new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!");
+    public static CustomerLoginRequest 조조그린_로그인_요청 = new CustomerLoginRequest("jo@naver.com", "1234abcd!");
+    public static Customer 헌치 = new Customer(1L, "hunch@gmail.com", "asdf1234@", "헌치");
     public static Product 치킨 = new Product(1L, "치킨", 10000, "http://example.com/chicken.jpg");
     public static Product 피자 = new Product(2L, "맥주", 20000, "http://example.com/beer.jpg");
 
+    public static final CartEntity 헌치_치킨 = new CartEntity(헌치.getId(),치킨.getId(),1);
+    public static final CartEntity 헌치_피자 = new CartEntity(헌치.getId(),피자.getId(),1);
+
+    public static Long 물품추가(NamedParameterJdbcTemplate namedParameterJdbcTemplate, Product product) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(
+                "INSERT INTO product (name, price, image_url) VALUES (:name, :price, :imageUrl)", new BeanPropertySqlParameterSource(product), keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public static  Long 사용자추가(NamedParameterJdbcTemplate namedParameterJdbcTemplate, Customer customer) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update("INSERT INTO customer (username, password, nickname, withdrawal) "
+                + "VALUES (:username, :password, :nickname, false)", new BeanPropertySqlParameterSource(customer), keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public static  Long 카트추가(NamedParameterJdbcTemplate namedParameterJdbcTemplate, CartEntity cart) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(
+                "INSERT INTO cart_item (customer_id, product_id, quantity) VALUES (:customerId, :productId, :quantity)", new BeanPropertySqlParameterSource(cart), keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
 
     public static ExtractableResponse<Response> 회원가입(final CustomerRequest customerRequest) {
         return RestAssured

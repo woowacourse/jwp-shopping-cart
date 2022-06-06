@@ -1,6 +1,12 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.Fixtures.로그인;
+import static woowacourse.Fixtures.조조그린_로그인_요청;
+import static woowacourse.Fixtures.조조그린_요청;
+import static woowacourse.Fixtures.치킨;
+import static woowacourse.Fixtures.피자;
+import static woowacourse.Fixtures.회원가입;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
 
 import io.restassured.RestAssured;
@@ -17,34 +23,36 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
-    private Long cartId1;
-    private Long cartId2;
+    private String 토큰;
+    private Long 치킨카트_아이디;
+    private Long 피자카트_아이디;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
+        회원가입(조조그린_요청);
+        토큰 = 로그인(조조그린_로그인_요청)
+                .as(CustomerLoginResponse.class)
+                .getAccessToken();
 
-        Long productId1 = 1L;
-        Long productId2 = 2L;
-
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        치킨카트_아이디 = 장바구니_아이템_추가되어_있음(토큰, 치킨.getId());
+        피자카트_아이디 = 장바구니_아이템_추가되어_있음(토큰, 피자.getId());
     }
 
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
+        List<OrderRequest> orderRequests = Stream.of(치킨카트_아이디, 피자카트_아이디)
                 .map(cartId -> new OrderRequest(cartId, 10))
                 .collect(Collectors.toList());
 
-        ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
+        ExtractableResponse<Response> response = 주문하기_요청(토큰, orderRequests);
 
         주문하기_성공함(response);
     }
@@ -52,10 +60,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(토큰, Collections.singletonList(new OrderRequest(치킨카트_아이디, 2)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(토큰, Collections.singletonList(new OrderRequest(피자카트_아이디, 5)));
 
-        ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
+        ExtractableResponse<Response> response = 주문_내역_조회_요청(토큰);
 
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, orderId1, orderId2);
@@ -64,12 +72,12 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 단일 조회")
     @Test
     void getOrder() {
-        Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
-                new OrderRequest(cartId1, 2),
-                new OrderRequest(cartId2, 4)
+        Long orderId = 주문하기_요청_성공되어_있음(토큰, Arrays.asList(
+                new OrderRequest(치킨카트_아이디, 2),
+                new OrderRequest(피자카트_아이디, 4)
         ));
 
-        ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
+        ExtractableResponse<Response> response = 주문_단일_조회_요청(토큰, orderId);
 
         주문_조회_응답됨(response);
         주문_조회됨(response, orderId);
