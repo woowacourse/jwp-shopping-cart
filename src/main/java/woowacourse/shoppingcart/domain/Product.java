@@ -1,23 +1,30 @@
 package woowacourse.shoppingcart.domain;
 
+import javax.validation.constraints.NotNull;
+import woowacourse.shoppingcart.dto.request.Request;
+
 public class Product {
+    @NotNull(groups = Request.id.class)
     private Long id;
+    @NotNull(groups = Request.allProperties.class)
     private String name;
+    @NotNull(groups = Request.allProperties.class)
     private Integer price;
-    private String imageUrl;
+    @NotNull(groups = Request.allProperties.class)
+    private String thumbnail;
 
     public Product() {
     }
 
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
+    public Product(final Long id, final String name, final int price, final String thumbnail) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.imageUrl = imageUrl;
+        this.thumbnail = thumbnail;
     }
 
-    public Product(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl);
+    public Product(final String name, final int price, final String thumbnail) {
+        this(null, name, price, thumbnail);
     }
 
     public String getName() {
@@ -28,8 +35,8 @@ public class Product {
         return price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
     public Long getId() {

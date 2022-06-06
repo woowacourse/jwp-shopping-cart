@@ -1,46 +1,103 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.acceptance.AcceptanceTest2;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-
+@SuppressWarnings("NonAsciiCharacters")
 @DisplayName("인증 관련 기능")
-public class AuthAcceptanceTest extends AcceptanceTest {
-    @DisplayName("Bearer Auth 로그인 성공")
-    @Test
-    void myInfoWithBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+class AuthAcceptanceTest extends AcceptanceTest2 {
 
-        // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+    private static final String USERNAME = "유효한_아이디!";
+    private static final String PASSWORD = "validPassword!@1";
+    private static final String WRONG_PASSWORD = "unvalidPassword!1";
 
-        // then
-        // 내 정보가 조회된다
+    @BeforeEach
+    void setup() {
+        회원가입_요청();
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
     @Test
-    void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
+    void 로그인_성공() {
+        TokenRequest 유효한_인증정보 = new TokenRequest(USERNAME, PASSWORD);
 
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+        ExtractableResponse<Response> response = 로그인_요청(유효한_인증정보);
 
-        // then
-        // 토큰 발급 요청이 거부된다
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+    void 로그인_실패() {
+        TokenRequest 잘못된_인증정보 = new TokenRequest(USERNAME, WRONG_PASSWORD);
 
-        // then
-        // 내 정보 조회 요청이 거부된다
+        ExtractableResponse<Response> response = 로그인_요청(잘못된_인증정보);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+
+    @Test
+    void 토큰이_유효한_경우_인가_성공() {
+        String 유효한_토큰 = 유효한_로그인_요청();
+
+        ExtractableResponse<Response> response = 내_정보_조회_요청(유효한_토큰);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    void 토큰이_유효하지_않은_경우_인가_실패() {
+        String 잘못된_토큰 = "안녕하세요.해커입니다.";
+
+        ExtractableResponse<Response> response = 내_정보_조회_요청(잘못된_토큰);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+
+    }
+
+    private void 회원가입_요청() {
+        SignUpRequest newCustomer = new SignUpRequest(USERNAME, PASSWORD, "닉네임", 15);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(newCustomer)
+                .when().post("/customers")
+                .then().log().all();
+    }
+
+    private String 유효한_로그인_요청() {
+        return 로그인_요청(new TokenRequest(USERNAME, PASSWORD))
+                .as(TokenResponse.class)
+                .getAccessToken();
+    }
+
+    private ExtractableResponse<Response> 로그인_요청(TokenRequest request) {
+        return RestAssured
+                .given().log().all()
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/login")
+                .then().log().all().extract();
+    }
+
+    private ExtractableResponse<Response> 내_정보_조회_요청(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/me")
+                .then().log().all()
+                .extract();
     }
 }

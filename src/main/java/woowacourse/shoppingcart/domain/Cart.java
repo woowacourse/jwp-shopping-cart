@@ -6,21 +6,21 @@ public class Cart {
     private Long productId;
     private String name;
     private int price;
-    private String imageUrl;
+    private String thumbnail;
 
     public Cart() {
     }
 
     public Cart(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        this(id, product.getId(), product.getName(), product.getPrice(), product.getThumbnail());
     }
 
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
+    public Cart(final Long id, final Long productId, final String name, final int price, final String thumbnail) {
         this.id = id;
         this.productId = productId;
         this.name = name;
         this.price = price;
-        this.imageUrl = imageUrl;
+        this.thumbnail = thumbnail;
     }
 
     public Long getId() {
@@ -39,7 +39,7 @@ public class Cart {
         return price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getThumbnail() {
+        return thumbnail;
     }
 }

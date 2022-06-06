@@ -1,13 +1,19 @@
 package woowacourse.auth.support;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
+import woowacourse.auth.exception.AuthorizationException;
 
 @Component
 public class JwtTokenProvider {
+
     @Value("${security.jwt.token.secret-key}")
     private String secretKey;
     @Value("${security.jwt.token.expire-length}")
@@ -22,22 +28,31 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(toKey())
                 .compact();
     }
 
     public String getPayload(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public boolean validateToken(String token) {
+        Claims claims;
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-
-            return !claims.getBody().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(toKey())
+                    .build()
+                    .parseClaimsJws(token).getBody();
+            validateExpiration(claims);
+            return claims.getSubject();
+        } catch (JwtException e) {
+            throw new AuthorizationException("권한이 없습니다.");
         }
     }
-}
 
+    private void validateExpiration(Claims claims) {
+        if (claims.getExpiration().before(new Date())) {
+            throw new AuthorizationException("다시 로그인해주세요.");
+        }
+    }
+
+    private SecretKey toKey() {
+        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+    }
+}
