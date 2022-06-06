@@ -53,8 +53,8 @@
 - [ ] RestDocs 적용
 
 ## 2단계 요구사항
-- [ ] DAO 레거시 코드 리팩토링
-  - [ ] jdbcTemplate 변경
+- [x] DAO 레거시 코드 리팩토링
+  - [x] jdbcTemplate 변경
 
 ### 상품
 - [ ] 단일 조회 (GET, /products/{productId})
