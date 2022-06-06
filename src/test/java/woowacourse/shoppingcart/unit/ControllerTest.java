@@ -10,6 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.shoppingcart.auth.application.AuthService;
 import woowacourse.shoppingcart.auth.ui.AuthController;
+import woowacourse.shoppingcart.cart.application.CartService;
+import woowacourse.shoppingcart.cart.ui.CartItemController;
 import woowacourse.shoppingcart.customer.application.CustomerService;
 import woowacourse.shoppingcart.customer.ui.CustomerController;
 import woowacourse.shoppingcart.customer.domain.Customer;
@@ -17,7 +19,8 @@ import woowacourse.shoppingcart.support.JwtTokenProvider;
 
 @WebMvcTest({
         AuthController.class,
-        CustomerController.class
+        CustomerController.class,
+        CartItemController.class
 })
 @AutoConfigureRestDocs
 public abstract class ControllerTest {
@@ -29,6 +32,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected CustomerService customerService;
+
+    @MockBean
+    protected CartService cartService;
 
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;
