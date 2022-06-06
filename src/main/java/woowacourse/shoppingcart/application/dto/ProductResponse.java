@@ -21,7 +21,7 @@ public class ProductResponse {
                 product.getId(),
                 product.getName().getValue(),
                 product.getPrice().getValue(),
-                product.getImageUrl()
+                product.getImageUrl().getValue()
         );
     }
 

@@ -25,7 +25,7 @@ public class ProductEntity {
                 product.getId(),
                 product.getName().getValue(),
                 product.getPrice().getValue(),
-                product.getImageUrl()
+                product.getImageUrl().getValue()
         );
     }
 

@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain.product;
 
+import woowacourse.shoppingcart.domain.product.vo.ImageUrl;
 import woowacourse.shoppingcart.domain.product.vo.Name;
 import woowacourse.shoppingcart.domain.product.vo.Price;
 
@@ -8,7 +9,7 @@ public class Product {
     private Long id;
     private Name name;
     private Price price;
-    private String imageUrl;
+    private ImageUrl imageUrl;
 
     public Product() {
     }
@@ -17,7 +18,7 @@ public class Product {
         this.id = id;
         this.name = new Name(name);
         this.price = new Price(price);
-        this.imageUrl = imageUrl;
+        this.imageUrl = new ImageUrl(imageUrl);
     }
 
     public Product(final String name, final int price, final String imageUrl) {
@@ -32,7 +33,7 @@ public class Product {
         return price;
     }
 
-    public String getImageUrl() {
+    public ImageUrl getImageUrl() {
         return imageUrl;
     }
 
