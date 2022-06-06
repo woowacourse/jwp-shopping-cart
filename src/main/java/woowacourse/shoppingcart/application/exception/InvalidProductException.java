@@ -1,6 +1,6 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.application.exception;
 
-public class InvalidProductException extends RuntimeException {
+public final class InvalidProductException extends ValidatedException {
     public InvalidProductException() {
         this("올바르지 않은 사용자 이름이거나 상품 아이디 입니다.");
     }

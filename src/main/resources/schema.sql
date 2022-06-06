@@ -12,6 +12,7 @@ create table customer
 (
     id       bigint       not null auto_increment,
     username varchar(255) not null,
+    password varchar(255) not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -37,7 +38,8 @@ create table cart_item
 
 alter table cart_item
     add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references customer (id);
+        foreign key (customer_id) references customer (id)
+            on delete cascade;
 
 alter table cart_item
     add constraint fk_cart_item_to_product
@@ -52,7 +54,8 @@ create table orders
 
 alter table orders
     add constraint fk_orders_to_customer
-        foreign key (customer_id) references customer (id);
+        foreign key (customer_id) references customer (id)
+            on delete cascade;
 
 create table orders_detail
 (

@@ -1,0 +1,23 @@
+= 기론의 애플리케이션 API 문서 (Auth)
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:snippets: ../../../build/generated-snippets
+
+= Auth
+---
+== 기본 API
+
+=== 토큰 발급
+
+`POST /api/login`
+
+요청 HTTP
+include::{snippets}/customer-login/http-request.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/customer-login/http-response.adoc[]
+include::{snippets}/customer-login/response-fields.adoc[]
