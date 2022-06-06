@@ -13,7 +13,12 @@ public class ProductTest {
     @DisplayName("이름이 비었다면 예외 발생")
     @Test
     void blankProductName_throwException() {
-        assertThatThrownBy(() -> new Product(" ", 1_000, 100, "product.png"))
+        assertThatThrownBy(() -> Product.builder()
+                .productName(" ")
+                .price(1_000)
+                .stock(100)
+                .imageUrl("coffee.png")
+                .build())
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("상품 이름은 비워둘 수 없습니다.");
     }
@@ -22,7 +27,12 @@ public class ProductTest {
     @ParameterizedTest
     @ValueSource(ints = {0, -100})
     void zeroOrNegativePrice_throwException(int price) {
-        assertThatThrownBy(() -> new Product("coffee", price, 100, "coffee.png"))
+        assertThatThrownBy(() -> Product.builder()
+                .productName("coffee")
+                .price(price)
+                .stock(100)
+                .imageUrl("coffee.png")
+                .build())
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("가격은 최소 1원이어야 합니다.");
     }
@@ -30,7 +40,12 @@ public class ProductTest {
     @DisplayName("재고가 음수라면 예외 발생")
     @Test
     void stockUnderZero_throwException() {
-        assertThatThrownBy(() -> new Product("coffee", 3_000, -1, "coffee.png"))
+        assertThatThrownBy(() -> Product.builder()
+                .productName("coffee")
+                .price(3_000)
+                .stock(-1)
+                .imageUrl("coffee.png")
+                .build())
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("재고는 음수가 될 수 없습니다.");
     }

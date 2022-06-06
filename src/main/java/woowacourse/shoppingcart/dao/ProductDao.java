@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.product.Product;
@@ -14,6 +15,16 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Product> productRowMapper = ((rs, rowNum) ->
+            Product.builder()
+                    .id(rs.getLong("id"))
+                    .productName(rs.getString("name"))
+                    .price(rs.getInt("price"))
+                    .stock(rs.getInt("stock"))
+                    .imageUrl(rs.getString("image_url"))
+                    .build()
+    );
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -37,16 +48,8 @@ public class ProductDao {
 
     public Product findProductById(final Long productId) {
         try {
-            final String query = "SELECT name, price, stock, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"),
-                            resultSet.getInt("price"),
-                            resultSet.getInt("stock"),
-                            resultSet.getString("image_url")
-                    ), productId
-            );
+            final String query = "SELECT id, name, price, stock, image_url FROM product WHERE id = ?";
+            return jdbcTemplate.queryForObject(query, productRowMapper, productId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
         }
@@ -54,15 +57,7 @@ public class ProductDao {
 
     public List<Product> findProducts() {
         final String query = "SELECT id, name, price, stock, image_url FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getInt("stock"),
-                                resultSet.getString("image_url")
-                        ));
+        return jdbcTemplate.query(query, productRowMapper);
     }
 
     public void delete(final Long productId) {

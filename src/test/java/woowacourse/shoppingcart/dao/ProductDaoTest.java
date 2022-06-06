@@ -29,13 +29,15 @@ public class ProductDaoTest {
     @Test
     void save() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final int stock = 100;
-        final String imageUrl = "www.test.com";
+        Product product = Product.builder()
+                .productName("초콜렛")
+                .price(1_000)
+                .stock(100)
+                .imageUrl("www.test.com")
+                .build();
 
         // when
-        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
+        final Long productId = productDao.save(product);
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -45,18 +47,26 @@ public class ProductDaoTest {
     @Test
     void findProductById() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final int stock = 100;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, stock, imageUrl);
+        Product product = Product.builder()
+                .productName("초콜렛")
+                .price(1_000)
+                .stock(100)
+                .imageUrl("www.test.com")
+                .build();
+        final Long productId = productDao.save(product);
+        final Product expectedProduct = Product.builder()
+                .id(productId)
+                .productName("초콜렛")
+                .price(1_000)
+                .stock(100)
+                .imageUrl("www.test.com")
+                .build();
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product result = productDao.findProductById(productId);
 
         // then
-        assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
+        assertThat(result).usingRecursiveComparison().isEqualTo(expectedProduct);
     }
 
     @DisplayName("상품 목록 조회")
@@ -77,12 +87,14 @@ public class ProductDaoTest {
     @Test
     void deleteProduct() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final int stock = 100;
-        final String imageUrl = "www.test.com";
+        Product product = Product.builder()
+                .productName("초콜렛")
+                .price(1_000)
+                .stock(100)
+                .imageUrl("www.test.com")
+                .build();
 
-        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
+        final Long productId = productDao.save(product);
         final int beforeSize = productDao.findProducts().size();
 
         // when
