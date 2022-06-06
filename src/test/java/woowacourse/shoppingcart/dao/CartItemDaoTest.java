@@ -77,8 +77,13 @@ class CartItemDaoTest {
 
     @DisplayName("장바구니에 담긴 상품의 수량을 변경한다.")
     @Test
-    void updateQuantityById() {
-        assertThatCode(() -> cartItemDao.updateQuantity(1L, 1L, 6))
-                .doesNotThrowAnyException();
+    void updateQuantity() {
+        cartItemDao.addCartItem(1L, 1L, 5);
+
+        cartItemDao.updateQuantity(1L, 1L, 6);
+        CartItem item = cartItemDao.findAll(1L)
+                .get(0);
+
+        assertThat(item.getQuantity()).isEqualTo(6);
     }
 }
