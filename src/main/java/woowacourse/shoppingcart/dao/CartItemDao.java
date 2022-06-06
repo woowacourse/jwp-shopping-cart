@@ -30,6 +30,11 @@ public class CartItemDao {
         return keyHolder.getKey().longValue();
     }
 
+    public boolean existProduct(Long productId) {
+        final String query = "SELECT EXISTS(SELECT * FROM cart_item WHERE product_id = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, productId);
+    }
+
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
 

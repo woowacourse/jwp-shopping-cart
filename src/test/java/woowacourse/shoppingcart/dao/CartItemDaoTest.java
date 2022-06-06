@@ -49,6 +49,19 @@ public class CartItemDaoTest {
         assertThat(cartId).isEqualTo(3L);
     }
 
+    @DisplayName("장바구니에 상품이 존재하는지 확인한다.")
+    @Test
+    void existProduct_exist_true() {
+        // given
+        Long productId = 1L;
+
+        // when
+        boolean isExist = cartItemDao.existProduct(productId);
+
+        // then
+        assertThat(isExist).isTrue();
+    }
+
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
