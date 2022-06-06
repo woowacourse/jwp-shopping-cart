@@ -35,7 +35,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         // TODO: 유효한 로그인인 경우 로그인한 사용자 객체를 만들어서 응답하기
         final String accessToken = AuthorizationExtractor.extract(
                 Objects.requireNonNull(webRequest.getHeader(AuthorizationExtractor.AUTHORIZATION)));
-        jwtTokenProvider.validateToken(accessToken);
+//        jwtTokenProvider.validateToken(accessToken);
         final ObjectMapper objectMapper = new JsonMapper();
         return objectMapper.readValue(jwtTokenProvider.getPayload(accessToken), EmailDto.class);
     }
