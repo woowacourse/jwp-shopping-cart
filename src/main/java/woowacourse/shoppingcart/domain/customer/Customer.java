@@ -44,10 +44,10 @@ public class Customer {
                 new Address(address), phoneNumber);
     }
 
-    public Customer(Long id, String account, String nickname, EncryptPassword password,
-            String address, PhoneNumber phoneNumber) {
-        this(id, new Account(account), new Nickname(nickname), password, new Address(address),
-                phoneNumber);
+    public void update(Nickname nickname, Address address, PhoneNumber phoneNumber) {
+        this.nickname = nickname;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
     }
 
     public Long getId() {
@@ -72,11 +72,5 @@ public class Customer {
 
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
-    }
-
-    public void update(Nickname nickname, Address address, PhoneNumber phoneNumber) {
-        this.nickname = nickname;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
     }
 }

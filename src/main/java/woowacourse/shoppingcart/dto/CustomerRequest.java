@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.customer.Customer;
-
 public class CustomerRequest {
 
     private String account;
