@@ -2,7 +2,8 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import java.util.Objects;
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.Optional;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,8 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.entity.ProductEntity;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.dao.entity.ProductEntity;
 
 @Repository
 public class ProductDao {
@@ -38,14 +38,11 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public ProductEntity findProductById(final Long productId) {
-        try {
-            final String query = "SELECT id, name, price, image_url FROM product WHERE id = :productId";
-            SqlParameterSource source = new MapSqlParameterSource("productId", productId);
-            return jdbcTemplate.queryForObject(query, source, ROW_MAPPER);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
-        }
+    public Optional<ProductEntity> findProductById(final Long productId) {
+        final String query = "SELECT id, name, price, image_url FROM product WHERE id = :productId";
+        SqlParameterSource source = new MapSqlParameterSource("productId", productId);
+        ProductEntity result = DataAccessUtils.singleResult(jdbcTemplate.query(query, source, ROW_MAPPER));
+        return Optional.ofNullable(result);
     }
 
     public List<ProductEntity> findProducts() {

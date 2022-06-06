@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.entity.ProductEntity;
+import woowacourse.shoppingcart.application.dto.ProductResponse;
+import woowacourse.shoppingcart.dao.entity.ProductEntity;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -31,8 +32,13 @@ public class ProductService {
     }
 
     public ProductResponse findProductById(final Long productId) {
-        ProductEntity productEntity = productDao.findProductById(productId);
+        ProductEntity productEntity = getProductEntity(productId);
         return ProductResponse.from(productEntity.toProduct());
+    }
+
+    private ProductEntity getProductEntity(Long productId) {
+        return productDao.findProductById(productId)
+                .orElseThrow(InvalidCustomerException::new);
     }
 
     public void deleteProductById(final Long productId) {

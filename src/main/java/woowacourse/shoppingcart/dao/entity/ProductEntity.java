@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.entity;
+package woowacourse.shoppingcart.dao.entity;
 
 import woowacourse.shoppingcart.domain.Product;
 

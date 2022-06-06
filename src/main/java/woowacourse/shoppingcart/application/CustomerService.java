@@ -5,12 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.common.exception.UnauthorizedException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.PhoneNumberRequest;
-import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.ui.dto.CustomerRequest;
+import woowacourse.shoppingcart.application.dto.CustomerResponse;
+import woowacourse.shoppingcart.ui.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.ui.dto.PasswordRequest;
+import woowacourse.shoppingcart.ui.dto.PhoneNumberRequest;
+import woowacourse.shoppingcart.dao.entity.CustomerEntity;
 import woowacourse.shoppingcart.exception.DuplicatedCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 

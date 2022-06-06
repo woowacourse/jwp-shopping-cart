@@ -1,6 +1,4 @@
-package woowacourse.shoppingcart.dto;
-
-import woowacourse.shoppingcart.domain.customer.Customer;
+package woowacourse.shoppingcart.ui.dto;
 
 public class CustomerUpdateRequest {
 
