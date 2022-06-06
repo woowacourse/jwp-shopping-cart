@@ -1,45 +1,27 @@
 package woowacourse.shoppingcart.domain;
 
 public class Cart {
+    private final CartItem cartItem;
+    private final int quantity;
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
-
-    public Cart() {
+    public Cart(CartItem cartItem, int quantity) {
+        this.cartItem = cartItem;
+        this.quantity = quantity;
     }
 
-    public Cart(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getThumbnail());
+    public static Cart of(Long id, String name, int price, String thumbnail, int quantity) {
+        return new Cart(CartItem.of(id, name, price, thumbnail), quantity);
     }
 
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public CartItem getCartItem() {
+        return cartItem;
     }
 
-    public Long getId() {
-        return id;
+    public Product getProduct() {
+        return cartItem.getProduct();
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    public int getQuantity() {
+        return quantity;
     }
 }

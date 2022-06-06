@@ -1,10 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -12,50 +13,73 @@ import java.util.List;
 
 @Repository
 public class CartItemDao {
+    private static final int DEFAULT_ADD_ITEM_QUANTITY = 1;
+
+    private static final RowMapper<Cart> CART_ROW_MAPPER = (resultSet, rowNum) -> Cart.of(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getInt("price"),
+            resultSet.getString("thumbnail"),
+            resultSet.getInt("quantity")
+    );
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public List<Cart> findCartsByCustomerId(final Long customerId) {
+        final String sql = "SELECT product.id as id, " +
+                "product.name as name, " +
+                "product.price as price, " +
+                "product.thumbnail as thumbnail, " +
+                "cart_item.quantity as quantity " +
+                "FROM cart_item " +
+                "INNER JOIN product " +
+                "ON cart_item.product_id = product.id " +
+                "WHERE cart_item.customer_id = ?";
+
+        return jdbcTemplate.query(sql, CART_ROW_MAPPER, customerId);
+    }
+
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
-
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    }
-
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
-
     public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setLong(1, customerId);
             preparedStatement.setLong(2, productId);
+            preparedStatement.setInt(3, DEFAULT_ADD_ITEM_QUANTITY);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteCartItem(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
+    public void updateCartItemQuantity(final int quantity, final Long productId, final Long customerId) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE product_id = ? and customer_id = ?";
+        jdbcTemplate.update(sql, quantity, productId, customerId);
+    }
 
-        final int rowCount = jdbcTemplate.update(sql, id);
+    public void deleteCartItem(final Long productId, final Long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE product_id = ? and customer_id = ?";
+
+        final int rowCount = jdbcTemplate.update(sql, productId, customerId);
+        if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public void deleteCartByCustomerId(final Long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
+
+        final int rowCount = jdbcTemplate.update(sql, customerId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
