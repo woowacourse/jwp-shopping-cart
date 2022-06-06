@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.ui.dto;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Min;
 
 public class FindCustomerRequest {
 
-    @NotEmpty(message = "이름은 비어있을 수 없습니다.")
+    @Min(0)
     private final Long id;
 
     public FindCustomerRequest(Long id) {

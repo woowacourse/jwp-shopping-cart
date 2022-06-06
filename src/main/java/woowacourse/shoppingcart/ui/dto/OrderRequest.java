@@ -7,14 +7,15 @@ public class OrderRequest {
 
     @NotNull
     private final Long cartId;
-    @Min(value = 0, message = "수량은 0 미만이 될 수 없습니다.")
-    private final int quantity;
 
-    public OrderRequest() {
-        this(1L, 10);
+    @Min(value = 0, message = "수량은 0 미만이 될 수 없습니다.")
+    private final Integer quantity;
+
+    private OrderRequest() {
+        this(null, null);
     }
 
-    public OrderRequest(final Long cartId, final int quantity) {
+    public OrderRequest(final Long cartId, final Integer quantity) {
         this.cartId = cartId;
         this.quantity = quantity;
     }
