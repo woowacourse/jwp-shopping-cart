@@ -56,7 +56,7 @@ public class CustomerDaoTest {
         assertAll(
                 () -> assertThat(customer.getUserId()).isEqualTo("puterism@woowacourse.com"),
                 () -> assertThat(customer.getNickname()).isEqualTo("nickname"),
-                () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
+                () -> assertThat(customer.getPassword()).isEqualTo("1338ad00357397e37ec3990310efd04f767ab485fa8e69f2d06df186f9327372")
         );
     }
 
@@ -70,7 +70,7 @@ public class CustomerDaoTest {
         assertAll(
                 () -> assertThat(customer.getUserId()).isEqualTo("puterism@woowacourse.com"),
                 () -> assertThat(customer.getNickname()).isEqualTo("nickname"),
-                () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
+                () -> assertThat(customer.getPassword()).isEqualTo("1338ad00357397e37ec3990310efd04f767ab485fa8e69f2d06df186f9327372")
         );
     }
 

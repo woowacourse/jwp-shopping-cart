@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Encryption.EncryptionStrategy;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdateRequest;
@@ -19,16 +20,18 @@ import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataE
 public class CustomerService {
 
     private final CustomerDao customerDao;
+    private final EncryptionStrategy encryptionStrategy;
 
-    public CustomerService(final CustomerDao customerDao) {
+    public CustomerService(final CustomerDao customerDao, final EncryptionStrategy encryptionStrategy) {
         this.customerDao = customerDao;
+        this.encryptionStrategy = encryptionStrategy;
     }
 
     @Transactional
     public Long signUp(final SignUpRequest signUpRequest) {
         Customer customer = signUpRequest.toEntity();
         validateCustomer(customer);
-        return customerDao.save(customer);
+        return customerDao.save(encryptionStrategy.encrypt(customer));
     }
 
     public CustomerResponse login(final LoginRequest loginRequest) {
@@ -92,7 +95,7 @@ public class CustomerService {
     }
 
     private Customer createCustomerForUpdate(final CustomerUpdateRequest customerUpdateRequest, final Customer customer) {
-        return Customer.from(customer.getId(), customer.getUserId(),
+        return Customer.getEncrypted(customer.getId(), customer.getUserId(),
                 customerUpdateRequest.getNickname(), customer.getPassword());
     }
 

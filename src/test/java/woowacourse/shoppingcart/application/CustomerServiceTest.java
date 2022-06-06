@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +16,7 @@ import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRe
 import woowacourse.shoppingcart.application.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.request.LoginRequest;
 import woowacourse.shoppingcart.application.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.domain.Encryption.EncryptionStrategy;
 import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
@@ -37,11 +37,14 @@ class CustomerServiceTest {
     @Autowired
     private CustomerDao customerDao;
 
+    @Autowired
+    private EncryptionStrategy encryptionStrategy;
+
     private CustomerService customerService;
 
     @BeforeEach
     void setUp() {
-        customerService = new CustomerService(customerDao);
+        customerService = new CustomerService(customerDao, encryptionStrategy);
     }
 
     @DisplayName("아이디에 null 을 입력하면 예외가 발생한다.")
