@@ -123,11 +123,14 @@
     - 상품 전체 조회
     - 상품 추가
     - 상품 삭제
+    - [x] product 테이블에 deleted (판매중인지) 칼럼 추가
+    - [ ] product 삭제 시 실제로 delete 하는 것이 아닌 deleted=true 로 수정
 - 장바구니(cartItem) 관련 기능
     - 장바구니 조회
     - 장바구니 추가
     - 장바구니 삭제
     - [ ] 장바구니 품목 수량 수정
+    - [ ] cartItem 테이블에 quantity 칼럼 추가
 - 주문(order) 관련 기능
     - 주문하기
     - 주문 단건 조회
@@ -136,16 +139,6 @@
 ### 레거시 리팩터링
 
 - [ ] dao에서 조회하는 값이 없느면 error를 반환하던 코드를 Optional을 반환하도록 수정
-- [ ] controller 중복 Path RequestMapping 으로 제거
-- [ ] cartItem 테이블에 quantity 칼럼 추가
-- [ ] product 테이블에 deleted (판매중인지) 칼럼 추가
-- [ ] 파라미터 final 제거
-- [ ] dto로 사용되고 있는 domain 패키지를 dto 패키지로 수정
-- [ ] domain 새로 만들기
 - [ ] PathVariable customerName 를 token 을 이용하도록 수정
-- api 명세 수정
-    - [ ] 팀 회의로 결정된 api 명세에 맞도록 path 수정
-    - [ ] 팀 회의로 결정된 api 명세에 맞도록 request, response 수정
-    - [ ] 팀 회의로 결정된 api 명세에 맞도록 예외처리 수정
 
 </details>

@@ -35,7 +35,7 @@ public class ProductDao {
 
     public Product findProductById(Long productId) {
         try {
-            String sql = "SELECT id, name, price, image_url FROM product WHERE id = :id";
+            String sql = "SELECT id, name, price, image_url, deleted FROM product WHERE id = :id";
             SqlParameterSource parameterSource = new MapSqlParameterSource("id", productId);
             return namedParameterJdbcTemplate.queryForObject(sql, parameterSource, mapToProduct());
         } catch (EmptyResultDataAccessException e) {
@@ -49,12 +49,12 @@ public class ProductDao {
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getInt("price"),
-                        resultSet.getString("image_url")
-                );
+                        resultSet.getString("image_url"),
+                        resultSet.getBoolean("deleted"));
     }
 
     public List<Product> findProducts() {
-        String sql = "SELECT id, name, price, image_url FROM product";
+        String sql = "SELECT id, name, price, image_url, deleted FROM product";
         return namedParameterJdbcTemplate.query(sql, mapToProduct());
     }
 
