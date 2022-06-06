@@ -7,9 +7,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 
@@ -21,26 +23,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrdersDetailDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
+    private final OrderDao orderDao;
+    private final ProductDao productDao;
+
     private long ordersId;
     private long productId;
-    private long customerId;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
+    public OrdersDetailDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.orderDao = new OrderDao(namedParameterJdbcTemplate);
+        this.ordersDetailDao = new OrdersDetailDao(namedParameterJdbcTemplate);
+        this.productDao = new ProductDao(namedParameterJdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
-        customerId = 1L;
-        jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
-        ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        long customerId = 1L;
+        ordersId = orderDao.addOrders(customerId);
 
-        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
-                , "name", 1000, "imageUrl");
-        productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        productId = productDao.save(new Product("name", 1000, "imageUrl"));
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")
@@ -63,9 +64,7 @@ class OrdersDetailDaoTest {
         //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
-            jdbcTemplate
-                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-                            ordersId, productId, 3);
+            ordersDetailDao.addOrdersDetail(ordersId, productId, 3);
         }
 
         //when

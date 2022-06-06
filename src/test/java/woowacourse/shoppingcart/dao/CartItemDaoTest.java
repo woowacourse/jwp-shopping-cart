@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
@@ -22,12 +23,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+    public CartItemDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        cartItemDao = new CartItemDao(namedParameterJdbcTemplate);
+        productDao = new ProductDao(namedParameterJdbcTemplate);
     }
 
     @BeforeEach
@@ -35,8 +34,8 @@ public class CartItemDaoTest {
         productDao.save(new Product("banana", 1_000, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        cartItemDao.addCartItem(1L, 1L);
+        cartItemDao.addCartItem(1L, 2L);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")

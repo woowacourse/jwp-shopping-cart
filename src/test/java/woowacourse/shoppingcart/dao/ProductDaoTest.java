@@ -6,11 +6,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,8 +24,8 @@ public class ProductDaoTest {
 
     private final ProductDao productDao;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+    public ProductDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.productDao = new ProductDao(namedParameterJdbcTemplate);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")
@@ -52,7 +54,10 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Optional<Product> wrapped = productDao.findProductById(productId);
+        assert(wrapped.isPresent());
+
+        final Product product = wrapped.get();
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);

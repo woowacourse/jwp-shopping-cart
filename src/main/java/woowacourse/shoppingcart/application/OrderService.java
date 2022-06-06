@@ -50,7 +50,7 @@ public class OrderService {
 
     public Orders findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+        return findOrdersById(orderId);
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
@@ -66,14 +66,14 @@ public class OrderService {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+                .map(orderId -> findOrdersById(orderId))
                 .collect(Collectors.toList());
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
+    private Orders findOrdersById(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
+            final Product product = productDao.findProductById(productQuantity.getProductId()).orElseThrow(IllegalArgumentException::new);
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }

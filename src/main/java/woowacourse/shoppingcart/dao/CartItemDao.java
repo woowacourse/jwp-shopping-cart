@@ -1,61 +1,84 @@
 package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CartItemDao {
-    private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public CartItemDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
+    public List<Long> findProductIdsByCustomerId(final long customerId) {
+        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = :customerId";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("customerId", customerId);
+
+        return namedParameterJdbcTemplate.query(
+                sql,
+                new MapSqlParameterSource(parameters),
+                (rs, rowNum) -> rs.getLong("product_id")
+        );
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
+    public List<Long> findIdsByCustomerId(final long customerId) {
+        final String sql = "SELECT id FROM cart_item WHERE customer_id = :customerId";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("customerId", customerId);
+
+        return namedParameterJdbcTemplate.query(
+                sql,
+                new MapSqlParameterSource(parameters),
+                (rs, rowNum) -> rs.getLong("id")
+        );
     }
 
-    public Long findProductIdById(final Long cartId) {
+    public Long findProductIdById(final long id) {
+        final String sql = "SELECT product_id FROM cart_item WHERE id = :id";
+
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", id);
+
         try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
+            return namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource(parameters), (rs, rowNum) -> rs.getLong("product_id"));
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
     }
 
     public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("customer_id", customerId);
+        parameters.put("product_id", productId);
+
+        final Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return number.longValue();
     }
 
     public void deleteCartItem(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
+        final String sql = "DELETE FROM cart_item WHERE id = :id";
 
-        final int rowCount = jdbcTemplate.update(sql, id);
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", id);
+
+        final int rowCount = namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(parameters));
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
