@@ -1,6 +1,7 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.domain.PasswordConvertor;
 import woowacourse.shoppingcart.exception.InvalidPasswordLengthException;
 
 public class Password {

@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.Password;
 
 public class CustomerPasswordUpdateRequest {
 
