@@ -59,19 +59,13 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Boolean existCustomerByUserId(final String userId) {
-        String query = "SELECT EXISTS (SELECT id FROM customer WHERE user_id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, userId);
-    }
-
-    public Boolean existCustomerByNickname(final String nickname) {
-        String query = "SELECT EXISTS (SELECT id FROM customer WHERE nickname = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, nickname);
-    }
-
-    public Boolean existCustomer(final String userId, final String password) {
-        String query = "SELECT EXISTS (SELECT id FROM customer WHERE user_id = ? and password = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, userId, password);
+    public Optional<Customer> findById(final Long id) {
+        String query = "SELECT id, user_id, nickname, password FROM customer WHERE id = ? and withdrawal = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, id, NOT_WITHDRAWAL));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public Optional<Customer> findByUserId(final String userId) {
@@ -83,10 +77,10 @@ public class CustomerDao {
         }
     }
 
-    public Optional<Customer> findById(final Long id) {
-        String query = "SELECT id, user_id, nickname, password FROM customer WHERE id = ? and withdrawal = ?";
+    public Optional<Customer> findByNickname(final String nickname) {
+        String query = "SELECT id, user_id, nickname, password FROM customer WHERE nickname = ? and withdrawal = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, id, NOT_WITHDRAWAL));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, nickname, NOT_WITHDRAWAL));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

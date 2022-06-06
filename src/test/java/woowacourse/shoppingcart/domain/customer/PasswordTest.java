@@ -6,6 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
+import woowacourse.shoppingcart.exception.datanotmatch.CustomerDataNotMatchException;
+import woowacourse.shoppingcart.exception.datanotmatch.LoginDataNotMatchException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -39,5 +41,29 @@ public class PasswordTest {
         assertThatThrownBy(() -> new Password(password))
                 .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
+    }
+
+    @DisplayName("로그인 시 비밀번호가 일치하지 않으면 예외가 발생한다.")
+    @Test
+    void validateMatchingLoginPassword() {
+        // given
+        Password password = new Password("1234asdf!");
+
+        // when & then
+        assertThatThrownBy(() -> password.validateMatchingLoginPassword("invalidPassword"))
+                .isInstanceOf(LoginDataNotMatchException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
+    }
+
+    @DisplayName("내 정보 조회 시 입력한 비밀번호가 기존 비밀번호와 일치하지 않으면 예외가 발생한다.")
+    @Test
+    void validateMatchingOriginalPassword() {
+        // given
+        Password password = new Password("1234asdf!");
+
+        // when & then
+        assertThatThrownBy(() -> password.validateMatchingOriginalPassword("invalidPassword"))
+                .isInstanceOf(CustomerDataNotMatchException.class)
+                .hasMessage("기존 비밀번호와 입력한 비밀번호가 일치하지 않습니다.");
     }
 }

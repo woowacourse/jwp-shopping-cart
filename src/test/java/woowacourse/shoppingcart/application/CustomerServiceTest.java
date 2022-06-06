@@ -21,6 +21,7 @@ import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
+import woowacourse.shoppingcart.exception.datanotmatch.LoginDataNotMatchException;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -180,17 +181,28 @@ class CustomerServiceTest {
                 .hasMessage("비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
     }
 
-    @ParameterizedTest
-    @CsvSource(value = {"asdf@woowacourse.com:1234asdf!", "puterism@woowacourse.com:12345asdf!"}, delimiter = ':')
-    @DisplayName("존재하지 않은 회원 정보로 로그인하면 예외가 발생한다.")
-    void loginNonExistentCustomerException(String userId, String password) {
+    @DisplayName("존재하지 않는 아이디로 로그인하면 예외가 발생한다.")
+    @Test
+    void loginNonExistentCustomerException() {
         // given
-        LoginRequest loginRequest = new LoginRequest(userId, password);
+        LoginRequest loginRequest = new LoginRequest("asdf@woowacourse.com", "1234asdf!");
 
         // when & then
         assertThatThrownBy(() -> customerService.login(loginRequest))
                 .isInstanceOf(LoginDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("틀린 비밀번호로 로그인하면 예외가 발생한다.")
+    @Test
+    void loginNotEqualsPasswordException() {
+        // given
+        LoginRequest loginRequest = new LoginRequest("puterism@woowacourse.com", "12345asdf!");
+
+        // when & then
+        assertThatThrownBy(() -> customerService.login(loginRequest))
+                .isInstanceOf(LoginDataNotMatchException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
     }
 
     @DisplayName("로그인한다.")

@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import woowacourse.shoppingcart.exception.datanotmatch.CustomerDataNotMatchException;
+import woowacourse.shoppingcart.exception.datanotmatch.LoginDataNotMatchException;
 import woowacourse.shoppingcart.ui.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.dataempty.DataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.DataFormatException;
@@ -30,7 +32,8 @@ public class ControllerAdvice {
             DuplicatedDataException.class,
             DataEmptyException.class,
             DataFormatException.class,
-            DataNotMatchException.class
+            DataNotMatchException.class,
+            CustomerDataNotMatchException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidData(final RuntimeException e) {
         return ResponseEntity.badRequest().body(ErrorResponse.from(e));
@@ -41,7 +44,10 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse.from(e));
     }
 
-    @ExceptionHandler(LoginDataNotFoundException.class)
+    @ExceptionHandler({
+            LoginDataNotFoundException.class,
+            LoginDataNotMatchException.class
+    })
     public ResponseEntity<ErrorResponse> handleLoginDataNotFound(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.from(e));
     }

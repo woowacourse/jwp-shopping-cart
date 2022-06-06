@@ -32,8 +32,8 @@ public class CustomerService {
     }
 
     public CustomerResponse login(final LoginRequest loginRequest) {
-        validateExistingCustomer(loginRequest.getUserId(), loginRequest.getPassword());
         Customer customer = findCustomerByUserId(loginRequest.getUserId());
+        customer.validateMatchingLoginPassword(loginRequest.getPassword());
         return CustomerResponse.from(customer);
     }
 
@@ -53,7 +53,7 @@ public class CustomerService {
     @Transactional
     public void updatePassword(final CustomerIdentificationRequest customerIdentificationRequest, final CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         Customer customer = findCustomerById(customerIdentificationRequest.getId());
-        customer.validateMatchPassword(customerUpdatePasswordRequest.getOldPassword());
+        customer.validateMatchingOriginalPassword(customerUpdatePasswordRequest.getOldPassword());
         Customer customerForUpdate = createCustomerForUpdatePassword(customerUpdatePasswordRequest, customer);
         customerDao.updatePassword(customerForUpdate.getId(), customerForUpdate.getPassword());
     }
@@ -80,20 +80,14 @@ public class CustomerService {
     }
 
     private void validateDuplicateUserId(final String userId) {
-        if (customerDao.existCustomerByUserId(userId)) {
+        if (customerDao.findByUserId(userId).isPresent()) {
             throw new CustomerDuplicatedDataException("이미 존재하는 아이디입니다.");
         }
     }
 
     private void validateDuplicateNickname(final String nickname) {
-        if (customerDao.existCustomerByNickname(nickname)) {
+        if (customerDao.findByNickname(nickname).isPresent()) {
             throw new CustomerDuplicatedDataException("이미 존재하는 닉네임입니다.");
-        }
-    }
-
-    private void validateExistingCustomer(final String userId, final String password) {
-        if (!customerDao.existCustomer(userId, password)) {
-            throw new LoginDataNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 

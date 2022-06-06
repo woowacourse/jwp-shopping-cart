@@ -28,51 +28,7 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
-    @DisplayName("아이디가 존재하는지 확인한다.")
-    @Test
-    void existCustomerByUserId() {
-        // when
-        boolean actual = customerDao.existCustomerByUserId("puterism@woowacourse.com");
-
-        // then
-        assertThat(actual).isEqualTo(true);
-    }
-
-    @DisplayName("닉네임이 존재하는지 확인한다.")
-    @Test
-    void existCustomerByNickname() {
-        // when
-        boolean actual = customerDao.existCustomerByNickname("nickname1");
-
-        // then
-        assertThat(actual).isEqualTo(true);
-    }
-
-    @DisplayName("로그인 정보가 존재하는지 확인한다.")
-    @Test
-    void existCustomer() {
-        // when
-        boolean actual = customerDao.existCustomer("puterism@woowacourse.com", "1234asdf!");
-
-        // then
-        assertThat(actual).isEqualTo(true);
-    }
-
-    @DisplayName("로그인 정보를 이용하여 사용자 정보를 조회한다,")
-    @Test
-    void findByUserId() {
-        // when
-        Customer customer = customerDao.findByUserId("puterism@woowacourse.com").get();
-
-        // then
-        assertAll(
-                () -> assertThat(customer.getUserId()).isEqualTo("puterism@woowacourse.com"),
-                () -> assertThat(customer.getNickname()).isEqualTo("nickname"),
-                () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
-        );
-    }
-
-    @DisplayName("회원 정보를 조회한다.")
+    @DisplayName("디비 ID 를 이용하여 회원 정보를 조회한다.")
     @Test
     void findById() {
         // given
@@ -86,6 +42,34 @@ public class CustomerDaoTest {
         assertAll(
                 () -> assertThat(customer.getUserId()).isEqualTo("test@woowacourse.com"),
                 () -> assertThat(customer.getNickname()).isEqualTo("test"),
+                () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
+        );
+    }
+
+    @DisplayName("사용자 ID 를 이용하여 회원 정보를 조회한다.")
+    @Test
+    void findByUserId() {
+        // when
+        Customer customer = customerDao.findByUserId("puterism@woowacourse.com").get();
+
+        // then
+        assertAll(
+                () -> assertThat(customer.getUserId()).isEqualTo("puterism@woowacourse.com"),
+                () -> assertThat(customer.getNickname()).isEqualTo("nickname"),
+                () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
+        );
+    }
+
+    @DisplayName("사용자 닉네임을 이용하여 회원 정보를 조회한다.")
+    @Test
+    void findByNickname() {
+        // when
+        Customer customer = customerDao.findByNickname("nickname").get();
+
+        // then
+        assertAll(
+                () -> assertThat(customer.getUserId()).isEqualTo("puterism@woowacourse.com"),
+                () -> assertThat(customer.getNickname()).isEqualTo("nickname"),
                 () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
         );
     }

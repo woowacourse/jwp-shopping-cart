@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
 import woowacourse.shoppingcart.exception.datanotmatch.CustomerDataNotMatchException;
+import woowacourse.shoppingcart.exception.datanotmatch.LoginDataNotMatchException;
 
 public class Password {
 
@@ -26,18 +27,24 @@ public class Password {
         }
     }
 
+    public void validateMatchingLoginPassword(final String other) {
+        if (!value.equals(other)) {
+            throw new LoginDataNotMatchException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    public void validateMatchingOriginalPassword(final String other) {
+        if (!value.equals(other)) {
+            throw new CustomerDataNotMatchException("기존 비밀번호와 입력한 비밀번호가 일치하지 않습니다.");
+        }
+    }
+
     private boolean isEmpty(final String value) {
         return value == null || value.isBlank();
     }
 
     private boolean isNotValidFormat(final String value) {
         return !PASSWORD_FORMAT.matcher(value).matches();
-    }
-
-    public void validateMatchPassword(final String other) {
-        if (!this.value.equals(other)) {
-            throw new CustomerDataNotMatchException("기존 비밀번호와 입력한 비밀번호가 일치하지 않습니다.");
-        }
     }
 
     public String getValue() {

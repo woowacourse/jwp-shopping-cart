@@ -125,7 +125,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("비밀번호가 틀리면 로그인이 401 에러가 발생한다.")
+    @DisplayName("틀린 비밀번호로 로그인하면 401 에러가 발생한다.")
     @Test
     void loginInvalidPassword() {
         ExtractableResponse<Response> response = login("puterism@woowacourse.com", "invalidPassword");
@@ -133,7 +133,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
-                        "존재하지 않는 회원입니다.")
+                        "비밀번호가 일치하지 않습니다.")
         );
     }
 

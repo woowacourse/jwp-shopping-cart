@@ -14,8 +14,12 @@ public class Customer {
         this.password = new Password(password);
     }
 
-    public void validateMatchPassword(final String password) {
-        this.password.validateMatchPassword(password);
+    public void validateMatchingOriginalPassword(final String other) {
+        password.validateMatchingOriginalPassword(other);
+    }
+
+    public void validateMatchingLoginPassword(final String other) {
+        password.validateMatchingLoginPassword(other);
     }
 
     public Long getId() {
