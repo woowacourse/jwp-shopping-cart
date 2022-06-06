@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:import.sql")
+@Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class ProductDaoTest {
 

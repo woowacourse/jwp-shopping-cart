@@ -1,11 +1,5 @@
-drop table if exists orders_detail;
-
-drop table if exists orders;
-
 drop table if exists cart_item;
-
 drop table if exists product;
-
 drop table if exists member;
 
 create table member
@@ -15,7 +9,7 @@ create table member
     password varchar(30)  not null,
     nickname varchar(20)  not null,
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+);
 
 
 create table product
@@ -26,22 +20,19 @@ create table product
     quantity  integer      not null,
     image_url varchar(255),
     primary key (id)
-) engine=InnoDB default charset=utf8mb4;
---
--- create table cart_item
--- (
---     id         bigint not null auto_increment,
---     member_id  bigint not null,
---     product_id bigint not null,
---     primary key (id)
--- ) engine=InnoDB default charset=utf8mb4;
---
--- alter table cart_item
---     add constraint fk_cart_item_to_member foreign key (member_id) references member (id);
---
--- alter table cart_item
---     add constraint fk_cart_item_to_product foreign key (product_id) references product (id);
---
+);
+
+create table cart_item
+(
+    id         bigint  not null auto_increment,
+    member_id  bigint  not null,
+    product_id bigint  not null,
+    quantity   integer not null,
+    primary key (id),
+    foreign key (member_id) references member (id) ON DELETE CASCADE,
+    foreign key (product_id) references product (id) ON DELETE CASCADE
+);
+
 -- create table orders
 -- (
 --     id        bigint not null auto_increment,
