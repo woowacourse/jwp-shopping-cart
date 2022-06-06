@@ -10,7 +10,11 @@ public interface CartItemDao {
 
     boolean hasCartItem(Long cartId, int customerId);
 
+    boolean hasProduct(int customerId, Long productId);
+
+    boolean hasCart(Long cartItem, int customerId, Long productId);
+
     void deleteCartItem(Long cartId);
 
-    boolean haseProduct(int customerId, Long productId);
+    void updateCartItem(Long cartItemId, int customerId, Long productId, int quantity);
 }

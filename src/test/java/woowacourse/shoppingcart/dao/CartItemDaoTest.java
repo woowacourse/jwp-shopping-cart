@@ -10,7 +10,6 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -126,7 +125,7 @@ public class CartItemDaoTest {
         cartItemDao.addCartItem(customerId, productId1, 1);
 
         // when
-        boolean result = cartItemDao.haseProduct(customerId, productId1);
+        boolean result = cartItemDao.hasProduct(customerId, productId1);
 
         // then
         assertThat(result).isTrue();
@@ -141,9 +140,27 @@ public class CartItemDaoTest {
         cartItemDao.addCartItem(customerId, productId1, 1);
 
         // when
-        boolean result = cartItemDao.haseProduct(customerId, productId1 + 1);
+        boolean result = cartItemDao.hasProduct(customerId, productId1 + 1);
 
         // then
         assertThat(result).isFalse();
+    }
+
+    @DisplayName("장바구니 아이템을 수정한다.")
+    @Test
+    public void updateCartItem() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long cartItemId = cartItemDao.addCartItem(customerId, productId1, 1);
+
+        // when
+        cartItemDao.updateCartItem(cartItemId, customerId, productId1, 3);
+
+        final List<CartItemEntity> cartItemEntities = cartItemDao.findCartByCustomerId(customerId);
+
+        // then
+        assertThat(cartItemEntities).extracting("id", "customerId", "productId", "quantity")
+                .containsExactly(tuple(cartItemId, customerId, productId1, 3));
     }
 }

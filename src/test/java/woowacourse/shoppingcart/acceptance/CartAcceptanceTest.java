@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.createCustomer;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.getTokenResponse;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static woowacourse.shoppingcart.fixture.CartItemFixtures.CART_ITEM_UPDATE_REQUEST_1;
 import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_2;
@@ -28,6 +29,7 @@ import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemResponses;
+import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 import woowacourse.shoppingcart.dto.ProductExistenceResponse;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
@@ -93,6 +95,30 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    private ExtractableResponse<Response> 장바구니_아이템_수정_요청(Long cartItemId, String token,
+                                                         CartItemUpdateRequest cartItemUpdateRequest) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer" + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(cartItemUpdateRequest)
+                .when().put("/api/customers/cart/{cartItemId}", cartItemId)
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 장바구니_아이템_잘못된_수정_요청(Long cartId, String token,
+                                                             CartItemUpdateRequest cartItemUpdateRequest) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer" + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(cartItemUpdateRequest)
+                .when().put("/api/customers/cart/")
+                .then().log().all()
+                .extract();
+    }
+
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
@@ -101,6 +127,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private void 만료된_토큰으로_요청시_확인(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
+
     private void 유효하지_않은_토큰으로_요청시_확인(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 
@@ -153,9 +180,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.jsonPath().getObject(".", ProductExistenceResponse.class).getExists()).isTrue();
     }
 
-    private void 장바구니_아이템_확인_안됨(ExtractableResponse<Response> response) {
+    private void 장바구니__확인(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getObject(".", ProductExistenceResponse.class).getExists()).isFalse();
+    }
+
+    private void 장바구니_수정_확인(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void 장바구니_수정_실패_확인(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Override
@@ -273,6 +308,34 @@ public class CartAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = 장바구니_아이템_확인_요청(productId2, token);
 
         // then
-        장바구니_아이템_확인_안됨(response);
+        장바구니__확인(response);
+    }
+
+    @DisplayName("장바구니를 수정한다.")
+    @Test
+    public void updateCart() {
+        // given
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
+
+        // when
+        final ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(cartId, token, CART_ITEM_UPDATE_REQUEST_1);
+
+        // then
+        장바구니_수정_확인(response);
+    }
+
+    @DisplayName("잘못된 상품이 전달될 시 400 Bad Request")
+    @Test
+    public void updateCartByInvalidProduct() {
+        // given
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
+
+        // when
+        final CartItemUpdateRequest invalidCartItemUpdateRequest = new CartItemUpdateRequest(productId2, 99);
+
+        final ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(cartId, token, invalidCartItemUpdateRequest);
+
+        // then
+        장바구니_수정_실패_확인(response);
     }
 }

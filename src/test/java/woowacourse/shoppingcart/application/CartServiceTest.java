@@ -26,6 +26,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemResponses;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @JdbcTest
@@ -68,12 +69,8 @@ class CartServiceTest {
 
         // when
         final CartItemResponses cartResponses = cartService.findCartsByCustomerId(customerId);
-        final List<ProductResponse> productResponses = cartResponses.getCart()
-                .stream()
-                .map(CartItemResponse::getProductResponse).collect(
-                        Collectors.toList());
-        final List<Integer> quantities = cartResponses.getCart().stream().map(CartItemResponse::getQuantity)
-                .collect(Collectors.toList());
+        final List<ProductResponse> productResponses = getProductResponses(cartResponses);
+        final List<Integer> quantities = getQuantities(cartResponses);
         // then
         assertAll(
                 () -> assertThat(productResponses).extracting("name", "price", "imageUrl", "description", "stock")
@@ -129,11 +126,80 @@ class CartServiceTest {
         boolean result1 = cartService.hasProduct(customerId, productId1);
         boolean result2 = cartService.hasProduct(customerId, productId2);
 
-
         // then
         assertAll(
                 () -> assertThat(result1).isTrue(),
                 () -> assertThat(result2).isFalse()
         );
+    }
+
+    @DisplayName("장바구니를 수정한다.")
+    @Test
+    public void updateCartItem() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long cartItem1 = cartService.addCart(customerId, productId1, 3);
+        int newQuantity = 5;
+
+        // when
+        cartService.updateCartItem(cartItem1, customerId, productId1, newQuantity);
+
+        // then
+        final CartItemResponses cartResponses = cartService.findCartsByCustomerId(customerId);
+        final List<ProductResponse> productResponses = getProductResponses(cartResponses);
+        final List<Integer> quantities = getQuantities(cartResponses);
+        // then
+        assertAll(
+                () -> assertThat(productResponses).extracting("name", "price", "imageUrl", "description", "stock")
+                        .containsExactly(
+                                tuple(PRODUCT_1.getName(), PRODUCT_1.getPrice(),
+                                        PRODUCT_1.getImageUrl(), PRODUCT_1.getDescription(),
+                                        PRODUCT_1.getStock())
+                        ),
+                () -> assertThat(quantities).hasSize(1).containsExactly(newQuantity)
+        );
+    }
+
+    @DisplayName("장바구니에 없는 물건을 수정한다.")
+    @Test
+    public void updateCartItemByInvalidProductId() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long productId2 = productDao.save(PRODUCT_2);
+        final Long cartItem1 = cartService.addCart(customerId, productId1, 3);
+        int newQuantity = 5;
+
+        // when & then
+        assertThatThrownBy(() -> cartService.updateCartItem(cartItem1, customerId, productId2, newQuantity))
+                .isInstanceOf(InvalidCartItemException.class);
+    }
+
+    @DisplayName("장바구니 id와 일치하지 않는 customerId가 입력될 경우 예외를 발생한다.")
+    @Test
+    public void updateCartItemByInvalidCustomerId() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long productId2 = productDao.save(PRODUCT_2);
+        final Long cartItem1 = cartService.addCart(customerId, productId1, 3);
+        int newQuantity = 5;
+
+        // when & then
+        assertThatThrownBy(() -> cartService.updateCartItem(cartItem1, customerId + 1, productId2, newQuantity))
+                .isInstanceOf(InvalidCartItemException.class);
+    }
+
+    private List<Integer> getQuantities(CartItemResponses cartResponses) {
+        return cartResponses.getCart().stream().map(CartItemResponse::getQuantity)
+                .collect(Collectors.toList());
+    }
+
+    private List<ProductResponse> getProductResponses(CartItemResponses cartResponses) {
+        return cartResponses.getCart()
+                .stream()
+                .map(CartItemResponse::getProductResponse).collect(
+                        Collectors.toList());
     }
 }

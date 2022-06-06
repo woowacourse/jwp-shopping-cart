@@ -11,6 +11,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import woowacourse.auth.exception.ExpiredTokenException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailedException;
@@ -38,7 +40,11 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
-    @ExceptionHandler({NotFoundProductException.class, NotInCustomerCartItemException.class})
+    @ExceptionHandler({NoHandlerFoundException.class,
+            NotFoundProductException.class,
+            NotInCustomerCartItemException.class,
+            MethodArgumentTypeMismatchException.class
+    })
     public ResponseEntity<ErrorResponse> handleNotFoundException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);

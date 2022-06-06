@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemResponses;
 import woowacourse.shoppingcart.entity.CartItemEntity;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
@@ -53,6 +54,13 @@ public class CartService {
     }
 
     public boolean hasProduct(int customerId, Long productId) {
-        return cartItemDao.haseProduct(customerId, productId);
+        return cartItemDao.hasProduct(customerId, productId);
+    }
+
+    public void updateCartItem(Long cartItem, int customerId, Long productId, int quantity) {
+        if (!cartItemDao.hasCart(cartItem, customerId, productId)) {
+            throw new InvalidCartItemException();
+        }
+        cartItemDao.updateCartItem(cartItem, customerId, productId, quantity);
     }
 }
