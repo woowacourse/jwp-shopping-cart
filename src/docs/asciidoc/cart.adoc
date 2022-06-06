@@ -73,3 +73,43 @@ include::{snippets}/delete-cart-item/http-response.adoc[]
 ===== HTTP Response
 
 include::{snippets}/delete-cart-item-not-exist-item/http-response.adoc[]
+
+[[resources-cart-change-quantity]]
+=== 장바구니에 들어있는 상품 수량 변경
+
+==== HTTP Request
+
+include::{snippets}/change-quantity-success/http-request.adoc[]
+
+==== Request path variables
+
+include::{snippets}/change-quantity-success/path-parameters.adoc[]
+
+==== Request body
+
+include::{snippets}/change-quantity-success/request-fields.adoc[]
+
+[[resources-cart-change-quantity-success]]
+==== 성공
+
+===== HTTP Response
+
+include::{snippets}/change-quantity-success/http-response.adoc[]
+
+===== Response body
+
+include::{snippets}/change-quantity-success/response-fields.adoc[]
+
+[[resources-cart-change-quantity-invalid-quantity]]
+==== 실패 - 잘못된 수량으로 요청한 경우
+
+===== HTTP Response
+
+include::{snippets}/change-quantity-invalid-quantity/http-response.adoc[]
+
+[[resources-cart-change-quantity-not-exist-product]]
+==== 실패 - 장바구니에 존재하지 않는 상품의 수량을 수정한 경우
+
+===== HTTP Response
+
+include::{snippets}/change-quantity-not-exist-product/http-response.adoc[]
