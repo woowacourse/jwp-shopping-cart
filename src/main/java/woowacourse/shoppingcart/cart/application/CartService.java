@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
-import woowacourse.shoppingcart.customer.dao.CustomerDao;
-import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
-import woowacourse.shoppingcart.product.domain.Product;
-import woowacourse.shoppingcart.exception.badrequest.InvalidProductException;
+import woowacourse.shoppingcart.customer.dao.CustomerDao;
+import woowacourse.shoppingcart.customer.domain.Customer;
+import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
 import woowacourse.shoppingcart.exception.badrequest.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.product.application.ProductService;
+import woowacourse.shoppingcart.product.dao.ProductDao;
+import woowacourse.shoppingcart.product.domain.Product;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -19,11 +21,14 @@ public class CartService {
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
+    private final ProductService productService;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(CartItemDao cartItemDao, CustomerDao customerDao,
+                       ProductDao productDao, ProductService productService) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
+        this.productService = productService;
     }
 
     @Transactional(readOnly = true)
@@ -44,13 +49,13 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findInByNickname(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (final Exception e) {
-            throw new InvalidProductException();
+    public Long addCart(final Long productId, final Customer customer) {
+        productService.findProductById(productId);
+        final boolean existProduct = cartItemDao.existProduct(customer.getId(), productId);
+        if (existProduct) {
+            throw new DuplicateCartItemException();
         }
+        return cartItemDao.addCartItem(customer.getId(), productId);
     }
 
     public void deleteCart(final String customerName, final Long cartId) {

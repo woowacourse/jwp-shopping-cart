@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import woowacourse.shoppingcart.customer.application.CustomerService;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
+import woowacourse.shoppingcart.product.application.ProductService;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,6 +25,9 @@ public abstract class ServiceMockTest {
 
     @Mock
     protected CustomerService customerService;
+
+    @Mock
+    protected ProductService productService;
 
     @Mock
     protected JwtTokenProvider jwtTokenProvider;
