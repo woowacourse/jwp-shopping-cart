@@ -4,9 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.application.ProductFixture.바나나;
 import static woowacourse.shoppingcart.application.ProductFixture.사과;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +15,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Price;
-import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -97,14 +93,14 @@ public class CartItemDaoTest {
 
         // given
         final Long customerId = 1L;
-        final Long cartId = 1L;
         cartItemDao.addCartItem(customerId, bananaId);
+        cartItemDao.addCartItem(customerId, appleId);
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteCartItem(customerId, bananaId);
 
         // then
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
-        assertThat(productIds.size()).isEqualTo(0);
+        assertThat(productIds.size()).isEqualTo(1);
     }
 }

@@ -57,10 +57,11 @@ public class CartItemDao {
         return number.longValue();
     }
 
-    public int deleteCartItem(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = :id";
+    public int deleteCartItem(Long customerId, final Long productId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = :customerId AND product_id = :productId";
         final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("id", id);
+        parameters.put("customerId", customerId);
+        parameters.put("productId", productId);
         return namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(parameters));
     }
 }
