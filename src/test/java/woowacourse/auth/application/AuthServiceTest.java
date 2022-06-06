@@ -11,6 +11,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.domain.Customer;
 import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.domain.Token;
@@ -29,7 +30,10 @@ class AuthServiceTest {
     private static final String 유효한_아이디 = "username";
     private static final String 비밀번호 = "password1@";
     private static final EncryptedPassword 암호화된_비밀번호 = new Password(비밀번호).toEncrypted();
+    private static final String 유효한_닉네임 = "닉네임";
+    private static final int 유효한_나이 = 20;
     private static final User 유효한_사용자 = new User(유효한_아이디, 암호화된_비밀번호);
+    private final Customer 유효한_고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
 
     @Autowired
     private AuthService authService;
@@ -73,26 +77,26 @@ class AuthServiceTest {
         }
     }
 
-    @DisplayName("findUserByToken 메서드는 토큰에 담긴 정보에 해당되는 사용자를 찾아내 반환")
+    @DisplayName("findCustomerByToken 메서드는 토큰에 담긴 정보에 해당되는 고객을 찾아내 반환")
     @Nested
-    class FindUserByTokenTest {
+    class FindCustomerByTokenTest {
 
         @Test
-        void 토큰에_해당되는_사용자_정보_반환() {
-            databaseFixture.save(유효한_사용자);
+        void 토큰에_해당되는_고객_정보_반환() {
+            databaseFixture.save(유효한_고객);
             String accessToken = authService.createToken(new TokenRequest(유효한_아이디, 비밀번호)).getAccessToken();
 
-            User actual = authService.findUserByToken(accessToken);
+            Customer actual = authService.findCustomerByToken(accessToken);
 
-            assertThat(actual).isEqualTo(유효한_사용자);
+            assertThat(actual).isEqualTo(유효한_고객);
         }
 
         @Test
-        void 존재하지_않는_사용자에_대한_정보로_만들어진_토큰인_경우_예외발생() {
+        void 존재하지_않는_고객에_대한_정보로_만들어진_토큰인_경우_예외발생() {
             Token token = tokenService.generateToken("존재하지_않는_사용자_정보");
             String accessToken = token.getValue();
 
-            assertThatThrownBy(() -> authService.findUserByToken(accessToken))
+            assertThatThrownBy(() -> authService.findCustomerByToken(accessToken))
                     .isInstanceOf(AuthenticationException.class);
         }
     }

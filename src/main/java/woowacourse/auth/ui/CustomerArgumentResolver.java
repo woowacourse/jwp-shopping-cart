@@ -7,29 +7,29 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.domain.User;
 import woowacourse.auth.constant.RequestAttributes;
+import woowacourse.auth.domain.Customer;
 
-public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
+public class CustomerArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final AuthService authService;
 
-    public AuthArgumentResolver(AuthService authService) {
+    public CustomerArgumentResolver(AuthService authService) {
         this.authService = authService;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(User.class);
+        return parameter.getParameterType().equals(Customer.class);
     }
 
     @Override
-    public User resolveArgument(MethodParameter parameter,
+    public Customer resolveArgument(MethodParameter parameter,
                                 ModelAndViewContainer mavContainer,
                                 NativeWebRequest webRequest,
                                 WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = (String) request.getAttribute(RequestAttributes.TOKEN);
-        return authService.findUserByToken(token);
+        return authService.findCustomerByToken(token);
     }
 }

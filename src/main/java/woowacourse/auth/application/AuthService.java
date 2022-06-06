@@ -1,7 +1,9 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.dao.UserDao;
+import woowacourse.auth.domain.Customer;
 import woowacourse.auth.domain.Token;
 import woowacourse.auth.domain.User;
 import woowacourse.auth.dto.request.TokenRequest;
@@ -11,10 +13,12 @@ import woowacourse.common.exception.AuthenticationException;
 @Service
 public class AuthService {
 
+    private final CustomerDao customerDao;
     private final UserDao userDao;
     private final JwtTokenService tokenService;
 
-    public AuthService(UserDao userDao, JwtTokenService tokenService) {
+    public AuthService(CustomerDao customerDao, UserDao userDao, JwtTokenService tokenService) {
+        this.customerDao = customerDao;
         this.userDao = userDao;
         this.tokenService = tokenService;
     }
@@ -34,9 +38,9 @@ public class AuthService {
         return user;
     }
 
-    public User findUserByToken(String token) {
+    public Customer findCustomerByToken(String token) {
         String username = tokenService.extractPayload(new Token(token));
-        return userDao.findByUserName(username)
+        return customerDao.findByUserName(username)
                 .orElseThrow(AuthenticationException::ofInvalidToken);
     }
 }
