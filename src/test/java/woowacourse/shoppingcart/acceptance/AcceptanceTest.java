@@ -23,13 +23,13 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    private <T> RequestSpecification createBody(String token, T request) {
+    private static <T> RequestSpecification createBody(String token, T request) {
         return RestAssured.given().log().all()
                 .auth().oauth2(token)
                 .body(request);
     }
 
-    protected ValidatableResponse requestHttpGet(String token, String uri) {
+    public static ValidatableResponse requestHttpGet(String token, String uri) {
         return RestAssured.given().log().all()
                 .auth().oauth2(token)
                 .when()
@@ -37,7 +37,7 @@ public class AcceptanceTest {
                 .then().log().all();
     }
 
-    protected <T> ValidatableResponse requestHttpPost(String token, T request, String uri) {
+    public static <T> ValidatableResponse requestHttpPost(String token, T request, String uri) {
         return createBody(token, request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -45,7 +45,7 @@ public class AcceptanceTest {
                 .then().log().all();
     }
 
-    protected <T> ValidatableResponse requestHttpPut(String token, T request, String uri) {
+    public static <T> ValidatableResponse requestHttpPut(String token, T request, String uri) {
         return createBody(token, request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -53,7 +53,7 @@ public class AcceptanceTest {
                 .then().log().all();
     }
 
-    protected ValidatableResponse requestHttpDelete(String token, String uri) {
+    public static ValidatableResponse requestHttpDelete(String token, String uri) {
         return RestAssured.given().log().all()
                 .auth().oauth2(token)
                 .when()

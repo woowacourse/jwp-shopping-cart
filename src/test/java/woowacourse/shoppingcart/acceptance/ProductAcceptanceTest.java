@@ -7,15 +7,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.*;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
@@ -24,16 +30,46 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_추가됨(response);
     }
 
-    @DisplayName("상품 목록을 조회한다")
+    @DisplayName("상품 목록을 회원이 조회한다")
     @Test
-    void getProducts() {
+    void getProductsByMember() {
+        // given
+        회원_추가되어_있음();
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        장바구니_아이템_추가되어_있음("user", productId1);
 
-        ExtractableResponse<Response> response = 상품_목록_조회_요청();
+        String accessToken = 로그인_후_토큰_획득();
+
+        ExtractableResponse<Response> response = 상품_목록_조회_요청_회원(accessToken);
 
         조회_응답됨(response);
         상품_목록_포함됨(productId1, productId2, response);
+        장바구니에_추가되어_있는_상품만_추가여부가_true(response);
+    }
+
+    private void 회원_추가되어_있음() {
+        CustomerRequest customer = new CustomerRequest(
+                "email", "Pw123456!", "user", "010-1234-5678", "address");
+        requestHttpPost("", customer, "/customers");
+    }
+
+    private String 로그인_후_토큰_획득() {
+        return requestHttpPost("", new TokenRequest("email", "Pw123456!"), "/auth/login")
+                .extract().as(TokenResponse.class).getAccessToken();
+    }
+
+    @DisplayName("상품 목록을 비회원이 조회한다")
+    @Test
+    void getProductsByNonMember() {
+        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+
+        ExtractableResponse<Response> response = 상품_목록_조회_요청_비회원();
+
+        조회_응답됨(response);
+        상품_목록_포함됨(productId1, productId2, response);
+        장바구니_추가여부가_모두_false(response);
     }
 
     @DisplayName("상품을 조회한다")
@@ -59,41 +95,23 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
         Product productRequest = new Product(name, price, imageUrl);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when().post("/api/products")
-                .then().log().all()
-                .extract();
+        return requestHttpPost("", productRequest, "/api/products").extract();
     }
 
-    public static ExtractableResponse<Response> 상품_목록_조회_요청() {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
-                .then().log().all()
-                .extract();
+    public static ExtractableResponse<Response> 상품_목록_조회_요청_회원(String token) {
+        return requestHttpGet(token, "/api/products").extract();
+    }
+
+    public static ExtractableResponse<Response> 상품_목록_조회_요청_비회원() {
+        return requestHttpGet("", "/api/products").extract();
     }
 
     public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
+        return requestHttpGet("", "/api/products/" + productId).extract();
     }
 
     public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
+        return requestHttpDelete("", "/api/products/" + productId).extract();
     }
 
     public static void 상품_추가됨(ExtractableResponse<Response> response) {
@@ -111,10 +129,24 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
-                .map(Product::getId)
+        List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
+                .map(ProductResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
+    }
+
+    public static void 장바구니에_추가되어_있는_상품만_추가여부가_true(ExtractableResponse<Response> response) {
+        List<Boolean> result = response.jsonPath().getList(".", ProductResponse.class).stream()
+                .map(ProductResponse::getStored)
+                .collect(Collectors.toList());
+        assertThat(result).containsExactly(true, false);
+    }
+
+    public static void 장바구니_추가여부가_모두_false(ExtractableResponse<Response> response) {
+        List<Boolean> result = response.jsonPath().getList(".", ProductResponse.class).stream()
+                .map(ProductResponse::getStored)
+                .collect(Collectors.toList());
+        assertThat(result).containsExactly(false, false);
     }
 
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {

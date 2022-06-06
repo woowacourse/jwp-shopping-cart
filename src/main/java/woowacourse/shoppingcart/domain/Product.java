@@ -3,21 +3,21 @@ package woowacourse.shoppingcart.domain;
 public class Product {
     private Long id;
     private String name;
+    private String thumbnail;
     private Integer price;
-    private String imageUrl;
 
     public Product() {
     }
 
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
+    public Product(Long id, String name, int price, String thumbnail) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.imageUrl = imageUrl;
+        this.thumbnail = thumbnail;
     }
 
-    public Product(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl);
+    public Product(String name, int price, String thumbnail) {
+        this(null, name, price, thumbnail);
     }
 
     public String getName() {
@@ -28,8 +28,8 @@ public class Product {
         return price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
     public Long getId() {

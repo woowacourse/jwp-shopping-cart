@@ -28,7 +28,7 @@ public class ProductDao {
                     connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
+            preparedStatement.setString(3, product.getThumbnail());
             return preparedStatement;
         }, keyHolder);
 
