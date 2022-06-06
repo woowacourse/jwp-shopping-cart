@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.hasSize;
 
 import io.restassured.RestAssured;
@@ -20,8 +20,6 @@ import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
 
-    private final Long productId1 = 1L;
-
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(final String token, final Long productId) {
         final Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);
@@ -36,23 +34,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(final String token, final Long cartId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .when().delete("/customers/carts/{cartId}", cartId)
-                .then().log().all()
-                .extract();
-    }
-
     public static Long 장바구니_아이템_추가되어_있음(final String token, final Long productId) {
         final ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, productId);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
-    }
-
-    public static void 장바구니_삭제됨(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("장바구니 아이템 추가")
@@ -76,14 +60,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         postCartItem(new CartItemAdditionRequest(1L));
 
         // when
-        final ValidatableResponse response = RestAssured
-                .given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/users/me/carts")
-                .then().log().all();
+        final ValidatableResponse response = getCarts();
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -97,11 +74,26 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        final Long cartId = 장바구니_아이템_추가되어_있음(token, productId1);
+        // given
+        final long productId = 1L;
+        postCartItem(new CartItemAdditionRequest(productId));
 
-        final ExtractableResponse<Response> response = 장바구니_삭제_요청(token, cartId);
+        // when
+        final ValidatableResponse response = RestAssured
+                .given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/users/me/carts/{productId}", productId)
+                .then().log().all();
 
-        장바구니_삭제됨(response);
+        final ValidatableResponse cartItemsResponse = getCarts();
+
+        // then
+        response.statusCode(HttpStatus.NO_CONTENT.value());
+        cartItemsResponse.statusCode(HttpStatus.OK.value())
+                .body("products", emptyArray());
     }
 
     private ValidatableResponse postCartItem(CartItemAdditionRequest request) {
@@ -113,6 +105,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .body(request)
                 .when()
                 .post("/users/me/carts")
+                .then().log().all();
+    }
+
+    private ValidatableResponse getCarts() {
+        return RestAssured
+                .given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/users/me/carts")
                 .then().log().all();
     }
 }
