@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -16,9 +18,9 @@ public class CustomerDao {
     private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = (rs, rowNum) -> {
         return new Customer(
                 rs.getLong("id"),
-                rs.getString("email"),
+                new Email(rs.getString("email")),
                 rs.getString("name"),
-                rs.getString("password")
+                new Password(rs.getString("password"))
         );
     };
 
