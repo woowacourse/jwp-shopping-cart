@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.ui.product.dto.request.ProductRegisterRequest;
 class ProductAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> 상품_등록_요청(final String name, final int price, final String imageUrl) {
-        ProductRegisterRequest productRequest = new ProductRegisterRequest(name, price, imageUrl);
+        final ProductRegisterRequest productRequest = new ProductRegisterRequest(name, price, imageUrl);
 
         return RestAssured.given().log().all().contentType(MediaType.APPLICATION_JSON_VALUE).body(productRequest).when()
                 .post("/api/products").then().log().all().extract();
@@ -37,7 +37,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static Long 상품_등록되어_있음(final String name, final int price, final String imageUrl) {
-        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl);
+        final ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 
@@ -46,7 +46,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_조회됨(final ExtractableResponse<Response> response, final Long productId) {
-        Product resultProduct = response.as(Product.class);
+        final Product resultProduct = response.as(Product.class);
         assertThat(resultProduct.getId()).isEqualTo(productId);
     }
 
@@ -54,20 +54,20 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 추가한다.")
     void addProduct() {
         // given, when 상품을 등록하면
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
+        final ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
 
         // then 정상적으로 상품이 등록된다.
         상품_추가됨(response);
     }
 
-    @DisplayName("상품을 조회한다.")
     @Test
+    @DisplayName("상품을 조회한다.")
     void getProduct() {
         // given 상품을 등록하고
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        final Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
 
         // when 해당 상품을 조회하면
-        ExtractableResponse<Response> response = 상품_조회_요청(productId);
+        final ExtractableResponse<Response> response = 상품_조회_요청(productId);
 
         // then 정상적으로 상품이 조회된다.
         조회_응답됨(response);

@@ -29,7 +29,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void register() {
         // given, when 이름, 이메일, 비밀번호를 입력하고 회원 등록을 요청하면
-        ExtractableResponse<Response> response = requestPostWithBody("/api/customer",
+        final ExtractableResponse<Response> response = requestPostWithBody("/api/customer",
                 new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
 
         // then 회원이 성공적으로 등록된다.

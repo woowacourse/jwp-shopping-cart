@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import woowacourse.shoppingcart.application.dto.ProductDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
@@ -56,16 +57,17 @@ public class ProductServiceTest {
                 .thenReturn(PRODUCT_ID);
         final Long productId = productService.addProduct(productRequest);
 
-        final Product expected = new Product(productId, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE_URL);
+        final Product savedProduct = new Product(productId, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE_URL);
         when(productDao.findProductById(productId))
-                .thenReturn(Optional.of(expected));
+                .thenReturn(Optional.of(savedProduct));
 
         //when
-        final Product actual = productService.findProductById(productId);
+        final ProductDetailServiceResponse actual = productService.findProductById(productId);
 
         //then
         assertThat(actual).usingRecursiveComparison()
-                .isEqualTo(expected);
+                .isEqualTo(
+                        new ProductDetailServiceResponse(PRODUCT_ID, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE_URL));
     }
 
     @Test
