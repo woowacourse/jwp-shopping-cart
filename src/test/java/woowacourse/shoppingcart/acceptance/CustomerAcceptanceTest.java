@@ -1,21 +1,24 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.AuthFixture.findById;
-import static woowacourse.fixture.AuthFixture.update;
 import static woowacourse.fixture.AuthFixture.updatePassword;
 import static woowacourse.fixture.AuthFixture.withdraw;
 import static woowacourse.fixture.CustomerFixture.login;
-import static woowacourse.fixture.CustomerFixture.signUp;
 
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -23,118 +26,163 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입을 한다.")
     @Test
     void signUpCustomer() {
-        ExtractableResponse<Response> response = signUp("test@woowacourse.com", "test", "1234asdf!");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("userId", "test@woowacourse.com");
+        requestBody.put("nickname", "test");
+        requestBody.put("password", "test123!");
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(response.header("Location")).isNotBlank()
-        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/customers/signUp")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("중복된 아이디로 회원가입을 하면 예외가 발생한다.")
     @Test
     void signUpDuplicateUserId() {
-        ExtractableResponse<Response> response = signUp(
-                "puterism@woowacourse.com", "test", "1234asdf!"
-        );
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("userId", "puterism@woowacourse.com");
+        requestBody.put("nickname", "test");
+        requestBody.put("password", "1234asdf!");
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("이미 존재하는 아이디입니다.")
-        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/customers/signUp")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("이미 존재하는 아이디입니다."));
     }
 
     @DisplayName("중복된 닉네임으로 회원가입을 하면 예외가 발생한다.")
     @Test
     void signUpDuplicateNickname() {
-        ExtractableResponse<Response> response = signUp(
-                "test@woowacourse.com", "nickname", "1234asdf!"
-        );
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("userId", "test@woowacourse.com");
+        requestBody.put("nickname", "nickname");
+        requestBody.put("password", "1234asdf!");
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("이미 존재하는 닉네임입니다.")
-        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/customers/signUp")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("이미 존재하는 닉네임입니다."));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"ddfkdksfk", "ddddddddddnaver.com", "cdd@dd"})
     @DisplayName("잘못된 아이디 형식으로 회원가입을 하면 예외가 발생한다.")
     void signUpInvalidFormatUserId(final String userId) {
-        ExtractableResponse<Response> response = signUp(
-                userId, "nick333", "1234asdf!"
-        );
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("userId", userId);
+        requestBody.put("nickname", "nickname");
+        requestBody.put("password", "1234asdf!");
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("아이디는 이메일 형식으로 입력해주세요.")
-        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/customers/signUp")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("아이디는 이메일 형식으로 입력해주세요."));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"!@#$%", "a", "aaaaaaaaaaa"})
     @DisplayName("잘못된 닉네임 형식으로 회원가입을 하면 예외가 발생한다.")
     void signUpInvalidFormatNickname(final String nickname) {
-        ExtractableResponse<Response> response = signUp(
-                "test@woowacourse.com", nickname, "1234asdf!"
-        );
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("userId", "test@woowacourse.com");
+        requestBody.put("nickname", nickname);
+        requestBody.put("password", "1234asdf!");
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
-                        "닉네임은 영문, 한글, 숫자를 조합하여 2 ~ 10 자를 입력해주세요.")
-        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/customers/signUp")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("닉네임은 영문, 한글, 숫자를 조합하여 2 ~ 10 자를 입력해주세요."));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"1234!@#$", "1234asdf", "asdf!@#$", "a", "aaaaaaaaaaaaaaaaa"})
     @DisplayName("잘못된 비밀번호 형식으로 회원가입을 하면 예외가 발생한다.")
     void signUpInvalidFormatPassword(final String password) {
-        ExtractableResponse<Response> response = signUp(
-                "test@woowacourse.com", "test", password
-        );
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("userId", "test@woowacourse.com");
+        requestBody.put("nickname", "test");
+        requestBody.put("password", password);
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
-                        "비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.")
-        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/customers/signUp")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요."));
     }
 
     @DisplayName("로그인을 한다.")
     @Test
-    void loginCustoemr() {
-        ExtractableResponse<Response> response = login("puterism@woowacourse.com", "1234asdf!");
+    void loginCustomer() {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("userId", "puterism@woowacourse.com");
+        requestBody.put("password", "1234asdf!");
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.body().jsonPath().getString("userId")).isEqualTo("puterism@woowacourse.com"),
-                () -> assertThat(response.body().jsonPath().getString("nickname")).isEqualTo("nickname")
-        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/customers/login")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("userId", is("puterism@woowacourse.com"))
+                .body("nickname", is("nickname"));
     }
 
     @DisplayName("존재하지 않은 회원 정보로 로그인하면 안된다.")
     @Test
     void loginNotExistingCustomer() {
-        ExtractableResponse<Response> response = login("test@woowacourse.com", "1234asdf!");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("userId", "test@woowacourse.com");
+        requestBody.put("password", "1234asdf!");
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
-                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
-                        "존재하지 않는 회원입니다.")
-        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/customers/login")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .body("message", is("존재하지 않는 회원입니다."));
     }
 
     @DisplayName("비밀번호가 틀리면 로그인이 안된다.")
     @Test
     void loginInvalidPassword() {
-        ExtractableResponse<Response> response = login("puterism@woowacourse.com", "invalidPassword");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("userId", "puterism@woowacourse.com");
+        requestBody.put("password", "invalidPassword");
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
-                        "비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.")
-        );
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/customers/login")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요."));
     }
 
     @DisplayName("내 정보 조회")
@@ -145,12 +193,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> secondResponse = findById(token);
 
-        assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(secondResponse.body().jsonPath().getString("userId")).isEqualTo(
-                        "puterism@woowacourse.com"),
-                () -> assertThat(secondResponse.body().jsonPath().getString("nickname")).isEqualTo("nickname")
-        );
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .when().get("/auth/customers/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("userId", is("puterism@woowacourse.com"))
+                .body("nickname", is("nickname"));
     }
 
     @DisplayName("탈퇴한 회원의 정보 조회를 하면 안된다.")
@@ -161,15 +211,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String token = firstResponse.body().jsonPath().getString("accessToken");
         withdraw(token);
 
-        // when
-        ExtractableResponse<Response> secondResponse = findById(token);
-
-        // then
-        assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
-                () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
-                        "존재하지 않는 회원입니다.")
-        );
+        // when & then
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .when().get("/auth/customers/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body("message", is("존재하지 않는 회원입니다."));
     }
 
     @DisplayName("내 정보 수정")
@@ -179,13 +228,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
-        // when
-        ExtractableResponse<Response> secondResponse = update(token, "유콩");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("nickname", "리버");
 
-        // then
-        assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
-        );
+        // when & then
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().patch("/auth/customers/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("존재하지 않는 사용자가 내 정보 수정을 요청하면 안된다.")
@@ -196,15 +250,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String token = firstResponse.body().jsonPath().getString("accessToken");
         withdraw(token);
 
-        // when
-        ExtractableResponse<Response> secondResponse = update(token, "유콩");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("nickname", "리버");
 
-        // then
-        assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
-                () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
-                        "존재하지 않는 회원입니다.")
-        );
+        // when & than
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().patch("/auth/customers/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body("message", is("존재하지 않는 회원입니다."));
     }
 
     @DisplayName("이미 존재하는 닉네임으로 내 정보 수정을 요청하면 안된다.")
@@ -214,15 +272,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
-        // when
-        ExtractableResponse<Response> secondResponse = update(token, "nickname");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("nickname", "nickname");
 
-        // then
-        assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
-                        "이미 존재하는 닉네임입니다.")
-        );
+        // when & than
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().patch("/auth/customers/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("이미 존재하는 닉네임입니다."));
     }
 
     @DisplayName("비밀번호 수정")
@@ -232,13 +294,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
-        // when
-        ExtractableResponse<Response> secondResponse = updatePassword(token, "1234asdf!", "asdf1234!");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("oldPassword", "1234asdf!");
+        requestBody.put("newPassword", "1234asdf!");
 
-        // then
-        assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
-        );
+        // when & than
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().patch("/auth/customers/profile/password")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("기존 비밀번호가 일치하지 않는 경우 비밀번호 변경이 안된다.")
@@ -248,15 +316,20 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
-        // when
-        ExtractableResponse<Response> secondResponse = updatePassword(token, "asdf1234!", "asdf1234!");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("oldPassword", "asdf1234!");
+        requestBody.put("newPassword", "asdf1234!");
 
-        // then
-        assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
-                        "입력한 비밀번호가 올바르지 않습니다.")
-        );
+        // when & then
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().patch("/auth/customers/profile/password")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("입력한 비밀번호가 올바르지 않습니다."));
     }
 
     @DisplayName("수정하려는 비밀번호가 올바른 형식이 아닐 경우 비밀번호 변경이 안된다.")
@@ -266,15 +339,20 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
-        // when
-        ExtractableResponse<Response> secondResponse = updatePassword(token, "1234asdf!", "invalidPassword");
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("oldPassword", "1234asdf!");
+        requestBody.put("newPassword", "invalidPassword");
 
-        // then
-        assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
-                        "비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.")
-        );
+        // when & then
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().patch("/auth/customers/profile/password")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요."));
     }
 
     @DisplayName("회원탈퇴")
@@ -284,13 +362,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
-        // when
-        ExtractableResponse<Response> secondResponse = withdraw(token);
-
-        // then
-        assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
-        );
+        // when & then
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .when().delete("/auth/customers/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("탈퇴한 사용자가 탈퇴를 요청할 경우 안된다.")
@@ -301,14 +379,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String token = firstResponse.body().jsonPath().getString("accessToken");
         withdraw(token);
 
-        // when
-        ExtractableResponse<Response> secondResponse = withdraw(token);
-
-        // then
-        assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
-                () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
-                        "존재하지 않는 회원입니다.")
-        );
+        // when & then
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .when().delete("/auth/customers/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body("message", is("존재하지 않는 회원입니다."));
     }
 }

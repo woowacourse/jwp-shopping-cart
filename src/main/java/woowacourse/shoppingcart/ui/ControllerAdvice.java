@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,8 +24,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleDataFormatError(final MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().body(ErrorResponse.from(e.getBindingResult()));
+    public ResponseEntity<ErrorResponse> handleDataFormatError(final BindingResult bindingResult) {
+        return ResponseEntity.badRequest().body(ErrorResponse.from(bindingResult));
     }
 
     @ExceptionHandler(DataNotFoundException.class)
