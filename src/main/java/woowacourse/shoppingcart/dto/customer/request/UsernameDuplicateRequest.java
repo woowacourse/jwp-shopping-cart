@@ -6,10 +6,9 @@ public class UsernameDuplicateRequest {
 
     @Pattern(regexp = "^[a-z0-9_-]{5,20}$",
             message = "유저 네임 형식이 올바르지 않습니다. (영문 소문자, 숫자와 특수기호(_), (-)만 사용 가능, 5자 이상 20자 이내)")
-    private final String username;
+    private String username;
 
     public UsernameDuplicateRequest() {
-        this(null);
     }
 
     public UsernameDuplicateRequest(String username) {

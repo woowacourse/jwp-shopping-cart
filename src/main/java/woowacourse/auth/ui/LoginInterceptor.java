@@ -9,7 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.TokenProvider;
-import woowacourse.shoppingcart.exception.NoAuthorizationHeaderException;
+import woowacourse.auth.exception.NoAuthorizationHeaderException;
 
 public class LoginInterceptor implements HandlerInterceptor {
 

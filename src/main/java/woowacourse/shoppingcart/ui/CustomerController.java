@@ -7,7 +7,7 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.customer.request.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.request.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.customer.request.EmailDuplicateRequest;
-import woowacourse.shoppingcart.dto.customer.response.EmailDuplicateResponse;
-import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.customer.request.UsernameDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.response.EmailDuplicateResponse;
 import woowacourse.shoppingcart.dto.customer.response.UsernameDuplicateResponse;
 
 @RestController
@@ -58,16 +58,16 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/api/customers/duplication/{username}")
+    @PostMapping("/api/customers/duplication/username")
     public ResponseEntity<UsernameDuplicateResponse> checkDuplicateUsername(
-            @Valid @PathVariable("username") UsernameDuplicateRequest request) {
+            @Valid @ModelAttribute UsernameDuplicateRequest request) {
         UsernameDuplicateResponse usernameDuplicateResponse = customerService.checkUsernameDuplicate(request);
         return ResponseEntity.ok(usernameDuplicateResponse);
     }
 
-    @PostMapping("/api/customers/duplication/{email}")
+    @PostMapping("/api/customers/duplication/email")
     public ResponseEntity<EmailDuplicateResponse> checkDuplicateEmail(
-            @Valid @PathVariable("email") EmailDuplicateRequest request) {
+            @Valid @ModelAttribute EmailDuplicateRequest request) {
         EmailDuplicateResponse emailDuplicateResponse = customerService.checkEmailDuplicate(request);
         return ResponseEntity.ok(emailDuplicateResponse);
     }
