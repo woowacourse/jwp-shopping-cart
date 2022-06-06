@@ -35,6 +35,7 @@ create table cart_item
     id          bigint not null auto_increment,
     customer_id bigint not null foreign key references customer(id),
     product_id  bigint not null foreign key references product(id),
+    quantity integer default 0,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
