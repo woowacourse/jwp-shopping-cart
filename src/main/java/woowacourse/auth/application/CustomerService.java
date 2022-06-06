@@ -1,4 +1,4 @@
-package woowacourse.user.application;
+package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,13 +7,13 @@ import woowacourse.auth.domain.User;
 import woowacourse.common.exception.InvalidExceptionType;
 import woowacourse.common.exception.InvalidRequestException;
 import woowacourse.common.exception.NotFoundException;
-import woowacourse.user.dao.CustomerDao;
-import woowacourse.user.domain.Customer;
-import woowacourse.user.dto.request.SignUpRequest;
-import woowacourse.user.dto.request.UpdateMeRequest;
-import woowacourse.user.dto.request.UpdatePasswordRequest;
-import woowacourse.user.dto.response.GetMeResponse;
-import woowacourse.user.dto.response.UniqueUsernameResponse;
+import woowacourse.auth.dao.CustomerDao;
+import woowacourse.auth.domain.Customer;
+import woowacourse.auth.dto.request.SignUpRequest;
+import woowacourse.auth.dto.request.UpdateMeRequest;
+import woowacourse.auth.dto.request.UpdatePasswordRequest;
+import woowacourse.auth.dto.response.GetMeResponse;
+import woowacourse.auth.dto.response.UniqueUsernameResponse;
 
 @Service
 public class CustomerService {

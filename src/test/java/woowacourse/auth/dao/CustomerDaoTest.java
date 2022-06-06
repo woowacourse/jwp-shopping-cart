@@ -1,4 +1,4 @@
-package woowacourse.user.dao;
+package woowacourse.auth.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -9,9 +9,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.setup.DatabaseTest;
-import woowacourse.user.domain.Customer;
+import woowacourse.auth.domain.Customer;
 import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")

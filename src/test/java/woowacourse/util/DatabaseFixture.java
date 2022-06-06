@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import woowacourse.auth.domain.User;
-import woowacourse.user.domain.Customer;
+import woowacourse.auth.domain.Customer;
 
 @Repository
 public class DatabaseFixture {

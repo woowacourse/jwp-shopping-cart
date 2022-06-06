@@ -1,4 +1,4 @@
-package woowacourse.user.application;
+package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -9,19 +9,20 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.domain.User;
 import woowacourse.common.exception.InvalidRequestException;
 import woowacourse.common.exception.NotFoundException;
 import woowacourse.setup.DatabaseTest;
-import woowacourse.user.dao.CustomerDao;
-import woowacourse.user.domain.Customer;
-import woowacourse.user.dto.request.SignUpRequest;
-import woowacourse.user.dto.request.UpdateMeRequest;
-import woowacourse.user.dto.request.UpdatePasswordRequest;
-import woowacourse.user.dto.response.GetMeResponse;
-import woowacourse.user.dto.response.UniqueUsernameResponse;
+import woowacourse.auth.dao.CustomerDao;
+import woowacourse.auth.domain.Customer;
+import woowacourse.auth.dto.request.SignUpRequest;
+import woowacourse.auth.dto.request.UpdateMeRequest;
+import woowacourse.auth.dto.request.UpdatePasswordRequest;
+import woowacourse.auth.dto.response.GetMeResponse;
+import woowacourse.auth.dto.response.UniqueUsernameResponse;
 import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")

@@ -1,10 +1,8 @@
-package woowacourse.user.domain;
+package woowacourse.auth.domain;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import woowacourse.auth.domain.EncryptedPassword;
-import woowacourse.auth.domain.Password;
 import woowacourse.common.exception.InvalidExceptionType;
 import woowacourse.common.exception.InvalidRequestException;
 

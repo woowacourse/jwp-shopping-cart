@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.request.TokenRequest;
+import woowacourse.auth.dto.response.TokenResponse;
 import woowacourse.setup.AcceptanceTest;
-import woowacourse.user.dto.request.SignUpRequest;
+import woowacourse.auth.dto.request.SignUpRequest;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayName("인증 관련 기능")

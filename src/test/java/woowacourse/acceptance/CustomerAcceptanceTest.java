@@ -12,15 +12,15 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.request.TokenRequest;
+import woowacourse.auth.dto.response.TokenResponse;
 import woowacourse.setup.AcceptanceTest;
-import woowacourse.user.dto.request.SignUpRequest;
-import woowacourse.user.dto.request.UniqueUsernameRequest;
-import woowacourse.user.dto.request.UpdateMeRequest;
-import woowacourse.user.dto.request.UpdatePasswordRequest;
-import woowacourse.user.dto.response.GetMeResponse;
-import woowacourse.user.dto.response.UniqueUsernameResponse;
+import woowacourse.auth.dto.request.SignUpRequest;
+import woowacourse.auth.dto.request.UniqueUsernameRequest;
+import woowacourse.auth.dto.request.UpdateMeRequest;
+import woowacourse.auth.dto.request.UpdatePasswordRequest;
+import woowacourse.auth.dto.response.GetMeResponse;
+import woowacourse.auth.dto.response.UniqueUsernameResponse;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayName("회원 관련 기능")

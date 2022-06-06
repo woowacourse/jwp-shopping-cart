@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.dao.UserDao;
 import woowacourse.auth.domain.Token;
 import woowacourse.auth.domain.User;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.request.TokenRequest;
+import woowacourse.auth.dto.response.TokenResponse;
 import woowacourse.common.exception.AuthenticationException;
 
 @Service

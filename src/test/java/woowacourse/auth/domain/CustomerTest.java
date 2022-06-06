@@ -1,4 +1,4 @@
-package woowacourse.user.domain;
+package woowacourse.auth.domain;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.common.exception.InvalidRequestException;
 
 @SuppressWarnings("NonAsciiCharacters")

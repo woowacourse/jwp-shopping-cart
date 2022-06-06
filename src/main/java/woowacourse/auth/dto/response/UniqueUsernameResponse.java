@@ -1,4 +1,4 @@
-package woowacourse.user.dto.response;
+package woowacourse.auth.dto.response;
 
 import java.util.Objects;
 

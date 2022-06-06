@@ -1,4 +1,4 @@
-package woowacourse.user.dao;
+package woowacourse.auth.dao;
 
 import java.util.Optional;
 import org.springframework.jdbc.core.RowMapper;
@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import woowacourse.auth.domain.EncryptedPassword;
-import woowacourse.user.domain.Customer;
+import woowacourse.auth.domain.Customer;
 
 @Repository
 public class CustomerDao {
