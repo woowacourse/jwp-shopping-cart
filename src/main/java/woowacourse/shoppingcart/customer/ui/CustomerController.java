@@ -14,7 +14,7 @@ import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.customer.dto.CustomerResponse;
 import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
-import woowacourse.shoppingcart.support.Login;
+import woowacourse.shoppingcart.unit.support.Login;
 
 @RestController
 @RequestMapping("/users")
