@@ -45,8 +45,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = parseClaimsJws(token);
-            return !claims.getBody().getExpiration().before(new Date());
+            return !parseClaimsJws(token).getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }

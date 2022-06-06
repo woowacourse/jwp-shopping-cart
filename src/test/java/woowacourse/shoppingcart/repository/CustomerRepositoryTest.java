@@ -24,7 +24,7 @@ import woowacourse.shoppingcart.repository.dao.CustomerDao;
 @Sql("/init.sql")
 class CustomerRepositoryTest {
 
-    private final CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
     public CustomerRepositoryTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
