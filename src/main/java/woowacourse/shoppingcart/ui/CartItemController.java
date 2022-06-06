@@ -14,7 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartItemResponses;
-import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.ProductExistenceResponse;
 
@@ -61,12 +60,12 @@ public class CartItemController {
     @PutMapping("/{cartItemId}")
     public ResponseEntity<Void> updateCartItem(@AuthenticationPrincipal final int customerId,
                                                @PathVariable final Long cartItemId,
-                                               @RequestBody CartItemUpdateRequest cartItemUpdateRequest) {
+                                               @RequestBody CartRequest cartRequest) {
 
         cartService.updateCartItem(
                 cartItemId, customerId,
-                cartItemUpdateRequest.getProductId(),
-                cartItemUpdateRequest.getQuantity()
+                cartRequest.getProductId(),
+                cartRequest.getQuantity()
         );
 
         return ResponseEntity.noContent().build();

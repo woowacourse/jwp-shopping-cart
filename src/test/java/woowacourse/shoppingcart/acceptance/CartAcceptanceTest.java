@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.createCustomer;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.getTokenResponse;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
-import static woowacourse.shoppingcart.fixture.CartItemFixtures.CART_ITEM_UPDATE_REQUEST_1;
+import static woowacourse.shoppingcart.fixture.CartItemFixtures.CART_REQUEST_1;
 import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_2;
@@ -29,7 +29,7 @@ import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemResponses;
-import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
+import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.ProductExistenceResponse;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
@@ -96,24 +96,24 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     private ExtractableResponse<Response> 장바구니_아이템_수정_요청(Long cartItemId, String token,
-                                                         CartItemUpdateRequest cartItemUpdateRequest) {
+                                                         CartRequest cartRequest) {
         return RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer" + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(cartItemUpdateRequest)
+                .body(cartRequest)
                 .when().put("/api/customers/cart/{cartItemId}", cartItemId)
                 .then().log().all()
                 .extract();
     }
 
     private ExtractableResponse<Response> 장바구니_아이템_잘못된_수정_요청(Long cartId, String token,
-                                                             CartItemUpdateRequest cartItemUpdateRequest) {
+                                                             CartRequest cartRequest) {
         return RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer" + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(cartItemUpdateRequest)
+                .body(cartRequest)
                 .when().put("/api/customers/cart/")
                 .then().log().all()
                 .extract();
@@ -318,7 +318,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
 
         // when
-        final ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(cartId, token, CART_ITEM_UPDATE_REQUEST_1);
+        final ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(cartId, token, CART_REQUEST_1);
 
         // then
         장바구니_수정_확인(response);
@@ -331,9 +331,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
         Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
 
         // when
-        final CartItemUpdateRequest invalidCartItemUpdateRequest = new CartItemUpdateRequest(productId2, 99);
+        final CartRequest invalidCartRequest = new CartRequest(productId2, 99);
 
-        final ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(cartId, token, invalidCartItemUpdateRequest);
+        final ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(cartId, token, invalidCartRequest);
 
         // then
         장바구니_수정_실패_확인(response);

@@ -22,7 +22,7 @@ public class CartRequest {
 
     @Override
     public String toString() {
-        return "CartRequest{" +
+        return "CartItemUpdateRequest{" +
                 "productId=" + productId +
                 ", quantity=" + quantity +
                 '}';
