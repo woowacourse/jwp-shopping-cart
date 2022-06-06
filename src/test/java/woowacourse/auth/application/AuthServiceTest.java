@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.dto.PasswordRequest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidAuthException;
@@ -70,7 +71,7 @@ class AuthServiceTest {
         customerDao.save(customer);
 
         // when & then
-        assertThatThrownBy(() -> authService.validatePassword(customer.getUsername(), "wrongpassword"))
+        assertThatThrownBy(() -> authService.checkPassword(customer.getUsername(), new PasswordRequest("wrongpassword")))
                 .isInstanceOf(InvalidAuthException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }
@@ -82,7 +83,7 @@ class AuthServiceTest {
         customerDao.save(customer);
 
         // when & then
-        assertDoesNotThrow(() -> authService.validatePassword(customer.getUsername(), "password123"));
+        assertDoesNotThrow(() -> authService.checkPassword(customer.getUsername(), new PasswordRequest("password123")));
     }
 
 }

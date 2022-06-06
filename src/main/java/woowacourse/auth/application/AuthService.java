@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.dto.PasswordRequest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidAuthException;
@@ -32,9 +33,9 @@ public class AuthService {
         return new TokenResponse(accessToken);
     }
 
-    public void validatePassword(final String username, final String password) {
+    public void checkPassword(final String username, final PasswordRequest request) {
         Customer customer = customerDao.findByUsername(username);
-        validatePasswordIsCorrect(customer, password);
+        validatePasswordIsCorrect(customer, request.getPassword());
     }
 
     private void validatePasswordIsCorrect(Customer customer, String password) {
