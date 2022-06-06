@@ -31,10 +31,18 @@ public class CartItemController {
         return ResponseEntity.ok().body(cartItemResponses);
     }
 
+    @GetMapping({"/{cartId}"})
+    public ResponseEntity<CartItemResponse> getCartItem(@AuthenticationPrincipal String email,
+                                                        @PathVariable final Long cartId) {
+        CartItemResponse cartItemResponse = cartService.findCart(cartId);
+        return ResponseEntity.ok().body(cartItemResponse);
+    }
+
     @PostMapping
     public ResponseEntity<Void> addCartItem(@RequestBody final CartItemAddRequest cartItemAddRequest,
                                             @AuthenticationPrincipal String email) {
-        final Long cartId = cartService.addCart(cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity(), email);
+        final Long cartId = cartService.addCart(cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity(),
+                email);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")

@@ -4,18 +4,61 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
+    private static final RowMapper<Cart> CART_ROW_MAPPER = (resultSet, rowNumber) ->
+            new Cart(
+                    resultSet.getLong("id"),
+                    resultSet.getInt("quantity"),
+                    new Product(
+                            resultSet.getLong("productId"),
+                            resultSet.getString("name"),
+                            resultSet.getInt("price"),
+                            resultSet.getInt("stock_quantity"),
+                            new ThumbnailImage(
+                                    resultSet.getString("url"),
+                                    resultSet.getString("alt")
+                            )
+                    )
+            );
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    public Cart getById(final Long cartId) {
+        final String sql =
+                "SELECT c.id AS id, c.quantity, p.id AS productId, p.name, p.price, p.stock_quantity, p.url, p.alt "
+                        + "FROM cart_item AS c, product AS p "
+                        + "WHERE c.id = ? AND c.product_id = p.id";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, CART_ROW_MAPPER, cartId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public List<Cart> getAllByCustomerId(final Long customerId) {
+        final String sql =
+                "SELECT c.id AS id, c.quantity, p.id AS productId, p.name, p.price, p.stock_quantity, p.url, p.alt "
+                        + "FROM cart_item AS c, product AS p "
+                        + "WHERE c.customer_id = ? AND c.product_id = p.id";
+
+        return jdbcTemplate.query(sql, CART_ROW_MAPPER, customerId);
+    }
+
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
@@ -33,15 +76,6 @@ public class CartItemDao {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
-
-    public int findQuantityById(Long cartId) {
-        try {
-            final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }

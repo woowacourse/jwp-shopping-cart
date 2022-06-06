@@ -5,7 +5,6 @@ import static woowacourse.AcceptanceTestFixture.deleteMethodRequestWithBearerAut
 import static woowacourse.AcceptanceTestFixture.getMethodRequestWithBearerAuth;
 import static woowacourse.AcceptanceTestFixture.postMethodRequest;
 import static woowacourse.AcceptanceTestFixture.postMethodRequestWithBearerAuth;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -24,6 +23,7 @@ import woowacourse.common.AcceptanceTest;
 import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.dto.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 
 @DisplayName("장바구니 관련 기능")
@@ -37,8 +37,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ThumbnailImage chickenThumbnailImage = new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
         ThumbnailImage beerThumbnailImage = new ThumbnailImage("http://example.com/beer.jpg", "chicken");
 
-        상품_등록되어_있음("치킨", 10_000, 10, chickenThumbnailImage);
-        상품_등록되어_있음("맥주", 20_000, 10, beerThumbnailImage);
+        ProductRequest chickenRequest = new ProductRequest("치킨", 1000, 10, chickenThumbnailImage);
+        ProductRequest beerRequest = new ProductRequest("치킨", 1000, 10, beerThumbnailImage);
+
+        postMethodRequest(chickenRequest, "/api/products");
+        postMethodRequest(beerRequest, "/api/products");
     }
 
 
