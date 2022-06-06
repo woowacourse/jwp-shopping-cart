@@ -9,6 +9,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.constant.RequestAttributes;
 import woowacourse.auth.domain.Customer;
+import woowacourse.auth.domain.Token;
 
 public class CustomerArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -29,7 +30,7 @@ public class CustomerArgumentResolver implements HandlerMethodArgumentResolver {
                                 NativeWebRequest webRequest,
                                 WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String token = (String) request.getAttribute(RequestAttributes.TOKEN);
+        Token token = (Token) request.getAttribute(RequestAttributes.TOKEN);
         return authService.findCustomerByToken(token);
     }
 }

@@ -82,17 +82,17 @@ class AuthServiceTest {
         @Test
         void 토큰에_해당되는_고객_정보_반환() {
             databaseFixture.save(유효한_고객);
-            String accessToken = authService.createToken(new TokenRequest(유효한_아이디, 비밀번호)).getAccessToken();
+            TokenResponse generatedToken = authService.createToken(new TokenRequest(유효한_아이디, 비밀번호));
+            Token validAccessToken = new Token(generatedToken.getAccessToken());
 
-            Customer actual = authService.findCustomerByToken(accessToken);
+            Customer actual = authService.findCustomerByToken(validAccessToken);
 
             assertThat(actual).isEqualTo(유효한_고객);
         }
 
         @Test
         void 존재하지_않는_고객에_대한_정보로_만들어진_토큰인_경우_예외발생() {
-            Token token = tokenService.generateToken("존재하지_않는_사용자_정보");
-            String accessToken = token.getValue();
+            Token accessToken = tokenService.generateToken("존재하지_않는_사용자_정보");
 
             assertThatThrownBy(() -> authService.findCustomerByToken(accessToken))
                     .isInstanceOf(AuthenticationException.class);

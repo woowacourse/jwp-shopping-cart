@@ -34,8 +34,8 @@ public class AuthService {
         return customer;
     }
 
-    public Customer findCustomerByToken(String token) {
-        String username = tokenService.extractPayload(new Token(token));
+    public Customer findCustomerByToken(Token token) {
+        String username = tokenService.extractPayload(token);
         return customerDao.findByUserName(username)
                 .orElseThrow(AuthenticationException::ofInvalidToken);
     }
