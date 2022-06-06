@@ -23,13 +23,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.customer.CustomerResponse;
-import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
-import woowacourse.shoppingcart.dto.customer.EmailDuplicateRequest;
-import woowacourse.shoppingcart.dto.customer.EmailDuplicateResponse;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.request.CustomerSaveRequest;
+import woowacourse.shoppingcart.dto.customer.request.EmailDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.response.EmailDuplicateResponse;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
-import woowacourse.shoppingcart.dto.customer.UsernameDuplicateRequest;
-import woowacourse.shoppingcart.dto.customer.UsernameDuplicateResponse;
+import woowacourse.shoppingcart.dto.customer.request.UsernameDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.response.UsernameDuplicateResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest

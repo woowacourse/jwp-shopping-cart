@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.customer.CustomerResponse;
-import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
-import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.customer.EmailDuplicateRequest;
-import woowacourse.shoppingcart.dto.customer.EmailDuplicateResponse;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.request.CustomerSaveRequest;
+import woowacourse.shoppingcart.dto.customer.request.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.request.EmailDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.response.EmailDuplicateResponse;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
-import woowacourse.shoppingcart.dto.customer.UsernameDuplicateRequest;
-import woowacourse.shoppingcart.dto.customer.UsernameDuplicateResponse;
+import woowacourse.shoppingcart.dto.customer.request.UsernameDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.response.UsernameDuplicateResponse;
 
 @RestController
 public class CustomerController {

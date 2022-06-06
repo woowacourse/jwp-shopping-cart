@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto.customer;
+package woowacourse.shoppingcart.dto.customer.request;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;

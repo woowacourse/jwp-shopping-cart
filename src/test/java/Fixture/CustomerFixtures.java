@@ -6,8 +6,8 @@ import woowacourse.shoppingcart.domain.customer.password.EncodedPassword;
 import woowacourse.shoppingcart.domain.customer.password.PasswordEncoder;
 import woowacourse.shoppingcart.domain.customer.password.RawPassword;
 import woowacourse.shoppingcart.domain.customer.password.SHA256Encoder;
-import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
-import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.request.CustomerSaveRequest;
+import woowacourse.shoppingcart.dto.customer.request.CustomerUpdateRequest;
 
 public class CustomerFixtures {
     private static final PasswordEncoder passwordEncoder = new SHA256Encoder();
