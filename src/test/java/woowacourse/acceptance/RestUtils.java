@@ -1,4 +1,4 @@
-package woowacourse.auth.acceptance;
+package woowacourse.acceptance;
 
 import org.springframework.http.MediaType;
 
@@ -9,6 +9,7 @@ import woowacourse.auth.dto.customer.CustomerDeleteRequest;
 import woowacourse.auth.dto.customer.CustomerRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.token.TokenRequest;
+import woowacourse.shoppingcart.dto.QuantityRequest;
 
 public class RestUtils {
 
@@ -40,7 +41,8 @@ public class RestUtils {
 			.extract();
 	}
 
-	public static ExtractableResponse<Response> update(String token, String nickname, String password, String newPassword) {
+	public static ExtractableResponse<Response> update(String token, String nickname, String password,
+		String newPassword) {
 		return RestAssured.given().log().all()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.auth().oauth2(token)
@@ -54,5 +56,15 @@ public class RestUtils {
 			.auth().oauth2(token)
 			.when().get("/customers")
 			.then().log().all().extract();
+	}
+
+	public static ExtractableResponse<Response> addCartItem(String token, Long productId, int quantity) {
+		return RestAssured.given().log().all()
+			.auth().oauth2(token)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.body(new QuantityRequest(quantity))
+			.when().put("/cart/products/{id}", productId)
+			.then().log().all()
+			.extract();
 	}
 }

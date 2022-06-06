@@ -264,7 +264,7 @@ Content-Type: application/json
 ### Request
 
 ```
-GET /cart
+GET /cartItem
 Authorization: `Bearer ${accessToken}`
 ```
 
@@ -292,7 +292,7 @@ Authorization: `Bearer ${accessToken}`
 ## 장바구니에 상품 추가 및 수량 수정
 ### Request
 ```
-PUT /cart/products/{id}
+PUT /cartItem/products/{id}
 Authorization: `Bearer ${accessToken}`
 ```
 
@@ -336,7 +336,7 @@ Content-Type: application/json
 ## 장바구니 내 상품 삭제
 ### Request
 ```
-DELETE /cart
+DELETE /cartItem
 Authorization: `Bearer ${accessToken}`
 ```
 ```json
