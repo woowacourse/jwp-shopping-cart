@@ -7,7 +7,7 @@ import woowacourse.common.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
 @Service
 public class CustomerService {

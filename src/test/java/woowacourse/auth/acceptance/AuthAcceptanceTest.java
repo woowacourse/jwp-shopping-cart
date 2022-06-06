@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.common.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {

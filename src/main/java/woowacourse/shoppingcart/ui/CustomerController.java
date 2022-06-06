@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.ChangeGeneralInfoRequest;
-import woowacourse.shoppingcart.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
+import woowacourse.shoppingcart.dto.customer.ChangeGeneralInfoRequest;
+import woowacourse.shoppingcart.dto.customer.ChangePasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.DeleteCustomerRequest;
 
 @RestController
 @RequestMapping("/api/customers")
