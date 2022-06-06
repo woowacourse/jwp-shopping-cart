@@ -25,7 +25,9 @@ public class Nickname {
 
     private void validateLength(String nickname) {
         if (nickname.length() < NICKNAME_MINIMUM_LENGTH || nickname.length() > NICKNAME_MAXIMUM_LENGTH) {
-            throw new IllegalArgumentException("닉네임 길이는 " + NICKNAME_MINIMUM_LENGTH + "~" + NICKNAME_MAXIMUM_LENGTH + "자를 만족해야 합니다.");
+            throw new IllegalArgumentException(
+                    String.format("닉네임 길이는 %d~%d자를 만족해야 합니다.", NICKNAME_MINIMUM_LENGTH, NICKNAME_MAXIMUM_LENGTH)
+            );
         }
     }
 

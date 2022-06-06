@@ -23,7 +23,9 @@ public class Account {
 
     private void validateLength(final String value) {
         if (value.length() < MINIMUM_LENGTH || value.length() > MAXIMUM_LENGTH) {
-            throw new IllegalArgumentException("아이디 길이는 " + MINIMUM_LENGTH + "~" + MAXIMUM_LENGTH + "자를 만족해야 합니다.");
+            throw new IllegalArgumentException(
+                    String.format("아이디 길이는 %d~%d자를 만족해야 합니다.", MINIMUM_LENGTH, MAXIMUM_LENGTH)
+            );
         }
     }
 

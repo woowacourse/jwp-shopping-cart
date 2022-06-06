@@ -24,7 +24,9 @@ public class PhoneNumber {
 
     private void validateLength(String phoneNumber) {
         if (phoneNumber.length() != PHONE_NUMBER_LENGTH) {
-            throw new IllegalArgumentException("핸드폰 번호 길이는 " + PHONE_NUMBER_LENGTH + "자 이어야 합니다.");
+            throw new IllegalArgumentException(
+                    String.format("핸드폰 번호 길이는 %d자 이어야 합니다.", PHONE_NUMBER_LENGTH)
+            );
         }
     }
 

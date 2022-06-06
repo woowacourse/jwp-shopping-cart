@@ -29,7 +29,9 @@ public class PlainPassword {
 
     private void validateLength(final String value) {
         if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("비밀번호 길이는 " + MIN_LENGTH + "~" + MAX_LENGTH + "자를 만족해야 합니다.");
+            throw new IllegalArgumentException(
+                    String.format("비밀번호 길이는 %d~%d자를 만족해야 합니다.", MIN_LENGTH, MAX_LENGTH)
+            );
         }
     }
 
