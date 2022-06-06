@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
@@ -37,5 +39,32 @@ public class ProductServiceTest {
 
         // then
         assertThat(products).containsExactly(product1, product2);
+    }
+
+    @Test
+    @DisplayName("존재하는 Product 1개를 조회한다.")
+    void findProduct_exist_returnProduct() {
+        // given
+        Product product1 = new Product(1L, "product1", 1000, "url1");
+        given(productDao.findProductById(1L))
+                .willReturn(product1);
+
+        // when
+        Product actual = productService.findProductById(1L);
+
+        // then
+        assertThat(actual).isEqualTo(product1);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 Product를 조회하면 예외가 발생한다.")
+    void findProduct_notExist_exceptionThrown() {
+        // given
+        given(productDao.findProductById(1L))
+                .willThrow(new NotFoundProductException());
+
+        // when, then
+        assertThatThrownBy(() -> productService.findProductById(1L))
+                .isInstanceOf(NotFoundProductException.class);
     }
 }
