@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.application.dto.response;
 
-import woowacourse.shoppingcart.domain.customer.Customer;
-
 public class LoginResponse {
 
     private final String accessToken;
@@ -16,8 +14,9 @@ public class LoginResponse {
         this.nickname = nickname;
     }
 
-    public static LoginResponse of(final String accessToken, final Customer customer) {
-        return new LoginResponse(accessToken, customer.getId(), customer.getUserId(), customer.getNickname());
+    public static LoginResponse of(final String accessToken, final CustomerResponse customerResponse) {
+        return new LoginResponse(accessToken,
+                customerResponse.getId(), customerResponse.getUserId(), customerResponse.getNickname());
     }
 
     public String getAccessToken() {

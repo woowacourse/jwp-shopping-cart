@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdatePasswordRequest;
@@ -10,7 +9,6 @@ import woowacourse.shoppingcart.application.dto.request.CustomerUpdateRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.request.LoginRequest;
-import woowacourse.shoppingcart.application.dto.response.LoginResponse;
 import woowacourse.shoppingcart.application.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
@@ -20,11 +18,9 @@ import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataE
 @Transactional(readOnly = true)
 public class CustomerService {
 
-    private final AuthService authService;
     private final CustomerDao customerDao;
 
-    public CustomerService(final AuthService authService, final CustomerDao customerDao) {
-        this.authService = authService;
+    public CustomerService(final CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 
@@ -35,11 +31,10 @@ public class CustomerService {
         return customerDao.save(customer);
     }
 
-    public LoginResponse login(final LoginRequest loginRequest) {
+    public CustomerResponse login(final LoginRequest loginRequest) {
         validateExistingCustomer(loginRequest.getUserId(), loginRequest.getPassword());
         Customer customer = findCustomerByUserId(loginRequest.getUserId());
-        String token = authService.createToken(customer.getId());
-        return LoginResponse.of(token, customer);
+        return CustomerResponse.from(customer);
     }
 
     public CustomerResponse findByCustomerId(final CustomerIdentificationRequest customerIdentificationRequest) {

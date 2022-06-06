@@ -10,14 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdateRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.request.LoginRequest;
-import woowacourse.shoppingcart.application.dto.response.LoginResponse;
 import woowacourse.shoppingcart.application.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.exception.dataempty.CustomerDataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.CustomerDataFormatException;
@@ -36,16 +34,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class CustomerServiceTest {
 
     @Autowired
-    private AuthService authService;
-
-    @Autowired
     private CustomerDao customerDao;
 
     private CustomerService customerService;
 
     @BeforeEach
     void setUp() {
-        customerService = new CustomerService(authService, customerDao);
+        customerService = new CustomerService(customerDao);
     }
 
     @DisplayName("아이디에 null 을 입력하면 예외가 발생한다.")
@@ -205,13 +200,12 @@ class CustomerServiceTest {
         LoginRequest loginRequest = new LoginRequest("puterism@woowacourse.com", "1234asdf!");
 
         // when
-        LoginResponse loginResponse = customerService.login(loginRequest);
+        CustomerResponse customerResponse = customerService.login(loginRequest);
 
         // then
         assertAll(
-                () -> assertThat(loginResponse.getAccessToken()).isNotNull(),
-                () -> assertThat(loginResponse.getUserId()).isEqualTo("puterism@woowacourse.com"),
-                () -> assertThat(loginResponse.getNickname()).isEqualTo("nickname")
+                () -> assertThat(customerResponse.getUserId()).isEqualTo("puterism@woowacourse.com"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("nickname")
         );
     }
 
