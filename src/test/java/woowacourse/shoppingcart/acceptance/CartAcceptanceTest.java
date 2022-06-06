@@ -6,12 +6,14 @@ import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.LOGIN_URI;
 import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.MEMBER_CREATE_REQUEST;
 import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.SIGN_UP_URI;
 import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.VALID_LOGIN_REQUEST;
+import static woowacourse.util.HttpRequestUtil.getWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.patchWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.post;
 import static woowacourse.util.HttpRequestUtil.postWithAuthorization;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,8 +34,10 @@ import woowacourse.shoppingcart.ui.dto.CartItemQuantityUpdateRequest;
 class CartAcceptanceTest extends AcceptanceTest {
 
     private static final String CART_URI = "/api/carts/products";
-    private static final CartItemAddRequest VALID_CART_ITEM_ADD_REQUEST =
+    private static final CartItemAddRequest VALID_CART_ITEM_ADD_REQUEST1 =
             new CartItemAddRequest(1L, 5);
+    private static final CartItemAddRequest VALID_CART_ITEM_ADD_REQUEST2 =
+            new CartItemAddRequest(2L, 8);
     private static final CartItemAddRequest INVALID_PRODUCT_ID_CART_ITEM_ADD_REQUEST =
             new CartItemAddRequest(4L, 5);
     private static final CartItemQuantityUpdateRequest VALID_CART_ITEM_QUANTITY_UPDATE_REQUEST =
@@ -51,7 +55,7 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 상품 추가에 성공하면 201을 응답한다.")
     @Test
     void addCartItem_created() {
-        ExtractableResponse<Response> response = postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST);
+        ExtractableResponse<Response> response = postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -100,10 +104,32 @@ class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("장바구니 목록을 반환한다.")
+    @Test
+    void findAllCartItems() {
+        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
+        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST2);
+
+        ExtractableResponse<Response> response = getWithAuthorization(CART_URI, token);
+        List<CartItemResponse> cartItems = response.jsonPath()
+                .getList(".", CartItemResponse.class);
+        CartItemResponse first = cartItems.get(0);
+        CartItemResponse second = cartItems.get(1);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(cartItems).hasSize(2),
+                () -> assertThat(first.getProduct().getId()).isEqualTo(1L),
+                () -> assertThat(first.getQuantity()).isEqualTo(5),
+                () -> assertThat(second.getProduct().getId()).isEqualTo(2L),
+                () -> assertThat(second.getQuantity()).isEqualTo(8)
+        );
+    }
+
     @DisplayName("상품의 수량을 변경하고 성공하면 200과 변경된 장바구니 목록을 반환한다.")
     @Test
     void updateQuantity() {
-        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST);
+        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
 
         ExtractableResponse<Response> response = patchWithAuthorization(CART_URI, token,
                 VALID_CART_ITEM_QUANTITY_UPDATE_REQUEST);
@@ -121,7 +147,7 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품의 재고보다 많은 양으로 수량을 변경하려고 하면 400을 응답한다.")
     @Test
     void updateQuantity_badRequest_InvalidQuantity() {
-        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST);
+        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
         int invalidQuantity = 101;
         ExtractableResponse<Response> response =
                 patchWithAuthorization(CART_URI, token, new CartItemQuantityUpdateRequest(1L, invalidQuantity));

@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,11 @@ public class CartItemController {
                                             @Valid @RequestBody CartItemAddRequest cartItemAddRequest) {
         cartService.addCart(memberId, cartItemAddRequest.getId(), cartItemAddRequest.getQuantity());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CartItemResponse>> findAllCartItems(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok(cartService.findAll(memberId));
     }
 
     @PatchMapping
