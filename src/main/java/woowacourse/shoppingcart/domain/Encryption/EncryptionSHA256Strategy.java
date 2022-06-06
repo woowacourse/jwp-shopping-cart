@@ -7,13 +7,15 @@ import java.security.NoSuchAlgorithmException;
 
 public class EncryptionSHA256Strategy implements EncryptionStrategy {
 
+    @Override
     public Customer encrypt(final Customer customer) {
         return Customer.getEncrypted(
                 customer.getId(), customer.getUserId(), customer.getNickname(), encrypt(customer.getPassword())
         );
     }
 
-    private static String encrypt(final String text) {
+    @Override
+    public String encrypt(final String text) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(text.getBytes());
@@ -23,7 +25,7 @@ public class EncryptionSHA256Strategy implements EncryptionStrategy {
         }
     }
 
-    private static String bytesToHex(final byte[] bytes) {
+    private String bytesToHex(final byte[] bytes) {
         StringBuilder builder = new StringBuilder();
         for (byte b : bytes) {
             builder.append(String.format("%02x", b));

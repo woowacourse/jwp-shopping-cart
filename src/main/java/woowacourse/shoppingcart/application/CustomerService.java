@@ -31,12 +31,12 @@ public class CustomerService {
     public Long signUp(final SignUpRequest signUpRequest) {
         Customer customer = signUpRequest.toEntity();
         validateCustomer(customer);
-        return customerDao.save(encryptionStrategy.encrypt(customer));
+        return customerDao.save(encrypt(customer));
     }
 
     public CustomerResponse login(final LoginRequest loginRequest) {
         Customer customer = findCustomerByUserId(loginRequest.getUserId());
-        customer.validateMatchingLoginPassword(loginRequest.getPassword());
+        customer.validateMatchingLoginPassword(encrypt(loginRequest.getPassword()));
         return CustomerResponse.from(customer);
     }
 
@@ -56,7 +56,7 @@ public class CustomerService {
     @Transactional
     public void updatePassword(final CustomerIdentificationRequest customerIdentificationRequest, final CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         Customer customer = findCustomerById(customerIdentificationRequest.getId());
-        customer.validateMatchingOriginalPassword(customerUpdatePasswordRequest.getOldPassword());
+        customer.validateMatchingOriginalPassword(encrypt(customerUpdatePasswordRequest.getOldPassword()));
         Customer customerForUpdate = createCustomerForUpdatePassword(customerUpdatePasswordRequest, customer);
         customerDao.updatePassword(customerForUpdate.getId(), customerForUpdate.getPassword());
     }
@@ -75,6 +75,14 @@ public class CustomerService {
     private Customer findCustomerById(final Long id) {
         return customerDao.findById(id)
                 .orElseThrow(() -> new CustomerDataNotFoundException("존재하지 않는 회원입니다."));
+    }
+
+    private Customer encrypt(final Customer customer) {
+        return encryptionStrategy.encrypt(customer);
+    }
+
+    private String encrypt(final String text) {
+        return encryptionStrategy.encrypt(text);
     }
 
     private void validateCustomer(final Customer customer) {
@@ -96,7 +104,7 @@ public class CustomerService {
 
     private Customer createCustomerForUpdate(final CustomerUpdateRequest customerUpdateRequest, final Customer customer) {
         return Customer.getEncrypted(customer.getId(), customer.getUserId(),
-                customerUpdateRequest.getNickname(), customer.getPassword());
+                customerUpdateRequest.getNickname(), encrypt(customer.getPassword()));
     }
 
     private Customer createCustomerForUpdatePassword(final CustomerUpdatePasswordRequest customerUpdatePasswordRequest, final Customer customer) {
