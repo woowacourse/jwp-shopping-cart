@@ -12,13 +12,13 @@ public class Member {
     public Member(Long id, String email, String password, String name) {
         this.id = id;
         this.email = new Email(email);
-        this.password = new Password(password);
+        this.password = Password.fromEncoded(password);
         this.name = new Name(name);
     }
 
     public Member(String email, String password, String name, PasswordEncoder passwordEncoder) {
         this.email = new Email(email);
-        this.password = new Password(password, passwordEncoder);
+        this.password = Password.fromNotEncoded(password, passwordEncoder);
         this.name = new Name(name);
     }
 

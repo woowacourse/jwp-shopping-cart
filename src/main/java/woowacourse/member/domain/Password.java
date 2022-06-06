@@ -7,20 +7,39 @@ import woowacourse.member.infrastructure.PasswordEncoder;
 
 public class Password {
 
+    private static final int ENCODED_PASSWORD_LENGTH = 64;
     private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@!?-])[A-Za-z\\d@!?-]{6,20}";
 
     private String password;
 
-    public Password(String password) {
+    private Password(String password) {
         this.password = password;
     }
 
-    public Password(String password, PasswordEncoder passwordEncoder) {
-        validatePassword(password);
-        this.password = passwordEncoder.encode(password);
+    public static Password fromEncoded(String password) {
+        validateEncoded(password);
+        return new Password(password);
     }
 
-    private void validatePassword(final String password) {
+    private static void validateEncoded(String password) {
+        if (password.length() != ENCODED_PASSWORD_LENGTH) {
+            throw new IllegalArgumentException("[ERROR] 올바른 비밀번호 입력 값이 아닙니다.");
+        }
+    }
+
+    public static Password fromNotEncoded(String password, PasswordEncoder passwordEncoder) {
+        validateNotEncoded(password);
+        validatePassword(password);
+        return new Password(passwordEncoder.encode(password));
+    }
+
+    private static void validateNotEncoded(String password) {
+        if (password.length() == ENCODED_PASSWORD_LENGTH) {
+            throw new IllegalArgumentException("[ERROR] 올바른 비밀번호 입력 값이 아닙니다.");
+        }
+    }
+
+    private static void validatePassword(final String password) {
         if (!Pattern.matches(PASSWORD_REGEX, password)) {
             throw new PasswordNotValidException();
         }

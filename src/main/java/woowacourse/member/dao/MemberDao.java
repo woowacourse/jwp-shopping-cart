@@ -1,11 +1,9 @@
 package woowacourse.member.dao;
 
-import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -41,7 +39,7 @@ public class MemberDao {
     }
 
     public Optional<Member> findByEmail(final String email) {
-        String sql= "SELECT id, email, password, name FROM member WHERE email = :email";
+        String sql = "SELECT id, email, password, name FROM member WHERE email = :email";
         SqlParameterSource parameters = new MapSqlParameterSource("email", email);
 
         try {
@@ -52,7 +50,7 @@ public class MemberDao {
     }
 
     public Optional<Member> findById(final Long id) {
-        String sql= "SELECT id, email, password, name FROM member WHERE id = :id";
+        String sql = "SELECT id, email, password, name FROM member WHERE id = :id";
         SqlParameterSource parameters = new MapSqlParameterSource("id", id);
 
         try {
@@ -75,14 +73,16 @@ public class MemberDao {
     public void updateName(final Member member) {
         String sql = "UPDATE member SET name = :name WHERE id = :id";
 
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(member);
+        SqlParameterSource parameters = new MapSqlParameterSource("id", member.getId())
+                .addValue("name", member.getName());
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 
     public void updatePassword(final Member member) {
         String sql = "UPDATE member SET password = :password WHERE id = :id";
 
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(member);
+        SqlParameterSource parameters = new MapSqlParameterSource("id", member.getId())
+                .addValue("password", member.getPassword());
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 

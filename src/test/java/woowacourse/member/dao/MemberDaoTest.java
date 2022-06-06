@@ -87,20 +87,23 @@ public class MemberDaoTest {
     @Test
     void updateName() {
         Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
-        memberDao.updateName(new Member(id, EMAIL, PASSWORD, "MARU"));
-        Member member = memberDao.findById(id).get();
+        Member savedMember = memberDao.findById(id).get();
+        savedMember.updateName("MARU");
+        memberDao.updateName(savedMember);
 
-        assertThat(member.getName()).isEqualTo("MARU");
+        assertThat(memberDao.findById(id).get().getName()).isEqualTo("MARU");
     }
 
     @DisplayName("비밀번호를 업데이트 한다.")
     @Test
     void updatePassword() {
         Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
-        memberDao.updatePassword(new Member(id, EMAIL, "Maru1234!", NAME));
-        Member member = memberDao.findById(id).get();
+        Member savedMember = memberDao.findById(id).get();
+        savedMember.updatePassword(PASSWORD, "Maru1234!", new SHA256PasswordEncoder());
+        memberDao.updatePassword(savedMember);
 
-        assertThat(member.getPassword()).isEqualTo("Maru1234!");
+        assertThat(memberDao.findById(id).get().getPassword())
+                .isEqualTo(new SHA256PasswordEncoder().encode("Maru1234!"));
     }
 
     @DisplayName("멤버를 삭제한다.")
