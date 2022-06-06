@@ -10,13 +10,11 @@ import static woowacourse.shoppingcart.application.ProductFixture.사과;
 
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Price;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
@@ -33,11 +31,6 @@ class ProductServiceTest {
     public ProductServiceTest() {
         MockitoAnnotations.openMocks(this);
         this.productService = new ProductService(productDao);
-    }
-
-    @BeforeEach
-    void setUp() {
-        Price price = new Price(1_000);
     }
 
     @Test
