@@ -9,6 +9,7 @@ import woowacourse.auth.ui.dto.TokenRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerChangePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerSignUpRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerChangeRequest;
+import woowacourse.shoppingcart.ui.dto.ProductAddRequest;
 
 public class ResponseCreator {
 
@@ -67,6 +68,36 @@ public class ResponseCreator {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
                 .delete("/api/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> postProduct(String name, int price, String imageUrl) {
+        ProductAddRequest request = new ProductAddRequest(name, price, imageUrl);
+
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/api/products")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> getProducts() {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/products")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> getProductById(Long productId) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/products/" + productId)
                 .then().log().all()
                 .extract();
     }
