@@ -35,6 +35,7 @@ public class CartService {
         cartItemDao.addCartItem(memberId, productId, quantity);
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findAll(long memberId) {
         return cartItemDao.findAll(memberId)
                 .stream()
