@@ -40,7 +40,8 @@ public class CartItemDao {
     }
 
     public Long addCartItem(final Long customerId, final Long productId, final Integer quantity) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?) "
+            + "ON DUPLICATE KEY UPDATE quantity = quantity + ?";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -48,9 +49,19 @@ public class CartItemDao {
             preparedStatement.setLong(1, customerId);
             preparedStatement.setLong(2, productId);
             preparedStatement.setInt(3, quantity);
+            preparedStatement.setInt(4, quantity);
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return getInsertedOrUpdatedKey(keyHolder, customerId, productId);
+    }
+
+    private Long getInsertedOrUpdatedKey(KeyHolder keyHolder, Long customerId, Long productId) {
+        final Number keyNumber = keyHolder.getKey();
+        if (keyNumber != null) {
+            return keyNumber.longValue();
+        }
+        final String query = "SELECT id FROM cart_item WHERE customer_id = ? and product_id = ?";
+        return jdbcTemplate.queryForObject(query, Long.class, customerId, productId);
     }
 
     public void deleteCartItem(final Long id) {

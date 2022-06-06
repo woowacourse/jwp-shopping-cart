@@ -33,6 +33,8 @@ create table cart_item
 ) engine = InnoDB
   default charset = utf8mb4;
 
+alter table cart_item add unique (customer_id, product_id);
+
 create table orders
 (
     id          bigint not null auto_increment,

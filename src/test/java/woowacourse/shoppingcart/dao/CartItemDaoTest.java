@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,7 +50,31 @@ public class CartItemDaoTest {
         final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity);
 
         // then
-        assertThat(cartId).isEqualTo(3L);
+        assertThat(cartId).isEqualTo(1L);
+    }
+
+    @DisplayName("카트에 같은 아이템을 두 번 담으면, 수량이 합쳐진다.")
+    @Test
+    void addCartItemTwice() {
+        // given
+        final Long customerId = 1L;
+        final Long productId = 1L;
+        final Integer quantity = 10;
+
+        // when
+        final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity);
+
+        // then
+        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
+        final CartItem cartItem = cartItems.stream()
+            .filter(item -> item.getId().equals(cartId))
+            .findAny()
+            .orElseThrow();
+
+        Assertions.assertAll(
+            () -> assertThat(cartId).isEqualTo(1L),
+            () -> assertThat(cartItem.getQuantity()).isEqualTo(15)
+        );
     }
 
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
