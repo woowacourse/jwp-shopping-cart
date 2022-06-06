@@ -9,20 +9,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import woowacourse.auth.application.CustomerService;
-import woowacourse.auth.domain.EncryptedPassword;
-import woowacourse.auth.domain.Password;
-import woowacourse.auth.domain.User;
-import woowacourse.common.exception.InvalidRequestException;
-import woowacourse.common.exception.NotFoundException;
-import woowacourse.setup.DatabaseTest;
 import woowacourse.auth.dao.CustomerDao;
 import woowacourse.auth.domain.Customer;
+import woowacourse.auth.domain.EncryptedPassword;
+import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.request.SignUpRequest;
 import woowacourse.auth.dto.request.UpdateMeRequest;
 import woowacourse.auth.dto.request.UpdatePasswordRequest;
-import woowacourse.auth.dto.response.GetMeResponse;
 import woowacourse.auth.dto.response.UniqueUsernameResponse;
+import woowacourse.common.exception.InvalidRequestException;
+import woowacourse.setup.DatabaseTest;
 import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -33,6 +29,7 @@ class CustomerServiceTest extends DatabaseTest {
     private static final EncryptedPassword 암호화된_비밀번호 = new Password(비밀번호).toEncrypted();
     private static final String 유효한_닉네임 = "닉네임";
     private static final int 유효한_나이 = 20;
+    private final Customer 유효한_고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
 
     private final CustomerService customerService;
     private final CustomerDao customerDao;
@@ -42,31 +39,6 @@ class CustomerServiceTest extends DatabaseTest {
         customerDao = new CustomerDao(jdbcTemplate);
         customerService = new CustomerService(customerDao);
         databaseFixture = new DatabaseFixture(jdbcTemplate);
-    }
-
-    @DisplayName("getCustomer 메서드는 사용자 정보에 해당되는 고객 데이터를 조회")
-    @Nested
-    class GetCustomerTest {
-
-        @Test
-        void 존재하는_고객의_정보인_경우_조회결과_반환() {
-            Customer 고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
-            databaseFixture.save(고객);
-            User 고객에_대응되는_사용자 = new User(유효한_아이디, 암호화된_비밀번호);
-
-            GetMeResponse actual = customerService.getCustomer(고객에_대응되는_사용자);
-            GetMeResponse expected = new GetMeResponse(고객);
-
-            assertThat(actual).isEqualTo(expected);
-        }
-
-        @Test
-        void 대응되는_고객이_존재하지_않는_경우_예외발생() {
-            User 대응되는_고객이_없는_사용자 = new User(유효한_아이디, 암호화된_비밀번호);
-
-            assertThatThrownBy(() -> customerService.getCustomer(대응되는_고객이_없는_사용자))
-                    .isInstanceOf(NotFoundException.class);
-        }
     }
 
     @DisplayName("checkUniqueUsername 메서드는 특정 아이디가 이미 존재하는지의 여부를 반환")
@@ -170,9 +142,6 @@ class CustomerServiceTest extends DatabaseTest {
     @Nested
     class UpdateNicknameAndAgeTest {
 
-        private final User 유효한_사용자 = new User(유효한_아이디, 암호화된_비밀번호);
-        private final Customer 유효한_고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
-
         @Test
         void 유효한_정보로_고객의_닉네임과_나이_수정() {
             databaseFixture.save(유효한_고객);
@@ -180,7 +149,7 @@ class CustomerServiceTest extends DatabaseTest {
             int 새로운_나이 = 100;
             UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest(새로운_닉네임, 새로운_나이);
 
-            customerService.updateNicknameAndAge(유효한_사용자, 수정된_고객_정보);
+            customerService.updateNicknameAndAge(유효한_고객, 수정된_고객_정보);
             Customer actual = findCustomer(유효한_아이디);
             Customer expected = new Customer(유효한_아이디, 암호화된_비밀번호, 새로운_닉네임, 새로운_나이);
 
@@ -193,15 +162,7 @@ class CustomerServiceTest extends DatabaseTest {
             UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest(유효한_닉네임, 유효한_나이);
 
             assertThatNoException()
-                    .isThrownBy(() -> customerService.updateNicknameAndAge(유효한_사용자, 수정된_고객_정보));
-        }
-
-        @Test
-        void 사용자에_대응되는_고객이_없는_경우_예외발생() {
-            UpdateMeRequest 수정된_고객_정보 = new UpdateMeRequest("새로운_닉네임", 100);
-
-            assertThatThrownBy(() -> customerService.updateNicknameAndAge(유효한_사용자, 수정된_고객_정보))
-                    .isInstanceOf(NotFoundException.class);
+                    .isThrownBy(() -> customerService.updateNicknameAndAge(유효한_고객, 수정된_고객_정보));
         }
     }
 
@@ -209,8 +170,6 @@ class CustomerServiceTest extends DatabaseTest {
     @Nested
     class UpdatePasswordTest {
 
-        private final User 유효한_사용자 = new User(유효한_아이디, 암호화된_비밀번호);
-        private final Customer 유효한_고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
         private final String 새로운_비밀번호 = "newpw123@#";
 
         @Test
@@ -218,7 +177,7 @@ class CustomerServiceTest extends DatabaseTest {
             databaseFixture.save(유효한_고객);
             UpdatePasswordRequest 비밀번호_수정_정보 = new UpdatePasswordRequest(비밀번호, 새로운_비밀번호);
 
-            customerService.updatePassword(유효한_사용자, 비밀번호_수정_정보);
+            customerService.updatePassword(유효한_고객, 비밀번호_수정_정보);
             EncryptedPassword actual = findCustomer(유효한_아이디).getEncryptedPassword();
 
             assertThat(actual.hasSamePassword(새로운_비밀번호)).isTrue();
@@ -230,16 +189,8 @@ class CustomerServiceTest extends DatabaseTest {
             String 틀린_기존_비밀번호 = "wrong1234!@#";
             UpdatePasswordRequest 비밀번호_수정_정보 = new UpdatePasswordRequest(틀린_기존_비밀번호, 새로운_비밀번호);
 
-            assertThatThrownBy(() -> customerService.updatePassword(유효한_사용자, 비밀번호_수정_정보))
+            assertThatThrownBy(() -> customerService.updatePassword(유효한_고객, 비밀번호_수정_정보))
                     .isInstanceOf(InvalidRequestException.class);
-        }
-
-        @Test
-        void 사용자에_대응되는_고객이_없는_경우_예외발생() {
-            UpdatePasswordRequest 비밀번호_수정_정보 = new UpdatePasswordRequest(비밀번호, 새로운_비밀번호);
-
-            assertThatThrownBy(() -> customerService.updatePassword(유효한_사용자, 비밀번호_수정_정보))
-                    .isInstanceOf(NotFoundException.class);
         }
     }
 
@@ -247,23 +198,14 @@ class CustomerServiceTest extends DatabaseTest {
     @Nested
     class DeleteCustomerTest {
 
-        private final User 유효한_사용자 = new User(유효한_아이디, 암호화된_비밀번호);
-        private final Customer 유효한_고객 = new Customer(유효한_아이디, 암호화된_비밀번호, 유효한_닉네임, 유효한_나이);
-
         @Test
         void 사용자에_대응되는_고객이_존재하면_삭제성공() {
             databaseFixture.save(유효한_고객);
 
-            customerService.deleteCustomer(유효한_사용자);
+            customerService.deleteCustomer(유효한_고객);
             boolean exists = customerDao.findByUserName(유효한_아이디).isPresent();
 
             assertThat(exists).isFalse();
-        }
-
-        @Test
-        void 사용자에_대응되는_고객이_없는_경우_예외발생() {
-            assertThatThrownBy(() -> customerService.deleteCustomer(유효한_사용자))
-                    .isInstanceOf(NotFoundException.class);
         }
     }
 

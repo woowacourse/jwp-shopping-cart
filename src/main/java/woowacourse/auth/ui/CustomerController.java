@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-import woowacourse.auth.domain.User;
+import woowacourse.auth.domain.Customer;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.dto.request.SignUpRequest;
 import woowacourse.auth.dto.request.UniqueUsernameRequest;
@@ -39,28 +39,27 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<GetMeResponse> getMe(@ApiIgnore User authUser) {
-        GetMeResponse currentCustomer = customerService.getCustomer(authUser);
-        return ResponseEntity.ok(currentCustomer);
+    public ResponseEntity<GetMeResponse> getMe(@ApiIgnore Customer authCustomer) {
+        return ResponseEntity.ok(new GetMeResponse(authCustomer));
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> updateMe(@ApiIgnore User authUser,
+    public ResponseEntity<Void> updateMe(@ApiIgnore Customer authCustomer,
                                          @Validated @RequestBody UpdateMeRequest updateMeRequest) {
-        customerService.updateNicknameAndAge(authUser, updateMeRequest);
+        customerService.updateNicknameAndAge(authCustomer, updateMeRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMe(@ApiIgnore User authUser) {
-        customerService.deleteCustomer(authUser);
+    public ResponseEntity<Void> deleteMe(@ApiIgnore Customer authCustomer) {
+        customerService.deleteCustomer(authCustomer);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me/password")
-    public ResponseEntity<Void> updatePassword(@ApiIgnore User authUser,
+    public ResponseEntity<Void> updatePassword(@ApiIgnore Customer authCustomer,
                                                @Validated @RequestBody UpdatePasswordRequest updatePasswordRequest) {
-        customerService.updatePassword(authUser, updatePasswordRequest);
+        customerService.updatePassword(authCustomer, updatePasswordRequest);
         return ResponseEntity.ok().build();
     }
 

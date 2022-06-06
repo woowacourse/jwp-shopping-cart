@@ -6,8 +6,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.ui.AuthArgumentResolver;
 import woowacourse.auth.ui.AuthorizationInterceptor;
+import woowacourse.auth.ui.CustomerArgumentResolver;
 
 @Configuration
 public class AuthenticationConfig implements WebMvcConfigurer {
@@ -25,6 +25,6 @@ public class AuthenticationConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(new AuthArgumentResolver(authService));
+        argumentResolvers.add(new CustomerArgumentResolver(authService));
     }
 }

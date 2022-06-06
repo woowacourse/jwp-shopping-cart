@@ -54,8 +54,8 @@ public class Customer {
         }
     }
 
-    public boolean hasSameUsername(String username) {
-        return this.username.equals(username);
+    public boolean hasDifferentPassword(String password) {
+        return !this.password.hasSamePassword(password);
     }
 
     public String getUsername() {
