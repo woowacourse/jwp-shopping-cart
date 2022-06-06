@@ -1,7 +1,6 @@
 package woowacourse.auth.support;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import woowacourse.shoppingcart.exception.JwtTokenException;
 
 @Component
 public class JwtTokenProvider {
@@ -44,15 +44,14 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    public boolean validateToken(String token) {
+    public void validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parserBuilder()
+            Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
                     .build().parseClaimsJws(token);
 
-            return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            return false;
+            throw new JwtTokenException(e.getMessage());
         }
     }
 }
