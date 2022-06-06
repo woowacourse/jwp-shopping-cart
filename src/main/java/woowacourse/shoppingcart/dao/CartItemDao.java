@@ -90,4 +90,16 @@ public class CartItemDao {
         params.addValue("productId", productId);
         return Objects.requireNonNull(namedJdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
+    
+    public void updateQuantity(Long customerId, Long productId, int quantity) {
+        String sql = "update cart_item set quantity = :quantity"
+                + " where customer_id = :customerId"
+                + " and product_id = :productId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("quantity", quantity);
+        params.addValue("customerId", customerId);
+        params.addValue("productId", productId);
+
+        namedJdbcTemplate.update(sql, params);
+    }
 }

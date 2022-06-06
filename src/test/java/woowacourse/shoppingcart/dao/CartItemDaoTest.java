@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dao.dto.CartItemDto;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -128,5 +130,22 @@ public class CartItemDaoTest {
 
         //then
         assertThat(result).isFalse();
+    }
+
+    @DisplayName("특정 사용자의 특정 물건의 수량을 변경한다.")
+    @Test
+    void updateQuantityTest() {
+        Long customerId = 1L;
+        Long productId = 1L;
+        int quantity = 10;
+
+        cartItemDao.updateQuantity(customerId, productId, quantity);
+        CartItemDto cartItemDto = cartItemDao.findCartItemByCustomerId(customerId)
+                .stream()
+                .filter(it -> it.getProductId() == productId)
+                .findAny()
+                .orElseThrow(InvalidCartItemException::new);
+
+        assertThat(cartItemDto.getQuantity()).isEqualTo(quantity);
     }
 }
