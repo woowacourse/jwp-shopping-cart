@@ -30,32 +30,26 @@ public class ProductDaoTest {
     @DisplayName("Product를 저장하면, id를 반환한다.")
     @Test
     void save() {
-        // given
         String name = "초콜렛";
         int price = 1_000;
         String imageUrl = "http://www.test.com";
 
-        // when
         Long productId = productDao.save(new Product(name, price, imageUrl, false));
 
-        // then
         assertThat(productId).isEqualTo(1L);
     }
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
     @Test
     void findProductById() {
-        // given
         String name = "초콜렛";
         int price = 1_000;
         String imageUrl = "http://www.test.com";
         Long productId = productDao.save(new Product(name, price, imageUrl, false));
         Product expectedProduct = new Product(productId, name, price, imageUrl, false);
 
-        // when
         Product product = productDao.findProductById(productId);
 
-        // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
     }
 
@@ -63,32 +57,26 @@ public class ProductDaoTest {
     @Test
     void getProducts() {
 
-        // given
         int size = 0;
 
-        // when
-        List<Product> products = productDao.findProducts();
+        List<Product> products = productDao.findSellingProducts();
 
-        // then
         assertThat(products).size().isEqualTo(size);
     }
 
     @DisplayName("싱품 삭제")
     @Test
     void deleteProduct() {
-        // given
         String name = "초콜렛";
         int price = 1_000;
         String imageUrl = "http://www.test.com";
 
         Long productId = productDao.save(new Product(name, price, imageUrl, false));
-        int beforeSize = productDao.findProducts().size();
+        int beforeSize = productDao.findSellingProducts().size();
 
-        // when
         productDao.delete(productId);
 
-        // then
-        int afterSize = productDao.findProducts().size();
+        int afterSize = productDao.findSellingProducts().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
     }
 }

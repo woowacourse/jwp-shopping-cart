@@ -124,7 +124,8 @@
     - 상품 추가
     - 상품 삭제
     - [x] product 테이블에 deleted (판매중인지) 칼럼 추가
-    - [ ] product 삭제 시 실제로 delete 하는 것이 아닌 deleted=true 로 수정
+    - [x] product 삭제 시 실제로 delete 하는 것이 아닌 deleted=true 로 수정
+    - [x] 상품 전체 조회했을 때 delete 되지 않은 product만 보여주도록 수정
 - 장바구니(cartItem) 관련 기능
     - 장바구니 조회
     - 장바구니 추가

@@ -53,13 +53,18 @@ public class ProductDao {
                         resultSet.getBoolean("deleted"));
     }
 
-    public List<Product> findProducts() {
+    public List<Product> findAllProducts() {
         String sql = "SELECT id, name, price, image_url, deleted FROM product";
         return namedParameterJdbcTemplate.query(sql, mapToProduct());
     }
 
+    public List<Product> findSellingProducts() {
+        String sql = "SELECT id, name, price, image_url, deleted FROM product WHERE deleted = false";
+        return namedParameterJdbcTemplate.query(sql, mapToProduct());
+    }
+
     public void delete(Long productId) {
-        String sql = "DELETE FROM product WHERE id = :id";
+        String sql = "UPDATE product SET deleted = true WHERE id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", productId);
         namedParameterJdbcTemplate.update(sql, parameterSource);
     }
