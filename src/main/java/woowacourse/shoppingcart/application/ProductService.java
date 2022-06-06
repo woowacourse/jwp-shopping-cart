@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.product.ProductAddRequest;
+import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -25,8 +26,8 @@ public class ProductService {
         return productDao.findProducts();
     }
 
-    public Product findById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponse findById(final Long productId) {
+        return ProductResponse.from(productDao.findProductById(productId));
     }
 
     @Transactional

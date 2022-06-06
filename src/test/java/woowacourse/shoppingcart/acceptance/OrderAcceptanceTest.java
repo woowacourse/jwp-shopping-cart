@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.product.ProductAddRequest;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
@@ -31,8 +32,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
 
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        Long productId1 = 상품_등록되어_있음(
+                new ProductAddRequest("치킨", 10_000, 100, "chicken.png"));
+        Long productId2 = 상품_등록되어_있음(
+                new ProductAddRequest("치킨", 10_000, 100, "chicken.png"));
 
         cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
         cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
