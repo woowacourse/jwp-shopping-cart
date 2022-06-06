@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Image;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
@@ -32,8 +32,8 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        Image wooWaOneImg = new Image("woowa1.com", "woowa1");
-        Image wooWaTwoImg = new Image("woowa2.com", "woowa2");
+        ThumbnailImage wooWaOneImg = new ThumbnailImage("woowa1.com", "woowa1");
+        ThumbnailImage wooWaTwoImg = new ThumbnailImage("woowa2.com", "woowa2");
 
         productDao.save(new Product("banana", 1_000, 10, wooWaOneImg));
         productDao.save(new Product("apple", 2_000, 10, wooWaTwoImg));

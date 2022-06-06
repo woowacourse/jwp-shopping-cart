@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Image;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
@@ -33,10 +33,10 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final int stockQuantity = 10;
-        final Image image = new Image("url", "alt");
+        final ThumbnailImage thumbnailImage = new ThumbnailImage("url", "alt");
 
         // when
-        final Long productId = productDao.save(new Product(name, price, stockQuantity, image));
+        final Long productId = productDao.save(new Product(name, price, stockQuantity, thumbnailImage));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -49,10 +49,10 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final int stockQuantity = 10;
-        final Image image = new Image("url", "alt");
+        final ThumbnailImage thumbnailImage = new ThumbnailImage("url", "alt");
 
-        final Long productId = productDao.save(new Product(name, price, stockQuantity, image));
-        final Product expectedProduct = new Product(productId, name, price, stockQuantity, image);
+        final Long productId = productDao.save(new Product(name, price, stockQuantity, thumbnailImage));
+        final Product expectedProduct = new Product(productId, name, price, stockQuantity, thumbnailImage);
 
         // when
         final Product product = productDao.findProductById(productId);
@@ -82,9 +82,9 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final int stockQuantity = 10;
-        final Image image = new Image("url", "alt");
+        final ThumbnailImage thumbnailImage = new ThumbnailImage("url", "alt");
 
-        final Long productId = productDao.save(new Product(name, price, stockQuantity, image));
+        final Long productId = productDao.save(new Product(name, price, stockQuantity, thumbnailImage));
         final int beforeSize = productDao.findProducts().size();
 
         // when

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @Service
@@ -25,7 +26,10 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public Long addProduct(final Product product) {
+    public Long addProduct(final ProductRequest productRequest) {
+        Product product = new Product(productRequest.getName(), productRequest.getPrice(),
+                productRequest.getStockQuantity(), productRequest.getThumbnailImage());
+
         return productDao.save(product);
     }
 

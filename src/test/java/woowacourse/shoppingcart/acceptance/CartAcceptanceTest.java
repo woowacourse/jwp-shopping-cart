@@ -21,7 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.common.AcceptanceTest;
-import woowacourse.shoppingcart.domain.Image;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.dto.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
@@ -34,11 +34,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        Image chickenImage = new Image("http://example.com/chicken.jpg", "chicken");
-        Image beerImage = new Image("http://example.com/beer.jpg", "chicken");
+        ThumbnailImage chickenThumbnailImage = new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
+        ThumbnailImage beerThumbnailImage = new ThumbnailImage("http://example.com/beer.jpg", "chicken");
 
-        상품_등록되어_있음("치킨", 10_000, 10, chickenImage);
-        상품_등록되어_있음("맥주", 20_000, 10, beerImage);
+        상품_등록되어_있음("치킨", 10_000, 10, chickenThumbnailImage);
+        상품_등록되어_있음("맥주", 20_000, 10, beerThumbnailImage);
     }
 
 

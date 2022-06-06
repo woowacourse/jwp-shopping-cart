@@ -1,6 +1,9 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.AcceptanceTestFixture.deleteMethodRequest;
+import static woowacourse.AcceptanceTestFixture.getMethodRequest;
+import static woowacourse.AcceptanceTestFixture.postMethodRequest;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -12,16 +15,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.common.AcceptanceTest;
-import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
+import woowacourse.shoppingcart.dto.ProductRequest;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
-        Image image = new Image("http://example.com/chicken.jpg", "chicken");
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, 10, image);
+        ThumbnailImage thumbnailImage = new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
+        ProductRequest productRequest = new ProductRequest("치킨", 1000, 10, thumbnailImage);
+
+        ExtractableResponse<Response> response = postMethodRequest(productRequest, "/api/products");
 
         상품_추가됨(response);
     }
@@ -29,43 +35,51 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
-        Image chickenImage = new Image("http://example.com/chicken.jpg", "chicken");
-        Image beerImage = new Image("http://example.com/beer.jpg", "chicken");
+        ThumbnailImage chickenThumbnailImage = new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
+        ThumbnailImage beerThumbnailImage = new ThumbnailImage("http://example.com/beer.jpg", "chicken");
 
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, 10, chickenImage);
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, 10, beerImage);
+        ProductRequest chickenRequest = new ProductRequest("치킨", 1000, 10, chickenThumbnailImage);
+        ProductRequest beerRequest = new ProductRequest("치킨", 1000, 10, beerThumbnailImage);
 
-        ExtractableResponse<Response> response = 상품_목록_조회_요청();
+        postMethodRequest(chickenRequest, "/api/products");
+        postMethodRequest(beerRequest, "/api/products");
+
+        ExtractableResponse<Response> response = getMethodRequest("/api/products");
 
         조회_응답됨(response);
-        상품_목록_포함됨(productId1, productId2, response);
+        상품_목록_포함됨(1L, 2L, response);
     }
 
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
-        Image chickenImage = new Image("http://example.com/chicken.jpg", "chicken");
-        Long productId = 상품_등록되어_있음("치킨", 10_000, 10, chickenImage);
+        ThumbnailImage chickenThumbnailImage = new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
+        ProductRequest chickenRequest = new ProductRequest("치킨", 1000, 10, chickenThumbnailImage);
 
-        ExtractableResponse<Response> response = 상품_조회_요청(productId);
+        postMethodRequest(chickenRequest, "/api/products");
+
+        ExtractableResponse<Response> response = getMethodRequest("/api/products/2");
 
         조회_응답됨(response);
-        상품_조회됨(response, productId);
+        상품_조회됨(response, 2L);
     }
 
     @DisplayName("상품을 삭제한다")
     @Test
     void deleteProduct() {
-        Image chickenImage = new Image("http://example.com/chicken.jpg", "chicken");
-        Long productId = 상품_등록되어_있음("치킨", 10_000, 10, chickenImage);
+        ThumbnailImage chickenThumbnailImage = new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
+        ProductRequest chickenRequest = new ProductRequest("치킨", 1000, 10, chickenThumbnailImage);
 
-        ExtractableResponse<Response> response = 상품_삭제_요청(productId);
+        postMethodRequest(chickenRequest, "/api/products");
+
+        ExtractableResponse<Response> response = deleteMethodRequest("/api/products/1");
 
         상품_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, int stockQuantity, Image image) {
-        Product productRequest = new Product(name, price, stockQuantity, image);
+    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, int stockQuantity,
+                                                         ThumbnailImage thumbnailImage) {
+        Product productRequest = new Product(name, price, stockQuantity, thumbnailImage);
 
         return RestAssured
                 .given().log().all()
@@ -76,40 +90,13 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_목록_조회_요청() {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
-    }
-
     public static void 상품_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 상품_등록되어_있음(String name, int price, int stockQuantity, Image image) {
-        ExtractableResponse<Response> response = 상품_등록_요청(name, price, stockQuantity, image);
+    public static Long 상품_등록되어_있음(String name, int price, int stockQuantity, ThumbnailImage thumbnailImage) {
+        ExtractableResponse<Response> response = 상품_등록_요청(name, price, stockQuantity, thumbnailImage);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 

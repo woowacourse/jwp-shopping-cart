@@ -23,7 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.domain.Image;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
@@ -76,9 +76,9 @@ public class OrderControllerTest {
         // given
         final String customerName = "pobi";
         final Long orderId = 1L;
-        final Image image= new Image("url", "alt");
+        final ThumbnailImage thumbnailImage = new ThumbnailImage("url", "alt");
         final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", image, 2)));
+                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", thumbnailImage, 2)));
 
         when(orderService.findOrderById(customerName, orderId))
                 .thenReturn(expected);
@@ -91,8 +91,8 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("orderDetails[0].productId").value(2L))
                 .andExpect(jsonPath("orderDetails[0].price").value(1_000))
                 .andExpect(jsonPath("orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("orderDetails[0].image.url").value(image.getUrl()))
-                .andExpect(jsonPath("orderDetails[0].image.alt").value(image.getAlt()))
+                .andExpect(jsonPath("orderDetails[0].image.url").value(thumbnailImage.getUrl()))
+                .andExpect(jsonPath("orderDetails[0].image.alt").value(thumbnailImage.getAlt()))
                 .andExpect(jsonPath("orderDetails[0].quantity").value(2));
     }
 
@@ -101,14 +101,14 @@ public class OrderControllerTest {
     void findOrders() throws Exception {
         // given
         final String customerName = "pobi";
-        final Image firstImage= new Image("url", "alt");
-        final Image secondImage= new Image("url", "alt");
+        final ThumbnailImage firstThumbnailImage = new ThumbnailImage("url", "alt");
+        final ThumbnailImage secondThumbnailImage = new ThumbnailImage("url", "alt");
 
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", firstImage, 2))),
+                        new OrderDetail(1L, 1_000, "banana", firstThumbnailImage, 2))),
                 new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", secondImage, 4)))
+                        new OrderDetail(2L, 2_000, "apple", secondThumbnailImage, 4)))
         );
 
         when(orderService.findOrdersByCustomerName(customerName))
@@ -122,16 +122,16 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))
                 .andExpect(jsonPath("$[0].orderDetails[0].price").value(1_000))
                 .andExpect(jsonPath("$[0].orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("$[0].orderDetails[0].image.url").value(firstImage.getUrl()))
-                .andExpect(jsonPath("$[0].orderDetails[0].image.alt").value(firstImage.getAlt()))
+                .andExpect(jsonPath("$[0].orderDetails[0].image.url").value(firstThumbnailImage.getUrl()))
+                .andExpect(jsonPath("$[0].orderDetails[0].image.alt").value(firstThumbnailImage.getAlt()))
                 .andExpect(jsonPath("$[0].orderDetails[0].quantity").value(2))
 
                 .andExpect(jsonPath("$[1].id").value(2L))
                 .andExpect(jsonPath("$[1].orderDetails[0].productId").value(2L))
                 .andExpect(jsonPath("$[1].orderDetails[0].price").value(2_000))
                 .andExpect(jsonPath("$[1].orderDetails[0].name").value("apple"))
-                .andExpect(jsonPath("$[0].orderDetails[0].image.url").value(secondImage.getUrl()))
-                .andExpect(jsonPath("$[0].orderDetails[0].image.alt").value(secondImage.getAlt()))
+                .andExpect(jsonPath("$[0].orderDetails[0].image.url").value(secondThumbnailImage.getUrl()))
+                .andExpect(jsonPath("$[0].orderDetails[0].image.alt").value(secondThumbnailImage.getAlt()))
                 .andExpect(jsonPath("$[1].orderDetails[0].quantity").value(4));
     }
 }

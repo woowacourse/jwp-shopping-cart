@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.domain;
 
-public class Image {
+public class ThumbnailImage {
     private final String url;
     private final String alt;
 
-    public Image(String url, String alt) {
+    public ThumbnailImage(String url, String alt) {
         this.url = url;
         this.alt = alt;
     }

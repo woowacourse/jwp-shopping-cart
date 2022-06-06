@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Image;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
@@ -22,7 +22,7 @@ public class ProductDao {
                     resultSet.getString("name"),
                     resultSet.getInt("price"),
                     resultSet.getInt("stock_quantity"),
-                    new Image(
+                    new ThumbnailImage(
                             resultSet.getString("url"),
                             resultSet.getString("alt")
                     )
@@ -41,8 +41,8 @@ public class ProductDao {
         params.put("name", product.getName());
         params.put("price", product.getPrice());
         params.put("stock_quantity", product.getStockQuantity());
-        params.put("url", product.getImage().getUrl());
-        params.put("alt", product.getImage().getAlt());
+        params.put("url", product.getThumbnailImage().getUrl());
+        params.put("alt", product.getThumbnailImage().getAlt());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }

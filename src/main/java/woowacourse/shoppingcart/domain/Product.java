@@ -5,21 +5,21 @@ public class Product {
     private String name;
     private int price;
     private int stockQuantity;
-    private Image image;
+    private ThumbnailImage thumbnailImage;
 
     public Product() {
     }
 
-    public Product(Long id, String name, int price, int stockQuantity, Image image) {
+    public Product(Long id, String name, int price, int stockQuantity, ThumbnailImage thumbnailImage) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
-        this.image = image;
+        this.thumbnailImage = thumbnailImage;
     }
 
-    public Product(String name, int price, int stockQuantity, Image image) {
-        this(null, name, price, stockQuantity, image);
+    public Product(String name, int price, int stockQuantity, ThumbnailImage thumbnailImage) {
+        this(null, name, price, stockQuantity, thumbnailImage);
     }
 
     public Long getId() {
@@ -38,7 +38,7 @@ public class Product {
         return stockQuantity;
     }
 
-    public Image getImage() {
-        return image;
+    public ThumbnailImage getThumbnailImage() {
+        return thumbnailImage;
     }
 }
