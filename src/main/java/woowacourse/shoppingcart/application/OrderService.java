@@ -1,39 +1,55 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.JdbcCartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class OrderService {
+    private final OrderDao orderDao;
+    private final ProductDao productDao;
+    private final OrdersDetailDao ordersDetailDao;
 
-//    private final OrderDao orderDao;
-//    private final OrdersDetailDao ordersDetailDao;
-//    private final JdbcCartItemDao cartItemDao;
-//    private final CustomerDao customerDao;
-//    private final ProductDao productDao;
-//
-//    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-//                        final JdbcCartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
-//        this.orderDao = orderDao;
-//        this.ordersDetailDao = ordersDetailDao;
-//        this.cartItemDao = cartItemDao;
-//        this.customerDao = customerDao;
-//        this.productDao = productDao;
-//    }
+    public OrderService(OrderDao orderDao, ProductDao productDao, OrdersDetailDao ordersDetailDao) {
+        this.orderDao = orderDao;
+        this.productDao = productDao;
+        this.ordersDetailDao = ordersDetailDao;
+    }
+
+    public Long addOrders(int customerId, OrderRequest orderRequest) {
+        final List<Long> productIds = getProductId(orderRequest);
+        checkProductIds(productIds);
+        // todo quantity까지 점검해야함 -> cart(product, quantity)를 만들기
+        final Long orderId = orderDao.addOrders(customerId);
+        addOrdersDetail(orderId, orderRequest);
+
+        return orderId;
+    }
+
+    private void addOrdersDetail(Long orderId, OrderRequest orderRequest) {
+        for (CartRequest cart : orderRequest.getCart()) {
+            ordersDetailDao.addOrdersDetail(orderId, cart.getProductId(), cart.getQuantity());
+        }
+    }
+
+    private List<Long> getProductId(OrderRequest orderRequest) {
+        return orderRequest.getCart()
+                .stream()
+                .map(CartRequest::getProductId)
+                .collect(Collectors.toList());
+    }
+
+    private void checkProductIds(List<Long> productIds) {
+        productIds.forEach(productDao::findProductById);
+    }
+
 //
 //    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String email) {
 //        final int customerId = customerDao.findByEmail(email).getId();

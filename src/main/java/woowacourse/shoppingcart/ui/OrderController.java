@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.application.OrderService;
@@ -13,22 +15,27 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/api/customers/{customerName}/orders")
+@RequestMapping("/api/customers/orders")
 public class OrderController {
-//    private final OrderService orderService;
-//
-//    public OrderController(final OrderService orderService) {
-//        this.orderService = orderService;
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<Void> addOrder(@PathVariable final String customerName,
-//                                   @RequestBody @Valid final List<OrderRequest> orderDetails) {
-//        final Long orderId = orderService.addOrder(orderDetails, customerName);
-//        return ResponseEntity.created(
-//                URI.create("/api/" + customerName + "/orders/" + orderId)).build();
-//    }
-//
+    private final OrderService orderService;
+
+    public OrderController(final OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final int customerId,
+                                         @RequestBody OrderRequest orderRequest) {
+        final Long orderId = orderService.addOrders(customerId, orderRequest);
+        final URI responseLocation = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{orderId}")
+                .buildAndExpand(orderId)
+                .toUri();
+
+        return ResponseEntity.created(responseLocation).build();
+    }
+
 //    @GetMapping("/{orderId}")
 //    public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
 //                                            @PathVariable final Long orderId) {
