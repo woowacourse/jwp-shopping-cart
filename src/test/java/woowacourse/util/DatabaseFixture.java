@@ -3,8 +3,10 @@ package woowacourse.util;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
 import woowacourse.auth.domain.user.Customer;
+import woowacourse.shoppingcart.domain.Product;
 
 @Repository
 public class DatabaseFixture {
@@ -21,5 +23,12 @@ public class DatabaseFixture {
         SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
 
         jdbcTemplate.update(sql, params);
+    }
+
+    public void save(Product... products) {
+        final String sql = "INSERT INTO product(id, name, price, image_url) "
+                + "VALUES(:id, :name, :price, :imageUrl)";
+
+        jdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(products));
     }
 }
