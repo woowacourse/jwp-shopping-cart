@@ -1,16 +1,16 @@
 package woowacourse.auth.ui;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.dto.*;
-import woowacourse.auth.support.AuthorizationExtractor;
-
-import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;

@@ -115,7 +115,7 @@ public class CustomerDaoTest {
         );
     }
 
-    @DisplayName("Customer Id를 통해 Customer를 수정하고 새로운 Customer를 생성했을 때 customerId와 정보가 올바른지 확인한다.")
+    @DisplayName("Customer Id를 통해 Customer를 수정하고 새로운 Customer를 생성했을 때 정보가 올바른지 확인한다.")
     @Test
     void saveTwoCustomers() {
         customerDao = new CustomerDao(jdbcTemplate);
@@ -129,7 +129,7 @@ public class CustomerDaoTest {
 
         Customer result = customerDao.findByEmail(new Email("new@naver.com"));
 
-        assertThat(result.getId()).isEqualTo(new Id(3L));
+        assertThat(result.getName()).isEqualTo(new Name(NAME));
     }
 
     @DisplayName("Customer Id를 통해 Customer를 삭제한다.")

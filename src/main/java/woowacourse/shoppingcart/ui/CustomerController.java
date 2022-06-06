@@ -2,12 +2,12 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.EmailRequest;
 import woowacourse.shoppingcart.dto.customer.EmailResponse;
-import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.application.CustomerService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -33,10 +33,10 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<CustomerResponse> registerCustomers(@RequestBody final CustomerRequest customerRequest) {
         CustomerResponse customerResponse = customerService.register(customerRequest);
-        return ResponseEntity.created(URI.create("/customers/login")).body(customerResponse);
+        return ResponseEntity.created(URI.create("/auth/login")).body(customerResponse);
     }
 
-    @PostMapping("/email")
+    @PostMapping("/email/validate")
     public ResponseEntity<EmailResponse> checkValidEmail(@RequestBody @Valid EmailRequest emailRequest) {
         return ResponseEntity.ok().body(customerService.checkValidEmail(emailRequest));
     }
@@ -54,6 +54,4 @@ public class CustomerController {
         customerService.delete(token);
         return ResponseEntity.noContent().build();
     }
-
-
 }

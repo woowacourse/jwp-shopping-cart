@@ -168,7 +168,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .body(emailRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers/email")
+                .when().post("/customers/email/validate")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value()).extract();
 
