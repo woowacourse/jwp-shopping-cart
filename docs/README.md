@@ -96,6 +96,15 @@
 </details>
 
 <details>
+<summary>소니의 1단계 두번째 리뷰</summary>
+
+- Service
+  - [ ] optional.get() 대신 optional.orElseThrow() 사용하기
+  - [ ] 비밀번호를 검증 로직을 customer로 이동
+
+</details>
+
+<details>
 <summary>2단계 기능 목록</summary>
 
 ### 기능 목록
