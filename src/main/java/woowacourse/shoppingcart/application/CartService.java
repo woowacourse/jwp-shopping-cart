@@ -27,6 +27,15 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    public Long addCart(final Long productId, final String account) {
+        final Long customerId = getCustomerIdByAccount(account);
+        try {
+            return cartItemDao.addCartItem(customerId, productId);
+        } catch (Exception e) {
+            throw new InvalidProductException();
+        }
+    }
+
     public List<Cart> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
@@ -44,18 +53,15 @@ public class CartService {
                 .orElseThrow(InvalidCustomerException::new);
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByAccount(customerName);
+    private List<Long> findCartIdsByCustomerName(final String account) {
+        final Long customerId = getCustomerIdByAccount(account);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByAccount(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+    private Long getCustomerIdByAccount(String account) {
+        return customerDao.findByAccount(account)
+                .orElseThrow(InvalidCustomerException::new)
+                .getId();
     }
 
     public void deleteCart(final String customerName, final Long cartId) {

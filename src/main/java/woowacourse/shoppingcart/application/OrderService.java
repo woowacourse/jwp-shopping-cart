@@ -12,8 +12,9 @@ import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.ui.dto.OrderRequest;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.ui.dto.OrderRequest;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -32,8 +33,8 @@ public class OrderService {
         this.customerDao = customerDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByAccount(customerName);
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String account) {
+        final Long customerId = getCustomerIdByAccount(account);
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
@@ -54,15 +55,15 @@ public class OrderService {
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByAccount(customerName);
+        final Long customerId = getCustomerIdByAccount(customerName);
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByAccount(customerName);
+    public List<Orders> findOrdersByCustomerName(final String account) {
+        final Long customerId = getCustomerIdByAccount(account);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
@@ -79,5 +80,11 @@ public class OrderService {
         }
 
         return new Orders(orderId, ordersDetails);
+    }
+
+    private Long getCustomerIdByAccount(String account) {
+        return customerDao.findByAccount(account)
+                .orElseThrow(InvalidCustomerException::new)
+                .getId();
     }
 }

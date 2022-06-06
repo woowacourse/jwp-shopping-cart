@@ -1,9 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -14,7 +12,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.entity.CustomerEntity;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
@@ -47,17 +44,6 @@ public class CustomerDao {
         String sql = "SELECT id, account, nickname, password, address, phone_number FROM customer WHERE id = :customerId";
         SqlParameterSource source = new MapSqlParameterSource("customerId", customerId);
         return Optional.ofNullable(DataAccessUtils.singleResult(jdbcTemplate.query(sql, source, ROW_MAPPER)));
-    }
-
-    public Long findIdByAccount(final String account) {
-        try {
-            final String sql = "SELECT id FROM customer WHERE account = :account";
-            SqlParameterSource source = new MapSqlParameterSource("account",
-                    account.toLowerCase(Locale.ROOT));
-            return jdbcTemplate.queryForObject(sql, source, Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
     }
 
     public Optional<CustomerEntity> findByAccount(String account) {
