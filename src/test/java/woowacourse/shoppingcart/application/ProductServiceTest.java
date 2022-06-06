@@ -65,4 +65,18 @@ class ProductServiceTest {
                         new ProductResponse(2L, "피자", 30_000, "http://pizza.test.com")
                 ));
     }
+
+    @Test
+    @DisplayName("상품을 ID로 조회할 수 있다.")
+    void findProduct() {
+        // given
+        productService.save(치킨);
+
+        // when
+        ProductResponse 치킨_조회 = productService.findById(1L);
+
+        // then
+        assertThat(치킨_조회).usingRecursiveComparison()
+                .isEqualTo(new ProductResponse(1L, "치킨", 20_000, "http://chicken.test.com"));
+    }
 }

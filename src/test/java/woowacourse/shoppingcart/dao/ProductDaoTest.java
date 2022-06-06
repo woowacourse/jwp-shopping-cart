@@ -41,6 +41,18 @@ public class ProductDaoTest {
         assertThat(productId).isEqualTo(1L);
     }
 
+    @DisplayName("상품 조회")
+    @Test
+    void findProduct() {
+        // given
+        productDao.save(new Product("치킨", 20_000, "http://chicken.test.com"));
+        // when
+        Product product = productDao.findById(1L).get();
+        // then
+        assertThat(product).usingRecursiveComparison()
+                .isEqualTo(new Product(1L, "치킨", 20_000, "http://chicken.test.com"));
+    }
+
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {

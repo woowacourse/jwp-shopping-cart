@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.global.exception.InvalidCustomerException;
 import woowacourse.global.exception.InvalidProductException;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
 import woowacourse.shoppingcart.application.dto.ProductSaveRequest;
@@ -28,6 +29,11 @@ public class ProductService {
         if (productDao.existByName(name)) {
             throw new InvalidProductException("[ERROR] 이미 존재하는 상품입니다.");
         }
+    }
+
+    public ProductResponse findById(Long id) {
+        return new ProductResponse(productDao.findById(id)
+                .orElseThrow(() -> new InvalidProductException("[ERROR] ID가 존재하지 않습니다.")));
     }
 
     public List<ProductResponse> findAll() {

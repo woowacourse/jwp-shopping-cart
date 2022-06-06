@@ -1,15 +1,18 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -37,6 +40,18 @@ public class ProductDao {
                 .addValue("price", product.getPrice())
                 .addValue("image_Url", product.getImageUrl());
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+    }
+
+    public Optional<Product> findById(Long id) {
+        String query = "SELECT id, name, price, image_Url FROM product WHERE id = :id";
+        SqlParameterSource nameParameters = new MapSqlParameterSource("id", id);
+
+        try {
+            Product product = template.queryForObject(query, nameParameters, PRODUCT_ROW_MAPPER);
+            return Optional.ofNullable(product);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<Product> findAll() {
