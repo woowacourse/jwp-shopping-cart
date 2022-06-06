@@ -1,14 +1,18 @@
 package woowacourse.shoppingcart.unit.cart.ui;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,6 +29,7 @@ import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.badrequest.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.unit.ControllerTest;
@@ -199,6 +204,82 @@ class CartItemControllerTest extends ControllerTest {
                         fieldWithPath("products[].price").description("가격"),
                         fieldWithPath("products[].imageUrl").description("상품 이미지 url"),
                         fieldWithPath("products[].quantity").description("상품 수량")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("장바구니에 들어있는 상품을 삭제한다.")
+    void deleteCartItem_existProduct_204() throws Exception {
+        // given
+        final Long productId = 1L;
+        String accessToken = "fake-token";
+        final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
+        getLoginCustomerByToken(accessToken, customer);
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                delete("/users/me/carts/{productId}", productId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        // docs
+        perform.andDo(document("delete-cart-item",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                pathParameters(
+                        parameterWithName("productId").description("상품 ID")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("장바구니에 존재하지 않는 상품을 삭제하면 400을 반환한다.")
+    void deleteCartItem_notExistProduct_400() throws Exception {
+        // given
+        final Long productId = 1L;
+        String accessToken = "fake-token";
+        final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
+        getLoginCustomerByToken(accessToken, customer);
+
+        willThrow(new NotInCustomerCartItemException())
+                .given(cartService)
+                .deleteCart(customer.getNickname(), productId);
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                delete("/users/me/carts/{productId}", productId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errorCode").value("1004"))
+                .andExpect(jsonPath("message").value("장바구니 아이템이 없습니다."));
+
+        // docs
+        perform.andDo(document("delete-cart-item-not-exist-item",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                pathParameters(
+                        parameterWithName("productId").description("상품 ID")
+                ),
+                responseFields(
+                        fieldWithPath("errorCode").description("에러 코드"),
+                        fieldWithPath("message").description("에러 메시지")
                 )
         ));
     }

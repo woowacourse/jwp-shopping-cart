@@ -44,10 +44,12 @@ public class CartItemController {
                 .build();
     }
 
-    @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                               @PathVariable final Long cartId) {
-        cartService.deleteCart(customerName, cartId);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteCartItem(@Login final Customer customer,
+                                               @PathVariable final Long productId) {
+        cartService.deleteCart(customer.getNickname(), productId);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
