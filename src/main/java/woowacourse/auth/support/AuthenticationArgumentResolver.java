@@ -18,7 +18,6 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
