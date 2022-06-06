@@ -46,7 +46,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers/login")
+                .when().post("/auth/login")
                 .then().log().all()
                 .extract().as(TokenResponse.class).getAccessToken();
 
@@ -93,7 +93,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers/login")
+                .when().post("/auth/login")
                 .then().log().all()
                 .extract();
 
@@ -125,7 +125,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers/login")
+                .when().post("/auth/login")
                 .then().log().all()
                 .extract();
 
@@ -155,7 +155,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(tokenRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers/login")
+                .when().post("/auth/login")
                 .then().log().all()
                 .extract().as(TokenResponse.class).getAccessToken();
 
