@@ -56,8 +56,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String thumbnail) {
+        Product productRequest = new Product(name, price, thumbnail);
 
         return RestAssured
                 .given().log().all()
@@ -100,8 +100,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
-        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl);
+    public static Long 상품_등록되어_있음(String name, int price, String thumbnail) {
+        ExtractableResponse<Response> response = 상품_등록_요청(name, price, thumbnail);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 
