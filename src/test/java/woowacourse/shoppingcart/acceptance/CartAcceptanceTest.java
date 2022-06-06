@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.equalTo;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -67,7 +66,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         class Context_not_exist_product extends AcceptanceTest {
             @DisplayName("장바구니 추가에 실패하고, 상태코드 400을 반환받는다.")
             @Test
-            void it_add_product_return_200() {
+            void it_fail_return_400() {
                 ValidatableResponse response = RestAssured
                         .given().log().all()
                         .header(AuthorizationExtractor.AUTHORIZATION,
@@ -79,6 +78,25 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
                 response.statusCode(HttpStatus.BAD_REQUEST.value())
                         .body("message", equalTo("물품이 존재하지 않습니다."));
+            }
+        }
+
+        @DisplayName("유효하지 않은 인가로 장바구니에 상품을 추가하려고 하면")
+        @Nested
+        class Context_invalid_token extends AcceptanceTest {
+            @DisplayName("장바구니 추가에 실패하고, 상태코드 401을 반환받는다.")
+            @Test
+            void it_fail_return_401() {
+                ValidatableResponse response = RestAssured
+                        .given().log().all()
+                        .header(AuthorizationExtractor.AUTHORIZATION,
+                                AuthorizationExtractor.BEARER_TYPE + " " + "invalid-token")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(request)
+                        .when().post("/users/me/carts")
+                        .then().log().all();
+
+                response.statusCode(HttpStatus.UNAUTHORIZED.value());
             }
         }
     }
