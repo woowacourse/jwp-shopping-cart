@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthenticationException;
 import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.shoppingcart.dto.response.ErrorResponse;
+import woowacourse.shoppingcart.exception.AlreadyExistCartItemException;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
 @RestControllerAdvice
@@ -31,6 +32,11 @@ public class ControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(AuthorizationException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(toErrorResponse(e));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(AlreadyExistCartItemException e) {
+        return ResponseEntity.status(HttpStatus.SEE_OTHER).body(toErrorResponse(e));
     }
 
     private ErrorResponse toErrorResponse(Exception e) {
