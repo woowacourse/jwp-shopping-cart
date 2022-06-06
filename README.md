@@ -60,6 +60,10 @@
 - [ ] 상품을 삭제한다.
 
 
+## 고민할 사항
+
+* CartService에서 CustomerDao가 아닌 CustomerService를 의존하도록 만들기 
+
 [API SPEC](https://www.notion.so/awesomeo184/API-SPEC-50fd99cc2ca9486ca5b83ed1958b6a6f)
 
 ## ✏️ Code Review Process
