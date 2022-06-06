@@ -23,8 +23,8 @@ public class Name {
     }
 
     private void checkLength(String value) {
-        if (value.length() > 255) {
-            throw new IllegalArgumentException("상품명 길이가 올바르지 않습니다. (길이: 255자 이내)");
+        if (value.length() > 100) {
+            throw new IllegalArgumentException("상품명 길이가 올바르지 않습니다. (길이: 100자 이내)");
         }
     }
 

@@ -19,8 +19,8 @@ class NameTest {
     @Test
     void checkLength() {
         String value = "a";
-        assertThatThrownBy(() -> new Name(value.repeat(256)))
+        assertThatThrownBy(() -> new Name(value.repeat(101)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("상품명 길이가 올바르지 않습니다. (길이: 255자 이내)");
+                .hasMessage("상품명 길이가 올바르지 않습니다. (길이: 100자 이내)");
     }
 }
