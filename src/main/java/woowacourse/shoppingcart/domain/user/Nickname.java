@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain.user;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.InvalidNicknameException;
+import woowacourse.shoppingcart.exception.user.InvalidNicknameException;
 
 public class Nickname {
 

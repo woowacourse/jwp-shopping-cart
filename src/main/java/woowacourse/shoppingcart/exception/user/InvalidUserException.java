@@ -1,4 +1,6 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.user;
+
+import woowacourse.shoppingcart.exception.ShoppingCartException;
 
 public class InvalidUserException extends ShoppingCartException {
 

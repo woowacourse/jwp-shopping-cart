@@ -8,8 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.DuplicateUserException;
-import woowacourse.shoppingcart.exception.InvalidUserException;
+import woowacourse.shoppingcart.exception.user.DuplicateUserException;
+import woowacourse.shoppingcart.exception.user.InvalidUserException;
 import woowacourse.shoppingcart.exception.ShoppingCartException;
 
 @RestControllerAdvice

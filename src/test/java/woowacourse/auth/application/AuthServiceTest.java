@@ -15,7 +15,7 @@ import woowacourse.auth.exception.InvalidLoginFormException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.UserService;
 import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.exception.InvalidUserException;
+import woowacourse.shoppingcart.exception.user.InvalidUserException;
 
 @SpringBootTest
 @Transactional

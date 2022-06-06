@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.user.Customer;
-import woowacourse.shoppingcart.exception.InvalidUserException;
+import woowacourse.shoppingcart.exception.user.InvalidUserException;
 
 import java.util.Locale;
 

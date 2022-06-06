@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.user;
 
 public class InvalidNicknameException extends IllegalArgumentException {
 }

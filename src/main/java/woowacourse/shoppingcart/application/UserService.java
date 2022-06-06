@@ -7,8 +7,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.user.Customer;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.UserUpdateRequest;
-import woowacourse.shoppingcart.exception.DuplicateUserException;
-import woowacourse.shoppingcart.exception.InvalidUserException;
+import woowacourse.shoppingcart.exception.user.DuplicateUserException;
+import woowacourse.shoppingcart.exception.user.InvalidUserException;
 
 @Service
 @Transactional
