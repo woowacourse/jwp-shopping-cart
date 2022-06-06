@@ -8,8 +8,9 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
@@ -19,11 +20,26 @@ public class CartService {
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
+    private final CustomerService customerService;
+    private final ProductService productService;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao,
+                       CustomerService customerService,
+                       ProductService productService) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
+        this.customerService = customerService;
+        this.productService = productService;
+    }
+
+    public void addCart(final Long productId, final Customer customer) {
+        try {
+            Product product = productService.findProductById(productId);
+            cartItemDao.addCartItem(customer.getId(), product.getId());
+        } catch (NotFoundProductException exception) {
+            throw new NotFoundProductException();
+        }
     }
 
     public List<Cart> findCartsByCustomerName(final String customerName) {
@@ -41,15 +57,6 @@ public class CartService {
     private List<Long> findCartIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findInByNickname(customerName);
         return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findInByNickname(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
     }
 
     public void deleteCart(final String customerName, final Long cartId) {

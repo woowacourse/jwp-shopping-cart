@@ -17,6 +17,19 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public Long addCartItem(final Long customerId, final Long productId) {
+        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            preparedStatement.setLong(1, customerId);
+            preparedStatement.setLong(2, productId);
+            return preparedStatement;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
+    }
+
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
 
@@ -36,19 +49,6 @@ public class CartItemDao {
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
-    }
-
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
     }
 
     public void deleteCartItem(final Long id) {
