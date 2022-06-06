@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.response.OrdersResponse;
 
 @Validated
 @RestController
 @RequestMapping("/api/customers/{customerName}/orders")
 public class OrderController {
+
     private final OrderService orderService;
 
     public OrderController(final OrderService orderService) {
@@ -34,15 +36,15 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
-                                            @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customerName, orderId);
+    public ResponseEntity<OrdersResponse> findOrder(@PathVariable final String customerName,
+                                                    @PathVariable final Long orderId) {
+        final OrdersResponse order = orderService.findOrderById(customerName, orderId);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
+    public ResponseEntity<List<OrdersResponse>> findOrders(@PathVariable final String customerName) {
+        final List<OrdersResponse> orders = orderService.findOrdersByCustomerName(customerName);
         return ResponseEntity.ok(orders);
     }
 }

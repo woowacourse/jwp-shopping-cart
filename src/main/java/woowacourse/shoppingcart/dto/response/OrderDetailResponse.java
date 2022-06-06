@@ -1,6 +1,9 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.dto.response;
 
-public class OrderDetail {
+import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Product;
+
+public class OrderDetailResponse {
 
     private Long productId;
     private int quantity;
@@ -8,25 +11,30 @@ public class OrderDetail {
     private String name;
     private String imageUrl;
 
-    public OrderDetail() {
+    public OrderDetailResponse() {
     }
 
-    public OrderDetail(final Long productId, final int quantity) {
+    public OrderDetailResponse(final Long productId, final int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }
 
-    public OrderDetail(final Product product, final int quantity) {
+    public OrderDetailResponse(final Product product, final int quantity) {
         this(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
     }
 
-    public OrderDetail(final Long productId, final int price, final String name,
+    public OrderDetailResponse(final Long productId, final int price, final String name,
                        final String imageUrl, final int quantity) {
         this.productId = productId;
         this.price = price;
         this.name = name;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
+    }
+
+    public static OrderDetailResponse from(final OrderDetail orderDetail) {
+        return new OrderDetailResponse(orderDetail.getProductId(), orderDetail.getPrice(),
+                orderDetail.getName(), orderDetail.getImageUrl(), orderDetail.getQuantity());
     }
 
     public Long getProductId() {

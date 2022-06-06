@@ -26,6 +26,7 @@ import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.response.OrdersResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -75,7 +76,7 @@ public class OrderControllerTest {
         // given
         final String customerName = "pobi";
         final Long orderId = 1L;
-        final Orders expected = new Orders(orderId,
+        final OrdersResponse expected = OrdersResponse.of(orderId,
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
 
         when(orderService.findOrderById(customerName, orderId))
@@ -98,10 +99,10 @@ public class OrderControllerTest {
     void findOrders() throws Exception {
         // given
         final String customerName = "pobi";
-        final List<Orders> expected = Arrays.asList(
-                new Orders(1L, Collections.singletonList(
+        final List<OrdersResponse> expected = Arrays.asList(
+                OrdersResponse.of(1L, Collections.singletonList(
                         new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
-                new Orders(2L, Collections.singletonList(
+                OrdersResponse.of(2L, Collections.singletonList(
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
