@@ -33,3 +33,18 @@ include::{snippets}/add-cart-item-duplicate-product/http-response.adoc[]
 ===== HTTP Response
 
 include::{snippets}/add-cart-item-not-exist-product/http-response.adoc[]
+
+[[resources-cart-get-cart-items]]
+=== 장바구니에 들어있는 상품 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/get-cart-items/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-cart-items/http-response.adoc[]
+
+==== Response body fields
+
+include::{snippets}/get-cart-items/response-fields.adoc[]
