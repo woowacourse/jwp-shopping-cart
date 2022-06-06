@@ -26,7 +26,7 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        final String imageUrl = "http://www.test.com";
 
         // when
         final Long productId = productDao.save(new Product(name, price, imageUrl));
@@ -41,7 +41,7 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        final String imageUrl = "http://www.test.com";
         final Long productId = productDao.save(new Product(name, price, imageUrl));
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
@@ -72,7 +72,7 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        final String imageUrl = "http://www.test.com";
 
         final Long productId = productDao.save(new Product(name, price, imageUrl));
         final int beforeSize = productDao.findProducts().size();
