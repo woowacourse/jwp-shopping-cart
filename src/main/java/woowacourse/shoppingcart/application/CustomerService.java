@@ -8,6 +8,8 @@ import woowacourse.shoppingcart.domain.customer.password.PasswordEncoder;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.EmailDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.EmailDuplicateResponse;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.customer.UsernameDuplicateRequest;
 import woowacourse.shoppingcart.dto.customer.UsernameDuplicateResponse;
@@ -52,11 +54,19 @@ public class CustomerService {
         customerDao.delete(customer);
     }
 
-    public UsernameDuplicateResponse checkDuplicate(UsernameDuplicateRequest usernameDuplicateRequest) {
+    public UsernameDuplicateResponse checkUsernameDuplicate(UsernameDuplicateRequest usernameDuplicateRequest) {
         String username = usernameDuplicateRequest.getUsername();;
         if (customerDao.findByUsername(username).isPresent()) {
             return new UsernameDuplicateResponse(username, true);
         }
         return new UsernameDuplicateResponse(username, false);
+    }
+
+    public EmailDuplicateResponse checkEmailDuplicate(EmailDuplicateRequest emailDuplicateRequest) {
+        String email = emailDuplicateRequest.getEmail();
+        if (customerDao.findEmailByEmail(email).isPresent()) {
+            return new EmailDuplicateResponse(email, true);
+        }
+        return new EmailDuplicateResponse(email, false);
     }
 }

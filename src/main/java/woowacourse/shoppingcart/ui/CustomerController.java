@@ -18,6 +18,8 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.EmailDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.EmailDuplicateResponse;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.customer.UsernameDuplicateRequest;
 import woowacourse.shoppingcart.dto.customer.UsernameDuplicateResponse;
@@ -57,9 +59,16 @@ public class CustomerController {
     }
 
     @PostMapping("/api/customers/duplication/{username}")
-    public ResponseEntity<UsernameDuplicateResponse> checkDuplicate(
+    public ResponseEntity<UsernameDuplicateResponse> checkDuplicateUsername(
             @Valid @PathVariable("username") UsernameDuplicateRequest request) {
-        UsernameDuplicateResponse usernameDuplicateResponse = customerService.checkDuplicate(request);
+        UsernameDuplicateResponse usernameDuplicateResponse = customerService.checkUsernameDuplicate(request);
         return ResponseEntity.ok(usernameDuplicateResponse);
+    }
+
+    @PostMapping("/api/customers/duplication/{email}")
+    public ResponseEntity<EmailDuplicateResponse> checkDuplicateEmail(
+            @Valid @PathVariable("email") EmailDuplicateRequest request) {
+        EmailDuplicateResponse emailDuplicateResponse = customerService.checkEmailDuplicate(request);
+        return ResponseEntity.ok(emailDuplicateResponse);
     }
 }

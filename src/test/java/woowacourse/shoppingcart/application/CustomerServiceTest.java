@@ -25,6 +25,8 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
+import woowacourse.shoppingcart.dto.customer.EmailDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.EmailDuplicateResponse;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.customer.UsernameDuplicateRequest;
 import woowacourse.shoppingcart.dto.customer.UsernameDuplicateResponse;
@@ -125,17 +127,35 @@ class CustomerServiceTest {
     @Test
     void checkDuplicateUsername_true() {
         customerService.save(YAHO_SAVE_REQUEST);
-        UsernameDuplicateResponse response = customerService.checkDuplicate(
+        UsernameDuplicateResponse response = customerService.checkUsernameDuplicate(
                 new UsernameDuplicateRequest(YAHO_USERNAME));
         assertThat(response.isDuplicate()).isTrue();
     }
 
-    @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=ture를 반환한다.")
+    @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=false를 반환한다.")
     @Test
     void checkDuplicateUsername_false() {
         customerService.save(YAHO_SAVE_REQUEST);
-        UsernameDuplicateResponse response = customerService.checkDuplicate(
+        UsernameDuplicateResponse response = customerService.checkUsernameDuplicate(
                 new UsernameDuplicateRequest(MAT_USERNAME));
+        assertThat(response.isDuplicate()).isFalse();
+    }
+
+    @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=ture를 반환한다.")
+    @Test
+    void checkDuplicateEmail_true() {
+        customerService.save(YAHO_SAVE_REQUEST);
+        EmailDuplicateResponse response = customerService.checkEmailDuplicate(
+                new EmailDuplicateRequest(YAHO_EMAIL));
+        assertThat(response.isDuplicate()).isTrue();
+    }
+
+    @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=false를 반환한다.")
+    @Test
+    void checkDuplicateEmail_false() {
+        customerService.save(YAHO_SAVE_REQUEST);
+        EmailDuplicateResponse response = customerService.checkEmailDuplicate(
+                new EmailDuplicateRequest(MAT_EMAIL));
         assertThat(response.isDuplicate()).isFalse();
     }
 }
