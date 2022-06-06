@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.authentication.LoginFailedException;
-import woowacourse.auth.exception.authorization.AuthorizationException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Password;
@@ -34,13 +33,8 @@ public class AuthService {
         return new TokenResponse(token, customerId);
     }
 
-    public void validateToken(String accessToken, String customerId) {
+    public void validateToken(String accessToken) {
         jwtTokenProvider.validateToken(accessToken);
-        String payload = jwtTokenProvider.getPayload(accessToken);
-
-        if (!payload.equals(customerId)) {
-            throw new AuthorizationException();
-        }
     }
 
     private void validateEmailExisting(String email) {

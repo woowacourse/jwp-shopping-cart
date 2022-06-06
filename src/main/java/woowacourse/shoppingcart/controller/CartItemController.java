@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import woowacourse.auth.controller.CustomerId;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.service.CartService;
 
 @RestController
-@RequestMapping("/api/customers/{customerName}/carts")
+@RequestMapping("/api/customers/cart")
 public class CartItemController {
     private final CartService cartService;
 
@@ -27,14 +28,14 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<List<Cart>> getCartItems(@CustomerId final Long customerId) {
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                            @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
+                                            @CustomerId final Long customerId) {
+        final Long cartId = cartService.addCart(product.getId(), customerId);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
@@ -44,9 +45,8 @@ public class CartItemController {
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                               @PathVariable final Long cartId) {
-        cartService.deleteCart(customerName, cartId);
+    public ResponseEntity<Void> deleteCartItem(@CustomerId final Long customerId, @PathVariable final Long cartId) {
+        cartService.deleteCart(customerId, cartId);
         return ResponseEntity.noContent().build();
     }
 }

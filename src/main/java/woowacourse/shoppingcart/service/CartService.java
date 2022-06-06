@@ -26,8 +26,8 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public List<Cart> findCartsByCustomerId(final Long customerId) {
+        final List<Long> cartIds = findCartIdsByCustomerName(customerId);
 
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
@@ -38,30 +38,28 @@ public class CartService {
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String email) {
-        final int customerId = customerDao.findByEmail(email).getId();
-        return cartItemDao.findIdsByCustomerId((long) customerId);
-    }
-
-    public Long addCart(final Long productId, final String email) {
-        final int customerId = customerDao.findByEmail(email).getId();
+    public Long addCart(final Long productId, final Long customerId) {
         try {
-            return cartItemDao.addCartItem((long) customerId, productId);
+            return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
+    public void deleteCart(final Long customerId, final Long cartId) {
+        validateCustomerCart(cartId, customerId);
         cartItemDao.deleteCartItem(cartId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
+    private void validateCustomerCart(final Long cartId, final Long customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
         if (cartIds.contains(cartId)) {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    private List<Long> findCartIdsByCustomerName(final Long customerId) {
+        return cartItemDao.findIdsByCustomerId(customerId);
     }
 }

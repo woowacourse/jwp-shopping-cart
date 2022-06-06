@@ -1,7 +1,6 @@
 package woowacourse.auth.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +25,8 @@ public class AuthController {
     }
 
     @PostMapping("/customers/{customerId}/authentication/sign-out")
-    public ResponseEntity<Void> signOut(@PathVariable String customerId, @Jwt String accessToken) {
-        authService.validateToken(accessToken, customerId);
+    public ResponseEntity<Void> signOut(@Jwt String accessToken) {
+        authService.validateToken(accessToken);
         return ResponseEntity.noContent().build();
     }
 }
