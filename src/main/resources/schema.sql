@@ -10,14 +10,17 @@ drop table if exists customer;
 
 create table customer
 (
-    id       bigint       not null auto_increment,
-    username varchar(255) not null,
-    password varchar(255),
+    id       bigint      not null auto_increment,
+    username varchar(20) not null,
+    password varchar(64),
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table customer
     add unique key (username);
+
+create index username_idx
+    on customer (username);
 
 create table product
 (
