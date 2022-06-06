@@ -1,6 +1,10 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -11,13 +15,9 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.OrderDetail;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrdersDetailDaoTest {
 
@@ -43,24 +43,26 @@ class OrdersDetailDaoTest {
         productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
     }
 
+    @Disabled
     @DisplayName("OrderDatail을 추가하는 기능")
     @Test
     void addOrdersDetail() {
-        //given
+        // given
         int quantity = 5;
 
-        //when
+        // when
         Long orderDetailId = ordersDetailDao
                 .addOrdersDetail(ordersId, productId, quantity);
 
-        //then
+        // then
         assertThat(orderDetailId).isEqualTo(1L);
     }
 
+    @Disabled
     @DisplayName("OrderId로 OrderDetails 조회하는 기능")
     @Test
     void findOrdersDetailsByOrderId() {
-        //given
+        // given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
             jdbcTemplate
@@ -68,11 +70,11 @@ class OrdersDetailDaoTest {
                             ordersId, productId, 3);
         }
 
-        //when
+        // when
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
                 .findOrdersDetailsByOrderId(ordersId);
 
-        //then
+        // then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);
     }
 }
