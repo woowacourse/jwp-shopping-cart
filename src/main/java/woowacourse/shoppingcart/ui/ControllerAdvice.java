@@ -12,23 +12,23 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidInputException;
-import woowacourse.shoppingcart.exception.InvalidLoginException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import woowacourse.shoppingcart.exception.ResourceNotFoundException;
+import woowacourse.shoppingcart.exception.custum.AuthorizationException;
+import woowacourse.shoppingcart.exception.custum.DuplicatedValueException;
+import woowacourse.shoppingcart.exception.custum.InvalidInputException;
+import woowacourse.shoppingcart.exception.custum.InvalidLoginException;
+import woowacourse.shoppingcart.exception.custum.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.custum.ResourceNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
 
     private static final String INVALID_DATA_ERROR_MESSAGE = "존재하지 않는 데이터 요청입니다.";
     private static final String UNHANDLED_ERROR_MESSAGE = "예상치못한 에러가 발생했습니다.";
-    private static final String DUPLICATE_KEY_ERROR_MESSAGE = "중복된 값이 존재합니다.";
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handle() {
@@ -62,8 +62,13 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
-    public ResponseEntity<String> duplicateKeyException() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(DUPLICATE_KEY_ERROR_MESSAGE);
+    public ResponseEntity<String> duplicateKeyException(final DuplicateKeyException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복된 값이 존재합니다.");
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> duplicateValueException(final DuplicatedValueException exception) {
+        return ResponseEntity.status(DuplicatedValueException.STATUS_CODE).body(exception.getMessage());
     }
 
     @ExceptionHandler
@@ -97,7 +102,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> unhandledException() {
+    public ResponseEntity<String> unhandledException(final Exception e) {
         return ResponseEntity.badRequest().body(UNHANDLED_ERROR_MESSAGE);
     }
 }

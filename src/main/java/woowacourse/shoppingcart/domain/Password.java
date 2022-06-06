@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.InvalidInputException;
+import woowacourse.shoppingcart.exception.custum.InvalidInputException;
 
 public class Password {
     private static final Pattern passwordPattern =
@@ -17,11 +17,11 @@ public class Password {
 
     private void validatePassword(final String password) {
         if (!passwordPattern.matcher(password).matches()) {
-            throw new InvalidInputException("올바르지 않은 포맷의 패스워드 입니다.");
+            throw new InvalidInputException("패스워드");
         }
     }
 
-    public String getPassword() {
+    public String get() {
         return password;
     }
 }

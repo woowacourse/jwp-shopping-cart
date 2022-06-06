@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.InvalidInputException;
+import woowacourse.shoppingcart.exception.custum.InvalidInputException;
 
 public class Customer {
     private static final Pattern usernamePattern =
@@ -34,13 +34,13 @@ public class Customer {
 
     private void validateUsername(final String username) {
         if (!usernamePattern.matcher(username).matches()) {
-            throw new InvalidInputException("올바르지 않은 포맷의 아이디 입니다.");
+            throw new InvalidInputException("아이디");
         }
     }
 
     private void validateNickname(final String nickname) {
         if (!nicknamePattern.matcher(nickname).matches()) {
-            throw new InvalidInputException("올바르지 않은 포맷의 닉네임 입니다.");
+            throw new InvalidInputException("닉네임");
         }
     }
 
@@ -53,7 +53,7 @@ public class Customer {
     }
 
     public String getPassword() {
-        return password.getPassword();
+        return password.get();
     }
 
     public String getNickname() {

@@ -322,7 +322,7 @@
 - [ ] 상품 목록 API 기능
 - [ ] 해당 페이지, 불러올 상품 갯수 만큼 목록을 반환하는 기능
     - [ ] product table
-    - [ ] id, 상품명(name), 상품 이미지(image), 상품 가격(price), 설명(description)
+    - [ ] id, 상품명(name), 상품 이미지(image), 상품 가격(price)
 - [ ] JSON 배열 형식으로 아이템을 응답한다
 
 **장바구니 목록 요청 기능**

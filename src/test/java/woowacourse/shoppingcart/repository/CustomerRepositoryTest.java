@@ -15,7 +15,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
-import woowacourse.shoppingcart.exception.ResourceNotFoundException;
+import woowacourse.shoppingcart.exception.custum.ResourceNotFoundException;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
 
@@ -98,7 +98,7 @@ class CustomerRepositoryTest {
 
         // then
         assertThat(customerRepository.findById(id).getPassword())
-                .isEqualTo(newPassword.getPassword());
+                .isEqualTo(newPassword.get());
     }
 
     @DisplayName("회원을 삭제한다.")
@@ -115,6 +115,6 @@ class CustomerRepositoryTest {
         // then
         assertThatThrownBy(() -> customerRepository.findById(id))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("존재하지 않는 유저입니다.");
+                .hasMessage("존재하지 않는 데이터입니다.");
     }
 }
