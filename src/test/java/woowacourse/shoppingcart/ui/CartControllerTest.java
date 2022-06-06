@@ -4,9 +4,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.helper.restdocs.RestDocsTest;
 import woowacourse.shoppingcart.dto.CartRequest;
@@ -77,7 +80,7 @@ public class CartControllerTest extends RestDocsTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/api/members/me/carts/1"));
 
-        resultActions.andDo(document("carts-get",
+        resultActions.andDo(document("carts-add",
                 getRequestPreprocessor(),
                 getResponsePreprocessor(),
                 requestHeaders(
@@ -88,6 +91,23 @@ public class CartControllerTest extends RestDocsTest {
                         fieldWithPath("quantity").type(NUMBER).description("개수")
                 )));
 
+    }
+
+    @DisplayName("카트의 제품을 삭제한다.")
+    @Test
+    void deleteCart() throws Exception {
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+        doNothing().when(cartService).deleteCart(anyLong(), anyLong());
+
+        final ResultActions resultActions = mockMvc.perform(delete("/api/members/me/carts/1")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN))
+                .andExpect(status().isNoContent());
+
+        resultActions.andDo(document("carts-delete",
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                )));
     }
 
     private List<CartResponse> cartResponses() {

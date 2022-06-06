@@ -39,10 +39,26 @@ public class CartsDao {
                         + "WHERE member_id = :id";
         final SqlParameterSource parameter = new MapSqlParameterSource("id", id);
 
-        return namedParameterJdbcTemplate.query(sql, parameter, rowMapper());
+        return namedParameterJdbcTemplate.query(sql, parameter, joinRowMapper());
     }
 
-    private RowMapper<Carts> rowMapper() {
+    public Carts findCartById(final Long id) {
+        String sql = "SELECT c.id, c.member_id, p.id as product_id, p.name, p.price, p.image_url, c.quantity FROM carts c "
+                + "LEFT JOIN product p "
+                + "ON c.product_id = p.id "
+                + "WHERE c.id = :id";
+        final SqlParameterSource parameter = new MapSqlParameterSource("id", id);
+
+        return namedParameterJdbcTemplate.queryForObject(sql, parameter, joinRowMapper());
+    }
+
+    public void delete(final Long id) {
+        String sql = "DELETE FROM carts WHERE id = :id";
+        final SqlParameterSource parameter = new MapSqlParameterSource("id", id);
+        namedParameterJdbcTemplate.update(sql, parameter);
+    }
+
+    private RowMapper<Carts> joinRowMapper() {
         return (rs, rowNum) -> {
             final Long id = rs.getLong("id");
             final Long memberId = rs.getLong("member_id");

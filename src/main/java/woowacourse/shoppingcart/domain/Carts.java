@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
+
 public class Carts {
 
     private Long id;
@@ -36,5 +38,22 @@ public class Carts {
 
     public int calculateTotalPrice() {
         return product.getPrice() * quantity;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Carts carts = (Carts) o;
+        return Objects.equals(id, carts.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
