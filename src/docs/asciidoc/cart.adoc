@@ -48,3 +48,28 @@ include::{snippets}/get-cart-items/http-response.adoc[]
 ==== Response body fields
 
 include::{snippets}/get-cart-items/response-fields.adoc[]
+
+[[resources-cart-delete-cart-item]]
+=== 장바구니에 들어있는 상품 삭제
+
+==== HTTP Request
+
+include::{snippets}/delete-cart-item/http-request.adoc[]
+
+==== Request path variables
+
+include::{snippets}/delete-cart-item/path-parameters.adoc[]
+
+[[resources-cart-delete-cart-item-success]]
+==== 성공
+
+===== HTTP Response
+
+include::{snippets}/delete-cart-item/http-response.adoc[]
+
+[[resources-cart-delete-cart-item-not-exist-item]]
+==== 실패 - 존재하지 않는 상품
+
+===== HTTP Response
+
+include::{snippets}/delete-cart-item-not-exist-item/http-response.adoc[]
