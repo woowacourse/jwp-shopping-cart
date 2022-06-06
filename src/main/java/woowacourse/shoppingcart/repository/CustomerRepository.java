@@ -12,9 +12,6 @@ import woowacourse.shoppingcart.repository.dao.CustomerDao;
 @Repository
 public class CustomerRepository {
 
-    private static final String DUPLICATE_VALUE_ERROR_MESSAGE = "중복된 값이 존재합니다.";
-
-
     private final CustomerDao customerDao;
 
     public CustomerRepository(final CustomerDao customerDao) {
@@ -53,7 +50,9 @@ public class CustomerRepository {
                 .ifPresent(customer -> {
                     throw new ResourceNotFoundException();
                 });
-        customerDao.delete(id);
+        if (customerDao.delete(id) == 0) {
+            throw new ResourceNotFoundException();
+        }
     }
 
     public void matchPassword(final Long id, final String password) {

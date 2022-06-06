@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.repository.CustomerRepository;
 public class CustomerService {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     public CustomerService(JwtTokenProvider jwtTokenProvider,
                            final CustomerRepository customerRepository) {

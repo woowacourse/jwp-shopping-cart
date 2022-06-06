@@ -33,7 +33,7 @@ public class CartService {
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
+            final Product product = productDao.findById(productId);
             carts.add(new Cart(cartId, product));
         }
         return carts;
@@ -47,7 +47,7 @@ public class CartService {
     public Long addCart(final Long productId, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.create(customerId, productId);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -55,7 +55,7 @@ public class CartService {
 
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteById(cartId);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {

@@ -33,6 +33,15 @@ public class CustomerDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+    public Long create(final Customer customer) {
+        String query = "insert into customer (username, password, nickname, withdrawal)"
+                + " values (:username, :password, :nickname, false)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SqlParameterSource source = new BeanPropertySqlParameterSource(customer);
+        namedParameterJdbcTemplate.update(query, source, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
     public Long findIdByUserName(final String username) {
         final String query = "SELECT id FROM customer WHERE username = :username";
         Map<String, Object> params = new HashMap<>();
@@ -55,15 +64,6 @@ public class CustomerDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-    }
-
-    public Long create(final Customer customer) {
-        String query = "insert into customer (username, password, nickname, withdrawal)"
-                + " values (:username, :password, :nickname, false)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        SqlParameterSource source = new BeanPropertySqlParameterSource(customer);
-        namedParameterJdbcTemplate.update(query, source, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public Optional<Customer> findWithdrawalById(final Long id) {

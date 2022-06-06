@@ -42,7 +42,7 @@ public class CartItemDaoTest {
         final Long productId = 1L;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.create(customerId, productId);
 
         // then
         assertThat(cartId).isEqualTo(3L);
@@ -84,7 +84,7 @@ public class CartItemDaoTest {
         final Long cartId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteById(cartId);
 
         // then
         final Long customerId = 1L;

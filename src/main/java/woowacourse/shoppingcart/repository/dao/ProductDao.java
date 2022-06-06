@@ -26,7 +26,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Product findProductById(final Long productId) {
+    public Product findById(final Long productId) {
         try {
             final String query = "SELECT id, name, price, image_url FROM product WHERE id = :id";
             Map<String, Object> params = new HashMap<>();
@@ -37,7 +37,7 @@ public class ProductDao {
         }
     }
 
-    public List<Product> findProducts() {
+    public List<Product> findAll() {
         final String query = "SELECT id, name, price, image_url FROM product";
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
     }

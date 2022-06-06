@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
@@ -34,7 +33,7 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(1L, "치킨", 10000, "http://example.com/chicken.jpg");
 
         // when
-        final Product product = productDao.findProductById(1L);
+        final Product product = productDao.findById(1L);
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -47,7 +46,7 @@ public class ProductDaoTest {
         final int size = 2;
 
         // when
-        final List<Product> products = productDao.findProducts();
+        final List<Product> products = productDao.findAll();
 
         // then
         assertThat(products).size().isEqualTo(size);

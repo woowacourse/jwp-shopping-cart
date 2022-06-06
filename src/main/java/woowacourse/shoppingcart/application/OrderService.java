@@ -37,15 +37,15 @@ public class OrderService {
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
+        final Long ordersId = orderDao.create(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
             final Long productId = cartItemDao.findProductIdById(cartId);
             final int quantity = orderDetail.getQuantity();
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+            ordersDetailDao.create(ordersId, productId, quantity);
+            cartItemDao.deleteById(cartId);
         }
 
         return ordersId;
@@ -59,14 +59,14 @@ public class OrderService {
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
         final Long customerId = customerDao.findIdByUserName(customerName);
 
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
+        if (!orderDao.isValidId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
     public List<Orders> findOrdersByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+        final List<Long> orderIds = orderDao.findIdsByCustomerId(customerId);
 
         return orderIds.stream()
                 .map(orderId -> findOrderResponseDtoByOrderId(orderId))
@@ -75,8 +75,8 @@ public class OrderService {
 
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
+        for (final OrderDetail productQuantity : ordersDetailDao.findByOrderId(orderId)) {
+            final Product product = productDao.findById(productQuantity.getProductId());
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }

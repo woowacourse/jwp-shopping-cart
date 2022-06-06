@@ -17,7 +17,7 @@ public class OrdersDetailDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrdersDetail(final Long ordersId, final Long productId, final int quantity) {
+    public Long create(final Long ordersId, final Long productId, final int quantity) {
         final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -31,7 +31,7 @@ public class OrdersDetailDao {
         return keyHolder.getKey().longValue();
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
+    public List<OrderDetail> findByOrderId(final Long orderId) {
         final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
                 rs.getLong("product_id"),

@@ -51,7 +51,7 @@ class OrdersDetailDaoTest {
 
         //when
         Long orderDetailId = ordersDetailDao
-                .addOrdersDetail(ordersId, productId, quantity);
+                .create(ordersId, productId, quantity);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);
@@ -70,7 +70,7 @@ class OrdersDetailDaoTest {
 
         //when
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsByOrderId(ordersId);
+                .findByOrderId(ordersId);
 
         //then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);
