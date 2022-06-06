@@ -18,9 +18,6 @@ CREATE TABLE customer
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
-ALTER TABLE customer
-    ADD UNIQUE KEY (nickname);
-
 CREATE TABLE product
 (
     id        BIGINT       NOT NULL AUTO_INCREMENT,
