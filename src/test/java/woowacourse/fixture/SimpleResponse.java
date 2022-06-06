@@ -2,6 +2,7 @@ package woowacourse.fixture;
 
 import static org.hamcrest.Matchers.equalTo;
 
+import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.dto.ErrorResponse;
@@ -13,6 +14,12 @@ public class SimpleResponse {
         this.response = response;
     }
 
+    public ExtractableResponse<Response> extract() {
+        return response
+                .then().log().all()
+                .extract();
+    }
+
     public boolean containsExceptionMessage(String message) {
         return this.toObject(ErrorResponse.class)
                 .getMessage()
@@ -20,7 +27,7 @@ public class SimpleResponse {
     }
 
     public <T> T toObject(Class<T> clazz) {
-        return response.then()
+        return this
                 .extract()
                 .as(clazz);
     }
