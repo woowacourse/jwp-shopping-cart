@@ -64,7 +64,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
-                .when().post("/api/products")
+                .when().post("/products")
                 .then().log().all()
                 .extract();
     }
@@ -73,7 +73,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
+                .when().get("/products")
                 .then().log().all()
                 .extract();
     }
@@ -82,7 +82,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products/{productId}", productId)
+                .when().get("/products/{productId}", productId)
                 .then().log().all()
                 .extract();
     }
@@ -91,7 +91,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
+                .when().delete("/products/{productId}", productId)
                 .then().log().all()
                 .extract();
     }

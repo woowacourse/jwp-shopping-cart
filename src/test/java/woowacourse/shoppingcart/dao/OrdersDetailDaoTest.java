@@ -38,7 +38,7 @@ class OrdersDetailDaoTest {
         jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
         ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 
-        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
+        jdbcTemplate.update("INSERT INTO product (name, price, thumbnail) VALUES (?, ?, ?)"
                 , "name", 1000, "imageUrl");
         productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
     }
