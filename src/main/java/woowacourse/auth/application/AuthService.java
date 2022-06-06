@@ -5,10 +5,11 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.exception.auth.LoginFailureException;
+import woowacourse.exception.LoginFailureException;
 import woowacourse.shoppingcart.application.PasswordEncoderAdapter;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
 @Service
@@ -25,13 +26,14 @@ public class AuthService {
     public TokenResponse getToken(TokenRequest tokenRequest) {
         final Customer customer = customerDao.findByEmail(tokenRequest.getEmail())
                 .orElseThrow(CustomerNotFoundException::new);
+
         validatePassword(tokenRequest, customer);
         final String accessToken = jwtTokenProvider.createToken(customer.getId());
         return new TokenResponse(accessToken);
     }
 
     private void validatePassword(TokenRequest tokenRequest, Customer customer) {
-        if (!customer.validatePassword(tokenRequest.getPassword(), new PasswordEncoderAdapter())) {
+        if (!customer.validatePassword(new Password(tokenRequest.getPassword()), new PasswordEncoderAdapter())) {
             throw new LoginFailureException();
         }
     }

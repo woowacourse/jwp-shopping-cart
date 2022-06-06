@@ -2,11 +2,13 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.exception.auth.EmailDuplicateException;
-import woowacourse.exception.auth.PasswordIncorrectException;
+import woowacourse.exception.EmailDuplicateException;
+import woowacourse.exception.PasswordIncorrectException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Encoder;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
@@ -27,18 +29,17 @@ public class CustomerService {
 
     @Transactional
     public Long create(CustomerRequest customerRequest) {
-        validateDuplicateEmail(customerRequest);
-
-        final String hashPassword = encoder.encode(customerRequest.getPassword());
-        final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getName(), hashPassword);
-
-        return customerDao.save(customer);
-    }
-
-    private void validateDuplicateEmail(CustomerRequest customerRequest) {
         if (customerDao.findByEmail(customerRequest.getEmail()).isPresent()) {
             throw new EmailDuplicateException();
         }
+
+        final String hashPassword = encoder.encode(customerRequest.getPassword());
+        final Customer customer = new Customer(
+                new Email(customerRequest.getEmail()),
+                customerRequest.getName(),
+                new Password(hashPassword));
+
+        return customerDao.save(customer);
     }
 
     @Transactional(readOnly = true)
@@ -66,15 +67,10 @@ public class CustomerService {
         validatePassword(customer, customerUpdatePasswordRequest.getOldPassword());
 
         final String hashPassword = encoder.encode(customerUpdatePasswordRequest.getNewPassword());
-        final Customer newCustomer = customer.changePassword(hashPassword);
+        final Password newPassword = new Password(hashPassword);
+        final Customer newCustomer = customer.changePassword(newPassword);
         customerDao.updatePassword(newCustomer);
         return id;
-    }
-
-    private void validatePassword(Customer customer, String inputPassword) {
-        if (!customer.validatePassword(inputPassword, encoder)) {
-            throw new PasswordIncorrectException();
-        }
     }
 
     public Long delete(long id, CustomerDeleteRequest customerDeleteRequest) {
@@ -83,5 +79,11 @@ public class CustomerService {
 
         customerDao.delete(id);
         return id;
+    }
+
+    private void validatePassword(Customer customer, String inputPassword) {
+        if (!customer.validatePassword(new Password(inputPassword), encoder)) {
+            throw new PasswordIncorrectException();
+        }
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.exception.auth.LoginFailureException;
+import woowacourse.exception.LoginFailureException;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
