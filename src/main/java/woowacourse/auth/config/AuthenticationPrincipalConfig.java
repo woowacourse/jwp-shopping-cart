@@ -6,19 +6,18 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.JwtTokenInterceptor;
-import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
+import woowacourse.auth.support.AuthenticationPrincipalArgumentResolver;
 
 import java.util.List;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     private final AuthService authService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenInterceptor jwtTokenInterceptor;
 
-    public AuthenticationPrincipalConfig(AuthService authService, final JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationPrincipalConfig(final AuthService authService, final JwtTokenInterceptor jwtTokenInterceptor) {
         this.authService = authService;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtTokenInterceptor = jwtTokenInterceptor;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new JwtTokenInterceptor(jwtTokenProvider))
+        registry.addInterceptor(jwtTokenInterceptor)
                 .addPathPatterns("/api/**")
                 .excludePathPatterns("/api/login", "/api/products/**",
                         "/api/customers", "/api/customers/duplication");

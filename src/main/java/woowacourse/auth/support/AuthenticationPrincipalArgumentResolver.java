@@ -1,4 +1,4 @@
-package woowacourse.auth.ui;
+package woowacourse.auth.support;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

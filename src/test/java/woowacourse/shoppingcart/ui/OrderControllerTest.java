@@ -1,19 +1,25 @@
 package woowacourse.shoppingcart.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.parameters.P;
 import org.springframework.test.web.servlet.MockMvc;
+import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
 import java.util.Arrays;
@@ -28,10 +34,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static woowacourse.fixture.PasswordFixture.ORIGIN_USER_1_PASSWORD;
+import static woowacourse.fixture.PasswordFixture.RAW_BASIC_PASSWORD;
 import static woowacourse.fixture.TokenFixture.ACCESS_TOKEN;
 import static woowacourse.fixture.TokenFixture.BEARER;
 
-@SpringBootTest
+@WebMvcTest(OrderController.class)
 @AutoConfigureMockMvc
 public class OrderControllerTest {
 
@@ -45,8 +53,16 @@ public class OrderControllerTest {
     private OrderService orderService;
 
     @MockBean
+    private AuthService authService;
+
+    @MockBean
     private JwtTokenProvider jwtTokenProvider;
 
+    private Customer customer;
+    @BeforeEach
+    void setUp(){
+         customer = new Customer("pobi", new Password(ORIGIN_USER_1_PASSWORD));
+    }
     @DisplayName("CREATED와 Location을 반환한다.")
     @Test
     void addOrder() throws Exception {
@@ -55,16 +71,18 @@ public class OrderControllerTest {
         final int quantity = 5;
         final Long cartId2 = 1L;
         final int quantity2 = 5;
-        final String customerName = "pobi";
+
         final List<OrderRequest> requestDtos =
                 Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
+
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
-        when(orderService.addOrder(any(), eq(customerName)))
-                .thenReturn(expectedOrderId);
+        given(authService.getAuthenticatedCustomer(ACCESS_TOKEN)).willReturn(customer);
+        when(orderService.addOrder(any(), eq(customer.getUserName()))).thenReturn(expectedOrderId);
+
         // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
+        mockMvc.perform(post("/api/customers/me/orders")
                         .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -73,7 +91,7 @@ public class OrderControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
-                        "/api/" + customerName + "/orders/" + expectedOrderId));
+                        "/api/customers/me/orders/" + expectedOrderId));
     }
 
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
@@ -81,16 +99,16 @@ public class OrderControllerTest {
     void findOrder() throws Exception {
 
         // given
-        final String customerName = "pobi";
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
 
+        given(authService.getAuthenticatedCustomer(ACCESS_TOKEN)).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
-        when(orderService.findOrderById(customerName, orderId))
-                .thenReturn(expected);
+        when(orderService.findOrderById(customer.getUserName(), orderId)).thenReturn(expected);
+
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
+        mockMvc.perform(get("/api/customers/me/orders/" + orderId)
                         .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 ).andDo(print())
                 .andExpect(status().isOk())
@@ -106,19 +124,19 @@ public class OrderControllerTest {
     @Test
     void findOrders() throws Exception {
         // given
-        final String customerName = "pobi";
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
                         new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
                 new Orders(2L, Collections.singletonList(
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
+
+        given(authService.getAuthenticatedCustomer(ACCESS_TOKEN)).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
-        when(orderService.findOrdersByCustomerName(customerName))
-                .thenReturn(expected);
+        when(orderService.findOrdersByCustomerName(customer.getUserName())).thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
+        mockMvc.perform(get("/api/customers/me/orders")
                         .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 ).andDo(print())
                 .andExpect(status().isOk())
