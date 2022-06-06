@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.customer.Id;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -24,10 +25,10 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
+    public List<Long> findIdsByCustomerId(final Id customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId.getValue());
     }
 
     public Long findProductIdById(final Long cartId) {
@@ -39,13 +40,13 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
+    public Long addCartItem(final Id customerId, final Long productId) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
+            preparedStatement.setLong(1, customerId.getValue());
             preparedStatement.setLong(2, productId);
             return preparedStatement;
         }, keyHolder);

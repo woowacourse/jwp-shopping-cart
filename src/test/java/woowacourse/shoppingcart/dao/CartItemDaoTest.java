@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Id;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class CartItemDaoTest {
         final Long productId = 1L;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(new Id(customerId), productId);
 
         // then
         assertThat(cartId).isEqualTo(3L);
@@ -76,7 +77,7 @@ public class CartItemDaoTest {
         final Long customerId = 1L;
 
         // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(new Id(customerId));
 
         // then
         assertThat(cartIds).containsExactly(1L, 2L);

@@ -11,12 +11,13 @@ drop table if exists customer;
 create table customer
 (
     id       bigint       not null auto_increment,
-    username varchar(255) not null,
+    email    varchar(255) not null unique,
+    name     varchar(30) not null,
+    phone    varchar(13) not null,
+    address  varchar(255) not null,
+    password varchar(64) not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
-
-alter table customer
-    add unique key (username);
 
 create table product
 (
@@ -32,6 +33,7 @@ create table cart_item
     id          bigint not null auto_increment,
     customer_id bigint not null,
     product_id  bigint not null,
+    quantity    integer not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
