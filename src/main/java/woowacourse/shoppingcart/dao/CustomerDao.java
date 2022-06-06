@@ -50,7 +50,7 @@ public class CustomerDao {
         }
     }
 
-    public long save(Customer customer) {
+    public Long save(Customer customer) {
         final Number number = simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(customer));
         return number.longValue();
     }

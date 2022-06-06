@@ -26,7 +26,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public long create(CustomerRequest customerRequest) {
+    public Long create(CustomerRequest customerRequest) {
         validateDuplicateEmail(customerRequest);
 
         final String hashPw = encoder.encode(customerRequest.getPassword());
@@ -49,7 +49,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public long updateProfile(Long id, CustomerUpdateProfileRequest customerUpdateProfileRequest) {
+    public Long updateProfile(Long id, CustomerUpdateProfileRequest customerUpdateProfileRequest) {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(CustomerNotFoundException::new);
 
@@ -59,7 +59,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public long updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
+    public Long updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         validatePassword(customer, customerUpdatePasswordRequest.getOldPassword());
 
@@ -74,7 +74,7 @@ public class CustomerService {
         }
     }
 
-    public long delete(long id, CustomerDeleteRequest customerDeleteRequest) {
+    public Long delete(long id, CustomerDeleteRequest customerDeleteRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         validatePassword(customer, customerDeleteRequest.getPassword());
 
