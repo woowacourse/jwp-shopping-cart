@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class CartService {
 
     private final CartItemDao cartItemDao;

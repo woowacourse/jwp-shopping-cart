@@ -8,7 +8,7 @@ import woowacourse.shoppingcart.domain.Product;
 import java.util.List;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class ProductService {
     private final ProductDao productDao;
 

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.support.Encoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.user.Customer;
@@ -10,6 +11,7 @@ import woowacourse.shoppingcart.exception.DuplicateUserException;
 import woowacourse.shoppingcart.exception.InvalidUserException;
 
 @Service
+@Transactional
 public class UserService {
 
     private final CustomerDao customerDao;

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class OrderService {
 
     private final OrderDao orderDao;
