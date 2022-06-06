@@ -1,10 +1,12 @@
 package woowacourse.shoppingcart.domain.user;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import woowacourse.shoppingcart.exception.InvalidNicknameException;
 
 public class Nickname {
 
-    private static final String NICKNAME_REGEX = "^[가-힣A-Za-z0-9]{2,8}$";
+    public static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣A-Za-z0-9]{2,8}$");
     private final String nickname;
 
     public Nickname(String nickname) {
@@ -13,7 +15,8 @@ public class Nickname {
     }
 
     private void validate() {
-        if (!nickname.matches(NICKNAME_REGEX)) {
+        Matcher matcher = NICKNAME_PATTERN.matcher(nickname);
+        if (!matcher.matches()) {
             throw new InvalidNicknameException();
         }
     }
