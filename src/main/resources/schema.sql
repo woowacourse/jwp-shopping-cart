@@ -11,7 +11,7 @@ drop table if exists customer;
 create table customer
 (
     id       bigint       not null auto_increment,
-    account varchar(30) not null,
+    account varchar(30) not null unique,
     nickname varchar(30) not null,
     password varchar(255) not null,
     address varchar(255) not null,
