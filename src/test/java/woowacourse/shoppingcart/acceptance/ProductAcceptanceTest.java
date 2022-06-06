@@ -22,7 +22,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     void addProduct() {
         ProductRequest 치킨 = new ProductRequest("치킨", 10_000, 20, "http://example.com/chicken.jpg");
-        ExtractableResponse<Response> response = 상품_등록_요청_DTO(치킨);
+        ExtractableResponse<Response> response = 상품_등록_요청(치킨);
 
         상품_추가됨(response);
     }
@@ -68,16 +68,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/products")
                 .then().log().all()
                 .extract();
-    }
-
-    public static ExtractableResponse<Response> 상품_등록_요청_DTO(ProductRequest productRequest) {
-        return RestAssured
-            .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequest)
-            .when().post("/api/products")
-            .then().log().all()
-            .extract();
     }
 
     public static ExtractableResponse<Response> 상품_목록_조회_요청() {
