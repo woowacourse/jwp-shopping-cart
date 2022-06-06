@@ -15,8 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.response.GetCartItemResponse;
+import woowacourse.shoppingcart.dto.request.UpdateProductQuantityRequest;
 import woowacourse.shoppingcart.dto.response.GetCartItemsResponse;
 
 @DisplayName("장바구니 관련 기능")
@@ -116,9 +118,10 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
         GetCartItemsResponse getCartItemsResponse = response.jsonPath().getObject(".", GetCartItemsResponse.class);
-        List<GetCartItemResponse> getCartItemResponses = getCartItemsResponse.getProducts();
-        List<Long> ids = getCartItemResponses.stream()
-                .map(GetCartItemResponse::getId)
+        List<CartItem> cartItems = getCartItemsResponse.getCartItems();
+        List<Long> ids = cartItems.stream()
+                .map(CartItem::getProduct)
+                .map(Product::getId)
                 .collect(Collectors.toList());
         assertThat(ids).contains(productIds);
     }

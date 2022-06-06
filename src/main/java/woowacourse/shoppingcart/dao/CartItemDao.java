@@ -5,15 +5,24 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.dao.dto.CartItemDto;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
+
+    private static final RowMapper<CartItemDto> ROW_MAPPER = (resultSet, rowNum) ->
+            new CartItemDto(
+                    resultSet.getLong("product_id"),
+                    resultSet.getInt("quantity"));
+
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
@@ -27,6 +36,13 @@ public class CartItemDao {
         final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
+    }
+
+    public List<CartItemDto> findCartItemByCustomerId(final Long customerId) {
+        final String sql = "SELECT * FROM cart_item where customer_id = :customerId";
+        SqlParameterSource params = new MapSqlParameterSource("customerId", customerId);
+
+        return namedJdbcTemplate.query(sql, params, ROW_MAPPER);
     }
 
     public List<Long> findIdsByCustomerId(final Long customerId) {

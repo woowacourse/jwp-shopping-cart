@@ -1,17 +1,17 @@
 package woowacourse.shoppingcart.ui;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.dto.response.GetCartItemResponse;
+import woowacourse.shoppingcart.dto.request.UpdateProductQuantityRequest;
 import woowacourse.shoppingcart.dto.response.GetCartItemsResponse;
 
 @RestController
@@ -25,17 +25,22 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<GetCartItemsResponse> getCartItems(@AuthenticationPrincipal Long customerId) {
-        List<GetCartItemResponse> getCartItemResponses = cartService.findCartItems(customerId)
-                .stream()
-                .map(it -> new GetCartItemResponse(it.getId(), it.getName(), it.getPrice(), it.getThumbnail()))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(new GetCartItemsResponse(getCartItemResponses));
+        GetCartItemsResponse response = new GetCartItemsResponse(cartService.findCartItems(customerId));
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("{productId}")
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal Long customerId,
                                       @PathVariable final Long productId) {
         cartService.addCart(customerId, productId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{productId}/quantity")
+    public ResponseEntity<Void> updateProductQuantity(@AuthenticationPrincipal Long customerId,
+                                                      @PathVariable final Long productId,
+                                                      @RequestBody UpdateProductQuantityRequest updateProductQuantityRequest) {
+        cartService.updateQuantity(customerId, productId, updateProductQuantityRequest.getQuantity());
         return ResponseEntity.ok().build();
     }
 

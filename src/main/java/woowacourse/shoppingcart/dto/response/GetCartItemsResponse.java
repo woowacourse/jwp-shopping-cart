@@ -1,23 +1,24 @@
 package woowacourse.shoppingcart.dto.response;
 
 import java.util.List;
+import woowacourse.shoppingcart.domain.CartItem;
 
 public class GetCartItemsResponse {
 
-    private List<GetCartItemResponse> products;
+    private List<CartItem> cartItems;
 
     public GetCartItemsResponse() {
     }
 
-    public GetCartItemsResponse(List<GetCartItemResponse> products) {
-        this.products = products;
+    public GetCartItemsResponse(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public List<GetCartItemResponse> getProducts() {
-        return products;
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 
-    public void setProducts(List<GetCartItemResponse> products) {
-        this.products = products;
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }
