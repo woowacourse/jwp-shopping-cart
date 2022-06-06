@@ -32,7 +32,8 @@ public class CartService {
         }
         return new CartResponse(cartIds.stream()
                 .map(this::findProductByCartId)
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(),
+                        product.getImageUrl()))
                 .collect(Collectors.toList()));
     }
 

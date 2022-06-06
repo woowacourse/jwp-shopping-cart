@@ -32,7 +32,7 @@ class CartServiceTest {
         MockitoAnnotations.openMocks(this);
         this.cartService = new CartService(cartItemDao, productDao);
     }
-    
+
     @Test
     @DisplayName("회원 아이디에 따라 가진 카트를 반환한다.")
     void findCartsByCustomerId() {
