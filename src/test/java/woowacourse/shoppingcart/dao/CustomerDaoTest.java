@@ -1,15 +1,21 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
+import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.Username;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -19,35 +25,107 @@ public class CustomerDaoTest {
 
     private final CustomerDao customerDao;
 
-    public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
-        customerDao = new CustomerDao(jdbcTemplate);
+    public CustomerDaoTest(DataSource dataSource) {
+        customerDao = new CustomerDao(dataSource);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
-    void findIdByUserNameTest() {
-
+    @DisplayName("회원을 저장할 수 있다.")
+    void save() {
         // given
-        final String userName = "puterism";
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        Customer customer = customerDao.save(레넌);
 
         // then
-        assertThat(customerId).isEqualTo(1L);
+        assertThat(customer.getId()).isNotNull();
     }
 
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
+    @DisplayName("유저이름으로 회원 정보를 조회할 수 있다.")
+    void findByUsername() {
         // given
-        final String userName = "gwangyeol-iM";
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
+        customerDao.save(레넌);
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        Customer foundCustomer = customerDao.findByUsername(new Username("레넌"));
 
         // then
-        assertThat(customerId).isEqualTo(16L);
+        assertThat(foundCustomer.getEmail().getValue()).isEqualTo("rennon@woowa.com");
+    }
+
+    @Test
+    @DisplayName("유저이메일로 회원 정보를 조회할 수 있다.")
+    void findByEmail() {
+        // given
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
+        customerDao.save(레넌);
+
+        // when
+        Customer foundCustomer = customerDao.findByEmail(new Email("rennon@woowa.com"));
+
+        // then
+        assertThat(foundCustomer.getEmail().getValue()).isEqualTo("rennon@woowa.com");
+    }
+
+    @Test
+    @DisplayName("유저이름이 존재하는지 확인할 수 있다.")
+    void existByUsername() {
+        // given
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
+        customerDao.save(레넌);
+
+        // when
+        boolean result = customerDao.existByUsername(new Username("레넌"));
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("이메일이 존재하는지 확인할 수 있다.")
+    void existByEmail() {
+        // given
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
+        customerDao.save(레넌);
+
+        // when
+        boolean result = customerDao.existByEmail(new Email("rennon@woowa.com"));
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("비밀번호를 갱신할 수 있다.")
+    void updatePassword() {
+        // given
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
+        Customer customer = customerDao.save(레넌);
+
+        // when
+        customerDao.updatePassword(customer.getId(), new Password("567890"));
+        Customer foundCustomer = customerDao.findByUsername(new Username("레넌"));
+
+        // then
+        assertThat(foundCustomer.getPassword().getValue()).isEqualTo("567890");
+    }
+
+    @Test
+    @DisplayName("회원을 지울 수 있다.")
+    void deleteByUsername() {
+        // given
+        Customer 레넌 = new Customer("레넌", "rennon@woowa.com", "123456");
+        customerDao.save(레넌);
+
+        // when
+        customerDao.deleteByUsername(new Username("레넌"));
+
+        // then
+        assertThatThrownBy(() -> customerDao.findByUsername(new Username("레넌")))
+                .isInstanceOf(InvalidCustomerException.class)
+                .hasMessage("존재하지 않는 유저입니다.");
     }
 }
