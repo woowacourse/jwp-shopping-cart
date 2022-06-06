@@ -20,7 +20,7 @@ public class AuthenticationConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthorizationInterceptor()).addPathPatterns("/customers/me/**");
+        registry.addInterceptor(new AuthorizationInterceptor());
     }
 
     @Override
