@@ -1,29 +1,30 @@
 package woowacourse.shoppingcart.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import woowacourse.auth.service.AuthService;
-import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
-import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
-import woowacourse.shoppingcart.service.CustomerService;
-import woowacourse.shoppingcart.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.dto.response.CustomerResponse;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.net.URI;
+import javax.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.support.UserName;
+import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.service.CustomerService;
 
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerController {
 
     private final CustomerService customerService;
-    private final AuthService authService;
 
-    public CustomerController(final CustomerService customerService, final AuthService authService) {
+    public CustomerController(final CustomerService customerService) {
         this.customerService = customerService;
-        this.authService = authService;
     }
 
     @PostMapping
@@ -33,33 +34,26 @@ public class CustomerController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> edit(final HttpServletRequest request,
+    public ResponseEntity<Void> edit(@UserName final String customerName,
                                      @RequestBody @Valid final CustomerRequest editRequest) {
-        final String customerName = getNameFromToken(request);
         customerService.editCustomerByName(customerName, editRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> customer(final HttpServletRequest request) {
-        final String customerName = getNameFromToken(request);
+    public ResponseEntity<CustomerResponse> customer(@UserName final String customerName) {
         return ResponseEntity.ok(customerService.findCustomerByName(customerName));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> withDraw(final HttpServletRequest request) {
-        final String customerName = getNameFromToken(request);
+    public ResponseEntity<Void> withDraw(@UserName final String customerName) {
         customerService.deleteCustomerByName(customerName);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/duplication")
-    public ResponseEntity<CheckDuplicationResponse> checkDuplication(@RequestBody final CheckDuplicationRequest request) {
+    public ResponseEntity<CheckDuplicationResponse> checkDuplication(
+            @RequestBody final CheckDuplicationRequest request) {
         return ResponseEntity.ok(customerService.checkDuplicationByName(request.getUserName()));
-    }
-
-    private String getNameFromToken(final HttpServletRequest request) {
-        final String token = AuthorizationExtractor.extract(request);
-        return authService.getNameFromToken(token);
     }
 }
