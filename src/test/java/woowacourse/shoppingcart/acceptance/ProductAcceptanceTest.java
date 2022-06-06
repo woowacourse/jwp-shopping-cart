@@ -11,9 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.product.ProductAddRequest;
 import woowacourse.shoppingcart.dto.product.ProductResponse;
+import woowacourse.shoppingcart.dto.product.ProductsResponse.ProductsInnerResponse;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -116,8 +116,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
-                .map(Product::getId)
+        List<Long> resultProductIds = response.jsonPath().getList("products.", ProductsInnerResponse.class).stream()
+                .map(ProductsInnerResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
     }
