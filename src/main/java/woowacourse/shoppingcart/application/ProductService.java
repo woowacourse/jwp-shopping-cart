@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.List;
@@ -18,20 +20,24 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public ProductsResponse findProducts() {
+        final List<Product> products = productDao.findAll();
+
+        return ProductsResponse.of(products);
     }
 
-    public Long addProduct(final Product product) {
+    public Product addProduct(final Product product) {
         return productDao.save(product);
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId)
+    public ProductResponse findProductById(final Long productId) {
+        final Product product = productDao.findById(productId)
                 .orElseThrow(InvalidProductException::new);
+
+        return ProductResponse.of(product);
     }
 
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+    public int deleteProductById(final Long productId) {
+        return productDao.delete(productId);
     }
 }

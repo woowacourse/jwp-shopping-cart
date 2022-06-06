@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,7 @@ public class ProductDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Long save(final Product product) {
+    public Product save(final Product product) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
@@ -42,10 +41,10 @@ public class ProductDao {
         parameters.put("image_url", product.getImageUrl());
 
         final Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return number.longValue();
+        return new Product(number.longValue(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public Optional<Product> findProductById(final long productId) {
+    public Optional<Product> findById(final long productId) {
         final String sql = "SELECT id, name, price, image_url FROM product WHERE id = :id";
 
         final Map<String, Object> parameters = new HashMap<>();
@@ -56,17 +55,17 @@ public class ProductDao {
         return Optional.ofNullable(DataAccessUtils.singleResult(query));
     }
 
-    public List<Product> findProducts() {
+    public List<Product> findAll() {
         final String query = "SELECT id, name, price, image_url FROM product";
         return namedParameterJdbcTemplate.query(query, productRowMapper);
     }
 
-    public void delete(final Long productId) {
+    public int delete(final long productId) {
         final String query = "DELETE FROM product WHERE id = :id";
 
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", productId);
 
-        namedParameterJdbcTemplate.update(query, new MapSqlParameterSource(parameters));
+        return namedParameterJdbcTemplate.update(query, new MapSqlParameterSource(parameters));
     }
 }

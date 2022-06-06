@@ -41,7 +41,7 @@ class OrdersDetailDaoTest {
         long customerId = 1L;
         ordersId = orderDao.addOrders(customerId);
 
-        productId = productDao.save(new Product("name", 1000, "imageUrl"));
+        productId = productDao.save(new Product("name", 1000, "imageUrl")).getId();
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")

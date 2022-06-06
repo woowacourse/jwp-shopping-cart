@@ -57,7 +57,7 @@
   - [x] jdbcTemplate 변경
 
 ### 상품
-- [ ] 단일 조회 (GET, /products/{productId})
+- [x] 단일 조회 (GET, /products/{productId})
   - Response
     200, OK
   ```json
@@ -69,7 +69,7 @@
   }
   ```
 
-  - [ ] 목록 조회 (GET, /products)
+  - [x] 목록 조회 (GET, /products)
     - Response
       200, OK
     ```json
