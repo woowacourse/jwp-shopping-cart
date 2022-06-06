@@ -4,6 +4,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -21,6 +22,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) {
         String header = request.getHeader(AUTHORIZATION);
+        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+            return true;
+        }
         if (header == null) {
             throw new UnauthorizedException("유효하지 않은 토큰입니다.");
         }
