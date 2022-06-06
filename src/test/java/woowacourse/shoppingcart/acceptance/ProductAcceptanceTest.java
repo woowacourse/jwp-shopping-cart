@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ProductsPerPageRequest;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -28,11 +30,16 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     void getProducts() {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        Long productId3 = 상품_등록되어_있음("피자", 20_000, "http://example.com/pizza.jpg");
+        Long productId4 = 상품_등록되어_있음("떡볶이", 20_000, "http://example.com/ddukbokki.jpg");
+        Long productId5 = 상품_등록되어_있음("보쌈", 20_000, "http://example.com/bossam.jpg");
+        Long productId6 = 상품_등록되어_있음("족발", 20_000, "http://example.com/jokbal.jpg");
+        Long productId7 = 상품_등록되어_있음("김치", 20_000, "http://example.com/kimchi.jpg");
 
-        ExtractableResponse<Response> response = 상품_목록_조회_요청();
+        ExtractableResponse<Response> response = 상품_목록_조회_요청(new ProductsPerPageRequest(3, 2));
 
         조회_응답됨(response);
-        상품_목록_포함됨(productId1, productId2, response);
+        상품_목록_포함됨(List.of(productId4, productId5, productId6), response);
     }
 
     @DisplayName("상품을 조회한다")
@@ -57,22 +64,24 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+        ProductRequest productRequest = new ProductRequest(name, price, imageUrl);
 
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
-                .when().post("/api/products")
+                .when().post("/products")
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_목록_조회_요청() {
+    public static ExtractableResponse<Response> 상품_목록_조회_요청(ProductsPerPageRequest productsPerPageRequest) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
+                .param("size", productsPerPageRequest.getSize())
+                .param("page", productsPerPageRequest.getPage())
+                .when().get("/products")
                 .then().log().all()
                 .extract();
     }
@@ -81,7 +90,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products/{productId}", productId)
+                .when().get("/products/{productId}", productId)
                 .then().log().all()
                 .extract();
     }
@@ -90,7 +99,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
+                .when().delete("/products/{productId}", productId)
                 .then().log().all()
                 .extract();
     }
@@ -109,11 +118,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
+    public static void 상품_목록_포함됨(List<Long> productIds, ExtractableResponse<Response> response) {
         List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
                 .map(Product::getId)
                 .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productId1, productId2);
+        assertThat(resultProductIds).containsExactlyElementsOf(productIds);
     }
 
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {

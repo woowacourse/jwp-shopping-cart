@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Products;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -21,8 +23,8 @@ public class ProductDaoTest {
 
     private final ProductDao productDao;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+    public ProductDaoTest(DataSource dataSource) {
+        this.productDao = new ProductDao(dataSource);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")
@@ -65,10 +67,10 @@ public class ProductDaoTest {
         final int size = 0;
 
         // when
-        final List<Product> products = productDao.findProducts();
+        final Products products = productDao.findProducts();
 
         // then
-        assertThat(products).size().isEqualTo(size);
+        assertThat(products.getValue()).size().isEqualTo(size);
     }
 
     @DisplayName("싱품 삭제")
@@ -80,13 +82,13 @@ public class ProductDaoTest {
         final String imageUrl = "www.test.com";
 
         final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts().size();
+        final int beforeSize = productDao.findProducts().getValue().size();
 
         // when
         productDao.delete(productId);
 
         // then
-        final int afterSize = productDao.findProducts().size();
+        final int afterSize = productDao.findProducts().getValue().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
     }
 }
