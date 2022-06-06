@@ -44,10 +44,9 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long addCart(final Long customerId, final Long productId, final int quantity) {
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.addCartItem(customerId, productId, quantity);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
