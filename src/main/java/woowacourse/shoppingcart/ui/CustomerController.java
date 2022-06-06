@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.auth.support.MemberOnly;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -40,20 +40,20 @@ public class CustomerController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public CustomerResponse showCustomer(@AuthenticationPrincipal Long customerId) {
+    public CustomerResponse showCustomer(@MemberOnly Long customerId) {
         return customerService.find(customerId);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public void updateCustomer(@AuthenticationPrincipal Long customerId,
+    public void updateCustomer(@MemberOnly Long customerId,
                                @RequestBody @Valid CustomerRequest customerRequest) {
         customerService.update(customerId, customerRequest);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCustomer(@AuthenticationPrincipal Long customerId) {
+    public void deleteCustomer(@MemberOnly Long customerId) {
         customerService.delete(customerId);
     }
 }
