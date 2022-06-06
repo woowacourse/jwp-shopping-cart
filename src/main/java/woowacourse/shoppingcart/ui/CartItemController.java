@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +17,9 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
@@ -28,27 +31,16 @@ public class CartItemController {
         this.cartService = cartService;
     }
 
-    @Deprecated
-    @GetMapping("/api/customers/{customerName}/carts")
-    public ResponseEntity<List<Cart>> getCartItemsDeprecated(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
-    }
-
     @GetMapping("/api/members/me/carts")
     public ResponseEntity<List<CartResponse>> getCartItems(@AuthenticationPrincipal Long memberId) {
         return ResponseEntity.ok(cartService.findCartsById(memberId));
     }
 
-    @PostMapping("/api/customers/{customerName}/carts")
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                      @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
-        return ResponseEntity.created(responseLocation).build();
+    @PostMapping("/api/members/me/carts")
+    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final Long memberId,
+                                            @RequestBody final CartRequest cartRequest) {
+        final Long id = cartService.addCart(memberId, cartRequest);
+        return ResponseEntity.created(URI.create("/api/members/me/carts/" + id)).build();
     }
 
     @DeleteMapping("/api/customers/{customerName}/carts/{cartId}")

@@ -4,6 +4,8 @@ drop table if exists orders;
 
 drop table if exists cart_item;
 
+drop table if exists carts;
+
 drop table if exists product;
 
 drop table if exists member;
