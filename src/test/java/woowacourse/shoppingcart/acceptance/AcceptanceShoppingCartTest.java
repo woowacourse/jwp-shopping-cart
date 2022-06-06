@@ -9,8 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = "/data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "/truncate_shopping_cart.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(value = "/set_up_shopping_cart.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @ActiveProfiles("test")
 class AcceptanceShoppingCartTest {
 
