@@ -41,8 +41,6 @@ public class JwtTokenProvider {
     public void validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-
-            claims.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             throw new IllegalArgumentException("만료된 토큰입니다.");
         } catch (Exception e) {
