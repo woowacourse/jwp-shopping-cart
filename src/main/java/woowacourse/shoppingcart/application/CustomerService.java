@@ -43,10 +43,9 @@ public class CustomerService {
 
     private Customer toCustomer(final SignupRequest signupRequest) {
         final PlainPassword plainPassword = new PlainPassword(signupRequest.getPassword());
-        final String encode = plainPassword.encode(passwordEncoder);
         return new Customer(new Account(signupRequest.getAccount()),
                 signupRequest.getNickname(),
-                new EncodedPassword(encode),
+                new EncodedPassword(plainPassword.encode(passwordEncoder)),
                 signupRequest.getAddress(),
                 signupRequest.getPhoneNumber().appendNumbers());
     }
