@@ -15,12 +15,12 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.setup.AcceptanceTest;
-import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
-import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
-import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
-import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
+import woowacourse.user.dto.request.SignUpRequest;
+import woowacourse.user.dto.request.UniqueUsernameRequest;
+import woowacourse.user.dto.request.UpdateMeRequest;
+import woowacourse.user.dto.request.UpdatePasswordRequest;
+import woowacourse.user.dto.response.GetMeResponse;
+import woowacourse.user.dto.response.UniqueUsernameResponse;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayName("회원 관련 기능")

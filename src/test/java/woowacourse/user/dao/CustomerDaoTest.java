@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dao;
+package woowacourse.user.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -11,7 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import woowacourse.auth.domain.EncryptedPassword;
 import woowacourse.setup.DatabaseTest;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.user.domain.Customer;
 import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")

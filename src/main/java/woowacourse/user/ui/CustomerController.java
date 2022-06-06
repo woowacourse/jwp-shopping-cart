@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.ui;
+package woowacourse.user.ui;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 import woowacourse.auth.domain.User;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
-import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
-import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
-import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
+import woowacourse.user.application.CustomerService;
+import woowacourse.user.dto.request.SignUpRequest;
+import woowacourse.user.dto.request.UniqueUsernameRequest;
+import woowacourse.user.dto.request.UpdateMeRequest;
+import woowacourse.user.dto.request.UpdatePasswordRequest;
+import woowacourse.user.dto.response.GetMeResponse;
+import woowacourse.user.dto.response.UniqueUsernameResponse;
 
 @RestController
 @RequestMapping("/customers")

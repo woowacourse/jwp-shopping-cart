@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.user.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,13 +7,13 @@ import woowacourse.auth.domain.User;
 import woowacourse.common.exception.InvalidExceptionType;
 import woowacourse.common.exception.InvalidRequestException;
 import woowacourse.common.exception.NotFoundException;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
-import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
-import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
+import woowacourse.user.dao.CustomerDao;
+import woowacourse.user.domain.Customer;
+import woowacourse.user.dto.request.SignUpRequest;
+import woowacourse.user.dto.request.UpdateMeRequest;
+import woowacourse.user.dto.request.UpdatePasswordRequest;
+import woowacourse.user.dto.response.GetMeResponse;
+import woowacourse.user.dto.response.UniqueUsernameResponse;
 
 @Service
 public class CustomerService {

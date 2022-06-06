@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto.response;
+package woowacourse.user.dto.response;
 
 import java.util.Objects;
 

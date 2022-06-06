@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.user.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -15,13 +15,13 @@ import woowacourse.auth.domain.User;
 import woowacourse.common.exception.InvalidRequestException;
 import woowacourse.common.exception.NotFoundException;
 import woowacourse.setup.DatabaseTest;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
-import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
-import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
+import woowacourse.user.dao.CustomerDao;
+import woowacourse.user.domain.Customer;
+import woowacourse.user.dto.request.SignUpRequest;
+import woowacourse.user.dto.request.UpdateMeRequest;
+import woowacourse.user.dto.request.UpdatePasswordRequest;
+import woowacourse.user.dto.response.GetMeResponse;
+import woowacourse.user.dto.response.UniqueUsernameResponse;
 import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")

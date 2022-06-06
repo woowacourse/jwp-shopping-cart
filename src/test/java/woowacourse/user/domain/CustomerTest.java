@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

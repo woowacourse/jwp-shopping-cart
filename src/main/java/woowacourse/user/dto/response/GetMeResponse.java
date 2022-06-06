@@ -1,7 +1,7 @@
-package woowacourse.shoppingcart.dto.response;
+package woowacourse.user.dto.response;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.user.domain.Customer;
 
 public class GetMeResponse {
 

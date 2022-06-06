@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.user.domain;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
