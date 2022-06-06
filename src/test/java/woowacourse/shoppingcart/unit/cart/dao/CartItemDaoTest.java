@@ -20,10 +20,14 @@ import woowacourse.shoppingcart.product.domain.Product;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
+class CartItemDaoTest {
+
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
+
+    private Long bananaId;
+    private Long appleId;
 
     public CartItemDaoTest(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -33,8 +37,8 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        bananaId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
+        appleId = productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
@@ -43,7 +47,6 @@ public class CartItemDaoTest {
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
-
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
@@ -58,7 +61,6 @@ public class CartItemDaoTest {
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
@@ -72,7 +74,6 @@ public class CartItemDaoTest {
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
@@ -86,7 +87,6 @@ public class CartItemDaoTest {
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void deleteCartItem() {
-
         // given
         final Long cartId = 1L;
 
@@ -98,5 +98,33 @@ public class CartItemDaoTest {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);
+    }
+
+    @Test
+    @DisplayName("카드에 이미 상품이 담겨있으면, true를 반환한다.")
+    void existProduct_alreadyExistProduct_trueReturned() {
+        // given
+        Long customerId = 1L;
+        cartItemDao.addCartItem(customerId, bananaId);
+
+        // when
+        final boolean actual = cartItemDao.existProduct(customerId, bananaId);
+
+        // then
+        assertThat(actual).isTrue();
+    }
+
+    @Test
+    @DisplayName("카드에 상품이 담겨있지 않으면, false를 반환한다.")
+    void existProduct_notExistProduct_falseReturned() {
+        // given
+        Long customerId = 1L;
+        cartItemDao.addCartItem(customerId, bananaId);
+
+        // when
+        final boolean actual = cartItemDao.existProduct(customerId, bananaId);
+
+        // then
+        assertThat(actual).isTrue();
     }
 }
