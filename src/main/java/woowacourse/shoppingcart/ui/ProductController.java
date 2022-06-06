@@ -3,8 +3,9 @@ package woowacourse.shoppingcart.ui;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import woowacourse.shoppingcart.application.ProductService;
-
-import woowacourse.shoppingcart.dto.product.ProductResponse;
-import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.product.ProductRequest;
+import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 @RestController
 @RequestMapping("/api/products")
@@ -31,12 +30,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> products() {
+    public ResponseEntity<List<ProductResponse>> findAll() {
         return ResponseEntity.ok(productService.findProducts());
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> add(@Valid @RequestBody ProductRequest productRequest) {
         Long productId = productService.addProduct(productRequest);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -46,7 +45,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponse> product(@PathVariable Long productId) {
+    public ResponseEntity<ProductResponse> find(@PathVariable Long productId) {
         return ResponseEntity.ok(productService.findProductById(productId));
     }
 

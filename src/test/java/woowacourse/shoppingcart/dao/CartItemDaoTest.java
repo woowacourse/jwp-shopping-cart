@@ -35,7 +35,7 @@ public class CartItemDaoTest {
     @Test
     void addCartItem() {
         Customer yaho = customerDao.save(YAHO);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", false));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
 
         Long cartId = cartItemDao.addCartItem(yaho.getId(), bananaId);
 
@@ -46,8 +46,8 @@ public class CartItemDaoTest {
     @Test
     void findProductIdsByCustomerId() {
         Customer mat = customerDao.save(MAT);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", false));
-        Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", false));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
+        Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", true));
         cartItemDao.addCartItem(mat.getId(), bananaId);
         cartItemDao.addCartItem(mat.getId(), appleId);
 
@@ -60,8 +60,8 @@ public class CartItemDaoTest {
     @Test
     void findIdsByCustomerId() {
         Customer yaho = customerDao.save(YAHO);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", false));
-        Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", false));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
+        Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", true));
         Long bananaCartId = cartItemDao.addCartItem(yaho.getId(), bananaId);
         Long appleCartId = cartItemDao.addCartItem(yaho.getId(), appleId);
 
@@ -74,8 +74,8 @@ public class CartItemDaoTest {
     @Test
     void deleteCartItem() {
         Customer mat = customerDao.save(MAT);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", false));
-        Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", false));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
+        Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", true));
         cartItemDao.addCartItem(mat.getId(), bananaId);
         Long appleCartId = cartItemDao.addCartItem(mat.getId(), appleId);
 

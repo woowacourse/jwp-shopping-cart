@@ -5,22 +5,22 @@ public class Product {
     private final Name name;
     private final Price price;
     private final ImageUrl imageUrl;
-    private final boolean deleted;
+    private final boolean selling;
 
-    public Product(String name, int price, String imageUrl, boolean deleted) {
-        this(null, new Name(name), new Price(price), new ImageUrl(imageUrl), deleted);
+    public Product(String name, int price, String imageUrl, boolean selling) {
+        this(null, new Name(name), new Price(price), new ImageUrl(imageUrl), selling);
     }
 
-    public Product(Long id, String name, int price, String imageUrl, boolean deleted) {
-        this(id, new Name(name), new Price(price), new ImageUrl(imageUrl), deleted);
+    public Product(Long id, String name, int price, String imageUrl, boolean selling) {
+        this(id, new Name(name), new Price(price), new ImageUrl(imageUrl), selling);
     }
 
-    public Product(Long id, Name name, Price price, ImageUrl imageUrl, boolean deleted) {
+    public Product(Long id, Name name, Price price, ImageUrl imageUrl, boolean selling) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.deleted = deleted;
+        this.selling = selling;
     }
 
     public Long getId() {
@@ -39,7 +39,7 @@ public class Product {
         return imageUrl.getValue();
     }
 
-    public boolean isDeleted() {
-        return deleted;
+    public boolean isSelling() {
+        return selling;
     }
 }

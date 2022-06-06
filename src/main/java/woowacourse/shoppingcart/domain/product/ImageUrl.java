@@ -1,10 +1,12 @@
 package woowacourse.shoppingcart.domain.product;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ImageUrl {
 
-    private static final String STARTING_WORD = "http";
+    private static final Pattern IMAGE_URL_PATTERN = Pattern.compile("http.*");
 
     private final String value;
 
@@ -19,8 +21,8 @@ public class ImageUrl {
     }
 
     private void checkFormat(String value) {
-        String startingWord = value.substring(0, 4);
-        if (!STARTING_WORD.equals(startingWord)) {
+        Matcher matcher = IMAGE_URL_PATTERN.matcher(value);
+        if (!matcher.matches()) {
             throw new IllegalArgumentException("상품 이미지 url 형식이 올바르지 않습니다. (형식: http로 시작)");
         }
     }

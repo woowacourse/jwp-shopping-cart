@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NoSuchProductException;
 
 @Repository
 public class ProductDao {
@@ -35,11 +36,11 @@ public class ProductDao {
 
     public Product findProductById(Long productId) {
         try {
-            String sql = "SELECT id, name, price, image_url, deleted FROM product WHERE id = :id";
+            String sql = "SELECT id, name, price, image_url, selling FROM product WHERE id = :id";
             SqlParameterSource parameterSource = new MapSqlParameterSource("id", productId);
             return namedParameterJdbcTemplate.queryForObject(sql, parameterSource, mapToProduct());
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            throw new NoSuchProductException();
         }
     }
 
@@ -50,21 +51,21 @@ public class ProductDao {
                         resultSet.getString("name"),
                         resultSet.getInt("price"),
                         resultSet.getString("image_url"),
-                        resultSet.getBoolean("deleted"));
+                        resultSet.getBoolean("selling"));
     }
 
     public List<Product> findAllProducts() {
-        String sql = "SELECT id, name, price, image_url, deleted FROM product";
+        String sql = "SELECT id, name, price, image_url, selling FROM product";
         return namedParameterJdbcTemplate.query(sql, mapToProduct());
     }
 
     public List<Product> findSellingProducts() {
-        String sql = "SELECT id, name, price, image_url, deleted FROM product WHERE deleted = false";
+        String sql = "SELECT id, name, price, image_url, selling FROM product WHERE selling = true";
         return namedParameterJdbcTemplate.query(sql, mapToProduct());
     }
 
     public void delete(Long productId) {
-        String sql = "UPDATE product SET deleted = true WHERE id = :id";
+        String sql = "UPDATE product SET selling = false WHERE id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", productId);
         namedParameterJdbcTemplate.update(sql, parameterSource);
     }

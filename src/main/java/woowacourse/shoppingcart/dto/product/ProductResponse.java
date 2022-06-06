@@ -7,18 +7,16 @@ public class ProductResponse {
     private final String name;
     private final Integer price;
     private final String imageUrl;
-    private final boolean deleted;
 
     public ProductResponse(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.isDeleted());
+        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public ProductResponse(Long id, String name, int price, String imageUrl, boolean deleted) {
+    public ProductResponse(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.deleted = deleted;
     }
 
     public String getName() {
@@ -35,9 +33,5 @@ public class ProductResponse {
 
     public Long getId() {
         return id;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
     }
 }
