@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS customer;
 CREATE TABLE customer
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT,
-    nickname VARCHAR(8) NOT NULL,
+    nickname VARCHAR(8)   NOT NULL,
     email    VARCHAR(255) NOT NULL,
     password VARCHAR(60)  NOT NULL,
     PRIMARY KEY (id)
@@ -30,9 +30,10 @@ CREATE TABLE product
 
 CREATE TABLE cart_item
 (
-    id          BIGINT NOT NULL AUTO_INCREMENT,
-    customer_id BIGINT NOT NULL,
-    product_id  BIGINT NOT NULL,
+    id          BIGINT  NOT NULL AUTO_INCREMENT,
+    customer_id BIGINT  NOT NULL,
+    product_id  BIGINT  NOT NULL,
+    quantity    INTEGER NOT NULL DEFAULT '1',
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
