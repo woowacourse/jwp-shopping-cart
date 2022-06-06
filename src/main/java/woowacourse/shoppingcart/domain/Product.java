@@ -7,14 +7,14 @@ public class Product {
     private final long id;
     private final String name;
     private final int price;
-    private final int quantity;
+    private final int stock;
     private final String imageUrl;
 
-    public Product(long id, String name, int price, int quantity, String imageUrl) {
+    public Product(long id, String name, int price, int stock, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.quantity = quantity;
+        this.stock = stock;
         this.imageUrl = imageUrl;
     }
 
@@ -30,8 +30,8 @@ public class Product {
         return price;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getStock() {
+        return stock;
     }
 
     public String getImageUrl() {
@@ -47,12 +47,12 @@ public class Product {
             return false;
         }
         Product product = (Product) o;
-        return id == product.id && price == product.price && quantity == product.quantity && Objects
+        return id == product.id && price == product.price && stock == product.stock && Objects
                 .equals(name, product.name) && Objects.equals(imageUrl, product.imageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, quantity, imageUrl);
+        return Objects.hash(id, name, price, stock, imageUrl);
     }
 }

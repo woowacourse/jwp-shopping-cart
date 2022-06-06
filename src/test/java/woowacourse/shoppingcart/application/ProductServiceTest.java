@@ -1,10 +1,9 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
@@ -16,12 +15,19 @@ class ProductServiceTest {
     @Autowired
     private ProductService productService;
 
-    @DisplayName("상품 id와 구매 수량을 받아, 구매할 수 있는지 반환한다.")
-    @ParameterizedTest
-    @CsvSource({"100, false", "101, true"})
-    void isPossibleQuantity(int purchasingQuantity, boolean expected) {
-        boolean actual = productService.isImpossibleQuantity(1L, purchasingQuantity);
+    @DisplayName("장바구니에 담으려는 상품의 수량이 재고보다 많다면 예외를 발생시킨다.")
+    @Test
+    void validateStock() {
+        assertThatThrownBy(() -> productService.validateStock(1L, 101))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("상품 재고가 부족합니다.");
+    }
 
-        assertThat(actual).isEqualTo(expected);
+    @DisplayName("장바구니에 담으려는 상품의 id가 존재하지 않는다면 예외를 발생시킨다.")
+    @Test
+    void validateProductId() {
+        assertThatThrownBy(() -> productService.validateProductId(4L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 상품입니다.");
     }
 }

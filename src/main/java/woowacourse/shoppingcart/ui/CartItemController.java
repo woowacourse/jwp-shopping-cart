@@ -1,16 +1,20 @@
 package woowacourse.shoppingcart.ui;
 
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.application.dto.CartItemResponse;
 import woowacourse.shoppingcart.ui.dto.CartItemAddRequest;
+import woowacourse.shoppingcart.ui.dto.CartItemQuantityUpdateRequest;
 
 @RestController
 @RequestMapping("/api/carts/products")
@@ -28,5 +32,14 @@ public class CartItemController {
                                             @Valid @RequestBody CartItemAddRequest cartItemAddRequest) {
         cartService.addCart(memberId, cartItemAddRequest.getId(), cartItemAddRequest.getQuantity());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping
+    public ResponseEntity<List<CartItemResponse>> updateQuantity(@AuthenticationPrincipal long memberId,
+                                                                 @Valid @RequestBody CartItemQuantityUpdateRequest
+                                                                         cartItemQuantityUpdateRequest) {
+        List<CartItemResponse> cartItemResponses = cartService.updateQuantity(
+                memberId, cartItemQuantityUpdateRequest.getId(), cartItemQuantityUpdateRequest.getQuantity());
+        return ResponseEntity.ok(cartItemResponses);
     }
 }

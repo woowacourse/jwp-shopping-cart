@@ -6,6 +6,7 @@ import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.LOGIN_URI;
 import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.MEMBER_CREATE_REQUEST;
 import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.SIGN_UP_URI;
 import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.VALID_LOGIN_REQUEST;
+import static woowacourse.util.HttpRequestUtil.patchWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.post;
 import static woowacourse.util.HttpRequestUtil.postWithAuthorization;
 
@@ -22,7 +23,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.ui.dto.response.ErrorResponse;
 import woowacourse.auth.ui.dto.response.LoginResponse;
+import woowacourse.shoppingcart.application.dto.CartItemResponse;
 import woowacourse.shoppingcart.ui.dto.CartItemAddRequest;
+import woowacourse.shoppingcart.ui.dto.CartItemQuantityUpdateRequest;
 
 @DisplayName("장바구니 관련 기능")
 @Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})
@@ -33,6 +36,8 @@ class CartAcceptanceTest extends AcceptanceTest {
             new CartItemAddRequest(1L, 5);
     private static final CartItemAddRequest INVALID_PRODUCT_ID_CART_ITEM_ADD_REQUEST =
             new CartItemAddRequest(4L, 5);
+    private static final CartItemQuantityUpdateRequest VALID_CART_ITEM_QUANTITY_UPDATE_REQUEST =
+            new CartItemQuantityUpdateRequest(1L, 8);
 
     private String token;
 
@@ -80,14 +85,6 @@ class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private static Stream<Arguments> provideNullProductIdAndQuantity() {
-        return Stream.of(
-                Arguments.of(null, 3),
-                Arguments.of(1L, null),
-                Arguments.of(null, null)
-        );
-    }
-
     @DisplayName("상품의 재고보다 많은 양을 구매하려고 하면 400을 응답한다.")
     @Test
     void addCartItem_badRequest_InvalidQuantity() {
@@ -100,6 +97,63 @@ class CartAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(message).isEqualTo("상품 재고가 부족합니다.")
+        );
+    }
+
+    @DisplayName("상품의 수량을 변경하고 성공하면 200과 변경된 장바구니 목록을 반환한다.")
+    @Test
+    void updateQuantity() {
+        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST);
+
+        ExtractableResponse<Response> response = patchWithAuthorization(CART_URI, token,
+                VALID_CART_ITEM_QUANTITY_UPDATE_REQUEST);
+
+        CartItemResponse updatedCartItem = response.jsonPath()
+                .getList(".", CartItemResponse.class)
+                .get(0);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(updatedCartItem.getQuantity()).isEqualTo(8)
+        );
+    }
+
+    @DisplayName("상품의 재고보다 많은 양으로 수량을 변경하려고 하면 400을 응답한다.")
+    @Test
+    void updateQuantity_badRequest_InvalidQuantity() {
+        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST);
+        int invalidQuantity = 101;
+        ExtractableResponse<Response> response =
+                patchWithAuthorization(CART_URI, token, new CartItemQuantityUpdateRequest(1L, invalidQuantity));
+        String message = response.as(ErrorResponse.class)
+                .getMessage();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(message).isEqualTo("상품 재고가 부족합니다.")
+        );
+    }
+
+    @DisplayName("null인 상품 id 혹은 null인 상품 수량으로 장바구니에 상품 수량을 변경하려하면 400을 응답한다.")
+    @ParameterizedTest
+    @MethodSource("provideNullProductIdAndQuantity")
+    void updateQuantity_badRequest_Null(Long productId, Integer quantity) {
+        ExtractableResponse<Response> response =
+                patchWithAuthorization(CART_URI, token, new CartItemQuantityUpdateRequest(productId, quantity));
+        String message = response.as(ErrorResponse.class)
+                .getMessage();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(message).isEqualTo("입력하지 않은 정보가 있습니다.")
+        );
+    }
+
+    private static Stream<Arguments> provideNullProductIdAndQuantity() {
+        return Stream.of(
+                Arguments.of(null, 3),
+                Arguments.of(1L, null),
+                Arguments.of(null, null)
         );
     }
 }

@@ -1,8 +1,11 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.CartItemResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 
 @Service
@@ -19,7 +22,12 @@ public class CartService {
 
     @Transactional
     public void addCart(long memberId, long productId, int quantity) {
-        checkStock(productId, quantity);
+        productService.validateProductId(productId);
+        productService.validateStock(productId, quantity);
+        addCartItem(memberId, productId, quantity);
+    }
+
+    private void addCartItem(long memberId, long productId, int quantity) {
         if (cartItemDao.isExistsMemberIdAndProductId(memberId, productId)) {
             cartItemDao.increaseQuantity(memberId, productId, quantity);
             return;
@@ -27,9 +35,18 @@ public class CartService {
         cartItemDao.addCartItem(memberId, productId, quantity);
     }
 
-    private void checkStock(long productId, int quantity) {
-        if (productService.isImpossibleQuantity(productId, quantity)) {
-            throw new IllegalArgumentException("상품 재고가 부족합니다.");
-        }
+    public List<CartItemResponse> findAll(long memberId) {
+        return cartItemDao.findAll(memberId)
+                .stream()
+                .map(CartItemResponse::new)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Transactional
+    public List<CartItemResponse> updateQuantity(long memberId, long productId, int quantity) {
+        productService.validateProductId(productId);
+        productService.validateStock(productId, quantity);
+        cartItemDao.updateQuantity(memberId, productId, quantity);
+        return findAll(memberId);
     }
 }

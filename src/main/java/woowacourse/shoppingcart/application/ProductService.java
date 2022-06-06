@@ -24,9 +24,16 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    @Transactional(readOnly = true)
-    public boolean isImpossibleQuantity(long productId, int purchasingQuantity) {
+    public void validateStock(long productId, int purchasingQuantity) {
         int stock = productDao.findStockById(productId);
-        return stock < purchasingQuantity;
+        if (stock < purchasingQuantity) {
+            throw new IllegalArgumentException("상품 재고가 부족합니다.");
+        }
+    }
+
+    public void validateProductId(long productId) {
+        if (!productDao.existsId(productId)) {
+            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
+        }
     }
 }
