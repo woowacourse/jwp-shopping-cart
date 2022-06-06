@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.BcryptPasswordEncryptor;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.domain.DuplicateCustomerException;
@@ -21,9 +22,11 @@ import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
 @Transactional(rollbackFor = Exception.class)
 public class CustomerService {
 
+    private final PasswordEncryptor encryptor;
     private final CustomerDao customerDao;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(PasswordEncryptor encryptor, CustomerDao customerDao) {
+        this.encryptor = encryptor;
         this.customerDao = customerDao;
     }
 
@@ -34,7 +37,7 @@ public class CustomerService {
             request.getEmail(),
             request.getAddress(),
             request.getPhoneNumber()
-        ).encryptPassword(new BcryptPasswordEncryptor());
+        ).encryptPassword(encryptor);
 
         return customerDao.save(customer)
             .orElseThrow(DuplicateCustomerException::new);
