@@ -59,6 +59,20 @@ public class CartItemDao {
         }
     }
 
+    public Long findIdByCustomerIdAndProductId(long customerId, long productId) {
+        final String sql = "SELECT id FROM cart_item WHERE customer_id = :customerId AND product_id = :productId";
+
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("customerId", customerId);
+        parameters.put("productId", productId);
+
+        try {
+            return namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource(parameters), (rs, rowNum) -> rs.getLong("id"));
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
     public Long addCartItem(final Long customerId, final Long productId) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("cart_item")
@@ -72,15 +86,12 @@ public class CartItemDao {
         return number.longValue();
     }
 
-    public void deleteCartItem(final Long id) {
+    public int deleteById(final long id) {
         final String sql = "DELETE FROM cart_item WHERE id = :id";
 
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", id);
 
-        final int rowCount = namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(parameters));
-        if (rowCount == 0) {
-            throw new InvalidCartItemException();
-        }
+        return namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(parameters));
     }
 }

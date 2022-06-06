@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
@@ -53,12 +52,11 @@ public class CartItemDaoTest {
         assertThat(cartId).isEqualTo(3L);
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("회원 아이디를 넣으면, 해당 회원이 구매한 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
-
         // given
-        final Long customerId = 1L;
+        final long customerId = 1L;
 
         // when
         final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
@@ -70,9 +68,8 @@ public class CartItemDaoTest {
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
-
         // given
-        final Long customerId = 1L;
+        final long customerId = 1L;
 
         // when
         final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
@@ -84,15 +81,14 @@ public class CartItemDaoTest {
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void deleteCartItem() {
-
         // given
-        final Long cartId = 1L;
+        final long cartId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteById(cartId);
 
         // then
-        final Long customerId = 1L;
+        final long customerId = 1L;
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);

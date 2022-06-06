@@ -91,7 +91,7 @@
     }
     ```
 ### 장바구니
-- [ ] 물품 추가 (POST, /customers/cart)
+- [x] 물품 추가 (POST, /customers/cart)
   - Request
   ```json
   {
@@ -100,7 +100,7 @@
   ```
   - Response
     201, CREATED
-- [ ] 물품 삭제 (DELETE, /customers/cart)
+- [x] 물품 삭제 (DELETE, /customers/cart)
   - Request
   ```json
   {
@@ -109,7 +109,7 @@
   ```
   - Response
     204, NO CONTENT
-- [ ] 물품 목록 조회 (GET, /customers/cart)
+- [x] 물품 목록 조회 (GET, /customers/cart)
   - Response
     200, OK
   ```json
