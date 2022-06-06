@@ -2,10 +2,13 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.global.exception.InvalidProductException;
+import woowacourse.shoppingcart.application.dto.ProductResponse;
+import woowacourse.shoppingcart.application.dto.ProductSaveRequest;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -16,19 +19,20 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public Long save(ProductSaveRequest request) {
+        validateProductName(request.getName());
+        return productDao.save(request.toEntity());
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    private void validateProductName(String name) {
+        if (productDao.existByName(name)) {
+            throw new InvalidProductException("[ERROR] 이미 존재하는 상품입니다.");
+        }
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
-    }
-
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+    public List<ProductResponse> findAll() {
+        return productDao.findAll().stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
     }
 }
