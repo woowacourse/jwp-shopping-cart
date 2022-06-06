@@ -2,16 +2,20 @@ package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 public class PhoneNumberFormat {
 
     private static final String errorMessage = "휴대폰번호 형식이 일치하지 않습니다.";
 
+    @NotBlank
     @Pattern(regexp = "\\d{3}", message = errorMessage)
     private final String start;
+    @NotBlank
     @Pattern(regexp = "\\d{4}", message = errorMessage)
     private final String middle;
+    @NotBlank
     @Pattern(regexp = "\\d{4}", message = errorMessage)
     private final String last;
 
