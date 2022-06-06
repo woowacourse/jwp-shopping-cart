@@ -32,6 +32,7 @@ public class ProductService {
         return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponses findProducts() {
         final List<Product> products = productDao.findProducts();
 
@@ -40,6 +41,7 @@ public class ProductService {
                 .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         try {
             return convertResponseToProduct(productDao.findProductById(productId));

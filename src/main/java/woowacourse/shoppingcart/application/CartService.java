@@ -27,6 +27,7 @@ public class CartService {
         return cartItemDao.addCartItem(customerId, productId, quantity);
     }
 
+    @Transactional(readOnly = true)
     public CartItemResponses findCartsByCustomerId(final int customerId) {
         final List<CartItemEntity> cartItemEntities = cartItemDao.findCartByCustomerId(customerId);
 
@@ -53,6 +54,7 @@ public class CartService {
         }
     }
 
+    @Transactional(readOnly = true)
     public boolean hasProduct(int customerId, Long productId) {
         return cartItemDao.hasProduct(customerId, productId);
     }
