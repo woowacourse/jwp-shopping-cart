@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class CartItemDao {
+public class CartDao {
     private static final int DEFAULT_ADD_ITEM_QUANTITY = 1;
 
     private static final RowMapper<Cart> CART_ROW_MAPPER = (resultSet, rowNum) -> Cart.of(
@@ -25,7 +25,7 @@ public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
+    public CartDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -64,7 +64,10 @@ public class CartItemDao {
 
     public void updateCartItemQuantity(final int quantity, final Long productId, final Long customerId) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE product_id = ? and customer_id = ?";
-        jdbcTemplate.update(sql, quantity, productId, customerId);
+        final int rowCount = jdbcTemplate.update(sql, quantity, productId, customerId);
+        if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
     }
 
     public void deleteCartItem(final Long productId, final Long customerId) {

@@ -21,14 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
-    private final CartItemDao cartItemDao;
+public class CartDaoTest {
+    private final CartDao cartDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
+        cartDao = new CartDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
     }
 
@@ -45,10 +45,10 @@ public class CartItemDaoTest {
     @Test
     void findCartsByCustomerId() {
         // given
-        cartItemDao.addCartItem(1L, 1L);
+        cartDao.addCartItem(1L, 1L);
 
         // when
-        final List<Cart> carts = cartItemDao.findCartsByCustomerId(1L);
+        final List<Cart> carts = cartDao.findCartsByCustomerId(1L);
 
         // then
         assertAll(
@@ -61,7 +61,7 @@ public class CartItemDaoTest {
     @Test
     void findProductIdsByCustomerId() {
         // when
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(1L);
+        final List<Long> productIds = cartDao.findProductIdsByCustomerId(1L);
 
         // then
         assertThat(productIds).containsAll(List.of(1L, 2L));
@@ -74,7 +74,7 @@ public class CartItemDaoTest {
         final Long productId = productDao.save(new Product("kiwi", 3_000, "woowakiwi.com"));
 
         // when
-        final Long actual = cartItemDao.addCartItem(1L, productId);
+        final Long actual = cartDao.addCartItem(1L, productId);
 
         // then
         assertThat(actual).isEqualTo(productId);
@@ -83,9 +83,9 @@ public class CartItemDaoTest {
     @DisplayName("장바구니 상품의 수량을 변경한다.")
     @Test
     void updateCartItemQuantity() {
-        cartItemDao.updateCartItemQuantity(3, 2L, 1L);
+        cartDao.updateCartItemQuantity(3, 2L, 1L);
 
-        final List<Cart> carts = cartItemDao.findCartsByCustomerId(1L);
+        final List<Cart> carts = cartDao.findCartsByCustomerId(1L);
 
         assertThat(carts.get(1).getQuantity()).isEqualTo(3);
     }
@@ -95,11 +95,11 @@ public class CartItemDaoTest {
     void deleteCartItem() {
         // given
         final Long productId = productDao.save(new Product("kiwi", 3_000, "woowakiwi.com"));
-        cartItemDao.addCartItem(1L, productId);
+        cartDao.addCartItem(1L, productId);
 
         // when
-        cartItemDao.deleteCartItem(productId, 1L);
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(1L);
+        cartDao.deleteCartItem(productId, 1L);
+        final List<Long> productIds = cartDao.findProductIdsByCustomerId(1L);
 
         // then
         assertThat(productIds).doesNotContain(productId);
@@ -109,8 +109,8 @@ public class CartItemDaoTest {
     @Test
     void deleteCart() {
         // when
-        cartItemDao.deleteCartByCustomerId(1L);
-        final List<Cart> actual = cartItemDao.findCartsByCustomerId(1L);
+        cartDao.deleteCartByCustomerId(1L);
+        final List<Cart> actual = cartDao.findCartsByCustomerId(1L);
 
         // then
         assertThat(actual.size()).isEqualTo(0);
