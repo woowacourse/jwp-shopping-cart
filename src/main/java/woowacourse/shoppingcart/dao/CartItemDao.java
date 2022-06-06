@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -62,5 +63,19 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public int findQuantityById(Long cartId) {
+        try {
+            final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), cartId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public void updateCartItem(CartItem cartItem) {
+        final String sql = "update cart_item set product_id=?, quantity=? where id = ?";
+        jdbcTemplate.update(sql, cartItem.getProductId(), cartItem.getQuantity(), cartItem.getId());
     }
 }
