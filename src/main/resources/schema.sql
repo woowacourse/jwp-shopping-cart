@@ -25,9 +25,10 @@ CREATE TABLE product
 
 CREATE TABLE cart_item
 (
-    id          BIGINT NOT NULL AUTO_INCREMENT,
-    customer_id BIGINT NOT NULL,
-    product_id  BIGINT NOT NULL,
+    id          BIGINT  NOT NULL AUTO_INCREMENT,
+    customer_id BIGINT  NOT NULL,
+    product_id  BIGINT  NOT NULL,
+    quantity    INTEGER NOT NULL,
     PRIMARY KEY (id)
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -41,7 +42,7 @@ CREATE TABLE orders
 CREATE TABLE orders_detail
 (
     id         BIGINT  NOT NULL AUTO_INCREMENT,
-    orders_id  BIGINT  NOT NULL,
+    order_id   BIGINT  NOT NULL,
     product_id BIGINT  NOT NULL,
     quantity   INTEGER NOT NULL,
     PRIMARY KEY (id)
