@@ -48,11 +48,6 @@ public class CustomerService {
         return new CustomerResponse(customer.getName(), customer.getEmail());
     }
 
-    public Customer getIdByEmail(String email) {
-        return customerDao.findByEmail(email)
-                .orElseThrow(CustomerNotFoundException::new);
-    }
-
     @Transactional
     public long updateProfile(Long id, CustomerUpdateProfileRequest customerUpdateProfileRequest) {
         final Customer customer = customerDao.findById(id)
