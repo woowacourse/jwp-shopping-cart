@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -31,13 +30,6 @@ public class AuthService {
 
         final String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
         return new TokenResponse(customer.getNickname(), token);
-    }
-
-    public Long extractIdFromToken(final String token) {
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException();
-        }
-        return Long.parseLong(jwtTokenProvider.getPayload(token));
     }
 
     private Customer getCustomer(final String email) {

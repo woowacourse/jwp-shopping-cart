@@ -7,17 +7,17 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
-import woowacourse.auth.application.AuthService;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.support.JwtTokenProvider;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalArgumentResolver(final AuthService authService) {
-        this.authService = authService;
+    public AuthenticationPrincipalArgumentResolver(final JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -31,6 +31,13 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String token = AuthorizationExtractor.extract(request)
                 .orElseThrow(InvalidTokenException::new);
-        return authService.extractIdFromToken(token);
+        return extractIdFromToken(token);
+    }
+
+    private Long extractIdFromToken(final String token) {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new InvalidTokenException();
+        }
+        return Long.parseLong(jwtTokenProvider.getPayload(token));
     }
 }
