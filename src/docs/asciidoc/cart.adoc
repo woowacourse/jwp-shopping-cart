@@ -1,0 +1,35 @@
+= Shopping cart API - rick
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-cart]]
+== 장바구니 관련 기능
+
+[[resources-cart-add-item]]
+=== 상품 추가
+
+[[resources-cart-add-item-success]]
+==== 성공
+
+===== HTTP Request
+
+include::{snippets}/add-cart-item/http-request.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/add-cart-item/http-response.adoc[]
+
+[[resources-cart-add-item-duplicate-product]]
+==== 실패 - 이미 추가한 상품 추가
+
+===== HTTP Response
+
+include::{snippets}/add-cart-item-duplicate-product/http-response.adoc[]
+
+[[resources-cart-add-item-not-exist-product]]
+==== 실패 - 존재하지 않는 상품 추가
+
+===== HTTP Response
+
+include::{snippets}/add-cart-item-not-exist-product/http-response.adoc[]
