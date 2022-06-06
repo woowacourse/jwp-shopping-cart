@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.application.AuthService;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.shoppingcart.auth.application.AuthService;
+import woowacourse.shoppingcart.customer.dao.CustomerDao;
+import woowacourse.shoppingcart.customer.domain.Customer;
+import woowacourse.shoppingcart.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.exception.badrequest.InvalidLoginException;
 
 @SpringBootTest

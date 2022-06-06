@@ -9,8 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
-import woowacourse.shoppingcart.dto.CustomerCreationRequest;
-import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
+import woowacourse.shoppingcart.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.support.AuthorizationExtractor;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

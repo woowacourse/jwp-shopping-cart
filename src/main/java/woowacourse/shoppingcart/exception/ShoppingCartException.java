@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.exception;
 
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.exception.dto.ErrorResponse;
 
 public class ShoppingCartException extends RuntimeException {
 

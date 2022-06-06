@@ -8,9 +8,11 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.shoppingcart.application.AuthService;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.auth.application.AuthService;
+import woowacourse.shoppingcart.auth.ui.AuthController;
+import woowacourse.shoppingcart.customer.application.CustomerService;
+import woowacourse.shoppingcart.customer.ui.CustomerController;
+import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
 
 @WebMvcTest({

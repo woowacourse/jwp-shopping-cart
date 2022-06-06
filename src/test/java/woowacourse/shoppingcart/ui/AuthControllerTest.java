@@ -19,8 +19,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.shoppingcart.dto.LoginRequest;
-import woowacourse.shoppingcart.dto.LoginResponse;
+import woowacourse.shoppingcart.auth.dto.LoginRequest;
+import woowacourse.shoppingcart.auth.dto.LoginResponse;
 import woowacourse.shoppingcart.exception.badrequest.InvalidLoginException;
 
 @DisplayName("AuthController 단위 테스트")

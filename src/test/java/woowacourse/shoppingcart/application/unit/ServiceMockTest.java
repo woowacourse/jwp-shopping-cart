@@ -9,8 +9,8 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.customer.application.CustomerService;
+import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
 
 @ExtendWith(MockitoExtension.class)

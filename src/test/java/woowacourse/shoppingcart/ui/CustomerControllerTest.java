@@ -27,10 +27,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerCreationRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
+import woowacourse.shoppingcart.customer.domain.Customer;
+import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
+import woowacourse.shoppingcart.customer.dto.CustomerResponse;
+import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
 
 @DisplayName("CustomerController 단위 테스트")
 class CustomerControllerTest extends ControllerTest {

@@ -10,10 +10,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.CustomerCreationRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
-import woowacourse.shoppingcart.dto.LoginRequest;
-import woowacourse.shoppingcart.dto.LoginResponse;
+import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
+import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
+import woowacourse.shoppingcart.auth.dto.LoginRequest;
+import woowacourse.shoppingcart.auth.dto.LoginResponse;
 import woowacourse.shoppingcart.support.AuthorizationExtractor;
 
 @DisplayName("회원 관련 기능")

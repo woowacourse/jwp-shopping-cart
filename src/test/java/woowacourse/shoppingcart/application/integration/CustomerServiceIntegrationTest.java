@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerCreationRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
+import woowacourse.shoppingcart.customer.application.CustomerService;
+import woowacourse.shoppingcart.customer.dao.CustomerDao;
+import woowacourse.shoppingcart.customer.domain.Customer;
+import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
+import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
 

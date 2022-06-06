@@ -22,10 +22,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.order.application.OrderService;
+import woowacourse.shoppingcart.order.domain.OrderDetail;
+import woowacourse.shoppingcart.order.domain.Orders;
+import woowacourse.shoppingcart.order.dto.OrderRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc

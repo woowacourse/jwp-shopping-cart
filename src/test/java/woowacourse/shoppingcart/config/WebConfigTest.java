@@ -19,11 +19,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.application.ProductService;
+import woowacourse.shoppingcart.customer.application.CustomerService;
+import woowacourse.shoppingcart.product.application.ProductService;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
-import woowacourse.shoppingcart.ui.CustomerController;
-import woowacourse.shoppingcart.ui.ProductController;
+import woowacourse.shoppingcart.customer.ui.CustomerController;
+import woowacourse.shoppingcart.product.ui.ProductController;
 
 @WebMvcTest({
         ProductController.class,
