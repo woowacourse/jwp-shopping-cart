@@ -97,35 +97,17 @@ public class CartItemDaoTest {
         // then
         assertThat(cartItemDao.findCartItemById(cartItemId).get().getQuantity().getValue()).isEqualTo(10);
     }
-    //
-    // @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    // @Test
-    // void findIdsByCustomerId() {
-    //
-    //     // given
-    //     final Long customerId = 1L;
-    //
-    //     // when
-    //     final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-    //
-    //     // then
-    //     assertThat(cartIds).containsExactly(1L, 2L);
-    // }
-    //
-    // @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    // @Test
-    // void deleteCartItem() {
-    //
-    //     // given
-    //     final Long cartId = 1L;
-    //
-    //     // when
-    //     cartItemDao.deleteCartItem(cartId);
-    //
-    //     // then
-    //     final Long customerId = 1L;
-    //     final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-    //
-    //     assertThat(productIds).containsExactly(2L);
-    // }
+
+    @DisplayName("특정 아이템을 삭제한다.")
+    @Test
+    void deleteCartItem() {
+        // given
+        final Long cartItemId = cartItemDao.addCartItem(customerId, productId1, 5);
+
+        // when
+        cartItemDao.deleteCartItem(cartItemId);
+
+        // then
+        assertThat(cartItemDao.findCartItemById(cartItemId)).isEmpty();
+    }
 }

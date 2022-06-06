@@ -75,19 +75,16 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_수량_수정됨(response);
     }
 
+    @DisplayName("장바구니 삭제")
+    @Test
+    void deleteCartItem() {
+        final Long cartId = 장바구니_아이템_추가되어_있음(accessToken, new CartItemAddRequest(productId1, 1));
 
-    //
-    // @DisplayName("장바구니 삭제")
-    // @Disabled
-    // @Test
-    // void deleteCartItem() {
-    //     Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
-    //
-    //     ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-    //
-    //     장바구니_삭제됨(response);
-    // }
-    //
+        final ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, cartId);
+
+        장바구니_삭제됨(response);
+    }
+
     public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(final String accessToken) {
         return RestAssured
             .given().log().all()
@@ -124,21 +121,21 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    //
-    // public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
-    //     return RestAssured
-    //             .given().log().all()
-    //             .contentType(MediaType.APPLICATION_JSON_VALUE)
-    //             .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
-    //             .then().log().all()
-    //             .extract();
-    // }
-    //
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(final String accessToken, final Long cartId) {
+        return RestAssured
+            .given().log().all()
+            .auth().oauth2(accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().delete("/api/cartItems/{cartItemId}", cartId)
+            .then().log().all()
+            .extract();
+    }
 
     public static void 장바구니_아이템_추가됨(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
+
     public static Long 장바구니_아이템_추가되어_있음(
         final String accessToken,
         final CartItemAddRequest cartItemAddRequest
@@ -162,8 +159,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
     }
-    //
-    // public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
-    //     assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    // }
+
+    public static void 장바구니_삭제됨(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
 }

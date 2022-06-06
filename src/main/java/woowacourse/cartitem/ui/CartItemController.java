@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,10 +54,12 @@ public class CartItemController {
         return ResponseEntity.ok().build();
     }
 
-    // @DeleteMapping("/{cartId}")
-    // public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-    //                                      @PathVariable final Long cartId) {
-    //     cartItemService.deleteCart(customerName, cartId);
-    //     return ResponseEntity.noContent().build();
-    // }
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity<Void> deleteCartItem(
+        @AuthenticationPrincipal final String username,
+        @PathVariable final Long cartItemId
+    ) {
+        cartItemService.deleteCart(username, cartItemId);
+        return ResponseEntity.noContent().build();
+    }
 }

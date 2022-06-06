@@ -1,6 +1,7 @@
 package woowacourse.cartitem.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.cartitem.dto.CartItemAddRequest;
 import woowacourse.cartitem.dto.CartItemResponse;
+import woowacourse.cartitem.exception.InvalidCartItemException;
 import woowacourse.customer.application.CustomerService;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.product.application.ProductService;
@@ -75,5 +77,15 @@ public class CartItemServiceTest {
     void updateCartItem() {
         final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1));
         assertDoesNotThrow(() -> cartItemService.updateQuantity(username, cartItemId, 5));
+    }
+
+    @DisplayName("카트 아이템을 삭제한다.")
+    @Test
+    void deleteCartItem() {
+        final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1));
+        cartItemService.deleteCart(username, cartItemId);
+
+        assertThatThrownBy(() -> cartItemService.findCartById(cartItemId))
+            .isInstanceOf(InvalidCartItemException.class);
     }
 }
