@@ -116,4 +116,34 @@ public class CartItemDaoTest {
         // then
         assertThat(result).isFalse();
     }
+
+    @DisplayName("장바구니에 해당 상품이 존재할 때 true를 반환한다.")
+    @Test
+    public void hasProduct() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        cartItemDao.addCartItem(customerId, productId1, 1);
+
+        // when
+        boolean result = cartItemDao.haseProduct(customerId, productId1);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("장바구니에 해당 상품이 존재하지 않을 때 false 반환한다.")
+    @Test
+    public void hasNotProduct() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        cartItemDao.addCartItem(customerId, productId1, 1);
+
+        // when
+        boolean result = cartItemDao.haseProduct(customerId, productId1 + 1);
+
+        // then
+        assertThat(result).isFalse();
+    }
 }

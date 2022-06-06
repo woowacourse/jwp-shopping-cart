@@ -57,4 +57,11 @@ public class JdbcCartItemDao implements CartItemDao {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, cartId);
     }
+
+    @Override
+    public boolean haseProduct(int customerId, Long productId) {
+        final String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE customer_id = ? and product_id = ?)";
+        return jdbcTemplate.queryForObject(sql, boolean.class, customerId, productId);
+
+    }
 }

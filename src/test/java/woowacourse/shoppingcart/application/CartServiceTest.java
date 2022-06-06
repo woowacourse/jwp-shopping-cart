@@ -115,4 +115,25 @@ class CartServiceTest {
         assertThatCode(() -> cartService.deleteCart(cartId1, customerId))
                 .doesNotThrowAnyException();
     }
+
+    @DisplayName("product가 존재하는 지 확인한다.")
+    @Test
+    public void hasProduct() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long productId2 = productDao.save(PRODUCT_2);
+        cartService.addCart(customerId, productId1, 3);
+
+        // when
+        boolean result1 = cartService.hasProduct(customerId, productId1);
+        boolean result2 = cartService.hasProduct(customerId, productId2);
+
+
+        // then
+        assertAll(
+                () -> assertThat(result1).isTrue(),
+                () -> assertThat(result2).isFalse()
+        );
+    }
 }

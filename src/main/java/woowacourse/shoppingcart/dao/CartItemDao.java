@@ -11,4 +11,6 @@ public interface CartItemDao {
     boolean hasCartItem(Long cartId, int customerId);
 
     void deleteCartItem(Long cartId);
+
+    boolean haseProduct(int customerId, Long productId);
 }

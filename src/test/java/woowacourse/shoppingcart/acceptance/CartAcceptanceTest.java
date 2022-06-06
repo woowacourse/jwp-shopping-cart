@@ -28,6 +28,7 @@ import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemResponses;
+import woowacourse.shoppingcart.dto.ProductExistenceResponse;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @DisplayName("장바구니 관련 기능")
@@ -82,6 +83,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    private ExtractableResponse<Response> 장바구니_아이템_확인_요청(Long productId, String token) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer" + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/cart/{productId}", productId)
+                .then().log().all()
+                .extract();
+    }
+
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
@@ -90,11 +101,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private void 만료된_토큰으로_요청시_확인(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
-
     private void 유효하지_않은_토큰으로_요청시_확인(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 
     }
+
     private void 장바구니_아이템_추가_안됨_없는_물건(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
 
@@ -135,6 +146,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private void 장바구니_삭제_안됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
 
+    }
+
+    private void 장바구니_아이템_확인됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getObject(".", ProductExistenceResponse.class).getExists()).isTrue();
+    }
+
+    private void 장바구니_아이템_확인_안됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getObject(".", ProductExistenceResponse.class).getExists()).isFalse();
     }
 
     @Override
@@ -227,5 +248,31 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_삭제_요청(cartId + 1, token);
 
         장바구니_삭제_안됨(response);
+    }
+
+    @DisplayName("장바구니에 해당 상품이 존재하는 지 조회한다.")
+    @Test
+    public void hasExistProduct() {
+        // given
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
+
+        // when
+        final ExtractableResponse<Response> response = 장바구니_아이템_확인_요청(productId1, token);
+
+        // then
+        장바구니_아이템_확인됨(response);
+    }
+
+    @DisplayName("장바구니에 해당 상품이 존재하지 않는 지 조회한다.")
+    @Test
+    public void hasNotExistProduct() {
+        // given
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
+
+        // when
+        final ExtractableResponse<Response> response = 장바구니_아이템_확인_요청(productId2, token);
+
+        // then
+        장바구니_아이템_확인_안됨(response);
     }
 }

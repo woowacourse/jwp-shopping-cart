@@ -51,4 +51,8 @@ public class CartService {
             throw new NotInCustomerCartItemException();
         }
     }
+
+    public boolean hasProduct(int customerId, Long productId) {
+        return cartItemDao.haseProduct(customerId, productId);
+    }
 }

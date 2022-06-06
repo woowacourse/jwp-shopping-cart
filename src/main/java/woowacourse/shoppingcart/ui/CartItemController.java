@@ -14,6 +14,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartItemResponses;
 import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.ProductExistenceResponse;
 
 @RestController
 @RequestMapping("/api/customers/cart")
@@ -40,6 +41,11 @@ public class CartItemController {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
     }
 
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductExistenceResponse> hasProduct(@AuthenticationPrincipal final int customerId, @PathVariable Long productId) {
+        final boolean result = cartService.hasProduct(customerId, productId);
+        return ResponseEntity.ok().body(new ProductExistenceResponse(result));
+    }
 
     @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final int customerId, @PathVariable final Long cartId) {
