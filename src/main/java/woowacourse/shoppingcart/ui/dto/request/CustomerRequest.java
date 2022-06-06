@@ -2,14 +2,18 @@ package woowacourse.shoppingcart.ui.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 public class CustomerRequest {
     @NotBlank
     private String name;
+
     @NotBlank
     @Email
     private String email;
+
     @NotBlank
+    @Length(min = 8, max = 15)
     private String password;
 
     public CustomerRequest() {

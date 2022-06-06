@@ -6,11 +6,10 @@ import org.hibernate.validator.constraints.Length;
 public class CustomerUpdatePasswordRequest {
 
     @NotBlank
-    @Length(min = 8)
+    @Length(min = 8, max = 15)
     private String oldPassword;
-
     @NotBlank
-    @Length(min = 8)
+    @Length(min = 8, max = 15)
     private String newPassword;
 
     public CustomerUpdatePasswordRequest() {

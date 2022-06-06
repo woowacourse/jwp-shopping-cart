@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.Length;
 public class CustomerDeleteRequest {
 
     @NotBlank
-    @Length(min = 8)
+    @Length(min = 8, max = 15)
     private String password;
 
     public CustomerDeleteRequest() {

@@ -6,11 +6,12 @@ import woowacourse.exception.PasswordLengthException;
 public class Password {
 
     private static final int MIN_SIZE = 8;
+    private static final int MAX_SIZE = 15;
 
     private final String password;
 
     public Password(String password) {
-        if (password.length() < MIN_SIZE) {
+        if (password.length() < MIN_SIZE || password.length() > MAX_SIZE) {
             throw new PasswordLengthException();
         }
         this.password = password;
