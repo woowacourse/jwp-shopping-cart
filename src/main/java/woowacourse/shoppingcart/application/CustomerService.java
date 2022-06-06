@@ -65,6 +65,7 @@ public class CustomerService {
         customerDao.deleteById(customer.getId());
     }
 
+    @Transactional(readOnly = true)
     public DuplicateResponse isDuplicateUserName(final String userName) {
         return new DuplicateResponse(customerDao.existsByUserName(userName));
     }
