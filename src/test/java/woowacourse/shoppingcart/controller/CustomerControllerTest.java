@@ -11,9 +11,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.auth.service.AuthService;
-import woowacourse.shoppingcart.service.CustomerService;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.service.CustomerService;
 
 @WebMvcTest(CustomerController.class)
 public class CustomerControllerTest {
@@ -28,7 +28,7 @@ public class CustomerControllerTest {
     private CustomerService customerService;
 
     @MockBean
-    private AuthService authService;
+    private JwtTokenProvider jwtTokenProvider;
 
     @Test
     void 이름에_대문자가_들어가면_요청_실패() throws Exception {

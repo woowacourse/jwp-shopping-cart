@@ -2,7 +2,6 @@ package woowacourse.auth.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,7 +17,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.service.AuthService;
-import woowacourse.shoppingcart.service.CustomerService;
+import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.support.Encryptor;
 
 @WebMvcTest(AuthController.class)
 public class AuthControllerTest {
@@ -33,7 +34,13 @@ public class AuthControllerTest {
     private AuthService authService;
 
     @MockBean
-    private CustomerService customerService;
+    private JwtTokenProvider jwtTokenProvider;
+
+    @MockBean
+    private Encryptor encryptor;
+
+    @MockBean
+    private CustomerDao customerDao;
 
     @Test
     void 로그인() throws Exception {
@@ -42,8 +49,7 @@ public class AuthControllerTest {
         String requestContent = objectMapper.writeValueAsString(request);
 
         // mocking
-        doNothing().when(customerService).validateNameAndPassword(any(String.class), any(String.class));
-        given(authService.createToken(any(TokenRequest.class))).willReturn(new TokenResponse("fake_token"));
+        given(authService.login(any(TokenRequest.class))).willReturn(new TokenResponse("fake_token"));
 
         // when
         ResultActions response = mockMvc.perform(post("/api/login")

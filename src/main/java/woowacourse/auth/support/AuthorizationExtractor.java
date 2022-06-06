@@ -2,6 +2,7 @@ package woowacourse.auth.support;
 
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
+import woowacourse.auth.exception.AuthorizationException;
 
 public class AuthorizationExtractor {
 
@@ -23,6 +24,6 @@ public class AuthorizationExtractor {
                 return authHeaderValue;
             }
         }
-        return null;
+        throw new AuthorizationException("토큰을 추출할 수 없습니다😤");
     }
 }

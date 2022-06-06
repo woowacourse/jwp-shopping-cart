@@ -17,16 +17,13 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
-    private final CustomerService customerService;
 
-    public AuthController(final AuthService authService, final CustomerService customerService) {
+    public AuthController(final AuthService authService) {
         this.authService = authService;
-        this.customerService = customerService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody @Valid final TokenRequest tokenRequest) {
-        customerService.validateNameAndPassword(tokenRequest.getUserName(), tokenRequest.getPassword());
-        return ResponseEntity.ok(authService.createToken(tokenRequest));
+        return ResponseEntity.ok(authService.login(tokenRequest));
     }
 }

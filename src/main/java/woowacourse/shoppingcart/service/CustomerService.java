@@ -2,11 +2,10 @@ package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
-import woowacourse.shoppingcart.exception.auth.AuthorizationException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.exception.duplicate.DuplicateCustomerException;
 import woowacourse.shoppingcart.support.Encryptor;
@@ -44,15 +43,6 @@ public class CustomerService {
     public void editCustomerByName(final String customerName, final CustomerRequest editRequest) {
         final String encryptedPassword = encryptor.encrypt(editRequest.getPassword());
         customerDao.updatePasswordByName(customerName, encryptedPassword);
-    }
-
-    @Transactional(readOnly = true)
-    public void validateNameAndPassword(final String name, final String password) {
-        final String encryptedPassword = encryptor.encrypt(password);
-        if (customerDao.existsByNameAndPassword(name, encryptedPassword)) {
-            return;
-        }
-        throw new AuthorizationException("로그인에 실패했습니다😤");
     }
 
     @Transactional(readOnly = true)
