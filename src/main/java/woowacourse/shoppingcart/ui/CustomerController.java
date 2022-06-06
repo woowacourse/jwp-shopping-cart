@@ -25,7 +25,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @PostMapping("/email")
+    @PostMapping("/email/validate")
     @ResponseStatus(HttpStatus.OK)
     public void checkEmail(@RequestParam String email) {
         customerService.checkDuplicationEmail(email);
