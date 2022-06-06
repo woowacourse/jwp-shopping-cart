@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.exception.EmailNotValidException;
+import woowacourse.exception.EmailFormattingException;
 
 public class EmailTest {
 
@@ -15,7 +15,7 @@ public class EmailTest {
     @ValueSource(strings = {"1", "2@", "woowahan", "woowahan@woowahan", "woowahan@woowahan."})
     void emailWithException(String email) {
         assertThatThrownBy(() -> new Email(email))
-                .isInstanceOf(EmailNotValidException.class);
+                .isInstanceOf(EmailFormattingException.class);
     }
 
     @DisplayName("이메일 형식이 올바를 경우, 이메일 객체가 생성된다.")

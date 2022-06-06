@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.exception.EmailNotValidException;
+import woowacourse.exception.EmailFormattingException;
 
 public class Email {
 
@@ -12,7 +12,7 @@ public class Email {
 
     public Email(String email) {
         if (!PATTERN.matcher(email).matches()) {
-            throw new EmailNotValidException();
+            throw new EmailFormattingException();
         }
         this.email = email;
     }

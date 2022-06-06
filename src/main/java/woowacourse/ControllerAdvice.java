@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.ui;
+package woowacourse;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.exception.EmailDuplicateException;
-import woowacourse.exception.EmailNotValidException;
+import woowacourse.exception.EmailFormattingException;
 import woowacourse.exception.LoginFailureException;
 import woowacourse.exception.PasswordIncorrectException;
 import woowacourse.exception.PasswordLengthException;
@@ -28,10 +28,19 @@ import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-    @ExceptionHandler({LoginFailureException.class, EmailDuplicateException.class, PasswordIncorrectException.class,
-            CustomerNotFoundException.class, EmailNotValidException.class, PasswordLengthException.class})
-    public ResponseEntity<ExceptionResponse> handleLoginFailureException(IllegalArgumentException e) {
+    @ExceptionHandler({EmailDuplicateException.class, EmailFormattingException.class, PasswordLengthException.class})
+    public ResponseEntity<ExceptionResponse> handleException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler({CustomerNotFoundException.class})
+    public ResponseEntity<ExceptionResponse> handleNotFoundException(IllegalArgumentException e) {
+        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({LoginFailureException.class, PasswordIncorrectException.class})
+    public ResponseEntity<ExceptionResponse> handleUnAuthorizationException(IllegalArgumentException e) {
+        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(TokenInvalidException.class)
