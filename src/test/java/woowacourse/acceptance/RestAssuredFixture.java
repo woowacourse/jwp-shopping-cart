@@ -41,6 +41,22 @@ public class RestAssuredFixture {
                 .then().log().all().extract().as(LogInResponse.class);
     }
 
+    public static ValidatableResponse getProducts(String path, int status) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get(path)
+                .then().log().all().statusCode(status);
+    }
+
+    public static ValidatableResponse getProduct(String path, int status, Long id) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get(path, id)
+                .then().log().all().statusCode(status);
+    }
+
     public static void patch(Object request, String token, String path, int status) {
         RestAssured
                 .given().log().all()
@@ -58,6 +74,16 @@ public class RestAssuredFixture {
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
                 .body(request)
+                .when().delete(path)
+                .then().log().all()
+                .statusCode(status);
+    }
+
+    public static void deleteProduct(String path, int status) {
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete(path)
                 .then().log().all()
                 .statusCode(status);
