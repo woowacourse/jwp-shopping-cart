@@ -14,7 +14,7 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdateRequest;
-import woowacourse.shoppingcart.application.dto.request.TokenRequest;
+import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.request.LoginRequest;
 import woowacourse.shoppingcart.application.dto.response.LoginResponse;
@@ -219,10 +219,10 @@ class CustomerServiceTest {
     @Test
     void findByCustomerIdNotExistingException() {
         // given
-        TokenRequest tokenRequest = new TokenRequest("-1");
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest("-1");
 
         // when & then
-        assertThatThrownBy(() -> customerService.findByCustomerId(tokenRequest))
+        assertThatThrownBy(() -> customerService.findByCustomerId(customerIdentificationRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -233,11 +233,11 @@ class CustomerServiceTest {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
-        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
-        customerService.withdraw(tokenRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+        customerService.withdraw(customerIdentificationRequest);
 
         // when & then
-        assertThatThrownBy(() -> customerService.findByCustomerId(tokenRequest))
+        assertThatThrownBy(() -> customerService.findByCustomerId(customerIdentificationRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -248,10 +248,10 @@ class CustomerServiceTest {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
-        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
 
         // when
-        CustomerResponse customerResponse = customerService.findByCustomerId(tokenRequest);
+        CustomerResponse customerResponse = customerService.findByCustomerId(customerIdentificationRequest);
 
         // then
         assertAll(
@@ -265,11 +265,11 @@ class CustomerServiceTest {
     @Test
     void updateNotExistingException() {
         // given
-        TokenRequest tokenRequest = new TokenRequest("-1");
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest("-1");
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("nickname");
 
         // when & then
-        assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
+        assertThatThrownBy(() -> customerService.update(customerIdentificationRequest, customerUpdateRequest))
                 .isInstanceOf(CustomerDuplicatedDataException.class)
                 .hasMessage("이미 존재하는 닉네임입니다.");
     }
@@ -280,12 +280,12 @@ class CustomerServiceTest {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
-        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
-        customerService.withdraw(tokenRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+        customerService.withdraw(customerIdentificationRequest);
 
         // when & then
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("test2");
-        assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
+        assertThatThrownBy(() -> customerService.update(customerIdentificationRequest, customerUpdateRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -295,11 +295,11 @@ class CustomerServiceTest {
     void updateNicknamedNullException() {
         // given
         Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
-        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(null);
 
         // when & than
-        assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
+        assertThatThrownBy(() -> customerService.update(customerIdentificationRequest, customerUpdateRequest))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
@@ -310,11 +310,11 @@ class CustomerServiceTest {
     void updateNicknameBlankException(String nickname) {
         // given
         Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
-        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(nickname);
 
         // when & than
-        assertThatThrownBy(() -> customerService.update(tokenRequest, customerUpdateRequest))
+        assertThatThrownBy(() -> customerService.update(customerIdentificationRequest, customerUpdateRequest))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
@@ -323,11 +323,11 @@ class CustomerServiceTest {
     @Test
     void updatePasswordNotExistingException() {
         // given
-        TokenRequest tokenRequest = new TokenRequest("-1");
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest("-1");
         CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234(dddd", "47374*ffff");
 
         // when & then
-        assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
+        assertThatThrownBy(() -> customerService.updatePassword(customerIdentificationRequest, customerUpdatePasswordRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -338,12 +338,12 @@ class CustomerServiceTest {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
-        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
-        customerService.withdraw(tokenRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+        customerService.withdraw(customerIdentificationRequest);
         CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234asdf!", "47374*ffff");
 
         // when & then
-        assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
+        assertThatThrownBy(() -> customerService.updatePassword(customerIdentificationRequest, customerUpdatePasswordRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -353,11 +353,11 @@ class CustomerServiceTest {
     void updatePasswordNullException() {
         // given
         Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
-        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
         CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234asdf!", null);
 
         // when & than
-        assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
+        assertThatThrownBy(() -> customerService.updatePassword(customerIdentificationRequest, customerUpdatePasswordRequest))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
@@ -368,11 +368,11 @@ class CustomerServiceTest {
     void updatePasswordBlankException(String password) {
         // given
         Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
-        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
         CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234asdf!", password);
 
         // when & than
-        assertThatThrownBy(() -> customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest))
+        assertThatThrownBy(() -> customerService.updatePassword(customerIdentificationRequest, customerUpdatePasswordRequest))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
@@ -383,13 +383,13 @@ class CustomerServiceTest {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
-        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
 
         // when
-        customerService.withdraw(tokenRequest);
+        customerService.withdraw(customerIdentificationRequest);
 
         // then
-        assertThatThrownBy(() -> customerService.findByCustomerId(tokenRequest))
+        assertThatThrownBy(() -> customerService.findByCustomerId(customerIdentificationRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -398,10 +398,10 @@ class CustomerServiceTest {
     @Test
     void withdrawNonCustomerException() {
         // given
-        TokenRequest tokenRequest = new TokenRequest("9999999");
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest("9999999");
 
         // when & then
-        assertThatThrownBy(() -> customerService.withdraw(tokenRequest))
+        assertThatThrownBy(() -> customerService.withdraw(customerIdentificationRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -412,12 +412,12 @@ class CustomerServiceTest {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
-        TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
 
-        customerService.withdraw(tokenRequest);
+        customerService.withdraw(customerIdentificationRequest);
 
         // when & then
-        assertThatThrownBy(() -> customerService.withdraw(tokenRequest))
+        assertThatThrownBy(() -> customerService.withdraw(customerIdentificationRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }

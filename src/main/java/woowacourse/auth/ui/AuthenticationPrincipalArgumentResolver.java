@@ -8,7 +8,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.application.dto.request.TokenRequest;
+import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +29,6 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
         String token = AuthorizationExtractor.extract(httpServletRequest);
         String payload = authService.getPayload(token);
-        return new TokenRequest(payload);
+        return new CustomerIdentificationRequest(payload);
     }
 }

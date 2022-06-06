@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.application.dto.request;
 
-public class TokenRequest {
+public class CustomerIdentificationRequest {
 
     private Long id;
 
-    private TokenRequest() {
+    private CustomerIdentificationRequest() {
     }
 
-    public TokenRequest(final String id) {
+    public CustomerIdentificationRequest(final String id) {
         this.id = Long.valueOf(id);
     }
 

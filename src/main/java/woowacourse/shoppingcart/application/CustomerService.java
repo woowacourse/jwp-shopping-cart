@@ -7,7 +7,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdateRequest;
-import woowacourse.shoppingcart.application.dto.request.TokenRequest;
+import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.request.LoginRequest;
 import woowacourse.shoppingcart.application.dto.response.LoginResponse;
@@ -42,30 +42,30 @@ public class CustomerService {
         return LoginResponse.of(token, customer);
     }
 
-    public CustomerResponse findByCustomerId(final TokenRequest tokenRequest) {
-        Customer customer = findCustomerById(tokenRequest.getId());
+    public CustomerResponse findByCustomerId(final CustomerIdentificationRequest customerIdentificationRequest) {
+        Customer customer = findCustomerById(customerIdentificationRequest.getId());
         return CustomerResponse.from(customer);
     }
 
     @Transactional
-    public void update(final TokenRequest tokenRequest, final CustomerUpdateRequest customerUpdateRequest) {
+    public void update(final CustomerIdentificationRequest customerIdentificationRequest, final CustomerUpdateRequest customerUpdateRequest) {
         validateDuplicateNickname(customerUpdateRequest.getNickname());
-        Customer customer = findCustomerById(tokenRequest.getId());
+        Customer customer = findCustomerById(customerIdentificationRequest.getId());
         Customer customerForUpdate = createCustomerForUpdate(customerUpdateRequest, customer);
         customerDao.update(customerForUpdate.getId(), customerForUpdate.getNickname());
     }
 
     @Transactional
-    public void updatePassword(final TokenRequest tokenRequest, final CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
-        Customer customer = findCustomerById(tokenRequest.getId());
+    public void updatePassword(final CustomerIdentificationRequest customerIdentificationRequest, final CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
+        Customer customer = findCustomerById(customerIdentificationRequest.getId());
         customer.validateMatchPassword(customerUpdatePasswordRequest.getOldPassword());
         Customer customerForUpdate = createCustomerForUpdatePassword(customerUpdatePasswordRequest, customer);
         customerDao.updatePassword(customerForUpdate.getId(), customerForUpdate.getPassword());
     }
 
     @Transactional
-    public void withdraw(final TokenRequest tokenRequest) {
-        Customer customer = findCustomerById(tokenRequest.getId());
+    public void withdraw(final CustomerIdentificationRequest customerIdentificationRequest) {
+        Customer customer = findCustomerById(customerIdentificationRequest.getId());
         customerDao.delete(customer.getId());
     }
 

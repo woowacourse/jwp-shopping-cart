@@ -12,7 +12,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdateRequest;
-import woowacourse.shoppingcart.application.dto.request.TokenRequest;
+import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 
 @RestController
 @RequestMapping("/auth/customers/profile")
@@ -25,28 +25,28 @@ public class AuthController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerResponse> findByCustomerId(@AuthenticationPrincipal TokenRequest tokenRequest) {
-        CustomerResponse customerResponse = customerService.findByCustomerId(tokenRequest);
+    public ResponseEntity<CustomerResponse> findByCustomerId(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest) {
+        CustomerResponse customerResponse = customerService.findByCustomerId(customerIdentificationRequest);
         return ResponseEntity.ok().body(customerResponse);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal TokenRequest tokenRequest) {
-        customerService.withdraw(tokenRequest);
+    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest) {
+        customerService.withdraw(customerIdentificationRequest);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping
-    public ResponseEntity<Void> update(@AuthenticationPrincipal TokenRequest tokenRequest,
+    public ResponseEntity<Void> update(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest,
                                                    @RequestBody CustomerUpdateRequest customerUpdateRequest) {
-        customerService.update(tokenRequest, customerUpdateRequest);
+        customerService.update(customerIdentificationRequest, customerUpdateRequest);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal TokenRequest tokenRequest,
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest,
                                                    @RequestBody CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
-        customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest);
+        customerService.updatePassword(customerIdentificationRequest, customerUpdatePasswordRequest);
         return ResponseEntity.ok().build();
     }
 }
