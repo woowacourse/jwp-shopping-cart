@@ -9,7 +9,6 @@ import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.Request;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,23 +20,14 @@ import java.util.List;
 public class CartItemController {
 
     private final CartService cartService;
-    private final AuthService authService;
 
-    public CartItemController(final CartService cartService, final AuthService authService) {
+    public CartItemController(final CartService cartService) {
         this.cartService = cartService;
-        this.authService = authService;
     }
 
     @GetMapping
     public ResponseEntity<List<CartItem>> getCartItems(@PathVariable final String customerName) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
-    }
-
-    @PatchMapping
-    public ResponseEntity<Void> updateCartItem(HttpServletRequest request,
-                                               @RequestBody final CartItemRequest cartItemRequest) {
-        cartService.updateCartItem(cartItemRequest);
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping
@@ -57,10 +47,5 @@ public class CartItemController {
                                                @PathVariable final Long cartId) {
         cartService.deleteCart(customerName, cartId);
         return ResponseEntity.noContent().build();
-    }
-
-    private String getNameFromToken(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        return authService.getNameFromToken(token);
     }
 }

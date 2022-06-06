@@ -8,7 +8,6 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -68,19 +67,5 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
-    }
-
-    public void updateCartItem(CartItemRequest cartItemRequest) {
-        CartItem cartItem = getCartItemById(cartItemRequest.getId());
-        cartItem.updateQuantity(cartItemRequest.getQuantity());
-        cartItemDao.updateCartItem(cartItem);
-    }
-
-    private CartItem getCartItemById(Long id) {
-        final Long productId = cartItemDao.findProductIdById(id);
-        final int quantity = cartItemDao.findQuantityById(id);
-        final Product product = productDao.findProductById(productId);
-
-        return new CartItem(id, product, quantity);
     }
 }

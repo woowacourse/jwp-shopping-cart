@@ -15,7 +15,6 @@ import java.util.List;
 @Repository
 public class CartItemDao {
 
-    private static final int DEFAULT_CART_ITEM_QUANTITY = 1;
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
@@ -44,14 +43,13 @@ public class CartItemDao {
     }
 
     public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
+        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setLong(1, customerId);
             preparedStatement.setLong(2, productId);
-            preparedStatement.setInt(3, DEFAULT_CART_ITEM_QUANTITY);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -63,19 +61,5 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
-    }
-
-    public int findQuantityById(Long cartId) {
-        try {
-            final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
-
-    public void updateCartItem(CartItem cartItem) {
-        final String sql = "update cart_item set product_id=?, quantity=? where id = ?";
-        jdbcTemplate.update(sql, cartItem.getProductId(), cartItem.getQuantity(), cartItem.getId());
     }
 }
