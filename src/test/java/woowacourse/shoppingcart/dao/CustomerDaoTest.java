@@ -5,8 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.utils.Fixture.customer;
 import static woowacourse.utils.Fixture.email;
-import static woowacourse.utils.Fixture.nickname;
-import static woowacourse.utils.Fixture.password;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;

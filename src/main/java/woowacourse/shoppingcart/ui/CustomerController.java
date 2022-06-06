@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateResponse;
 import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.dto.customer.SignupResponse;
 import woowacourse.auth.support.Login;
+import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @RestController
 @RequestMapping("/customers")

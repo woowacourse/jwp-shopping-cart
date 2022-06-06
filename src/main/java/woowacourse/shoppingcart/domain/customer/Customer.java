@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.domain.customer;
 
 import static lombok.EqualsAndHashCode.Include;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

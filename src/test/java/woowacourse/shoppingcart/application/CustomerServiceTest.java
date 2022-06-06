@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static woowacourse.utils.Fixture.customer;
 import static woowacourse.utils.Fixture.email;
-import static woowacourse.utils.Fixture.nickname;
 import static woowacourse.utils.Fixture.password;
 import static woowacourse.utils.Fixture.signupRequest;
 
@@ -18,11 +17,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
-import woowacourse.utils.Fixture;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {

@@ -1,8 +1,6 @@
 package woowacourse.auth.dto.customer;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class CustomerUpdateResponse {

@@ -1,12 +1,12 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @Service
 public class AuthService {

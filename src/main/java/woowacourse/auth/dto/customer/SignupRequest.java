@@ -2,19 +2,18 @@ package woowacourse.auth.dto.customer;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import lombok.Getter;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
 @Getter
 public class SignupRequest {
 
-    @NotBlank
-    @Email
+    @Email(message = "이메일 형식이 올바르지 않습")
+    @NotBlank(message = "이메일은 공백이 아니여야합니다")
     private String email;
-    @Size(min = 2, max = 10, message = "닉네임은 2~10 길이어야 합니다.")
+    @NotBlank(message = "닉네임은 공백이 아니여야합니다")
     private String nickname;
-    @NotBlank
+    @NotBlank(message = "비밀번호는 공백이 아니여야합니다")
     private String password;
 
     public SignupRequest() {

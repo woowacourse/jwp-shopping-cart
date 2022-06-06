@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class SignoutRequest {
-    @NotBlank
+    @NotBlank(message = "비밀번호는 공백이 아니여야합니다")
     private String password;
 
     public SignoutRequest() {

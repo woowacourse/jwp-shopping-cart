@@ -8,8 +8,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.application.CustomerService;
 
 @Configuration
 public class LoginConfig implements WebMvcConfigurer {

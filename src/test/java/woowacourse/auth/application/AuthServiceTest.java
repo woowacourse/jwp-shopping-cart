@@ -14,13 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
