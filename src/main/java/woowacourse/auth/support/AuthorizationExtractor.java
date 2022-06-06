@@ -1,9 +1,8 @@
 package woowacourse.auth.support;
 
-import woowacourse.shoppingcart.exception.UnauthorizedException;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import javax.servlet.http.HttpServletRequest;
+import woowacourse.shoppingcart.exception.UnauthorizedException;
 
 public class AuthorizationExtractor {
 
@@ -18,7 +17,8 @@ public class AuthorizationExtractor {
             String value = headers.nextElement();
             if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
                 String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
-                request.setAttribute(ACCESS_TOKEN_TYPE, value.substring(HEADER_VALUE_BEGIN_INDEX, BEARER_TYPE.length()).trim());
+                request.setAttribute(ACCESS_TOKEN_TYPE,
+                        value.substring(HEADER_VALUE_BEGIN_INDEX, BEARER_TYPE.length()).trim());
                 return authHeaderValue;
             }
         }

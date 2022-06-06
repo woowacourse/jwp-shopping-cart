@@ -1,13 +1,12 @@
 package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-
 import javax.validation.constraints.Pattern;
 
 public class PhoneNumberFormat {
 
     private static final String errorMessage = "휴대폰번호 형식이 일치하지 않습니다.";
-    private static final int  PHONE_NUMBER_START_BEGIN_INDEX = 0;
+    private static final int PHONE_NUMBER_START_BEGIN_INDEX = 0;
     private static final int PHONE_NUMBER_START_LAST_INDEX = 3;
     private static final int PHONE_NUMBER_MIDDLE_LAST_INDEX = 7;
     private static final int PHONE_NUMBER_END_LAST_INDEX = 11;

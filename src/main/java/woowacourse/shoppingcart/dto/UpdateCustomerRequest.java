@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 

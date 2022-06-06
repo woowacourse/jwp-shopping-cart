@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -12,11 +16,6 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
 import woowacourse.shoppingcart.domain.PhoneNumber;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class CustomerDao {
@@ -67,7 +66,8 @@ public class CustomerDao {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("account", account);
 
-        final List<Customer> query = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), customerRowMapper);
+        final List<Customer> query = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters),
+                customerRowMapper);
         return Optional.ofNullable(DataAccessUtils.singleResult(query));
     }
 
@@ -84,7 +84,8 @@ public class CustomerDao {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("customerId", customerId);
 
-        final List<Customer> result = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), customerRowMapper);
+        final List<Customer> result = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters),
+                customerRowMapper);
         return Optional.ofNullable(DataAccessUtils.singleResult(result));
     }
 

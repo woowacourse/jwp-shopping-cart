@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -23,7 +22,8 @@ public class SignupRequest {
     private final PhoneNumberFormat phoneNumber;
 
     @JsonCreator
-    public SignupRequest(String account, String nickname, String password, String address, PhoneNumberFormat phoneNumber) {
+    public SignupRequest(String account, String nickname, String password, String address,
+                         PhoneNumberFormat phoneNumber) {
         this.account = account;
         this.nickname = nickname;
         this.password = password;
