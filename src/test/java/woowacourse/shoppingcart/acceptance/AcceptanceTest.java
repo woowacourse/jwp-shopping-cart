@@ -86,4 +86,26 @@ public class AcceptanceTest {
                 .then().log().all()
                 .statusCode(httpStatus.value()).extract();
     }
+
+    protected ExtractableResponse createOneProductResult(Long productId, HttpStatus httpStatus) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/products/" + productId)
+                .then().log().all()
+                .statusCode(httpStatus.value())
+                .extract();
+    }
+
+    protected ExtractableResponse createPagedProductResult(int page, int perPage, HttpStatus httpStatus) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/products?size=" + perPage + "&page=" + page)
+                .then().log().all()
+                .statusCode(httpStatus.value())
+                .extract();
+    }
 }
