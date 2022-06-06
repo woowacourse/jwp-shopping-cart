@@ -6,9 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Account;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.EncodedPassword;
+import woowacourse.shoppingcart.domain.*;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
 import java.util.HashMap;
@@ -24,10 +22,10 @@ public class CustomerDao {
             new Customer(
                     rs.getLong("id"),
                     new Account(rs.getString("account")),
-                    rs.getString("nickname"),
+                    new Nickname(rs.getString("nickname")),
                     new EncodedPassword(rs.getString("password")),
-                    rs.getString("address"),
-                    rs.getString("phone_number")
+                    new Address(rs.getString("address")),
+                    new PhoneNumber(rs.getString("phone_number"))
             );
 
     public CustomerDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -42,10 +40,10 @@ public class CustomerDao {
 
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("account", customer.getAccount().getValue());
-        parameters.put("nickname", customer.getNickname());
+        parameters.put("nickname", customer.getNickname().getValue());
         parameters.put("password", customer.getPassword().getValue());
-        parameters.put("address", customer.getAddress());
-        parameters.put("phone_number", customer.getPhoneNumber());
+        parameters.put("address", customer.getAddress().getValue());
+        parameters.put("phone_number", customer.getPhoneNumber().getValue());
 
         final Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
         return new Customer(number.longValue(), customer.getAccount(), customer.getNickname(), customer.getPassword(), customer.getAddress(), customer.getPhoneNumber());

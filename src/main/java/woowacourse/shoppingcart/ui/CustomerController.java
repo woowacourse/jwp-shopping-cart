@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.dto.DeleteCustomerRequest;
-import woowacourse.auth.dto.UpdateCustomerRequest;
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerResponse;

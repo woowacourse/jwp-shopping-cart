@@ -1,12 +1,10 @@
 package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import woowacourse.auth.dto.PhoneNumber;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 public class SignupRequest {
 
@@ -18,11 +16,12 @@ public class SignupRequest {
     private final String password;
     @NotBlank
     private final String address;
+    @NotNull
     @Valid
-    private final PhoneNumber phoneNumber;
+    private final PhoneNumberFormat phoneNumber;
 
     @JsonCreator
-    public SignupRequest(String account, String nickname, String password, String address, PhoneNumber phoneNumber) {
+    public SignupRequest(String account, String nickname, String password, String address, PhoneNumberFormat phoneNumber) {
         this.account = account;
         this.nickname = nickname;
         this.password = password;
@@ -46,7 +45,7 @@ public class SignupRequest {
         return address;
     }
 
-    public PhoneNumber getPhoneNumber() {
+    public PhoneNumberFormat getPhoneNumber() {
         return phoneNumber;
     }
 }

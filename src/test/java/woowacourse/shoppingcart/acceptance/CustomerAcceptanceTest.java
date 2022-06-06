@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.*;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.PhoneNumberFormat;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -57,7 +59,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 아이디 길이가 4~15자를 벗어나면 400 상태코드를 반환한다.")
     void invalidAccountLength(String account) {
         // given
-        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -74,7 +76,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 아이디가 소문자 혹은 숫자 조합을 만족하지 않으면 상태코드 400을 반환한다.")
     void changeAccountPattern(String account) {
         // when
-        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumberFormat("010", "1234", "5678"));
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
 
         // then
@@ -89,7 +91,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 닉네임 길이가 2~10자를 벗어나면 400 상태코드를 반환한다.")
     void invalidNicknameLength(String nickName) {
         // given
-        final SignupRequest signupRequest = new SignupRequest("account", nickName, "Password123!", "address", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("account", nickName, "Password123!", "address", new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -106,7 +108,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 비밀번호 길이가 8~20자를 벗어나면 400 상태코드를 반환한다.")
     void invalidPasswordLength(String password) {
         // given
-        final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address", new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -120,10 +122,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @ParameterizedTest
     @CsvSource(value = {"12345678aa", "aA!!!!Aa", "korinnee123", "qwe123!!!", "tjdtksdlWkd"})
-    @DisplayName("회원가입 시 비밀번호가 영어 대문자, 소문자, 숫자 중 2종류 이상을 조합하지 않았다면 상태코드 400을 반환한다.")
+    @DisplayName("회원가입 시 대소문자, 숫자, 특수문자가 반드시 1개 이상 포함하지 않는다면 상태코드 400을 반환한다.")
     void invalidPasswordPattern(String password) {
         // given
-        final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address", new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address", new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -140,7 +142,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void invalidAddressLength() {
         // given
         String address = "a".repeat(256);
-        final SignupRequest signupRequest = new SignupRequest("account", "nickname", "Password123!", address, new PhoneNumber("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", "Password123!", address, new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -157,7 +159,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 휴대폰 번호의 각각 길이가 3, 4, 4자가 아니면 상태코드 400을 반환한다.")
     void invalidPhoneNumberLength(String start, String middle, String end) {
         // given
-        final SignupRequest signupRequest = new SignupRequest("account", "nickname", "Password123!", "address", new PhoneNumber(start, middle, end));
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", "Password123!", "address", new PhoneNumberFormat(start, middle, end));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -242,7 +244,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumberFormat("010", "1234", "1234"));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
@@ -255,7 +257,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumberFormat("010", "1234", "1234"));
         final ExtractableResponse<Response> response = put("/customers", updateCustomerRequest);
 
         // then
@@ -273,7 +275,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final String invalidToken = jwtTokenProvider.createToken("fake");
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumber("010", "1234", "1234"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumberFormat("010", "1234", "1234"));
         final ExtractableResponse<Response> response = put("/customers", invalidToken, updateCustomerRequest);
 
         // then
@@ -292,7 +294,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest(nickName, "address", new PhoneNumber("010", "1234", "5678"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest(nickName, "address", new PhoneNumberFormat("010", "1234", "5678"));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
@@ -311,7 +313,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         String address = "a".repeat(256);
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", address, new PhoneNumber("010", "1234", "5678"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", address, new PhoneNumberFormat("010", "1234", "5678"));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
@@ -330,7 +332,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "address", new PhoneNumber(start, middle, end
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "address", new PhoneNumberFormat(start, middle, end
         ));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 

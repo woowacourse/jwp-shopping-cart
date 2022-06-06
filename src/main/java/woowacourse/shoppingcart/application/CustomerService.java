@@ -4,14 +4,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.DeleteCustomerRequest;
-import woowacourse.auth.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Account;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.EncodedPassword;
-import woowacourse.shoppingcart.domain.PlainPassword;
+import woowacourse.shoppingcart.domain.*;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.DuplicatedAccountException;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
@@ -44,10 +41,10 @@ public class CustomerService {
     private Customer toCustomer(final SignupRequest signupRequest) {
         final PlainPassword plainPassword = new PlainPassword(signupRequest.getPassword());
         return new Customer(new Account(signupRequest.getAccount()),
-                signupRequest.getNickname(),
+                new Nickname(signupRequest.getNickname()),
                 new EncodedPassword(plainPassword.encode(passwordEncoder)),
-                signupRequest.getAddress(),
-                signupRequest.getPhoneNumber().appendNumbers());
+                new Address(signupRequest.getAddress()),
+                new PhoneNumber(signupRequest.getPhoneNumber().appendNumbers()));
     }
 
     @Transactional(readOnly = true)

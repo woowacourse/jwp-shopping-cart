@@ -9,13 +9,13 @@
 ## 1단계 요구사항
 
 - [x] 회원가입
-    - [x] account, nickname, password, address, phoneNumber 을 받아 회원을 생성한다.
+    - [x] account, nickname, password, address, phoneNumberFormat 을 받아 회원을 생성한다.
     - [x] account 의 글자수가 4~15를 벗어나면 예외를 발생한다.
     - [x] nickname 의 글자수가 2~10을 벗어나면 예외를 발생한다.
     - [x] password 의 글자수가 8~20을 벗어나면 예외를 발생한다.
     - [x] password 가 대소문자, 숫자, 특수문자가 모두 조합되지 않으면 예외를 발생한다.
     - [x] address 의 글자수가 255자를 초과하면 예외를 발생한다.
-    - [x] phoneNumber 의 양식이 일치하지 않으면 예외를 발생한다.
+    - [x] phoneNumberFormat 의 양식이 일치하지 않으면 예외를 발생한다.
         - [x] start, middle, last 의 형식을 지닌다.
         - [x] start 는 3글자, middle과 last는 4글자이다.
     - [x] account 가 중복되면 예외를 발생한다.
@@ -31,11 +31,11 @@
   - [x] 알맞은 회원정보가 없을 시, 회원 정보가 없다는 예외를 발생한다.
 
 - [x] 회원 정보 수정
-    - [x] nickname, address, phoneNumber 을 받아 회원 정보를 수정한다.
+    - [x] nickname, address, phoneNumberFormat 을 받아 회원 정보를 수정한다.
     - [x] request header 에 token 이 포함되지 않으면 예외를 발생한다.
     - [x] nickname 의 글자수가 2~10을 벗어나면 예외를 발생한다.
     - [x] address 의 글자수가 255자를 초과하면 예외를 발생한다.
-    - [x] phoneNumber 의 양식이 일치하지 않으면 예외를 발생한다.
+    - [x] phoneNumberFormat 의 양식이 일치하지 않으면 예외를 발생한다.
         - [x] start, middle, last 의 형식을 지닌다.
         - [x] start 는 3글자, middle과 last는 4글자이다.
 

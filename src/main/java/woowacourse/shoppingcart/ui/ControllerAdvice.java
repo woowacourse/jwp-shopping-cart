@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.ui;
 
 import io.jsonwebtoken.JwtException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,11 @@ import java.util.List;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+    private final Logger logger = LoggerFactory.getLogger(ControllerAdvice.class);
+
     @ExceptionHandler({RuntimeException.class, Exception.class})
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+    public ResponseEntity<ErrorResponse> handleUnhandledException(Exception e) {
+        logger.info(e.getMessage());
         return ResponseEntity.internalServerError().body(new ErrorResponse("서버 에러가 발생했습니다."));
     }
 
