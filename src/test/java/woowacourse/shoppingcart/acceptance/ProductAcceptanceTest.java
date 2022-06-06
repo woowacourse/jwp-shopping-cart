@@ -34,6 +34,41 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         }
     }
 
+    @DisplayName("상품 1개를 상세 조회할 때,")
+    @Nested
+    class Describe_상품상세조회 {
+        @DisplayName("ID가 1인 상품을 조회하면")
+        @Nested
+        class Context_Product_id_1 extends AcceptanceTest {
+            @Test
+            @DisplayName("ID가 1인 상품에 대한 정보와 상태코드 200을 반환받는다.")
+                // then
+            void it_return_productId_1() {
+                ValidatableResponse response = RestAssured
+                        .given().log().all()
+                        .when().get("/products/1")
+                        .then().log().all();
+
+                response.statusCode(HttpStatus.OK.value());
+            }
+        }
+
+        @DisplayName("존재하지 않는 ID인 상품을 조회하면")
+        @Nested
+        class Context_notExist_Product extends AcceptanceTest {
+            @Test
+            @DisplayName("NOT FOUND 상태코드를 반환받는다.")
+            void it_return_notFound() {
+                ValidatableResponse response = RestAssured
+                        .given().log().all()
+                        .when().get("/products/20")
+                        .then().log().all();
+
+                response.statusCode(HttpStatus.NOT_FOUND.value());
+            }
+        }
+    }
+
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
         Product productRequest = new Product(name, price, imageUrl);
 
