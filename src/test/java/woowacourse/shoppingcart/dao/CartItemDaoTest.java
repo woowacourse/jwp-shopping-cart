@@ -86,4 +86,15 @@ class CartItemDaoTest {
 
         assertThat(item.getQuantity()).isEqualTo(6);
     }
+
+    @DisplayName("장바구니에 담긴 상품을 삭제한다.")
+    @Test
+    void delete() {
+        cartItemDao.addCartItem(1L, 1L, 5);
+
+        cartItemDao.delete(1L, 1L);
+        List<CartItem> cartItems = cartItemDao.findAll(1L);
+
+        assertThat(cartItems).isEmpty();
+    }
 }

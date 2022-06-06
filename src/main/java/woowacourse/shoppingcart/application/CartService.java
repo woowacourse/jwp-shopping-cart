@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dto.CartItemAddRequest.CartItemResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @Service
 public class CartService {
@@ -48,6 +48,13 @@ public class CartService {
         productService.validateProductId(productId);
         productService.validateStock(productId, quantity);
         cartItemDao.updateQuantity(memberId, productId, quantity);
+        return findAll(memberId);
+    }
+
+    @Transactional
+    public List<CartItemResponse> deleteCartItem(long memberId, long productId) {
+        productService.validateProductId(productId);
+        cartItemDao.delete(memberId, productId);
         return findAll(memberId);
     }
 }

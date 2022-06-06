@@ -6,6 +6,7 @@ import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.LOGIN_URI;
 import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.MEMBER_CREATE_REQUEST;
 import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.SIGN_UP_URI;
 import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.VALID_LOGIN_REQUEST;
+import static woowacourse.util.HttpRequestUtil.deleteWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.getWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.patchWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.post;
@@ -25,9 +26,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.ui.dto.response.ErrorResponse;
 import woowacourse.auth.ui.dto.response.LoginResponse;
-import woowacourse.shoppingcart.dto.CartItemAddRequest.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityUpdateRequest;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @DisplayName("장바구니 관련 기능")
 @Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})
@@ -106,7 +107,7 @@ class CartAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("장바구니 목록을 반환한다.")
     @Test
-    void findAllCartItems() {
+    void findAllCartItems_OK() {
         postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
         postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST2);
 
@@ -128,7 +129,7 @@ class CartAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("상품의 수량을 변경하고 성공하면 200과 변경된 장바구니 목록을 반환한다.")
     @Test
-    void updateQuantity() {
+    void updateQuantity_OK() {
         postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
 
         ExtractableResponse<Response> response = patchWithAuthorization(CART_URI, token,
@@ -172,6 +173,21 @@ class CartAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(message).isEqualTo("입력하지 않은 정보가 있습니다.")
+        );
+    }
+
+    @DisplayName("상품을 삭제하고 성공하면 200과 삭제된 장바구니 목록을 응답한다.")
+    @Test
+    void deleteCartItem_OK() {
+        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
+
+        ExtractableResponse<Response> response = deleteWithAuthorization(CART_URI + "?id=1", token);
+        List<CartItemResponse> cartItems = response.jsonPath()
+                .getList(".", CartItemResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(cartItems).isEmpty()
         );
     }
 

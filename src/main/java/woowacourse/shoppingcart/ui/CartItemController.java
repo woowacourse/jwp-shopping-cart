@@ -5,17 +5,19 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.dto.CartItemAddRequest.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityUpdateRequest;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @RestController
 @RequestMapping("/api/carts/products")
@@ -47,5 +49,11 @@ public class CartItemController {
         List<CartItemResponse> cartItemResponses = cartService.updateQuantity(
                 memberId, cartItemQuantityUpdateRequest.getId(), cartItemQuantityUpdateRequest.getQuantity());
         return ResponseEntity.ok(cartItemResponses);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<List<CartItemResponse>> deleteCartItem(@AuthenticationPrincipal long memberId,
+                                                                 @RequestParam long id) {
+        return ResponseEntity.ok(cartService.deleteCartItem(memberId, id));
     }
 }

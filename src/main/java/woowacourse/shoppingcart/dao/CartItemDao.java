@@ -77,4 +77,11 @@ public class CartItemDao {
             throw new IllegalArgumentException("존재하지 않는 상품입니다.");
         }
     }
+
+    public void delete(long memberId, long productId) {
+        String sql = "DELETE FROM CART_ITEM WHERE member_id = :member_id AND product_id = :product_id";
+        SqlParameterSource params = new MapSqlParameterSource("member_id", memberId)
+                .addValue("product_id", productId);
+        jdbcTemplate.update(sql, params);
+    }
 }

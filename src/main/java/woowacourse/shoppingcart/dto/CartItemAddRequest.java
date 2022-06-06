@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.NotNull;
-import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 
 public class CartItemAddRequest {
@@ -25,28 +24,6 @@ public class CartItemAddRequest {
 
     public Integer getQuantity() {
         return quantity;
-    }
-
-    public static class CartItemResponse {
-
-        private ProductResponse product;
-        private int quantity;
-
-        public CartItemResponse() {
-        }
-
-        public CartItemResponse(CartItem cartItem) {
-            this.product = new ProductResponse(cartItem.getProduct());
-            this.quantity = cartItem.getQuantity();
-        }
-
-        public ProductResponse getProduct() {
-            return product;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
     }
 
     public static class ProductResponse {
