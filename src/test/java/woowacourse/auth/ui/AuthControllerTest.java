@@ -15,11 +15,14 @@ import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.dto.customer.CustomerRequest;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
+import woowacourse.auth.support.JwtTokenProvider;
 
 public class AuthControllerTest extends ControllerTest {
 
 	@Autowired
 	private CustomerService customerService;
+	@Autowired
+	protected JwtTokenProvider tokenProvider;
 
 	@DisplayName("로그인이 성공한다.")
 	@Test

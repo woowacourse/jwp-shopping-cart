@@ -9,31 +9,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import woowacourse.auth.ui.ControllerTest;
 import woowacourse.shoppingcart.ProductInsertUtil;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
-@SpringBootTest
-@Transactional
-@AutoConfigureMockMvc
-class ProductControllerTest {
+class ProductControllerTest extends ControllerTest {
 
 	private Long productId1;
 	private Product product1;
 	private Product product2;
 
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
 	@Autowired
 	private ProductInsertUtil productInsertUtil;
 

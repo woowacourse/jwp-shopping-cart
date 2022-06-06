@@ -9,28 +9,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.dto.customer.CustomerRequest;
 import woowacourse.auth.dto.token.TokenRequest;
+import woowacourse.auth.ui.ControllerTest;
 import woowacourse.shoppingcart.ProductInsertUtil;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.QuantityRequest;
 
-@SpringBootTest
-@Transactional
-@AutoConfigureMockMvc
-class CartItemControllerTest {
+class CartItemControllerTest extends ControllerTest {
 
 	private Long customerId;
 	private Long productId;
@@ -44,15 +36,9 @@ class CartItemControllerTest {
 	private AuthService authService;
 	@Autowired
 	private CartService cartService;
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	@BeforeEach
 	void init() {
-		String email = "123@gmail.com";
-		String password = "a1234!";
 		customerId = customerService.signUp(new CustomerRequest(email, password, "does"))
 			.getId();
 

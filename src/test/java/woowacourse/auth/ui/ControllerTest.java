@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import woowacourse.auth.support.JwtTokenProvider;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -23,6 +21,4 @@ public class ControllerTest {
 	protected MockMvc mockMvc;
 	@Autowired
 	protected ObjectMapper objectMapper;
-	@Autowired
-	protected JwtTokenProvider tokenProvider;
 }
