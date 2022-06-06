@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.ui;
 
+import java.util.List;
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,11 +12,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.*;
 
-import javax.validation.ConstraintViolationException;
-import java.util.List;
+import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.exception.AuthorizationException;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -30,7 +36,6 @@ public class ControllerAdvice {
             IllegalArgumentException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
-            InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
             HttpMessageNotReadableException.class,
@@ -39,6 +44,12 @@ public class ControllerAdvice {
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleInvalidResourceAccess(final InvalidProductException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler
