@@ -25,3 +25,16 @@ values ('puterism', 'email1@email.com', 'qwerasdf123'),
        ('yujo11', 'email24@email.com', 'qwerasdf123'),
        ('sunhpark42', 'email25@email.com', 'qwerasdf123')
 ;
+
+insert into product (name, price, image_url)
+values ('product1', 1000, 'url1'),
+       ('product2', 2000, 'url2'),
+       ('product3', 3000, 'url3'),
+       ('product4', 4000, 'url4'),
+       ('product5', 5000, 'url5'),
+       ('product6', 6000, 'url6'),
+       ('product7', 7000, 'url7'),
+       ('product8', 8000, 'url8'),
+       ('product9', 9000, 'url9'),
+       ('product10', 10000, 'url10')
+;
