@@ -17,10 +17,10 @@ import woowacourse.shoppingcart.dto.CartResponse;
 
 @RestController
 @RequestMapping("/api/members/me/carts")
-public class CartItemController {
+public class CartController {
     private final CartService cartService;
 
-    public CartItemController(final CartService cartService) {
+    public CartController(final CartService cartService) {
         this.cartService = cartService;
     }
 

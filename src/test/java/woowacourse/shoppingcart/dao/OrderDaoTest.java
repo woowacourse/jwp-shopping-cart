@@ -49,4 +49,14 @@ class OrderDaoTest {
 
         assertThat(orderDao.isValidOrderId(id, orderId)).isTrue();
     }
+
+    @DisplayName("멤버의 전체 주문 id를 조회한다.")
+    @Test
+    void findOrdersIdsByMemberId() {
+        final Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        orderDao.save(id);
+        orderDao.save(id);
+
+        assertThat(orderDao.findOrdersIdsByMemberId(id)).hasSize(2);
+    }
 }

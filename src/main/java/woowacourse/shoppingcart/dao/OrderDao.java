@@ -30,11 +30,15 @@ public class OrderDao {
         return simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
     }
 
-    private RowMapper<Orders> rowMapper() {
+    public List<Long> findOrdersIdsByMemberId(final Long memberId) {
+        String sql = "SELECT id FROM orders WHERE member_id = :memberId";
+        final SqlParameterSource parameter = new MapSqlParameterSource("memberId", memberId);
+        return namedParameterJdbcTemplate.query(sql, parameter, rowMapper());
+    }
+
+    private RowMapper<Long> rowMapper() {
         return (rs, rowNum) -> {
-            final Long id = rs.getLong("id");
-            final Long memberId = rs.getLong("member_id");
-            return new Orders(id, null);
+            return rs.getLong("id");
         };
     }
 

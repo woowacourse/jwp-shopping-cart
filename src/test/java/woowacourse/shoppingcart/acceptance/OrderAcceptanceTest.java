@@ -26,9 +26,6 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
-    private Long cartId1;
-    private Long cartId2;
 
     @DisplayName("주문하기")
     @Test
@@ -68,7 +65,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long orderId1 = 주문하기_요청_성공되어_있음(token, Collections.singletonList(new OrderRequest(cartId1)));
         Long orderId2 = 주문하기_요청_성공되어_있음(token, Collections.singletonList(new OrderRequest(cartId2)));
 
-        ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
+        ExtractableResponse<Response> response = 주문_내역_조회_요청(token);
 
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, orderId1, orderId2);
@@ -144,8 +141,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-                .map(Orders::getId)
+        List<Long> resultOrderIds = response.jsonPath().getList(".", OrderResponse.class).stream()
+                .map(OrderResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }

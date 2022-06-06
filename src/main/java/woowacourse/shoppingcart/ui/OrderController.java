@@ -43,8 +43,9 @@ public class OrderController {
         return ResponseEntity.ok(orderResponse);
     }
 
-    @GetMapping("/api/customers/{customerName}/orders")
-    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-        return ResponseEntity.ok(Collections.emptyList());
+    @GetMapping("/api/members/me/orders")
+    public ResponseEntity<List<OrderResponse>> findOrders(@AuthenticationPrincipal final Long memberId) {
+        List<OrderResponse> orderResponses = orderService.findOrdersByMemberId(memberId);
+        return ResponseEntity.ok(orderResponses);
     }
 }

@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -12,9 +11,6 @@ import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.OrdersDetail;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
@@ -74,14 +70,10 @@ public class OrderService {
         }
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrdersDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProduct().getId());
-            final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrdersDetail(product, quantity));
-        }
-
-        return new Orders(orderId, ordersDetails);
+    public List<OrderResponse> findOrdersByMemberId(final Long memberId) {
+        final List<Long> orderIds = orderDao.findOrdersIdsByMemberId(memberId);
+        return orderIds.stream()
+                .map(id -> new OrderResponse(id, toOrderDetailResponses(ordersDetailDao.findOrdersDetailsByOrderId(id))))
+                .collect(Collectors.toList());
     }
 }
