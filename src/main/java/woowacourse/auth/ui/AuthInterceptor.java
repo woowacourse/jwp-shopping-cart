@@ -2,19 +2,20 @@ package woowacourse.auth.ui;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.auth.application.AuthService;
 import woowacourse.auth.application.AuthorizationException;
 import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.TokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AuthInterceptor implements HandlerInterceptor {
 
-    private final AuthService authService;
+    private final TokenProvider tokenProvider;
 
-    public AuthInterceptor(AuthService authService) {
-        this.authService = authService;
+    public AuthInterceptor(TokenProvider tokenProvider) {
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (token == null) {
             throw new AuthorizationException("토큰이 없습니다.");
         }
-        authService.validateToken(token);
+        tokenProvider.validateToken(token);
     }
 
 }

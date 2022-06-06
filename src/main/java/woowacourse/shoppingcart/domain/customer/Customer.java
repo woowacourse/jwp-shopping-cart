@@ -4,8 +4,6 @@ import woowacourse.shoppingcart.support.Encryptor;
 
 public class Customer {
 
-    private static final long DEFAULT_ID = 0L;
-
     private Long id;
     private UserName name;
     private Password password;
@@ -17,7 +15,6 @@ public class Customer {
     }
 
     public Customer(String name, String password, Encryptor encryptor) {
-        this.id = DEFAULT_ID;
         this.name = new UserName(name);
         this.password = Password.toPasswordWithEncrypt(password, encryptor);
     }
