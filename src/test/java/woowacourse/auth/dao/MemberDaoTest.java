@@ -1,7 +1,6 @@
 package woowacourse.auth.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,38 +63,13 @@ class MemberDaoTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("이메일로 회원정보를 조회한다.")
+    @DisplayName("회원 id로 회원정보를 조회한다.")
     @Test
     void findByEmail() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        Member foundMember = memberDao.findById(1L)
-                .orElseGet(() -> fail("실패"));
-
-        assertThat(foundMember).isEqualTo(member);
-    }
-
-    @DisplayName("이메일에 해당하는 회원정보가 없을 경우 empty인 Optional을 반환한다.")
-    @Test
-    void findByEmail_Null() {
-        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        memberDao.save(member);
-
-        Optional<Member> foundMember = memberDao.findById(2L);
-        boolean actual = foundMember.isEmpty();
-
-        assertThat(actual).isTrue();
-    }
-
-    @DisplayName("이메일과 비밀번호로 회원정보를 조회한다.")
-    @Test
-    void findByEmailAndPassword() {
-        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        memberDao.save(member);
-
-        Member foundMember = memberDao.findById(1L)
-                .orElseGet(() -> fail("실패"));
+        Member foundMember = memberDao.findById(1L);
 
         assertThat(foundMember).isEqualTo(member);
     }
@@ -132,8 +106,7 @@ class MemberDaoTest {
         memberDao.save(member);
 
         memberDao.updateNicknameByEmail(1L, "바꾼닉네임");
-        Member foundMember = memberDao.findById(1L)
-                .orElseGet(() -> fail("실패"));
+        Member foundMember = memberDao.findById(1L);
 
         assertThat(foundMember.getNickname()).isEqualTo("바꾼닉네임");
     }
@@ -145,8 +118,7 @@ class MemberDaoTest {
         memberDao.save(member);
 
         memberDao.updatePasswordByEmail(1L, "1q2w3e4r@");
-        Member foundMember = memberDao.findById(1L)
-                .orElseGet(() -> fail("실패"));
+        Member foundMember = memberDao.findById(1L);
 
         assertThat(foundMember.getPassword()).isEqualTo("1q2w3e4r@");
     }

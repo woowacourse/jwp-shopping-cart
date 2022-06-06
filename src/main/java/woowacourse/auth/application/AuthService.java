@@ -65,8 +65,8 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public MemberResponse findMember(long memberId) {
-        Member member = memberDao.findById(memberId)
-                .orElseThrow(() -> new AuthorizationException("유효하지 않은 토큰입니다."));
+        validateId(memberId);
+        Member member = memberDao.findById(memberId);
         return new MemberResponse(member);
     }
 

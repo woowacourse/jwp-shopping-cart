@@ -49,14 +49,10 @@ public class MemberDao {
         return namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class);
     }
 
-    public Optional<Member> findById(long id) {
+    public Member findById(long id) {
         String sql = "SELECT id, email, password, nickname FROM MEMBER WHERE id = :id";
         SqlParameterSource params = new MapSqlParameterSource("id", id);
-        try {
-            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, params, MEMBER_MAPPER));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return namedParameterJdbcTemplate.queryForObject(sql, params, MEMBER_MAPPER);
     }
 
     public Optional<Member> findByEmailAndPassword(String email, String password) {
