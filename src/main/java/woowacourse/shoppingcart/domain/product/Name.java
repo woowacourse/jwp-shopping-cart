@@ -7,11 +7,11 @@ public class Name {
     private final String value;
 
     public Name(String value) {
-        validateEmail(value);
+        validateName(value);
         this.value = value;
     }
 
-    private void validateEmail(String value) {
+    private void validateName(String value) {
         checkNull(value);
         checkLength(value);
     }
