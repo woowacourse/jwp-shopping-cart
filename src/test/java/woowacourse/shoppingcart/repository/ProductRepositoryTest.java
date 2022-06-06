@@ -1,9 +1,8 @@
 package woowacourse.shoppingcart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,14 @@ class ProductRepositoryTest {
     }
 
     @DisplayName("id 를 이용해서 저장되어 있는 상품을 조회한다.")
-    @Test
     @Sql("/setProducts.sql")
+    @Test
     void findById() {
         // given
-        Long id = 1L;
+        Long productId = 1L;
 
         // when
-        Product product = productRepository.findById(id);
+        Product product = productRepository.findById(productId);
 
         // then
         assertAll(

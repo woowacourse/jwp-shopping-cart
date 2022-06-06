@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
@@ -14,6 +15,7 @@ import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
