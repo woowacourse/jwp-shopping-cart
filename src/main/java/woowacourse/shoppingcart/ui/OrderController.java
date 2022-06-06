@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.order.Orders;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
 
 @Validated

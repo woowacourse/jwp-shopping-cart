@@ -1,4 +1,6 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.cart;
+
+import woowacourse.shoppingcart.domain.product.Product;
 
 public class Cart {
 

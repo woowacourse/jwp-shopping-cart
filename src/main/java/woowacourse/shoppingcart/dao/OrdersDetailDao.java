@@ -7,8 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.product.Product;
 
 @Repository
 public class OrdersDetailDao {

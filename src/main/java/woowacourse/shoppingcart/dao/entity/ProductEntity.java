@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dao.entity;
 
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.Product;
 
 public class ProductEntity {
 

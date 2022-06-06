@@ -1,6 +1,7 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.product;
 
 public class Product {
+
     private Long id;
     private String name;
     private Integer price;

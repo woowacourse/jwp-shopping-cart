@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.dao.entity.ProductEntity;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;

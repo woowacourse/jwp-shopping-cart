@@ -17,7 +17,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.cart.Cart;
 
 @DisplayName("장바구니 관련 기능")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
