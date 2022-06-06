@@ -5,11 +5,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class CartItemDao {
@@ -60,5 +60,22 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public List<CartItem> findCartItemsByCustomerId(Long customerId) {
+        final String sql = "SELECT c.id, p.id as product_id, p.name, c.quantity, p.price, p.image_url " +
+                "FROM cart_item as c " +
+                "INNER JOIN product as p ON p.id = c.product_id " +
+                "WHERE c.customer_id = ?";
+
+        List<CartItem> query = jdbcTemplate.query(sql, (resultSet, rowNum) -> new CartItem(
+                resultSet.getLong("id"),
+                resultSet.getLong("product_id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getInt("quantity"),
+                resultSet.getString("image_url")
+        ), customerId);
+        return query;
     }
 }

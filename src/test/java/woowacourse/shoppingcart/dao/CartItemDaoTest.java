@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
@@ -47,7 +48,6 @@ public class CartItemDaoTest {
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
-
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
@@ -57,6 +57,19 @@ public class CartItemDaoTest {
 
         // then
         assertThat(cartId).isEqualTo(3L);
+    }
+
+    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 장바구니에 담은 상품의 목록을 가져온다.")
+    @Test
+    void getCartItemsByCustomerId() {
+        final Long customerId = 1L;
+
+        List<CartItem> carts =  cartItemDao.findCartItemsByCustomerId(customerId);
+
+        assertThat(carts).usingRecursiveComparison().ignoringFields("id").isEqualTo(
+                List.of(new CartItem(1L, 1L, "banana", 1_000, 1, "woowa1.com"),
+                        new CartItem(2L, 2L, "apple", 2_000, 1, "woowa2.com"))
+        );
     }
 
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
