@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.service.CustomerService;
 
 @WebMvcTest(CustomerController.class)
@@ -58,7 +58,7 @@ public class CustomerControllerTest {
     }
 
     private ResultActions 회원_가입_요청(String name, String password) throws Exception {
-        CustomerRequest request = new CustomerRequest(name, password);
+        SignUpRequest request = new SignUpRequest(name, password);
         String requestContent = objectMapper.writeValueAsString(request);
 
         return mockMvc.perform(post("/api/customers")

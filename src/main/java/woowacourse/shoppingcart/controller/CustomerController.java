@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.UserName;
 import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
-import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.service.CustomerService;
@@ -28,15 +29,15 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> signUp(@RequestBody @Valid final CustomerRequest customerRequest) {
-        customerService.addCustomer(customerRequest);
-        return ResponseEntity.created(URI.create("/api/customers/" + customerRequest.getUserName())).build();
+    public ResponseEntity<Void> signUp(@RequestBody @Valid final SignUpRequest request) {
+        customerService.addCustomer(request);
+        return ResponseEntity.created(URI.create("/api/customers/" + request.getUserName())).build();
     }
 
     @PutMapping("/me")
     public ResponseEntity<Void> edit(@UserName final String customerName,
-                                     @RequestBody @Valid final CustomerRequest editRequest) {
-        customerService.editCustomerByName(customerName, editRequest);
+                                     @RequestBody @Valid final EditCustomerRequest request) {
+        customerService.editCustomerByName(customerName, request);
         return ResponseEntity.ok().build();
     }
 

@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.dto.request;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-public class CustomerRequest {
+public class SignUpRequest {
 
     @Pattern(regexp = "[a-z1-9_]{5,20}", message = "이름은 5~20자에 소문자, 숫자, 언더바(_)만 사용가능합니다😉")
     @NotBlank(message = "이름을 입력해주세요😉")
@@ -12,10 +12,10 @@ public class CustomerRequest {
     @NotBlank(message = "비밀번호를 입력해주세요😉")
     private String password;
 
-    public CustomerRequest() {
+    public SignUpRequest() {
     }
 
-    public CustomerRequest(final String userName, final String password) {
+    public SignUpRequest(final String userName, final String password) {
         this.userName = userName;
         this.password = password;
     }
@@ -28,4 +28,3 @@ public class CustomerRequest {
         return password;
     }
 }
-

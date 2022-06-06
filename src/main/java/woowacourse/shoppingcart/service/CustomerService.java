@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.exception.duplicate.DuplicateCustomerException;
@@ -22,12 +23,12 @@ public class CustomerService {
         this.encryptor = encryptor;
     }
 
-    public void addCustomer(final CustomerRequest customerRequest) {
-        if (customerDao.existsByName(customerRequest.getUserName())) {
+    public void addCustomer(final SignUpRequest request) {
+        if (customerDao.existsByName(request.getUserName())) {
             throw new DuplicateCustomerException();
         }
-        final String encryptedPassword = encryptor.encrypt(customerRequest.getPassword());
-        customerDao.save(new Customer(customerRequest.getUserName(), encryptedPassword));
+        final String encryptedPassword = encryptor.encrypt(request.getPassword());
+        customerDao.save(new Customer(request.getUserName(), encryptedPassword));
     }
 
     public void deleteCustomerByName(final String customerName) {
@@ -40,8 +41,8 @@ public class CustomerService {
         return new CustomerResponse(customer.getUserName());
     }
 
-    public void editCustomerByName(final String customerName, final CustomerRequest editRequest) {
-        final String encryptedPassword = encryptor.encrypt(editRequest.getPassword());
+    public void editCustomerByName(final String customerName, final EditCustomerRequest request) {
+        final String encryptedPassword = encryptor.encrypt(request.getPassword());
         customerDao.updatePasswordByName(customerName, encryptedPassword);
     }
 

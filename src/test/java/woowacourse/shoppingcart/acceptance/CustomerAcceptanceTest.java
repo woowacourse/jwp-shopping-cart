@@ -10,7 +10,8 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
-import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -216,7 +217,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest(name, password))
+                .body(new SignUpRequest(name, password))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -251,7 +252,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest(name, password))
+                .body(new EditCustomerRequest(name, password))
                 .when().put("/api/customers/me")
                 .then().log().all()
                 .extract();

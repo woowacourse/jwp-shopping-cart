@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
@@ -24,7 +24,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("ellie", "Ellie1234!"))
+                .body(new SignUpRequest("ellie", "Ellie1234!"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -56,7 +56,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("ellie", "Ellie1234!"))
+                .body(new SignUpRequest("ellie", "Ellie1234!"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
@@ -80,7 +80,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerRequest("ellie", "Ellie1234!"))
+                .body(new SignUpRequest("ellie", "Ellie1234!"))
                 .when().post("/api/customers")
                 .then().log().all()
                 .extract();
