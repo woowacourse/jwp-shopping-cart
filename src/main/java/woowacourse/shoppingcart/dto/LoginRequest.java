@@ -1,13 +1,14 @@
-package woowacourse.auth.dto;
+package woowacourse.shoppingcart.dto;
 
-public class TokenRequest {
+public class LoginRequest {
+
     private String loginId;
     private String password;
 
-    public TokenRequest() {
+    public LoginRequest() {
     }
 
-    public TokenRequest(String loginId, String password) {
+    public LoginRequest(String loginId, String password) {
         this.loginId = loginId;
         this.password = password;
     }
