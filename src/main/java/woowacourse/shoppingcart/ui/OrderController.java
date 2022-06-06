@@ -1,19 +1,21 @@
 package woowacourse.shoppingcart.ui;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import woowacourse.shoppingcart.dto.request.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.application.OrderService;
-
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.dto.request.OrderRequest;
 
 @Validated
 @RestController
-@RequestMapping("/api/customers/{customerName}/orders")
+@RequestMapping("/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -29,7 +31,7 @@ public class OrderController {
                 URI.create("/api/" + customerName + "/orders/" + orderId)).build();
     }
 
-    @GetMapping("/{orderId}")
+    /*@GetMapping("/{orderId}")
     public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
                                             @PathVariable final Long orderId) {
         final Orders order = orderService.findOrderById(customerName, orderId);
@@ -40,5 +42,5 @@ public class OrderController {
     public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
         final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
         return ResponseEntity.ok(orders);
-    }
+    }*/
 }
