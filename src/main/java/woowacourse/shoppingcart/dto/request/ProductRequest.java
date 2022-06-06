@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.dto.request;
 
 public class ProductRequest {
 
-    private Long id;
     private String name;
     private Integer price;
     private String imageUrl;
@@ -10,8 +9,7 @@ public class ProductRequest {
     public ProductRequest() {
     }
 
-    public ProductRequest(final Long id, final String name, final int price, final String imageUrl) {
-        this.id = id;
+    public ProductRequest(final String name, final int price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -27,9 +25,5 @@ public class ProductRequest {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public Long getId() {
-        return id;
     }
 }

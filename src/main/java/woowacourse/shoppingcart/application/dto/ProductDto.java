@@ -21,7 +21,7 @@ public class ProductDto {
     }
 
     public static ProductDto from(final ProductRequest request) {
-        return new ProductDto(request.getId(), request.getName(), request.getPrice(), request.getImageUrl());
+        return new ProductDto(null, request.getName(), request.getPrice(), request.getImageUrl());
     }
 
     public static Product toProduct(final ProductDto productDto) {
