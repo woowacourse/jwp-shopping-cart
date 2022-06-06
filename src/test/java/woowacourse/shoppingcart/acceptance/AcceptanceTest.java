@@ -65,7 +65,7 @@ public class AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .body(passwordRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/members/auth/password-check")
+                .when().post("/api/members/password-check")
                 .then().log().all()
                 .extract();
     }
@@ -75,7 +75,7 @@ public class AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .when().get("/api/members/auth/me")
+                .when().get("/api/members/me")
                 .then().log().all()
                 .extract();
     }
