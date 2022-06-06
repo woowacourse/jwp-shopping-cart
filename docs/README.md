@@ -107,7 +107,7 @@
     - 회원 정보 조회
     - 회원 정보 수정
     - 회원 탈퇴
-    - [ ] username 중복 확인
+    - [x] username 중복 확인
     - [ ] email 중복 확인
 - 상품(product) 관련 기능
     - 상품 조회
@@ -126,6 +126,8 @@
 
 ### 레거시 리팩터링
 
+- [ ] dao에서 조회하는 값이 없느면 error를 반환하던 코드를 Optional을 반환하도록 수정
+- [ ] controller 중복 Path RequestMapping 으로 제거
 - [ ] cartItem 테이블에 quantity 칼럼 추가
 - [ ] product 테이블에 deleted (판매중인지) 칼럼 추가
 - [ ] 파라미터 final 제거

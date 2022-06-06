@@ -26,6 +26,8 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
+import woowacourse.shoppingcart.dto.customer.UsernameDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.UsernameDuplicateResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
@@ -42,9 +44,7 @@ class CustomerServiceTest {
     @DisplayName("customer를 저장한다.")
     @Test
     void save() {
-        CustomerSaveRequest request = MAT_SAVE_REQUEST;
-
-        CustomerResponse response = customerService.save(request);
+        CustomerResponse response = customerService.save(MAT_SAVE_REQUEST);
 
         assertAll(() -> {
             assertThat(response.getId()).isNotNull();
@@ -82,8 +82,7 @@ class CustomerServiceTest {
     @DisplayName("customer를 수정한다.")
     @Test
     void update() {
-        CustomerSaveRequest request = MAT_SAVE_REQUEST;
-        customerService.save(request);
+        customerService.save(MAT_SAVE_REQUEST);
 
         customerService.update(new LoginCustomer(MAT_USERNAME), UPDATE_REQUEST);
 
@@ -120,5 +119,23 @@ class CustomerServiceTest {
     void delete_error_notExist_username() {
         assertThatThrownBy(() -> customerService.delete(new LoginCustomer(YAHO_USERNAME)))
                 .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=ture를 반환한다.")
+    @Test
+    void checkDuplicateUsername_true() {
+        customerService.save(YAHO_SAVE_REQUEST);
+        UsernameDuplicateResponse response = customerService.checkDuplicate(
+                new UsernameDuplicateRequest(YAHO_USERNAME));
+        assertThat(response.isDuplicate()).isTrue();
+    }
+
+    @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=ture를 반환한다.")
+    @Test
+    void checkDuplicateUsername_false() {
+        customerService.save(YAHO_SAVE_REQUEST);
+        UsernameDuplicateResponse response = customerService.checkDuplicate(
+                new UsernameDuplicateRequest(MAT_USERNAME));
+        assertThat(response.isDuplicate()).isFalse();
     }
 }
