@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.EncodedPassword;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -28,7 +28,7 @@ public class CustomerDao {
                 rs.getLong("id"),
                 rs.getString("name"),
                 new Email(rs.getString("email")),
-                Password.fromHashedValue(rs.getString("password"))
+                new EncodedPassword(rs.getString("password"))
         );
     }
 

@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.application.dto.*;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.EncodedPassword;
+import woowacourse.shoppingcart.domain.PlainPassword;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -55,8 +56,9 @@ public class CustomerService {
     public void updatePassword(final CustomerPasswordUpdateServiceRequest request) {
         final Customer customer = findCustomerById(request.getId());
         customer.checkPasswordMatch(request.getOldPassword());
-        final String newPassword = request.getNewPassword();
-        final Customer updatedCustomer = customer.updatePassword(Password.fromRawValue(newPassword));
+        final PlainPassword plainPassword = new PlainPassword(request.getNewPassword());
+        final EncodedPassword encodedPassword = new EncodedPassword(plainPassword.encode());
+        final Customer updatedCustomer = customer.updatePassword(encodedPassword);
         customerDao.updateById(updatedCustomer);
     }
 }

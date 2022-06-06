@@ -2,7 +2,8 @@ package woowacourse.shoppingcart.application.dto;
 
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.EncodedPassword;
+import woowacourse.shoppingcart.domain.PlainPassword;
 
 public class CustomerSaveServiceRequest {
 
@@ -17,7 +18,8 @@ public class CustomerSaveServiceRequest {
     }
 
     public Customer toEntity() {
-        return new Customer(name, new Email(email), Password.fromRawValue(password));
+        final PlainPassword plainPassword = new PlainPassword(password);
+        return new Customer(name, new Email(email), new EncodedPassword(plainPassword.encode()));
     }
 
     public String getName() {

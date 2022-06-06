@@ -15,7 +15,8 @@ import woowacourse.shoppingcart.application.dto.*;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.EncodedPassword;
+import woowacourse.shoppingcart.domain.PlainPassword;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 import java.util.Optional;
 
@@ -25,6 +26,8 @@ class CustomerServiceTest {
     private static final String NAME = "라라";
     private static final String EMAIL = "lala.seeun@gmail.com";
     private static final String PASSWORD = "tpdmstpdms11";
+    private static final PlainPassword PLAIN_PASSWORD = new PlainPassword(PASSWORD);
+    private static final EncodedPassword ENCODED_PASSWORD = new EncodedPassword(PLAIN_PASSWORD.encode());
 
     @InjectMocks
     private CustomerService customerService;
@@ -40,7 +43,8 @@ class CustomerServiceTest {
                 PASSWORD);
         final Customer customer = new Customer(1L, customerSaveServiceRequest.getName(),
                 new Email(customerSaveServiceRequest.getEmail()),
-                Password.fromRawValue(customerSaveServiceRequest.getPassword()));
+                ENCODED_PASSWORD);
+
         when(customerDao.save(any(Customer.class)))
                 .thenReturn(customer);
 
@@ -72,7 +76,7 @@ class CustomerServiceTest {
                 PASSWORD);
         final Customer customer = new Customer(id, customerSaveServiceRequest.getName(),
                 new Email(customerSaveServiceRequest.getEmail()),
-                Password.fromRawValue(customerSaveServiceRequest.getPassword()));
+                ENCODED_PASSWORD);
         when(customerDao.findById(any(Long.class)))
                 .thenReturn(Optional.of(customer));
 
@@ -91,7 +95,7 @@ class CustomerServiceTest {
         final CustomerDeleteServiceRequest request
                 = new CustomerDeleteServiceRequest(1L, PASSWORD);
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
+                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), ENCODED_PASSWORD)));
         when(customerDao.deleteById(1L))
                 .thenReturn(1);
 
@@ -107,7 +111,7 @@ class CustomerServiceTest {
         final CustomerDeleteServiceRequest request
                 = new CustomerDeleteServiceRequest(1L, "1111111111");
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
+                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), ENCODED_PASSWORD)));
 
         // when, then
         assertThatThrownBy(() -> customerService.delete(request))
@@ -119,7 +123,7 @@ class CustomerServiceTest {
     void updateName() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
+                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), ENCODED_PASSWORD)));
         when(customerDao.updateById(any(Customer.class)))
                 .thenReturn(1);
 
@@ -134,7 +138,7 @@ class CustomerServiceTest {
     void updatePassword() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
+                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), ENCODED_PASSWORD)));
         when(customerDao.updateById(any(Customer.class)))
                 .thenReturn(1);
 
@@ -150,7 +154,7 @@ class CustomerServiceTest {
     void updatePassword_passwordNotMatch_throwsException() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
+                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), ENCODED_PASSWORD)));
 
         // when
         final CustomerPasswordUpdateServiceRequest request = new CustomerPasswordUpdateServiceRequest(1L,

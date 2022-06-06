@@ -6,7 +6,8 @@ public class CustomerPasswordUpdateServiceRequest {
     private final String oldPassword;
     private final String newPassword;
 
-    public CustomerPasswordUpdateServiceRequest(final Long id, final String oldPassword,
+    public CustomerPasswordUpdateServiceRequest(final Long id,
+                                                final String oldPassword,
                                                 final String newPassword) {
         this.id = id;
         this.oldPassword = oldPassword;

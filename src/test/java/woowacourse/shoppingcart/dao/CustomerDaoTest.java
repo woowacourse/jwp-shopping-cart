@@ -12,7 +12,8 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.EncodedPassword;
+import woowacourse.shoppingcart.domain.PlainPassword;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -24,7 +25,8 @@ public class CustomerDaoTest {
     private static final String RAW_EMAIL = "sunyong@gmail.com";
     private static final Email EMAIL = new Email(RAW_EMAIL);
     private static final String RAW_PASSWORD = "12345678";
-    private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD);
+    private static final PlainPassword PLAIN_PASSWORD = new PlainPassword(RAW_PASSWORD);
+    private static final EncodedPassword PASSWORD = new EncodedPassword(PLAIN_PASSWORD.encode());
 
     private final CustomerDao customerDao;
 
@@ -157,7 +159,8 @@ public class CustomerDaoTest {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
         final Customer savedCustomer = customerDao.save(customer);
-        final Password newPassword = Password.fromRawValue("newpassword123");
+        final PlainPassword plainPassword = new PlainPassword("newpassword123");
+        final EncodedPassword newPassword = new EncodedPassword(plainPassword.encode());
 
         // when
         final Customer updatedCustomer = new Customer(savedCustomer.getId(), NAME, EMAIL, newPassword);

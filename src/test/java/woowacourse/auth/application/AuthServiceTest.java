@@ -17,14 +17,16 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.EncodedPassword;
+import woowacourse.shoppingcart.domain.PlainPassword;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
     private static final String RAW_PASSWORD = "12345678";
-    private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD);
+    private static final PlainPassword PLAIN_PASSWORD = new PlainPassword(RAW_PASSWORD);
+    private static final EncodedPassword PASSWORD = new EncodedPassword(PLAIN_PASSWORD.encode());
 
     @InjectMocks
     private AuthService authService;
