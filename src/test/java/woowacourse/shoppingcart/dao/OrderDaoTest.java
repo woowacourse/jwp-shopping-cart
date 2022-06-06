@@ -3,12 +3,16 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -18,12 +22,20 @@ import org.springframework.test.context.jdbc.Sql;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrderDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final OrderDao orderDao;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
+    private final DataSource dataSource;
+    private final SimpleJdbcInsert simpleInsert;
 
-    public OrderDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.orderDao = new OrderDao(jdbcTemplate);
+    public OrderDaoTest(final JdbcTemplate jdbcTemplate,
+                        final NamedParameterJdbcTemplate  namedJdbcTemplate,
+                        final DataSource dataSource) {
+        this.namedJdbcTemplate = namedJdbcTemplate;
+        this.dataSource = dataSource;
+        this.orderDao = new OrderDao(namedJdbcTemplate, dataSource);
+        simpleInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("orders")
+                .usingGeneratedKeyColumns("id");
     }
 
     @DisplayName("Order를 추가하는 기능")
@@ -44,8 +56,8 @@ class OrderDaoTest {
     void findOrderIdsByCustomerId() {
         //given
         final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        simpleInsert.execute(Map.of("customer_id", customerId));
+        simpleInsert.execute(Map.of("customer_id", customerId));
 
         //when
         final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
