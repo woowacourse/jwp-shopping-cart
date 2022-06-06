@@ -1,11 +1,13 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
+import woowacourse.shoppingcart.dto.ProductRequest;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -20,7 +22,14 @@ public class ProductService {
         return productDao.findProducts();
     }
 
-    public Long addProduct(final Product product) {
+    public Long addProduct(final ProductRequest productRequest) {
+        Product product = new Product(
+            productRequest.getName(),
+            productRequest.getPrice(),
+            productRequest.getStock(),
+            productRequest.getImageURL()
+        );
+
         return productDao.save(product);
     }
 

@@ -37,7 +37,7 @@
 - Product
   - [ ] `GET /api/products` 상품 전체 조회 api
   - [ ] `GET /api/products/{productId}` 상품 단일 조회 api
-  - [ ] `POST /api/products` 상품 추가 api
+  - [x] `POST /api/products` 상품 추가 api
   - [ ] `DELETE /api/products/{productId}` 상품 삭제 api
 
     
