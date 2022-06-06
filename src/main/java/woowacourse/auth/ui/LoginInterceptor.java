@@ -26,8 +26,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         String token = AuthorizationExtractor.extract(request);
-        validateAvailableToken(token);
         validateNotToken(token);
+        validateAvailableToken(token);
         return true;
     }
 
