@@ -41,7 +41,8 @@ public class ProductDao {
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                     new Product(
                             productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
+                            resultSet.getString("name"),
+                            resultSet.getInt("price"),
                             resultSet.getString("thumbnail")
                     ), productId
             );
@@ -52,14 +53,13 @@ public class ProductDao {
 
     public List<Product> findProducts() {
         final String query = "SELECT id, name, price, thumbnail FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("thumbnail")
-                        ));
+        return jdbcTemplate.query(query, (resultSet, rowNumber) ->
+                new Product(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("price"),
+                        resultSet.getString("thumbnail")
+                ));
     }
 
     public void delete(final Long productId) {
