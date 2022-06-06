@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.ProductFindResponse;
 import woowacourse.shoppingcart.dto.ProductSaveRequest;
 import woowacourse.utils.AcceptanceTest;
 
@@ -122,8 +123,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
-        Product resultProduct = response.as(Product.class);
-        assertThat(resultProduct.getId()).isEqualTo(productId);
+        ProductFindResponse resultProduct = response.as(ProductFindResponse.class);
+        assertThat(resultProduct.getProductId()).isEqualTo(productId);
     }
 
     public static void 상품_삭제됨(ExtractableResponse<Response> response) {

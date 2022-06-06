@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.ProductFindResponse;
 import woowacourse.shoppingcart.dto.ProductSaveRequest;
 import woowacourse.shoppingcart.dto.ProductSaveResponse;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -25,8 +27,10 @@ public class ProductService {
         return new ProductSaveResponse(productDao.save(request.toEntity()));
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductFindResponse findProductById(final Long productId) {
+        Product product = productDao.findProductById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("상품이 존재하지 않습니다"));
+        return new ProductFindResponse(product);
     }
 
     public void deleteProductById(final Long productId) {

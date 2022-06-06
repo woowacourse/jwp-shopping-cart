@@ -1,22 +1,25 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
 import static woowacourse.utils.Fixture.치킨;
 
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.ProductFindResponse;
 import woowacourse.shoppingcart.dto.ProductSaveRequest;
 import woowacourse.shoppingcart.dto.ProductSaveResponse;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 @ExtendWith({MockitoExtension.class})
 class ProductServiceTest {
@@ -28,7 +31,7 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("상품을 추가한다.")
-    void test() {
+    void add_product() {
         // given
         ProductSaveRequest request = new ProductSaveRequest(치킨.getName(), 치킨.getPrice(), 치킨.getImage());
         Product saved = new Product(1L, 치킨.getName(), 치킨.getPrice(), 치킨.getImage());
@@ -44,4 +47,35 @@ class ProductServiceTest {
                 () -> assertThat(productResponse.getImage()).isEqualTo(치킨.getImage())
         );
     }
+
+    @Test
+    @DisplayName("상품을 있는 경우 상품을 조회해서 반환한다.")
+    void find_product_exist() {
+        // given
+        Product saved = new Product(1L, 치킨.getName(), 치킨.getPrice(), 치킨.getImage());
+        given(productDao.findProductById(any(Long.class))).willReturn(Optional.of(saved));
+
+        // when
+        ProductFindResponse findResponse = productService.findProductById(1L);
+
+        // then
+        assertAll(
+                () -> assertThat(findResponse.getName()).isEqualTo(치킨.getName()),
+                () -> assertThat(findResponse.getPrice()).isEqualTo(치킨.getPrice()),
+                () -> assertThat(findResponse.getImage()).isEqualTo(치킨.getImage())
+        );
+    }
+
+    @Test
+    @DisplayName("상품이 없는 경우 예외를 반환한다.")
+    void find_product_not_exist() {
+        // given
+        Product saved = new Product(1L, 치킨.getName(), 치킨.getPrice(), 치킨.getImage());
+        given(productDao.findProductById(any(Long.class))).willReturn(Optional.empty());
+
+        // when
+        assertThatThrownBy(() -> productService.findProductById(1L))
+                .isInstanceOf(ProductNotFoundException.class);
+    }
+
 }

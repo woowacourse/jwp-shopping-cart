@@ -43,14 +43,11 @@ public class ProductDaoTest {
     @Test
     void findProductById() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Product saved = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(saved.getId(), name, price, imageUrl);
+        Product saved = productDao.save(초콜렛);
+        Product expectedProduct = new Product(saved.getId(), 초콜렛.getName(), 초콜렛.getPrice(), 초콜렛.getImage());
 
         // when
-        final Product product = productDao.findProductById(saved.getId());
+        Product product = productDao.findProductById(saved.getId()).get();
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
