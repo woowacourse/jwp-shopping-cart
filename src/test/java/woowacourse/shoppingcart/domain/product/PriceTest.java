@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.shoppingcart.exception.InvalidPriceException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidPriceException;
 
 public class PriceTest {
 

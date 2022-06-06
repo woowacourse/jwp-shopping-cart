@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.domain.product;
 
-import woowacourse.shoppingcart.exception.InvalidPriceException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidPriceException;
 
 public class Price {
 

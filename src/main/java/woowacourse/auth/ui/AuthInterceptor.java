@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.auth.exception.UnauthorizedException;
+import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedException;
 import woowacourse.auth.support.JwtTokenExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 

@@ -6,10 +6,12 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
 
 import java.util.List;
+import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 
 @Service
 @Transactional
 public class ProductService {
+
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {
@@ -25,7 +27,8 @@ public class ProductService {
     }
 
     public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+        return productDao.findProductById(productId)
+                .orElseThrow(NotFoundProductException::new);
     }
 
     public void deleteProductById(final Long productId) {
