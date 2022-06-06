@@ -45,9 +45,8 @@ public class JwtTokenProvider implements TokenProvider {
         try {
             final Claims body = extractBody(token);
 
-            return body.keySet()
+            return body.entrySet()
                     .stream()
-                    .map(key -> Map.entry(key, body.get(key)))
                     .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
         } catch (JwtException | IllegalArgumentException e) {
             throw new TokenInvalidException();
