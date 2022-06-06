@@ -1,26 +1,20 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.dao.dto;
 
 import woowacourse.shoppingcart.domain.product.Product;
 
-public class Cart {
+public class ProductDto {
 
     private final Long id;
-    private final Long productId;
     private final String name;
     private final int price;
     private final String imageUrl;
 
-    public Cart() {
-        this(null, null, null, 0, null);
+    public ProductDto(Product product) {
+        this(null, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public Cart(Long id, Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-    }
-
-    public Cart(Long id, Long productId, String name, int price, String imageUrl) {
+    public ProductDto(Long id, String name, int price, String imageUrl) {
         this.id = id;
-        this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -28,10 +22,6 @@ public class Cart {
 
     public Long getId() {
         return id;
-    }
-
-    public Long getProductId() {
-        return productId;
     }
 
     public String getName() {

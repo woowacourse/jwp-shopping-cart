@@ -1,28 +1,27 @@
 package woowacourse.shoppingcart.domain;
 
-import woowacourse.shoppingcart.dto.Product;
+import woowacourse.shoppingcart.domain.product.Product;
 
 public class OrderDetail {
-    private Long productId;
-    private int quantity;
-    private int price;
-    private String name;
-    private String imageUrl;
+    private final Long productId;
+    private final int price;
+    private final String name;
+    private final String imageUrl;
+    private final int quantity;
 
     public OrderDetail() {
+        this(null, 0, null, null, 0);
     }
 
-    public OrderDetail(final Long productId, final int quantity) {
-        this.productId = productId;
-        this.quantity = quantity;
+    public OrderDetail(Long productId, int quantity) {
+        this(productId, 0, null, null, quantity);
     }
 
-    public OrderDetail(final Product product, final int quantity) {
+    public OrderDetail(Product product, int quantity) {
         this(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
     }
 
-    public OrderDetail(final Long productId, final int price, final String name,
-                       final String imageUrl, final int quantity) {
+    public OrderDetail(Long productId, int price, String name, String imageUrl, int quantity) {
         this.productId = productId;
         this.price = price;
         this.name = name;

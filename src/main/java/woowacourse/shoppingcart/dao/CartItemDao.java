@@ -1,21 +1,29 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.List;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
-import java.sql.PreparedStatement;
-import java.util.List;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
+    public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
@@ -39,17 +47,10 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+    public Long addCartItem(Long customerId, Long productId) {
+        SqlParameterSource parameterSource = new MapSqlParameterSource("customerId", customerId)
+                .addValue("productId", productId);
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
     public void deleteCartItem(final Long id) {

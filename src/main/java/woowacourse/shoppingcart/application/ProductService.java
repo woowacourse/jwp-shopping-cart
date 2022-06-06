@@ -1,34 +1,41 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.dto.Product;
 
-import java.util.List;
+import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.product.ProductRequest;
+import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ProductService {
     private final ProductDao productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public List<ProductResponse> findProducts() {
+        return productDao.findProducts().stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    public Long addProduct(ProductRequest productRequest) {
+        return productDao.save(productRequest.toProduct());
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponse findProductById(Long productId) {
+        Product product = productDao.findProductById(productId);
+        return new ProductResponse(product);
     }
 
-    public void deleteProductById(final Long productId) {
+    public void deleteProductById(Long productId) {
         productDao.delete(productId);
     }
 }
