@@ -1,12 +1,12 @@
-package woowacourse.shoppingcart.unit.config;
+package woowacourse.shoppingcart.config;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedTokenException;
-import woowacourse.shoppingcart.unit.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.unit.support.JwtTokenProvider;
+import woowacourse.shoppingcart.support.AuthorizationExtractor;
+import woowacourse.shoppingcart.support.JwtTokenProvider;
 
 public class LoginInterceptor implements HandlerInterceptor {
 

@@ -13,7 +13,7 @@ import woowacourse.shoppingcart.auth.ui.AuthController;
 import woowacourse.shoppingcart.customer.application.CustomerService;
 import woowacourse.shoppingcart.customer.ui.CustomerController;
 import woowacourse.shoppingcart.customer.domain.Customer;
-import woowacourse.shoppingcart.unit.support.JwtTokenProvider;
+import woowacourse.shoppingcart.support.JwtTokenProvider;
 
 @WebMvcTest({
         AuthController.class,

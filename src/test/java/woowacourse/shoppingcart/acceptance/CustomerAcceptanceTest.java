@@ -14,7 +14,7 @@ import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.auth.dto.LoginResponse;
-import woowacourse.shoppingcart.unit.support.AuthorizationExtractor;
+import woowacourse.shoppingcart.support.AuthorizationExtractor;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {

@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static woowacourse.shoppingcart.unit.config.WebConfig.ALLOWED_METHOD_NAMES;
+import static woowacourse.shoppingcart.config.WebConfig.ALLOWED_METHOD_NAMES;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.shoppingcart.customer.application.CustomerService;
 import woowacourse.shoppingcart.product.application.ProductService;
-import woowacourse.shoppingcart.unit.support.JwtTokenProvider;
+import woowacourse.shoppingcart.support.JwtTokenProvider;
 import woowacourse.shoppingcart.customer.ui.CustomerController;
 import woowacourse.shoppingcart.product.ui.ProductController;
 

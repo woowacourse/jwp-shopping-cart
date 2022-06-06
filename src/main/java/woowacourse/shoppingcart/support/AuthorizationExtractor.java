@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.unit.support;
+package woowacourse.shoppingcart.support;
 
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;

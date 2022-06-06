@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.unit.config;
+package woowacourse.shoppingcart.config;
 
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.shoppingcart.customer.application.CustomerService;
-import woowacourse.shoppingcart.unit.support.JwtTokenProvider;
+import woowacourse.shoppingcart.support.JwtTokenProvider;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
