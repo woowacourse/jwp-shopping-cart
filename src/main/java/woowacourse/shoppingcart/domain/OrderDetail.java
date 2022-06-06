@@ -5,7 +5,7 @@ public class OrderDetail {
     private int quantity;
     private int price;
     private String name;
-    private String thumbnail;
+    private String imageUrl;
 
     public OrderDetail() {
     }
@@ -16,15 +16,15 @@ public class OrderDetail {
     }
 
     public OrderDetail(final Product product, final int quantity) {
-        this(product.getId(), product.getPrice(), product.getName(), product.getThumbnail(), quantity);
+        this(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
     }
 
     public OrderDetail(final Long productId, final int price, final String name,
-                       final String thumbnail, final int quantity) {
+                       final String imageUrl, final int quantity) {
         this.productId = productId;
         this.price = price;
         this.name = name;
-        this.thumbnail = thumbnail;
+        this.imageUrl = imageUrl;
         this.quantity = quantity;
     }
 
@@ -40,8 +40,8 @@ public class OrderDetail {
         return name;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public int getQuantity() {

@@ -20,14 +20,15 @@ public class CustomerDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    private final RowMapper<Customer> customerRowMapper = (resultSet, rowNum) -> new Customer(
-            resultSet.getLong("id"),
-            resultSet.getString("email"),
-            new Password(resultSet.getString("password")),
-            resultSet.getString("name"),
-            resultSet.getString("phone"),
-            resultSet.getString("address")
-    );
+    private final RowMapper<Customer> customerRowMapper = (resultSet, rowNum) ->
+            new Customer(
+                    resultSet.getLong("id"),
+                    resultSet.getString("email"),
+                    new Password(resultSet.getString("password")),
+                    resultSet.getString("name"),
+                    resultSet.getString("phone"),
+                    resultSet.getString("address")
+            );
 
     public CustomerDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
