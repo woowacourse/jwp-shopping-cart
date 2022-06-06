@@ -61,20 +61,17 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         주문하기_성공함(response);
     }
 
-    //
-    // @DisplayName("주문 내역 조회")
-    // @Disabled
-    // @Test
-    // void getOrders() {
-    //     Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-    //     Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
-    //
-    //     ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
-    //
-    //     주문_조회_응답됨(response);
-    //     주문_내역_포함됨(response, orderId1, orderId2);
-    // }
-    //
+    @DisplayName("주문 내역 조회")
+    @Test
+    void getOrders() {
+        final Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, orderRequests);
+
+        final ExtractableResponse<Response> response = 주문_내역_조회_요청(accessToken);
+
+        주문_조회_응답됨(response);
+        주문_내역_포함됨(response, orderId1);
+    }
+
     @DisplayName("주문 단일 조회")
     @Test
     void getOrder() {
@@ -98,15 +95,15 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    //
-    // public static ExtractableResponse<Response> 주문_내역_조회_요청(String userName) {
-    //     return RestAssured
-    //             .given().log().all()
-    //             .contentType(MediaType.APPLICATION_JSON_VALUE)
-    //             .when().get("/api/customers/{customerName}/orders", userName)
-    //             .then().log().all()
-    //             .extract();
-    // }
+    public static ExtractableResponse<Response> 주문_내역_조회_요청(final String accessToken) {
+        return RestAssured
+            .given().log().all()
+            .auth().oauth2(accessToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/orders")
+            .then().log().all()
+            .extract();
+    }
 
     public static ExtractableResponse<Response> 주문_단일_조회_요청(final String accessToken, final Long orderId) {
         return RestAssured
@@ -132,12 +129,12 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    // public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-    //     List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-    //             .map(Orders::getId)
-    //             .collect(Collectors.toList());
-    //     assertThat(resultOrderIds).contains(orderIds);
-    // }
+    public static void 주문_내역_포함됨(final ExtractableResponse<Response> response, final Long... orderIds) {
+        final List<Long> resultOrderIds = response.jsonPath().getList(".", OrderResponse.class).stream()
+                .map(OrderResponse::getId)
+                .collect(Collectors.toList());
+        assertThat(resultOrderIds).contains(orderIds);
+    }
 
     private void 주문_조회됨(final ExtractableResponse<Response> response, final Long orderId) {
         final OrderResponse resultOrder = response.as(OrderResponse.class);

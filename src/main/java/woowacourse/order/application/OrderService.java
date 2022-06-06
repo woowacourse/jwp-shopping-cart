@@ -1,6 +1,7 @@
 package woowacourse.order.application;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +51,7 @@ public class OrderService {
 
     public OrderResponse findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
-        return OrderResponse.from(orderId, ordersDetailDao.findOrdersDetailsByOrderId(orderId));
+        return findOrderResponseByOrderId(orderId);
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
@@ -60,24 +61,17 @@ public class OrderService {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
-    //
-    // public List<Orders> findOrdersByCustomerName(final String customerName) {
-    //     final Long customerId = customerDao.findIdByUserName(customerName);
-    //     final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
-    //
-    //     return orderIds.stream()
-    //             .map(orderId -> findOrderResponseDtoByOrderId(orderId))
-    //             .collect(Collectors.toList());
-    // }
-    //
-    // private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-    //     final List<OrderDetail> ordersDetails = new ArrayList<>();
-    //     for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-    //         //final Product product = productDao.findProductById(productQuantity.getProductId());
-    //         final int quantity = productQuantity.getQuantity();
-    //         //ordersDetails.add(new OrderDetail(product, quantity));
-    //     }
-    //
-    //     return new Orders(orderId, ordersDetails);
-    // }
+
+    public List<OrderResponse> findOrdersByCustomerName(final String customerName) {
+        final Long customerId = customerDao.findIdByUserName(customerName);
+        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+
+        return orderIds.stream()
+                .map(this::findOrderResponseByOrderId)
+                .collect(Collectors.toList());
+    }
+
+    private OrderResponse findOrderResponseByOrderId(final Long orderId) {
+        return OrderResponse.from(orderId, ordersDetailDao.findOrdersDetailsByOrderId(orderId));
+    }
 }

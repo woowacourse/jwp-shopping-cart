@@ -43,10 +43,9 @@ public class OrderController {
     ) {
         return ResponseEntity.ok(orderService.findOrderById(username, orderId));
     }
-    //
-    // @GetMapping
-    // public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-    //     final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
-    //     return ResponseEntity.ok(orders);
-    // }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> findOrders(@AuthenticationPrincipal final String username) {
+        return ResponseEntity.ok(orderService.findOrdersByCustomerName(username));
+    }
 }

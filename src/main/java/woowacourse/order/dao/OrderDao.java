@@ -1,5 +1,7 @@
 package woowacourse.order.dao;
 
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -26,11 +28,12 @@ public class OrderDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    // public List<Long> findOrderIdsByCustomerId(final Long customerId) {
-    //     final String sql = "SELECT id FROM orders WHERE customer_id = ? ";
-    //     return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    // }
-    //
+    public List<Long> findOrderIdsByCustomerId(final Long customerId) {
+        final String sql = "SELECT id FROM orders WHERE customer_id = :customer_id";
+        final SqlParameterSource params = new MapSqlParameterSource("customer_id", customerId);
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
+    }
+
     public boolean isValidOrderId(final Long customerId, final Long orderId) {
         final String sql = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = :customer_id AND id = :id)";
         final SqlParameterSource params = new MapSqlParameterSource("customer_id", customerId)
