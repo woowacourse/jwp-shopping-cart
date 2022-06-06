@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.application.dto;
 
 import woowacourse.shoppingcart.domain.address.FullAddress;
-import woowacourse.shoppingcart.dto.AddressRequest;
+import woowacourse.shoppingcart.dto.request.AddressRequest;
 
 public class AddressDto {
 

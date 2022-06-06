@@ -1,6 +1,8 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.request;
 
-public class ModifiedCustomerRequest {
+import woowacourse.shoppingcart.dto.request.AddressRequest;
+
+public class SignUpRequest {
 
     private String email;
     private String password;
@@ -9,16 +11,15 @@ public class ModifiedCustomerRequest {
     private String gender;
     private String birthday;
     private String contact;
-    private AddressRequest address;
+    private AddressRequest fullAddress;
     private boolean terms;
 
-    public ModifiedCustomerRequest() {
+    public SignUpRequest() {
     }
 
-    public ModifiedCustomerRequest(String email, String password, String profileImageUrl, String name, String gender,
-                                   String birthday, String contact, String address, String detailAddress,
-                                   String zoneCode,
-                                   boolean terms) {
+    public SignUpRequest(String email, String password, String profileImageUrl, String name, String gender,
+                         String birthday, String contact, String address, String detailAddress, String zoneCode,
+                         boolean terms) {
         this.email = email;
         this.password = password;
         this.profileImageUrl = profileImageUrl;
@@ -26,7 +27,7 @@ public class ModifiedCustomerRequest {
         this.gender = gender;
         this.birthday = birthday;
         this.contact = contact;
-        this.address = new AddressRequest(address, detailAddress, zoneCode);
+        this.fullAddress = new AddressRequest(address, detailAddress, zoneCode);
         this.terms = terms;
     }
 
@@ -58,11 +59,12 @@ public class ModifiedCustomerRequest {
         return contact;
     }
 
-    public AddressRequest getAddress() {
-        return address;
+    public AddressRequest getFullAddress() {
+        return fullAddress;
     }
 
     public boolean isTerms() {
         return terms;
     }
+
 }

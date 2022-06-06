@@ -9,7 +9,7 @@ import woowacourse.shoppingcart.domain.customer.Name;
 import woowacourse.shoppingcart.domain.customer.Terms;
 import woowacourse.shoppingcart.domain.customer.password.PasswordFactory;
 import woowacourse.shoppingcart.domain.customer.password.PasswordType;
-import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
 public class CustomerDto {
 

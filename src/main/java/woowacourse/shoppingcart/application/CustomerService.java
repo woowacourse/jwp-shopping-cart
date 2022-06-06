@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.password.Password;
 import woowacourse.shoppingcart.domain.customer.password.PasswordFactory;
 import woowacourse.shoppingcart.domain.customer.password.PasswordType;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Service

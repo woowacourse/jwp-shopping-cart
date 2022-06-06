@@ -21,7 +21,7 @@ import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.dao.CustomerFixture;
-import woowacourse.shoppingcart.dto.AddressRequest;
+import woowacourse.shoppingcart.dto.request.AddressRequest;
 
 @SpringBootTest
 @DisplayName("CustomerService 는")
