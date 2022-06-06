@@ -3,12 +3,15 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import javax.sql.DataSource;
+import javax.xml.crypto.Data;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
@@ -20,9 +23,15 @@ import woowacourse.shoppingcart.domain.Product;
 public class ProductDaoTest {
 
     private final ProductDao productDao;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
+    private final DataSource dataSource;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+    public ProductDaoTest(final JdbcTemplate jdbcTemplate,
+                          final NamedParameterJdbcTemplate namedJdbcTemplate,
+                          final DataSource dataSource) {
+        this.namedJdbcTemplate = namedJdbcTemplate;
+        this.dataSource = dataSource;
+        this.productDao = new ProductDao(namedJdbcTemplate, dataSource);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")

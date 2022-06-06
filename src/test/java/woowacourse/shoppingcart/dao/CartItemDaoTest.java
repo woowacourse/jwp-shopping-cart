@@ -26,17 +26,15 @@ public class CartItemDaoTest {
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final DataSource dataSource;
 
-    public CartItemDaoTest(final NamedParameterJdbcTemplate namedJdbcTemplate, final DataSource dataSource,
-                           final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public CartItemDaoTest(final NamedParameterJdbcTemplate namedJdbcTemplate,
+                           final DataSource dataSource) {
         this.namedJdbcTemplate = namedJdbcTemplate;
         this.dataSource = dataSource;
         cartItemDao = new CartItemDao(namedJdbcTemplate, dataSource);
-        productDao = new ProductDao(jdbcTemplate);
+        productDao = new ProductDao(namedJdbcTemplate, dataSource);
     }
 
     @BeforeEach
