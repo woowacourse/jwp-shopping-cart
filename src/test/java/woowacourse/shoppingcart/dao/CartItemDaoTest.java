@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
@@ -19,6 +20,11 @@ import woowacourse.shoppingcart.domain.Product;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
+
+    private final int stockQuantity = 10;
+    private final String imageUrl = "www.test.com";
+    private final String imageAlt = "ImageAlt";
+    private final Image image = new Image(imageUrl, imageAlt);
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
@@ -32,8 +38,8 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        productDao.save(new Product("banana", 1_000, stockQuantity, image));
+        productDao.save(new Product("apple", 2_000, stockQuantity, image));
 
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);

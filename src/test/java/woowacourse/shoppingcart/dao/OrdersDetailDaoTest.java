@@ -21,6 +21,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 class OrdersDetailDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ProductDao productDao;
     private final OrdersDetailDao ordersDetailDao;
     private long ordersId;
     private long productId;
@@ -28,7 +29,8 @@ class OrdersDetailDaoTest {
 
     public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
+        this.productDao = new ProductDao(jdbcTemplate);
+        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate, productDao);
     }
 
     @BeforeEach

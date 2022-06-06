@@ -1,6 +1,19 @@
 package woowacourse.shoppingcart.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,26 +22,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.Username;
+import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.service.OrderService;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class OrderControllerTest {
+
+    private final Customer customer = new Customer(Email.of("test@gmail.com"), Password.ofWithEncryption("password1!"), Username.of("aki"));
 
     @Autowired
     private MockMvc mockMvc;
@@ -75,7 +84,8 @@ public class OrderControllerTest {
         final String customerName = "pobi";
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
+                customer,
+                Collections.singletonList(new OrderDetail(new Product(2L, "banana", 1_000, 20, new Image("imageUrl", "imageAlt")), 2)));
 
         when(orderService.findOrderById(customerName, orderId))
                 .thenReturn(expected);
@@ -85,10 +95,10 @@ public class OrderControllerTest {
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
-                .andExpect(jsonPath("orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("orderDetails[0].imageUrl").value("imageUrl"))
+                .andExpect(jsonPath("orderDetails[0]..product[0].id").value(2L))
+                .andExpect(jsonPath("orderDetails[0]..product[0].price").value(1_000))
+                .andExpect(jsonPath("orderDetails[0]..product[0].name").value("banana"))
+                .andExpect(jsonPath("orderDetails[0]..product[0].imageUrl").value("imageUrl"))
                 .andExpect(jsonPath("orderDetails[0].quantity").value(2));
     }
 
@@ -98,10 +108,10 @@ public class OrderControllerTest {
         // given
         final String customerName = "pobi";
         final List<Orders> expected = Arrays.asList(
-                new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
-                new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
+                new Orders(1L, customer, Collections.singletonList(
+                        new OrderDetail(new Product(1L, "banana", 1_000, 20, new Image("imageUrl", "imageAlt")), 2))),
+                new Orders(2L, customer, Collections.singletonList(
+                        new OrderDetail(new Product(2L, "apple", 2_000, 20, new Image("imageUrl2", "imageAlt")), 4)))
         );
 
         when(orderService.findOrdersByCustomerName(customerName))
@@ -112,17 +122,17 @@ public class OrderControllerTest {
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))
-                .andExpect(jsonPath("$[0].orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("$[0].orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("$[0].orderDetails[0].imageUrl").value("imageUrl"))
+                .andExpect(jsonPath("$[0].orderDetails[0].product[0].id").value(1L))
+                .andExpect(jsonPath("$[0].orderDetails[0].product[0].price").value(1_000))
+                .andExpect(jsonPath("$[0].orderDetails[0].product[0].name").value("banana"))
+                .andExpect(jsonPath("$[0].orderDetails[0].product[0].imageUrl").value("imageUrl"))
                 .andExpect(jsonPath("$[0].orderDetails[0].quantity").value(2))
 
                 .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("$[1].orderDetails[0].price").value(2_000))
-                .andExpect(jsonPath("$[1].orderDetails[0].name").value("apple"))
-                .andExpect(jsonPath("$[1].orderDetails[0].imageUrl").value("imageUrl2"))
+                .andExpect(jsonPath("$[1].orderDetails[0].product[0].id").value(2L))
+                .andExpect(jsonPath("$[1].orderDetails[0].product[0].price").value(2_000))
+                .andExpect(jsonPath("$[1].orderDetails[0].product[0].name").value("apple"))
+                .andExpect(jsonPath("$[1].orderDetails[0].product[0].imageUrl").value("imageUrl2"))
                 .andExpect(jsonPath("$[1].orderDetails[0].quantity").value(4));
     }
 }

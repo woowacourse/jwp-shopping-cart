@@ -1,68 +1,76 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
 public class ProductDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
-            return preparedStatement;
-        }, keyHolder);
+        Long imageId = saveImage(product.getImage());
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("name", product.getName());
+        parameterSource.addValue("price", product.getPrice());
+        parameterSource.addValue("stock_quantity", product.getStockQuantity());
+        parameterSource.addValue("image_id", imageId);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public Product findProductById(final Long productId) {
-        try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
-        }
+    private Long saveImage(Image image) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("image_url", image.getUrl());
+        parameterSource.addValue("image_alt", image.getAlt());
+
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
+    }
+
+    public Product findProductById(final Long id) {
+        final String query = "SELECT id, name, price, stock_quantity,"
+                + " image.url AS image_url, image.alt AS image_alt"
+                + " FROM product INNER JOIN image ON product.image_id = image.id"
+                + " WHERE id = :id";
+
+        return jdbcTemplate.queryForObject(query, Map.of("id", id), PRODUCT_ROW_MAPPER);
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
-                        ));
+        final String query = "SELECT id, name, price, stock_quantity,"
+                + " image.url AS image_url, image.alt AS image_alt"
+                + " FROM product INNER JOIN image ON product.image_id = image.id";
+
+        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
     }
 
-    public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+    public void deleteById(final Long id) {
+        final String query = "DELETE FROM product WHERE id = :id";
+        jdbcTemplate.update(query, Map.of("id", id));
     }
+
+    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (resultSet, rowNum) -> new Product(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getInt("price"),
+            resultSet.getInt("stock_quantity"),
+            new Image(resultSet.getString("image_url"),
+                    resultSet.getString("image_alt"))
+    );
 }
