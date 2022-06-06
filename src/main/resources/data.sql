@@ -25,3 +25,8 @@ values ('puterism', '1234', 'nick1', false),
        ('yujo11', '1234', 'nick24', false),
        ('sunhpark42', '1234', 'nick25', false)
 ;
+
+insert into product (name, price, image_url)
+values ('치킨', 10000, 'http://example.com/chicken.jpg'),
+       ('맥주', 20000, 'http://example.com/beer.jpg')
+;

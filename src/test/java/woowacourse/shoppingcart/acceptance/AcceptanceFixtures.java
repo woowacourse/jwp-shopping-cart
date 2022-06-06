@@ -68,7 +68,8 @@ public class AcceptanceFixtures {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 비밀번호_변경(PasswordChangeRequest passwordChangeRequest, String accessToken) {
+    public static ExtractableResponse<Response> 비밀번호_변경(PasswordChangeRequest passwordChangeRequest,
+                                                        String accessToken) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
