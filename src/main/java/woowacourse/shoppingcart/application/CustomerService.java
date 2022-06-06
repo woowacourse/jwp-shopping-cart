@@ -92,12 +92,12 @@ public class CustomerService {
     }
 
     private Customer createCustomerForUpdate(final CustomerUpdateRequest customerUpdateRequest, final Customer customer) {
-        return new Customer(customer.getId(), customer.getUserId(),
+        return Customer.from(customer.getId(), customer.getUserId(),
                 customerUpdateRequest.getNickname(), customer.getPassword());
     }
 
     private Customer createCustomerForUpdatePassword(final CustomerUpdatePasswordRequest customerUpdatePasswordRequest, final Customer customer) {
-        return new Customer(customer.getId(), customer.getUserId(),
+        return Customer.from(customer.getId(), customer.getUserId(),
                 customer.getNickname(), customerUpdatePasswordRequest.getNewPassword());
     }
 }

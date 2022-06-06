@@ -18,7 +18,7 @@ import java.util.Optional;
 public class CustomerDao {
 
     private static final RowMapper<Customer> CUSTOMER_ROW_MAPPER = (resultSet, rowNum) -> {
-        return new Customer(
+        return Customer.from(
                 resultSet.getLong("id"),
                 resultSet.getString("user_id"),
                 resultSet.getString("nickname"),

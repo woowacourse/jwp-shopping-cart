@@ -18,7 +18,7 @@ class CustomerTest {
     @Test
     void userIdNullException() {
         // when & then
-        assertThatThrownBy(() -> new Customer(null, null, "유콩", "1234"))
+        assertThatThrownBy(() -> Customer.from(null, null, "유콩", "1234asdf!"))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("아이디를 입력해주세요.");
     }
@@ -28,7 +28,7 @@ class CustomerTest {
     @DisplayName("아이디에 빈값을 입력하면 예외가 발생한다.")
     void userIdBlankException(String userId) {
         // when & then
-        assertThatThrownBy(() -> new Customer(null, userId, "유콩", "1234"))
+        assertThatThrownBy(() -> Customer.from(null, userId, "유콩", "1234asdf!"))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("아이디를 입력해주세요.");
     }
@@ -37,7 +37,7 @@ class CustomerTest {
     @Test
     void nicknameNullException() {
         // when & then
-        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", null, "1234"))
+        assertThatThrownBy(() -> Customer.from(null, "userId@woowacourse.com", null, "1234asdf!"))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
@@ -47,7 +47,7 @@ class CustomerTest {
     @DisplayName("닉네임에 빈값을 입력하면 예외가 발생한다.")
     void nicknameBlankException(String nickname) {
         // when & then
-        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", nickname, "1234"))
+        assertThatThrownBy(() -> Customer.from(null, "userId@woowacourse.com", nickname, "1234asdf!"))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
     }
@@ -56,7 +56,7 @@ class CustomerTest {
     @Test
     void passwordNullException() {
         // when & then
-        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", "유콩", null))
+        assertThatThrownBy(() -> Customer.from(null, "userId@woowacourse.com", "유콩", null))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
@@ -66,7 +66,7 @@ class CustomerTest {
     @DisplayName("비밀번호에 빈값을 입력하면 예외가 발생한다.")
     void passwordBlankException(String password) {
         // when & then
-        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", "유콩", password))
+        assertThatThrownBy(() -> Customer.from(null, "userId@woowacourse.com", "유콩", password))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("비밀번호를 입력해주세요.");
     }
@@ -75,7 +75,7 @@ class CustomerTest {
     @Test
     void userIdFormatException() {
         // when & then
-        assertThatThrownBy(() -> new Customer(null, "userId", "유콩", "1234"))
+        assertThatThrownBy(() -> Customer.from(null, "userId", "유콩", "1234asdf!"))
                 .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("아이디는 이메일 형식으로 입력해주세요.");
     }
@@ -85,7 +85,7 @@ class CustomerTest {
     @DisplayName("닉네임이 영문, 한글, 숫자를 조합하여 2 ~ 10 자가 아니면 예외가 발생한다.")
     void nicknameFormatException(String nickname) {
         // when & then
-        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", nickname, "1234"))
+        assertThatThrownBy(() -> Customer.from(null, "userId@woowacourse.com", nickname, "1234asdf!"))
                 .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("닉네임은 영문, 한글, 숫자를 조합하여 2 ~ 10 자를 입력해주세요.");
     }
@@ -95,7 +95,7 @@ class CustomerTest {
     @DisplayName("비밀번호가 영문, 한글, 숫자를 필수로 조합한 8 ~ 16 자가 아니면 예외가 발생한다.")
     void passwordFormatException(String password) {
         // when & then
-        assertThatThrownBy(() -> new Customer(null, "userId@woowacourse.com", "유콩", password))
+        assertThatThrownBy(() -> Customer.from(null, "userId@woowacourse.com", "유콩", password))
                 .isInstanceOf(CustomerDataFormatException.class)
                 .hasMessage("비밀번호는 영문, 특수문자, 숫자를 필수로 조합하여 8 ~ 16 자를 입력해주세요.");
     }
@@ -104,7 +104,7 @@ class CustomerTest {
     @Test
     void validateMatchingLoginPassword() {
         // given
-        Customer customer = new Customer(null, "userId@woowacourse.com", "유콩", "1234asdf!");
+        Customer customer = Customer.from(null, "userId@woowacourse.com", "유콩", "1234asdf!");
 
         // when & then
         assertThatThrownBy(() -> customer.validateMatchingLoginPassword("invalidPassword"))
@@ -116,7 +116,7 @@ class CustomerTest {
     @Test
     void validateMatchingOriginalPassword() {
         // given
-        Customer customer = new Customer(null, "userId@woowacourse.com", "유콩", "1234asdf!");
+        Customer customer = Customer.from(null, "userId@woowacourse.com", "유콩", "1234asdf!");
 
         // when & then
         assertThatThrownBy(() -> customer.validateMatchingOriginalPassword("invalidPassword"))

@@ -7,11 +7,19 @@ public class Customer {
     private final Nickname nickname;
     private final Password password;
 
-    public Customer(final Long id, final String userId, final String nickname, final String password) {
+    private Customer(final Long id, final String userId, final String nickname, final Password password) {
         this.id = id;
         this.userId = new UserId(userId);
         this.nickname = new Nickname(nickname);
-        this.password = new Password(password);
+        this.password = password;
+    }
+
+    private Customer(final Long id, final String userId, final String nickname, final String password) {
+        this(id, userId, nickname, new Password(password));
+    }
+
+    public static Customer from(final Long id, final String userId, final String nickname, final String password) {
+        return new Customer(id, userId, nickname, password);
     }
 
     public void validateMatchingOriginalPassword(final String other) {

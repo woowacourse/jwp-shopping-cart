@@ -32,7 +32,7 @@ public class CustomerDaoTest {
     @Test
     void findById() {
         // given
-        Customer savedCustomer = new Customer(null, "test@woowacourse.com", "test", "1234asdf!");
+        Customer savedCustomer = Customer.from(null, "test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerDao.save(savedCustomer);
 
         // when
@@ -78,7 +78,7 @@ public class CustomerDaoTest {
     @Test
     void update() {
         // given
-        Customer savedCustomer = new Customer(null, "test@woowacourse.com", "test", "1234asdf!");
+        Customer savedCustomer = Customer.from(null, "test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerDao.save(savedCustomer);
 
         // when
@@ -98,7 +98,7 @@ public class CustomerDaoTest {
     @Test
     void updatePassword() {
         // given
-        Customer savedCustomer = new Customer(null, "test@woowacourse.com", "test", "1234asdf!");
+        Customer savedCustomer = Customer.from(null, "test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerDao.save(savedCustomer);
 
         // when
@@ -118,7 +118,7 @@ public class CustomerDaoTest {
     @Test
     void delete() {
         // given
-        Customer savedCustomer = new Customer(null, "test@woowacourse.com", "test", "1234asdf!");
+        Customer savedCustomer = Customer.from(null, "test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerDao.save(savedCustomer);
 
         // when

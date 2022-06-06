@@ -18,7 +18,7 @@ public class SignUpRequest {
     }
 
     public Customer toEntity() {
-        return new Customer(null, userId, nickname, password);
+        return Customer.from(null, userId, nickname, password);
     }
 
     public String getUserId() {
