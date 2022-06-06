@@ -35,10 +35,10 @@
   - [ ] `GET /api/orders` 주문 전체 확인 api
   - [ ] `GET /api/orders/{orderId}` 주문 상세 확인 api
 - Product
-  - [ ] `GET /api/products` 상품 전체 조회 api
-  - [ ] `GET /api/products/{productId}` 상품 단일 조회 api
+  - [x] `GET /api/products` 상품 전체 조회 api
+  - [x] `GET /api/products/{productId}` 상품 단일 조회 api
   - [x] `POST /api/products` 상품 추가 api
-  - [ ] `DELETE /api/products/{productId}` 상품 삭제 api
+  - [x] `DELETE /api/products/{productId}` 상품 삭제 api
 
     
 
