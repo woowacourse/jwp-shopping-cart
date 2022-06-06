@@ -12,9 +12,7 @@ import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
-import woowacourse.shoppingcart.exception.NoSuchCustomerException;
+import woowacourse.shoppingcart.exception.AuthorizationException;
 
 @SpringBootTest
 @Sql(value = "/sql/ClearTableCustomer.sql")
@@ -40,8 +38,8 @@ class AuthServiceTest {
     @DisplayName("등록된 회원이 없다면 로그인에 실패한다.")
     void signInFailNoSuchCustomer() {
         assertThatThrownBy(() -> authService.signIn(new SignInRequest("rennon@woowa.com", "12345678")))
-                .isInstanceOf(NoSuchCustomerException.class)
-                .hasMessageContaining("등록된 사용자가 없습니다.");
+                .isInstanceOf(AuthorizationException.class)
+                .hasMessageContaining("로그인에 실패했습니다.");
     }
 
     @Test
@@ -51,7 +49,7 @@ class AuthServiceTest {
         authService.signIn(new SignInRequest("rennon@woowa.com", "12345678"));
 
         assertThatThrownBy(() -> authService.signIn(new SignInRequest("rennon@woowa.com", "56781234")))
-                .isInstanceOf(InvalidPasswordException.class)
-                .hasMessageContaining("비밀번호가 틀렸습니다.");
+                .isInstanceOf(AuthorizationException.class)
+                .hasMessageContaining("로그인에 실패했습니다.");
     }
 }
