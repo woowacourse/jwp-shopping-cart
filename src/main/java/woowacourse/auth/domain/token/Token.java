@@ -1,4 +1,4 @@
-package woowacourse.auth.domain;
+package woowacourse.auth.domain.token;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

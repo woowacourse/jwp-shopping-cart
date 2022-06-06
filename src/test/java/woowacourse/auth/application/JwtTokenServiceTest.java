@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import woowacourse.auth.domain.Token;
+import woowacourse.auth.domain.token.Token;
 
 @SuppressWarnings("NonAsciiCharacters")
 class JwtTokenServiceTest {

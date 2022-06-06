@@ -8,7 +8,7 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import woowacourse.auth.domain.Token;
+import woowacourse.auth.domain.token.Token;
 
 @Component
 public class JwtTokenService {

@@ -8,8 +8,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.constant.RequestAttributes;
-import woowacourse.auth.domain.Customer;
-import woowacourse.auth.domain.Token;
+import woowacourse.auth.domain.user.Customer;
+import woowacourse.auth.domain.token.Token;
 
 public class CustomerArgumentResolver implements HandlerMethodArgumentResolver {
 

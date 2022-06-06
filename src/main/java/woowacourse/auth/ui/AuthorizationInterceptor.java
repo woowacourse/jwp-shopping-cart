@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.constant.RequestAttributes;
-import woowacourse.auth.domain.Token;
+import woowacourse.auth.domain.token.Token;
 import woowacourse.common.exception.ForbiddenException;
 
 public class AuthorizationInterceptor implements HandlerInterceptor {

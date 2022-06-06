@@ -1,7 +1,7 @@
 package woowacourse.auth.dto.response;
 
 import java.util.Objects;
-import woowacourse.auth.domain.Customer;
+import woowacourse.auth.domain.user.Customer;
 
 public class GetMeResponse {
 

@@ -2,8 +2,8 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dao.CustomerDao;
-import woowacourse.auth.domain.Customer;
-import woowacourse.auth.domain.Token;
+import woowacourse.auth.domain.user.Customer;
+import woowacourse.auth.domain.token.Token;
 import woowacourse.auth.dto.request.TokenRequest;
 import woowacourse.auth.dto.response.TokenResponse;
 import woowacourse.common.exception.AuthenticationException;

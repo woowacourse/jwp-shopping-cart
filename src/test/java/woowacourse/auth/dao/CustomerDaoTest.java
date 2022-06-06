@@ -9,10 +9,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import woowacourse.auth.dao.CustomerDao;
-import woowacourse.auth.domain.EncryptedPassword;
+import woowacourse.auth.domain.user.EncryptedPassword;
 import woowacourse.setup.DatabaseTest;
-import woowacourse.auth.domain.Customer;
+import woowacourse.auth.domain.user.Customer;
 import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")

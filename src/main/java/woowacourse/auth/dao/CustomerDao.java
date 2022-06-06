@@ -7,8 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
-import woowacourse.auth.domain.EncryptedPassword;
-import woowacourse.auth.domain.Customer;
+import woowacourse.auth.domain.user.EncryptedPassword;
+import woowacourse.auth.domain.user.Customer;
 
 @Repository
 public class CustomerDao {

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-import woowacourse.auth.domain.Customer;
+import woowacourse.auth.domain.user.Customer;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.dto.request.SignUpRequest;
 import woowacourse.auth.dto.request.UniqueUsernameRequest;
