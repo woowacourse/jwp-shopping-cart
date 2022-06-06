@@ -11,10 +11,11 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.domain.token.Token;
 import woowacourse.auth.domain.user.Customer;
 import woowacourse.auth.domain.user.EncryptedPassword;
 import woowacourse.auth.domain.user.Password;
-import woowacourse.auth.domain.token.Token;
+import woowacourse.auth.domain.token.ValidToken;
 import woowacourse.auth.dto.request.TokenRequest;
 import woowacourse.auth.dto.response.TokenResponse;
 import woowacourse.common.exception.AuthenticationException;
@@ -83,7 +84,7 @@ class AuthServiceTest {
         void 토큰에_해당되는_고객_정보_반환() {
             databaseFixture.save(유효한_고객);
             TokenResponse generatedToken = authService.createToken(new TokenRequest(유효한_아이디, 비밀번호));
-            Token validAccessToken = new Token(generatedToken.getAccessToken());
+            Token validAccessToken = new ValidToken(generatedToken.getAccessToken());
 
             Customer actual = authService.findCustomerByToken(validAccessToken);
 

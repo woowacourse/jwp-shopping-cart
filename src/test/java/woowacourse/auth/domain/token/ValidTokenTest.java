@@ -16,7 +16,7 @@ import woowacourse.common.exception.AuthenticationException;
 import woowacourse.common.exception.ForbiddenException;
 
 @SuppressWarnings("NonAsciiCharacters")
-class TokenTest {
+class ValidTokenTest {
 
     private static final String SECRET_KEY = "secret_key_that_is_long_enough_for_security_purpose";
     private static final SecretKey 올바른_토큰_키 = toSecretKey(SECRET_KEY);
@@ -29,7 +29,7 @@ class TokenTest {
         @Test
         void 토큰을_발급할_때_사용한_키와_동일한_키를_받은_경우_payload_복원_성공() {
             String 원본_데이터 = "asd12!";
-            Token token = new Token(generateAccessToken(원본_데이터, 토큰_만료기간));
+            Token token = new ValidToken(generateAccessToken(원본_데이터, 토큰_만료기간));
 
             String 복원된_데이터 = token.getPayload(올바른_토큰_키);
 
@@ -39,7 +39,7 @@ class TokenTest {
         @Test
         void 서버에서_사용하는_키와_다른_키로_생성한_토큰인_경우_예외_발생() {
             SecretKey 잘못된_키 = toSecretKey("wrong_wrong_wrong_wrong_wrong_wrong_wrong_wrong_wrong_wrong");
-            Token token = new Token(generateAccessToken("asd12!", 잘못된_키, 토큰_만료기간));
+            Token token = new ValidToken(generateAccessToken("asd12!", 잘못된_키, 토큰_만료기간));
 
             assertThatThrownBy(() -> token.getPayload(올바른_토큰_키))
                     .isInstanceOf(ForbiddenException.class);
@@ -48,7 +48,7 @@ class TokenTest {
         @Test
         void JWT_토큰의_형식에_부합하지_않는_값에_대한_해석시도시_예외발생() {
             String JWT_형식에_부합하지_않는_값 = "invalid_payload";
-            Token token = new Token(JWT_형식에_부합하지_않는_값);
+            Token token = new ValidToken(JWT_형식에_부합하지_않는_값);
 
             assertThatThrownBy(() -> token.getPayload(올바른_토큰_키))
                     .isInstanceOf(ForbiddenException.class);
@@ -56,7 +56,7 @@ class TokenTest {
 
         @Test
         void 만료된_토큰에_대한_해석시도시_예외발생() throws InterruptedException {
-            Token token = new Token(generateAccessToken("asd12!", 1));
+            Token token = new ValidToken(generateAccessToken("asd12!", 1));
             Thread.sleep(100);
             assertThatThrownBy(() -> token.getPayload(올바른_토큰_키))
                     .isInstanceOf(AuthenticationException.class);
@@ -67,7 +67,7 @@ class TokenTest {
     void getValue_메서드는_accessToken_원본값을_그대로_반환() {
         String accessToken = generateAccessToken("asd12!", 토큰_만료기간);
 
-        Token token = new Token(accessToken);
+        Token token = new ValidToken(accessToken);
         String actual = token.getValue();
 
         assertThat(actual).isEqualTo(accessToken);

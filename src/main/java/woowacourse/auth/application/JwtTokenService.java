@@ -9,6 +9,7 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import woowacourse.auth.domain.token.Token;
+import woowacourse.auth.domain.token.ValidToken;
 
 @Component
 public class JwtTokenService {
@@ -31,7 +32,7 @@ public class JwtTokenService {
                 .setExpiration(getExpiration(now))
                 .signWith(secretKey)
                 .compact();
-        return new Token(tokenValue);
+        return new ValidToken(tokenValue);
     }
 
     private Date getExpiration(Date now) {

@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.constant.RequestAttributes;
-import woowacourse.auth.domain.token.Token;
+import woowacourse.auth.domain.token.ValidToken;
 import woowacourse.common.exception.ForbiddenException;
 
 public class AuthorizationInterceptor implements HandlerInterceptor {
@@ -17,7 +17,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         validateTokenExistence(authorizationHeader);
         String bearerToken = toSingleBearerToken(authorizationHeader.substring(BEARER_TYPE.length()).trim());
-        request.setAttribute(RequestAttributes.TOKEN, new Token(bearerToken));
+        request.setAttribute(RequestAttributes.TOKEN, new ValidToken(bearerToken));
         return true;
     }
 
