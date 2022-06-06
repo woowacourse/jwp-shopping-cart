@@ -22,7 +22,7 @@ create table product
     id        bigint       not null auto_increment,
     name      varchar(255) not null,
     price     integer      not null,
-    image_url varchar(255),
+    image varchar(255),
     primary key (id)
 );
 
@@ -32,7 +32,7 @@ create table cart_item
     customer_id bigint not null,
     product_id  bigint not null,
 
-    primary key (id)
+    primary key (id),
     foreign key (customer_id) references customer(id),
     foreign key (product_id) references product(id)
 );

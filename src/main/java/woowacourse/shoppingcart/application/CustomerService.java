@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.auth.dto.customer.SignupRequest;

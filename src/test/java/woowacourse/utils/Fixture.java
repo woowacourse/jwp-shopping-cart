@@ -2,6 +2,7 @@ package woowacourse.utils;
 
 import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.dto.token.TokenRequest;
+import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class Fixture {
@@ -13,4 +14,8 @@ public class Fixture {
     public static final TokenRequest tokenRequest = new TokenRequest(email, password);
 
     public static final Customer customer = new Customer(1L, email, nickname, password);
+
+    public static final Product 치킨 = new Product("치킨", 10_000, "http://example.com/chicken.jpg");
+    public static final Product 맥주 = new Product("맥주", 20_000, "http://example.com/beer.jpg");
+    public static final Product 초콜렛 = new Product("초콜렛", 10_000, "www.test.com");
 }

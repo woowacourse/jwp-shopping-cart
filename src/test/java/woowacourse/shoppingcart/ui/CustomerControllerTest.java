@@ -23,7 +23,7 @@ import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.auth.dto.customer.SignupRequest;
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.utils.AcceptanceTest;
 
 class CustomerControllerTest extends AcceptanceTest {
 

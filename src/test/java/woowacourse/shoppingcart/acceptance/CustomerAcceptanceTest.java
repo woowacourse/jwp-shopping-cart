@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.SignoutRequest;
+import woowacourse.utils.AcceptanceTest;
 
 @DisplayName("회원관련 기능 인수테스트")
 public class CustomerAcceptanceTest extends AcceptanceTest {

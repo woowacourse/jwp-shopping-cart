@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.ProductSaveRequest;
+import woowacourse.shoppingcart.dto.ProductSaveResponse;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -32,13 +33,15 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {
-        final Long productId = productService.addProduct(product);
-        final URI uri = ServletUriComponentsBuilder
+    public ResponseEntity<ProductSaveResponse> add(@RequestBody ProductSaveRequest request) {
+        System.out.println("========");
+        System.out.println("========");
+        ProductSaveResponse saved = productService.addProduct(request);
+        URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/" + productId)
+                .path("/" + saved.getProductId())
                 .build().toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(saved);
     }
 
     @GetMapping("/{productId}")

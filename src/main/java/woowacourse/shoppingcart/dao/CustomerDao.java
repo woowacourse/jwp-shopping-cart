@@ -1,4 +1,4 @@
-package woowacourse.auth.dao;
+package woowacourse.shoppingcart.dao;
 
 import java.util.Map;
 import java.util.NoSuchElementException;

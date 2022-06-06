@@ -2,21 +2,26 @@ package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
+import woowacourse.shoppingcart.domain.product.Product;
 
 @Getter
-public class ProductRequest {
+public class ProductSaveRequest {
     @NotBlank
     private String name;
     @NotBlank
     private int price;
     private String image;
 
-    public ProductRequest() {
+    public ProductSaveRequest() {
     }
 
-    public ProductRequest(String name, int price, String image) {
+    public ProductSaveRequest(String name, int price, String image) {
         this.name = name;
         this.price = price;
         this.image = image;
+    }
+
+    public Product toEntity() {
+        return new Product(name, price, image);
     }
 }
