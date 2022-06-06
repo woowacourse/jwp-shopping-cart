@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.unit.cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
+import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.exception.notfound.NotFoundCartException;
 import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
 
@@ -126,5 +129,35 @@ class CartItemDaoTest {
 
         // then
         assertThat(actual).isTrue();
+    }
+
+    @Test
+    @DisplayName("Customer Id와 Product Id가 일치하는 Cart를 조회한다.")
+    void findByProductAndCustomerId() {
+        // given
+        Long customerId = 4L;
+        Long productId = 6L;
+        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+
+        final Product product = productDao.findProductById(productId);
+        final Cart expected = new Cart(cartId, productId, product.getName(), product.getPrice(), product.getImageUrl(), 1);
+
+        // when
+        final Cart actual = cartItemDao.findByProductAndCustomerId(productId, customerId);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("Customer Id와 Product Id가 일치하는 Cart가 존재하지 않으면 에외를 던진다.")
+    void findByProductAndCustomerId_notMatch_ExceptionThrown() {
+        // given
+        Long productId = 999L;
+        Long customerId = 777L;
+
+        // when, then
+        assertThatThrownBy(() -> cartItemDao.findByProductAndCustomerId(productId, customerId))
+                .isInstanceOf(NotFoundCartException.class);
     }
 }

@@ -4,15 +4,26 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.exception.badrequest.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundCartException;
 
 @Repository
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Cart> rowMapper = (resultSet, rowNumber) -> new Cart(
+            resultSet.getLong("id"),
+            resultSet.getLong("product_id"),
+            resultSet.getString("name"),
+            resultSet.getInt("price"),
+            resultSet.getString("image_url"),
+            resultSet.getInt("quantity")
+    );
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -64,5 +75,23 @@ public class CartItemDao {
     public boolean existProduct(Long customerId, Long productId) {
         final String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE customer_id = ? AND product_id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId);
+    }
+
+    public Cart findByProductAndCustomerId(Long productId, Long customerId) {
+        try {
+            final String sql = ""
+                    + "SELECT ci.id, "
+                    + "p.id AS product_id, "
+                    + "p.name, "
+                    + "p.price, "
+                    + "p.image_url, "
+                    + "ci.quantity "
+                    + "FROM cart_item AS ci "
+                    + "INNER JOIN product AS p ON ci.product_id = p.id "
+                    + "WHERE ci.product_id = ? AND ci.customer_id = ?";
+            return jdbcTemplate.queryForObject(sql, rowMapper, productId, customerId);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new NotFoundCartException();
+        }
     }
 }
