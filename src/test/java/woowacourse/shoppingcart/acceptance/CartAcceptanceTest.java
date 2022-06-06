@@ -86,8 +86,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        productId1 = 상품_등록되어_있음("치킨", "치킨 입니다.", 10_000, 10, "http://example.com/chicken.jpg");
+        productId2 = 상품_등록되어_있음("맥주", "맥주 입니다.", 20_000, 10, "http://example.com/beer.jpg");
     }
 
     @Disabled
