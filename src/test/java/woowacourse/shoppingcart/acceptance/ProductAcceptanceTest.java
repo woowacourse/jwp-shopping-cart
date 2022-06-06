@@ -65,21 +65,27 @@ class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     void 상품_id로_상품_조회() {
         // given
-        Long productId = 상품_등록_후_id_반환("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long id = 상품_등록_후_id_반환("치킨", 10_000, "http://example.com/chicken.jpg");
 
         // when
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/products/{productId}", productId)
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> response = id로_상품_조회(id);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         Long findId = Long.valueOf(findValue(response, "id"));
-        assertThat(findId).isEqualTo(productId);
+        assertThat(findId).isEqualTo(id);
+    }
+
+    @Test
+    void 존재하지_않는_상품_id로_상품_조회() {
+        // given
+
+        // when
+        ExtractableResponse<Response> response = id로_상품_조회(1L);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(findValue(response, "message")).contains("존재하지 않는 상품입니다.");
     }
 
     @Test
@@ -97,6 +103,16 @@ class ProductAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private ExtractableResponse<Response> id로_상품_조회(Long id) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/products/{productId}", id)
+                .then().log().all()
+                .extract();
     }
 
     private Long 상품_등록_후_id_반환(String name, int price, String imageUrl) {
