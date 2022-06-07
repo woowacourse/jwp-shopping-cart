@@ -11,7 +11,7 @@ import woowacourse.shoppingcart.dto.CartResponse;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/customers/carts")
+@RequestMapping("/customers/cart")
 public class CartItemController {
 
     private final CartService cartService;

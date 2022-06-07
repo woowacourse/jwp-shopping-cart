@@ -73,15 +73,15 @@ public class CartAcceptanceTest extends AcceptanceTest {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("productId", productId);
 
-        return post("/customers/carts", accessToken, requestBody);
+        return post("/customers/cart", accessToken, requestBody);
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String accessToken) {
-        return get("/customers/carts", accessToken);
+        return get("/customers/cart", accessToken);
     }
 
     public static ExtractableResponse<Response> 장바구니_삭제_요청(String accessToken, long productId) {
-        return delete("/customers/carts", accessToken, new CartRequest(productId));
+        return delete("/customers/cart", accessToken, new CartRequest(productId));
     }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {

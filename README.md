@@ -132,7 +132,7 @@
   ```
   
 ### 주문
-- [ ] 물품들 추가 (POST, /customers/orders)
+- [x] 물품들 추가 (POST, /customers/orders)
   - Request
   ```json
   {
@@ -150,7 +150,7 @@
   ```
   - Response
     201, CREATED
-- [ ] 단일 조회 (GET, /customers/orders/{orderId})
+- [x] 단일 조회 (GET, /customers/orders/{orderId})
   - Response
     200, OK
   ```json
@@ -175,7 +175,7 @@
   }
   ```
   
-- [ ] 목록 조회 (GET, /customers/carts)
+- [x] 목록 조회 (GET, /customers/cart)
   - Response
     200, OK
   ```json
