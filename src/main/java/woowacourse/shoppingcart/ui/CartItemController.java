@@ -9,9 +9,12 @@ import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.ItemAddRequest;
+import woowacourse.shoppingcart.dto.CartItemAddRequest;
+import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 import woowacourse.shoppingcart.dto.Request;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -34,8 +37,8 @@ public class CartItemController {
     }
 
     @PostMapping("/users/me/carts")
-    public ResponseEntity<Void> addCartItem2(@RequestBody ItemAddRequest itemAddRequest, @AuthenticationPrincipal Customer customer) {
-        cartService.addCart(itemAddRequest.getProductId(), customer);
+    public ResponseEntity<Void> addCartItem2(@RequestBody CartItemAddRequest cartItemAddRequest, @AuthenticationPrincipal Customer customer) {
+        cartService.addCart(cartItemAddRequest.getProductId(), customer);
         return ResponseEntity.noContent().build();
     }
 
@@ -62,5 +65,13 @@ public class CartItemController {
                                                @PathVariable final Long cartId) {
         cartService.deleteCart(customerName, cartId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/users/me/carts/{productId}")
+    public ResponseEntity<CartItemResponse> updateCartItemQuantity(@PathVariable Long productId,
+                                                                   @RequestBody CartItemUpdateRequest request,
+                                                                   @AuthenticationPrincipal Customer customer) {
+        Cart cartItem = cartService.updateQuantity(request, customer, productId);
+        return ResponseEntity.ok(CartItemResponse.from(cartItem));
     }
 }

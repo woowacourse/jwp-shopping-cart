@@ -8,10 +8,8 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.DuplicateCartItemException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import woowacourse.shoppingcart.exception.NotFoundProductException;
+import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
+import woowacourse.shoppingcart.exception.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +68,7 @@ public class CartService {
                 .orElseThrow(NotFoundProductException::new);
         validateDuplicateCartItem(productId);
         try {
-            return cartItemDao.addCartItem(customer.getId(), productId);
+            return cartItemDao.addCartItem(customer.getId(), productId, 1);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -87,7 +85,7 @@ public class CartService {
                 .orElseThrow(InvalidProductException::new);
         final Long customerId = customerDao.findIdByUserName(customerName);
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.addCartItem(customerId, productId, 1);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -111,5 +109,22 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    public Cart updateQuantity(CartItemUpdateRequest request, final Customer customer, final Long productId) {
+        validateQuantity(request.getQuantity());
+        Product product = productDao.findProductById(productId)
+                .orElseThrow(NotFoundProductException::new);
+
+        cartItemDao.updateQuantity(customer.getId(), productId, request.getQuantity());
+
+        return new Cart(product, request.getQuantity());
+
+    }
+
+    private void validateQuantity(int quantity) {
+        if (quantity < 1) {
+            throw new InvalidQuantityException();
+        }
     }
 }

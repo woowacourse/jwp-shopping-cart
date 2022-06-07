@@ -85,9 +85,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_추가_요청2(productId1, token);
         ExtractableResponse response = 장바구니_아이템_추가_요청2(productId1, token);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(CART_DUPLICATE_ERROR_CODE);
-        assertThat(response.jsonPath().getString("message")).isNotBlank();
+        BAD_REQUEST_400_응답됨(response, CART_DUPLICATE_ERROR_CODE);
     }
 
     @DisplayName("잘못된 토큰으로 장바구니 아이템 목록 조회할 경우 401 반환")
@@ -166,8 +164,60 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_삭제2(token, productId1);
         ExtractableResponse<Response> response = 장바구니_아이템_삭제2(token, productId1);
 
+        BAD_REQUEST_400_응답됨(response, CART_NOT_EXISTED_ERROR_CODE);
+    }
+
+    @DisplayName("잘못된 토큰으로 장바구니 아이템 수정 요청시 401 반환")
+    @Test
+    void updateCartItemQuantityWithInvalidToken() {
+        장바구니_아이템_추가_요청2(productId1, token);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청("invalidToken", productId1,3);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("DB에 없는 productId로 장바구니 아이템 수정 요청시 404 반환")
+    @Test
+    void updateNotExistedCartItem() {
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청(token, 0L,3);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @DisplayName("장바구니에 없는 productId로 장바구니 아이템 수정 요청시 400 반환")
+    @Test
+    void updateItemNotExistedInCart() {
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청(token, productId1,3);
+
+        BAD_REQUEST_400_응답됨(response, 1102);
+    }
+
+    @DisplayName("음수 범위의 수량으로 장바구니 아이템 수정 요청 시 400 반환")
+    @Test
+    void updateItemWithNegativeQuantity() {
+        장바구니_아이템_추가_요청2(productId1, token);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청(token, productId1,-3);
+
+        BAD_REQUEST_400_응답됨(response, 1100);
+    }
+
+    @DisplayName("정상적인 장바구니 아이템 수량 수정 요청시 200 반환")
+    @Test
+    void updateCartItemQuantity() {
+        장바구니_아이템_추가_요청2(productId1, token);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청(token, productId1,3);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getLong("id")).isEqualTo(productId1);
+        assertThat(response.jsonPath().getInt("quantity")).isEqualTo(3);
+    }
+
+    private void BAD_REQUEST_400_응답됨(ExtractableResponse<Response> response, int errorCode) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(CART_NOT_EXISTED_ERROR_CODE);
+        assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(errorCode);
         assertThat(response.jsonPath().getString("message")).isNotBlank();
     }
 
@@ -176,25 +226,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .when().log().all()
                 .delete("users/me/carts/" + productId1)
-                .then().log().all()
-                .extract();
-    }
-
-//    @DisplayName("장바구니 삭제")
-//    @Test
-//    void deleteCartItem() {
-//        Long cartId = 장바구니_아이템_추가되어_있음(productId1, token);
-//
-//        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-//
-//        장바구니_삭제됨(response);
-//    }
-
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
                 .then().log().all()
                 .extract();
     }
@@ -210,7 +241,15 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(resultProductIds).contains(productIds);
     }
 
-    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    private ExtractableResponse<Response> 장바구니_아이템_수량_수정_요청(String token, Long productId, int quantity) {
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(Map.of("quantity", quantity))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().log().all()
+                .put("users/me/carts/" + productId)
+                .then().log().all()
+                .extract();
+        return response;
     }
 }

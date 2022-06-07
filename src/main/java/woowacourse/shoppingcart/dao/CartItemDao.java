@@ -40,14 +40,15 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
+    public Long addCartItem(final Long customerId, final Long productId, final int quantity) {
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setLong(1, customerId);
             preparedStatement.setLong(2, productId);
+            preparedStatement.setLong(3, quantity);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -71,6 +72,15 @@ public class CartItemDao {
         final String sql = "DELETE FROM cart_item where customer_id = ? and product_id = ?";
 
         final int rowCount = jdbcTemplate.update(sql, customerId, productId);
+        if (rowCount == 0) {
+            throw new ItemNotExistedInCartException();
+        }
+    }
+
+    public void updateQuantity(final Long customerId, final Long productId, final int quantity) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? and product_id = ?";
+
+        final int rowCount = jdbcTemplate.update(sql, quantity, customerId, productId);
         if (rowCount == 0) {
             throw new ItemNotExistedInCartException();
         }
