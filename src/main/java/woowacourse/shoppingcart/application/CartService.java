@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.exception.domain.InvalidProductException;
 import woowacourse.shoppingcart.exception.domain.NotInCustomerCartItemException;
 
@@ -51,5 +52,9 @@ public class CartService {
             .noneMatch(item -> item.getId().equals(cartId))) {
             throw new NotInCustomerCartItemException();
         }
+    }
+
+    public void updateCartItemQuantity(Long customerId, Long cartId, Integer quantityValue) {
+        cartItemDao.updateQuantity(customerId, cartId, new Quantity(quantityValue));
     }
 }

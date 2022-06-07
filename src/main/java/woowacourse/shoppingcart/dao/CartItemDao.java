@@ -68,7 +68,11 @@ public class CartItemDao {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
         final int rowCount = jdbcTemplate.update(sql, id);
-        if (rowCount == 0) {
+        validateUpdated(rowCount);
+    }
+
+    private void validateUpdated(int updatedCount) {
+        if (updatedCount == 0) {
             throw new CartItemNotFoundException();
         }
     }
@@ -80,5 +84,11 @@ public class CartItemDao {
             new Quantity(rs.getInt("quantity")),
             productDao.findProductById(rs.getLong("product_id"))
         ), customerId);
+    }
+
+    public void updateQuantity(Long customerId, Long cartId, Quantity quantity) {
+        final String query = "UPDATE cart_item SET quantity = ? WHERE customerId = ? AND cartId = ?";
+        final int updatedCount = jdbcTemplate.update(query, quantity.getAmount(), customerId, cartId);
+        validateUpdated(updatedCount);
     }
 }

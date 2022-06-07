@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.application.dto.CartItemResponse;
 import woowacourse.shoppingcart.application.dto.CartResponse;
+import woowacourse.shoppingcart.ui.dto.CartItemQuantityRequest;
 import woowacourse.shoppingcart.ui.dto.CartItemRequest;
 import woowacourse.shoppingcart.ui.dto.FindCustomerRequest;
 import woowacourse.shoppingcart.ui.dto.Request;
@@ -57,6 +59,13 @@ public class CartItemController {
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal FindCustomerRequest customerRequest,
         @PathVariable final Long cartId) {
         cartService.deleteCart(customerRequest.getId(), cartId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{cartId}")
+    public ResponseEntity<Void> updateCartItemQuantity(@AuthenticationPrincipal FindCustomerRequest customerRequest,
+        @PathVariable final Long cartId, @RequestBody CartItemQuantityRequest quantityRequest) {
+        cartService.updateCartItemQuantity(customerRequest.getId(), cartId, quantityRequest.getQuantity());
         return ResponseEntity.noContent().build();
     }
 }
