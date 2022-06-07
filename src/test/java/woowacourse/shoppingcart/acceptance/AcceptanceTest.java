@@ -25,7 +25,7 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    protected String loginAndGetAccessToken(TokenRequest tokenRequest) {
+    protected String 로그인_요청(TokenRequest tokenRequest) {
         return sendLoginRequest(tokenRequest.getEmail(), tokenRequest.getPassword())
                 .as(TokenResponse.class)
                 .getAccessToken();
