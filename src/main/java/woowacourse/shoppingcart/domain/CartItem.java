@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain.cartitem;
+package woowacourse.shoppingcart.domain;
 
 import woowacourse.shoppingcart.domain.product.Product;
 

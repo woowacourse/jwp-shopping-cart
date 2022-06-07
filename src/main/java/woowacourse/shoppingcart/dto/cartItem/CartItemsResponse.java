@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.dto.cartItem;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import woowacourse.shoppingcart.domain.cartitem.CartItem;
+import woowacourse.shoppingcart.domain.CartItem;
 
 public class CartItemsResponse {
 

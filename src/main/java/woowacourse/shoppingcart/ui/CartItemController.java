@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.cartitem.CartItem;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
 import woowacourse.shoppingcart.dto.cartItem.CartItemsResponse;

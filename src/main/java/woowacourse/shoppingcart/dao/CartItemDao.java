@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.cartitem.CartItem;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
