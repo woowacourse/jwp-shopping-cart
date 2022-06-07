@@ -11,6 +11,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.util.List;
 
@@ -44,9 +45,6 @@ public class CartDaoTest {
     @DisplayName("구매자 id로 해당 구매자가 담은 장바구니 아이템 목록을 가져온다.")
     @Test
     void findCartsByCustomerId() {
-        // given
-        cartDao.addCartItem(1L, 1L);
-
         // when
         final List<Cart> carts = cartDao.findCartsByCustomerId(1L);
 
@@ -65,6 +63,20 @@ public class CartDaoTest {
 
         // then
         assertThat(productIds).containsAll(List.of(1L, 2L));
+    }
+
+    @DisplayName("구매자 id와 상품 id로 장바구니에 담긴 상품 정보를 가져온다.")
+    @Test
+    void findCart() {
+        // when
+        Cart cart = cartDao.findCartByProductId(1L, 1L)
+                .orElseThrow(InvalidCartItemException::new);
+
+        // then
+        assertAll(
+                () -> assertThat(cart.getProduct().getName()).isEqualTo("banana"),
+                () -> assertThat(cart.getQuantity()).isEqualTo(1)
+        );
     }
 
     @DisplayName("장바구니에 상품을 성공적으로 담는다.")

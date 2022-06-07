@@ -3,10 +3,11 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.*;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
@@ -33,20 +34,15 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUsername(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
-
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-//            final Long cartId = orderDetail.getCartId();
-//            final Long productId = cartItemDao.findProductIdsByCustomerId(customerId);
-//            final int quantity = orderDetail.getQuantity();
-//
-//            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-//            cartItemDao.deleteCartByCustomerId(cartId);
+    public Long addOrder(final List<Long> productIds, final String customerUsername) {
+        final Long customerId = customerDao.findIdByUsername(customerUsername);
+        final Long orderId = orderDao.addOrders(customerId);
+        for (Long productId : productIds) {
+            final Cart cart = cartDao.findCartByProductId(productId, customerId)
+                    .orElseThrow(InvalidCartItemException::new);
+            ordersDetailDao.addOrdersDetail(orderId, productId, cart.getQuantity());
         }
-
-        return ordersId;
+        return orderId;
     }
 
     public Orders findOrderById(final String customerName, final Long orderId) {
