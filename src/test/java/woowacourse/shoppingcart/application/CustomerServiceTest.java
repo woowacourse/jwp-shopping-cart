@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.support.HashPasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
+@Sql("/schema.sql")
 class CustomerServiceTest {
     private final CustomerRequest customerRequest1 =
             new CustomerRequest("kth990303", "kth@@123", "케이", 23);
