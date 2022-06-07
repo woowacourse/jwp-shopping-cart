@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import woowacourse.common.exception.CartItemException;
+import woowacourse.common.exception.OrderException;
 import woowacourse.common.exception.dto.ErrorResponse;
 
 public class CartItem {
@@ -31,5 +32,11 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public void checkQuantity() {
+        if(quantity > product.getStockQuantity()){
+            throw new OrderException("재고보다 많은 양을 구매할 수 없습니다.", ErrorResponse.OUT_OF_STOCK);
+        }
     }
 }

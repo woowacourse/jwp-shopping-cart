@@ -30,13 +30,12 @@ public class OrderController {
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final String email,
                                          @RequestBody @Valid final OrderCreateRequest orderCreateRequest) {
         final Long orderId = orderService.addOrder(orderCreateRequest.getCartItemIds(), email);
-        return ResponseEntity.created(
-                URI.create("/api/myorders/" + orderId)).build();
+        return ResponseEntity.created(URI.create("/api/myorders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> findOrder(@AuthenticationPrincipal final String email,
-                                            @PathVariable final Long orderId) {
+                                                   @PathVariable final Long orderId) {
         final OrderResponse order = orderService.findOrderById(email, orderId);
         return ResponseEntity.ok(order);
     }

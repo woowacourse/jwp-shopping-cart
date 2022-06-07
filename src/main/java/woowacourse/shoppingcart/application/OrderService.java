@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.common.exception.NotFoundException;
+import woowacourse.common.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
@@ -11,8 +13,8 @@ import woowacourse.shoppingcart.dao.OrderedProductDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderedProduct;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -33,28 +35,41 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<Long> cartIds, final String customerName) {
-        final Long customerId = customerDao.getIdByEmail(customerName);
+    public Long addOrder(final List<Long> cartIds, final String email) {
+        final Long customerId = customerDao.getIdByEmail(email);
         final Long ordersId = orderDao.save(customerId);
 
         for (Long cartId : cartIds) {
             CartItem cartItem = cartItemDao.getById(cartId);
+            validateProduct(cartItem.getProduct());
+            cartItem.checkQuantity();
             orderedProductDao.save(ordersId, cartItem);
         }
         return ordersId;
     }
 
-    public OrderResponse findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
+    private void validateProduct(Product product) {
+        if (!productDao.existsById(product.getId())) {
+            throw new NotFoundException("존재하지 않는 상품입니다.", ErrorResponse.NOT_EXIST_PRODUCT);
+        }
+    }
+
+    public OrderResponse findOrderById(final String email, final Long orderId) {
+        validateOrderIdByCustomerName(email, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
         final Long customerId = customerDao.getIdByEmail(customerName);
 
-        if (!orderDao.validOrderIdAndCustomerId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+        if (!orderDao.existByOrderIdAndCustomerId(customerId, orderId)) {
+            throw new NotFoundException("해당 주문은 존재하지 않습니다", ErrorResponse.NOT_EXIST_ORDER);
         }
+    }
+
+    private OrderResponse findOrderResponseDtoByOrderId(final Long orderId) {
+        List<OrderedProduct> orderedProducts = orderedProductDao.getAllByOrderId(orderId);
+        return new OrderResponse(orderId, orderedProducts);
     }
 
     public List<OrderResponse> findOrdersByCustomerEmail(final String customerName) {
@@ -64,10 +79,5 @@ public class OrderService {
         return orderIds.stream()
                 .map(this::findOrderResponseDtoByOrderId)
                 .collect(Collectors.toUnmodifiableList());
-    }
-
-    private OrderResponse findOrderResponseDtoByOrderId(final Long orderId) {
-        List<OrderedProduct> orderedProducts = orderedProductDao.getAllByOrderId(orderId);
-        return new OrderResponse(orderId, orderedProducts);
     }
 }

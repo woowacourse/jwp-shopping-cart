@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.common.exception.CartItemException;
 import woowacourse.common.exception.NotFoundException;
-import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
@@ -22,8 +21,6 @@ import woowacourse.shoppingcart.domain.customer.Password;
 @SpringBootTest
 @Sql("classpath:truncate.sql")
 class CartServiceTest {
-    @Autowired
-    private CartItemDao cartItemDao;
     @Autowired
     private CustomerDao customerDao;
     @Autowired

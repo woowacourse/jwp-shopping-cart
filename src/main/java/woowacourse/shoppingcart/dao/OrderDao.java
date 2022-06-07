@@ -30,8 +30,8 @@ public class OrderDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public boolean validOrderIdAndCustomerId(final Long customerId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
+    public boolean existByOrderIdAndCustomerId(final Long customerId, final Long orderId) {
+        final String query = "SELECT EXISTS(SELECT id FROM orders WHERE customer_id = ? AND id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
     }
 }
