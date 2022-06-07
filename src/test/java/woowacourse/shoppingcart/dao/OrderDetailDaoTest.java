@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
@@ -21,18 +20,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class OrdersDetailDaoTest {
+class OrderDetailDaoTest {
 
-    private final OrdersDetailDao ordersDetailDao;
+    private final OrderDetailDao orderDetailDao;
     private final OrderDao orderDao;
     private final ProductDao productDao;
 
     private long ordersId;
     private long productId;
 
-    public OrdersDetailDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public OrderDetailDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.orderDao = new OrderDao(namedParameterJdbcTemplate);
-        this.ordersDetailDao = new OrdersDetailDao(namedParameterJdbcTemplate);
+        this.orderDetailDao = new OrderDetailDao(namedParameterJdbcTemplate);
         this.productDao = new ProductDao(namedParameterJdbcTemplate);
     }
 
@@ -51,8 +50,7 @@ class OrdersDetailDaoTest {
         int quantity = 5;
 
         //when
-        Long orderDetailId = ordersDetailDao
-                .addOrdersDetail(ordersId, productId, quantity);
+        Long orderDetailId = orderDetailDao.addOrdersDetail(ordersId, productId, quantity);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);
@@ -64,12 +62,11 @@ class OrdersDetailDaoTest {
         //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
-            ordersDetailDao.addOrdersDetail(ordersId, productId, 3);
+            orderDetailDao.addOrdersDetail(ordersId, productId, 3);
         }
 
         //when
-        final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsByOrderId(ordersId);
+        final List<OrderDetail> ordersDetailsByOrderId = orderDetailDao.findOrderDetailsByOrderId(ordersId);
 
         //then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);

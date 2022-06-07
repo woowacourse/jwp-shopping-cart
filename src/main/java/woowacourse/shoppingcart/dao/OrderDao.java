@@ -42,14 +42,4 @@ public class OrderDao {
                 (rs, rowNum) -> rs.getLong("id")
         );
     }
-
-    public boolean isValidOrderId(final long customerId, final long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = :customerId AND id = :orderId)";
-
-        final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("customerId", customerId);
-        parameters.put("orderId", orderId);
-
-        return namedParameterJdbcTemplate.queryForObject(query, new MapSqlParameterSource(parameters), Boolean.class);
-    }
 }

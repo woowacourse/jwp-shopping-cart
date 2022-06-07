@@ -36,7 +36,7 @@ class OrderDaoTest {
         final Long orderId = orderDao.addOrders(customerId);
 
         //then
-        assertThat(orderId).isNotNull();
+        assertThat(orderId).isEqualTo(1L);
     }
 
     @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")

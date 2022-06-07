@@ -18,6 +18,9 @@ import static org.mockito.BDDMockito.given;
 
 class ProductServiceTest {
 
+    public static final Product 상품1 = new Product(1L, "상품1", 1_000, "imageUrl1");
+    public static final Product 상품2 = new Product(2L, "상품2", 2_000, "imageUrl2");
+
     private final ProductService productService;
 
     @Mock
@@ -33,10 +36,10 @@ class ProductServiceTest {
     void findProductById() {
         // given
         given(productDao.findById(1L))
-                .willReturn(Optional.of(new Product(1L, "상품명", 1000, "imageUrl")));
+                .willReturn(Optional.of(상품1));
         // when
         final ProductResponse productResponse = productService.findProductById(1L);
-        final ProductResponse expected = new ProductResponse(1L, "상품명", 1000, "imageUrl");
+        final ProductResponse expected = new ProductResponse(1L, "상품1", 1_000, "imageUrl1");
         // then
         assertThat(productResponse)
                 .usingRecursiveComparison()
@@ -47,13 +50,7 @@ class ProductServiceTest {
     @Test
     void findAllProducts() {
         // given
-        given(productDao.findAll())
-                .willReturn(
-                        List.of(
-                                new Product(1L, "상품명1", 1000, "imageUrl1"),
-                                new Product(2L, "상품명2", 2000, "imageUrl2")
-                        )
-                );
+        given(productDao.findAll()).willReturn(List.of(상품1, 상품2));
         // when
         final ProductsResponse productsResponse = productService.findProducts();
 
@@ -65,13 +62,11 @@ class ProductServiceTest {
     @Test
     void addProduct() {
         // given
-        final Product product = new Product(1L, "상품명", 1000, "imageUrl");
-        given(productDao.save(any()))
-                .willReturn(product);
+        given(productDao.save(any())).willReturn(상품1);
         // when
-        final Product expected = new Product(1L, "상품명", 1000, "imageUrl");
+        final Product expected = new Product(1L, "상품1", 1_000, "imageUrl1");
         // then
-        assertThat(product)
+        assertThat(상품1)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
     }
