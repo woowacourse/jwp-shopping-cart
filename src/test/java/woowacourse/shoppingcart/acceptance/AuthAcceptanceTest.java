@@ -22,6 +22,7 @@ import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.ExceptionRequest;
 
 @DisplayName("인증 관련 인수테스트")
 @Sql("/init.sql")
@@ -65,7 +66,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode())
                         .isEqualTo(HttpStatus.FORBIDDEN.value()),
-                () -> assertThat(response.body().asString())
+                () -> assertThat(response.body().as(ExceptionRequest.class).getMessage())
                         .isEqualTo("토큰이 유효하지 않습니다.")
         );
     }
@@ -92,7 +93,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode())
                         .isEqualTo(HttpStatus.FORBIDDEN.value()),
-                () -> assertThat(response.body().asString())
+                () -> assertThat(response.body().as(ExceptionRequest.class).getMessage())
                         .isEqualTo("토큰이 유효하지 않습니다.")
         );
     }

@@ -155,7 +155,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> NOT_FOUND(나의_정보조회Response),
                 () -> 예외메세지_검증(나의_정보조회Response, "존재하지 않는 회원입니다.")
         );
-
     }
 
     @Test
