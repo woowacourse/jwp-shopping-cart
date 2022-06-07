@@ -121,8 +121,18 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
                 .extract().as(LoginResponse.class).getAccessToken();
 
-        WithdrawalRequest withdrawalRequest = new WithdrawalRequest("Wooteco1!");
-        RestAssuredConvenienceMethod.deleteRequestWithToken(accessToken, withdrawalRequest, "/api/members/me")
+        RestAssuredConvenienceMethod.deleteRequestWithToken(accessToken, "/api/members/me")
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    public static void 회원가입_요청(String email, String name, String password) {
+        SignUpRequest signUpRequest = new SignUpRequest(email, name, password);
+        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+    }
+
+    public static String 로그인_요청(String email, String password) {
+        LoginRequest loginRequest = new LoginRequest(email, password);
+        return RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+                .extract().as(LoginResponse.class).getAccessToken();
     }
 }

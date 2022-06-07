@@ -44,11 +44,11 @@ public class OrderService {
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
+            final Optional<Long> productId = cartItemDao.findProductIdById(cartId);
             final int quantity = orderDetail.getQuantity();
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+            ordersDetailDao.addOrdersDetail(ordersId, productId.get(), quantity);
+            cartItemDao.deleteById(cartId);
         }
 
         return ordersId;
@@ -72,7 +72,7 @@ public class OrderService {
         final List<Long> orderIds = orderDao.findOrderIdsByMemberId(memberId);
 
         return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+                .map(this::findOrderResponseDtoByOrderId)
                 .collect(Collectors.toList());
     }
 

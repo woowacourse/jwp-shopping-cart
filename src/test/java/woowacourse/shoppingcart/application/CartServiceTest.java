@@ -8,8 +8,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.exception.MemberNotFoundException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.NotInMemberCartItemException;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
@@ -25,12 +24,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CartServiceTest {
 
     private final CartService cartService;
-    private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
-    public CartServiceTest(CartService cartService, ProductDao productDao, CartItemDao cartItemDao) {
+    public CartServiceTest(CartService cartService, CartItemDao cartItemDao) {
         this.cartService = cartService;
-        this.productDao = productDao;
         this.cartItemDao = cartItemDao;
     }
 
@@ -65,16 +62,9 @@ class CartServiceTest {
         Long cartId2 = cartService.add(1L, 2L);
         Long cartId3 = cartService.add(1L, 3L);
 
-        List<Cart> carts = cartService.findCarts(1L);
+        List<CartResponse> carts = cartService.findCarts(1L);
 
-        Optional<Product> product1 = productDao.findProductById(1L);
-        Cart cart1 = new Cart(cartId1, product1.get());
-        Optional<Product> product2 = productDao.findProductById(2L);
-        Cart cart2 = new Cart(cartId2, product2.get());
-        Optional<Product> product3 = productDao.findProductById(3L);
-        Cart cart3 = new Cart(cartId3, product3.get());
-
-        assertThat(carts).contains(cart1, cart2, cart3);
+        assertThat(carts.size()).isEqualTo(3);
     }
 
     @DisplayName("등록된 장바구니를 삭제한다.")

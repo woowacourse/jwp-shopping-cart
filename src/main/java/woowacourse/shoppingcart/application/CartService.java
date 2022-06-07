@@ -9,8 +9,8 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dao.dto.CartItem;
 import woowacourse.shoppingcart.dao.dto.EnrollCartDto;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.NotInMemberCartItemException;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
@@ -41,14 +41,14 @@ public class CartService {
         return cartItemDao.save(enrollCartDto);
     }
 
-    public List<Cart> findCarts(Long memberId) {
+    public List<CartResponse> findCarts(Long memberId) {
         validateExistMember(memberId);
         List<CartItem> cartItems = cartItemDao.findCartItemsByMemberId(memberId);
-        List<Cart> carts = new ArrayList<>();
+        List<CartResponse> carts = new ArrayList<>();
         for (CartItem cartItem : cartItems) {
             Product product = productDao.findProductById(cartItem.getProduct_id())
                     .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
-            carts.add(new Cart(cartItem.getCart_id(), product));
+            carts.add(new CartResponse(cartItem.getCart_id(), product));
         }
         return carts;
     }
