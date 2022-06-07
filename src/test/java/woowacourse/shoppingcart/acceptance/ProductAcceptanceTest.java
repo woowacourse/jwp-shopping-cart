@@ -31,6 +31,15 @@ class ProductAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/api/products/{productId}", productId)
+                .then().log().all()
+                .extract();
+    }
+
     public static void 상품_추가됨(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
@@ -48,6 +57,10 @@ class ProductAcceptanceTest extends AcceptanceTest {
     public static void 상품_조회됨(final ExtractableResponse<Response> response, final Long productId) {
         final Product resultProduct = response.as(Product.class);
         assertThat(resultProduct.getId()).isEqualTo(productId);
+    }
+
+    public static void 상품_삭제됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
@@ -72,5 +85,38 @@ class ProductAcceptanceTest extends AcceptanceTest {
         // then 정상적으로 상품이 조회된다.
         조회_응답됨(response);
         상품_조회됨(response, productId);
+    }
+
+    @Test
+    @DisplayName("상품 조회시 존재하지 않는 상품일 경우 404 응답을 반환한다.")
+    void getProduct_invalidProduct_statusCode404() {
+        //when
+        final ExtractableResponse<Response> response = 상품_조회_요청(100L);
+
+        //then
+        요청이_NOT_FOUND_응답함(response);
+    }
+
+    @Test
+    @DisplayName("상품을 삭제한다.")
+    void delete() {
+        // given 상품을 등록하고
+        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+
+        // when 상품 삭제를 하면
+        ExtractableResponse<Response> response = 상품_삭제_요청(productId);
+
+        // then 상품이 정상적으로 삭제된다.
+        상품_삭제됨(response);
+    }
+
+    @Test
+    @DisplayName("상품 삭제시 존재하지 않는 상품일 경우 404 응답을 반환한다.")
+    void delete_invalidProduct_statusCode404() {
+        //when
+        final ExtractableResponse<Response> response = 상품_조회_요청(100L);
+
+        //then
+        요청이_NOT_FOUND_응답함(response);
     }
 }

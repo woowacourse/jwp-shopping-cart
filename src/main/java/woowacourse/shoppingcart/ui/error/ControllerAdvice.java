@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.ui.error;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
-
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -17,12 +16,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationFailureException;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
-import woowacourse.shoppingcart.ui.error.dto.response.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.ui.error.dto.response.ErrorResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -58,7 +57,6 @@ public class ControllerAdvice {
     @ExceptionHandler({
             InvalidCustomerException.class,
             InvalidCartItemException.class,
-            InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
             NoSuchEmailException.class,
@@ -66,6 +64,11 @@ public class ControllerAdvice {
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidProductException.class)
+    public ResponseEntity<ErrorResponse> handleNotFountException(final RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(AuthorizationFailureException.class)
