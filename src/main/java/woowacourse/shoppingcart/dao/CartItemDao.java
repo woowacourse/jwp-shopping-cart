@@ -35,7 +35,6 @@ public class CartItemDao {
 
     public List<Long> findIdsByCustomerId(Long customerId) {
         String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
@@ -74,10 +73,27 @@ public class CartItemDao {
         }
     }
 
+    public void addQuantity(Long cartItemId, int quantity) {
+        String sql = "UPDATE cart_item SET quantity = quantity + :quantity WHERE id = :id";
+        SqlParameterSource parameterSource = new MapSqlParameterSource("id", cartItemId)
+                .addValue("quantity", quantity);
+        namedParameterJdbcTemplate.update(sql, parameterSource);
+    }
+
     public void updateQuantity(Long cartItemId, int quantity) {
         String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", cartItemId)
                 .addValue("quantity", quantity);
         namedParameterJdbcTemplate.update(sql, parameterSource);
+    }
+
+    public Optional<Long> findIdByProductId(Long productId) {
+        try {
+            String sql = "SELECT id FROM cart_item WHERE product_id = :productId";
+            SqlParameterSource parameterSource = new MapSqlParameterSource("productId", productId);
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameterSource, Long.class));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

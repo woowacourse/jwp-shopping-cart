@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NoSuchCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -56,12 +56,19 @@ public class CartItemService {
 
     public Long addCart(CartItemSaveRequest cartItemSaveRequest, LoginCustomer loginCustomer) {
         Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername());
-        try {
-            return cartItemDao.addCartItem(customerId, cartItemSaveRequest.getProductId(),
-                    cartItemSaveRequest.getQuantity());
-        } catch (Exception e) {
-            throw new InvalidProductException();
+        Optional<Long> OptionalCartItemId = cartItemDao.findIdByProductId(cartItemSaveRequest.getProductId());
+        if (OptionalCartItemId.isPresent()) {
+            Long cartItemId = OptionalCartItemId.get();
+            cartItemDao.addQuantity(cartItemId, cartItemSaveRequest.getQuantity());
+            return cartItemId;
         }
+        return cartItemDao.addCartItem(customerId, cartItemSaveRequest.getProductId(),
+                cartItemSaveRequest.getQuantity());
+    }
+
+    public void deleteCart(LoginCustomer loginCustomer, Long cartItemId) {
+        validateCustomerCart(cartItemId, loginCustomer.getUsername());
+        cartItemDao.deleteCartItem(cartItemId);
     }
 
     private void validateCustomerCart(Long cartItemId, String username) {
@@ -72,13 +79,8 @@ public class CartItemService {
         throw new NotInCustomerCartItemException();
     }
 
-    public void deleteCart(LoginCustomer loginCustomer, Long cartItemId) {
-        validateCustomerCart(cartItemId, loginCustomer.getUsername());
-        cartItemDao.deleteCartItem(cartItemId);
-    }
-
     public void updateQuantity(LoginCustomer loginCustomer, Long cartItemId, int quantity) {
-        validateCustomerCart(cartItemId, loginCustomer.getUsername());
+        customerDao.findIdByUsername(loginCustomer.getUsername());
         cartItemDao.updateQuantity(cartItemId, quantity);
     }
 }

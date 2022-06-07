@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static Fixture.CustomerFixtures.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
 
 import java.util.List;
@@ -44,6 +45,24 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1, 10);
 
         장바구니_아이템_추가됨(response);
+    }
+
+    @DisplayName("장바구니 아이템 추가 - 같은 상품을 반복해서 추가하면 quantity 가 추가된다.")
+    @Test
+    void addCartItem_duplicate() {
+        String accessToken = SimpleRestAssured.getAccessToken(YAHO_TOKEN_REQUEST);
+
+        장바구니_아이템_추가_요청(accessToken, productId1, 10);
+        장바구니_아이템_추가_요청(accessToken, productId1, 10);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(accessToken);
+        List<Integer> quantities = response.jsonPath().getList("quantity", Integer.class);
+
+        assertAll(
+                () -> assertThat(quantities.size()).isEqualTo(1),
+                () -> assertThat(quantities.get(0)).isEqualTo(20)
+        );
+
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
