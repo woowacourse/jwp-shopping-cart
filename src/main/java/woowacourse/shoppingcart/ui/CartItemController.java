@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
@@ -46,10 +47,10 @@ public class CartItemController {
         return ResponseEntity.created(responseLocation).build();
     }
 
-    @DeleteMapping("/customers/{customerName}/carts/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                               @PathVariable final Long cartId) {
-        cartService.deleteCart(customerName, cartId);
+    @DeleteMapping("/customer/carts")
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final Long customerId,
+                                               @Valid @RequestBody DeleteCartItemRequest request) {
+        cartService.deleteCart(customerId, request.getCartIds());
         return ResponseEntity.noContent().build();
     }
 
@@ -64,11 +65,5 @@ public class CartItemController {
                 .buildAndExpand(cartId)
                 .toUri();
         return ResponseEntity.created(responseLocation).build();
-    }
-
-    @GetMapping("/customers/{customerName}/carts")
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        // TODO 레거시
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
     }
 }

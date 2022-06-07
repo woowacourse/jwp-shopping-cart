@@ -59,36 +59,20 @@ public class CartService {
         }
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        // TODO 레거시
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
+    public void deleteCart(final Long customerId, final List<Long> cartIds) {
+        validateCustomerCart(customerId, cartIds);
+        cartItemDao.deleteCartItems(cartIds);
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
-    }
-
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
+    private void validateCustomerCart(final Long customerId, final List<Long> cartIds) {
+        final List<Long> findByCustomerId = cartItemDao.findIdsByCustomerId(customerId);
+        if (containSameElements(cartIds, findByCustomerId)) {
             return;
         }
         throw new NotInCustomerCartItemException();
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        // TODO 레거시
-        final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(CustomerNotFoundException::new);
-        return cartItemDao.findIdsByCustomerId(customerId);
+    private boolean containSameElements(final List<Long> from, final List<Long> to) {
+        return from.containsAll(to) && to.containsAll(from);
     }
 }

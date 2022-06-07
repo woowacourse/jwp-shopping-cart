@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.acceptance.AuthAcceptanceFixture;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -51,11 +52,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
+    public static ExtractableResponse<Response> 토큰으로_장바구니_삭제_요청(String token, DeleteCartItemRequest data) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
+                .body(data)
+                .when().delete("/api/customer/carts")
                 .then().log().all()
                 .extract();
     }
@@ -137,9 +140,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        Long cartId1 = 토큰으로_장바구니_아이템_추가되어_있음(token, productId1);
+        Long cartId2 = 토큰으로_장바구니_아이템_추가되어_있음(token, productId2);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        ExtractableResponse<Response> response
+                = 토큰으로_장바구니_삭제_요청(token, new DeleteCartItemRequest(List.of(cartId1, cartId2)));
 
         장바구니_삭제됨(response);
     }
