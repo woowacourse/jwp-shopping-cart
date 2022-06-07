@@ -10,7 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.entity.CartItemEntity;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 

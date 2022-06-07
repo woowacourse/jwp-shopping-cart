@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.CartItemRepository;
-import woowacourse.shoppingcart.domain.CartItems;
 import woowacourse.shoppingcart.domain.Quantity;
+import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.domain.cart.CartItemRepository;
+import woowacourse.shoppingcart.domain.cart.CartItems;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.CartItemRequest;

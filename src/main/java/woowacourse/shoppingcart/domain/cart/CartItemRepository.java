@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.cart;
 
 public interface CartItemRepository {
     CartItems findByCustomer(long customerId);

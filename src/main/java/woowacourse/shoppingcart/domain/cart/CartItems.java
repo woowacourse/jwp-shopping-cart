@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.cart;
 
 import java.util.Iterator;
 import java.util.List;

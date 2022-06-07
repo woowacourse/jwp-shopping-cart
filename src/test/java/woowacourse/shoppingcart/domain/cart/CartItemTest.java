@@ -1,10 +1,11 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.cart;
 
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.domain.product.ThumbnailImage;
 import woowacourse.shoppingcart.exception.DuplicateProductInCartException;

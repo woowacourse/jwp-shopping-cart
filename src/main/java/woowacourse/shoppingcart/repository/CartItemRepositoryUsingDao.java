@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.CartItemRepository;
-import woowacourse.shoppingcart.domain.CartItems;
 import woowacourse.shoppingcart.domain.Quantity;
+import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.domain.cart.CartItemRepository;
+import woowacourse.shoppingcart.domain.cart.CartItems;
 import woowacourse.shoppingcart.entity.CartItemEntity;
 
 @Repository
