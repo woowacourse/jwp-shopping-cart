@@ -43,6 +43,23 @@ public class CartService {
         return carts;
     }
 
+    public List<Cart> findCartsByCustomer(final Customer customer) {
+        final List<Long> cartIds = findCartIdsByCustomerId(customer.getId());
+
+        final List<Cart> carts = new ArrayList<>();
+        for (final Long cartId : cartIds) {
+            final Long productId = cartItemDao.findProductIdById(cartId);
+            final Product product = productDao.findProductById(productId)
+                    .orElseThrow(InvalidProductException::new);
+            carts.add(new Cart(cartId, product));
+        }
+        return carts;
+    }
+
+    private List<Long> findCartIdsByCustomerId(final Long customerId) {
+        return cartItemDao.findIdsByCustomerId(customerId);
+    }
+
     private List<Long> findCartIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         return cartItemDao.findIdsByCustomerId(customerId);

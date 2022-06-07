@@ -23,6 +23,11 @@ public class CartItemController {
         this.cartService = cartService;
     }
 
+    @GetMapping("/users/me/carts")
+    public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal Customer customer) {
+        return ResponseEntity.ok(cartService.findCartsByCustomer(customer));
+    }
+
     @GetMapping("/api/customers/{customerName}/carts")
     public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
