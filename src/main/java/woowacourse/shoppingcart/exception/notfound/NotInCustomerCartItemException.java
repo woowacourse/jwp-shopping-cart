@@ -2,8 +2,10 @@ package woowacourse.shoppingcart.exception.notfound;
 
 public class NotInCustomerCartItemException extends NotFoundException {
 
+    private static final String MESSAGE = "장바구니 아이템이 없습니다.";
+
     public NotInCustomerCartItemException() {
-        this("장바구니 아이템이 없습니다.");
+        this(MESSAGE);
     }
 
     public NotInCustomerCartItemException(final String msg) {
