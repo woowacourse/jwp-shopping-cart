@@ -22,6 +22,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public Long addProduct(final Product product) {
         return productDao.save(product);
     }
@@ -32,8 +33,9 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public List<ProductResponse> findProducts() {
+        List<Product> products = productDao.findProducts();
+        return ProductResponse.from(products);
     }
 
     public List<ProductResponse> findProductsInPage(final Long pageNum, final Long limitCount) {
@@ -42,6 +44,7 @@ public class ProductService {
         return ProductResponse.from(products);
     }
 
+    @Transactional
     public void deleteProductById(final Long productId) {
         productDao.delete(productId);
     }

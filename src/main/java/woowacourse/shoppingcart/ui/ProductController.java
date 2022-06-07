@@ -22,7 +22,7 @@ public class ProductController {
     }
 
     @GetMapping("/api/products")
-    public ResponseEntity<List<Product>> products() {
+    public ResponseEntity<List<ProductResponse>> products() {
         return ResponseEntity.ok(productService.findProducts());
     }
 
