@@ -1,14 +1,11 @@
 package woowacourse.shoppingcart.acceptance;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Product;
 
@@ -57,7 +54,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     private String 로그인_후_토큰_획득() {
-        return requestHttpPost("", new TokenRequest("email", "Pw123456!"), "/auth/login")
+        return requestHttpPost("", new LoginRequest("email", "Pw123456!"), "/auth/login")
                 .extract().as(TokenResponse.class).getAccessToken();
     }
 
@@ -131,14 +128,16 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
+        ProductsResponse products = response.jsonPath().getObject(".", ProductsResponse.class);
+        List<Long> resultProductIds = products.getProducts().stream()
                 .map(ProductResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
     }
 
     public static void 장바구니에_추가되어_있는_상품만_추가여부가_true(ExtractableResponse<Response> response) {
-        List<Boolean> result =  response.jsonPath().getList(".", ProductResponse.class).stream()
+        ProductsResponse products = response.jsonPath().getObject(".", ProductsResponse.class);
+        List<Boolean> result =  products.getProducts().stream()
                 .map(ProductResponse::getIsStored)
                 .collect(Collectors.toList());
 
@@ -146,7 +145,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_추가여부가_모두_false(ExtractableResponse<Response> response) {
-        List<Boolean> result =  response.jsonPath().getList(".", ProductResponse.class).stream()
+        ProductsResponse products = response.jsonPath().getObject(".", ProductsResponse.class);
+        List<Boolean> result =  products.getProducts().stream()
                 .map(ProductResponse::getIsStored)
                 .collect(Collectors.toList());
 

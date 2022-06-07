@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -9,8 +9,6 @@ import woowacourse.auth.support.User;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductsResponse;
 
@@ -25,16 +23,16 @@ public class ProductService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<ProductResponse> findProducts(User user) {
+    public ProductsResponse findProducts(User user) {
         List<Product> products = productDao.findProducts();
 
         if (user.isNonMember()) {
-            return createProductResponses(
-                    products, user.getId(), (customerId, productId) -> false);
+            return new ProductsResponse(
+                    createProductResponses(products, user.getId(), (customerId, productId) -> false));
         }
 
-        return createProductResponses(
-                products, user.getId(), cartItemDao::existByCustomerIdAndProductId);
+        return new ProductsResponse(
+                createProductResponses(products, user.getId(), cartItemDao::existByCustomerIdAndProductId));
     }
 
     private List<ProductResponse> createProductResponses(List<Product> products,

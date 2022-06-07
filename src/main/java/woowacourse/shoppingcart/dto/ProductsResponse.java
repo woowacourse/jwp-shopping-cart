@@ -4,16 +4,16 @@ import java.util.List;
 
 public class ProductsResponse {
 
-    private List<ProductResponse> productResponses;
+    private List<ProductResponse> products;
 
     public ProductsResponse() {
     }
 
     public ProductsResponse(List<ProductResponse> productResponses) {
-        this.productResponses = productResponses;
+        this.products = productResponses;
     }
 
-    public List<ProductResponse> getProductResponses() {
-        return productResponses;
+    public List<ProductResponse> getProducts() {
+        return products;
     }
 }

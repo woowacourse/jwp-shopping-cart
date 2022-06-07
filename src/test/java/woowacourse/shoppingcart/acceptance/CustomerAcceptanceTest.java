@@ -7,7 +7,7 @@ import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
@@ -16,7 +16,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     private final CustomerRequest customer = new CustomerRequest(
             "email", "Pw123456!", "name", "010-1234-5678", "address");
-    private final TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
+    private final LoginRequest loginRequest = new LoginRequest("email", "Pw123456!");
 
     @DisplayName("회원가입")
     @Test
@@ -55,7 +55,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         requestHttpPost("", customer, "/customers");
 
-        String accessToken = requestHttpPost("", tokenRequest, "/auth/login")
+        String accessToken = requestHttpPost("", loginRequest, "/auth/login")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         //when
@@ -79,7 +79,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         requestHttpPost("", customer, "/customers");
 
-        String accessToken = requestHttpPost("", tokenRequest, "/auth/login")
+        String accessToken = requestHttpPost("", loginRequest, "/auth/login")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         //when

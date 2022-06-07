@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 
 @RestController
@@ -23,8 +23,8 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public TokenResponse login(@RequestBody @Valid TokenRequest tokenRequest) {
-        Long customerId = authService.loginCustomer(tokenRequest);
+    public TokenResponse login(@RequestBody @Valid LoginRequest loginRequest) {
+        Long customerId = authService.loginCustomer(loginRequest);
         return authService.createToken(customerId);
     }
 }

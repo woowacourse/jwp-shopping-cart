@@ -3,7 +3,7 @@ package woowacourse.auth.application;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -23,10 +23,10 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public Long loginCustomer(TokenRequest tokenRequest) {
-        String password = Password.from(tokenRequest.getPassword()).getPassword();
+    public Long loginCustomer(LoginRequest loginRequest) {
+        String password = Password.from(loginRequest.getPassword()).getPassword();
         Optional<Long> idByEmailAndPassword =
-                customerDao.findIdByEmailAndPassword(tokenRequest.getEmail(), password);
+                customerDao.findIdByEmailAndPassword(loginRequest.getEmail(), password);
 
         return idByEmailAndPassword.orElseThrow(
                 () -> new InvalidCustomerException("Email 또는 Password가 일치하지 않습니다."));
