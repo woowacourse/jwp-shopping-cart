@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
@@ -7,11 +9,9 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -28,7 +28,7 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<Cart> findCartsByCustomerName(final String customerName) {
+    public List<Cart> findCartsByCustomerName(final UserName customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
         final List<Cart> carts = new ArrayList<>();
@@ -41,12 +41,12 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
+    private List<Long> findCartIdsByCustomerName(final UserName customerName) {
         final Long customerId = customerDao.getIdByUserName(customerName);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
+    public Long addCart(final Long productId, final UserName customerName) {
         final Long customerId = customerDao.getIdByUserName(customerName);
         try {
             return cartItemDao.addCartItem(customerId, productId);
@@ -55,12 +55,12 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
+    public void deleteCart(final UserName customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
+    private void validateCustomerCart(final Long cartId, final UserName customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
         if (cartIds.contains(cartId)) {
             return;

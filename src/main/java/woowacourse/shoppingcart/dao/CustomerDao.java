@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Locale;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -10,8 +11,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
-
-import java.util.Locale;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
@@ -48,10 +47,10 @@ public class CustomerDao {
         }
     }
 
-    public Long getIdByUserName(final String userName) {
+    public Long getIdByUserName(final UserName userName) {
         try {
             final String query = "SELECT id FROM customer WHERE username = :userName";
-            return jdbcTemplate.queryForObject(query, Map.of("userName", userName.toLowerCase(Locale.ROOT)),
+            return jdbcTemplate.queryForObject(query, Map.of("userName", userName.getValue().toLowerCase(Locale.ROOT)),
                     Long.class);
         } catch (final EmptyResultDataAccessException e) {
             throw new NotFoundCustomerException();

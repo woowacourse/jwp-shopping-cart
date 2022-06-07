@@ -1,17 +1,21 @@
 package woowacourse.shoppingcart.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.*;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.request.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.OrderDao;
+import woowacourse.shoppingcart.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.UserName;
+import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -32,7 +36,7 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final UserName customerName) {
         final Long customerId = customerDao.getIdByUserName(customerName);
         final Long ordersId = orderDao.addOrders(customerId);
 
@@ -49,12 +53,12 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Orders findOrderById(final String customerName, final Long orderId) {
+    public Orders findOrderById(final UserName customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
+    private void validateOrderIdByCustomerName(final UserName customerName, final Long orderId) {
         final Long customerId = customerDao.getIdByUserName(customerName);
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
@@ -63,7 +67,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
+    public List<Orders> findOrdersByCustomerName(final UserName customerName) {
         final Long customerId = customerDao.getIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 

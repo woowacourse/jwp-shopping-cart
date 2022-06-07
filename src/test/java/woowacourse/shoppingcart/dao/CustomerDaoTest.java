@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -10,10 +14,6 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -47,7 +47,7 @@ public class CustomerDaoTest {
         final Long expectedId = customerDao.save(new Customer("ellie", "12345678"));
 
         // when
-        final Long actualId = customerDao.getIdByUserName("ellie");
+        final Long actualId = customerDao.getIdByUserName(new UserName("ellie"));
 
         // then
         assertThat(actualId).isEqualTo(expectedId);
@@ -59,7 +59,7 @@ public class CustomerDaoTest {
         final Long expectedId = customerDao.save(new Customer("ellie", "12345678"));
 
         // when
-        final Long actualId = customerDao.getIdByUserName("ellie");
+        final Long actualId = customerDao.getIdByUserName(new UserName("ellie"));
 
         // then
         assertThat(actualId).isEqualTo(expectedId);
