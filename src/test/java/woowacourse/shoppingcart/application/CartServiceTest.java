@@ -66,8 +66,7 @@ public class CartServiceTest {
 
         // when, then
         assertThatThrownBy(() -> cartService.addCart(notExistProductId, customer))
-                .isInstanceOf(DuplicatedProductInCartException.class)
-                .hasMessage("물품이 존재하지 않습니다.");
+                .isInstanceOf(NotFoundProductException.class);
     }
 
     @DisplayName("장바구니에 등록된 물품을 중복 추가하려면 예외가 발생한다.")
@@ -155,14 +154,16 @@ public class CartServiceTest {
         //given
         Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
         CartUpdationRequest request = new CartUpdationRequest(4);
+        Product product = new Product(1L, "product9", 9000, "url9");
 
-        given(cartItemDao.existProduct(1L, 21L))
+        given(productService.findProductById(1L))
+                .willReturn(product);
+        given(cartItemDao.existProduct(1L, 1L))
                 .willReturn(false);
 
         // when, then
-        assertThatThrownBy(() -> cartService.updateProductInCart(customer, request, 21L))
-                .isInstanceOf(DuplicatedProductInCartException.class)
-                .hasMessage("장바구니에 상품이 존재하지 않습니다.");
+        assertThatThrownBy(() -> cartService.updateProductInCart(customer, request, 1L))
+                .isInstanceOf(NotExistProductInCartException.class);
     }
 
     @DisplayName("장바구니에서 상품을 삭제한다.")
@@ -172,6 +173,8 @@ public class CartServiceTest {
         Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
         Product product1 = new Product(1L, "product1", 1000, "url1");
 
+        given(productService.findProductById(1L))
+                .willReturn(product1);
         given(cartItemDao.existProduct(1L, 1L))
                 .willReturn(true);
 
@@ -186,12 +189,15 @@ public class CartServiceTest {
         //given
         Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
 
-        given(cartItemDao.existProduct(1L, 21L))
+        Product product = new Product(9L, "product9", 9000, "url9");
+
+        given(productService.findProductById(9L))
+                .willReturn(product);
+        given(cartItemDao.existProduct(1L, 9L))
                 .willThrow(new NotExistProductInCartException());
 
         // when, then
-        assertThatThrownBy(() -> cartService.deleteProductInCart(customer, 21L))
-                .isInstanceOf(DuplicatedProductInCartException.class)
-                .hasMessage("장바구니에 상품이 존재하지 않습니다.");
+        assertThatThrownBy(() -> cartService.deleteProductInCart(customer, 9L))
+                .isInstanceOf(NotExistProductInCartException.class);
     }
 }
