@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemsResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -41,6 +42,11 @@ public class CartService {
 
     public CartItem findById(final Long cartItemId) {
         return cartItemDao.findById(cartItemId);
+    }
+
+    public CartItemsResponse findAllByCustomerName(final String username) {
+        Long customerId = customerDao.findIdByUserName(username);
+        return new CartItemsResponse(cartItemDao.findAllByCustomerId(customerId));
     }
 
     public List<CartItem> findCartsByCustomerName(final String customerName) {
