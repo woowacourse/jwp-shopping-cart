@@ -1,4 +1,4 @@
-package woowacourse.auth.acceptance;
+package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.util.AcceptanceTestUtil.로그인_없이_회원_정보를_조회한다;
@@ -15,10 +15,10 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.request.MemberUpdateRequest;
-import woowacourse.auth.dto.request.PasswordUpdateRequest;
-import woowacourse.auth.dto.response.ErrorResponse;
-import woowacourse.auth.dto.response.MemberResponse;
+import woowacourse.shoppingcart.dto.request.MemberUpdateRequest;
+import woowacourse.shoppingcart.dto.request.PasswordUpdateRequest;
+import woowacourse.shoppingcart.dto.response.ErrorResponse;
+import woowacourse.shoppingcart.dto.response.MemberResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("회원 관련 기능")

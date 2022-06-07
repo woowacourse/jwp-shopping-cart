@@ -12,7 +12,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.response.ErrorResponse;
+import woowacourse.shoppingcart.dto.response.ErrorResponse;
 import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.dto.response.PasswordCheckResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;

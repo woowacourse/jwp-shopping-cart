@@ -1,22 +1,23 @@
-package woowacourse.auth.domain;
+package woowacourse.shoppingcart.domain.value;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class Nickname {
+public class Email {
 
-    private static final Pattern PATTERN = Pattern.compile("^[가-힣]{1,5}$");
+    private static final Pattern PATTERN = Pattern.compile("^(?=.{1,64}@)[A-Za-z0-9_-]"
+            + "+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
 
     private final String value;
 
-    public Nickname(String value) {
+    public Email(String value) {
         validate(value);
         this.value = value;
     }
 
     private void validate(String value) {
         if (!PATTERN.matcher(value).matches()) {
-            throw new IllegalArgumentException("닉네임 형식이 올바르지 않습니다.");
+            throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
         }
     }
 
@@ -32,8 +33,8 @@ public class Nickname {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Nickname nickname = (Nickname) o;
-        return Objects.equals(value, nickname.value);
+        Email email = (Email) o;
+        return Objects.equals(value, email.value);
     }
 
     @Override

@@ -1,6 +1,6 @@
-package woowacourse.auth.dto.response;
+package woowacourse.shoppingcart.dto.response;
 
-import woowacourse.auth.domain.Member;
+import woowacourse.shoppingcart.domain.value.Member;
 
 public class MemberResponse {
 

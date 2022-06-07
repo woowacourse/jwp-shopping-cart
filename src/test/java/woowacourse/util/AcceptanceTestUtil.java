@@ -12,11 +12,11 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.dto.request.LoginRequest;
-import woowacourse.auth.dto.request.MemberCreateRequest;
-import woowacourse.auth.dto.request.MemberUpdateRequest;
+import woowacourse.shoppingcart.dto.request.MemberCreateRequest;
+import woowacourse.shoppingcart.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
-import woowacourse.auth.dto.request.PasswordUpdateRequest;
-import woowacourse.auth.dto.response.EmailUniqueCheckResponse;
+import woowacourse.shoppingcart.dto.request.PasswordUpdateRequest;
+import woowacourse.shoppingcart.dto.response.EmailUniqueCheckResponse;
 import woowacourse.auth.dto.response.LoginResponse;
 
 public class AcceptanceTestUtil {

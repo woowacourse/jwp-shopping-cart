@@ -1,16 +1,16 @@
-package woowacourse.auth.application;
+package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dao.MemberDao;
-import woowacourse.auth.domain.Email;
-import woowacourse.auth.domain.Member;
-import woowacourse.auth.domain.Nickname;
-import woowacourse.auth.domain.Password;
-import woowacourse.auth.dto.request.MemberCreateRequest;
-import woowacourse.auth.dto.request.MemberUpdateRequest;
-import woowacourse.auth.dto.request.PasswordUpdateRequest;
-import woowacourse.auth.dto.response.MemberResponse;
+import woowacourse.shoppingcart.dao.MemberDao;
+import woowacourse.shoppingcart.domain.value.Email;
+import woowacourse.shoppingcart.domain.value.Member;
+import woowacourse.shoppingcart.domain.value.Nickname;
+import woowacourse.shoppingcart.domain.value.Password;
+import woowacourse.shoppingcart.dto.request.MemberCreateRequest;
+import woowacourse.shoppingcart.dto.request.MemberUpdateRequest;
+import woowacourse.shoppingcart.dto.request.PasswordUpdateRequest;
+import woowacourse.shoppingcart.dto.response.MemberResponse;
 import woowacourse.auth.exception.AuthorizationException;
 
 @Service

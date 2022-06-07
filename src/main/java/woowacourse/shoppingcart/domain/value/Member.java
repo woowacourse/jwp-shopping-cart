@@ -1,4 +1,4 @@
-package woowacourse.auth.domain;
+package woowacourse.shoppingcart.domain.value;
 
 import java.util.Objects;
 

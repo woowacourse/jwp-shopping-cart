@@ -1,4 +1,4 @@
-package woowacourse.auth.ui;
+package woowacourse.shoppingcart.ui;
 
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.auth.application.MemberService;
-import woowacourse.auth.dto.request.MemberCreateRequest;
-import woowacourse.auth.dto.request.MemberUpdateRequest;
-import woowacourse.auth.dto.request.PasswordUpdateRequest;
-import woowacourse.auth.dto.response.EmailUniqueCheckResponse;
-import woowacourse.auth.dto.response.MemberResponse;
+import woowacourse.shoppingcart.application.MemberService;
+import woowacourse.shoppingcart.dto.request.MemberCreateRequest;
+import woowacourse.shoppingcart.dto.request.MemberUpdateRequest;
+import woowacourse.shoppingcart.dto.request.PasswordUpdateRequest;
+import woowacourse.shoppingcart.dto.response.EmailUniqueCheckResponse;
+import woowacourse.shoppingcart.dto.response.MemberResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 
 @RestController

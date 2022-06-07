@@ -1,4 +1,4 @@
-package woowacourse.auth.ui;
+package woowacourse.shoppingcart.ui;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -24,11 +24,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.auth.application.MemberService;
-import woowacourse.auth.dto.request.MemberCreateRequest;
-import woowacourse.auth.dto.request.MemberUpdateRequest;
-import woowacourse.auth.dto.request.PasswordUpdateRequest;
-import woowacourse.auth.dto.response.MemberResponse;
+import woowacourse.shoppingcart.application.MemberService;
+import woowacourse.shoppingcart.dto.request.MemberCreateRequest;
+import woowacourse.shoppingcart.dto.request.MemberUpdateRequest;
+import woowacourse.shoppingcart.dto.request.PasswordUpdateRequest;
+import woowacourse.shoppingcart.dto.response.MemberResponse;
 import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.support.TokenProvider;
 

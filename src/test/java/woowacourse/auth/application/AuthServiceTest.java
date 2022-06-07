@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.request.LoginRequest;
-import woowacourse.auth.dto.request.MemberCreateRequest;
+import woowacourse.shoppingcart.application.MemberService;
+import woowacourse.shoppingcart.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.response.LoginResponse;
 

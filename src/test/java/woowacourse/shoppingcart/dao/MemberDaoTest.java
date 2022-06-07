@@ -1,4 +1,4 @@
-package woowacourse.auth.dao;
+package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -13,7 +13,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import woowacourse.auth.domain.Member;
+import woowacourse.shoppingcart.dao.MemberDao;
+import woowacourse.shoppingcart.domain.value.Member;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

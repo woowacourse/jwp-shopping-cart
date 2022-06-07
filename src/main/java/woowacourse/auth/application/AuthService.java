@@ -2,8 +2,8 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dao.MemberDao;
-import woowacourse.auth.domain.Member;
+import woowacourse.shoppingcart.dao.MemberDao;
+import woowacourse.shoppingcart.domain.value.Member;
 import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.response.LoginResponse;

@@ -1,4 +1,4 @@
-package woowacourse.auth.application;
+package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -11,11 +11,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dao.MemberDao;
-import woowacourse.auth.dto.request.MemberCreateRequest;
-import woowacourse.auth.dto.request.MemberUpdateRequest;
-import woowacourse.auth.dto.request.PasswordUpdateRequest;
-import woowacourse.auth.dto.response.MemberResponse;
+import woowacourse.shoppingcart.application.MemberService;
+import woowacourse.shoppingcart.dao.MemberDao;
+import woowacourse.shoppingcart.dto.request.MemberCreateRequest;
+import woowacourse.shoppingcart.dto.request.MemberUpdateRequest;
+import woowacourse.shoppingcart.dto.request.PasswordUpdateRequest;
+import woowacourse.shoppingcart.dto.response.MemberResponse;
 import woowacourse.auth.exception.AuthorizationException;
 
 @SpringBootTest
