@@ -8,9 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.DuplicateCustomerException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.ShoppingCartException;
+import woowacourse.shoppingcart.exception.*;
 
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -29,9 +27,16 @@ public class CustomerControllerAdvice {
 
     @ExceptionHandler({
             InvalidCustomerException.class,
-            DuplicateCustomerException.class
+            InvalidProductException.class,
+            DuplicateCustomerException.class,
+            DuplicateCartItemException.class
     })
     public ResponseEntity<ErrorResponse> handleShoppingCartException(final ShoppingCartException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
+    }
+
+    @ExceptionHandler({NotFoundException.class})
+    public ResponseEntity<Void> handleNotFoundException() {
+        return ResponseEntity.notFound().build();
     }
 }

@@ -30,7 +30,7 @@ public class CartItemController {
 
     @PostMapping("/users/me/carts")
     public ResponseEntity<Void> addCartItem2(@RequestBody ItemAddRequest itemAddRequest, @AuthenticationPrincipal Customer customer) {
-        //cartService.addCart(itemAddRequest.getProductId(), email);
+        cartService.addCart(itemAddRequest.getProductId(), customer);
         return ResponseEntity.noContent().build();
     }
 

@@ -6,9 +6,12 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.DuplicateCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +36,8 @@ public class CartService {
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
+            final Product product = productDao.findProductById(productId)
+                    .orElseThrow(InvalidProductException::new);
             carts.add(new Cart(cartId, product));
         }
         return carts;
@@ -44,7 +48,26 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
+    public Long addCart(final Long productId, final Customer customer) {
+        productDao.findProductById(productId)
+                .orElseThrow(ProductNotFoundException::new);
+        validateDuplicateCartItem(productId);
+        try {
+            return cartItemDao.addCartItem(customer.getId(), productId);
+        } catch (Exception e) {
+            throw new InvalidProductException();
+        }
+    }
+
+    private void validateDuplicateCartItem(Long productId) {
+        if (cartItemDao.existByProductId(productId)) {
+            throw new DuplicateCartItemException();
+        }
+    }
+
     public Long addCart(final Long productId, final String customerName) {
+        productDao.findProductById(productId)
+                .orElseThrow(InvalidProductException::new);
         final Long customerId = customerDao.findIdByUserName(customerName);
         try {
             return cartItemDao.addCartItem(customerId, productId);
