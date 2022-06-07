@@ -49,7 +49,7 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/duplication")
+    @GetMapping("/exists")
     public ResponseEntity<DuplicateResponse> duplicateUserName(@Valid @RequestParam String userName) {
         return ResponseEntity.ok(customerService.isDuplicateUserName(userName));
     }
