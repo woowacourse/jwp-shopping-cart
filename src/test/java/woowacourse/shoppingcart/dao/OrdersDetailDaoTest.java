@@ -9,10 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.dao.entity.OrdersDetailEntity;
+import woowacourse.shoppingcart.dao.entity.ProductEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -20,26 +21,22 @@ import woowacourse.shoppingcart.domain.order.OrderDetail;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrdersDetailDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
+    private final OrdersDao ordersDao;
+    private final ProductDao productDao;
     private long ordersId;
     private long productId;
-    private long customerId;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public OrdersDetailDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
         this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
+        this.ordersDao = new OrdersDao(jdbcTemplate);
+        this.productDao = new ProductDao(jdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
-        customerId = 1L;
-        jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
-        ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
-
-        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
-                , "name", 1000, "imageUrl");
-        productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        productId = productDao.save(new ProductEntity("name", 1_000, "imageUrl"));
+        ordersId = ordersDao.save(1L);
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")
@@ -49,8 +46,7 @@ class OrdersDetailDaoTest {
         int quantity = 5;
 
         //when
-        Long orderDetailId = ordersDetailDao
-                .addOrdersDetail(ordersId, productId, quantity);
+        Long orderDetailId = ordersDetailDao.save(new OrdersDetailEntity(null, ordersId, productId, quantity));
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);
@@ -62,14 +58,11 @@ class OrdersDetailDaoTest {
         //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
-            jdbcTemplate
-                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-                            ordersId, productId, 3);
+            ordersDetailDao.save(new OrdersDetailEntity(null, ordersId, productId, 3));
         }
 
         //when
-        final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsByOrderId(ordersId);
+        final List<OrdersDetailEntity> ordersDetailsByOrderId = ordersDetailDao.findByOrderId(ordersId);
 
         //then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);
