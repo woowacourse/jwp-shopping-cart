@@ -1,24 +1,15 @@
 package woowacourse.shoppingcart.application;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.PermissionCustomerRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.BadRequestException;
 import woowacourse.auth.exception.NotFoundException;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
-import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service

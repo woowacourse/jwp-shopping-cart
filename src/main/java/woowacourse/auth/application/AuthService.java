@@ -15,12 +15,12 @@ import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.dto.CustomerDto;
 
 @Service
 public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
-
     private final CustomerDao customerDao;
 
     public AuthService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
@@ -33,21 +33,13 @@ public class AuthService {
         jwtTokenProvider.validateToken(token);
         return true;
     }
+
     public TokenResponse signIn(final SignInDto signInDto) {
         final Email email = new Email(signInDto.getEmail());
-        final Long customerId = checkSignUpCustomer(email);
-        checkSignUpPassword(email, signInDto.getPassword());
+        final CustomerDto customer = checkSignUpCustomer(email);
+        verifyPassword(signInDto.getPassword(), customer.getPassword());
         String payload = createPayload(new PermissionCustomerRequest(email.getValue()));
-        return new TokenResponse(customerId, jwtTokenProvider.createToken(payload));
-    }
-
-    private void checkSignUpPassword(Email email, String targetPassword) {
-        try {
-            String foundPassword = customerDao.findPasswordByEmail(email);
-            verifyPassword(targetPassword, foundPassword);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException("가입하지 않은 유저입니다.");
-        }
+        return new TokenResponse(customer.getId(), jwtTokenProvider.createToken(payload));
     }
 
     private void verifyPassword(final String password, final String hashedPassword) {
@@ -57,9 +49,9 @@ public class AuthService {
         }
     }
 
-    private Long checkSignUpCustomer(Email email) {
+    private CustomerDto checkSignUpCustomer(Email email) {
         try {
-            return customerDao.findIdByEmail(email);
+            return customerDao.findCustomerByEmail(email);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("가입하지 않은 유저입니다.");
         }

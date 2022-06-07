@@ -4,7 +4,6 @@ import java.util.Locale;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,6 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -36,15 +36,15 @@ public class CustomerDao {
         return simpleInsert.executeAndReturnKey(parameter).longValue();
     }
 
+    public CustomerDto findCustomerByEmail(final Email email) {
+        final String query = "SELECT id, email, password, profileImageUrl, name, gender, birthday, contact, address, detailAddress, zoneCode FROM customer WHERE email=:email";
+        final SqlParameterSource parameter = new MapSqlParameterSource(Map.of("email", email.getValue()));
+        return CreateCustomerDto(query, parameter);
+    }
+
     public Long findIdByEmail(final Email email) {
         final String query = "SELECT id FROM customer WHERE email = ?";
         return jdbcTemplate.queryForObject(query, Long.class, email.getValue());
-    }
-
-
-    public String findPasswordByEmail(final Email email) {
-        final String query = "SELECT password FROM customer WHERE email = ?";
-        return DataAccessUtils.singleResult(jdbcTemplate.queryForList(query, String.class, email.getValue()));
     }
 
     public Long findIdByUserName(final String userName) {
@@ -74,12 +74,6 @@ public class CustomerDao {
         return namedJdbcTemplate.update(query, parameter);
     }
 
-    public int deleteCustomer(final Email email) {
-        final String query = "DELETE FROM customer WHERE email=:email";
-        final SqlParameterSource parameter = new MapSqlParameterSource(Map.of("email", email.getValue()));
-        return namedJdbcTemplate.update(query, parameter);
-    }
-
     public int deleteCustomer(final Long customerId) {
         final String query = "DELETE FROM customer WHERE id=:customerId";
         final SqlParameterSource parameter = new MapSqlParameterSource(Map.of("customerId", customerId));
@@ -102,6 +96,23 @@ public class CustomerDao {
         return namedJdbcTemplate.queryForObject(query, parameter, (resultSet, rowNum) -> {
             return new CustomerResponse(resultSet.getLong("id"),
                     resultSet.getString("email"),
+                    resultSet.getString("profileImageUrl"),
+                    resultSet.getString("name"),
+                    resultSet.getString("gender"),
+                    resultSet.getString("birthday"),
+                    resultSet.getString("contact"),
+                    resultSet.getString("address"),
+                    resultSet.getString("detailAddress"),
+                    resultSet.getString("zoneCode")
+            );
+        });
+    }
+
+    private CustomerDto CreateCustomerDto(String query, SqlParameterSource parameter) {
+        return namedJdbcTemplate.queryForObject(query, parameter, (resultSet, rowNum) -> {
+            return new CustomerDto(resultSet.getLong("id"),
+                    resultSet.getString("email"),
+                    resultSet.getString("password"),
                     resultSet.getString("profileImageUrl"),
                     resultSet.getString("name"),
                     resultSet.getString("gender"),
