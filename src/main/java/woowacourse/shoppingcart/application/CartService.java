@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -27,10 +28,10 @@ public class CartService {
     }
 
     @Transactional
-    public Long add(final Long productId, final String customerName, final int quantity) {
+    public Long add(final String customerName, final CartItemAddRequest request) {
         final Long customerId = customerDao.findIdByUserName(customerName);
-        Product product = productDao.findProductById(productId);
-        CartItem cartItem = new CartItem(product, quantity);
+        Product product = productDao.findProductById(request.getProductId());
+        CartItem cartItem = new CartItem(product, request.getQuantity());
         try {
             return cartItemDao.addCartItem(customerId, cartItem);
         } catch (Exception e) {

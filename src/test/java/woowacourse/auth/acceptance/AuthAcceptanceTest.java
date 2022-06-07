@@ -111,7 +111,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         }
     }
 
-    private String 회원_가입_후_로그인() {
+    public static String 회원_가입_후_로그인() {
         CustomerSignUpRequest request = new CustomerSignUpRequest(USERNAME, PASSWORD, PHONE_NUMBER, ADDRESS);
         회원_가입_요청(request);
         TokenRequest tokenRequest = new TokenRequest(USERNAME, PASSWORD);

@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
 
 @SpringBootTest
 @Transactional
@@ -45,16 +46,16 @@ class CartServiceTest {
         customerDao.save(customer);
         Long productId = productDao.save(product);
 
-        assertDoesNotThrow(() -> cartService.add(productId, customer.getUsername(), 1));
+        assertDoesNotThrow(() -> cartService.add(customer.getUsername(), new CartItemAddRequest(productId, 1)));
     }
-    
+
     @DisplayName("카트에 재고보다 많은 수량 추가시 예외 발생")
     @Test
     void add_quantityOverStock_throwsException() {
         customerDao.save(customer);
         Long productId = productDao.save(product);
 
-        assertThatThrownBy(() -> cartService.add(productId, customer.getUsername(), 11));
+        assertThatThrownBy(() -> cartService.add(customer.getUsername(), new CartItemAddRequest(productId, 11)));
     }
 
 }

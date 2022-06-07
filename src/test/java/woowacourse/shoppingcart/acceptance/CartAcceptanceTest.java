@@ -1,14 +1,13 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.auth.acceptance.AuthAcceptanceTest.회원_가입_후_로그인;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.cartitem.CartItem;
+import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.product.ProductAddRequest;
 
 @DisplayName("장바구니 관련 기능")
@@ -23,11 +23,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
+    private String token;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
+
+        token = 회원_가입_후_로그인();
 
         productId1 = 상품_등록되어_있음(
                 new ProductAddRequest("치킨", 10_000, 100, "chicken.png"));
@@ -38,7 +41,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
+        String token = 회원_가입_후_로그인();
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(new CartItemAddRequest(productId1, 1), token);
 
         장바구니_아이템_추가됨(response);
     }
@@ -46,8 +50,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
+        장바구니_아이템_추가되어_있음(new CartItemAddRequest(productId1, 1), token);
+        장바구니_아이템_추가되어_있음(new CartItemAddRequest(productId2, 1), token);
 
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
 
@@ -58,22 +62,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        Long cartItemId = 장바구니_아이템_추가되어_있음(new CartItemAddRequest(productId1, 1), token);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartItemId);
 
         장바구니_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(CartItemAddRequest request, String token) {
         return RestAssured
                 .given().log().all()
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
+                .body(request)
+                .when().post("/api/cartItems")
                 .then().log().all()
                 .extract();
     }
@@ -101,8 +103,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
+    public static Long 장바구니_아이템_추가되어_있음(CartItemAddRequest request, String token) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(request, token);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 
