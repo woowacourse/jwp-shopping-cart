@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerProfileRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.EmailUniqueCheckResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerProfileRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.EmailUniqueCheckResponse;
 
 @Controller
 @RequestMapping("/api/members")
