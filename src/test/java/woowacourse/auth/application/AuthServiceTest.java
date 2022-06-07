@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
@@ -24,7 +24,7 @@ class AuthServiceTest {
     @Test
     void createToken() {
         // given
-        TokenRequest request = new TokenRequest("puterism@naver.com", "12349053145");
+        LoginRequest request = new LoginRequest("puterism@naver.com", "12349053145");
         String token = authService.createToken(request).getAccessToken();
 
         // when
@@ -38,7 +38,7 @@ class AuthServiceTest {
     @Test
     void findCustomerByToken() {
         // given
-        TokenRequest request = new TokenRequest("puterism@naver.com", "12349053145");
+        LoginRequest request = new LoginRequest("puterism@naver.com", "12349053145");
         String token = authService.createToken(request).getAccessToken();
 
         // when

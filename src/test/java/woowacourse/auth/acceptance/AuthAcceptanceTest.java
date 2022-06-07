@@ -10,8 +10,8 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginTokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
@@ -24,8 +24,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         // email, password를 사용해 토큰을 발급받고
-        TokenRequest tokenRequest = new TokenRequest("puterism@naver.com", "12349053145");
-        String accessToken = 로그인_요청_및_토큰발급(tokenRequest);
+        LoginRequest loginRequest = new LoginRequest("puterism@naver.com", "12349053145");
+        String accessToken = 로그인_요청_및_토큰발급(loginRequest);
 
         // when
         // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
@@ -44,8 +44,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBadBearerAuth() {
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
-        TokenRequest tokenRequest = new TokenRequest("puterism@naver.com", "123456789");
-        ExtractableResponse<Response> loginResponse = 로그인_요청(tokenRequest);
+        LoginRequest loginRequest = new LoginRequest("puterism@naver.com", "123456789");
+        ExtractableResponse<Response> loginResponse = 로그인_요청(loginRequest);
 
         // then
         // 토큰 발급 요청이 거부된다
@@ -64,7 +64,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
-    private ExtractableResponse<Response> 로그인_요청(TokenRequest request) {
+    private ExtractableResponse<Response> 로그인_요청(LoginRequest request) {
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -74,7 +74,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    public String 로그인_요청_및_토큰발급(TokenRequest request) {
+    public String 로그인_요청_및_토큰발급(LoginRequest request) {
         ExtractableResponse<Response> loginResponse = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -83,8 +83,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
             .then().log().all()
             .extract();
 
-        TokenResponse tokenResponse = loginResponse.body().as(TokenResponse.class);
-        return tokenResponse.getAccessToken();
+        LoginTokenResponse loginTokenResponse = loginResponse.body().as(LoginTokenResponse.class);
+        return loginTokenResponse.getAccessToken();
     }
 
     public ExtractableResponse<Response> 회원조회_요청(String token, Long id) {

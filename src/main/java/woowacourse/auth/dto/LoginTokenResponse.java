@@ -2,16 +2,16 @@ package woowacourse.auth.dto;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
 
-public class TokenResponse {
+public class LoginTokenResponse {
 
     private String accessToken;
     private Long expirationTime;
     private Customer customer;
 
-    private TokenResponse() {
+    private LoginTokenResponse() {
     }
 
-    public TokenResponse(String accessToken, Long expirationTime, Customer customer) {
+    public LoginTokenResponse(String accessToken, Long expirationTime, Customer customer) {
         this.accessToken = accessToken;
         this.expirationTime = expirationTime;
         this.customer = customer;

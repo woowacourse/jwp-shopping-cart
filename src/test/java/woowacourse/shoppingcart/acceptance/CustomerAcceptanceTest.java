@@ -14,8 +14,8 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginTokenResponse;
 import woowacourse.shoppingcart.dto.ErrorResponseWithField;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
@@ -115,7 +115,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
         long savedId = ID_추출(createResponse);
 
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("roma@naver.com", "12345678"));
         ExtractableResponse<Response> response = 회원조회_요청(token, savedId);
 
         CustomerResponse customerResponse = response.as(CustomerResponse.class);
@@ -135,7 +135,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
         long savedId = ID_추출(createResponse);
         long 다른사람의_ID = savedId + 1L;
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("roma@naver.com", "12345678"));
 
         // when
         ExtractableResponse<Response> response = 회원조회_요청(token, 다른사람의_ID);
@@ -149,7 +149,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void update() {
         long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
 
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("roma@naver.com", "12345678"));
         ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("sojukang"));
 
         CustomerResponse customerResponse = response.as(CustomerResponse.class);
@@ -166,7 +166,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void update_same_origin_name() {
         long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
 
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("roma@naver.com", "12345678"));
         ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("roma"));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -177,7 +177,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void update_duplicated_username() {
         long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
 
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("roma@naver.com", "12345678"));
         ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("yujo11"));
 
         ErrorResponseWithField errorResponseWithField = response.as(ErrorResponseWithField.class);
@@ -195,7 +195,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @NullSource
     void update_exception_parameter_name(String username) {
         // given
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("puterism@naver.com", "12349053145"));
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(username);
 
         // when
@@ -213,7 +213,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
         long savedId = ID_추출(createResponse);
         long 다른사람의_ID = savedId + 1L;
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("roma@naver.com", "12345678"));
 
         // when
         CustomerUpdateRequest updateRequest = new CustomerUpdateRequest("philz");
@@ -226,7 +226,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void delete() {
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("puterism@naver.com", "12349053145"));
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
         ExtractableResponse<Response> response = 회원탈퇴_요청(token, 1L);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
@@ -235,14 +235,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("다른 사람의 정보를 수정하면 403을 반환한다")
     @Test
     void delete_otherId() {
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("puterism@naver.com", "12349053145"));
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
         long 다른사람의_ID = 2L;
         ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
-    public String 로그인_요청_및_토큰발급(TokenRequest request) {
+    public String 로그인_요청_및_토큰발급(LoginRequest request) {
         ExtractableResponse<Response> loginResponse = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -251,8 +251,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .then().log().all()
             .extract();
 
-        TokenResponse tokenResponse = loginResponse.body().as(TokenResponse.class);
-        return tokenResponse.getAccessToken();
+        LoginTokenResponse loginTokenResponse = loginResponse.body().as(LoginTokenResponse.class);
+        return loginTokenResponse.getAccessToken();
     }
 
     public ExtractableResponse<Response> 회원가입_요청(CustomerCreateRequest request) {
