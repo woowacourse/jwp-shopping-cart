@@ -30,11 +30,13 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         String token = AuthorizationExtractor.extract(webRequest.getNativeRequest(HttpServletRequest.class));
 
         if (token == null || token.isEmpty()) {
-            throw new InvalidTokenException("토큰 정보가 존재하지 않습니다.");
+            //throw new InvalidTokenException("토큰 정보가 존재하지 않습니다.");
+            return 0L;
         }
 
         if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException("유효하지 않거나 만료된 토큰입니다.");
+            //throw new InvalidTokenException("유효하지 않거나 만료된 토큰입니다.");
+            return 0L;
         }
 
         return Long.valueOf(jwtTokenProvider.getPayload(token));
