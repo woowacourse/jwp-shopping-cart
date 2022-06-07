@@ -1,0 +1,31 @@
+package woowacourse.shoppingcart.customer.domain;
+
+import java.util.regex.Pattern;
+
+import woowacourse.shoppingcart.exception.InvalidEmailFormatException;
+
+public class Email {
+
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+
+    private final String email;
+
+    public Email(final String email) {
+        validateEmail(email);
+        this.email = email;
+    }
+
+    private void validateEmail(final String email) {
+        if (isEmailOutOfForm(email)) {
+            throw new InvalidEmailFormatException();
+        }
+    }
+
+    private boolean isEmailOutOfForm(final String email) {
+        return !EMAIL_PATTERN.matcher(email).matches();
+    }
+
+    public String get() {
+        return email;
+    }
+}
