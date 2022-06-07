@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 import woowacourse.shoppingcart.service.CartService;
 
@@ -34,23 +35,10 @@ public class CartItemController {
     public ResponseEntity<CartResponse> updateCartItems(@AuthenticationPrincipal String username, @RequestBody UpdateCartItemRequest updateCartItemRequest) {
         return ResponseEntity.ok().body(cartService.updateItem(username, updateCartItemRequest));
     }
-//
-//    @PostMapping
-//    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-//                                      @PathVariable final String customerName) {
-//        final Long cartId = cartService.addCart(product.getId(), customerName);
-//        final URI responseLocation = ServletUriComponentsBuilder
-//                .fromCurrentRequest()
-//                .path("/{cartId}")
-//                .buildAndExpand(cartId)
-//                .toUri();
-//        return ResponseEntity.created(responseLocation).build();
-//    }
-//
-//    @DeleteMapping("/{cartId}")
-//    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-//                                         @PathVariable final Long cartId) {
-//        cartService.deleteCart(customerName, cartId);
-//        return ResponseEntity.noContent().build();
-//    }
+
+    @DeleteMapping
+    public ResponseEntity deleteCartItems(@AuthenticationPrincipal String username, @RequestBody DeleteCartItemRequest deleteCartItemRequest) {
+        cartService.deleteItem(username, deleteCartItemRequest);
+        return ResponseEntity.noContent().build();
+    }
 }

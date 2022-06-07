@@ -65,4 +65,9 @@ public class CartItemDao {
         final var sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE customer_id = ? AND id = ?";
         jdbcTemplate.update(sql, quantity, checked, customerId, cartId);
     }
+
+    public void deleteOneItem(Long customerId, Long cartId) {
+        final var sql = "DELETE FROM cart_item WHERE customer_id = ? AND id = ?";
+        jdbcTemplate.update(sql, customerId, cartId);
+    }
 }

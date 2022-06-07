@@ -73,4 +73,15 @@ public class CartServiceTest {
                 cartService.updateItem("puterism", updateCartItemRequest);
         assertThat(updateCartItemResponse.getProducts().size()).isEqualTo(2);
     }
+
+    @Test
+    void 장바구니_내의_존재하는_상품의_일부를_삭제하는_경우() {
+        DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(
+                List.of(
+                        new DeleteCartItemElement(1L),
+                        new DeleteCartItemElement(2L)));
+        cartService.deleteItem("puterism", deleteCartItemRequest);
+        CartResponse cartResponse = cartService.findByUserName("puterism");
+        assertThat(cartResponse.getProducts().size()).isEqualTo(1);
+    }
 }

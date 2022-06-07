@@ -8,10 +8,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.AddCartItemRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.UpdateCartItemElement;
-import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
+import woowacourse.shoppingcart.dto.*;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.util.*;
@@ -120,4 +117,12 @@ public class CartService {
         return new Cart(updatedCart, checked, quantities);
     }
 
+    public void deleteItem(String username, DeleteCartItemRequest deleteCartItemRequest) {
+        validateExistName(username);
+        Long id = customerDao.findIdByUserName(username);
+        List<Long> cartIds = deleteCartItemRequest.getIds();
+        for (Long cartId : cartIds) {
+            cartItemDao.deleteOneItem(id, cartId);
+        }
+    }
 }
