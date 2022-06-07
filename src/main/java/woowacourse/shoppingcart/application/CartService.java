@@ -2,69 +2,37 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.customer.Id;
-import woowacourse.shoppingcart.domain.customer.Name;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
-import java.util.ArrayList;
-import java.util.List;
+import woowacourse.shoppingcart.domain.cart.Quantity;
+import woowacourse.shoppingcart.domain.customer.CustomerId;
+import woowacourse.shoppingcart.domain.product.ProductId;
+import woowacourse.shoppingcart.dto.CartItemRequest;
+import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.exception.InvalidTokenException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, JwtTokenProvider jwtTokenProvider) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public List<Cart> findCartsByCustomerName(final Name customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public CartItemResponse addCart(String token, CartItemRequest cartItemRequest) {
+        validateToken(token);
+        final CustomerId customerId = new CustomerId(Long.parseLong(jwtTokenProvider.getPayload(token)));
+        cartItemDao.save(customerId, new ProductId(cartItemRequest.getId()), new Quantity(cartItemRequest.getQuantity()));
+        return new CartItemResponse(customerId.getValue(), cartItemRequest.getQuantity());
+    }
 
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+    private void validateToken(String token) {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new InvalidTokenException();
         }
-        return carts;
-    }
-
-    private List<Long> findCartIdsByCustomerName(final Name customerName) {
-        final Id customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    public Long addCart(final Long productId, final Name customerName) {
-        final Id customerId = customerDao.findIdByUserName(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
-    }
-
-    public void deleteCart(final Name customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
-    }
-
-    private void validateCustomerCart(final Long cartId, final Name customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
     }
 }

@@ -1,15 +1,16 @@
-package woowacourse.shoppingcart.domain.customer;
+package woowacourse.shoppingcart.domain.product;
 
 import java.util.Objects;
 
-public class Id {
-    private final Long id;
+public class ProductId {
 
-    public Id(Long id) {
+    private final int id;
+
+    public ProductId(int id) {
         this.id = id;
     }
 
-    public Long getValue() {
+    public int getValue() {
         return id;
     }
 
@@ -17,8 +18,8 @@ public class Id {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Id id1 = (Id) o;
-        return Objects.equals(id, id1.id);
+        ProductId productId = (ProductId) o;
+        return id == productId.id;
     }
 
     @Override

@@ -1,14 +1,14 @@
 package woowacourse.shoppingcart.domain.customer;
 
 public class Customer {
-    private final Id id;
+    private final CustomerId id;
     private final Email email;
     private final Name name;
     private final Phone phone;
     private final Address address;
     private final Password password;
 
-    public Customer(Id id, Email email, Name name, Phone phone, Address address, Password password) {
+    public Customer(CustomerId id, Email email, Name name, Phone phone, Address address, Password password) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -21,7 +21,7 @@ public class Customer {
         this(null, email, name, phone, address, password);
     }
 
-    public Customer(Id id, Customer customer) {
+    public Customer(CustomerId id, Customer customer) {
         this(id, customer.email, customer.name, customer.phone, customer.address, customer.password);
     }
 
@@ -29,7 +29,7 @@ public class Customer {
         return this.password.isSame(password);
     }
 
-    public Id getId() {
+    public CustomerId getId() {
         return id;
     }
 

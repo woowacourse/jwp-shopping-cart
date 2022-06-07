@@ -30,8 +30,8 @@ public class CustomerService {
 
     public CustomerResponse findCustomerByToken(String token) {
         validateToken(token);
-        final Id id = new Id(Long.parseLong(jwtTokenProvider.getPayload(token)));
-        final Customer customer = customerDao.findById(id);
+        final CustomerId customerId = new CustomerId(Long.parseLong(jwtTokenProvider.getPayload(token)));
+        final Customer customer = customerDao.findById(customerId);
         return new CustomerResponse(customer.getId().getValue(), customer.getEmail().getValue(), customer.getName().getValue(), customer.getPhone().getValue(), customer.getAddress().getValue());
     }
 
@@ -41,15 +41,15 @@ public class CustomerService {
 
     public void edit(String token, CustomerRequest customerRequest) {
         validateToken(token);
-        final Id id = new Id(Long.parseLong(jwtTokenProvider.getPayload(token)));
-        final Customer customer = new Customer(id, new Email(customerRequest.getEmail()), new Name(customerRequest.getName()), new Phone(customerRequest.getPhone()), new Address(customerRequest.getAddress()), Password.of(customerRequest.getPassword()));
+        final CustomerId customerId = new CustomerId(Long.parseLong(jwtTokenProvider.getPayload(token)));
+        final Customer customer = new Customer(customerId, new Email(customerRequest.getEmail()), new Name(customerRequest.getName()), new Phone(customerRequest.getPhone()), new Address(customerRequest.getAddress()), Password.of(customerRequest.getPassword()));
         customerDao.save(customer);
     }
 
     public void delete(String token) {
         validateToken(token);
-        final Id id = new Id(Long.parseLong(jwtTokenProvider.getPayload(token)));
-        customerDao.delete(id);
+        final CustomerId customerId = new CustomerId(Long.parseLong(jwtTokenProvider.getPayload(token)));
+        customerDao.delete(customerId);
     }
 
     private void validateToken(String token) {

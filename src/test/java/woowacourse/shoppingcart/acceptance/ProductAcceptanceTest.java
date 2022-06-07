@@ -7,16 +7,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.acceptance.AuthAcceptanceTest;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.auth.acceptance.AuthAcceptanceTest.로그인;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원가입;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -32,8 +32,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     void getProducts() {
         // given
         // 로그인하여 토큰이 발급 되어 있고
-        CustomerAcceptanceTest.회원가입(new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS));
-        String token = AuthAcceptanceTest.로그인(new TokenRequest(EMAIL, PASSWORD));
+        회원가입(new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS));
+        String token = 로그인(new TokenRequest(EMAIL, PASSWORD));
 
         // when
         // 상품 목록을 조회하면
@@ -41,7 +41,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         // then
         // 상품 목록이 조회된다.
-        List<Product> products = response.body().jsonPath().getList("products", Product.class);
+        List<ProductResponse> products = response.body().jsonPath().getList("products", ProductResponse.class);
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(products.size()).isEqualTo(3));

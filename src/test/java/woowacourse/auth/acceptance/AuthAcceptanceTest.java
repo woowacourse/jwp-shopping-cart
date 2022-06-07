@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원가입;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -33,7 +34,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 회원이 등록되어 있고
         // id, password를 사용해 토큰을 발급받고
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        CustomerAcceptanceTest.회원가입(customerRequest);
+        회원가입(customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
         String accessToken = 로그인(tokenRequest);
@@ -65,7 +66,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        CustomerAcceptanceTest.회원가입(customerRequest);
+        회원가입(customerRequest);
 
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
@@ -91,7 +92,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        CustomerAcceptanceTest.회원가입(customerRequest);
+        회원가입(customerRequest);
 
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
@@ -117,7 +118,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        CustomerAcceptanceTest.회원가입(customerRequest);
+        회원가입(customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
         String accessToken = 로그인(tokenRequest);

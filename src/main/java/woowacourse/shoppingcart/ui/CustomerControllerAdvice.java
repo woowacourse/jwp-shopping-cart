@@ -20,6 +20,6 @@ public class CustomerControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handle(Exception e) {
         log.error("error: ", e);
-        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        return ResponseEntity.internalServerError().body(new ErrorResponse(e.getMessage()));
     }
 }
