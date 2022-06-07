@@ -21,16 +21,18 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    public Product addProduct(final ProductRequest product) {
+        return productDao.save(product.toEntity());
+    }
+
+    @Transactional(readOnly = true)
     public ProductsResponse findProducts() {
         final List<Product> products = productDao.findAll();
 
         return ProductsResponse.of(products);
     }
 
-    public Product addProduct(final ProductRequest product) {
-        return productDao.save(product.toEntity());
-    }
-
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         final Product product = productDao.findById(productId)
                 .orElseThrow(InvalidProductException::new);

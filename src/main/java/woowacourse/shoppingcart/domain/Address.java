@@ -24,9 +24,7 @@ public class Address {
 
     private void validateLength(String address) {
         if (address.length() > ADDRESS_MAXIMUM_LENGTH) {
-            throw new IllegalArgumentException(
-                    String.format("주소 길이는 %d자를 초과할 수 없습니다.", ADDRESS_MAXIMUM_LENGTH)
-            );
+            throw new IllegalArgumentException(String.format("주소 길이는 %d자를 초과할 수 없습니다.", ADDRESS_MAXIMUM_LENGTH));
         }
     }
 

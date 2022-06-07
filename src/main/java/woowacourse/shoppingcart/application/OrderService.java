@@ -7,8 +7,8 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderDetailDao;
 import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.dto.OrderDetailRequest;
-import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.dto.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
@@ -45,6 +45,7 @@ public class OrderService {
         return ordersId;
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findOrderById(final long customerId, final Long orderId) {
         validateOrderIdByCustomerId(customerId, orderId);
         final Order order = findOrderById(orderId);
@@ -59,6 +60,7 @@ public class OrderService {
                 .orElseThrow(() -> new InvalidOrderException("유저에게는 해당 order_id가 없습니다."));
     }
 
+    @Transactional(readOnly = true)
     public OrdersResponse findOrdersByCustomerId(final long customerId) {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 

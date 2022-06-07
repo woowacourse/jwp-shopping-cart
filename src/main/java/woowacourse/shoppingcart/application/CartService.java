@@ -25,6 +25,12 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    public Long addCart(final long productId, final long customerId) {
+        productDao.findById(productId).orElseThrow(InvalidProductException::new);
+        return cartItemDao.addCartItem(customerId, productId);
+    }
+
+    @Transactional(readOnly = true)
     public CartResponse findCartByCustomerId(final long customerId) {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
@@ -34,11 +40,6 @@ public class CartService {
                 .collect(Collectors.toList());
 
         return CartResponse.of(products);
-    }
-
-    public Long addCart(final long productId, final long customerId) {
-        productDao.findById(productId).orElseThrow(InvalidProductException::new);
-        return cartItemDao.addCartItem(customerId, productId);
     }
 
     public int deleteCart(final long customerId, final long productId) {
