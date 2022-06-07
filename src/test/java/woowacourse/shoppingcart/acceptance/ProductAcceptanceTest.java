@@ -1,8 +1,10 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.ProductFixture.NOTE;
-import static woowacourse.shoppingcart.ProductFixture.WATCH;
+import static woowacourse.shoppingcart.ProductFixture.CHEESE;
+import static woowacourse.shoppingcart.ProductFixture.PAPER;
+import static woowacourse.shoppingcart.ProductFixture.PEN;
+import static woowacourse.shoppingcart.ProductFixture.WATER;
 
 import io.restassured.RestAssured;
 import java.util.List;
@@ -15,16 +17,39 @@ import woowacourse.shoppingcart.domain.Product;
 
 public class ProductAcceptanceTest extends AcceptanceTest {
 
-    public static Stream<Arguments> provide() {
+    public static Stream<Arguments> provideFindProducts() {
         return Stream.of(
-                Arguments.of(2, 2, List.of(NOTE, WATCH)),
+                Arguments.of(2, 2, List.of(PAPER, PEN)),
                 Arguments.of(4, 2, List.of()),
-                Arguments.of(3, 2, List.of(WATCH))
+                Arguments.of(3, 2, List.of(PEN))
+        );
+    }
+
+    public static Stream<Arguments> provideFindProduct() {
+        return Stream.of(
+                Arguments.of(1L, WATER),
+                Arguments.of(2L, CHEESE),
+                Arguments.of(3L, PAPER),
+                Arguments.of(4L, PEN)
         );
     }
 
     @ParameterizedTest
-    @MethodSource("provide")
+    @MethodSource("provideFindProduct")
+    void 상품_조회(Long productId, Product expected) {
+        var requestPath = String.format("/products/%d", productId);
+
+        var actual = RestAssured.given().log().all()
+                .get(requestPath)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(Product.class);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideFindProducts")
     void 페이지별_상품_목록_조회(int size, int page, List<Product> expected) {
         var requestPath = String.format("/products?size=%d&page=%d", size, page);
 

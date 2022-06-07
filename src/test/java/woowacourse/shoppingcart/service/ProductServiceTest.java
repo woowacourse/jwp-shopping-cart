@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.ProductFixture.WATER;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -22,5 +23,11 @@ public class ProductServiceTest {
         var products = productService.findProducts(size, page);
 
         assertThat(products.size()).isEqualTo(productCount);
+    }
+
+    void 상품_ID로_조회() {
+        var product = productService.findProductById(1L);
+
+        assertThat(product).isEqualTo(WATER);
     }
 }
