@@ -46,6 +46,17 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
+    // TODO : 레거시
+    public Long addCart(final Long productId, final String customerName) {
+        final Long customerId = customerDao.findIdByUserName(customerName)
+                .orElseThrow(CustomerNotFoundException::new);
+        try {
+            return cartItemDao.addCartItem(customerId, productId, 0);
+        } catch (Exception e) {
+            throw new InvalidProductException();
+        }
+    }
+
     public Long addCart(final Long customerId, final Long productId) {
         try {
             return cartItemDao.addCartItem(customerId, productId, INITIAL_QUANTITY);
