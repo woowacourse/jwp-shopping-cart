@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dto.CartDto;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -30,8 +32,8 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 3);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 5);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
@@ -60,6 +62,29 @@ public class CartItemDaoTest {
 
         // then
         assertThat(isExist).isTrue();
+    }
+
+    @DisplayName("Customer id로 Product id들을 조회한다.")
+    @Test
+    void getProductIdsByCustomerId_exist_productIdsReturned() {
+        // when
+        List<Long> productIds = cartItemDao.findProductIdsByCustomerId(1L);
+
+        // then
+        assertThat(productIds).containsExactly(1L, 2L);
+    }
+
+    @DisplayName("productId들로 수량들을 조회한다.")
+    @Test
+    void getQuantitiesByProductIds_exist_quantities() {
+        // when
+        List<CartDto> cartDtos = cartItemDao.getCartinfosByIds(List.of(2L, 1L));
+
+        List<Integer> quantities = cartDtos.stream()
+                .map(cartDto -> cartDto.getQuantity())
+                .collect(Collectors.toList());
+        // then
+        assertThat(quantities).containsExactly(5, 3);
     }
 
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
