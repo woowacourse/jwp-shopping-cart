@@ -11,20 +11,22 @@ public class CartResponse {
     private String name;
     private int price;
     private String imageUrl;
+    private int quantity;
 
     public CartResponse() {
     }
 
-    public CartResponse(Long id, Long productId, String name, int price, String imageUrl) {
+    public CartResponse(Long id, Long productId, String name, int price, String imageUrl, int quantity) {
         this.id = id;
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.quantity = quantity;
     }
 
     public static CartResponse of(Cart cart) {
-        return new CartResponse(cart.getId(), cart.getProductId(), cart.getName(), cart.getPrice(), cart.getImageUrl());
+        return new CartResponse(cart.getId(), cart.getProductId(), cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getQuantity());
     }
 
     public static List<CartResponse> toCartResponses(List<Cart> carts) {
@@ -51,5 +53,9 @@ public class CartResponse {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }

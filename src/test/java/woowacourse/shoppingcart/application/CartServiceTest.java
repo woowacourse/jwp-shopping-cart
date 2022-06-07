@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -148,6 +149,32 @@ class CartServiceTest {
             List<CartResponse> actual = cartService.findCartsByCustomerName(customerName);
 
             assertThat(actual).hasSize(0);
+        }
+    }
+
+    @DisplayName("updateCart 메서드는 회원의 장바구니의 상품의 수량을 수정한다.")
+    @Nested
+    class UpdateCartTest {
+
+        @Test
+        void 장바구니_상품_수량_수정_성공() {
+            Long cartId1 = cartService.addCart(productId1, customerName);
+
+            cartService.updateCart(customerName, cartId1, 5);
+
+            List<CartResponse> actual = cartService.findCartsByCustomerName(customerName);
+
+
+            assertThat(actual.get(0)).extracting("productId", "name", "price", "imageUrl", "quantity")
+                    .containsExactly(productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 5);
+        }
+
+        @Test
+        void 장바구니에_상품이_존재하지_않는_상품의_수량을_수정하면_예외_반환() {
+            Long invalidCartId = -1L;
+
+            assertThatThrownBy(() -> cartService.updateCart(customerName, invalidCartId, 5))
+                    .isInstanceOf(InvalidCartItemException.class);
         }
     }
 }

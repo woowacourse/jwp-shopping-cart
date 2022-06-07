@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CartQuantityRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.LoginRequest;
 
@@ -85,6 +86,19 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_삭제됨(response);
     }
 
+    @DisplayName("장바구니 수량 수정")
+    @Test
+    void updateCartItem() {
+        TokenResponse tokenResponse = 토큰_생성_요청();
+
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken());
+        CartQuantityRequest cartQuantityRequest = new CartQuantityRequest(5);
+
+        ExtractableResponse<Response> response = 장바구니_수량_수정_요청(tokenResponse.getAccessToken(), cartId, cartQuantityRequest);
+
+        장바구니_수량_수정됨(response);
+    }
+
     public static TokenResponse 토큰_생성_요청() {
         사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
         LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
@@ -136,6 +150,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    private ExtractableResponse<Response> 장바구니_수량_수정_요청(String accessToken, Long cartId, CartQuantityRequest cartQuantityRequest) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().oauth2(accessToken)
+                .body(cartQuantityRequest)
+                .when().put("/customers/cart/1")
+                .then().log().all()
+                .extract();
+    }
+
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
@@ -159,5 +184,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void 장바구니_수량_수정됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

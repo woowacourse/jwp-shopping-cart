@@ -70,4 +70,21 @@ public class CartItemDao {
             throw new InvalidCartItemException();
         }
     }
+
+    public void updateQuantity(Long cartId, int quantity) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        final int rowCount = jdbcTemplate.update(sql, quantity, cartId);
+        if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public int findQuantityById(Long cartId) {
+        try {
+            final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), cartId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
 }
