@@ -15,14 +15,12 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
@@ -53,7 +51,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers//orders")
+                .when().get("/api/customers/orders")
                 .then().log().all()
                 .extract();
     }
@@ -154,8 +152,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(orderRequest1, token);
-        Long orderId2 = 주문하기_요청_성공되어_있음(orderRequest2, token);
+        주문하기_요청_성공되어_있음(orderRequest1, token);
+        주문하기_요청_성공되어_있음(orderRequest2, token);
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(token);
 
