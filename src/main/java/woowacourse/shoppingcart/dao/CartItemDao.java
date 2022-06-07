@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.dto.OrderRequest;
 
 @Repository
 public class CartItemDao {
@@ -63,5 +64,23 @@ public class CartItemDao {
         parameters.put("customerId", customerId);
         parameters.put("productId", productId);
         return namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(parameters));
+    }
+
+    public int deleteAllCartItems(Long customerId, final List<Long> productIds) {
+        String sql = "DELETE FROM cart_item WHERE  customer_id = :customerId AND product_id = :productId";
+        Map<String, Object>[] batchValues = toBatchValues(customerId, productIds);
+        return namedParameterJdbcTemplate.batchUpdate(sql, batchValues).length;
+    }
+
+    private Map<String, Object>[] toBatchValues(Long customerId, List<Long> productIds) {
+        Map<String, Object>[] batchValues = new Map[productIds.size()];
+        for (int i = 0; i < productIds.size(); i++) {
+            Map<String, Object> parameters = new MapSqlParameterSource()
+                    .addValue("customerId", customerId)
+                    .addValue("productId", productIds.get(i))
+                    .getValues();
+            batchValues[i] = parameters;
+        }
+        return batchValues;
     }
 }

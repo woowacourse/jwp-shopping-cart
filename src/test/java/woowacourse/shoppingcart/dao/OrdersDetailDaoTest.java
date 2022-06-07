@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.dto.OrderRequest;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -85,6 +87,23 @@ class OrdersDetailDaoTest {
         //then
         assertThat(ordersDetails).hasSize(2);
 
+    }
+
+    @Test
+    void addAllOrderDetails() {
+        //given
+        insertProduct("banana", 1_500, "banana.com");
+        long productId2 = namedParameterJdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", new HashMap<>(),
+                Long.class);
+
+        List<OrderRequest> orderRequests = new ArrayList<>();
+        orderRequests.add(new OrderRequest(productId, 3));
+        orderRequests.add(new OrderRequest(productId2, 5));
+        //when
+
+        int affectedQuery = ordersDetailDao.addAllOrdersDetails(ordersId, orderRequests);
+        //then
+        assertThat(affectedQuery).isEqualTo(2);
     }
 
     private void insertProduct(String name, int price, String imageUrl) {

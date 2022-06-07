@@ -103,4 +103,16 @@ public class CartItemDaoTest {
 
         assertThat(productIds.size()).isEqualTo(1);
     }
+
+    @Test
+    void deleteAllCartItems() {
+        //given
+        final Long customerId = 1L;
+        cartItemDao.addCartItem(customerId, bananaId);
+        cartItemDao.addCartItem(customerId, appleId);
+        //when
+        int affectedQuery = cartItemDao.deleteAllCartItems(customerId, List.of(bananaId, appleId));
+        //then
+        assertThat(affectedQuery).isEqualTo(2);
+    }
 }

@@ -53,8 +53,8 @@ public class OrderControllerTest {
                 Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(customerName)))
-                .thenReturn(expectedOrderId);
+//        when(orderService.addOrder(any(), eq(customerName)))
+//                .thenReturn(expectedOrderId);
 
         // when // then
         mockMvc.perform(post("/api/customers/" + customerName + "/orders")

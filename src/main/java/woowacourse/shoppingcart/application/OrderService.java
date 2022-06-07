@@ -14,7 +14,6 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
@@ -37,20 +36,19 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.getIdByAccount(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
-
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final long customerId) {
+        Long createdOrdersId = orderDao.addOrders(customerId);
+        ordersDetailDao.addAllOrdersDetails(createdOrdersId, orderDetailRequests);
+        for (OrderRequest orderRequest : orderDetailRequests) {
+            ordersDetailDao.addOrdersDetail(createdOrdersId, orderRequest.getProductId(), orderRequest.getQuantity());
+            cartItemDao.deleteCartItem(customerId, orderRequest.getProductId());
+        }
         for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId).orElseThrow(InvalidCartItemException::new);
-            final int quantity = orderDetail.getQuantity();
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(customerId, productId);
+            cartItemDao.deleteCartItem(customerId, orderDetail.getProductId());
         }
 
-        return ordersId;
+        return createdOrdersId;
     }
 
     public Orders findOrderById(final String customerName, final Long orderId) {
