@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.List;
@@ -26,11 +27,12 @@ public class ProductService {
         return productDao.save(product);
     }
 
-    public List<ProductResponse> findProducts() {
+    public ProductsResponse findProducts() {
         List<Product> products = productDao.findProducts();
-        return products.stream()
+        List<ProductResponse> productResponses = products.stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
+        return new ProductsResponse(productResponses);
     }
 
     public ProductResponse findProductById(final Long productId) {

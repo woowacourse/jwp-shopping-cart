@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.List;
@@ -49,9 +50,9 @@ class ProductServiceTest {
         productService.addProduct(productRequest1);
         productService.addProduct(productRequest2);
 
-        List<ProductResponse> actual = productService.findProducts();
+        ProductsResponse actual = productService.findProducts();
 
-        assertThat(actual.size()).isEqualTo(2);
+        assertThat(actual.getProducts().size()).isEqualTo(2);
     }
 
     @DisplayName("상품 아이디로 단일 상품을 조회한다.")

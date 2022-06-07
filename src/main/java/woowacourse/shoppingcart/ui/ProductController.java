@@ -6,6 +6,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -22,7 +23,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> products() {
+    public ResponseEntity<ProductsResponse> products() {
         return ResponseEntity.ok(productService.findProducts());
     }
 
