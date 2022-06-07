@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.globalException.dto.ErrorResponse;
 import woowacourse.member.exception.MemberException;
-import woowacourse.shoppingcart.exception.*;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.cart.CartException;
+import woowacourse.shoppingcart.exception.product.ProductException;
 
 import javax.validation.ConstraintViolationException;
 
@@ -30,15 +32,16 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<ErrorResponse> bindException(BindException e){
+    public ResponseEntity<ErrorResponse> bindException(BindException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getFieldError().getDefaultMessage()));
     }
 
     @ExceptionHandler({
             MemberException.class,
+            CartException.class,
             ProductException.class
     })
-    public ResponseEntity<ErrorResponse> handleMemberException(MemberException e) {
+    public ResponseEntity<ErrorResponse> handleMemberException(Exception e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
@@ -60,18 +63,14 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler({
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInMemberCartItemException.class,
-    })
+    @ExceptionHandler(InvalidOrderException.class)
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException() {
+    public ResponseEntity handleUnhandledException(final RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 

@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -9,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Cart;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -22,81 +21,47 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(dataSource);
+    public CartItemDaoTest(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        cartItemDao = new CartItemDao(dataSource);
     }
 
-    @BeforeEach
-    void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
-
-        jdbcTemplate.update("INSERT INTO cart_item(member_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(member_id, product_id) VALUES(?, ?)", 1L, 2L);
-    }
-
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
-    @Test
-    void addCartItem() {
-
-        // given
-        final Long memberId = 1L;
-        final Long productId = 1L;
-
-        // when
-        final Long cartId = cartItemDao.addCartItem(memberId, productId);
-
-        // then
-        assertThat(cartId).isEqualTo(3L);
-    }
-
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("사용자별 장바구니 목록을 조회한다.")
     @Test
     void findProductIdsByMemberId() {
+        List<Cart> carts = cartItemDao.findCartByMemberId(1L);
 
-        // given
-        final Long memberId = 1L;
-
-        // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByMemberId(memberId);
-
-        // then
-        assertThat(productsIds).containsExactly(1L, 2L);
+        assertThat(carts.size()).isEqualTo(2);
     }
 
-    @DisplayName("Member Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("장바구니에 새로운 상품을 추가한다.")
     @Test
-    void findIdsByMemberId() {
+    void add() {
+        cartItemDao.add(2L, 1L, 1);
 
-        // given
-        final Long memberId = 1L;
-
-        // when
-        final List<Long> cartIds = cartItemDao.findIdsByMemberId(memberId);
-
-        // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        boolean result = jdbcTemplate.queryForObject("SELECT EXISTS (SELECT * FROM cart_item WHERE member_id = 2 AND product_id = 1)", Boolean.class);
+        assertThat(result).isTrue();
     }
 
-    @DisplayName("Member Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("장바구니 상품의 수량을 수정한다.")
     @Test
-    void deleteCartItem() {
+    void update() {
+        cartItemDao.update(1L, 5);
 
-        // given
-        final Long cartId = 1L;
-
-        // when
-        cartItemDao.deleteCartItem(cartId);
-
-        // then
-        final Long memberId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByMemberId(memberId);
-
-        assertThat(productIds).containsExactly(2L);
+        int result = jdbcTemplate.queryForObject("SELECT quantity FROM cart_item WHERE id = 1", Integer.class);
+        assertThat(result).isEqualTo(5);
     }
+
+    @DisplayName("장바구니를 삭제한다.")
+    @Test
+    void delete() {
+        cartItemDao.delete(1L);
+
+        boolean result = jdbcTemplate.queryForObject("SELECT EXISTS (SELECT * FROM cart_item WHERE id = 1)", Boolean.class);
+        assertThat(result).isFalse();
+    }
+
+
 }
