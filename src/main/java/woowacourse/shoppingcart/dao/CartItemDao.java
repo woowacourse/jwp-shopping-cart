@@ -39,6 +39,15 @@ public class CartItemDao {
         }
     }
 
+    public int findQuantityById(final Long cartId) {
+        try {
+            final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), cartId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
     public Long addCartItem(final Long customerId, final Long productId, final int quantity) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -57,6 +66,15 @@ public class CartItemDao {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
         final int rowCount = jdbcTemplate.update(sql, id);
+        if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public void updateQuantity(Long customerId, Long productId, int quantity) {
+        final String query = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND product_id = ?";
+
+        final int rowCount = jdbcTemplate.update(query, quantity, customerId, productId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }

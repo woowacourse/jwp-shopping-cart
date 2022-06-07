@@ -79,6 +79,21 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_삭제됨(response);
     }
 
+    @DisplayName("장바구니 수량 변경")
+    @Test
+    void updateCartItem() {
+        createCustomer(페퍼);
+        ExtractableResponse<Response> login = login(페퍼_아이디, 페퍼_비밀번호);
+        String accessToken = login.as(TokenResponse.class).getAccessToken();
+
+        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_변경_요청(accessToken, cartId, 5);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().jsonPath().getInt("quantity")).isEqualTo(5);
+    }
+
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("productId", productId);
@@ -109,6 +124,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/customers/carts/{cartId}", cartId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_아이템_수량_변경_요청(String accessToken, Long cartId, int quantity) {
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("quantity", quantity);
+
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().put("/customers/carts/{cartId}", cartId)
                 .then().log().all()
                 .extract();
     }

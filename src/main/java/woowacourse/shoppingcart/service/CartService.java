@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartAddRequest;
+import woowacourse.shoppingcart.dto.CartUpdateRequest;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -38,7 +39,8 @@ public class CartService {
         for (Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            int quantity = cartItemDao.findQuantityById(cartId);
+            carts.add(new Cart(cartId, product, quantity));
         }
         return carts;
     }
@@ -54,7 +56,7 @@ public class CartService {
         try {
             Long cartId = cartItemDao.addCartItem(customerId, cartAddRequest.getProductId(), DEFAULT_QUANTITY);
             Long productId = cartItemDao.findProductIdById(cartId);
-            return new Cart(cartId, productDao.findProductById(productId));
+            return new Cart(cartId, productDao.findProductById(productId), cartItemDao.findQuantityById(cartId));
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -64,6 +66,14 @@ public class CartService {
         Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         validateCustomerCart(cartId, customer.getName());
         cartItemDao.deleteCartItem(cartId);
+    }
+
+    public Cart updateQuantity(LoginCustomer loginCustomer, CartUpdateRequest request, Long cartId) {
+        Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
+        Long productId = cartItemDao.findProductIdById(cartId);
+        cartItemDao.updateQuantity(customer.getId(), productId, request.getQuantity());
+        Product product = productDao.findProductById(productId);
+        return new Cart(cartId, product, cartItemDao.findQuantityById(cartId));
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
