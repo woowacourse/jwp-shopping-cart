@@ -19,13 +19,13 @@ import woowacourse.shoppingcart.domain.product.Product;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
+public class CartItemItemDaoTest {
 
     private final CustomerDao customerDao;
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartItemItemDaoTest(JdbcTemplate jdbcTemplate) {
         this.customerDao = new CustomerDao(jdbcTemplate);
         this.cartItemDao = new CartItemDao(jdbcTemplate);
         this.productDao = new ProductDao(jdbcTemplate);

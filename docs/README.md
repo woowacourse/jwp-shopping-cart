@@ -131,10 +131,11 @@
     - 장바구니 조회
     - 장바구니 추가
     - 장바구니 삭제
-    - [ ] cart -> cartItem 으로 변경하기
+    - [x] cart -> cartItem 으로 변경하기
     - [ ] 장바구니 품목 수량 수정
     - [ ] cartItem 테이블에 quantity 칼럼 추가
     - [ ] 이미 담겨있는 상품을 다시 담을 경우 수량을 더해 update (insert ignore 사용)
+    - [ ] username 기반에서 token 기반으로 수정
 - 주문(order) 관련 기능
     - 주문하기
     - 주문 단건 조회
@@ -143,6 +144,16 @@
 
 ### 레거시 리팩터링
 
+- [ ] test fixture 만들어 중복코드 제거하기
+- [ ] jdbcTemplate 대신 NamedParameterJdbcTemplate과 SimpleJdbcInsert 사용하도록 수정
+- [ ] controller 중복 Path RequestMapping 으로 제거 
+- [ ] 파라미터 final 제거 
+- [ ] dto로 사용되고 있는 domain 패키지를 dto 패키지로 수정 
+- [ ] domain 새로 만들기 
+- api 명세 수정
+    - [ ] 팀 회의로 결정된 api 명세에 맞도록 path 수정
+    - [ ] 팀 회의로 결정된 api 명세에 맞도록 request, response 수정
+    - [ ] 팀 회의로 결정된 api 명세에 맞도록 예외처리 수정
 - [ ] dao에서 조회하는 값이 없느면 error를 반환하던 코드를 Optional을 반환하도록 수정
 - [ ] PathVariable customerName 를 token 을 이용하도록 수정
 

@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 import static Fixture.CustomerFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
+import static woowacourse.shoppingcart.acceptance.CartItemAcceptanceTest.장바구니_아이템_추가되어_있음;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 @DisplayName("주문 관련 기능")

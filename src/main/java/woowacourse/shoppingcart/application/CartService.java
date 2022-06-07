@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -28,16 +28,16 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(String customerName) {
+    public List<CartItem> findCartsByCustomerName(String customerName) {
         List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
-        List<Cart> carts = new ArrayList<>();
+        List<CartItem> cartItems = new ArrayList<>();
         for (Long cartId : cartIds) {
             Long productId = cartItemDao.findProductIdById(cartId);
             Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            cartItems.add(new CartItem(cartId, product));
         }
-        return carts;
+        return cartItems;
     }
 
     private List<Long> findCartIdsByCustomerName(String customerName) {
