@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.dto.ProductsResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
