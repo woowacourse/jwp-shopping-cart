@@ -113,4 +113,10 @@ public class CartItemDao {
 
         namedJdbcTemplate.update(sql, params);
     }
+
+    public void deleteAllCartItem(Long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = :customerId";
+        SqlParameterSource params = new MapSqlParameterSource("customerId", customerId);
+        namedJdbcTemplate.update(sql, params);
+    }
 }

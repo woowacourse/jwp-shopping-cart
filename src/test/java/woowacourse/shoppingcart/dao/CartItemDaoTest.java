@@ -147,4 +147,14 @@ public class CartItemDaoTest {
 
         assertThat(cartItemDto.getQuantity()).isEqualTo(quantity);
     }
+
+    @DisplayName("특정 사용자id가 주어지면 그 사용자의 카트에 담긴 모든 상품을 삭제한다")
+    @Test
+    void deleteAllCartItemTest() {
+        Long customerId = 1L;
+
+        cartItemDao.deleteAllCartItem(customerId);
+
+        assertThat(cartItemDao.findCartItemByCustomerId(customerId).size()).isEqualTo(0);
+    }
 }
