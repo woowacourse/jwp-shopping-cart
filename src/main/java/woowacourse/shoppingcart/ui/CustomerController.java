@@ -24,9 +24,9 @@ import woowacourse.shoppingcart.dto.PasswordRequest;
 @RestController
 public class CustomerController {
 
-    private final JwtTokenProvider jwtTokenProvider;
-
     private final CustomerService customerService;
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     public CustomerController(final JwtTokenProvider jwtTokenProvider,
                               final CustomerService customerService) {

@@ -43,7 +43,12 @@ public class CartItemService {
 
     public CartItemQuantityResponse updateCartItem(final TokenRequest tokenRequest,
                                                    final CartItemQuantityRequest cartItemQuantityRequest) {
-        return null;
+        CartItem cartItem = CartItem.ofNullProductId(
+                cartItemQuantityRequest.getId(),
+                tokenRequest.getId(),
+                cartItemQuantityRequest.getQuantity()
+        );
+        return CartItemQuantityResponse.of(cartItemRepository.updateCartItem(cartItem));
     }
 
     public void delete(final TokenRequest tokenRequest, final List<CartItemIdRequest> cartItemIdRequests) {

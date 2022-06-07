@@ -66,4 +66,17 @@ class CartItemRepositoryTest {
                 () -> assertThat(cartItems.get(1).getQuantity()).isEqualTo(1)
         );
     }
+
+    @DisplayName("기존의 장바구니 물품의 수량을 입력 받은 수량정보로 수정한다.")
+    @Test
+    void updateCartItem() {
+        // given
+        CartItem cartItem = CartItem.ofNullProductId(1L, 1L, 100);
+
+        // when
+        CartItem updatedCartItem = cartItemRepository.updateCartItem(cartItem);
+
+        // then
+        assertThat(updatedCartItem.getQuantity()).isEqualTo(100);
+    }
 }

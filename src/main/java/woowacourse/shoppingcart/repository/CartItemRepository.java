@@ -37,4 +37,14 @@ public class CartItemRepository {
             cartItemDao.create(customerId, productId);
         }
     }
+
+    public CartItem updateCartItem(final CartItem cartItem) {
+        cartItemDao.updateCartItem(cartItem.getId(), cartItem.getQuantity());
+        return cartItem;
+    }
+
+    //
+    public CartItem  findByCustomerIdAndProductId(final Long customerId, final Long productId) {
+        return cartItemDao.findByCustomerIdAndProductId(customerId, productId);
+    }
 }
