@@ -33,6 +33,12 @@ public class SimpleRestAssured {
                 .when().post(path));
     }
 
+    public static SimpleResponse postWithToken(String path, String token, Object params) {
+        return new SimpleResponse(givenWithToken(token)
+                .body(params)
+                .when().post(path));
+    }
+
     public static SimpleResponse putWithToken(String path, String token, Object params) {
         return new SimpleResponse(givenWithToken(token)
                 .body(params)

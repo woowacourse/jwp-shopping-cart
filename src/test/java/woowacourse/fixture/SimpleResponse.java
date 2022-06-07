@@ -32,6 +32,10 @@ public class SimpleResponse {
                 .as(clazz);
     }
 
+    public Long getIdFromLocation(String prefix) {
+        return Long.parseLong(response.header("Location").split(prefix)[1]);
+    }
+
     public void assertStatus(HttpStatus status) {
         response.then().log().all()
                 .statusCode(status.value());
