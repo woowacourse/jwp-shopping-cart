@@ -39,7 +39,7 @@ public class ProductResponse {
         return price;
     }
 
-    public Boolean getStored() {
+    public Boolean getIsStored() {
         return isStored;
     }
 }

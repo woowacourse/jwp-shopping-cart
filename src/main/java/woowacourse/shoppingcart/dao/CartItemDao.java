@@ -60,4 +60,9 @@ public class CartItemDao {
             throw new InvalidCartItemException();
         }
     }
+
+    public Boolean existByCustomerIdAndProductId(Long customerId, Long productId) {
+        final String query = "SELECT EXISTS (SELECT id FROM CART_ITEM WHERE customer_id = ? AND product_id = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, customerId, productId);
+    }
 }

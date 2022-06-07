@@ -52,7 +52,7 @@ public class CustomerDao {
     }
 
     public boolean existByEmail(String email) {
-        final String query = "SELECT EXISTS (SELECT * FROM CUSTOMER WHERE email = ?)";
+        final String query = "SELECT EXISTS (SELECT id FROM CUSTOMER WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);
     }
 
@@ -71,7 +71,7 @@ public class CustomerDao {
     }
 
     public boolean existById(Long customerId) {
-        final String query = "SELECT EXISTS (SELECT * FROM CUSTOMER WHERE id = ?)";
+        final String query = "SELECT EXISTS (SELECT id FROM CUSTOMER WHERE id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, customerId);
     }
 

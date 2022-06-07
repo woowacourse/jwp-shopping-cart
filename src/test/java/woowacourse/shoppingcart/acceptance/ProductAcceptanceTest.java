@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.acceptance;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.*;
@@ -136,16 +138,18 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니에_추가되어_있는_상품만_추가여부가_true(ExtractableResponse<Response> response) {
-        List<Boolean> result = response.jsonPath().getList(".", ProductResponse.class).stream()
-                .map(ProductResponse::getStored)
+        List<Boolean> result =  response.jsonPath().getList(".", ProductResponse.class).stream()
+                .map(ProductResponse::getIsStored)
                 .collect(Collectors.toList());
+
         assertThat(result).containsExactly(true, false);
     }
 
     public static void 장바구니_추가여부가_모두_false(ExtractableResponse<Response> response) {
-        List<Boolean> result = response.jsonPath().getList(".", ProductResponse.class).stream()
-                .map(ProductResponse::getStored)
+        List<Boolean> result =  response.jsonPath().getList(".", ProductResponse.class).stream()
+                .map(ProductResponse::getIsStored)
                 .collect(Collectors.toList());
+
         assertThat(result).containsExactly(false, false);
     }
 

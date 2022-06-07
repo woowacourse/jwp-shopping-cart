@@ -4,7 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.auth.support.User;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.application.ProductService;
 
@@ -22,8 +26,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
+    public ResponseEntity<List<ProductResponse>> products(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(productService.findProducts(user));
     }
 
     @PostMapping
