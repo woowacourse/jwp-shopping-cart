@@ -28,8 +28,16 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public Long addCart(final Long customerId, final Long productId) {
+        try {
+            return cartItemDao.addCartItem(customerId, productId, INITIAL_QUANTITY);
+        } catch (Exception e) {
+            throw new InvalidProductException();
+        }
+    }
+
+    public List<Cart> findCartsByCustomerName(final Long customerId) {
+        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
 
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
@@ -40,14 +48,8 @@ public class CartService {
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(CustomerNotFoundException::new);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    // TODO : 레거시
     public Long addCart(final Long productId, final String customerName) {
+        // TODO : 레거시
         final Long customerId = customerDao.findIdByUserName(customerName)
                 .orElseThrow(CustomerNotFoundException::new);
         try {
@@ -57,12 +59,17 @@ public class CartService {
         }
     }
 
-    public Long addCart(final Long customerId, final Long productId) {
-        try {
-            return cartItemDao.addCartItem(customerId, productId, INITIAL_QUANTITY);
-        } catch (Exception e) {
-            throw new InvalidProductException();
+    public List<Cart> findCartsByCustomerName(final String customerName) {
+        // TODO 레거시
+        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+
+        final List<Cart> carts = new ArrayList<>();
+        for (final Long cartId : cartIds) {
+            final Long productId = cartItemDao.findProductIdById(cartId);
+            final Product product = productDao.findProductById(productId);
+            carts.add(new Cart(cartId, product));
         }
+        return carts;
     }
 
     public void deleteCart(final String customerName, final Long cartId) {
@@ -76,5 +83,12 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    private List<Long> findCartIdsByCustomerName(final String customerName) {
+        // TODO 레거시
+        final Long customerId = customerDao.findIdByUserName(customerName)
+                .orElseThrow(CustomerNotFoundException::new);
+        return cartItemDao.findIdsByCustomerId(customerId);
     }
 }
