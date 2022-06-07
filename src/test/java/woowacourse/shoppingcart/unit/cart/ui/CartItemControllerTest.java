@@ -101,7 +101,7 @@ class CartItemControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errorCode").value("1003"))
+                .andExpect(jsonPath("errorCode").value("1101"))
                 .andExpect(jsonPath("message").value("중복된 상품입니다."));
 
         // docs

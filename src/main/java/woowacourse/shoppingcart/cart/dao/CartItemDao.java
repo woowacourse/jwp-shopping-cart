@@ -9,8 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.cart.domain.Cart;
-import woowacourse.shoppingcart.cart.exception.badrequest.InvalidCartItemException;
-import woowacourse.shoppingcart.cart.exception.notfound.NotFoundCartException;
+import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
 
 @Repository
 public class CartItemDao {
@@ -44,15 +43,6 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, rowMapper, customerId);
     }
 
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
-
     public Long addCartItem(final Long customerId, final Long productId) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -71,7 +61,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new NoExistCartItemException();
         }
     }
 
@@ -94,7 +84,7 @@ public class CartItemDao {
                     + "WHERE ci.product_id = ? AND ci.customer_id = ?";
             return jdbcTemplate.queryForObject(sql, rowMapper, productId, customerId);
         } catch (final EmptyResultDataAccessException e) {
-            throw new NotFoundCartException();
+            throw new NoExistCartItemException();
         }
     }
 

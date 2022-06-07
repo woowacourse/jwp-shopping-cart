@@ -28,32 +28,6 @@ class CustomerDaoTest {
     }
 
     @Test
-    @DisplayName("nickname을 통해 아이디를 찾으면, id를 반환한다.")
-    void findIdByNickNameTest() {
-        // given
-        final String nickname = "puterism";
-
-        // when
-        final Long customerId = customerDao.findInByNickname(nickname);
-
-        // then
-        assertThat(customerId).isEqualTo(1L);
-    }
-
-    @Test
-    @DisplayName("대소문자를 구별하지 않고 nickname을 통해 아이디를 찾으면, id를 반환한다.")
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-        // given
-        final String userName = "gwangyeo";
-
-        // when
-        final Long customerId = customerDao.findInByNickname(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(16L);
-    }
-
-    @Test
     @DisplayName("이메일이 존재하지 않으면 false를 반환한다.")
     void existEmail_notExist_falseReturned() {
         // given

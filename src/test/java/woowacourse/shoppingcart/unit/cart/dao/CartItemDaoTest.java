@@ -16,7 +16,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
-import woowacourse.shoppingcart.cart.exception.notfound.NotFoundCartException;
+import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
 
@@ -160,7 +160,7 @@ class CartItemDaoTest {
 
         // when, then
         assertThatThrownBy(() -> cartItemDao.findByProductAndCustomerId(productId, customerId))
-                .isInstanceOf(NotFoundCartException.class);
+                .isInstanceOf(NoExistCartItemException.class);
     }
 
     @Test

@@ -6,10 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
-import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
-import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
-import woowacourse.shoppingcart.cart.exception.notfound.NotFoundCartException;
+import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.product.application.ProductService;
 
 @Service
@@ -39,30 +37,14 @@ public class CartService {
     }
 
     public Cart changeQuantity(final Customer customer, final Long productId, final QuantityChangingRequest request) {
-        final Cart cart = fetchCartBy(customer.getId(), productId);
+        final Cart cart = cartItemDao.findByProductAndCustomerId(productId, customer.getId());
         final Cart updatedCart = cart.changeQuantity(request.getQuantity());
         cartItemDao.updateQuantity(updatedCart);
         return updatedCart;
     }
 
-    private Cart fetchCartBy(final Long customerId, final Long productId) {
-        try {
-            return cartItemDao.findByProductAndCustomerId(productId, customerId);
-        } catch (final NotFoundCartException e) {
-            throw new NoExistCartItemException();
-        }
-    }
-
     public void deleteCartBy(final Customer customer, final Long productId) {
-        final Cart cart = fetchCart(productId, customer.getId());
+        final Cart cart = cartItemDao.findByProductAndCustomerId(productId, customer.getId());
         cartItemDao.deleteCartItem(cart.getId());
-    }
-
-    private Cart fetchCart(final Long productId, final Long customerId) {
-        try {
-            return cartItemDao.findByProductAndCustomerId(productId, customerId);
-        } catch (final NotFoundCartException e) {
-            throw new NoExistCartItemException();
-        }
     }
 }

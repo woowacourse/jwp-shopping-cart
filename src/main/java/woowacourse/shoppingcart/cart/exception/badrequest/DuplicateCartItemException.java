@@ -5,6 +5,6 @@ import woowacourse.shoppingcart.exception.BadRequestException;
 public class DuplicateCartItemException extends BadRequestException {
 
     public DuplicateCartItemException() {
-        super("1003", "중복된 상품입니다.");
+        super("1101", "중복된 상품입니다.");
     }
 }

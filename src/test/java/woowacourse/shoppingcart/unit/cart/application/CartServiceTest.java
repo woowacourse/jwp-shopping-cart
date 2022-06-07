@@ -13,12 +13,11 @@ import woowacourse.shoppingcart.cart.application.CartService;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
-import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
-import woowacourse.shoppingcart.cart.exception.notfound.NotFoundCartException;
-import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
+import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.product.domain.Product;
+import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.unit.ServiceMockTest;
 
 class CartServiceTest extends ServiceMockTest {
@@ -118,7 +117,7 @@ class CartServiceTest extends ServiceMockTest {
         QuantityChangingRequest request = new QuantityChangingRequest(quantity);
 
         given(cartItemDao.findByProductAndCustomerId(productId, customer.getId()))
-                .willThrow(NotFoundCartException.class);
+                .willThrow(NoExistCartItemException.class);
 
         // when, then
         assertThatThrownBy(() -> cartService.changeQuantity(customer, productId, request))
