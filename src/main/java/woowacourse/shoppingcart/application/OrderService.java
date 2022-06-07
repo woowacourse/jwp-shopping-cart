@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
@@ -53,8 +54,8 @@ public class OrderService {
 
     public OrderResponse findOrderById(final Long memberId, final Long orderId) {
         validateOrderIdByMemberId(memberId, orderId);
-        final List<OrderDetail> orderDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
-        return new OrderResponse(orderId, toOrderDetailResponses(orderDetails));
+        final Orders foundOrder = orderDao.findOrderByIdLazyOrderDetails(orderId);
+        return new OrderResponse(foundOrder.getId(), toOrderDetailResponses(foundOrder.getOrderDetails()));
     }
 
     private List<OrderDetailResponse> toOrderDetailResponses(final List<OrderDetail> orderDetails) {
@@ -70,10 +71,10 @@ public class OrderService {
     }
 
     public List<OrderResponse> findOrdersByMemberId(final Long memberId) {
-        final List<Long> orderIds = orderDao.findOrdersIdsByMemberId(memberId);
-        return orderIds.stream()
-                .map(id -> new OrderResponse(id,
-                        toOrderDetailResponses(ordersDetailDao.findOrdersDetailsByOrderId(id))))
+        final List<Orders> orders = orderDao.findOrdersByIdLazyOrderDetails(memberId);
+        return orders.stream()
+                .map(order -> new OrderResponse(order.getId(),
+                        toOrderDetailResponses(order.getOrderDetails())))
                 .collect(Collectors.toList());
     }
 }

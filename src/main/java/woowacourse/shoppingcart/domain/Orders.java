@@ -15,6 +15,10 @@ public class Orders {
         this.orderDetails = orderDetails;
     }
 
+    public void lazyInitializeDetails(final List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
     public Long getId() {
         return id;
     }
