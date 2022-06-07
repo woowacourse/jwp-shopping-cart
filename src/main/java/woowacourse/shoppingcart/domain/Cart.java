@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import woowacourse.common.exception.InvalidRequestException;
 
@@ -46,5 +47,22 @@ public class Cart {
         if (!isFullyRegistered) {
             throw new InvalidRequestException("장바구니에 등록되지 않은 상품은 구매할 수 없습니다.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Cart cart = (Cart) o;
+        return Objects.equals(cartItems, cart.cartItems);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cartItems);
     }
 }

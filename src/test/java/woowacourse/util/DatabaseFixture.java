@@ -1,12 +1,17 @@
 package woowacourse.util;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
 import woowacourse.auth.domain.user.Customer;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.entity.CartItemEntity;
 
 @Repository
 public class DatabaseFixture {
@@ -30,5 +35,15 @@ public class DatabaseFixture {
                 + "VALUES(:id, :name, :price, :imageUrl)";
 
         jdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(products));
+    }
+
+    public void save(Customer customer, CartItem... cartItems) {
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) "
+                + "VALUES(:customerId, :productId, :quantity)";
+        List<CartItemEntity> cartItemEntities = Arrays.stream(cartItems)
+                .map(it -> new CartItemEntity(customer, it))
+                .collect(Collectors.toList());
+
+        jdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(cartItemEntities));
     }
 }
