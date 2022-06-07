@@ -7,8 +7,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -92,7 +90,7 @@ public class CartItemServiceTest {
         Long customerId = createCustomer(email, nickname, "Password1234!");
         Long productId = createProduct("치킨", 10000, "imageUrl");
         LoginCustomer loginCustomer = new LoginCustomer(customerId, email, nickname);
-        Long cartItemId = cartService.addCart(loginCustomer, productId);
+        cartService.addCart(loginCustomer, productId);
 
         // when
         int changeQuantity = 10;

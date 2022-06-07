@@ -17,7 +17,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/carts")
 public class CartItemController {
 
     private final CartService cartService;
@@ -26,27 +26,27 @@ public class CartItemController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/carts")
+    @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(
       @AuthenticationPrincipal LoginCustomer loginCustomer) {
         List<CartItemResponse> cartItemResponses = cartService.showCartItems(loginCustomer);
         return ResponseEntity.ok().body(cartItemResponses);
     }
 
-    @PostMapping("/carts/products/{productId}")
+    @PostMapping("/products/{productId}")
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal LoginCustomer loginCustomer,
       @PathVariable Long productId) {
         cartService.addCart(loginCustomer, productId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/carts/products/{productId}")
+    @DeleteMapping("/products/{productId}")
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal LoginCustomer loginCustomer, @PathVariable Long productId) {
         cartService.deleteCart(loginCustomer, productId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/carts/products/{productId}")
+    @PatchMapping("/products/{productId}")
     public ResponseEntity<Void> changeCartItemQuantity(
       @AuthenticationPrincipal LoginCustomer loginCustomer, @PathVariable Long productId,
       @RequestBody CartItemChangeQuantityRequest request) {
