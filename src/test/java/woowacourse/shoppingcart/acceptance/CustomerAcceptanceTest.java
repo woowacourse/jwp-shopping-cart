@@ -4,12 +4,15 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
 import io.restassured.response.ValidatableResponse;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.EmailRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -43,7 +46,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         requestHttpPost("", customer, "/customers");
 
         // when
-        ValidatableResponse response = requestHttpGet("", "/customers/email?email=email@naver.com");
+        ValidatableResponse response = requestHttpPost("", new EmailRequest("email@naver.com"),"/customers/email/validate");
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value());

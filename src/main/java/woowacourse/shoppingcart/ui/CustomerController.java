@@ -15,6 +15,7 @@ import woowacourse.auth.support.MemberOnly;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.EmailRequest;
 
 @RestController
 @RequestMapping("/customers")
@@ -26,10 +27,10 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/email")
+    @PostMapping("/email/validate")
     @ResponseStatus(HttpStatus.OK)
-    public void checkEmailExistence(@RequestParam String email) {
-        customerService.validateEmailDuplication(email);
+    public void checkEmailExistence(@RequestBody @Valid EmailRequest emailRequest) {
+        customerService.validateEmailDuplication(emailRequest.getEmail());
     }
 
     @PostMapping
