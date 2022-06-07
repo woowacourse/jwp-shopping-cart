@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AddCartRequest {
 
+    @JsonProperty("product_id")
     private Long productId;
 
     public AddCartRequest() {
