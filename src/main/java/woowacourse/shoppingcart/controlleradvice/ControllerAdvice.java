@@ -116,12 +116,9 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-        InvalidCartItemException.class,
-        InvalidProductException.class,
         InvalidOrderException.class,
         NotInCustomerCartItemException.class,
     })
-
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
