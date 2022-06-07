@@ -4,7 +4,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,7 +21,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.request.LoginRequest;
-import woowacourse.auth.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.dto.response.PasswordCheckResponse;
@@ -47,52 +45,6 @@ class AuthControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-
-    @DisplayName("회원 가입에 성공한다. - 201 Created")
-    @Test
-    void signUp_Created() throws Exception {
-        MemberCreateRequest requestBody = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "우아한");
-
-        given(authService.save(any()))
-                .willReturn(MEMBER_ID);
-
-        mockMvc.perform(post("/api/members")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestBody)))
-                .andExpect(status().isCreated());
-
-        verify(authService, times(1))
-                .save(any());
-    }
-
-    @DisplayName("형식에 맞지 않는 정보로 회원 가입에 실패한다. - 400 Bad Request")
-    @ParameterizedTest
-    @CsvSource({"abc,1q2w3e4r!,닉네임", "abc@woowahan.com,1q2w3e4r,닉네임", "abc@woowahan.com,1q2w3e4r!,잘못된닉네임"})
-    void signUp_BadRequest(String email, String password, String nickname) throws Exception {
-        MemberCreateRequest requestBody = new MemberCreateRequest(email, password, nickname);
-
-        given(authService.save(any()))
-                .willReturn(MEMBER_ID);
-
-        mockMvc.perform(post("/api/members")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestBody)))
-                .andExpect(status().isBadRequest());
-        verify(authService, times(0))
-                .save(any());
-    }
-
-    @DisplayName("이메일 중복 체크를 한다. - 200 Ok")
-    @Test
-    void checkUniqueEmail() throws Exception {
-        given(authService.existsEmail(any()))
-                .willReturn(true);
-
-        mockMvc.perform(get("/api/members/email-check?email=" + "abc@woowahan.com"))
-                .andExpect(status().isOk());
-        verify(authService, times(1))
-                .existsEmail("abc@woowahan.com");
-    }
 
     @DisplayName("로그인에 성공하면 토큰과 닉네임을 반환한다. - 200 Ok")
     @Test

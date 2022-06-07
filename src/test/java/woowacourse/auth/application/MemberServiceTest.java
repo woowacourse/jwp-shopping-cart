@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dao.MemberDao;
-import woowacourse.auth.domain.Member;
+import woowacourse.auth.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.MemberUpdateRequest;
 import woowacourse.auth.dto.request.PasswordUpdateRequest;
 import woowacourse.auth.dto.response.MemberResponse;
@@ -27,11 +27,31 @@ class MemberServiceTest {
     @Autowired
     private MemberDao memberDao;
 
+    @DisplayName("회원 객체를 생성하고 DB에 저장한다.")
+    @Test
+    void saveMember() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+
+        memberService.save(memberCreateRequest);
+    }
+
+    @DisplayName("이미 존재하는 이메일로 회원을 생성하려고 하면 예외를 반환한다.")
+    @Test
+    void saveMember_DuplicatedEmail() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+
+        memberService.save(memberCreateRequest);
+
+        assertThatThrownBy(() -> memberService.save(memberCreateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 이메일 주소입니다.");
+    }
+
     @DisplayName("이메일과 수정할 회원 정보를 받아 회원 정보를 수정한다.")
     @Test
     void updateMember() {
-        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        Long memberId = memberDao.save(member);
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        Long memberId = memberService.save(memberCreateRequest);
 
         memberService.updateMember(memberId, new MemberUpdateRequest("바뀐닉네임"));
         String nickname = memberService.find(memberId)
@@ -51,22 +71,22 @@ class MemberServiceTest {
     @DisplayName("올바르지 않은 형식의 닉네임으로 변경하려고 하면 예외를 반환한다.")
     @Test
     void updatePassword_InvalidNicknameFormat() {
-        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        Long memberId = memberDao.save(member);
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        Long memberId = memberService.save(memberCreateRequest);
 
         assertThatThrownBy(() -> memberService.updateMember(memberId, new MemberUpdateRequest("1234")))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("닉네임 형식이 올바르지 않습니다.");
     }
 
-    @DisplayName("이메일과 비밀번호를 받아 비밀번호를 수정한다.")
+    @DisplayName("비밀번호를 받아 수정한다.")
     @Test
     void updatePassword() {
-        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        Long memberId = memberDao.save(member);
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        Long memberId = memberService.save(memberCreateRequest);
 
         memberService.updatePassword(memberId, new PasswordUpdateRequest("1q2w3e4r@"));
-        String password = memberDao.findByEmail("abc@woowahan.com")
+        String password = memberDao.findById(memberId)
                 .orElseGet(() -> fail(""))
                 .getPassword();
 
@@ -76,8 +96,8 @@ class MemberServiceTest {
     @DisplayName("회원의 정보를 반환한다.")
     @Test
     void findMember() {
-        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        Long memberId = memberDao.save(member);
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        Long memberId = memberService.save(memberCreateRequest);
 
         MemberResponse memberResponse = memberService.find(memberId);
 
@@ -104,19 +124,19 @@ class MemberServiceTest {
     @DisplayName("올바르지 않은 형식의 비밀번호로 변경하려고 하면 예외를 반환한다.")
     @Test
     void updatePassword_InvalidPasswordFormat() {
-        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        Long memberId = memberDao.save(member);
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        Long memberId = memberService.save(memberCreateRequest);
 
         assertThatThrownBy(() -> memberService.updatePassword(memberId, new PasswordUpdateRequest("1234")))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호 형식이 올바르지 않습니다.");
     }
 
-    @DisplayName("이메일이 일치하는 회원 정보를 삭제한다.")
+    @DisplayName("회원 정보를 삭제한다.")
     @Test
     void deleteMember() {
-        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        Long memberId = memberDao.save(member);
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        Long memberId = memberService.save(memberCreateRequest);
 
         memberService.delete(memberId);
         boolean actual = memberService.existsEmail("abc@woowahan.com");
@@ -128,8 +148,8 @@ class MemberServiceTest {
     @ParameterizedTest
     @CsvSource({"abc@woowahan.com, true", "abc@naver.com, false"})
     void existsEmail(String email, boolean expected) {
-        Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        memberDao.save(member);
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
+        Long memberId = memberService.save(memberCreateRequest);
 
         boolean actual = memberService.existsEmail(email);
 
