@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.TokenProvider;
 import woowacourse.shoppingcart.dto.CheckDuplicateResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CheckDuplicateRequest;
@@ -19,11 +20,11 @@ import java.net.URI;
 public class CustomerController {
 
     private final CustomerService customerService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenProvider tokenProvider;
 
-    public CustomerController(CustomerService customerService, JwtTokenProvider jwtTokenProvider) {
+    public CustomerController(CustomerService customerService, TokenProvider tokenProvider) {
         this.customerService = customerService;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.tokenProvider = tokenProvider;
     }
 
     @PostMapping
