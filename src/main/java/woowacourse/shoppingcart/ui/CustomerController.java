@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
@@ -34,20 +35,21 @@ public class CustomerController {
     }
 
     @GetMapping("/customers/{customerId}")
-    public ResponseEntity<CustomerResponse> findCustomerInformation(@PathVariable Long customerId) {
+    public ResponseEntity<CustomerResponse> findCustomerInformation(
+            @AuthenticationPrincipal @PathVariable Long customerId) {
         CustomerResponse response = customerService.findCustomerById(customerId);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/customers/{customerId}")
-    public ResponseEntity<Void> updateCustomerInformation(@PathVariable Long customerId,
+    public ResponseEntity<Void> updateCustomerInformation(@AuthenticationPrincipal @PathVariable Long customerId,
                                                           @RequestBody final ModifiedCustomerRequest request) {
         customerService.updateCustomer(customerId, ModifiedCustomerDto.fromModifiedCustomerRequest(request));
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/customers/{customerId}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal @PathVariable Long customerId) {
         customerService.deleteCustomer(customerId);
         return ResponseEntity.noContent().build();
     }

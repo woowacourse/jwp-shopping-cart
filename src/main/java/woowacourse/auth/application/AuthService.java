@@ -34,7 +34,7 @@ public class AuthService {
         final Email email = new Email(signInDto.getEmail());
         final CustomerDto customer = checkSignUpCustomer(email);
         verifyPassword(signInDto.getPassword(), customer.getPassword());
-        return new TokenResponse(customer.getId(), jwtTokenProvider.createToken(email.getValue()));
+        return new TokenResponse(customer.getId(), jwtTokenProvider.createToken(String.valueOf(customer.getId())));
     }
 
     private void verifyPassword(final String password, final String hashedPassword) {

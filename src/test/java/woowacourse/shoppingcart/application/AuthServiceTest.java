@@ -53,11 +53,11 @@ class AuthServiceTest {
         @Test
         @DisplayName("로그인이 되면 토큰이 정상적으로 발급된다.")
         void createAccessToken() {
-            코니_회원_가입();
+            Long 코니_id = 코니_회원_가입();
             final String email = "her0807@naver.com";
             final TokenResponse response = authService.signIn(new SignInDto(email, "password1!"));
             String payload = provider.getPayload(response.getAccessToken());
-            assertThat(payload).isEqualTo(email);
+            assertThat(payload).isEqualTo(코니_id.toString());
             assertThat(response.getCustomerId()).isNotNull();
         }
 
