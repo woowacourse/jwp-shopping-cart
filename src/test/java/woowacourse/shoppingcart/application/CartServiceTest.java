@@ -145,6 +145,22 @@ public class CartServiceTest {
         assertThat(cart.getQuantity()).isEqualTo(5);
     }
 
+    @DisplayName("장바구니에 존재하지 않는 상품을 수정하려고 하면 예외가 발생한다.")
+    @Test
+    void updateProductInCart_notExist_exceptionThrown() {
+        //given
+        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
+        CartUpdationRequest request = new CartUpdationRequest(4);
+
+        given(cartItemDao.existProduct(1L, 21L))
+                .willThrow(new IllegalProductException("장바구니에 상품이 존재하지 않습니다."));
+
+        // when, then
+        assertThatThrownBy(() -> cartService.updateProductInCart(customer, request, 21L))
+                .isInstanceOf(IllegalProductException.class)
+                .hasMessage("장바구니에 상품이 존재하지 않습니다.");
+    }
+
     @DisplayName("장바구니에서 상품을 삭제한다.")
     @Test
     void deleteProductInCart_success_void() {
