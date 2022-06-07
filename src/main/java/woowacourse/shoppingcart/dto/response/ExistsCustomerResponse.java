@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.dto.response;
 
-public class CheckDuplicationResponse {
+public class ExistsCustomerResponse {
 
     private Boolean duplicated;
 
-    public CheckDuplicationResponse() {
+    public ExistsCustomerResponse() {
     }
 
-    public CheckDuplicationResponse(final boolean duplicated) {
+    public ExistsCustomerResponse(final boolean duplicated) {
         this.duplicated = duplicated;
     }
 

@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.UserNameArgument;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
 import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
+import woowacourse.shoppingcart.dto.response.ExistsCustomerResponse;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.service.CustomerService;
 
@@ -53,9 +53,8 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/duplication")
-    public ResponseEntity<CheckDuplicationResponse> checkDuplication(
-            @RequestBody final CheckDuplicationRequest request) {
-        return ResponseEntity.ok(customerService.checkDuplicationByName(request));
+    @GetMapping("/exists")
+    public ResponseEntity<ExistsCustomerResponse> exists(@RequestParam(name = "userName") final String userName) {
+        return ResponseEntity.ok(customerService.existsByName(userName));
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
 import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
@@ -271,9 +270,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     private ExtractableResponse<Response> 회원_이름_중복_검사(String userName) {
         return RestAssured
                 .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CheckDuplicationRequest(userName))
-                .when().post("/api/customers/duplication")
+                .when().get("/api/customers/exists?userName=" + userName)
                 .then().log().all()
                 .extract();
     }

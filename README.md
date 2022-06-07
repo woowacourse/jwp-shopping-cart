@@ -13,7 +13,7 @@
 - [X] 로그인
 
 ### 리팩토링
-- [ ] POST /api/customers/duplication를 GET /api/customers/exists?userName=ellie로 변경
+- [X] POST /api/customers/duplication를 GET /api/customers/exists?userName=ellie로 변경
 
 <br>
 
@@ -34,14 +34,14 @@
 
 ### 회원 기능 API 명세
 
-| Method | Url               | Description |
-|--------|-------------------|-------------|
-| POST   | /api/customers    | 회원 가입       |
-| GET    | /api/customers/me | 내 정보 조회     |
-| PUT    | /api/customers/me | 내 정보 수정     |
-| DELETE | /api/customers/me | 회원 탈퇴       |
-| POST   | /api/login        | 로그인         |
-| POST   |/api/customers/duplication | 회원 이름 중복 검사 |
+| Method | Url                   | Description |
+|--------|-----------------------|-------------|
+| POST   | /api/customers        | 회원 가입       |
+| GET    | /api/customers/me     | 내 정보 조회     |
+| PUT    | /api/customers/me     | 내 정보 수정     |
+| DELETE | /api/customers/me     | 회원 탈퇴       |
+| POST   | /api/login            | 로그인         |
+| GET    | /api/customers/exists | 회원 이름 중복 검사 |
 
 ### 제품 기능 API 명세
 
