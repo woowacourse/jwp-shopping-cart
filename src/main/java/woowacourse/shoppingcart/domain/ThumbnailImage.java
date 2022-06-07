@@ -16,4 +16,6 @@ public class ThumbnailImage {
     public String getAlt() {
         return alt;
     }
+
+
 }

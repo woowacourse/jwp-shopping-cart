@@ -26,11 +26,14 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public Long addProduct(final ProductRequest productRequest) {
+    public Product addProduct(final ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(),
                 productRequest.getStockQuantity(), productRequest.getThumbnailImage());
 
-        return productDao.save(product);
+        Long productId = productDao.save(product);
+
+        return new Product(productId, productRequest.getName(), productRequest.getPrice(),
+                product.getStockQuantity(), product.getThumbnailImage());
     }
 
     public ProductResponse findProductById(final Long productId) {
