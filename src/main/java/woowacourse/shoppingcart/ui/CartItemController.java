@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 @RestController
-@RequestMapping("/api/customers/{customerName}/cartItems")
+@RequestMapping("/api/customers/me/cartItems")
 public class CartItemController {
     private final CartService cartService;
 
@@ -29,14 +31,15 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<List<CartItem>> getCartItems(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(loginCustomer));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(
-            @Validated(Request.id.class) @RequestBody ProductResponse productResponse, @PathVariable String customerName) {
-        Long cartId = cartService.addCart(productResponse.getId(), customerName);
+            @Validated(Request.id.class) @RequestBody ProductResponse productResponse,
+            @AuthenticationPrincipal LoginCustomer loginCustomer) {
+        Long cartId = cartService.addCart(productResponse.getId(), loginCustomer);
         URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
@@ -46,8 +49,9 @@ public class CartItemController {
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable String customerName, @PathVariable Long cartId) {
-        cartService.deleteCart(customerName, cartId);
+    public ResponseEntity<Void> deleteCartItem(
+            @AuthenticationPrincipal LoginCustomer loginCustomer, @PathVariable Long cartId) {
+        cartService.deleteCart(loginCustomer, cartId);
         return ResponseEntity.noContent().build();
     }
 }

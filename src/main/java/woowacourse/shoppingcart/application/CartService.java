@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -28,8 +29,8 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<CartItem> findCartsByCustomerName(String customerName) {
-        List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public List<CartItem> findCartsByCustomerName(LoginCustomer loginCustomer) {
+        List<Long> cartIds = findCartIdsByCustomerName(loginCustomer.getUsername());
 
         List<CartItem> cartItems = new ArrayList<>();
         for (Long cartId : cartIds) {
@@ -45,8 +46,8 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(Long productId, String customerName) {
-        Long customerId = customerDao.findIdByUsername(customerName);
+    public Long addCart(Long productId, LoginCustomer loginCustomer) {
+        Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername());
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
@@ -54,13 +55,13 @@ public class CartService {
         }
     }
 
-    public void deleteCart(String customerName, Long cartId) {
-        validateCustomerCart(cartId, customerName);
+    public void deleteCart(LoginCustomer loginCustomer, Long cartId) {
+        validateCustomerCart(cartId, loginCustomer.getUsername());
         cartItemDao.deleteCartItem(cartId);
     }
 
-    private void validateCustomerCart(Long cartId, String customerName) {
-        List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    private void validateCustomerCart(Long cartId, String username) {
+        List<Long> cartIds = findCartIdsByCustomerName(username);
         if (cartIds.contains(cartId)) {
             return;
         }

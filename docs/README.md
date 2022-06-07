@@ -135,7 +135,7 @@
     - [ ] 장바구니 품목 수량 수정
     - [ ] cartItem 테이블에 quantity 칼럼 추가
     - [ ] 이미 담겨있는 상품을 다시 담을 경우 수량을 더해 update (insert ignore 사용)
-    - [ ] username 기반에서 token 기반으로 수정
+    - [x] username 기반에서 token 기반으로 수정
 - 주문(order) 관련 기능
     - 주문하기
     - 주문 단건 조회
