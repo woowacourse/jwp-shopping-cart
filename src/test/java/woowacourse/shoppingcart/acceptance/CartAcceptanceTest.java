@@ -14,8 +14,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemsResponse.CartItemInnerResponse;
 import woowacourse.shoppingcart.dto.product.ProductAddRequest;
 
 @DisplayName("장바구니 관련 기능")
@@ -52,7 +52,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_추가되어_있음(new CartItemAddRequest(productId1, 1), token);
         장바구니_아이템_추가되어_있음(new CartItemAddRequest(productId2, 1), token);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token);
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
@@ -98,11 +98,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token) {
         return RestAssured
                 .given().log().all()
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
+                .when().get("/api/cartItems")
                 .then().log().all()
                 .extract();
     }
@@ -131,8 +132,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", CartItem.class).stream()
-                .map(cartItem -> cartItem.getProduct().getId())
+        List<Long> resultProductIds = response.jsonPath().getList("cartItems", CartItemInnerResponse.class).stream()
+                .map(CartItemInnerResponse::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }

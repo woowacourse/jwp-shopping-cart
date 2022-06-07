@@ -17,6 +17,10 @@ public class CartItemsResponse {
                 .collect(Collectors.toList());
     }
 
+    public List<CartItemInnerResponse> getCartItems() {
+        return cartItems;
+    }
+
     public static class CartItemInnerResponse {
 
         private long id;
