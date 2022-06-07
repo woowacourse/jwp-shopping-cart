@@ -45,6 +45,16 @@ public class AcceptanceTestFixture {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> deleteMethodRequest(String path) {
+        return RestAssured.given().log().all()
+//                .body(request)
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete(path)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> deleteMethodRequestWithBearerAuth(Object request, String token, String path) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + token)
