@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.ui.dto.request;
+package woowacourse.shoppingcart.ui.dto.response;
 
 public class CustomerResponse {
     private String name;

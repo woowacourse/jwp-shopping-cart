@@ -12,7 +12,7 @@ import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
+import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 

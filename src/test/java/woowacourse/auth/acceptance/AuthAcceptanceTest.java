@@ -21,7 +21,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
+import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @DisplayName("인증 관련 기능")
@@ -38,7 +38,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final TokenResponse 엑세스토큰 = post(LOGIN_URI, 로그인요청).as(TokenResponse.class);
 
         // when
-        final ExtractableResponse<Response> 회원조회응답 = get(CUSTOMER_URI, 엑세스토큰.getAccessToken());
+        final ExtractableResponse<Response> 회원조회응답 = getWithToken(CUSTOMER_URI, 엑세스토큰.getAccessToken());
         final CustomerResponse 회원조회결과 = 회원조회응답.as(CustomerResponse.class);
 
         // then
@@ -95,7 +95,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         post(CUSTOMER_URI, 회원생성요청);
 
         // when
-        final ExtractableResponse<Response> 회원조회응답 = get(CUSTOMER_URI, "NotValidToken");
+        final ExtractableResponse<Response> 회원조회응답 = getWithToken(CUSTOMER_URI, "NotValidToken");
 
         // then
         assertAll(

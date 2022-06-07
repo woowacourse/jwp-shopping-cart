@@ -14,7 +14,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
+import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 
