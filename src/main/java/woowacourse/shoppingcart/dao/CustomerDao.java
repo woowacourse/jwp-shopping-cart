@@ -22,8 +22,7 @@ public class CustomerDao {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
 
-    public CustomerDao(DataSource dataSource,
-        NamedParameterJdbcTemplate jdbcTemplate) {
+    public CustomerDao(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(dataSource)
             .withTableName("customer")
