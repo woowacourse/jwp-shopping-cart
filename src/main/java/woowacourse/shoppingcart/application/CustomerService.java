@@ -45,6 +45,7 @@ public class CustomerService {
         final Customer customer = getById(customerId);
         validatePassword(customer, customerUpdateRequest.getPassword());
         customer.update(customerUpdateRequest.getNickname(), customerUpdateRequest.getNewPassword());
+        customerDao.update(customer);
         return new CustomerUpdateResponse(customer.getNickname());
     }
 

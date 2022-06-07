@@ -82,8 +82,10 @@ class CustomerServiceTest {
 
         final String newNickname = "Guest123";
         final String newPassword = "qwer1234!@#$";
-        final CustomerUpdateResponse actual = customerService.updateCustomer(customerId,
+        customerService.updateCustomer(customerId,
                 new CustomerUpdateRequest(newNickname, CUSTOMER_PASSWORD, newPassword));
+
+        CustomerResponse actual = customerService.findById(customerId);
 
         assertThat(actual.getNickname()).isEqualTo(newNickname);
     }

@@ -101,12 +101,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         final CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
                 "newGuest", CUSTOMER_PASSWORD, "qwer1234!@#$");
-        final ExtractableResponse<Response> patchResponse = RequestHandler.patchRequest(
-                "/customers", customerUpdateRequest, tokenResponse.getAccessToken());
-
+        RequestHandler.patchRequest("/customers", customerUpdateRequest, tokenResponse.getAccessToken());
+        ExtractableResponse<Response> getResponse = RequestHandler.getRequest("/customers", tokenResponse.getAccessToken());
         // then
-        assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(patchResponse.jsonPath().getObject(".", CustomerUpdateResponse.class)
+        assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(getResponse.jsonPath().getObject(".", CustomerResponse.class)
                 .getNickname()).isEqualTo("newGuest");
     }
 
