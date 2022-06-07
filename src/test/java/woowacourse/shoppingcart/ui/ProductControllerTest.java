@@ -78,14 +78,39 @@ public class ProductControllerTest extends RestDocsTest {
                 )));
     }
 
+    @DisplayName("새 상품 추가시 제품명이 없어 실패한다.")
+    @Test
+    void addNameEmpty() throws Exception {
+        ProductRequest productRequest = new ProductRequest("", 1000, "image.com");
+        ErrorResponse response = new ErrorResponse("제품명을 입력해주세요.");
+        mockMvc.perform(post("/api/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(response)));
+    }
+
     @DisplayName("새 상품 추가시 가격이 맞지 않아 실패한다.")
     @Test
     void addPriceNotRight() throws Exception {
         ProductRequest productRequest = new ProductRequest("김치", -10, "image.com");
 
-        given(productService.addProduct(any(ProductRequest.class))).willReturn(1L);
         ErrorResponse response = new ErrorResponse("0원 이상의 금액을 입력해주세요.");
-        final ResultActions resultActions = mockMvc.perform(post("/api/products")
+        mockMvc.perform(post("/api/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(response)));
+    }
+
+    @DisplayName("새 상품 추가시 이미지가 존재하지 않아 실패한다.")
+    @Test
+    void addImageUrlNotBlank() throws Exception {
+        ProductRequest productRequest = new ProductRequest("", 1000, "");
+        ErrorResponse response = new ErrorResponse("이미지 주소에는 공백이 허용되지 않습니다.");
+        mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productRequest)))
