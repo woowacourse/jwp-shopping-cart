@@ -80,14 +80,4 @@ public class MemberDao {
         String SQL = "DELETE FROM member WHERE id = ?";
         return jdbcTemplate.update(SQL, id);
     }
-
-    // 기존 제공 코드로 2단계 shopping cart를 진행하며 제거할 예정
-    public Long findIdByUserName(final String userName) {
-        try {
-            final String query = "SELECT id FROM member WHERE name = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
-        }
-    }
 }

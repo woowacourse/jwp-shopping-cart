@@ -50,7 +50,7 @@ public class OrderService {
 
     private void validateOrderIdByMemberId(Long memberId, Long orderId) {
         if (!orderDao.isExistOrderId(memberId, orderId)) {
-            throw new InvalidOrderException("잘못된 주문 정보입니다.");
+            throw new InvalidOrderException();
         }
     }
 

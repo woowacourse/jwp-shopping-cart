@@ -37,13 +37,13 @@ public class AuthService {
         Member member = validateExistMember(memberDao.findMemberByEmail(request.getEmail()));
         Password requestPassword = new NewPassword(request.getPassword());
         if (!member.isSamePassword(requestPassword)) {
-            throw new WrongPasswordException("잘못된 비밀번호입니다.");
+            throw new WrongPasswordException();
         }
         return member.getId();
     }
 
     private Member validateExistMember(Optional<Member> member) {
-        return member.orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+        return member.orElseThrow(MemberNotFoundException::new);
     }
 
     public Long extractIdFromRequest(HttpServletRequest request) {

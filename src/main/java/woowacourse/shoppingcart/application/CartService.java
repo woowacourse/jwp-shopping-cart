@@ -82,7 +82,7 @@ public class CartService {
     private void validateExistMember(Long memberId) {
         Optional<Member> member = memberDao.findMemberById(memberId);
         if (member.isEmpty()) {
-            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
+            throw new MemberNotFoundException();
         }
     }
 

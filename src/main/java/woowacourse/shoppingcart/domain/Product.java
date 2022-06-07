@@ -25,7 +25,7 @@ public class Product {
 
     private void validatePrice(int price) {
         if (price <= 0) {
-            throw new InvalidProductPriceException("상품 가격은 양의 정수가 되어야 합니다.");
+            throw new InvalidProductPriceException();
         }
     }
 

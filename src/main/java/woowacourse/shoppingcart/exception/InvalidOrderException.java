@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.exception;
 
-public class InvalidOrderException extends RuntimeException {
+public class InvalidOrderException extends OrderException {
 
-    public InvalidOrderException(final String msg) {
-        super(msg);
+    public InvalidOrderException() {
+        super("잘못된 주문 정보입니다.");
     }
 }

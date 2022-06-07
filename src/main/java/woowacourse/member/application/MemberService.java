@@ -39,7 +39,7 @@ public class MemberService {
 
     public void checkDuplicateEmail(EmailDuplicateCheckRequest request) {
         if (memberDao.existMemberByEmail(request.getEmail())) {
-            throw new DuplicateEmailException("이메일은 중복될 수 없습니다.");
+            throw new DuplicateEmailException();
         }
     }
 
@@ -63,7 +63,7 @@ public class MemberService {
     }
 
     private Member validateExistMember(Optional<Member> member) {
-        return member.orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+        return member.orElseThrow(MemberNotFoundException::new);
     }
 
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {
@@ -82,7 +82,7 @@ public class MemberService {
         Member member = validateExistMember(memberDao.findMemberById(id));
         int deletedRowCount = memberDao.deleteById(id);
         if (deletedRowCount == 0) {
-            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
+            throw new MemberNotFoundException();
         }
     }
 }
