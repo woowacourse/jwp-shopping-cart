@@ -75,12 +75,4 @@ create table orders_detail
 --     add constraint fk_orders_detail_to_product
 --         foreign key (product_id) references product (id);
 
-INSERT INTO product (name, price, thumbnail)
-VALUES (싱싱한 감자, 10000, https://storybook.takealook.kr/image/potato.jpg);
-INSERT INTO product (name, price, thumbnail)
-VALUES (안싱싱한 감자, 10000, https://storybook.takealook.kr/image/potato.jpg);
-INSERT INTO product (name, price, thumbnail)
-VALUES (약간싱싱한 감자, 10000, https://storybook.takealook.kr/image/potato.jpg);
-INSERT INTO product (name, price, thumbnail)
-VALUES (맛있는 감자, 10000, https://storybook.takealook.kr/image/potato.jpg);
 
