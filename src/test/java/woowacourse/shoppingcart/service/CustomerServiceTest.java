@@ -17,7 +17,6 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dao.CustomerDao;
 
 @SpringBootTest
 @Transactional
@@ -27,8 +26,6 @@ public class CustomerServiceTest {
     private AuthService authService;
     @Autowired
     private CustomerService customerService;
-    @Autowired
-    private CustomerDao customerDao;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;

@@ -1,13 +1,8 @@
 package woowacourse.shoppingcart.dto;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 public class CartRequest {
-
-    @NotNull
+    
     private Long id;
-    @Min(0)
     private int quantity;
 
     public CartRequest() {

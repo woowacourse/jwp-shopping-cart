@@ -47,7 +47,7 @@ public class CartItemDao {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
+            throw new InvalidCartItemException("장바구니에 해당하는 상품이 없습니다.");
         }
     }
 
@@ -70,7 +70,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, customerId, productId);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new InvalidCartItemException("장바구니에 해당하는 상품이 없습니다.");
         }
     }
 
@@ -78,7 +78,7 @@ public class CartItemDao {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? and product_id = ?";
         final int rowCount = jdbcTemplate.update(sql, quantity, customerId, productId);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new InvalidCartItemException("장바구니에 해당하는 상품이 없습니다.");
         }
     }
 }

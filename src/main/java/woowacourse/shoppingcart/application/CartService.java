@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
+    public static final int MINIMUM_CART_QUANTITY = 0;
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
 
@@ -28,7 +29,7 @@ public class CartService {
         final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(id);
         final List<Cart> carts = new ArrayList<>();
         for (final CartItem cartItem : cartItems) {
-            final Long productId = cartItemDao.findProductIdById(cartItem.getProductId());
+            final Long productId = cartItemDao.findProductIdById(cartItem.getId());
             final Product product = productDao.findProductById(productId);
             carts.add(new Cart(cartItem.getId(), product, cartItem.getQuantity()));
         }
@@ -36,10 +37,11 @@ public class CartService {
     }
 
     public Long addCart(final Long customerId, final Long productId, final int quantity) {
+        validateMinimumQuantity(quantity);
         try {
             return cartItemDao.addCartItem(customerId, productId, quantity);
         } catch (Exception e) {
-            throw new InvalidProductException();
+            throw new InvalidProductException("해당하는 상품이 없습니다.");
         }
     }
 
@@ -51,8 +53,15 @@ public class CartService {
     }
 
     public void updateCart(Long customerId, Long productId, int quantity) {
+        validateMinimumQuantity(quantity);
         validateCustomerCart(productId, customerId);
         cartItemDao.modifyQuantity(customerId, productId, quantity);
+    }
+
+    private void validateMinimumQuantity(int quantity) {
+        if (quantity <= MINIMUM_CART_QUANTITY) {
+            throw new IllegalArgumentException("올바르지 않은 상품 수량 형식입니다.");
+        }
     }
 
     private void validateCustomerCart(final Long productId, final Long customerId) {
@@ -60,6 +69,6 @@ public class CartService {
         if (productIds.contains(productId)) {
             return;
         }
-        throw new NotInCustomerCartItemException();
+        throw new NotInCustomerCartItemException("해당하는 상품이 없습니다.");
     }
 }
