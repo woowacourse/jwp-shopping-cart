@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -57,11 +58,27 @@ public class CartItemService {
         CartItems cartItems = cartItemRepository.findByCustomer(customerId);
         CartItem cartItem = cartItemRepository.findById(id);
 
+        checkContain(cartItems, cartItem);
+
+        return CartItemResponse.from(cartItem);
+    }
+
+    public void update(String email, UpdateCartItemRequest cartItemRequest) {
+        long customerId = findCustomerIdByEmail(email);
+        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
+        CartItem cartItem = cartItemRepository.findById(cartItemRequest.getCartItemId());
+
+        checkContain(cartItems, cartItem);
+
+        CartItem updateCartItem = new CartItem(cartItem.getId(), cartItem.getProduct(),
+            new Quantity(cartItemRequest.getQuantity()));
+        cartItemRepository.update(updateCartItem);
+    }
+
+    private void checkContain(CartItems cartItems, CartItem cartItem) {
         if (!cartItems.contains(cartItem)) {
             throw new IllegalArgumentException();
         }
-
-        return CartItemResponse.from(cartItem);
     }
 
     private long findCustomerIdByEmail(String email) {

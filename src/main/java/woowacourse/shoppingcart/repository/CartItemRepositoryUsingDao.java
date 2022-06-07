@@ -47,4 +47,9 @@ public class CartItemRepositoryUsingDao implements CartItemRepository {
             new Quantity(cartItemEntity.getQuantity()));
     }
 
+    @Override
+    public void update(CartItem updateCartItem) {
+        cartItemDao.update(updateCartItem);
+    }
+
 }

@@ -6,4 +6,6 @@ public interface CartItemRepository {
     long addCartItem(long customerId, CartItem cartItem);
 
     CartItem findById(long id);
+
+    void update(CartItem updateCartItem);
 }

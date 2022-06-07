@@ -23,6 +23,7 @@ import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ThumbnailImageDto;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -106,6 +107,28 @@ public class CartAcceptanceTest extends AcceptanceTest {
             .extracting("id", "productId", "price", "quantity")
             .containsExactly(createdCartItemResponse.getId(), createdCartItemResponse.getProductId(),
                 createdCartItemResponse.getPrice(), createdCartItemResponse.getQuantity());
+    }
+
+    @DisplayName("장바구니 갯수 업데이트")
+    @Test
+    void update() {
+        // given
+        ExtractableResponse<Response> responseAboutCreatedCartItem1 = AcceptanceFixture.post(
+            new CartItemRequest(productId1, 10), "/api/mycarts",
+            header);
+        AcceptanceFixture.post(new CartItemRequest(productId2, 10), "/api/mycarts", header);
+        CartItemResponse createdCartItemResponse = responseAboutCreatedCartItem1.jsonPath()
+            .getObject(".", CartItemResponse.class);
+
+        // when
+        ExtractableResponse<Response> patchResponse = AcceptanceFixture.patch(
+            new UpdateCartItemRequest(createdCartItemResponse.getId(), 15), "/api/mycarts", header);
+        ExtractableResponse<Response> responseAboutGetItem = AcceptanceFixture.get(
+            "/api/mycarts/" + createdCartItemResponse.getId(), header);
+        CartItemResponse cartItemResponse = responseAboutGetItem.jsonPath().getObject(".", CartItemResponse.class);
+
+        // then
+        assertThat(cartItemResponse.getQuantity()).isEqualTo(15);
     }
 
     @DisplayName("장바구니 삭제")

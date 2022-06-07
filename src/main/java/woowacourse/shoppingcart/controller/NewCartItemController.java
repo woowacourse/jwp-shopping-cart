@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 import woowacourse.shoppingcart.service.CartItemService;
 
 @RestController
@@ -44,5 +46,12 @@ public class NewCartItemController {
     public ResponseEntity<CartItemResponse> findCartItem(@AuthenticationPrincipal String email,
         @PathVariable(value = "cartItemId") long id) {
         return ResponseEntity.ok(cartItemService.getCartItem(email, id));
+    }
+
+    @PatchMapping
+    public ResponseEntity<Void> updateQuantity(@AuthenticationPrincipal String email,
+        @RequestBody UpdateCartItemRequest cartItemRequest) {
+        cartItemService.update(email, cartItemRequest);
+        return ResponseEntity.ok().build();
     }
 }
