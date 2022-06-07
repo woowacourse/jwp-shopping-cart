@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.customer.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.customer.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {

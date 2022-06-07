@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.customer.domain.Customer;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
 import woowacourse.customer.dto.UpdatePasswordRequest;
+import woowacourse.customer.exception.InvalidCustomerException;
 import woowacourse.customer.support.passwordencoder.PasswordEncoder;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.UserNotFoundException;
 
 @Transactional
 @SpringBootTest
@@ -138,6 +138,6 @@ class CustomerServiceTest {
 
         // then
         assertThatThrownBy(() -> customerService.findByUsername(username))
-            .isInstanceOf(UserNotFoundException.class);
+            .isInstanceOf(InvalidLoginException.class);
     }
 }

@@ -14,7 +14,7 @@ import woowacourse.customer.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.ExceptionResponse;
+import woowacourse.exception.dto.ExceptionResponse;
 import woowacourse.customer.dto.SignupRequest;
 
 @DisplayName("인증 관련 기능")
@@ -67,7 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertAll(
             () -> response.statusCode(HttpStatus.UNAUTHORIZED.value()),
             () -> assertThat(exceptionResponse.getMessages())
-                .containsExactly("해당하는 username이 없습니다.")
+                .containsExactly("해당하는 사용자 이름이 없습니다.")
         );
     }
 

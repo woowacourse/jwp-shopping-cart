@@ -8,7 +8,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.exception.AuthorizationException;
+import woowacourse.auth.exception.InvalidTokenException;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
@@ -26,7 +26,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         String token = AuthorizationExtractor.extract(request);
         if (!jwtTokenProvider.validateToken(token) || token == null) {
-            throw new AuthorizationException();
+            throw new InvalidTokenException();
         }
         return true;
     }

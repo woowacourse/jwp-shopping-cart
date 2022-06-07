@@ -2,7 +2,7 @@ package woowacourse.customer.domain;
 
 import java.util.Objects;
 
-import woowacourse.shoppingcart.exception.PasswordMisMatchException;
+import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.customer.support.passwordencoder.PasswordEncoder;
 
 public class EncodedPassword {
@@ -15,7 +15,7 @@ public class EncodedPassword {
 
     public void matches(final PasswordEncoder passwordEncoder, final String raw) {
         if (!passwordEncoder.matches(raw, value)) {
-            throw new PasswordMisMatchException();
+            throw new InvalidLoginException("비밀번호가 일치하지 않습니다.");
         }
     }
 

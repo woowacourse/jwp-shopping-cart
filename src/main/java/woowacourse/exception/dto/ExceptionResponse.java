@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.exception.dto;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package woowacourse.product.domain;
 import java.util.Objects;
 
 import woowacourse.product.exception.InvalidStockException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.product.exception.InvalidProductException;
 
 public class Stock {
 

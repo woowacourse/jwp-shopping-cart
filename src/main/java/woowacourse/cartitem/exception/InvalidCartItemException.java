@@ -1,9 +1,11 @@
 package woowacourse.cartitem.exception;
 
-public class InvalidCartItemException extends RuntimeException {
+import woowacourse.exception.BadRequestException;
+
+public class InvalidCartItemException extends BadRequestException {
 
     public InvalidCartItemException() {
-        this("유효하지 않은 장바구니입니다.");
+        this("장바구니 아이템을 찾을 수 없습니다.");
     }
 
     public InvalidCartItemException(final String msg) {

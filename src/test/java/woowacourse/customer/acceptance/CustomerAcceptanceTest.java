@@ -20,7 +20,7 @@ import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
 import woowacourse.customer.dto.UpdatePasswordRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.ExceptionResponse;
+import woowacourse.exception.dto.ExceptionResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {

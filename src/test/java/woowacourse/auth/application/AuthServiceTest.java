@@ -1,7 +1,8 @@
 package woowacourse.auth.application;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,12 +12,11 @@ import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.customer.application.CustomerService;
 import woowacourse.customer.domain.Customer;
 import woowacourse.customer.dto.SignupRequest;
-import woowacourse.shoppingcart.exception.PasswordMisMatchException;
-import woowacourse.shoppingcart.exception.UserNotFoundException;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -72,7 +72,7 @@ class AuthServiceTest {
 
         // then
         assertThatThrownBy(() -> authService.createToken(loginRequest))
-            .isInstanceOf(UserNotFoundException.class);
+            .isInstanceOf(InvalidLoginException.class);
     }
 
     @DisplayName("password가 일치하지 않으면 PasswordMisMatchException을 반환해야 한다.")
@@ -87,6 +87,6 @@ class AuthServiceTest {
 
         // then
         assertThatThrownBy(() -> authService.createToken(loginRequest))
-            .isInstanceOf(PasswordMisMatchException.class);
+            .isInstanceOf(InvalidLoginException.class);
     }
 }

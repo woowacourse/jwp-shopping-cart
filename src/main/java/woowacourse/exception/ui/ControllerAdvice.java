@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.ui;
+package woowacourse.exception.ui;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,14 +16,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import woowacourse.shoppingcart.dto.ExceptionResponse;
-import woowacourse.shoppingcart.exception.AuthorizationException;
-import woowacourse.cartitem.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.order.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.LoginException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.exception.BadRequestException;
+import woowacourse.exception.UnauthorizedException;
+import woowacourse.exception.dto.ExceptionResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -36,12 +31,6 @@ public class ControllerAdvice {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity handle() {
         return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
-    }
-
-    @ExceptionHandler(LoginException.class)
-    public ResponseEntity<ExceptionResponse> handleLoginException(final LoginException exception) {
-        final ExceptionResponse response = new ExceptionResponse(List.of(exception.getMessage()));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -57,28 +46,22 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            HttpMessageNotReadableException.class,
-            ConstraintViolationException.class,
+        HttpMessageNotReadableException.class,
+        ConstraintViolationException.class,
     })
     public ResponseEntity handleInvalidRequest(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler({
-            InvalidCustomerException.class,
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
-    })
-    public ResponseEntity<ExceptionResponse> handleInvalidAccess(final RuntimeException e) {
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ExceptionResponse> handleUnauthorizedException(final UnauthorizedException e) {
         final ExceptionResponse response = new ExceptionResponse(List.of(e.getMessage()));
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(response);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ExceptionResponse> handleAuthException(final AuthorizationException e) {
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ExceptionResponse> handleBadRequestException(final BadRequestException e) {
         final ExceptionResponse response = new ExceptionResponse(List.of(e.getMessage()));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
     }
 }

@@ -11,12 +11,11 @@ import woowacourse.cartitem.domain.Quantity;
 import woowacourse.cartitem.dto.CartItemAddRequest;
 import woowacourse.cartitem.dto.CartItemResponse;
 import woowacourse.cartitem.dto.CartItemResponses;
-import woowacourse.cartitem.exception.InvalidCartItemException;
 import woowacourse.customer.application.CustomerService;
 import woowacourse.product.dao.ProductDao;
 import woowacourse.product.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.product.exception.InvalidProductException;
+import woowacourse.cartitem.exception.InvalidCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -43,7 +42,7 @@ public class CartItemService {
 
         final Long cartItemId = cartItemDao.addCartItem(customerId, cartItemAddRequest.getProductId(), quantity.getValue());
         final CartItem cartItem = cartItemDao.findCartItemById(cartItemId)
-            .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
+            .orElseThrow(() -> new woowacourse.cartitem.exception.InvalidCartItemException("장바구니를 찾을 수 없습니다."));
 
         return CartItemResponse.from(cartItem);
     }
@@ -63,7 +62,7 @@ public class CartItemService {
 
     public CartItem findCartById(final Long cartItemId) {
         return cartItemDao.findCartItemById(cartItemId)
-            .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
+            .orElseThrow(() -> new woowacourse.cartitem.exception.InvalidCartItemException("장바구니를 찾을 수 없습니다."));
     }
 
     public void updateQuantity(final String customerName, final Long cartItemId, final int quantity) {
@@ -85,6 +84,6 @@ public class CartItemService {
         if (cartIds.contains(cartId)) {
             return;
         }
-        throw new NotInCustomerCartItemException();
+        throw new InvalidCartItemException();
     }
 }

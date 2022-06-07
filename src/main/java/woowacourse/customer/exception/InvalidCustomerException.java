@@ -1,6 +1,9 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.customer.exception;
 
-public class InvalidCustomerException extends RuntimeException {
+import woowacourse.exception.BadRequestException;
+
+public class InvalidCustomerException extends BadRequestException {
+
     public InvalidCustomerException() {
         this("존재하지 않는 유저입니다.");
     }

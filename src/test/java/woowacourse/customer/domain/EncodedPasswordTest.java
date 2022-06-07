@@ -8,9 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.customer.support.passwordencoder.PasswordEncoder;
 import woowacourse.customer.support.passwordencoder.SimplePasswordEncoder;
-import woowacourse.shoppingcart.exception.PasswordMisMatchException;
 
 class EncodedPasswordTest {
 
@@ -51,6 +51,6 @@ class EncodedPasswordTest {
 
         assertThatThrownBy(() -> encodedPassword.matches(passwordEncoder, wrongPassword))
             .hasMessage("비밀번호가 일치하지 않습니다.")
-            .isInstanceOf(PasswordMisMatchException.class);
+            .isInstanceOf(InvalidLoginException.class);
     }
 }

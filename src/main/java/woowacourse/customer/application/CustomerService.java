@@ -3,15 +3,15 @@ package woowacourse.customer.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.customer.dao.CustomerDao;
 import woowacourse.customer.domain.Customer;
 import woowacourse.customer.domain.PlainPassword;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
 import woowacourse.customer.dto.UpdatePasswordRequest;
+import woowacourse.customer.exception.InvalidCustomerException;
 import woowacourse.customer.support.passwordencoder.PasswordEncoder;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.UserNotFoundException;
 
 @Transactional
 @Service
@@ -46,7 +46,7 @@ public class CustomerService {
     @Transactional(readOnly = true)
     public Customer findByUsername(final String username) {
         return customerDao.findByUsername(username)
-            .orElseThrow(UserNotFoundException::new);
+            .orElseThrow(() -> new InvalidLoginException("해당하는 사용자 이름이 없습니다."));
     }
 
     @Transactional(readOnly = true)

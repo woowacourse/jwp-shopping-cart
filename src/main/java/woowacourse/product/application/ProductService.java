@@ -8,7 +8,7 @@ import woowacourse.product.domain.Product;
 import woowacourse.product.dto.ProductRequest;
 import woowacourse.product.dto.ProductResponse;
 import woowacourse.product.dto.ProductResponses;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.product.exception.InvalidProductException;
 
 @Transactional(rollbackFor = Exception.class)
 @Service
