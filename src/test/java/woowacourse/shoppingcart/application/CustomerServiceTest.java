@@ -74,7 +74,7 @@ class CustomerServiceTest {
     void checkExistByIdExceptionWhenFind() {
         assertThatThrownBy(() -> customerService.find(1L))
                 .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 유저입니다.");
+                .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
     @DisplayName("회원 정보를 수정한다.")
@@ -100,7 +100,7 @@ class CustomerServiceTest {
                 new CustomerRequest("email", "Pw123456~~", "eve", "010-1111-2222", "address2");
         assertThatThrownBy(() -> customerService.update(1L, customerRequest))
                 .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 유저입니다.");
+                .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
     @DisplayName("id를 이용하여 customer를 삭제한다.")
@@ -114,7 +114,7 @@ class CustomerServiceTest {
 
         assertThatThrownBy(() -> customerService.find(1L))
                 .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 유저입니다.");
+                .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
     @DisplayName("존재하지 않는 id를 이용하여 회원을 삭제하면 예외가 발생한다.")
@@ -122,6 +122,6 @@ class CustomerServiceTest {
     void checkExistByIdExceptionWhenDelete() {
         assertThatThrownBy(() -> customerService.delete(1L))
                 .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 유저입니다.");
+                .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 }

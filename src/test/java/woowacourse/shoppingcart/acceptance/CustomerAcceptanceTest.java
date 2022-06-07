@@ -164,6 +164,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().as(ExceptionResponse.class);
 
-        assertThat(response.getMessage()).isEqualTo("존재하지 않는 유저입니다.");
+        assertThat(response.getMessage()).isEqualTo("존재하지 않는 회원입니다.");
     }
 }
