@@ -5,17 +5,17 @@ import java.util.Objects;
 public class Name {
 
     private static final int MIN_LENGTH = 1;
-    private static final int MAX_LENGTH = 20;
+    private static final int MAX_LENGTH = 50;
 
     private final String value;
 
     public Name(String value) {
         value = value.trim();
-        validate(value);
+        validateLength(value);
         this.value = value;
     }
 
-    private void validate(String value) {
+    private void validateLength(String value) {
         int length = value.length();
         if (length < MIN_LENGTH || length > MAX_LENGTH) {
             throw new IllegalArgumentException(

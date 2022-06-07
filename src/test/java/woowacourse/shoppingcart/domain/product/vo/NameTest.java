@@ -19,12 +19,18 @@ class NameTest {
         assertThat(name).isNotNull();
     }
 
-    @ParameterizedTest(name = "상품명 : {0}")
-    @ValueSource(strings = {"", "연로그연로그연로그연로그연로그연로그연로그"})
-    void 올바르지_않은_글자수로_이름_생성(String value) {
+    @Test
+    void 최소_글자수_미만으로_이름_생성() {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new Name(value))
-                .withMessageContaining("상품의 이름은 1자 ~ 20자만 가능합니다.");
+                .isThrownBy(() -> new Name(""))
+                .withMessageContaining("상품의 이름은 1자 ~ 50자만 가능합니다.");
+    }
+
+    @Test
+    void 최대_글자수_초과로_이름_생성() {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> new Name("y".repeat(51)))
+                .withMessageContaining("상품의 이름은 1자 ~ 50자만 가능합니다.");
     }
 
     @ParameterizedTest(name = "상품명 : {0}")

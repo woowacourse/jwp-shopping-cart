@@ -3,11 +3,22 @@ package woowacourse.shoppingcart.domain.product.vo;
 import java.util.Objects;
 
 public class ImageUrl {
-    
+
+    private static final int MAX_LENGTH = 2000;
+
     private final String value;
 
     public ImageUrl(String value) {
-        this.value = value.trim();
+        value = value.trim();
+        validateLength(value);
+        this.value = value;
+    }
+
+    private void validateLength(String value) {
+        if (value.length() > MAX_LENGTH) {
+            throw new IllegalArgumentException(
+                    String.format("이미지 url 은 %d자가 넘을 수 없습니다. 입력값: %s", MAX_LENGTH, value));
+        }
     }
 
     public String getValue() {

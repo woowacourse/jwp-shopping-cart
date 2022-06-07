@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain.product.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -16,6 +17,13 @@ class ImageUrlTest {
     void url_생성() {
         ImageUrl imageUrl = new ImageUrl("https://yeonyeon.tistory.com");
         assertThat(imageUrl).isNotNull();
+    }
+
+    @Test
+    void 글자수_초과한_url_생성() {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> new ImageUrl("y".repeat(2001)))
+                .withMessageContaining("이미지 url 은 2000자가 넘을 수 없습니다.");
     }
 
     @ParameterizedTest(name = "url : {0}")
