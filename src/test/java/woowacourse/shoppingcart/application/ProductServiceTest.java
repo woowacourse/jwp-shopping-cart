@@ -1,12 +1,16 @@
 package woowacourse.shoppingcart.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dto.ProductResponse;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})
@@ -29,5 +33,16 @@ class ProductServiceTest {
         assertThatThrownBy(() -> productService.validateProductId(20L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 상품입니다.");
+    }
+
+    @DisplayName("상품 목록을 페이징 조회한다.")
+    @Test
+    void findProducts() {
+        List<ProductResponse> products = productService.findProducts(1, 6);
+        List<Long> productIds = products.stream()
+                .map(ProductResponse::getId)
+                .collect(Collectors.toUnmodifiableList());
+
+        assertThat(productIds).containsExactly(1L, 2L, 3L, 4L, 5L, 6L);
     }
 }

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dto.CartItemAddRequest.ProductResponse;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dto.ProductResponse;
 
 @Service
 public class ProductService {
@@ -17,8 +17,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findAllProducts() {
-        return productDao.findAll()
+    public List<ProductResponse> findProducts(int page, int limit) {
+        int offset = (page - 1) * limit;
+        return productDao.findProducts(offset, limit)
                 .stream()
                 .map(ProductResponse::new)
                 .collect(Collectors.toUnmodifiableList());

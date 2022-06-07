@@ -1,8 +1,10 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,12 +29,18 @@ class ProductDaoTest {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("상품 목록 조회")
+    @DisplayName("상품 목록을 페이징 조회한다.")
     @Test
-    void findAll() {
-        List<Product> products = productDao.findAll();
+    void findProducts() {
+        List<Product> products = productDao.findProducts(3, 10);
+        List<Long> productIds = products.stream()
+                .map(Product::getId)
+                .collect(Collectors.toUnmodifiableList());
 
-        assertThat(products).hasSize(19);
+        assertAll(
+                () -> assertThat(productIds).hasSize(10),
+                () -> assertThat(productIds).containsExactly(4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L)
+        );
     }
 
     @DisplayName("상품의 재고를 반환한다.")

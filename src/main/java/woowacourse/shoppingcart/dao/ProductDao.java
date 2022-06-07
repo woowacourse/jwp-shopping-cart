@@ -27,9 +27,11 @@ public class ProductDao {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public List<Product> findAll() {
-        String sql = "SELECT id, name, price, stock, image_url FROM product";
-        return jdbcTemplate.query(sql, PRODUCT_MAPPER);
+    public List<Product> findProducts(int offset, int limit) {
+        String sql = "SELECT id, name, price, stock, image_url FROM product LIMIT :limit OFFSET :offset";
+        SqlParameterSource params = new MapSqlParameterSource("offset", offset)
+                .addValue("limit", limit);
+        return jdbcTemplate.query(sql, params, PRODUCT_MAPPER);
     }
 
     public int findStockById(long id) {
