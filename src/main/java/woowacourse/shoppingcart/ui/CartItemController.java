@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
@@ -32,9 +32,9 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
+    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final ProductRequest productRequest,
                                       @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
+        final Long cartId = cartService.addCart(productRequest.getId(), customerName);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
