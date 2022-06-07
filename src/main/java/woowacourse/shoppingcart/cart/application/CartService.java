@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.cart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +13,6 @@ import woowacourse.shoppingcart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.exception.badrequest.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCartException;
 import woowacourse.shoppingcart.product.application.ProductService;
-import woowacourse.shoppingcart.product.dao.ProductDao;
-import woowacourse.shoppingcart.product.domain.Product;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -23,33 +20,18 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
     private final ProductService productService;
 
-    public CartService(CartItemDao cartItemDao, CustomerDao customerDao,
-                       ProductDao productDao, ProductService productService) {
+    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao,
+                       final ProductService productService) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
         this.productService = productService;
     }
 
     @Transactional(readOnly = true)
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
-    }
-
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findInByNickname(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+    public List<Cart> findCartsBy(final Customer customer) {
+        return cartItemDao.findAllByCustomerId(customer.getId());
     }
 
     public Long addCart(final Long productId, final Customer customer) {
@@ -61,7 +43,7 @@ public class CartService {
         return cartItemDao.addCartItem(customer.getId(), productId);
     }
 
-    public Cart changeQuantity(Customer customer, Long productId, QuantityChangingRequest request) {
+    public Cart changeQuantity(final Customer customer, final Long productId, final QuantityChangingRequest request) {
         final Cart cart = fetchCartBy(customer.getId(), productId);
         final Cart updatedCart = cart.changeQuantity(request.getQuantity());
         cartItemDao.updateQuantity(updatedCart);
@@ -87,5 +69,10 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    private List<Long> findCartIdsByCustomerName(final String customerName) {
+        final Long customerId = customerDao.findInByNickname(customerName);
+        return cartItemDao.findIdsByCustomerId(customerId);
     }
 }

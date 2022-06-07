@@ -180,7 +180,7 @@ class CartItemControllerTest extends ControllerTest {
                 new Cart(7L, carrot),
                 new Cart(8L, carrot)
         );
-        given(cartService.findCartsByCustomerName(customer.getNickname()))
+        given(cartService.findCartsBy(customer))
                 .willReturn(carts);
 
         // when

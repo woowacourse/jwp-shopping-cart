@@ -33,7 +33,7 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<CartItemsResponse> getCartItems(@Login final Customer customer) {
-        final List<Cart> carts = cartService.findCartsByCustomerName(customer.getNickname());
+        final List<Cart> carts = cartService.findCartsBy(customer);
         final CartItemsResponse response = CartItemsResponse.from(carts);
         return ResponseEntity
                 .ok()
