@@ -15,10 +15,10 @@ public class Nickname {
 
     private void validateNickname(String nickname) {
         if (!StringUtils.hasText(nickname)) {
-            throw new InvalidArgumentRequestException("이름은 공백일 수 없습니다.");
+            throw new InvalidArgumentRequestException("닉네임은 공백일 수 없습니다.");
         }
         if (nickname.length() > MAX_NICKNAME_LENGTH) {
-            throw new InvalidArgumentRequestException("이름의 길이는 10자 이하여야 합니다.");
+            throw new InvalidArgumentRequestException("닉네임의 길이는 10자 이하여야 합니다.");
         }
     }
 

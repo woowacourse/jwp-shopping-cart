@@ -51,12 +51,12 @@ public class CustomerControllerTest {
         performAndExpectedErrorMessage(customerRequest, message);
     }
 
-    @DisplayName("이름을 10자 초과로 작성한 경우 예외를 발생시킨다.")
+    @DisplayName("닉네임을 10자 초과로 작성한 경우 예외를 발생시킨다.")
     @Test
     void invalidUsername() throws Exception {
         CustomerRequest customerRequest =
                 new CustomerRequest(DEFAULT_USERNAME, DEFAULT_PASSWORD, "이런저런열한글자의이름", DEFAULT_AGE);
-        String message = "이름은 1자 이상 10자 이하여야 합니다.";
+        String message = "닉네임은 1자 이상 10자 이하여야 합니다.";
         performAndExpectedErrorMessage(customerRequest, message);
     }
 
