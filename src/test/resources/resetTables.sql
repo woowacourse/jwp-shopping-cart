@@ -1,7 +1,7 @@
-DELETE FROM customer;
 DELETE FROM orders_detail;
 DELETE FROM orders;
 DELETE FROM cart_item;
+DELETE FROM customer;
 DELETE FROM product;
 
 ALTER TABLE customer ALTER COLUMN id RESTART WITH 1;
