@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderedProduct;
 import woowacourse.shoppingcart.domain.ThumbnailImage;
 
@@ -31,15 +31,15 @@ public class OrderedProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final Long ordersId, final Cart cart) {
+    public Long save(final Long ordersId, final CartItem cartItem) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("ordered_product")
                 .usingGeneratedKeyColumns("id");
 
         Map<String, Object> params = new HashMap<>();
         params.put("orders_id", ordersId);
-        params.put("product_id", cart.getProduct().getId());
-        params.put("quantity", cart.getQuantity());
+        params.put("product_id", cartItem.getProduct().getId());
+        params.put("quantity", cartItem.getQuantity());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }

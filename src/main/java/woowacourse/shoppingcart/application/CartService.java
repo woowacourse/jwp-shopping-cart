@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -24,21 +24,21 @@ public class CartService {
     }
 
     public List<CartItemResponse> findCartsByEmail(final String email) {
-        final List<Cart> carts = findCartIdsByEmail(email);
+        final List<CartItem> cartItems = findCartIdsByEmail(email);
 
-        return carts.stream()
+        return cartItems.stream()
                 .map(CartItemResponse::new)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private List<Cart> findCartIdsByEmail(final String email) {
+    private List<CartItem> findCartIdsByEmail(final String email) {
         final Long customerId = customerDao.getIdByEmail(email);
         return cartItemDao.getAllByCustomerId(customerId);
     }
 
     public CartItemResponse findCart(Long cartId) {
-        Cart cart = cartItemDao.getById(cartId);
-        return new CartItemResponse(cart);
+        CartItem cartItem = cartItemDao.getById(cartId);
+        return new CartItemResponse(cartItem);
     }
 
     public Long addCart(final Long productId, final int quantity, final String email) {
@@ -59,7 +59,7 @@ public class CartService {
 
     private void validateCustomerCart(final Long cartId, final String email) {
         List<Long> cartIds = findCartIdsByEmail(email).stream()
-                .map(Cart::getId)
+                .map(CartItem::getId)
                 .collect(Collectors.toUnmodifiableList());
         if (cartIds.contains(cartId)) {
             return;
@@ -69,8 +69,8 @@ public class CartService {
 
     public void updateCart(final String email, final Long cartItemId, final int quantity) {
         validateCustomerCart(cartItemId, email);
-        Cart oldCart = cartItemDao.getById(cartItemId);
-        Cart newCart = new Cart(oldCart.getId(), quantity, oldCart.getProduct());
-        cartItemDao.updateCartQuantity(newCart);
+        CartItem oldCartItem = cartItemDao.getById(cartItemId);
+        CartItem newCartItem = new CartItem(oldCartItem.getId(), quantity, oldCartItem.getProduct());
+        cartItemDao.updateCartQuantity(newCartItem);
     }
 }

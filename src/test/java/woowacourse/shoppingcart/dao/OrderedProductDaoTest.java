@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderedProduct;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ThumbnailImage;
@@ -51,10 +51,10 @@ class OrderedProductDaoTest {
         //given
         ThumbnailImage image = new ThumbnailImage("url", "alt");
         Product product = new Product(1L, "name", 1000, 10, image);
-        Cart cart = new Cart(1L, 10, product);
+        CartItem cartItem = new CartItem(1L, 10, product);
 
         //when
-        Long orderDetailId = orderedProductDao.save(ordersId, cart);
+        Long orderDetailId = orderedProductDao.save(ordersId, cartItem);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);

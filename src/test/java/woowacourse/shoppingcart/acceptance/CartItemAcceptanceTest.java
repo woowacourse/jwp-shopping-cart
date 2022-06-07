@@ -28,7 +28,7 @@ import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+public class CartItemAcceptanceTest extends AcceptanceTest {
 
     @Override
     @BeforeEach
@@ -102,7 +102,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
+        return Long.parseLong(response.header("Location").split("/cartItems/")[1]);
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {

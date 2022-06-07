@@ -9,7 +9,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderedProductDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderedProduct;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -38,8 +38,8 @@ public class OrderService {
         final Long ordersId = orderDao.save(customerId);
 
         for (Long cartId : cartIds) {
-            Cart cart = cartItemDao.getById(cartId);
-            orderedProductDao.save(ordersId, cart);
+            CartItem cartItem = cartItemDao.getById(cartId);
+            orderedProductDao.save(ordersId, cartItem);
         }
         return ordersId;
     }

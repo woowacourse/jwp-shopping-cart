@@ -1,11 +1,11 @@
 package woowacourse.shoppingcart.domain;
 
-public class Cart {
+public class CartItem {
     private final Long id;
     private final int quantity;
     private final Product product;
 
-    public Cart(Long id, int quantity, Product product) {
+    public CartItem(Long id, int quantity, Product product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;

@@ -8,15 +8,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
-    private static final RowMapper<Cart> CART_ROW_MAPPER = (resultSet, rowNumber) ->
-            new Cart(
+    private static final RowMapper<CartItem> CART_ROW_MAPPER = (resultSet, rowNumber) ->
+            new CartItem(
                     resultSet.getLong("id"),
                     resultSet.getInt("quantity"),
                     new Product(
@@ -37,7 +37,7 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Cart getById(final Long cartId) {
+    public CartItem getById(final Long cartId) {
         final String sql =
                 "SELECT c.id AS id, c.quantity, p.id AS productId, p.name, p.price, p.stock_quantity, p.url, p.alt "
                         + "FROM cart_item AS c, product AS p "
@@ -50,7 +50,7 @@ public class CartItemDao {
         }
     }
 
-    public List<Cart> getAllByCustomerId(final Long customerId) {
+    public List<CartItem> getAllByCustomerId(final Long customerId) {
         final String sql =
                 "SELECT c.id AS id, c.quantity, p.id AS productId, p.name, p.price, p.stock_quantity, p.url, p.alt "
                         + "FROM cart_item AS c, product AS p "
@@ -81,9 +81,9 @@ public class CartItemDao {
         }
     }
 
-    public void updateCartQuantity(Cart cart) {
+    public void updateCartQuantity(CartItem cartItem) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
 
-        jdbcTemplate.update(sql, cart.getQuantity(), cart.getId());
+        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 }
