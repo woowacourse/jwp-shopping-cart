@@ -71,21 +71,26 @@ public class CartService {
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findInByNickname(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+    public void deleteProductInCart(Customer customer, Long productId) {
+        cartItemDao.deleteCartItem(customer.getId(), productId);
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
-    }
+//    private List<Long> findCartIdsByCustomerName(final String customerName) {
+//        final Long customerId = customerDao.findInByNickname(customerName);
+//        return cartItemDao.findIdsByCustomerId(customerId);
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
-    }
+//    }
+//    public void deleteCart(final String customerName, final Long cartId) {
+//        validateCustomerCart(cartId, customerName);
+//        cartItemDao.deleteCartItem(cartId);
+
+//    }
+//    private void validateCustomerCart(final Long cartId, final String customerName) {
+//        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+//        if (cartIds.contains(cartId)) {
+//            return;
+//        }
+//        throw new NotInCustomerCartItemException();
+
+//    }
 }

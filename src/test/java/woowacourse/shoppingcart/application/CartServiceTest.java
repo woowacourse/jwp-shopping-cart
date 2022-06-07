@@ -119,4 +119,16 @@ public class CartServiceTest {
         // then
         assertThat(carts).containsExactly(cart1, cart2, cart3);
     }
+
+    @DisplayName("장바구니에서 상품을 삭제한다.")
+    @Test
+    void deleteProductInCart_success_void() {
+        // given
+        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
+        Product product1 = new Product(1L, "product1", 1000, "url1");
+
+        // when, then
+        assertThatCode(() -> cartService.deleteProductInCart(customer, product1.getId()))
+                .doesNotThrowAnyException();
+    }
 }
