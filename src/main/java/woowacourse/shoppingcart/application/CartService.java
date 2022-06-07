@@ -11,7 +11,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.DuplicateCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import woowacourse.shoppingcart.exception.ProductNotFoundException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class CartService {
 
     public Long addCart(final Long productId, final Customer customer) {
         productDao.findProductById(productId)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(NotFoundProductException::new);
         validateDuplicateCartItem(productId);
         try {
             return cartItemDao.addCartItem(customer.getId(), productId);
@@ -95,7 +95,7 @@ public class CartService {
 
     public void deleteCart(final Customer customer, final Long productId) {
         productDao.findProductById(productId)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(NotFoundProductException::new);
 
         cartItemDao.deleteByProductIdAndCustomerId(customer.getId(), productId);
     }
