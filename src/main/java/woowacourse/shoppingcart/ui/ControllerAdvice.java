@@ -26,7 +26,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorDto> handleUnhandledException(RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
+        return ResponseEntity.badRequest().body(new ErrorDto("서버 에러가 발생했습니다."));
     }
 
     @ExceptionHandler(UnauthorizedException.class)
