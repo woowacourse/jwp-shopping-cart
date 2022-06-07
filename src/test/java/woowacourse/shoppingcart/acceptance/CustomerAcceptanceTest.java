@@ -81,15 +81,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void 중복_아이디_검사() {
         회원_가입("testx", "1a2b3c4D!");
 
-        Map<String, String> params = new HashMap<>();
-        params.put("userName", "testx");
-
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(params)
-                .when().post("/api/customers/duplication")
+                .when().get("/api/customers/exists?userName=testx")
                 .then().log().all()
                 .extract();
 
@@ -100,16 +95,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 중복되지_않은_아이디_검사() {
         회원_가입("testx", "1a2b3c4D!");
-
-        Map<String, String> params = new HashMap<>();
-        params.put("userName", "testxy");
-
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(params)
-                .when().post("/api/customers/duplication")
+                .when().get("/api/customers/exists?userName=testxy")
                 .then().log().all()
                 .extract();
 

@@ -3,15 +3,12 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.TokenProvider;
 import woowacourse.shoppingcart.dto.CheckDuplicateResponse;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CheckDuplicateRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -52,7 +49,7 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/exists")
+    @GetMapping("/exists")
     public ResponseEntity<CheckDuplicateResponse> checkDuplicate(@RequestParam String userName) {
         return ResponseEntity.ok(customerService.isExistUser(userName));
     }
