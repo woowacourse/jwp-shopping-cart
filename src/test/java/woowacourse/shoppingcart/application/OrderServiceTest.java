@@ -89,12 +89,12 @@ class OrderServiceTest {
                 new OrderRequest(List.of(new CartRequest(productId1, 4), new CartRequest(productId2, 9))));
 
         // when
-        OrderResponses orderResponses = orderService.findOrdersByCustomerId(customerId);
+        List<OrderResponse>  orderResponses = orderService.findOrdersByCustomerId(customerId);
 
         // then
         assertAll(
-                () -> assertThat(orderResponses.getOrders()).hasSize(2),
-                () -> assertThat(orderResponses.getOrders().stream()
+                () -> assertThat(orderResponses).hasSize(2),
+                () -> assertThat(orderResponses.stream()
                         .map(OrderResponse::getTotalPrice)
                         .collect(Collectors.toList())).containsExactly(
                         PRODUCT_1.getPrice() * 3 + PRODUCT_2.getPrice() * 5,

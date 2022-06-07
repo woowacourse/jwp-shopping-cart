@@ -97,7 +97,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 주문_내역_포함됨(ExtractableResponse<Response> response, int orderCount) {
-        final List<OrderResponse> orders = response.jsonPath().getObject(".", OrderResponses.class).getOrders();
+        final List<OrderResponse> orders = response.jsonPath().getList(".", OrderResponse.class);
         assertThat(orders.size()).isEqualTo(orderCount);
     }
 

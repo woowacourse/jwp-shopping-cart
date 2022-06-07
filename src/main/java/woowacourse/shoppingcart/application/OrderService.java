@@ -14,7 +14,6 @@ import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.dto.OrderResponses;
 import woowacourse.shoppingcart.entity.OrdersDetailEntity;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
@@ -58,23 +57,22 @@ public class OrderService {
         productIds.forEach(productDao::findProductById);
     }
 
-    public OrderResponses findOrdersByCustomerId(final int customerId) {
+    public List<OrderResponse> findOrdersByCustomerId(final int customerId) {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
         return getOrderResponses(orderIds);
     }
 
-    private OrderResponses getOrderResponses(List<Long> orderIds) {
-        return new OrderResponses(
-                orderIds.stream()
-                        .map(ordersDetailDao::findOrdersDetailsByOrderId)
-                        .map(ordersDetailEntity -> {
-                            final List<CartItemResponse> cartItemResponses = getCartItemResponse(ordersDetailEntity);
+    private List<OrderResponse> getOrderResponses(List<Long> orderIds) {
+        return orderIds.stream()
+                .map(ordersDetailDao::findOrdersDetailsByOrderId)
+                .map(ordersDetailEntity -> {
+                    final List<CartItemResponse> cartItemResponses = getCartItemResponse(ordersDetailEntity);
 
-                            final int totalPrice = getTotalPrice(cartItemResponses);
+                    final int totalPrice = getTotalPrice(cartItemResponses);
 
-                            return new OrderResponse(cartItemResponses, totalPrice);
-                        })
-                        .collect(Collectors.toList()));
+                    return new OrderResponse(cartItemResponses, totalPrice);
+                })
+                .collect(Collectors.toList());
     }
 
     private List<CartItemResponse> getCartItemResponse(List<OrdersDetailEntity> ordersDetailEntity) {
