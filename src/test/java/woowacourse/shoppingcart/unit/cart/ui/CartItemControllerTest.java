@@ -409,7 +409,7 @@ class CartItemControllerTest extends ControllerTest {
 
         willThrow(new NotInCustomerCartItemException())
                 .given(cartService)
-                .deleteCart(customer.getNickname(), productId);
+                .deleteCartBy(customer, productId);
 
         // when
         final ResultActions perform = mockMvc.perform(
@@ -421,8 +421,8 @@ class CartItemControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errorCode").value("1004"))
-                .andExpect(jsonPath("message").value("장바구니 아이템이 없습니다."));
+                .andExpect(jsonPath("errorCode").value("1101"))
+                .andExpect(jsonPath("message").value("장바구니 상품이 존재하지 않습니다."));
 
         // docs
         perform.andDo(document("delete-cart-item-not-exist-item",

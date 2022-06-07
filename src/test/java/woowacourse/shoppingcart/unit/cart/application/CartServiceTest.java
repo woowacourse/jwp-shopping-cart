@@ -13,13 +13,11 @@ import woowacourse.shoppingcart.cart.application.CartService;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
-import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
 import woowacourse.shoppingcart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCartException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
-import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.unit.ServiceMockTest;
 
@@ -30,12 +28,6 @@ class CartServiceTest extends ServiceMockTest {
 
     @Mock
     private CartItemDao cartItemDao;
-
-    @Mock
-    private CustomerDao customerDao;
-
-    @Mock
-    private ProductDao productDao;
 
     @Test
     @DisplayName("존재하지 않는 상품을 장바구니에 추가하면 예외를 던진다.")
@@ -131,5 +123,21 @@ class CartServiceTest extends ServiceMockTest {
         // when, then
         assertThatThrownBy(() -> cartService.changeQuantity(customer, productId, request))
                 .isInstanceOf(NoExistCartItemException.class);
+    }
+
+    @Test
+    @DisplayName("Product 아이디에 해당하는 Cart를 삭제한다.")
+    void deleteCart() {
+        // given
+        final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
+        final Long productId = 1L;
+
+        final Cart cart = new Cart(1L, productId, "망고", 1990, "man.go", 3);
+        given(cartItemDao.findByProductAndCustomerId(productId, customer.getId()))
+                .willReturn(cart);
+
+        // when, then
+        assertThatCode(() -> cartService.deleteCartBy(customer, productId))
+                .doesNotThrowAnyException();;
     }
 }

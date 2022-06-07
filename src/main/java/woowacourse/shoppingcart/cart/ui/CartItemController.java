@@ -63,7 +63,7 @@ public class CartItemController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteCartItem(@Login final Customer customer,
                                                @PathVariable final Long productId) {
-        cartService.deleteCart(customer.getNickname(), productId);
+        cartService.deleteCartBy(customer, productId);
         return ResponseEntity
                 .noContent()
                 .build();
