@@ -56,14 +56,14 @@ public class CartItemService {
 
     @Transactional
     public void updateCartItemQuantity(final String customerName, final Long cartItemId, final int quantity) {
-        validateCustomerCart(cartItemId, customerName);
+        validateCustomerHasCartItem(cartItemId, customerName);
         checkAvaliableForPurchaseProduct(cartItemDao.findProductIdById(cartItemId), quantity);
         cartItemDao.updateCartItemQuantity(cartItemId, quantity);
     }
 
     @Transactional
     public void deleteCart(final String customerName, final Long cartItemId) {
-        validateCustomerCart(cartItemId, customerName);
+        validateCustomerHasCartItem(cartItemId, customerName);
         cartItemDao.deleteCartItem(cartItemId);
     }
 
@@ -77,7 +77,7 @@ public class CartItemService {
         product.purchaseProduct(quantity);
     }
 
-    private void validateCustomerCart(final Long cartItemId, final String customerName) {
+    private void validateCustomerHasCartItem(final Long cartItemId, final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
         if (cartIds.contains(cartItemId)) {
             return;
