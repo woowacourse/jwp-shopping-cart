@@ -19,6 +19,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.dto.CartItemRequest;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ThumbnailImageDto;
@@ -47,9 +49,21 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = requestToAddCartItem(USER, productId1);
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
+        // given
+        CartItemRequest cartItemRequest = new CartItemRequest(productId1, 10);
+
+        // when
+        ExtractableResponse<Response> responseAddedCartItem = AcceptanceFixture.post(cartItemRequest, "/api/mycarts",
+            header);
+        CartItemResponse cartItemResponse = responseAddedCartItem.jsonPath().getObject(".", CartItemResponse.class);
+
+        // then
+        assertThat(responseAddedCartItem.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(responseAddedCartItem.header("Location")).isEqualTo("/api/mycarts/" + cartItemResponse.getId());
+        assertThat(cartItemResponse)
+            .extracting("productId", "price", "name", "quantity")
+            .containsExactly(cartItemRequest.getProductId(), 10_000, "치킨",
+                cartItemRequest.getQuantity());
     }
 
     @DisplayName("장바구니 아이템 목록 조회")

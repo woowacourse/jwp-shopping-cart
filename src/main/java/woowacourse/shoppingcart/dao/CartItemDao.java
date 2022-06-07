@@ -1,17 +1,28 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-
 import java.sql.PreparedStatement;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.entity.CartItemEntity;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+
 @Repository
 public class CartItemDao {
+    private final RowMapper<CartItemEntity> cartItemEntityRowMapper = (resultSet, rowNum) -> new CartItemEntity(
+        resultSet.getLong("id"),
+        resultSet.getLong("customer_id"),
+        resultSet.getLong("product_id"),
+        resultSet.getInt("quantity")
+    );
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
@@ -39,16 +50,31 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
+    public Long addCartItem(final long customerId, final long productId) {
         final String query = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(query, new String[]{"id"});
+            PreparedStatement preparedStatement = con.prepareStatement(query, new String[] {"id"});
             preparedStatement.setLong(1, customerId);
             preparedStatement.setLong(2, productId);
             return preparedStatement;
         }, keyHolder);
+        return keyHolder.getKey().longValue();
+    }
+
+    public long addCartItem(final long customerId, final CartItem cartItem) {
+        final String query = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(query, new String[] {"id"});
+            preparedStatement.setLong(1, customerId);
+            preparedStatement.setLong(2, cartItem.getProductId());
+            preparedStatement.setLong(3, cartItem.getQuantity());
+            return preparedStatement;
+        }, keyHolder);
+
         return keyHolder.getKey().longValue();
     }
 
@@ -59,5 +85,15 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public List<CartItemEntity> findCartItemsByCustomerId(long customerId) {
+        final String sql = "SELECT * FROM cart_item WHERE customer_id = ?";
+        return jdbcTemplate.query(sql, cartItemEntityRowMapper, customerId);
+    }
+
+    public CartItemEntity findCartItemById(long id) {
+        final String sql = "SELECT * FROM cart_item WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, cartItemEntityRowMapper, id);
     }
 }

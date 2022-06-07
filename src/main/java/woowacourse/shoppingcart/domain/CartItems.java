@@ -1,8 +1,11 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
-public class CartItems {
+public class CartItems implements Iterable<CartItem> {
 
     private final long customerId;
     private final List<CartItem> cartItems;
@@ -29,5 +32,33 @@ public class CartItems {
 
     public List<CartItem> getCartItems() {
         return cartItems;
+    }
+
+    private class CartItemIterator implements Iterator<CartItem> {
+
+        private int current = 0;
+
+        @Override
+        public boolean hasNext() {
+            return current < cartItems.size();
+        }
+
+        @Override
+        public CartItem next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return cartItems.get(current++);
+        }
+    }
+
+    @Override
+    public Iterator<CartItem> iterator() {
+        return new CartItemIterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super CartItem> action) {
+        Iterable.super.forEach(action);
     }
 }

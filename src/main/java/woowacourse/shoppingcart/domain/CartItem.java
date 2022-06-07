@@ -18,6 +18,16 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public void checkSameProduct(CartItem newCartItem) {
+        if (product.equals(newCartItem.product)) {
+            throw new DuplicateProductInCartException();
+        }
+    }
+
+    public long getProductId() {
+        return product.getId();
+    }
+
     public Long getId() {
         return id;
     }
@@ -28,11 +38,5 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity.getQuantity();
-    }
-
-    public void checkSameProduct(CartItem newCartItem) {
-        if (product.equals(newCartItem.product)) {
-            throw new DuplicateProductInCartException();
-        }
     }
 }

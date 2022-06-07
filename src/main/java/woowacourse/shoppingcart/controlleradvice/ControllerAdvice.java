@@ -19,11 +19,13 @@ import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
+import woowacourse.shoppingcart.exception.DuplicateProductInCartException;
 import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.InvalidQuantityException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @RestControllerAdvice
@@ -93,12 +95,23 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final DuplicateProductInCartException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.ALREADY_EXIST_IN_CART);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final InvalidQuantityException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.INVALID_QUANTITY);
+    }
+
     @ExceptionHandler({
         InvalidCartItemException.class,
         InvalidProductException.class,
         InvalidOrderException.class,
         NotInCustomerCartItemException.class,
     })
+
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }

@@ -1,9 +1,10 @@
 package woowacourse.shoppingcart.dto;
 
+import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import java.util.Arrays;
+
 import woowacourse.shoppingcart.exception.NotExistException;
 
 @JsonFormat(shape = Shape.OBJECT)
@@ -15,7 +16,9 @@ public enum ErrorResponse {
     INVALID_TOKEN(3002, "Invalid Token"),
     INVALID_EMAIL(4001, "Invalid Email"),
     INVALID_PASSWORD(4002, "Invalid Password"),
-    INVALID_USERNAME(4003, "Invalid Username");
+    INVALID_USERNAME(4003, "Invalid Username"),
+    ALREADY_EXIST_IN_CART(5001, "Already Exists"),
+    INVALID_QUANTITY(5002, "Invalid Quantity");
 
     private final int errorCode;
     private final String message;
@@ -27,9 +30,9 @@ public enum ErrorResponse {
 
     public static ErrorResponse from(String message) {
         return Arrays.stream(values())
-                .filter(it -> it.getMessage().equals(message))
-                .findAny()
-                .orElseThrow(NotExistException::new);
+            .filter(it -> it.getMessage().equals(message))
+            .findAny()
+            .orElseThrow(NotExistException::new);
     }
 
     public int getErrorCode() {

@@ -14,8 +14,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.domain.product.ProductStock;
 import woowacourse.shoppingcart.domain.product.ThumbnailImage;
+import woowacourse.shoppingcart.entity.CartItemEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -25,6 +29,8 @@ public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
+    private ProductStock productStock1;
+    private ProductStock productStock2;
 
     public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,26 +40,35 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, new ThumbnailImage("woowa1.com", "이미지")), 10);
-        productDao.save(new Product("apple", 2_000, new ThumbnailImage("woowa2.com", "이미지")), 10);
+        productStock1 = productDao.save(new Product("banana", 1_000, new ThumbnailImage("woowa1.com", "이미지")), 10);
+        productStock2 = productDao.save(new Product("apple", 2_000, new ThumbnailImage("woowa2.com", "이미지")), 10);
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 10);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 10);
     }
 
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("카트에 아이템을 담으면, 담은 카트 아이템의 아이디를 반환한다.")
     @Test
     void addCartItem() {
-
         // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
+        final long customerId = 1L;
+        Product product = productStock1.getProduct();
+        CartItem cartItem = new CartItem(product, new Quantity(10));
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        long id = cartItemDao.addCartItem(customerId, cartItem);
 
         // then
-        assertThat(cartId).isEqualTo(3L);
+        assertThat(id).isEqualTo(3L);
+    }
+
+    @DisplayName("아이디를 이용해 cartItem의 엔티티를 알 수 있다.")
+    @Test
+    void findById() {
+        CartItemEntity cartItemEntity = cartItemDao.findCartItemById(1L);
+        assertThat(cartItemEntity)
+            .extracting("id", "customerId", "productId", "quantity")
+            .containsExactly(1L, 1L, 1L, 10);
     }
 
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
