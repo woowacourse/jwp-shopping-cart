@@ -4,14 +4,14 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 
 public class CartResponse {
-    private ProductResponse productResponse;
+    private ProductResponse product;
     private int quantity;
 
     private CartResponse() {
     }
 
-    public CartResponse(ProductResponse productResponse, int quantity) {
-        this.productResponse = productResponse;
+    public CartResponse(ProductResponse product, int quantity) {
+        this.product = product;
         this.quantity = quantity;
     }
 
@@ -23,8 +23,8 @@ public class CartResponse {
         return new CartResponse(ProductResponse.from(product), quantity);
     }
 
-    public ProductResponse getProductResponse() {
-        return productResponse;
+    public ProductResponse getProduct() {
+        return product;
     }
 
     public int getQuantity() {
