@@ -3,10 +3,12 @@ package woowacourse.shoppingcart.ui;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +20,6 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemSaveRequest;
-import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 
 @RestController
@@ -38,7 +39,7 @@ public class CartItemController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(
-            @Validated(Request.id.class) @RequestBody CartItemSaveRequest cartItemSaveRequest,
+            @Valid @RequestBody CartItemSaveRequest cartItemSaveRequest,
             @AuthenticationPrincipal LoginCustomer loginCustomer) {
         Long cartId = cartService.addCart(cartItemSaveRequest, loginCustomer);
         URI responseLocation = ServletUriComponentsBuilder
@@ -49,10 +50,10 @@ public class CartItemController {
         return ResponseEntity.created(responseLocation).build();
     }
 
-    @DeleteMapping("/{cartId}")
+    @DeleteMapping("/{cartItemId}")
     public ResponseEntity<Void> deleteCartItem(
-            @AuthenticationPrincipal LoginCustomer loginCustomer, @PathVariable Long cartId) {
-        cartService.deleteCart(loginCustomer, cartId);
+            @AuthenticationPrincipal LoginCustomer loginCustomer, @PathVariable Long cartItemId) {
+        cartService.deleteCart(loginCustomer, cartItemId);
         return ResponseEntity.noContent().build();
     }
 }

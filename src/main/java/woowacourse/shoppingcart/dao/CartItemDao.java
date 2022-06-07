@@ -73,4 +73,11 @@ public class CartItemDao {
             throw new InvalidCartItemException();
         }
     }
+
+    public void updateQuantity(Long cartId, int quantity) {
+        String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
+        SqlParameterSource parameterSource = new MapSqlParameterSource("id", cartId)
+                .addValue("quantity", quantity);
+        namedParameterJdbcTemplate.update(sql, parameterSource);
+    }
 }

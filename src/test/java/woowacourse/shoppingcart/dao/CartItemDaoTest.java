@@ -19,13 +19,13 @@ import woowacourse.shoppingcart.domain.product.Product;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemItemDaoTest {
+public class CartItemDaoTest {
 
     private final CustomerDao customerDao;
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
 
-    public CartItemItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
         this.customerDao = new CustomerDao(jdbcTemplate);
         this.cartItemDao = new CartItemDao(jdbcTemplate);
         this.productDao = new ProductDao(jdbcTemplate);
@@ -35,7 +35,7 @@ public class CartItemItemDaoTest {
     @Test
     void addCartItem() {
         Customer yaho = customerDao.save(YAHO);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true));
 
         Long cartId = cartItemDao.addCartItem(yaho.getId(), bananaId, 10);
 
@@ -46,8 +46,8 @@ public class CartItemItemDaoTest {
     @Test
     void findProductIdsByCustomerId() {
         Customer mat = customerDao.save(MAT);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
-        Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", true));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true));
+        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true));
         cartItemDao.addCartItem(mat.getId(), bananaId, 10);
         cartItemDao.addCartItem(mat.getId(), appleId, 10);
 
@@ -60,8 +60,8 @@ public class CartItemItemDaoTest {
     @Test
     void findIdsByCustomerId() {
         Customer yaho = customerDao.save(YAHO);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
-        Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", true));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true));
+        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true));
         Long bananaCartId = cartItemDao.addCartItem(yaho.getId(), bananaId, 10);
         Long appleCartId = cartItemDao.addCartItem(yaho.getId(), appleId, 10);
 
@@ -74,8 +74,8 @@ public class CartItemItemDaoTest {
     @Test
     void deleteCartItem() {
         Customer mat = customerDao.save(MAT);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
-        Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", true));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true));
+        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true));
         cartItemDao.addCartItem(mat.getId(), bananaId, 10);
         Long appleCartId = cartItemDao.addCartItem(mat.getId(), appleId, 10);
 
@@ -84,5 +84,18 @@ public class CartItemItemDaoTest {
         List<Long> productIds = cartItemDao.findProductIdsByCustomerId(mat.getId());
 
         assertThat(productIds).containsExactly(bananaId);
+    }
+
+    @DisplayName("cartId 에 해당하는 상품의 개수를 quantity로 수정한다.")
+    @Test
+    void updateQuantity() {
+        Customer mat = customerDao.save(MAT);
+        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true));
+        Long bananaCartId = cartItemDao.addCartItem(mat.getId(), bananaId, 10);
+
+        cartItemDao.updateQuantity(bananaCartId, 5);
+
+        Integer quantity = cartItemDao.findQuantityById(bananaCartId).get();
+        assertThat(quantity).isEqualTo(5);
     }
 }
