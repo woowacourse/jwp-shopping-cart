@@ -2,12 +2,14 @@ package woowacourse.shoppingcart.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 import woowacourse.shoppingcart.dao.entity.ProductEntity;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -30,7 +32,7 @@ public class CartService {
     public Long addCart(final Long productId, final String account) {
         final Long customerId = getCustomerIdByAccount(account);
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.save(new CartItemEntity(customerId, productId));
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -41,8 +43,8 @@ public class CartService {
 
         final List<ProductResponse> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final ProductEntity productEntity = getProductEntity(productId);
+            final CartItemEntity cartItemEntity = cartItemDao.findById(cartId);
+            final ProductEntity productEntity = getProductEntity(cartItemEntity.getProductId());
             carts.add(ProductResponse.from(productEntity.toProduct()));
         }
         return carts;
@@ -55,7 +57,11 @@ public class CartService {
 
     private List<Long> findCartIdsByCustomerName(final String account) {
         final Long customerId = getCustomerIdByAccount(account);
-        return cartItemDao.findIdsByCustomerId(customerId);
+
+        return cartItemDao.findByCustomerId(customerId)
+                .stream()
+                .map(CartItemEntity::getId)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     private Long getCustomerIdByAccount(String account) {
@@ -66,7 +72,7 @@ public class CartService {
 
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.delete(cartId);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {

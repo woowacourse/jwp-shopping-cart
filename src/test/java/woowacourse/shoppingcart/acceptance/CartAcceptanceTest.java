@@ -52,7 +52,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
 
         장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
     @DisplayName("장바구니 삭제")
@@ -108,13 +107,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList("cart", ProductResponse.class).stream()
-                .map(ProductResponse::getId)
-                .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productIds);
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
