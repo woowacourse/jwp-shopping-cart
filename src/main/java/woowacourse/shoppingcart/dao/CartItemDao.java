@@ -126,4 +126,14 @@ public class CartItemDao {
                         ),
                         rs.getInt("quantity")));
     }
+
+    public boolean notExistByIdAndCustomerId(Long id, Long customerId) {
+        final String sql = "select exists(select * from cart_item where id = ? and customer_id = ?)";
+        return jdbcTemplate.queryForObject(sql,Boolean.class, id, customerId);
+    }
+
+    public boolean existsByProductIdAndCustomerId(Long productId, Long customerId) {
+        final String sql = "select exists(select * from cart_item where product_id = ? and customer_id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, productId, customerId);
+    }
 }

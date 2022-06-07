@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -13,10 +14,12 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.exception.AlreadyExistException;
+import woowacourse.shoppingcart.exception.NotExistException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class CartService {
 
     private final CartItemDao cartItemDao;
@@ -29,11 +32,15 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public CartItemResponse addCartItem(Long productId, Integer quantity, String email) {
         final Customer customer = customerDao.findByEmail(email);
+        if (cartItemDao.existsByProductIdAndCustomerId(productId, customer.getId())) {
+            throw new AlreadyExistException("이미 장바구니에 담겨 있는 상품입니다.", ErrorResponse.ALREADY_EXIST_PRODUCT_IN_CART);
+        }
 
-        final Long id = cartItemDao.addCartItem(customer.getId(), productId, quantity);
         final Product product = productDao.findProductById(productId);
+        final Long id = cartItemDao.addCartItem(customer.getId(), productId, quantity);
         return CartItemResponse.of(id, quantity, product);
     }
 
@@ -51,11 +58,16 @@ public class CartService {
         return CartItemResponse.of(cartItem.getId(), cartItem.getQuantity(), cartItem.getProduct());
     }
 
+    @Transactional
     public void updateQuantity(String email, Long cartItemId, Integer quantity) {
         final Customer customer = customerDao.findByEmail(email);
+        if (cartItemDao.notExistByIdAndCustomerId(cartItemId, customer.getId())) {
+            throw new NotExistException("존재하지 않는 장바구니 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
+        }
         cartItemDao.updateQuantityByCustomerId(customer.getId(), cartItemId, quantity);
     }
 
+    @Transactional
     public void deleteCartItem(String email, List<Long> cartItemIds) {
         final Customer customer = customerDao.findByEmail(email);
         validateCustomerCart(cartItemIds, customer.getId());

@@ -40,15 +40,10 @@ public class OrdersDetailDao {
                         + "inner join product as p on p.id = od.product_id "
                         + "inner join images as i on p.id = i.product_id "
                         + "where od.orders_id = ?";
-        try {
-            return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-                    new Product(rs.getLong("productId"), rs.getString("name"),
-                            rs.getInt("price"), rs.getLong("stockQuantity"),
-                            new ThumbnailImage(rs.getString("url"), rs.getString("alt"))
-                    ), rs.getInt("quantity")), orderId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException();
-        }
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
+                new Product(rs.getLong("productId"), rs.getString("name"),
+                        rs.getInt("price"), rs.getLong("stockQuantity"),
+                        new ThumbnailImage(rs.getString("url"), rs.getString("alt"))
+                ), rs.getInt("quantity")), orderId);
     }
 }

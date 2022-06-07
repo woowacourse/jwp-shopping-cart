@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -13,11 +14,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.shoppingcart.exception.AlreadyExistException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotExistException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.OutOfStockException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -66,6 +70,21 @@ public class ControllerAdvice {
 
     @ExceptionHandler(JoinException.class)
     public ResponseEntity<ErrorResponse> handleJoinException(JoinException e){
+        return ResponseEntity.badRequest().body(e.getErrorResponse());
+    }
+
+    @ExceptionHandler(NotExistException.class)
+    public ResponseEntity<ErrorResponse> handleNotExistException(NotExistException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorResponse());
+    }
+
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyExistException(AlreadyExistException e){
+        return ResponseEntity.badRequest().body(e.getErrorResponse());
+    }
+
+    @ExceptionHandler(OutOfStockException.class)
+    public ResponseEntity<ErrorResponse> handleOutOfStockException(OutOfStockException e){
         return ResponseEntity.badRequest().body(e.getErrorResponse());
     }
 }

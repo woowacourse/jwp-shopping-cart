@@ -1,7 +1,11 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.Min;
+
 public class CartItemQuantityRequest {
     private Long cartItemId;
+
+    @Min(message = "5002", value = 0)
     private Integer quantity;
 
     public CartItemQuantityRequest() {
