@@ -30,7 +30,7 @@
   - [x] `GET /api/cartItems` 카트 전체 아이템 조회 api
   - [x] `POST /api/cartItems` 카트에 아이템 추가 api
   - [ ] `PATCH /api/cartItems{cartItemId}?quantity=2` 카트에 아이템 수량 수정 api
-  - [ ] `DELETE /api/carItems{cartItemId}` 카트에 아이템 삭제 api
+  - [x] `DELETE /api/carItems{cartItemId}` 카트에 아이템 삭제 api
 - Order
   - [ ] `POST /api/orders` 주문추가 api
   - [ ] `GET /api/orders` 주문 전체 확인 api

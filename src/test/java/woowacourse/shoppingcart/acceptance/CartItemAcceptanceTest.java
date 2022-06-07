@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,7 @@ import woowacourse.shoppingcart.dto.SignupRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartItemAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
+    private static final String USER = "dongho108";
     private Long productId1;
     private Long productId2;
     private String accessToken;
@@ -37,9 +36,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
+        SignupRequest signupRequest = new SignupRequest(USER, "password1234", "01022728572", "인천 서구 검단로");
         회원가입_되어있음(signupRequest);
-        LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        LoginRequest loginRequest = new LoginRequest(USER, "password1234");
         accessToken = 로그인하고_토큰받아옴(loginRequest);
 
         ProductRequest 치킨 = new ProductRequest("치킨", 10_000, 10, "http://example.com/chicken.jpg");
@@ -49,7 +48,6 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("장바구니 아이템 추가")
-    @Disabled
     @Test
     void addCartItem() {
         CartItemRequest cartItemRequest = new CartItemRequest(productId1, 5);
@@ -59,7 +57,6 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
-    @Disabled
     @Test
     void getCartItems() {
         장바구니_아이템_추가되어_있음_토큰(productId1);
@@ -71,15 +68,19 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨_토큰(response, productId1, productId2);
     }
 
-    @DisplayName("장바구니 삭제")
-    @Disabled
+    @DisplayName("장바구니 아이템 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        // given
+        CartItemRequest cartItemRequest = new CartItemRequest(productId1, 5);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청_토큰(cartItemRequest, accessToken);
+        CartItemResponse cartItemResponse = response.jsonPath().getObject(".", CartItemResponse.class);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        // when
+        ExtractableResponse<Response> deleteResponse = 장바구니_삭제_요청_토큰(accessToken, cartItemResponse.getId());
 
-        장바구니_삭제됨(response);
+        // then
+        장바구니_삭제됨(deleteResponse);
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
@@ -106,15 +107,6 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String customerName) {
-        return RestAssured
-            .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/api/customers/{customerName}/cartItems", customerName)
-            .then().log().all()
-            .extract();
-    }
-
     public ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청_토큰(String accessToken) {
         return RestAssured
                 .given().log().all()
@@ -125,13 +117,14 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
+    public ExtractableResponse<Response> 장바구니_삭제_요청_토큰(String token, Long cartId) {
         return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/cartItems/{cartId}", userName, cartId)
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().oauth2(token)
+            .when().delete("/api/customers/cartItems/{cartId}", cartId)
+            .then().log().all()
+            .extract();
     }
 
     public void 장바구니_아이템_추가됨_OK(ExtractableResponse<Response> response) {
