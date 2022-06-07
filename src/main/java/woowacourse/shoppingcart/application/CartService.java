@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.exception.notfound.NotInCustomerCartItemExceptio
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
+    private static final int INITIAL_QUANTITY = 0;
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
@@ -45,12 +46,9 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(CustomerNotFoundException::new);
+    public Long addCart(final Long customerId, final Long productId) {
         try {
-            //TODO: 적절한 수량을 받도록 수정해야함.
-            return cartItemDao.addCartItem(customerId, productId, 0);
+            return cartItemDao.addCartItem(customerId, productId, INITIAL_QUANTITY);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
