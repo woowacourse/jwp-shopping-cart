@@ -37,19 +37,21 @@ public class CartItemDaoTest {
     void setUp() {
         productDao.save(new Product(null, new ProductName("banana"), new Price(1_000), new Stock(100), "woowa1.com"));
         productDao.save(new Product(null, new ProductName("apple"), new Price(2_000), new Stock(100), "woowa2.com"));
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 1);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 1);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
-
         // given
         final Long customerId = 1L;
-        final Long productId = 1L;
-
-        Product product = Product.builder().build();
+        Product product = Product.builder()
+                .id(1L)
+                .productName("banana")
+                .price(1_000)
+                .stock(100)
+                .build();
         // when
         final Long cartId = cartItemDao.addCartItem(customerId, new CartItem(product, 1));
 
@@ -57,10 +59,9 @@ public class CartItemDaoTest {
         assertThat(cartId).isEqualTo(3L);
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머 카트 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
@@ -71,10 +72,9 @@ public class CartItemDaoTest {
         assertThat(productsIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("Customer Id를 넣으면, 해당 카트 아이템 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
@@ -85,10 +85,9 @@ public class CartItemDaoTest {
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("해당 id의 카트 아이템을 삭제한다.")
     @Test
     void deleteCartItem() {
-
         // given
         final Long cartId = 1L;
 
