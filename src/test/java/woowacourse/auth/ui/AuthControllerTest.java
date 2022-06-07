@@ -52,8 +52,6 @@ class AuthControllerTest {
         TokenRequest request = new TokenRequest(페퍼_아이디, 페퍼_비밀번호);
         String requestContent = objectMapper.writeValueAsString(request);
 
-        String token = jwtTokenProvider.createToken(페퍼_아이디);
-
         // when
         final ResultActions response = mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -62,7 +60,7 @@ class AuthControllerTest {
 
         // then
         response.andExpect(status().isOk())
-                .andExpect(jsonPath("accessToken").value(token));
+                .andExpect(jsonPath("accessToken").value(jwtTokenProvider.createToken(페퍼_아이디)));
     }
 
     @ParameterizedTest
