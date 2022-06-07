@@ -74,8 +74,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         CustomerResponse customerResponse = response.toObject(CustomerResponse.class);
         assertAll(
                 () -> response.assertStatus(HttpStatus.OK),
-                () -> assertThat(customerResponse.getUserName()).isEqualTo("forky"),
-                () -> assertThat(customerResponse.getNickName()).isEqualTo("복희"),
+                () -> assertThat(customerResponse.getUsername()).isEqualTo("forky"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("복희"),
                 () -> assertThat(customerResponse.getAge()).isEqualTo(26)
         );
     }
@@ -161,9 +161,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         CustomerResponse customerResponse = response.toObject(CustomerResponse.class);
         assertAll(
                 () -> response.assertStatus(HttpStatus.OK),
-                () -> assertThat(customerResponse.getUserName()).isEqualTo(userName),
+                () -> assertThat(customerResponse.getUsername()).isEqualTo(userName),
                 () -> assertThat(customerResponse.getPassword()).isEqualTo(password),
-                () -> assertThat(customerResponse.getNickName()).isEqualTo(nickName),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo(nickName),
                 () -> assertThat(customerResponse.getAge()).isEqualTo(age)
         );
     }

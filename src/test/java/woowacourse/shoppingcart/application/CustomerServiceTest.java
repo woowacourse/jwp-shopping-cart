@@ -65,7 +65,7 @@ class CustomerServiceTest {
     void getCustomer() {
         customerService.addCustomer(customerRequest1);
         CustomerResponse actual = customerService.getCustomer(customerRequest1.getUsername());
-        assertThat(actual.getUserName()).isEqualTo(customerRequest1.getUsername());
+        assertThat(actual.getUsername()).isEqualTo(customerRequest1.getUsername());
     }
 
     @DisplayName("비밀번호를 성공적으로 변경한다.")

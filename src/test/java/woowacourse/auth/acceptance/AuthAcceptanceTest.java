@@ -40,7 +40,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                () -> assertThat(actual.getUserName()).isEqualTo("forky"),
+                () -> assertThat(actual.getUsername()).isEqualTo("forky"),
                 () -> assertThat(actual.getPassword()).isEqualTo("forky@1234")
         );
     }
