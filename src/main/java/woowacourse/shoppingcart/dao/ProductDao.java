@@ -67,6 +67,17 @@ public class ProductDao {
                         ));
     }
 
+    public void update(Product product) {
+        final String query = "UPDATE product SET name = ?, price = ?, stock = ?, image_url = ? WHERE id = ?";
+        jdbcTemplate.update(query,
+            product.getName(),
+            product.getPrice(),
+            product.getStock(),
+            product.getImageUrl(),
+            product.getId()
+        );
+    }
+
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);

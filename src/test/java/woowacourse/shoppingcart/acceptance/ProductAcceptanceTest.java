@@ -108,6 +108,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 
+    public static Long 상품_등록되어_있음_DTO(ProductRequest productRequest) {
+        ExtractableResponse<Response> response = 상품_등록_요청(productRequest);
+        return Long.parseLong(response.header("Location").split("/products/")[1]);
+    }
+
     public static void 조회_응답됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }

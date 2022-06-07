@@ -22,6 +22,13 @@ public class Product {
         this(null, name, price, stock, imageUrl);
     }
 
+    public void removeStock(int stock) {
+        if (this.stock < stock) {
+            throw new IllegalArgumentException("현재 수량보다 더 많이 꺼낼 수 없습니다.");
+        }
+        this.stock -= stock;
+    }
+
     public String getName() {
         return name;
     }
