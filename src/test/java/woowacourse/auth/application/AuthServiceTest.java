@@ -15,7 +15,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.customer.application.CustomerService;
-import woowacourse.customer.domain.Customer;
+import woowacourse.customer.dto.CustomerResponse;
 import woowacourse.customer.dto.SignupRequest;
 
 @SpringBootTest
@@ -47,16 +47,15 @@ class AuthServiceTest {
     @Test
     void findCustomerByToken() {
         SignupRequest signupRequest = new SignupRequest("dongho108", "password1234", "01012341234", "인천시 서구");
-        Customer savedCustomer = customerService.save(signupRequest);
+        customerService.save(signupRequest);
 
         LoginRequest loginRequest = new LoginRequest("dongho108", "password1234");
-        Customer customer = customerService.findByUsername(loginRequest.getUsername());
+        CustomerResponse customer = customerService.findByUsername(loginRequest.getUsername());
 
         assertAll(
-            () -> assertThat(customer.getUsername()).isEqualTo(savedCustomer.getUsername()),
-            () -> assertThat(customer.getPassword()).isEqualTo(savedCustomer.getPassword()),
-            () -> assertThat(customer.getPhoneNumber()).isEqualTo(savedCustomer.getPhoneNumber()),
-            () -> assertThat(customer.getAddress()).isEqualTo(savedCustomer.getAddress())
+            () -> assertThat(customer.getUsername()).isEqualTo(signupRequest.getUsername()),
+            () -> assertThat(customer.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
+            () -> assertThat(customer.getAddress()).isEqualTo(signupRequest.getAddress())
         );
     }
 

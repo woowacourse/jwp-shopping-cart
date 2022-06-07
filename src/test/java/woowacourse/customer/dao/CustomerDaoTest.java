@@ -3,12 +3,13 @@ package woowacourse.customer.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -28,8 +29,8 @@ public class CustomerDaoTest {
     private final String password;
     private final Customer customer;
 
-    public CustomerDaoTest(final JdbcTemplate jdbcTemplate) {
-        customerDao = new CustomerDao(jdbcTemplate);
+    public CustomerDaoTest(final DataSource dataSource) {
+        customerDao = new CustomerDao(dataSource);
         passwordEncoder = new SimplePasswordEncoder();
         password = passwordEncoder.encode("ehdgh1234");
         customer = Customer.of("dongho108", password, "01012123232", "인천 서구 검단로");
@@ -46,19 +47,6 @@ public class CustomerDaoTest {
 
         // then
         assertThat(customerId).isEqualTo(1L);
-    }
-
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-        // given
-        final String userName = "gwangyeol-iM";
-
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(16L);
     }
 
     @DisplayName("입력할 username이 이미 존재하면 True를 반환한다.")

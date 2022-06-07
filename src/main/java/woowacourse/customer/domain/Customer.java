@@ -1,5 +1,7 @@
 package woowacourse.customer.domain;
 
+import woowacourse.customer.support.passwordencoder.PasswordEncoder;
+
 public class Customer {
 
     private final Long id;
@@ -33,6 +35,10 @@ public class Customer {
             new PhoneNumber(phoneNumber),
             address
         );
+    }
+
+    public void matchesPassword(final PasswordEncoder passwordEncoder, final String password) {
+        this.password.matches(passwordEncoder, password);
     }
 
     public void updatePhoneNumber(final String phoneNumber) {

@@ -13,12 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.auth.exception.InvalidLoginException;
-import woowacourse.customer.domain.Customer;
+import woowacourse.customer.dto.CustomerResponse;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
 import woowacourse.customer.dto.UpdatePasswordRequest;
 import woowacourse.customer.exception.InvalidCustomerException;
-import woowacourse.customer.support.passwordencoder.PasswordEncoder;
 
 @Transactional
 @SpringBootTest
@@ -26,9 +25,6 @@ class CustomerServiceTest {
 
     @Autowired
     private CustomerService customerService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     private final String username = "username";
     private final String password = "password";
@@ -44,17 +40,7 @@ class CustomerServiceTest {
     @DisplayName("회원을 저장한다.")
     @Test
     void saveCustomer() {
-        // when
-        final Customer customer = customerService.save(signupRequest);
-
-        // then
-        assertAll(
-            () -> assertThat(customer.getId()).isNotNull(),
-            () -> assertThat(customer.getUsername().getValue()).isEqualTo(signupRequest.getUsername()),
-            () -> assertDoesNotThrow(() -> customer.getPassword().matches(passwordEncoder, password)),
-            () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(signupRequest.getPhoneNumber()),
-            () -> assertThat(customer.getAddress()).isEqualTo(signupRequest.getAddress())
-        );
+        assertDoesNotThrow(() -> customerService.save(signupRequest));
     }
 
     @DisplayName("회원 저장 시 username이 이미 존재하면 예외를 반환한다.")
@@ -73,27 +59,26 @@ class CustomerServiceTest {
     @Test
     void findByUsername() {
         // given
-        final Customer savedCustomer = customerService.save(signupRequest);
+        customerService.save(signupRequest);
 
         // when
-        final Customer findCustomer = customerService.findByUsername(username);
+        final CustomerResponse findCustomerResponse = customerService.findByUsername(username);
 
         // given
         assertAll(
-            () -> assertThat(findCustomer.getId()).isNotNull(),
-            () -> assertThat(findCustomer.getUsername()).isEqualTo(savedCustomer.getUsername()),
-            () -> assertThat(findCustomer.getPassword()).isEqualTo(savedCustomer.getPassword()),
-            () -> assertThat(findCustomer.getPhoneNumber()).isEqualTo(savedCustomer.getPhoneNumber()),
-            () -> assertThat(findCustomer.getAddress()).isEqualTo(savedCustomer.getAddress())
+            () -> assertThat(findCustomerResponse.getUsername()).isEqualTo(signupRequest.getUsername()),
+            () -> assertThat(findCustomerResponse.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
+            () -> assertThat(findCustomerResponse.getAddress()).isEqualTo(signupRequest.getAddress())
         );
     }
 
     @DisplayName("비밀번호가 일치하는지 확인한다.")
     @Test
     void confirmPassword() {
-        final Customer savedCustomer = customerService.save(signupRequest);
+        customerService.save(signupRequest);
+        final CustomerResponse customerResponse = customerService.findByUsername(username);
 
-        assertDoesNotThrow(() -> customerService.confirmPassword(savedCustomer.getUsername().getValue(), password));
+        assertDoesNotThrow(() -> customerService.confirmPassword(customerResponse.getUsername(), password));
     }
 
     @DisplayName("phoneNumber와 address를 수정한다.")
@@ -105,11 +90,11 @@ class CustomerServiceTest {
         final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01012123434", "서울시 여러분");
         customerService.updateInfo(username, updateCustomerRequest);
 
-        final Customer customer = customerService.findByUsername(username);
+        final CustomerResponse customerResponse = customerService.findByUsername(username);
 
         assertAll(
-            () -> assertThat(customer.getPhoneNumber().getValue()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
-            () -> assertThat(customer.getAddress()).isEqualTo(updateCustomerRequest.getAddress())
+            () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
+            () -> assertThat(customerResponse.getAddress()).isEqualTo(updateCustomerRequest.getAddress())
         );
     }
 
@@ -120,11 +105,8 @@ class CustomerServiceTest {
         customerService.save(signupRequest);
 
         final UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("ehdgh1111");
-        customerService.updatePassword(username, updatePasswordRequest);
 
-        final Customer customer = customerService.findByUsername(username);
-
-        assertDoesNotThrow(() -> customer.getPassword().matches(passwordEncoder, "ehdgh1111"));
+        assertDoesNotThrow(() -> customerService.updatePassword(username, updatePasswordRequest));
     }
 
     @DisplayName("회원을 삭제한다.")

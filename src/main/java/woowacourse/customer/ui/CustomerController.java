@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import woowacourse.customer.dto.CustomerResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.customer.application.CustomerService;
-import woowacourse.customer.domain.Customer;
+import woowacourse.customer.dto.CustomerResponse;
 import woowacourse.customer.dto.PasswordConfirmRequest;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
@@ -40,8 +39,7 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<CustomerResponse> findCustomerInfo(@AuthenticationPrincipal final String username) {
-        Customer customer = customerService.findByUsername(username);
-        return ResponseEntity.ok().body(CustomerResponse.from(customer));
+        return ResponseEntity.ok().body(customerService.findByUsername(username));
     }
 
     @PutMapping

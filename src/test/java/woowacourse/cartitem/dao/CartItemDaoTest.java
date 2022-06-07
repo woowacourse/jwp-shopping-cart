@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -35,16 +34,14 @@ public class CartItemDaoTest {
     private final CustomerDao customerDao;
     private final CartItemDao cartItemDao;
     private final DataSource dataSource;
-    private final JdbcTemplate jdbcTemplate;
 
     private Long customerId;
     private Long productId1;
     private Long productId2;
 
-    public CartItemDaoTest(final DataSource dataSource, final JdbcTemplate jdbcTemplate) {
+    public CartItemDaoTest(final DataSource dataSource) {
         this.dataSource = dataSource;
-        this.jdbcTemplate = jdbcTemplate;
-        customerDao = new CustomerDao(jdbcTemplate);
+        customerDao = new CustomerDao(dataSource);
         productDao = new ProductDao(dataSource);
         cartItemDao = new CartItemDao(dataSource);
     }

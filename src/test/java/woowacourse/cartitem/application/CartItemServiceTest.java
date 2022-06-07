@@ -41,9 +41,8 @@ public class CartItemServiceTest {
 
     @BeforeEach
     void setUp() {
-        username = customerService.save(new SignupRequest("username", "password", "01000001111", "서울시"))
-            .getUsername()
-            .getValue();
+        customerService.save(new SignupRequest("username", "password", "01000001111", "서울시"));
+        username = customerService.findByUsername("username").getUsername();
         productId1 = productService.addProduct(new ProductRequest("짱구", 100_000_000, 10, "jjanggu.jpg"));
         productId2 = productService.addProduct(new ProductRequest("짱아", 10_000_000, 10, "jjanga.jpg"));
     }

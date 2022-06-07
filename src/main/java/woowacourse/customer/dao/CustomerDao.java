@@ -1,69 +1,67 @@
 package woowacourse.customer.dao;
 
-import java.util.Locale;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.customer.domain.Customer;
-import woowacourse.customer.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public CustomerDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+    public CustomerDao(final DataSource dataSource) {
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
             .withTableName("customer")
             .usingGeneratedKeyColumns("id");
     }
 
     public Long findIdByUserName(final String userName) {
-        try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
+        final String sql = "SELECT id FROM customer WHERE username = :username";
+        final SqlParameterSource params = new MapSqlParameterSource("username", userName);
+
+        return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
     public boolean existsByUsername(final String username) {
-        final String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, username));
+        final String sql = "SELECT EXISTS (SELECT * FROM customer WHERE username = :username)";
+        final SqlParameterSource params = new MapSqlParameterSource("username", username);
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
 
-    public Customer save(Customer customer) {
+    public Customer save(final Customer customer) {
         final SqlParameterSource params = new MapSqlParameterSource()
             .addValue("username", customer.getUsername().getValue())
             .addValue("password", customer.getPassword().getValue())
             .addValue("phoneNumber", customer.getPhoneNumber().getValue())
             .addValue("address", customer.getAddress());
-        final Number newId = jdbcInsert.executeAndReturnKey(params);
+        final Long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
         return new Customer(
-            newId.longValue(),
-            customer.getUsername(),
-            customer.getPassword(),
-            customer.getPhoneNumber(),
-            customer.getAddress()
+            id, customer.getUsername(), customer.getPassword(),
+            customer.getPhoneNumber(), customer.getAddress()
         );
     }
 
     public Optional<Customer> findByUsername(final String username) {
-        final String query = "SELECT id, username, password, phoneNumber, address FROM customer WHERE username = ?";
+        final String sql = "SELECT id, username, password, phoneNumber, address FROM customer WHERE username = :username";
+        final SqlParameterSource params = new MapSqlParameterSource("username", username);
 
         try {
-            return Optional.of(jdbcTemplate.queryForObject(query, customerMapper(), username));
-        } catch (EmptyResultDataAccessException exception) {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, customerMapper()));
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
@@ -78,18 +76,20 @@ public class CustomerDao {
         );
     }
 
-    public void update(Customer customer) {
-        final String query = "UPDATE customer SET password = ?, phoneNumber = ?, address = ? WHERE id = ?";
-        jdbcTemplate.update(query,
-            customer.getPassword().getValue(),
-            customer.getPhoneNumber().getValue(),
-            customer.getAddress(),
-            customer.getId()
-        );
+    public void update(final Customer customer) {
+        final String sql = "UPDATE customer SET password = :password, phoneNumber = :phoneNumber, address = :address WHERE id = :id";
+        final SqlParameterSource params = new MapSqlParameterSource("password", customer.getPassword().getValue())
+            .addValue("phoneNumber", customer.getPhoneNumber().getValue())
+            .addValue("address", customer.getAddress())
+            .addValue("id", customer.getId());
+
+        jdbcTemplate.update(sql, params);
     }
 
     public void deleteByUsername(final String username) {
-        final String query = "DELETE FROM customer WHERE username = ?";
-        jdbcTemplate.update(query, username);
+        final String sql = "DELETE FROM customer WHERE username = :username";
+        final SqlParameterSource params = new MapSqlParameterSource("username", username);
+
+        jdbcTemplate.update(sql, params);
     }
 }
