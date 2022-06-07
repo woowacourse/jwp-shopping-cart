@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
@@ -98,4 +100,21 @@ public class CartItemDaoTest {
 
         assertThat(productIds).containsExactly(2L);
     }
+
+//    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 장바구니에 담은 상품의 목록을 가져온다.")
+//    @Test
+//    void findCartItemsByCustomerId() {
+//
+//        // given
+//        final Long customerId = 1L;
+//
+//        // when
+//        final List<Cart> carts = cartItemDao.findCartItemsByCustomerId(customerId);
+//
+//        // then
+//        List<Long> cartIds = carts.stream().map(Cart::getId).collect(Collectors.toList());
+//        List<Integer> quantities = carts.stream().map(Cart::getQuantity).collect(Collectors.toList());
+//        assertThat(cartIds).containsExactly(1L, 2L);
+//        assertThat(quantities).containsExactly(10, 10);
+//    }
 }

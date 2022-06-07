@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,28 +67,40 @@ public class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    //    @DisplayName("장바구니 아이템 목록 조회")
-//    @Test
-//    void getCartItems() {
-//        장바구니_아이템_추가되어_있음(USER, productId1);
-//        장바구니_아이템_추가되어_있음(USER, productId2);
-//
-//        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
-//
-//        장바구니_아이템_목록_응답됨(response);
-//        장바구니_아이템_목록_포함됨(response, productId1, productId2);
-//    }
-//
-//    @DisplayName("장바구니 삭제")
-//    @Test
-//    void deleteCartItem() {
-//        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
-//
-//        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-//
+    @DisplayName("장바구니 아이템 목록 조회")
+    @Test
+    void getCartItems() {
+        CartRequest cartRequestProduct1 = new CartRequest(productId1, 5);
+        CartRequest cartRequestProduct2 = new CartRequest(productId2, 3);
+        postWithBodyByToken("/customers/carts", accessToken, cartRequestProduct1);
+        postWithBodyByToken("/customers/carts", accessToken, cartRequestProduct2);
+
+        ExtractableResponse<Response> response = getByToken("/customers/carts", accessToken);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        List<Cart> resultCartList = new ArrayList<>(response.jsonPath().getList(".", Cart.class));
+        assertThat(resultCartList.stream().map(Cart::getQuantity)).containsExactly(5, 3);
+    }
+
+
+    @DisplayName("장바구니 삭제")
+    @Test
+    void deleteCartItem() {
+        CartRequest cartRequestProduct1 = new CartRequest(productId1, 5);
+        CartRequest cartRequestProduct2 = new CartRequest(productId2, 3);
+        postWithBodyByToken("/customers/carts", accessToken, cartRequestProduct1);
+        postWithBodyByToken("/customers/carts", accessToken, cartRequestProduct2);
+
+//        ExtractableResponse<Response> response = RestAssured
+//                .given().log().all()
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//                .when().delete("/customers/carts/{cartId}",cartId)
+//                .then().log().all()
+//                .extract();
+
 //        장바구니_삭제됨(response);
-//    }
-//
+    }
+
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);

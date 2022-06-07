@@ -24,8 +24,8 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal Long id) {
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(id));
     }
 
     @PostMapping
