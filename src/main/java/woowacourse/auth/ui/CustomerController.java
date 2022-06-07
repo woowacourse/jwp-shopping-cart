@@ -1,6 +1,8 @@
 package woowacourse.auth.ui;
 
 import java.net.URI;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,12 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-import woowacourse.auth.domain.user.Customer;
 import woowacourse.auth.application.CustomerService;
+import woowacourse.auth.domain.user.Customer;
 import woowacourse.auth.dto.request.SignUpRequest;
-import woowacourse.auth.dto.request.UniqueUsernameRequest;
 import woowacourse.auth.dto.request.UpdateMeRequest;
 import woowacourse.auth.dto.request.UpdatePasswordRequest;
 import woowacourse.auth.dto.response.GetMeResponse;
@@ -63,10 +65,10 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/username/duplication")
+    @GetMapping("/username/uniqueness")
     public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(
-            @Validated @RequestBody UniqueUsernameRequest request) {
-        UniqueUsernameResponse response = customerService.checkUniqueUsername(request.getUsername());
+            @Valid @NotNull(message = "아이디 입력 필요") @RequestParam String username) {
+        UniqueUsernameResponse response = customerService.checkUniqueUsername(username);
         return ResponseEntity.ok(response);
     }
 }
