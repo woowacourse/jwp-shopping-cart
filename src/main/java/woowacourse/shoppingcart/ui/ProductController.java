@@ -4,16 +4,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.auth.application.AuthorizationException;
 import woowacourse.auth.domain.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.application.ProductService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 

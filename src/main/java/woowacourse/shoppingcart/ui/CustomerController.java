@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.domain.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CheckDuplicationRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -28,9 +27,9 @@ public class CustomerController {
                 URI.create("/api/customers/" + customerRequest.getName())).build();
     }
 
-    @PostMapping("/duplication")
-    public ResponseEntity<Boolean> checkDuplicatedName(@RequestBody CheckDuplicationRequest checkDuplicationRequest) {
-        boolean isExistCustomer = customerService.existsCustomer(checkDuplicationRequest.getName());
+    @GetMapping("/exist")
+    public ResponseEntity<Boolean> checkDuplicatedName(@RequestParam String userName) {
+        boolean isExistCustomer = customerService.existsCustomer(userName);
         return ResponseEntity.ok(isExistCustomer);
     }
 

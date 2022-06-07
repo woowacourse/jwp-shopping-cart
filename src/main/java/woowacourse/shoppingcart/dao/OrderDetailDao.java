@@ -4,16 +4,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.dto.OrderQuantityInfo;
 
 import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class OrdersDetailDao {
+public class OrderDetailDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {
+    public OrderDetailDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -31,9 +31,9 @@ public class OrdersDetailDao {
         return keyHolder.getKey().longValue();
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
+    public List<OrderQuantityInfo> findOrderQuantityInfoByOrderId(final Long orderId) {
         final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderQuantityInfo(
                 rs.getLong("product_id"),
                 rs.getInt("quantity")
         ), orderId);
