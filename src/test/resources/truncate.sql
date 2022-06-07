@@ -1,9 +1,14 @@
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE ordered_product;
+ALTER TABLE ordered_product AUTO_INCREMENT = 1;
 TRUNCATE TABLE cart_item;
+ALTER TABLE cart_item AUTO_INCREMENT = 1;
 TRUNCATE TABLE orders;
+ALTER TABLE orders AUTO_INCREMENT = 1;
 TRUNCATE TABLE product;
+ALTER TABLE product AUTO_INCREMENT = 1;
 TRUNCATE TABLE customer;
+ALTER TABLE customer AUTO_INCREMENT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 
 insert into customer (email, password, username)

@@ -23,10 +23,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.domain.OrderedProduct;
 import woowacourse.shoppingcart.domain.ThumbnailImage;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.order.OrderCreateRequest;
+import woowacourse.shoppingcart.dto.order.OrderResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -45,24 +45,20 @@ public class OrderControllerTest {
     @Test
     void addOrder() throws Exception {
         // given
-        final Long cartId = 1L;
-        final int quantity = 5;
-        final Long cartId2 = 1L;
-        final int quantity2 = 5;
         final String customerName = "pobi";
-        final List<OrderRequest> requestDtos =
-                Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
+
+        OrderCreateRequest orderCreateRequest = new OrderCreateRequest(List.of(1L, 2L));
 
         final Long expectedOrderId = 1L;
         when(orderService.addOrder(any(), eq(customerName)))
                 .thenReturn(expectedOrderId);
 
         // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(requestDtos))
-        ).andDo(print())
+        mockMvc.perform(post("/api/myorders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(orderCreateRequest))
+                ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
@@ -77,15 +73,15 @@ public class OrderControllerTest {
         final String customerName = "pobi";
         final Long orderId = 1L;
         final ThumbnailImage thumbnailImage = new ThumbnailImage("url", "alt");
-        final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", thumbnailImage, 2)));
+        final OrderResponse expected = new OrderResponse(orderId,
+                Collections.singletonList(new OrderedProduct(2L, 2, 100, "banana", thumbnailImage)));
 
         when(orderService.findOrderById(customerName, orderId))
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
-        ).andDo(print())
+        mockMvc.perform(get("/api/myorders/" + orderId)
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
                 .andExpect(jsonPath("orderDetails[0].productId").value(2L))
@@ -104,19 +100,19 @@ public class OrderControllerTest {
         final ThumbnailImage firstThumbnailImage = new ThumbnailImage("url", "alt");
         final ThumbnailImage secondThumbnailImage = new ThumbnailImage("url", "alt");
 
-        final List<Orders> expected = Arrays.asList(
-                new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", firstThumbnailImage, 2))),
-                new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", secondThumbnailImage, 4)))
+        final List<OrderResponse> expected = Arrays.asList(
+                new OrderResponse(1L, Collections.singletonList(
+                        new OrderedProduct(1L, 2, 1_000, "banana", firstThumbnailImage))),
+                new OrderResponse(2L, Collections.singletonList(
+                        new OrderedProduct(2L, 4, 2_000, "apple", secondThumbnailImage)))
         );
 
-        when(orderService.findOrdersByCustomerName(customerName))
+        when(orderService.findOrdersByCustomerEmail(customerName))
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
-        ).andDo(print())
+        mockMvc.perform(get("/api/myorders")
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))

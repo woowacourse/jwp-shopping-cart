@@ -69,9 +69,6 @@ create table ordered_product
     orders_id  bigint  not null,
     product_id bigint  not null,
     quantity   integer not null,
-    price      integer not null,
-    url        varchar(255),
-    alt        varchar(255),
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;

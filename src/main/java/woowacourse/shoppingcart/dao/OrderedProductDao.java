@@ -4,14 +4,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.OrderedProduct;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 
 @Repository
 public class OrderedProductDao {
+    private static final RowMapper<OrderedProduct> ORDERED_PRODUCT_ROW_MAPPER = (rs, rowNum) ->
+            new OrderedProduct(
+                    rs.getLong("product_id"),
+                    rs.getInt("quantity"),
+                    rs.getInt("price"),
+                    rs.getString("name"),
+                    new ThumbnailImage(
+                            rs.getString("url"),
+                            rs.getString("alt")
+                    )
+            );
+
     private final JdbcTemplate jdbcTemplate;
 
     public OrderedProductDao(final JdbcTemplate jdbcTemplate) {
@@ -23,24 +36,18 @@ public class OrderedProductDao {
                 .withTableName("ordered_product")
                 .usingGeneratedKeyColumns("id");
 
-        Product product = cart.getProduct();
-
         Map<String, Object> params = new HashMap<>();
         params.put("orders_id", ordersId);
-        params.put("product_id", product.getId());
+        params.put("product_id", cart.getProduct().getId());
         params.put("quantity", cart.getQuantity());
-        params.put("price", product.getPrice());
-        params.put("url", product.getThumbnailImage().getUrl());
-        params.put("alt", product.getThumbnailImage().getAlt());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT product_id, quantity FROM ordered_product WHERE orders_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-                rs.getLong("product_id"),
-                rs.getInt("quantity")
-        ), orderId);
+    public List<OrderedProduct> findOrderedProductByOrderId(final Long orderId) {
+        final String sql = "SELECT op.product_id, op.quantity, p.price, p.name, p.url, p.alt "
+                + "FROM ordered_product as op, product as p "
+                + "WHERE orders_id = ? AND op.product_id = p.id";
+        return jdbcTemplate.query(sql, ORDERED_PRODUCT_ROW_MAPPER, orderId);
     }
 }

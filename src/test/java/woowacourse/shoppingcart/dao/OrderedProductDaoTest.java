@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.OrderedProduct;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ThumbnailImage;
 
@@ -54,8 +54,7 @@ class OrderedProductDaoTest {
         Cart cart = new Cart(1L, 10, product);
 
         //when
-        Long orderDetailId = orderedProductDao
-                .save(ordersId,cart);
+        Long orderDetailId = orderedProductDao.save(ordersId, cart);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);
@@ -68,13 +67,13 @@ class OrderedProductDaoTest {
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
             jdbcTemplate
-                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
+                    .update("INSERT INTO ordered_product (orders_id, product_id, quantity) VALUES (?, ?, ?)",
                             ordersId, productId, 3);
         }
 
         //when
-        final List<OrderDetail> ordersDetailsByOrderId = orderedProductDao
-                .findOrdersDetailsByOrderId(ordersId);
+        final List<OrderedProduct> ordersDetailsByOrderId = orderedProductDao
+                .findOrderedProductByOrderId(ordersId);
 
         //then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);

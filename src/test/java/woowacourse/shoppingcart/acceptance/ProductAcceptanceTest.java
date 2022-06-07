@@ -58,10 +58,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         postMethodRequest(chickenRequest, "/api/products");
 
-        ExtractableResponse<Response> response = getMethodRequest("/api/products/2");
+        ExtractableResponse<Response> response = getMethodRequest("/api/products/1");
 
         조회_응답됨(response);
-        상품_조회됨(response, 2L);
+        상품_조회됨(response, 1L);
     }
 
     @DisplayName("상품을 삭제한다")
