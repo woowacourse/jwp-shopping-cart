@@ -36,7 +36,7 @@ public class ProductService {
 
     public int addProducts(List<ProductRequestDto> productDtos) {
         List<Product> products = productDtos.stream()
-                .map(dto -> new Product(dto.getName(), dto.getPrice(), dto.getImageUrl()))
+                .map(dto -> new Product(dto.getName(), dto.getPrice(), dto.getThumbnailUrl()))
                 .collect(Collectors.toList());
         return productDao.saveAll(products);
     }
