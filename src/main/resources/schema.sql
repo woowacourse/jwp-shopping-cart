@@ -17,9 +17,6 @@ create table member
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-alter table member
-    add unique key (name);
-
 create table product
 (
     id        bigint       not null auto_increment,
