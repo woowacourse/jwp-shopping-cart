@@ -8,6 +8,8 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ThumbnailImage;
 
 @Repository
 public class OrdersDetailDao {
@@ -32,10 +34,21 @@ public class OrdersDetailDao {
     }
 
     public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-                rs.getLong("product_id"),
-                rs.getInt("quantity")
-        ), orderId);
+        final String sql =
+                "select p.id as productId, p.name as name, p.price as price, p.stock_quantity as stockQuantity, i.url as url, i.alt as alt, od.quantity as quantity "
+                        + "from orders_detail as od "
+                        + "inner join product as p on p.id = od.product_id "
+                        + "inner join images as i on p.id = i.product_id "
+                        + "where od.orders_id = ?";
+        try {
+            return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
+                    new Product(rs.getLong("productId"), rs.getString("name"),
+                            rs.getInt("price"), rs.getLong("stockQuantity"),
+                            new ThumbnailImage(rs.getString("url"), rs.getString("alt"))
+                    ), rs.getInt("quantity")), orderId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
     }
 }

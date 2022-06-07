@@ -29,12 +29,6 @@ public class CartService {
         this.productDao = productDao;
     }
 
-
-//    private List<Long> findCartIdsByCustomerName(final String customerName) {
-//        final Long customerId = customerDao.findIdByUserName(customerName);
-//        return cartItemDao.findIdsByCustomerId(customerId);
-//    }
-
     public CartItemResponse addCartItem(Long productId, Integer quantity, String email) {
         final Customer customer = customerDao.findByEmail(email);
 
@@ -42,13 +36,6 @@ public class CartService {
         final Product product = productDao.findProductById(productId);
         return CartItemResponse.of(id, quantity, product);
     }
-
-
-//
-//    public void deleteCart(final String customerName, final Long cartId) {
-//        validateCustomerCart(cartId, customerName);
-//        cartItemDao.deleteCartItem(cartId);
-//    }
 
     public List<CartItemResponse> findCartItems(String email) {
         final Customer customer = customerDao.findByEmail(email);
@@ -77,7 +64,10 @@ public class CartService {
     }
 
     private void validateCustomerCart(List<Long> cartItemIds, Long customerId) {
-        final Set<Long> savedCartItemIds = new HashSet<>(cartItemDao.findIdsByCustomerId(customerId));
+        final List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customerId);
+        final Set<Long> savedCartItemIds = new HashSet<>(cartItems.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toUnmodifiableList()));
         if (containsAllIds(cartItemIds, savedCartItemIds)) {
             return;
         }
