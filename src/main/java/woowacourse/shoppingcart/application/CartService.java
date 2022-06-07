@@ -43,6 +43,10 @@ public class CartService {
     }
 
     public Long addCartItem(final Long productId, final long customerId, final int count) {
+        checkProductExist(productId);
+        int quantity = productDao.findProductById(productId).getQuantity();
+        checkAlreadyInCart(productId, customerId);
+        checkInStock(count, quantity);
         try {
             return cartItemDao.addCartItem(customerId, productId, count);
         } catch (Exception e) {
@@ -50,7 +54,23 @@ public class CartService {
         }
     }
 
+    private void checkAlreadyInCart(Long productId, long customerId) {
+        boolean isInCart = cartItemDao.findProductIdsByCustomerId(customerId).contains(productId);
+        if (isInCart) {
+            throw new InvalidCartItemException("이미 담겨있는 상품입니다.");
+        }
+    }
+
+    private void checkProductExist(Long productId) {
+        try {
+            productDao.findProductById(productId);
+        } catch (InvalidProductException e) {
+            throw new ProductNotFoundException();
+        }
+    }
+
     public void deleteCartItem(final long customerId, final long productId) {
+        checkProductExist(productId);
         try {
             cartItemDao.deleteCartItem(customerId, productId);
         } catch (InvalidCartItemException e) {
@@ -59,17 +79,16 @@ public class CartService {
     }
 
     public void updateCount(long customerId, long productId, int count) {
-        int quantity;
+        checkProductExist(productId);
+        int quantity = productDao.findProductById(productId).getQuantity();
+        checkInStock(count, quantity);
+        cartItemDao.updateCount(customerId, productId, count);
+    }
 
-        try {
-            quantity = productDao.findProductById(productId).getQuantity();
-        } catch (InvalidProductException e) {
-            throw new ProductNotFoundException();
-        }
-
+    private void checkInStock(int count, int quantity) {
         if (count > quantity) {
             throw new InvalidCartItemException("재고가 부족합니다.");
         }
-        cartItemDao.updateCount(customerId, productId, count);
     }
+
 }
