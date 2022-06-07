@@ -1,6 +1,5 @@
 package woowacourse.fixture;
 
-import static io.restassured.RestAssured.given;
 import static woowacourse.fixture.Fixture.get;
 import static woowacourse.fixture.Fixture.post;
 

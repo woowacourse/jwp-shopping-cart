@@ -13,48 +13,61 @@ public abstract class Fixture {
     public static final String BEARER = "Bearer ";
 
     public static ExtractableResponse<Response> get(String path, Object body) {
-        return afterMethod(beforeMethod(body).get(path));
+        return postProcess(preProcess(body).get(path));
     }
 
     public static ExtractableResponse<Response> get(String path, String token) {
-        return afterMethod(beforeMethod(token).get(path));
+        return postProcess(preProcess(token).get(path));
+    }
+
+    public static ExtractableResponse<Response> get(String path, String token, Object body) {
+        return postProcess(preProcess(token, body).get(path));
     }
 
     public static ExtractableResponse<Response> post(String path, Object body) {
-        return afterMethod(beforeMethod(body).post(path));
+        return postProcess(preProcess(body).post(path));
+    }
+
+    public static ExtractableResponse<Response> post(String path, String token, Object body) {
+        return postProcess(preProcess(token, body).post(path));
     }
 
     public static ExtractableResponse<Response> put(String path, Object body) {
-        return afterMethod(beforeMethod(body).put(path));
+        return postProcess(preProcess(body).put(path));
     }
 
+
     public static ExtractableResponse<Response> put(String path, String token, Object body) {
-        return afterMethod(beforeMethod(token, body).put(path));
+        return postProcess(preProcess(token, body).put(path));
     }
 
 
     public static ExtractableResponse<Response> delete(String path, Object body) {
-        return afterMethod(beforeMethod(body).delete(path));
+        return postProcess(preProcess(body).delete(path));
     }
 
     public static ExtractableResponse<Response> delete(String path, String token) {
-        return afterMethod(beforeMethod(token).delete(path));
+        return postProcess(preProcess(token).delete(path));
     }
 
-    protected static RequestSpecification beforeMethod(Object body) {
+    public static ExtractableResponse<Response> delete(String path, String token, Object... pathParams) {
+        return postProcess(preProcess(token).delete(path, pathParams));
+    }
+
+    protected static RequestSpecification preProcess(Object body) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
                 .when();
     }
 
-    protected static RequestSpecification beforeMethod(String token) {
+    protected static RequestSpecification preProcess(String token) {
         return given().log().all()
                 .header(AUTHORIZATION, BEARER + token)
                 .when();
     }
 
-    protected static RequestSpecification beforeMethod(String token, Object body) {
+    protected static RequestSpecification preProcess(String token, Object body) {
         return given().log().all()
                 .header(AUTHORIZATION, BEARER + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -62,7 +75,7 @@ public abstract class Fixture {
                 .when();
     }
 
-    protected static ExtractableResponse<Response> afterMethod(Response response) {
+    protected static ExtractableResponse<Response> postProcess(Response response) {
         return response
                 .then().log().all()
                 .extract();

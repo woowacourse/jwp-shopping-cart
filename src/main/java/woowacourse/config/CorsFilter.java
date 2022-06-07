@@ -1,6 +1,6 @@
 package woowacourse.config;
 
-import static woowacourse.config.CorsConfig.ALLOWED_METHOD_NAMES;
+import static woowacourse.config.WebMvcConfig.ALLOWED_METHOD_NAMES;
 
 import java.io.IOException;
 import javax.servlet.Filter;
@@ -8,13 +8,11 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 
 public class CorsFilter implements Filter {
 

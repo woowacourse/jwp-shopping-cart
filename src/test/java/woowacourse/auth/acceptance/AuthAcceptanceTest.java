@@ -1,8 +1,6 @@
 package woowacourse.auth.acceptance;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.AuthFixture.로그인_요청;
 import static woowacourse.fixture.AuthFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.AuthFixture.회원조회_요청;
