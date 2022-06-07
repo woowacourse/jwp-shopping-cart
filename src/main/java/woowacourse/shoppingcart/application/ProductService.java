@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dto.product.ProductResponse;
-import woowacourse.shoppingcart.dto.product.ProductResponses;
 import woowacourse.shoppingcart.dto.product.ProductSaveRequest;
+import woowacourse.shoppingcart.dto.product.ProductsResponse;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,8 +16,8 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public ProductResponses findProducts() {
-        return ProductResponses.from(productDao.findProducts());
+    public ProductsResponse findProducts() {
+        return ProductsResponse.from(productDao.findProducts());
     }
 
     @Transactional

@@ -5,19 +5,19 @@ import java.util.stream.Collectors;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.product.ProductResponse.ProductResponseNested;
 
-public class ProductResponses {
+public class ProductsResponse {
 
     private List<ProductResponseNested> products;
 
-    private ProductResponses() {
+    private ProductsResponse() {
     }
 
-    public ProductResponses(final List<ProductResponseNested> products) {
+    public ProductsResponse(final List<ProductResponseNested> products) {
         this.products = products;
     }
 
-    public static ProductResponses from(final List<Product> products) {
-        return new ProductResponses(products.stream()
+    public static ProductsResponse from(final List<Product> products) {
+        return new ProductsResponse(products.stream()
                 .map(ProductResponseNested::from)
                 .collect(Collectors.toList()));
     }

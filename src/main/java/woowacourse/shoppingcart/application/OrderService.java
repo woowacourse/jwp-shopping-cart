@@ -14,8 +14,8 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
-import woowacourse.shoppingcart.dto.order.OrderResponses;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
+import woowacourse.shoppingcart.dto.order.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -69,11 +69,11 @@ public class OrderService {
         }
     }
 
-    public OrderResponses findOrdersByCustomerName(final String customerName) {
+    public OrdersResponse findOrdersByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
-        return OrderResponses.from(orderIds.stream()
+        return OrdersResponse.from(orderIds.stream()
                 .map(this::findOrderResponseDtoByOrderId)
                 .collect(Collectors.toList()));
     }

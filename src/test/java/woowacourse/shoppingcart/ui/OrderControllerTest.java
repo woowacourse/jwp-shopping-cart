@@ -29,8 +29,8 @@ import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
-import woowacourse.shoppingcart.dto.order.OrderResponses;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
+import woowacourse.shoppingcart.dto.order.OrdersResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -114,7 +114,7 @@ public class OrderControllerTest {
     void findOrders() throws Exception {
         // given
         final String customerName = "pobi";
-        final OrderResponses expected = OrderResponses.from(Arrays.asList(
+        final OrdersResponse expected = OrdersResponse.from(Arrays.asList(
                 new Orders(1L, Collections.singletonList(
                         new OrderDetail(1L, 1L, "banana", 1_000, 2, "imageUrl"))),
                 new Orders(2L, Collections.singletonList(

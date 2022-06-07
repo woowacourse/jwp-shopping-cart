@@ -10,8 +10,8 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.cartitem.CartItemResponse;
-import woowacourse.shoppingcart.dto.cartitem.CartItemResponses;
 import woowacourse.shoppingcart.dto.cartitem.CartItemSaveRequest;
+import woowacourse.shoppingcart.dto.cartitem.CartItemsResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -29,7 +29,7 @@ public class CartItemService {
         this.productDao = productDao;
     }
 
-    public CartItemResponses findCartsByCustomerName(final String customerName) {
+    public CartItemsResponse findCartsByCustomerName(final String customerName) {
         final List<Long> cartItemIds = findCartIdsByCustomerName(customerName);
 
         final List<CartItem> cartItems = new ArrayList<>();
@@ -39,7 +39,7 @@ public class CartItemService {
             final Product product = productDao.findProductById(productId);
             cartItems.add(new CartItem(cartItemId, product, quantity));
         }
-        return CartItemResponses.from(cartItems);
+        return CartItemsResponse.from(cartItems);
     }
 
     @Transactional

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
-import woowacourse.shoppingcart.dto.order.OrderResponses;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
+import woowacourse.shoppingcart.dto.order.OrdersResponse;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -40,8 +40,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<OrderResponses> findOrders(@AuthenticationPrincipal final String customerName) {
-        final OrderResponses response = orderService.findOrdersByCustomerName(customerName);
+    public ResponseEntity<OrdersResponse> findOrders(@AuthenticationPrincipal final String customerName) {
+        final OrdersResponse response = orderService.findOrdersByCustomerName(customerName);
         return ResponseEntity.ok(response);
     }
 }

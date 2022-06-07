@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.dto.product.ProductResponse;
-import woowacourse.shoppingcart.dto.product.ProductResponses;
 import woowacourse.shoppingcart.dto.product.ProductSaveRequest;
+import woowacourse.shoppingcart.dto.product.ProductsResponse;
 
 @RestController
 @RequestMapping("/api/products")
@@ -26,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductResponses> products() {
+    public ResponseEntity<ProductsResponse> products() {
         return ResponseEntity.ok(productService.findProducts());
     }
 
