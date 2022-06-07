@@ -14,11 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.EmailUniqueCheckResponse;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest

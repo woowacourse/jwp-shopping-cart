@@ -10,8 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
