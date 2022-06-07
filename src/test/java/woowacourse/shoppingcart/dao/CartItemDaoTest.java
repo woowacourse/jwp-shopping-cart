@@ -100,7 +100,7 @@ class CartItemDaoTest {
         Long cartId = cartItemDao.save(new CartItemEntity(customerId, productId));
 
         // when
-        cartItemDao.delete(cartId);
+        cartItemDao.delete(new CartItemEntity(customerId, productId));
 
         // then
         assertThat(cartItemDao.findById(cartId)).isEmpty();

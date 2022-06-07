@@ -6,43 +6,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 import woowacourse.shoppingcart.dao.entity.ProductEntity;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.ui.dto.CartItemRequest;
 
 @Service
 @Transactional
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(CartItemDao cartItemDao, CustomerDao customerDao, ProductDao productDao) {
+    public CartService(CartItemDao cartItemDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
-    public Long create(Long productId, String account) {
-        Long customerId = getCustomerIdByAccount(account);
-        return cartItemDao.save(new CartItemEntity(customerId, productId));
+    public Long create(CartItemRequest cartItemRequest, Long customerId) {
+        return cartItemDao.save(new CartItemEntity(customerId, cartItemRequest.getProductId()));
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findByAccount(final String account) {
-        Long customerId = getCustomerIdByAccount(account);
+    public List<ProductResponse> findByCustomerId(Long customerId) {
         List<Long> productIds = findProductIdsByCustomerId(customerId);
-
         return convertToProductReponses(productDao.findByIds(productIds));
-    }
-
-    private Long getCustomerIdByAccount(String account) {
-        return customerDao.findByAccount(account)
-                .orElseThrow(InvalidCustomerException::new)
-                .getId();
     }
 
     private List<Long> findProductIdsByCustomerId(Long customerId) {
@@ -58,7 +46,7 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void deleteCart(Long cartId) {
-        cartItemDao.delete(cartId);
+    public void delete(Long customerId, CartItemRequest cartItemRequest) {
+        cartItemDao.delete(new CartItemEntity (customerId, cartItemRequest.getProductId()));
     }
 }

@@ -53,9 +53,9 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, source, ROW_MAPPER);
     }
 
-    public void delete(Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = :id";
-        SqlParameterSource source = new MapSqlParameterSource("id", id);
+    public void delete(CartItemEntity cartItemEntity) {
+        String sql = "DELETE FROM cart_item WHERE customer_id = :customerId AND product_id = :productId";
+        SqlParameterSource source = new BeanPropertySqlParameterSource(cartItemEntity);
         jdbcTemplate.update(sql, source);
     }
 }
