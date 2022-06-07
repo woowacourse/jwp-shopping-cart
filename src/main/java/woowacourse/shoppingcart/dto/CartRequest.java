@@ -1,15 +1,15 @@
 package woowacourse.shoppingcart.dto;
 
-public class ProductInCartRequest {
+public class CartRequest {
 
     private Long productId;
-    private Integer quantity;
-    private Boolean checked;
+    private int quantity;
+    private boolean checked;
 
-    public ProductInCartRequest() {
+    public CartRequest() {
     }
 
-    public ProductInCartRequest(Long productId, Integer quantity, Boolean checked) {
+    public CartRequest(Long productId, int quantity, boolean checked) {
         this.productId = productId;
         this.quantity = quantity;
         this.checked = checked;
@@ -19,11 +19,11 @@ public class ProductInCartRequest {
         return productId;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public Boolean getChecked() {
+    public boolean getChecked() {
         return checked;
     }
 }

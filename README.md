@@ -30,9 +30,9 @@
 - [x] 장바구니 상품 추가
   - [x] 요청으로 상품의 ID, quantity, checked를 받는다.
   - [x] 201
-- [ ] 장바구니 상품 조회 
-  - [ ] 요청으로 토큰을 받는다.
-  - [ ] 응답으로 상품들의 id, name, price, imageUrl, quantity, checked를 반환한다. 200
+- [x] 장바구니 상품 조회 
+  - [x] 요청으로 토큰을 받는다.
+  - [x] 응답으로 상품들의 id, name, price, imageUrl, quantity, checked를 반환한다. 200
 - [ ] 장바구니 상품 제거
   - [ ] 요청으로 상품ID와 토큰을 받는다.
   - [ ] 204
