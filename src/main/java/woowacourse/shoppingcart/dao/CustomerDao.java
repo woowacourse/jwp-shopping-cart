@@ -54,29 +54,15 @@ public class CustomerDao {
         }
     }
 
-    public List<String> findAllUserNames() {
-        String sql = "SELECT username FROM customer";
-        return jdbcTemplate.queryForList(sql, String.class);
-    }
-
     public boolean isUsernameExist(String userName) {
         String sql = "SELECT EXISTS (SELECT username FROM customer WHERE username = ?) AS isExist;";
         return jdbcTemplate.queryForObject(sql, Boolean.class, userName);
     }
 
-    public Customer getCustomerById(Long id) {
-        try {
-            final String sql = "SELECT username, password, nickname, age FROM customer WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, id);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
-    }
-
-    public Customer getCustomerByUserName(String userName) {
+    public Customer getCustomerByUserName(String username) {
         try {
             final String sql = "SELECT username, password, nickname, age FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, userName);
+            return jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, username);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
@@ -100,8 +86,8 @@ public class CustomerDao {
         }
     }
 
-    public void delete(Long id) {
-        final String sql = "DELETE FROM customer WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+    public void delete(String username) {
+        final String sql = "DELETE FROM customer WHERE username = ?";
+        jdbcTemplate.update(sql, username);
     }
 }

@@ -58,20 +58,6 @@ public class CustomerDaoTest {
         assertThat(customerId).isEqualTo(1L);
     }
 
-    @DisplayName("id값으로 회원을 찾는다.")
-    @Test
-    void getCustomerById() {
-        // given
-        final Customer given = Customer.of("forky", "forky@1234", "복희", 26);
-        final Long id = customerDao.save(given);
-
-        // when
-        final Customer actual = customerDao.getCustomerById(id);
-
-        // then
-        assertThat(actual.getUserName()).isEqualTo("forky");
-    }
-
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
@@ -122,8 +108,8 @@ public class CustomerDaoTest {
     void delete() {
         Customer given = Customer.of("forky", "forky@1234", "복희", 26);
 
-        Long id = customerDao.save(given);
-        customerDao.delete(id);
+        customerDao.save(given);
+        customerDao.delete(given.getUserName());
 
         assertThatExceptionOfType(InvalidCustomerException.class)
                 .isThrownBy(() -> customerDao.getCustomerByUserName(given.getUserName()))

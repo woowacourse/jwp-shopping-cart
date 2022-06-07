@@ -2,13 +2,13 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 
-public class UserName {
+public class Username {
     private static final int MIN_USERNAME_LENGTH = 4;
     private static final int MAX_USERNAME_LENGTH = 20;
 
     private final String userName;
 
-    public UserName(String userName) {
+    public Username(String userName) {
         validateUserName(userName);
         this.userName = userName;
     }
@@ -30,8 +30,8 @@ public class UserName {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserName userName1 = (UserName) o;
-        return Objects.equals(userName, userName1.userName);
+        Username username1 = (Username) o;
+        return Objects.equals(userName, username1.userName);
     }
 
     @Override

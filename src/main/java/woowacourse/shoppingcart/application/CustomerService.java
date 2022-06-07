@@ -40,25 +40,25 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
-    public CustomerResponse getCustomer(Long id) {
-        Customer customer = customerDao.getCustomerById(id);
+    public CustomerResponse getCustomer(String username) {
+        Customer customer = customerDao.getCustomerByUserName(username);
         return CustomerResponse.from(customer);
     }
 
-    public void updatePassword(Long id, PasswordRequest passwordRequest) {
-        Customer customer = customerDao.getCustomerById(id);
+    public void updatePassword(String username, PasswordRequest passwordRequest) {
+        Customer customer = customerDao.getCustomerByUserName(username);
         customer.validatePassword(passwordRequest.getOldPassword());
         Customer updateCustomer = customer.updatePassword(passwordRequest.getNewPassword());
         customerDao.updatePassword(updateCustomer);
     }
 
-    public void updateInfo(Long id, CustomerRequest customerRequest) {
-        Customer customer = customerDao.getCustomerById(id);
+    public void updateInfo(String username, CustomerRequest customerRequest) {
+        Customer customer = customerDao.getCustomerByUserName(username);
         Customer updateCustomer = customer.updateInfo(customerRequest.getNickName(), customerRequest.getAge());
         customerDao.updateInfo(updateCustomer);
     }
 
-    public void deleteCustomer(Long id) {
-        customerDao.delete(id);
+    public void deleteCustomer(String username) {
+        customerDao.delete(username);
     }
 }

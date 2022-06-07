@@ -42,27 +42,27 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> findMyInfo(@AuthenticationPrincipal Long id) {
-        return ResponseEntity.ok(customerService.getCustomer(id));
+    public ResponseEntity<CustomerResponse> findMyInfo(@AuthenticationPrincipal String username) {
+        return ResponseEntity.ok(customerService.getCustomer(username));
     }
 
     @PutMapping("/me/password")
-    public ResponseEntity<Void> updateMyPassword(@AuthenticationPrincipal Long id,
+    public ResponseEntity<Void> updateMyPassword(@AuthenticationPrincipal String username,
                                                  @RequestBody PasswordRequest passwordRequest) {
-        customerService.updatePassword(id, passwordRequest);
+        customerService.updatePassword(username, passwordRequest);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> updateInfo(@AuthenticationPrincipal Long id,
+    public ResponseEntity<Void> updateInfo(@AuthenticationPrincipal String username,
                                            @RequestBody CustomerRequest customerRequest) {
-        customerService.updateInfo(id, customerRequest);
+        customerService.updateInfo(username, customerRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal Long id) {
-        customerService.deleteCustomer(id);
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal String username) {
+        customerService.deleteCustomer(username);
         return ResponseEntity.noContent().build();
     }
 }

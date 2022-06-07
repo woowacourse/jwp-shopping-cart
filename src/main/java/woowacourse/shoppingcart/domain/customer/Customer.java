@@ -1,12 +1,12 @@
 package woowacourse.shoppingcart.domain.customer;
 
 public class Customer {
-    private final UserName userName;
+    private final Username userName;
     private final Password password;
     private final NickName nickName;
     private final Age age;
 
-    public Customer(UserName userName, Password password, NickName nickName, Age age) {
+    public Customer(Username userName, Password password, NickName nickName, Age age) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
@@ -15,7 +15,7 @@ public class Customer {
 
     public static Customer of(String userName, String password, String nickName, int age) {
         return new Customer(
-                new UserName(userName),
+                new Username(userName),
                 new Password(password),
                 new NickName(nickName),
                 new Age(age)
