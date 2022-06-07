@@ -4,13 +4,13 @@ import java.util.List;
 
 public class ProductsResponse {
 
-    private final List<ProductResponse> products;
+    private final List<ProductResponse> productList;
 
-    public ProductsResponse(List<ProductResponse> products) {
-        this.products = products;
+    public ProductsResponse(List<ProductResponse> productList) {
+        this.productList = productList;
     }
 
-    public List<ProductResponse> getProducts() {
-        return products;
+    public List<ProductResponse> getProductList() {
+        return productList;
     }
 }
