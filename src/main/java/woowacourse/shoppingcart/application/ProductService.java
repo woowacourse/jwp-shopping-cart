@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.customer.CustomerId;
 import woowacourse.shoppingcart.domain.product.Product;
@@ -18,20 +19,20 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductDao productDao;
+    private final CartItemDao cartItemDao;
     private final CustomerService customerService;
-    private final CartService cartService;
 
-    public ProductService(final CustomerService customerService, final ProductDao productDao, final CartService cartService) {
-        this.customerService = customerService;
+    public ProductService(final ProductDao productDao, final CustomerService customerService, final CartItemDao cartItemDao) {
         this.productDao = productDao;
-        this.cartService = cartService;
+        this.cartItemDao = cartItemDao;
+        this.customerService = customerService;
     }
 
     public ProductsResponse findProducts(String token) {
         try {
             customerService.validateToken(token);
             CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
-            return new ProductsResponse(getProductsResponse(productDao.getProducts(), cartService.getProductIdsBy(customerId)));
+            return new ProductsResponse(getProductsResponse(productDao.getProducts(), cartItemDao.getProductIdsBy(customerId)));
         } catch (InvalidTokenException e) {
             return new ProductsResponse(getProductsResponse(productDao.getProducts(), List.of()));
         }

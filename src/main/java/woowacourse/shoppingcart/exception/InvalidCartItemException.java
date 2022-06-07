@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.exception;
 
 public class InvalidCartItemException extends RuntimeException {
     public InvalidCartItemException() {
-        this("유효하지 않은 장바구니입니다.");
+        this("장바구니에 해당하는 상품이 없습니다.");
     }
 
     public InvalidCartItemException(final String msg) {

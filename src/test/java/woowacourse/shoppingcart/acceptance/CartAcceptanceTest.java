@@ -3,17 +3,16 @@ package woowacourse.shoppingcart.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CartItemRequest;
+import woowacourse.shoppingcart.dto.RemovedCartItemsRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.auth.acceptance.AuthAcceptanceTest.로그인;
@@ -43,6 +42,32 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // then
         // 정상적으로 상품이 추가된다.
         assertThat(extract.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("장바구니 상품 삭제")
+    @Test
+    void remove() {
+        // given
+        // 로그인하여 토큰 발급과 장바구니에 물품이 추가되어 있고
+        회원가입(new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS));
+        String token = 로그인(new TokenRequest(EMAIL, PASSWORD));
+        장바구니_상품_추가(token, new CartItemRequest(1, 3));
+        장바구니_상품_추가(token, new CartItemRequest(2, 3));
+
+        // when
+        // 장바구니에 있는 물품을 삭제하면
+        RemovedCartItemsRequest request = new RemovedCartItemsRequest(List.of(1, 2));
+        ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .auth().oauth2(token)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/customers/carts")
+                .then().log().all().extract();
+
+        // then
+        // 정상적으로 삭제된다.
+        assertThat(extract.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     private ExtractableResponse<Response> 장바구니_상품_추가(String token, CartItemRequest request) {

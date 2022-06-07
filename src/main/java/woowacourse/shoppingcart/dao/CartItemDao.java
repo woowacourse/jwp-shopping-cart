@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.domain.customer.CustomerId;
 import woowacourse.shoppingcart.domain.product.ProductId;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class CartItemDao {
@@ -27,11 +28,14 @@ public class CartItemDao {
         jdbcTemplate.update(sql, query);
     }
 
-    public void deleteCartItems(CustomerId customerId, List<Integer> productIds) {
+    public void deleteCartItems(CustomerId customerId, List<ProductId> productIds) {
+        final List<Integer> ids = productIds.stream()
+                .map(ProductId::getValue)
+                .collect(Collectors.toList());
         final String sql = "delete from cart_item where customer_id = :customerId and product_id in (:productIds)";
         final MapSqlParameterSource query = new MapSqlParameterSource();
         query.addValue("customerId", customerId.getValue());
-        query.addValue("productIds", productIds);
+        query.addValue("productIds", ids);
 
         jdbcTemplate.update(sql, query);
     }
@@ -40,5 +44,12 @@ public class CartItemDao {
         final String sql = "select product_id from cart_item where customer_id = :customerId";
         return jdbcTemplate.query(sql, new MapSqlParameterSource("customerId", customerId.getValue()),
                 (rs, rowNum) -> new ProductId(rs.getInt("product_id")));
+    }
+
+    public boolean exists(CustomerId customerId, ProductId productId) {
+        final String sql = "select exists(select customer_id, product_id from cart_item where customer_id = :customerId and product_id = :productId)";
+        final MapSqlParameterSource query = new MapSqlParameterSource("customerId", customerId.getValue());
+        query.addValue("productId", productId.getValue());
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, query, Boolean.class));
     }
 }
