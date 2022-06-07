@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Cart;
@@ -23,6 +24,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
+    private String token;
 
     @Override
     @BeforeEach
@@ -31,6 +33,52 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+
+        회원가입_요청("email@email.com", "12345678a", "tonic");
+        token = 토큰_요청("email@email.com", "12345678a");
+    }
+
+    @DisplayName("장바구니 아이템 추가 시 잘못된 토큰이면 401 반환")
+    @Test
+    void addCartItemWithUnauthorizedToken() {
+        ExtractableResponse response = 장바구니_아이템_추가_요청2(productId1, "invalidToken");
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("장바구니 아이템 추가 시 토큰이 없으면 401 반환")
+    @Test
+    void addCartItemWithoutToken() {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("id", productId1);
+
+        ExtractableResponse response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/users/me/carts")
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("정상 토큰으로 장바구니 아이템 추가 시 204 반환")
+    @Test
+    void addCartItemWithValidToken() {
+        ExtractableResponse response = 장바구니_아이템_추가_요청2(productId1, token);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("존재하지 않는 상품을 장바구니 아이템 추가시 400 반환")
+    @Test
+    void addNotExistedCartItem() {
+        Long notExistId = 0L;
+        ExtractableResponse response = 장바구니_아이템_추가_요청2(notExistId, token);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.jsonPath().getInt("errorCode")).isNotNull(); // 수정 필요
+        assertThat(response.jsonPath().getString("message")).isNotBlank();
     }
 
     @DisplayName("장바구니 아이템 추가")

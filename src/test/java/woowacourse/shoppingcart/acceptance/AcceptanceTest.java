@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+
+import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -87,5 +89,18 @@ public class AcceptanceTest {
                 .put("/users/me")
                 .then().log().all().extract();
         return response;
+    }
+
+    protected ExtractableResponse 장바구니_아이템_추가_요청2(Long productId, String token) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("id", productId);
+
+        return RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .body(requestBody)
+                    .when().post("/users/me/carts")
+                    .then().log().all()
+                    .extract();
     }
 }
