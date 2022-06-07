@@ -1,8 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static java.lang.Long.parseLong;
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -12,6 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import java.util.Arrays;
@@ -21,21 +23,35 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @DisplayName("주문 관련 기능")
+@Sql("/testData.sql")
 public class OrderAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
+
+    private static final String NAME = "썬";
+    private static final String EMAIL = "sun@gmail.com";
+    private static final String PASSWORD = "12345678";
+
     private Long cartId1;
     private Long cartId2;
+    private String accessToken;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
 
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        // 토큰 발급
+        accessToken = requestPostWithBody("/api/login", new TokenRequest(EMAIL, PASSWORD))
+                .as(TokenResponse.class)
+                .getAccessToken();
 
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        // 카트 담기
+        final ExtractableResponse<Response> cartResponse1 =
+                requestPostWithTokenAndBody("/api/customer/carts", accessToken, 1L);
+        final ExtractableResponse<Response> cartResponse2 =
+                requestPostWithTokenAndBody("/api/customer/carts", accessToken, 2L);
+
+        cartId1 = parseLong(cartResponse1.header("Location").split("/carts/")[1]);
+        cartId2 = parseLong(cartResponse2.header("Location").split("/carts/")[1]);
     }
 
     @DisplayName("주문하기")
@@ -45,7 +61,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .map(cartId -> new OrderRequest(cartId, 10))
                 .collect(Collectors.toList());
 
-        ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
+        ExtractableResponse<Response> response = 주문하기_요청(NAME, orderRequests);
 
         주문하기_성공함(response);
     }
@@ -53,10 +69,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(NAME, Collections.singletonList(new OrderRequest(cartId1, 2)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(NAME, Collections.singletonList(new OrderRequest(cartId2, 5)));
 
-        ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
+        ExtractableResponse<Response> response = 주문_내역_조회_요청(NAME);
 
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, orderId1, orderId2);
@@ -65,12 +81,12 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 단일 조회")
     @Test
     void getOrder() {
-        Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
+        Long orderId = 주문하기_요청_성공되어_있음(NAME, Arrays.asList(
                 new OrderRequest(cartId1, 2),
                 new OrderRequest(cartId2, 4)
         ));
 
-        ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
+        ExtractableResponse<Response> response = 주문_단일_조회_요청(NAME, orderId);
 
         주문_조회_응답됨(response);
         주문_조회됨(response, orderId);
@@ -111,7 +127,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
     public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
         ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
-        return Long.parseLong(response.header("Location").split("/orders/")[1]);
+        return parseLong(response.header("Location").split("/orders/")[1]);
     }
 
     public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {

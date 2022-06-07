@@ -48,6 +48,29 @@ public class AcceptanceTest {
                 .extract();
     }
 
+    protected ExtractableResponse<Response> requestGetWithTokenAndBody(final String path,
+                                                                       final String accessToken) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get(path)
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> requestPostWithTokenAndBody(final String path,
+                                                                        final String accessToken,
+                                                                        final Object requestBody) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .body(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post(path)
+                .then().log().all()
+                .extract();
+    }
+
     protected ExtractableResponse<Response> requestPutWithTokenAndBody(final String path,
                                                                        final String accessToken,
                                                                        final Object requestBody) {

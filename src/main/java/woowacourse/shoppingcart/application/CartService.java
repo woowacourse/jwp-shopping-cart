@@ -6,16 +6,19 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.DataNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class CartService {
 
     private final CartItemDao cartItemDao;
@@ -28,8 +31,16 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    @Transactional
+    public Long add(final Long customerId, final Long productId) {
+        final Customer customer = getCustomer(customerId);
+        final Product product = getProduct(productId);
+
+        return cartItemDao.addCartItem(customer.getId(), product.getId());
+    }
+
+    public List<CartResponse> findAllByCustomerId(final Long id) {
+        final List<Long> cartIds = findCartIdsByCustomerId(id);
 
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
@@ -38,35 +49,43 @@ public class CartService {
                     .orElseThrow(DataNotFoundException::new);
             carts.add(new Cart(cartId, product));
         }
-        return carts;
+
+        return carts.stream()
+                .map(CartResponse::from)
+                .collect(Collectors.toList());
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(InvalidCustomerException::new);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(InvalidCustomerException::new);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
-    }
-
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
+    @Transactional
+    public void delete(final Long customerId, final Long cartId) {
+        validateCustomerCart(customerId, cartId);
         cartItemDao.deleteCartItem(cartId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
+    private Customer getCustomer(final Long id) {
+        return customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
+    }
+
+    private Product getProduct(final Long productId) {
+        return productDao.findProductById(productId)
+                .orElseThrow(InvalidProductException::new);
+    }
+
+    private void validateCustomerCart(final Long customerId, final Long cartId) {
+        getCustomer(customerId);
+        if (notExistsInCart(customerId, cartId)) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
+    }
+
+    private boolean notExistsInCart(final Long customerId, final Long cartId) {
+        return findCartIdsByCustomerId(customerId).stream()
+                .noneMatch(id -> id.equals(cartId));
+    }
+
+    private List<Long> findCartIdsByCustomerId(final Long id) {
+        final Customer customer = getCustomer(id);
+
+        return cartItemDao.findIdsByCustomerId(customer.getId());
     }
 }

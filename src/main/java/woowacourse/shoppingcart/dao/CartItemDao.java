@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.exception.DataNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Repository
 public class CartItemDao {
@@ -57,7 +58,7 @@ public class CartItemDao {
 
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(params), keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public void deleteCartItem(final Long id) {
