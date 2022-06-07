@@ -5,11 +5,11 @@ import woowacourse.shoppingcart.exception.dto.ErrorResponse;
 
 public class ShoppingCartException extends RuntimeException {
 
-    private final String errorCode;
+    private final ErrorCode errorCode;
     private final String message;
     private final HttpStatus httpStatus;
 
-    public ShoppingCartException(final String errorCode, final String message, final HttpStatus httpStatus) {
+    public ShoppingCartException(final ErrorCode errorCode, final String message, final HttpStatus httpStatus) {
         this.errorCode = errorCode;
         this.message = message;
         this.httpStatus = httpStatus;
@@ -20,6 +20,6 @@ public class ShoppingCartException extends RuntimeException {
     }
 
     public ErrorResponse toErrorResponse() {
-        return new ErrorResponse(errorCode, message);
+        return new ErrorResponse(errorCode.getValue(), message);
     }
 }

@@ -16,7 +16,8 @@ import woowacourse.shoppingcart.exception.dto.ErrorResponse;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    private static final ErrorResponse INTERNAL_SERVER_RESPONSE = new ErrorResponse("500", "서버가 요청을 처리할 수 없습니다.");
+    private static final ErrorResponse INTERNAL_SERVER_RESPONSE = new ErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR.getValue(), "서버가 요청을 처리할 수 없습니다.");
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
@@ -25,7 +26,8 @@ public class ControllerAdvice {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
-        final ErrorResponse response = new ErrorResponse("1000", mainError.getDefaultMessage());
+        final ErrorResponse response = new ErrorResponse(ErrorCode.INVALID_REQUEST_FORM.getValue(),
+                mainError.getDefaultMessage());
         return ResponseEntity
                 .badRequest()
                 .body(response);
@@ -33,7 +35,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler({HttpMessageNotReadableException.class, ConstraintViolationException.class})
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final RuntimeException e) {
-        final ErrorResponse response = new ErrorResponse("1000", e.getMessage());
+        final ErrorResponse response = new ErrorResponse(ErrorCode.INVALID_REQUEST_FORM.getValue(), e.getMessage());
         return ResponseEntity
                 .badRequest()
                 .body(response);

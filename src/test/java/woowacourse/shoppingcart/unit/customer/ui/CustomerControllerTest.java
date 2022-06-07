@@ -178,7 +178,7 @@ class CustomerControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("errorCode").value("998"))
+                .andExpect(jsonPath("errorCode").value("3000"))
                 .andExpect(jsonPath("message").value("유효하지 않은 토큰입니다."));
 
         // docs
@@ -209,7 +209,7 @@ class CustomerControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("errorCode").value("998"))
+                .andExpect(jsonPath("errorCode").value("3000"))
                 .andExpect(jsonPath("message").value("유효하지 않은 토큰입니다."));
 
         // docs
