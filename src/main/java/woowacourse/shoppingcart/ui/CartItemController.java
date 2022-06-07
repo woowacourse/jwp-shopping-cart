@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponses;
 import woowacourse.shoppingcart.dto.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.UpdateCartRequests;
 
 @RestController
 @RequestMapping("/cart")
@@ -40,6 +42,12 @@ public class CartItemController {
     @GetMapping
     public ResponseEntity<CartResponses> getCartItems(@AuthenticationPrincipal String usernameByToken) {
         return ResponseEntity.ok().body(cartService.findCartsByUsername(usernameByToken));
+    }
+
+    @PatchMapping
+    public ResponseEntity<CartResponses> updateCartItems(@AuthenticationPrincipal String usernameByToken,
+                                                         @RequestBody UpdateCartRequests updateCartRequests) {
+        return ResponseEntity.ok(cartService.updateCartItems(usernameByToken, updateCartRequests));
     }
 
     @DeleteMapping

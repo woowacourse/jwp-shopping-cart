@@ -46,7 +46,7 @@ public class CartItemDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<Cart> findIByCustomerId(Long customerId) {
+    public List<Cart> findByCustomerId(Long customerId) {
         final String sql =
                 "SELECT c.id AS id, c.product_id AS product_id, p.name AS name, p.price AS price, p.image_url AS image_url, c.quantity AS quantity, c.checked AS checked "
                         + "FROM cart_item AS c "
@@ -62,6 +62,13 @@ public class CartItemDao {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
+        }
+    }
+
+    public void updateCartItem(List<Cart> carts) {
+        String sql = "UPDATE cart_item SET (quantity, checked) = (?, ?) WHERE id = ?";
+        for (Cart cart : carts) {
+            jdbcTemplate.update(sql, cart.getQuantity(), cart.isChecked(), cart.getId());
         }
     }
 

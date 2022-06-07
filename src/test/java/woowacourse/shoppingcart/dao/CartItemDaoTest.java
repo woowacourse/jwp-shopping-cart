@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,12 +70,31 @@ public class CartItemDaoTest {
         Long customerId = 1L;
 
         // when
-        List<Cart> carts = cartItemDao.findIByCustomerId(customerId);
+        List<Cart> carts = cartItemDao.findByCustomerId(customerId);
         List<Long> cartIds = carts.stream()
                 .map(cart -> cart.getId())
                 .collect(Collectors.toList());
         // then
         assertThat(cartIds).containsExactly(1L, 2L, 3L);
+    }
+
+    @Test
+    @DisplayName("장바구니 아이템을 수정한다.")
+    void updateCartItem() {
+        // given
+        Long customerId = 1L;
+
+        // when
+        cartItemDao.updateCartItem(List.of(new Cart(1L, 1, false), new Cart(3L, 3, true)));
+        List<Cart> carts = cartItemDao.findByCustomerId(customerId);
+        Cart firstCartItem = carts.get(0);
+        Cart thirdCartItem = carts.get(2);
+
+        // then
+        Assertions.assertAll(
+                () -> assertThat(firstCartItem.isChecked()).isFalse(),
+                () -> assertThat(thirdCartItem.getQuantity()).isEqualTo(3)
+        );
     }
 
     @Test
@@ -85,7 +105,7 @@ public class CartItemDaoTest {
 
         // when
         cartItemDao.deleteCartItem(List.of(1L, 2L));
-        List<Cart> carts = cartItemDao.findIByCustomerId(customerId);
+        List<Cart> carts = cartItemDao.findByCustomerId(customerId);
         List<Long> cartIds = carts.stream()
                 .map(cart -> cart.getId())
                 .collect(Collectors.toList());
@@ -104,6 +124,6 @@ public class CartItemDaoTest {
         cartItemDao.deleteAllCartItem(customerId);
 
         // then
-        assertThat(cartItemDao.findIByCustomerId(customerId)).size().isEqualTo(0);
+        assertThat(cartItemDao.findByCustomerId(customerId)).size().isEqualTo(0);
     }
 }

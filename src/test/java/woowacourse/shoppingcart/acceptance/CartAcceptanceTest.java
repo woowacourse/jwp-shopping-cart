@@ -23,6 +23,8 @@ import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartResponses;
 import woowacourse.shoppingcart.dto.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.UpdateCartRequest;
+import woowacourse.shoppingcart.dto.UpdateCartRequests;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -65,6 +67,19 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    @DisplayName("장바구니 아이템 정보 수정")
+    void updateCartItems() {
+        장바구니_아이템_추가_요청(token, productId1);
+        장바구니_아이템_추가_요청(token, productId2);
+
+        UpdateCartRequests updateCartRequests = new UpdateCartRequests(
+                List.of(new UpdateCartRequest(1L, 2, false), new UpdateCartRequest(2L, 3, true)));
+        ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(token, updateCartRequests);
+
+        장바구니_수정됨(response);
+    }
+
+    @Test
     @DisplayName("장바구니 일부 삭제")
     void deleteCartItem() {
         장바구니_아이템_추가_요청(token, productId1);
@@ -96,6 +111,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .body(cartRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/cart")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_아이템_수정_요청(String token, UpdateCartRequests updateCartRequests) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .body(updateCartRequests)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("/cart")
                 .then().log().all()
                 .extract();
     }
@@ -135,6 +161,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         String location = response.header("Location");
         assertThat(location).isNotBlank();
+    }
+
+    private void 장바구니_수정됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {

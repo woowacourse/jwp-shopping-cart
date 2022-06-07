@@ -14,6 +14,8 @@ import woowacourse.shoppingcart.dto.CartResponses;
 import woowacourse.shoppingcart.dto.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.UpdateCartRequest;
+import woowacourse.shoppingcart.dto.UpdateCartRequests;
 
 @SpringBootTest
 @Sql("classpath:schema.sql")
@@ -55,6 +57,22 @@ class CartServiceTest {
 
         // then
         assertThat(cartResponses.getProducts()).size().isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("장바구니 상품을 수정할 수 있다.")
+    void updateCartItems() {
+        // given
+        customerService.addCustomer(new SignUpRequest("rennon", "rennon@woowa.com", "123456"));
+        productService.addProduct(new ProductRequest("치킨", 20_000, "http://example.com/chicken.jpg"));
+        cartService.addCart("rennon", new CartRequest(1L, 1, true));
+
+        // when
+        UpdateCartRequests updateCartRequests = new UpdateCartRequests(List.of(new UpdateCartRequest(1L, 10, true)));
+        cartService.updateCartItems("rennon", updateCartRequests);
+
+        // then
+        assertThat(cartService.findCartsByUsername("rennon").getProducts().get(0).getQuantity()).isEqualTo(10);
     }
 
     @Test

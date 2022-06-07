@@ -32,16 +32,16 @@
   - [x] 201
 - [x] 장바구니 상품 조회 
   - [x] 요청으로 토큰을 받는다.
-  - [x] 응답으로 상품들의 id, name, price, imageUrl, quantity, checked를 반환한다. 200
+  - [x] 응답으로 cartId, name, price, imageUrl, quantity, checked를 반환한다. 200
 - [x] 장바구니 선택 상품 제거
-  - [x] 요청으로 상품ID들과 토큰을 받는다.
+  - [x] 요청으로 카트ID들과 토큰을 받는다.
   - [x] 204
 - [x] 장바구니 전체 상품 제거
   - [x] 요청으로 토큰을 받는다.
   - [x] 204
-- [ ] 장바구니 상품 정보 수정
-  - [ ] 요청으로 상품들의 id, quantity, checked와 토큰을 받는다.
-  - [ ] 응답으로 상품들의 id, name, price, imageUrl, quantity, checked를 반환한다. 200
+- [x] 장바구니 상품 정보 수정
+  - [x] 요청으로 cartId, quantity, checked와 토큰을 받는다.
+  - [x] 응답으로 cartId, name, price, imageUrl, quantity, checked를 반환한다. 200
 
 [API 문서](https://www.notion.so/brorae/1-API-c10e17f6fdc940bbb2379ec7e07b1cb4)
 ## ✏️ Code Review Process
