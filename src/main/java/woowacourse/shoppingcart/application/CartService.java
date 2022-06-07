@@ -1,16 +1,18 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.CartItemResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -24,6 +26,21 @@ public class CartService {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
+    }
+
+    public Long saveCartItem(final Long productId, final Long customerId) {
+        productDao.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+        return cartItemDao.saveCartItem(customerId, productId);
+    }
+
+    public List<CartItemResponse> findAllByCustomerId(Long customerId) {
+        List<CartItem> cartProducts = cartItemDao.findAllByCustomerId(customerId);
+
+        return cartProducts.stream()
+                .map(it -> new CartItemResponse(it.getId(), it.getName(), it.getPrice(), it.getQuantity(),
+                        it.getImageUrl()))
+                .collect(Collectors.toList());
     }
 
     public List<Cart> findCartsByCustomerName(final String customerName) {
@@ -42,12 +59,6 @@ public class CartService {
     private List<Long> findCartIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    public Long saveCartItem(final Long productId, final Long customerId) {
-        productDao.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-        return cartItemDao.saveCartItem(customerId, productId);
     }
 
     public void deleteCart(final String customerName, final Long cartId) {

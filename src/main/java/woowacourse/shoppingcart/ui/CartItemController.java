@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.ui.LoginCustomer;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.application.dto.CartItemResponse;
 import woowacourse.shoppingcart.application.CartService;
 
 import java.util.List;
@@ -19,8 +19,8 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<List<CartItemResponse>> showCartItems(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        return ResponseEntity.ok().body(cartService.findAllByCustomerId(loginCustomer.getId()));
     }
 
     @PostMapping("/products/{id}")

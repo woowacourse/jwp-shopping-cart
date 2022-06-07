@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.dao;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -11,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 
@@ -62,10 +62,22 @@ public class CartItemDaoTest {
         assertThat(cartId).isEqualTo(3L);
     }
 
+    @Test
+    @DisplayName("유저 id를 통해서 카트에 저장된 상품 목록들을 조회할 수 있다.")
+    void findAllByCustomerId() {
+        // given
+        Long customerId = 1L;
+
+        // when
+        List<CartItem> cartsProduct = cartItemDao.findAllByCustomerId(customerId);
+
+        // then
+        assertThat(cartsProduct).hasSize(2);
+    }
+
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
