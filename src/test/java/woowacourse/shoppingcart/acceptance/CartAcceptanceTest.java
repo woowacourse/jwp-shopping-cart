@@ -143,13 +143,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     private void 장바구니_아이템_목록_확인(ExtractableResponse<Response> response) {
-        final CartItemResponses cartItemResponses = response.jsonPath().getObject(".", CartItemResponses.class);
+        final List<CartItemResponse> cartItemResponses = response.jsonPath().getList(".", CartItemResponse.class);
 
-        final List<ProductResponse> productResponses = cartItemResponses.getCart()
+        final List<ProductResponse> productResponses = cartItemResponses
                 .stream()
                 .map(CartItemResponse::getProduct).collect(
                         Collectors.toList());
-        final List<Integer> quantities = cartItemResponses.getCart().stream().map(CartItemResponse::getQuantity)
+        final List<Integer> quantities = cartItemResponses.stream().map(CartItemResponse::getQuantity)
                 .collect(Collectors.toList());
 
         assertAll(

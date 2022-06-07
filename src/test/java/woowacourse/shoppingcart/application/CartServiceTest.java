@@ -68,7 +68,7 @@ class CartServiceTest {
         final Long cartId2 = cartService.addCart(customerId, productId2, 4);
 
         // when
-        final CartItemResponses cartResponses = cartService.findCartsByCustomerId(customerId);
+        final List<CartItemResponse> cartResponses = cartService.findCartsByCustomerId(customerId);
         final List<ProductResponse> productResponses = getProductResponses(cartResponses);
         final List<Integer> quantities = getQuantities(cartResponses);
         // then
@@ -146,7 +146,7 @@ class CartServiceTest {
         cartService.updateCartItem(cartItem1, customerId, productId1, newQuantity);
 
         // then
-        final CartItemResponses cartResponses = cartService.findCartsByCustomerId(customerId);
+        final List<CartItemResponse> cartResponses = cartService.findCartsByCustomerId(customerId);
         final List<ProductResponse> productResponses = getProductResponses(cartResponses);
         final List<Integer> quantities = getQuantities(cartResponses);
         // then
@@ -191,13 +191,14 @@ class CartServiceTest {
                 .isInstanceOf(InvalidCartItemException.class);
     }
 
-    private List<Integer> getQuantities(CartItemResponses cartResponses) {
-        return cartResponses.getCart().stream().map(CartItemResponse::getQuantity)
+    private List<Integer> getQuantities(List<CartItemResponse> cartResponses) {
+        return cartResponses.stream()
+                .map(CartItemResponse::getQuantity)
                 .collect(Collectors.toList());
     }
 
-    private List<ProductResponse> getProductResponses(CartItemResponses cartResponses) {
-        return cartResponses.getCart()
+    private List<ProductResponse> getProductResponses(List<CartItemResponse> cartResponses) {
+        return cartResponses
                 .stream()
                 .map(CartItemResponse::getProduct).collect(
                         Collectors.toList());

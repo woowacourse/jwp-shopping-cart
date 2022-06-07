@@ -28,12 +28,12 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public CartItemResponses findCartsByCustomerId(final int customerId) {
+    public List<CartItemResponse> findCartsByCustomerId(final int customerId) {
         final List<CartItemEntity> cartItemEntities = cartItemDao.findCartByCustomerId(customerId);
 
-        return new CartItemResponses(cartItemEntities.stream()
+        return cartItemEntities.stream()
                 .map(this::convertCartItemResponse)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
     private CartItemResponse convertCartItemResponse(CartItemEntity cartItemEntity) {
