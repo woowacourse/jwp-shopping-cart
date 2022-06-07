@@ -53,7 +53,7 @@ public class CartItemDao {
                     productDao.findProductById(resultSet.getLong("product_id")),
                     resultSet.getInt("quantity")), customerId, cartItemId);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotExistCartItemException("장바구니에 없는 아이템입니다.", ErrorResponse.Not_EXIST_CART_ITEM);
+            throw new NotExistCartItemException("장바구니에 없는 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
         }
     }
 
@@ -62,7 +62,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
-            throw new NotExistCartItemException("장바구니에 없는 아이템입니다.", ErrorResponse.Not_EXIST_CART_ITEM);
+            throw new NotExistCartItemException("장바구니에 없는 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
         }
     }
 

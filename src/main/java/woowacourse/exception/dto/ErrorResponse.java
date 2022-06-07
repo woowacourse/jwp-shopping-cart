@@ -13,7 +13,10 @@ public enum ErrorResponse {
     INVALID_EMAIL(4001, "Invalid Email"),
     INVALID_PASSWORD(4002, "Invalid Password"),
     INVALID_USERNAME(4003, "Invalid Username"),
-    Not_EXIST_CART_ITEM(6002, "Not Exist CartItem");
+    NOT_EXIST_CART_ITEM(6002, "Not Exist CartItem"),
+    NOT_EXIST_ORDER(6003, "Not Exist Order"),
+    OUT_OF_STOCK(7001, "Out of stock"),
+    ;
 
     private final int errorCode;
     private final String message;

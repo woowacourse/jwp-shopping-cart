@@ -52,7 +52,7 @@ public class CartService {
     private void validateCustomerCartItem(Customer customer, Long cartItemId) {
         boolean result = cartItemDao.validateCustomerCartItem(customer.getId(), cartItemId);
         if (!result) {
-            throw new NotExistCartItemException("장바구니에 없는 아이템입니다.", ErrorResponse.Not_EXIST_CART_ITEM);
+            throw new NotExistCartItemException("장바구니에 없는 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
         }
     }
 }

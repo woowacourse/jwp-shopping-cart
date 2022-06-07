@@ -25,7 +25,6 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 @DisplayName("장바구니 관련 기능")
 public class CartItemAcceptanceTest extends AcceptanceTest {
 
-    private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
     private String token;
@@ -171,8 +170,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("cartItemIds", cartItemIds);
 
-        return RestAssured
-                .given().log().all()
+        return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestBody)
