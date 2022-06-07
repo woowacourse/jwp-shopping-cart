@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
-import woowacourse.shoppingcart.dto.SignUpDto;
+import woowacourse.shoppingcart.dto.request.SignUpDto;
 import woowacourse.shoppingcart.service.CustomerService;
 
 import static org.assertj.core.api.Assertions.assertThat;

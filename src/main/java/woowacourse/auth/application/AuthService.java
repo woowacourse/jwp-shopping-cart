@@ -7,7 +7,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.response.CustomerDto;
 import woowacourse.shoppingcart.exception.AuthorizationFailException;
 
 @Service

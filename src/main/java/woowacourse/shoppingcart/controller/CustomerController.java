@@ -4,10 +4,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.LoginCustomer;
-import woowacourse.shoppingcart.dto.CustomerDto;
-import woowacourse.shoppingcart.dto.DeleteCustomerDto;
-import woowacourse.shoppingcart.dto.SignUpDto;
-import woowacourse.shoppingcart.dto.UpdateCustomerDto;
+import woowacourse.shoppingcart.dto.response.CustomerDto;
+import woowacourse.shoppingcart.dto.request.DeleteCustomerDto;
+import woowacourse.shoppingcart.dto.request.SignUpDto;
+import woowacourse.shoppingcart.dto.request.UpdateCustomerDto;
 import woowacourse.shoppingcart.exception.ForbiddenException;
 import woowacourse.shoppingcart.service.CustomerService;
 

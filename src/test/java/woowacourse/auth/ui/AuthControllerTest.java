@@ -15,7 +15,7 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.controller.ControllerTest;
-import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.response.CustomerDto;
 
 import java.util.stream.Stream;
 

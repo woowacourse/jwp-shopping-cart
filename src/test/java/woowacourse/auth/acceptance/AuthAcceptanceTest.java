@@ -9,8 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerDto;
-import woowacourse.shoppingcart.dto.SignUpDto;
+import woowacourse.shoppingcart.dto.response.CustomerDto;
+import woowacourse.shoppingcart.dto.request.SignUpDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

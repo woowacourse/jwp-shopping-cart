@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenResponseDto;
-import woowacourse.shoppingcart.dto.CustomerDto;
-import woowacourse.shoppingcart.dto.DeleteCustomerDto;
-import woowacourse.shoppingcart.dto.SignUpDto;
-import woowacourse.shoppingcart.dto.UpdateCustomerDto;
+import woowacourse.shoppingcart.dto.response.CustomerDto;
+import woowacourse.shoppingcart.dto.request.DeleteCustomerDto;
+import woowacourse.shoppingcart.dto.request.SignUpDto;
+import woowacourse.shoppingcart.dto.request.UpdateCustomerDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
