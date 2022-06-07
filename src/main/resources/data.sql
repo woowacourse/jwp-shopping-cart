@@ -12,3 +12,10 @@ values ('꼬깔콘', 1300, 'https://sitem.ssgcdn.com/05/90/32/item/0000008329005
 
 insert into product (name, price, image_url)
 values ('빅파이', 3000, 'http://www.thessan.com/shopimages/thessancom/0060020001432.jpg?1488531916');
+
+insert into cart_item(customer_id, product_id)
+values (1, 1);
+
+insert into cart_item(customer_id, product_id)
+values (1, 2);
+

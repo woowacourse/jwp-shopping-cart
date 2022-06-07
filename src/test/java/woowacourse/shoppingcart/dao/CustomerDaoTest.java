@@ -21,6 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 
+    private static final Customer 회원 = new Customer(
+            new Account("hamcheeseburger"),
+            new Nickname("corinne"),
+            new EncodedPassword("Password123!"),
+            new Address("address"),
+            new PhoneNumber("01012345678"));
+
     private final CustomerDao customerDao;
 
     public CustomerDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -31,14 +38,9 @@ public class CustomerDaoTest {
     @DisplayName("회원을 저장한다.")
     void save() {
         // given
-        final Customer customer = new Customer(
-                new Account("hamcheeseburger"),
-                new Nickname("corinne"),
-                new EncodedPassword("Password123!"),
-                new Address("address"),
-                new PhoneNumber("01012345678"));
+
         // when
-        final Customer savedCustomer = customerDao.save(customer);
+        final Customer savedCustomer = customerDao.save(회원);
         // then
         assertAll(
                 () -> assertThat(savedCustomer.getId()).isEqualTo(2L),
@@ -118,10 +120,10 @@ public class CustomerDaoTest {
     @DisplayName("회원을 삭제한다.")
     void deleteById() {
         // given
-        long id = 1L;
+        final Customer savedCustomer = customerDao.save(회원);
         // when
-        int affectedRows = customerDao.deleteById(id);
-        final Optional<Customer> deletedCustomer = customerDao.findById(id);
+        int affectedRows = customerDao.deleteById(savedCustomer.getId());
+        final Optional<Customer> deletedCustomer = customerDao.findById(savedCustomer.getId());
         // then
         assertAll(
                 () -> assertThat(affectedRows).isEqualTo(1),
