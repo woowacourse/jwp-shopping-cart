@@ -11,11 +11,11 @@ import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.TokenProvider;
 
 @Component
-public class LoginInterceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor {
 
     private final TokenProvider tokenProvider;
 
-    public LoginInterceptor(TokenProvider tokenProvider) {
+    public AuthInterceptor(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 
