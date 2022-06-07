@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -13,42 +13,39 @@ import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.exception.InvalidFormException;
 import woowacourse.shoppingcart.exception.InvalidLengthException;
 
-class PasswordTest {
+class NameTest {
 
     @Test
-    @DisplayName("패스워드를 생성한다.")
-    void createPassword() {
-        String value = "123abcdefg!!";
+    @DisplayName("이름을 생성한다.")
+    void createName() {
+        String value = "slowchalee";
 
-        assertThatCode(() -> new Password(value))
+        assertThatCode(() -> new Name(value))
                 .doesNotThrowAnyException();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"12345a!", "1234567891234567!"})
-    @DisplayName("패스워드의 길이가 올바르지 않은 경우, 예외를 발생한다.")
+    @ValueSource(strings = {"abcd", "aaaaabbbbbcccccddddde"})
+    @DisplayName("이름의 길이는 5이상 20이하가 아닌 경우, 예외를 발생한다.")
     void invalidLengthException(String value) {
         assertThatExceptionOfType(InvalidLengthException.class)
-                .isThrownBy(() -> new Password(value));
+                .isThrownBy(() -> new Name(value));
     }
 
     @ParameterizedTest
-    @MethodSource("provideInvalidPasswords")
-    @DisplayName("패스워드의 형식이 올바르지 않은 경우, 예외를 발생한다.")
+    @MethodSource("provideInvalidName")
+    @DisplayName("영문 소문자, 숫자, 특수기호(_, -) 외의 문자를 사용해서 이름을 생성한 경우, 예외를 발생한다.")
     void invalidFormException(String value) {
         assertThatExceptionOfType(InvalidFormException.class)
-                .isThrownBy(() -> new Password(value));
+                .isThrownBy(() -> new Name(value));
     }
 
-
-    private static Stream<Arguments> provideInvalidPasswords() {
+    private static Stream<Arguments> provideInvalidName() {
         return Stream.of(
-                Arguments.of("12345678"),
-                Arguments.of("abcdefgh"),
-                Arguments.of("!@#$%^&*"),
-                Arguments.of("1234abcd"),
-                Arguments.of("abcd!@#$"),
-                Arguments.of("!@#$abcd")
+                Arguments.of("Abcdef"),
+                Arguments.of("hello!!"),
+                Arguments.of("hello-!"),
+                Arguments.of("abc12_@")
         );
     }
 }
