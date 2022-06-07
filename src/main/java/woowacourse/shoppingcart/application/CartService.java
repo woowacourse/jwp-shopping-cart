@@ -58,17 +58,9 @@ public class CartService {
         return carts;
     }
 
-    public void deleteProductInCart(Customer customer, Long productId) {
-        boolean isExist = cartItemDao.existProduct(customer.getId(), productId);
-        if (!isExist) {
-            throw new NotExistProductInCartException();
-        }
-
-        cartItemDao.deleteCartItem(customer.getId(), productId);
-    }
-
     public Cart updateProductInCart(Customer customer, CartUpdationRequest request, Long productId) {
-        boolean isExist = cartItemDao.existProduct(customer.getId(), productId);
+        Product productToUpdate = productService.findProductById(productId);
+        boolean isExist = cartItemDao.existProduct(customer.getId(), productToUpdate.getId());
         if (!isExist) {
             throw new NotExistProductInCartException();
         }
@@ -76,5 +68,14 @@ public class CartService {
         CartDto cartDto = cartItemDao.findCartByProductCustomer(customer.getId(), productId);
         Product product = productService.findProductById(cartDto.getProductId());
         return new Cart(cartDto.getCartId(), product, cartDto.getQuantity());
+    }
+
+    public void deleteProductInCart(Customer customer, Long productId) {
+        boolean isExist = cartItemDao.existProduct(customer.getId(), productId);
+        if (!isExist) {
+            throw new NotExistProductInCartException();
+        }
+
+        cartItemDao.deleteCartItem(customer.getId(), productId);
     }
 }

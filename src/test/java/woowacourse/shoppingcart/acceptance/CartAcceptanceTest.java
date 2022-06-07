@@ -235,7 +235,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         @DisplayName("장바구니에 존재하지 않는 상품을 수정하려고 하면")
         @Nested
-        class Context_not_exist_product extends AcceptanceTest {
+        class Context_not_exist_product_in_cart extends AcceptanceTest {
 
             @DisplayName("장바구니 수정에 실패하고, 상태코드 400을 반환받는다.")
             @Test
@@ -261,6 +261,18 @@ public class CartAcceptanceTest extends AcceptanceTest {
             }
         }
 
+        @DisplayName("수정하려는 상품이 존재하지 않은 상품이라면")
+        @Nested
+        class Context_not_exist_product extends AcceptanceTest {
+
+            @DisplayName("상태코드 404를 반환받는다.")
+            @Test
+            void it_return_404() {
+                ValidatableResponse response = putCart(22L, accessToken, updationRequest);
+
+                response.statusCode(HttpStatus.NOT_FOUND.value());
+            }
+        }
     }
 
     private ValidatableResponse postCart(CartAdditionRequest request, String accessToken) {
