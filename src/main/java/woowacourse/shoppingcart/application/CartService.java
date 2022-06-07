@@ -33,7 +33,7 @@ public class CartService {
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+//            carts.add(new Cart(cartId, product));
         }
         return carts;
     }
@@ -46,7 +46,7 @@ public class CartService {
     public Long addCart(final Long productId, final String customerName) {
         final Long customerId = customerDao.findIdByName(customerName);
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.save(customerId, productId, 10);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -54,7 +54,7 @@ public class CartService {
 
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+//        cartItemDao.deleteByCustomerIdAndProductId(cartId);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
