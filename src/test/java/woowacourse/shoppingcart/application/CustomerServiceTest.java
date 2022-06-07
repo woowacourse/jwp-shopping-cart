@@ -71,32 +71,7 @@ class CustomerServiceTest {
         }
     }
 
-    @DisplayName("로그인을 할 때")
-    @Nested
-    class SignInTest {
 
-        @Test
-        @DisplayName("로그인이 되면 토큰이 정상적으로 발급된다.")
-        void createAccessToken() throws JsonProcessingException {
-            코니_회원_가입();
-            final String email = "her0807@naver.com";
-            final TokenResponse response = customerService.signIn(new SignInDto(email, "password1!"));
-            final ObjectMapper mapper = new JsonMapper();
-            AddressResponse tokenPayloadDto = mapper.readValue(tokenProvider.getPayload(response.getAccessToken()),
-                    AddressResponse.class);
-            assertThat(tokenPayloadDto.getEmail()).isEqualTo(email);
-            assertThat(response.getCustomerId()).isNotNull();
-        }
-
-        @Test
-        @DisplayName("회원 가입을 하지 않은 유저면 에러가 발생한다.")
-        void noSignUpCustomer() {
-            final String email = "her0807@naver.com";
-            assertThatThrownBy(() -> customerService.signIn(new SignInDto(email, "password1!")))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("가입하지 않은 유저입니다.");
-        }
-    }
 
     @DisplayName("회원 조회를 할 때")
     @Nested

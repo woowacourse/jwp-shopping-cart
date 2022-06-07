@@ -10,12 +10,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
-import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.ModifiedCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -36,16 +33,10 @@ public class CustomerController {
         return ResponseEntity.created(URI.create("/api/customers/" + customerId)).build();
     }
 
-    @PostMapping("/customer/authentication/sign-in")
-    public ResponseEntity<TokenResponse> signIn(@RequestBody final TokenRequest tokenRequest) {
-        final TokenResponse tokenResponse = customerService.signIn(SignInDto.fromTokenRequest(tokenRequest));
-        return ResponseEntity.ok().body(tokenResponse);
-    }
-
     @GetMapping("/customers/{customerId}")
     public ResponseEntity<CustomerResponse> findCustomerInformation(@PathVariable Long customerId) {
         CustomerResponse response = customerService.findCustomerById(customerId);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/customers/{customerId}")
