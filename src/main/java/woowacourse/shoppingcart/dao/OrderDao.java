@@ -13,13 +13,13 @@ public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public OrderDao(final JdbcTemplate jdbcTemplate) {
+    public OrderDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrders(final Long customerId) {
-        final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long addOrders(Long customerId) {
+        String sql = "INSERT INTO orders (customer_id) VALUES (?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});

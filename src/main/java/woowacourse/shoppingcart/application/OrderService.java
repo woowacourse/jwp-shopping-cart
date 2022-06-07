@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -37,8 +38,8 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(List<OrderRequest> orderDetailRequests, String customerName) {
-        Long customerId = customerDao.findIdByUsername(customerName);
+    public Long addOrder(List<OrderRequest> orderDetailRequests, LoginCustomer loginCustomer) {
+        Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername());
         Long ordersId = orderDao.addOrders(customerId);
 
         for (OrderRequest orderDetail : orderDetailRequests) {
@@ -53,8 +54,8 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(String customerName, Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
+    public Orders findOrderById(LoginCustomer loginCustomer, Long orderId) {
+        validateOrderIdByCustomerName(loginCustomer.getUsername(), orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
@@ -66,8 +67,8 @@ public class OrderService {
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(String customerName) {
-        Long customerId = customerDao.findIdByUsername(customerName);
+    public List<Orders> findOrdersByCustomerName(LoginCustomer loginCustomer) {
+        Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername());
         List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
