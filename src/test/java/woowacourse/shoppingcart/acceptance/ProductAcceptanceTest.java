@@ -11,13 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.application.dto.response.ProductResponse;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.ProductFixture.findProductById;
 import static woowacourse.fixture.ProductFixture.findProductsInPage;
