@@ -27,12 +27,6 @@ public class CustomerService {
         customerDao.save(customer);
     }
 
-    private void validateDuplicatedEmail(final Customer customer) {
-        if (customerDao.existsByEmail(customer)) {
-            throw new DuplicatedEmailException();
-        }
-    }
-
     public CustomerDetailServiceResponse findById(final Long id) {
         final Customer customer = findCustomerById(id);
         return CustomerDetailServiceResponse.from(customer);
@@ -60,6 +54,12 @@ public class CustomerService {
         final EncodedPassword encodedPassword = new EncodedPassword(plainPassword.encode());
         final Customer updatedCustomer = customer.updatePassword(encodedPassword);
         customerDao.updateById(updatedCustomer);
+    }
+
+    private void validateDuplicatedEmail(final Customer customer) {
+        if (customerDao.existsByEmail(customer)) {
+            throw new DuplicatedEmailException();
+        }
     }
 
     private Customer findCustomerById(final Long id) {

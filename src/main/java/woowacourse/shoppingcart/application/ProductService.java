@@ -13,14 +13,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class ProductService {
+
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
+    @Transactional
     public Long addProduct(final ProductSaveServiceRequest request) {
         return productDao.save(request.toEntity());
     }
@@ -38,6 +40,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteById(final Long productId) {
         findProduct(productId);
         productDao.delete(productId);

@@ -47,6 +47,17 @@ public class CartService {
     }
 
     @Transactional
+    public void updateQuantity(final Long customerId, final CartUpdateServiceRequest request) {
+        getCustomer(customerId);
+        final Cart cart = cartItemDao.findCartByCustomerIdAndProductId(customerId, request.getProductId())
+                .orElseThrow(NotInCustomerCartItemException::new);
+
+        cart.updateQuantity(request.getQuantity());
+
+        cartItemDao.update(cart, customerId);
+    }
+
+    @Transactional
     public void delete(final Long customerId, final CartDeleteServiceRequest request) {
         validateExistInCart(customerId, request.getCartIds());
         cartItemDao.deleteAllById(request.getCartIds());
@@ -72,15 +83,5 @@ public class CartService {
         if (!cartIds.containsAll(ids)) {
             throw new NotInCustomerCartItemException();
         }
-    }
-
-    public void updateQuantity(final Long customerId, final CartUpdateServiceRequest request) {
-        getCustomer(customerId);
-        final Cart cart = cartItemDao.findCartByCustomerIdAndProductId(customerId, request.getProductId())
-                .orElseThrow(NotInCustomerCartItemException::new);
-
-        cart.updateQuantity(request.getQuantity());
-
-        cartItemDao.update(cart, customerId);
     }
 }
