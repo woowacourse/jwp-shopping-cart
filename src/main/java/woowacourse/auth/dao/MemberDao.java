@@ -15,6 +15,7 @@ import woowacourse.auth.domain.Member;
 public class MemberDao {
 
     private static final RowMapper<Member> MEMBER_MAPPER = ((rs, rowNum) -> new Member(
+            rs.getLong("id"),
             rs.getString("email"),
             rs.getString("password"),
             rs.getString("nickname")
@@ -30,9 +31,10 @@ public class MemberDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public void save(Member member) {
+    public Long save(Member member) {
         BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(member);
-        simpleJdbcInsert.execute(params);
+        return simpleJdbcInsert.executeAndReturnKey(params)
+                .longValue();
     }
 
     public boolean existsEmail(String email) {
@@ -41,9 +43,23 @@ public class MemberDao {
         return namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class);
     }
 
+    public boolean exists(Long id) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM MEMBER WHERE id = :id)";
+        SqlParameterSource params = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class);
+    }
+
     public Optional<Member> findByEmail(String email) {
-        String sql = "SELECT email, password, nickname FROM MEMBER WHERE email = :email";
+        String sql = "SELECT id, email, password, nickname FROM MEMBER WHERE email = :email";
         SqlParameterSource params = new MapSqlParameterSource("email", email);
+        return namedParameterJdbcTemplate.query(sql, params, MEMBER_MAPPER)
+                .stream()
+                .findAny();
+    }
+
+    public Optional<Member> findById(Long id) {
+        String sql = "SELECT id, email, password, nickname FROM MEMBER WHERE id = :id";
+        SqlParameterSource params = new MapSqlParameterSource("id", id);
         return namedParameterJdbcTemplate.query(sql, params, MEMBER_MAPPER)
                 .stream()
                 .findAny();
@@ -56,6 +72,13 @@ public class MemberDao {
         namedParameterJdbcTemplate.update(sql, params);
     }
 
+    public void updateNicknameById(Long id, String nickname) {
+        String sql = "UPDATE MEMBER SET nickname = :nickname WHERE id = :id";
+        SqlParameterSource params = new MapSqlParameterSource("id", id)
+                .addValue("nickname", nickname);
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
     public void updatePasswordByEmail(String email, String password) {
         String sql = "UPDATE MEMBER SET password = :password WHERE email = :email";
         SqlParameterSource params = new MapSqlParameterSource("email", email)
@@ -63,9 +86,22 @@ public class MemberDao {
         namedParameterJdbcTemplate.update(sql, params);
     }
 
+    public void updatePasswordById(Long id, String password) {
+        String sql = "UPDATE MEMBER SET password = :password WHERE id = :id";
+        SqlParameterSource params = new MapSqlParameterSource("id", id)
+                .addValue("password", password);
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
     public void deleteByEmail(String email) {
         String sql = "DELETE FROM MEMBER WHERE email = :email";
         SqlParameterSource params = new MapSqlParameterSource("email", email);
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM MEMBER WHERE id = :id";
+        SqlParameterSource params = new MapSqlParameterSource("id", id);
         namedParameterJdbcTemplate.update(sql, params);
     }
 }

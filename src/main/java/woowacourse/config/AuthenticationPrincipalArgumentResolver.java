@@ -8,6 +8,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.TokenProvider;
@@ -31,6 +32,11 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String token = AuthorizationExtractor.extract(Objects.requireNonNull(request));
-        return tokenProvider.getPayload(token);
+        String payload = tokenProvider.getPayload(token);
+        try {
+            return Long.parseLong(payload);
+        } catch (NumberFormatException e) {
+            throw new AuthorizationException("유효하지 않은 토큰입니다.");
+        }
     }
 }

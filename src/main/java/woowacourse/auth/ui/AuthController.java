@@ -47,8 +47,8 @@ public class AuthController {
     }
 
     @PostMapping("/members/password-check")
-    public ResponseEntity<PasswordCheckResponse> confirmPassword(@AuthenticationPrincipal String payload,
+    public ResponseEntity<PasswordCheckResponse> confirmPassword(@AuthenticationPrincipal Long memberId,
                                                                  @RequestBody PasswordCheckRequest passwordCheckRequest) {
-        return ResponseEntity.ok(authService.checkPassword(payload, passwordCheckRequest));
+        return ResponseEntity.ok(authService.checkPassword(memberId, passwordCheckRequest));
     }
 }

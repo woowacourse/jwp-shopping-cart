@@ -73,10 +73,10 @@ class AuthServiceTest {
     @CsvSource({"1q2w3e4r!, true", "asda1234!, false"})
     void checkPassword(String password, boolean expected) {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        authService.save(memberCreateRequest);
+        Long memberId = authService.save(memberCreateRequest);
         PasswordCheckRequest passwordCheckRequest = new PasswordCheckRequest(password);
 
-        boolean actual = authService.checkPassword("abc@woowahan.com", passwordCheckRequest)
+        boolean actual = authService.checkPassword(memberId, passwordCheckRequest)
                 .isSuccess();
 
         assertThat(actual).isEqualTo(expected);

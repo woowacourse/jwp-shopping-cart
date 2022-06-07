@@ -32,7 +32,7 @@ import woowacourse.auth.support.TokenProvider;
 public class MemberControllerTest {
 
     private static final String TOKEN = "access_token";
-    private static final String PAYLOAD = "abc@woowahan.com";
+    private static final Long MEMBER_ID = 1L;
 
     @MockBean
     private TokenProvider tokenProvider;
@@ -62,7 +62,7 @@ public class MemberControllerTest {
         given(handlerMethodArgumentResolver.supportsParameter(any()))
                 .willReturn(true);
         given(handlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .willReturn(PAYLOAD);
+                .willReturn(MEMBER_ID);
 
         mockMvc.perform(get("/api/members/me")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -70,7 +70,7 @@ public class MemberControllerTest {
                 .andExpect(status().isOk());
 
         verify(memberService, times(1))
-                .find(PAYLOAD);
+                .find(MEMBER_ID);
     }
 
     @DisplayName("인증 없이 회원 정보를 조회할 수 없다. - 401 Unauthorized")
@@ -101,7 +101,7 @@ public class MemberControllerTest {
         given(handlerMethodArgumentResolver.supportsParameter(any()))
                 .willReturn(true);
         given(handlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .willReturn(PAYLOAD);
+                .willReturn(MEMBER_ID);
 
         mockMvc.perform(patch("/api/members/me")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +109,7 @@ public class MemberControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(memberService, times(1))
-                .updateMember(eq(PAYLOAD), any());
+                .updateMember(eq(MEMBER_ID), any());
     }
 
     @DisplayName("인증 없이 회원 정보를 수정할 수 없다. - 401 Unauthorized")
@@ -140,7 +140,7 @@ public class MemberControllerTest {
         given(handlerMethodArgumentResolver.supportsParameter(any()))
                 .willReturn(true);
         given(handlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .willReturn(PAYLOAD);
+                .willReturn(MEMBER_ID);
 
         mockMvc.perform(patch("/api/members/me")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -165,7 +165,7 @@ public class MemberControllerTest {
         given(handlerMethodArgumentResolver.supportsParameter(any()))
                 .willReturn(true);
         given(handlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .willReturn(PAYLOAD);
+                .willReturn(MEMBER_ID);
 
         mockMvc.perform(patch("/api/members/password")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -173,7 +173,7 @@ public class MemberControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(memberService, times(1))
-                .updatePassword(eq(PAYLOAD), any());
+                .updatePassword(eq(MEMBER_ID), any());
     }
 
     @DisplayName("인증 없이 비밀번호를 수정할 수 없다. - 401 Unauthorized")
@@ -202,7 +202,7 @@ public class MemberControllerTest {
         given(handlerMethodArgumentResolver.supportsParameter(any()))
                 .willReturn(true);
         given(handlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .willReturn(PAYLOAD);
+                .willReturn(MEMBER_ID);
 
         mockMvc.perform(patch("/api/members/password")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -225,14 +225,14 @@ public class MemberControllerTest {
         given(handlerMethodArgumentResolver.supportsParameter(any()))
                 .willReturn(true);
         given(handlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .willReturn(PAYLOAD);
+                .willReturn(MEMBER_ID);
 
         mockMvc.perform(delete("/api/members/me")
                         .header("Authorization", TOKEN))
                 .andExpect(status().isNoContent());
 
         verify(memberService, times(1))
-                .delete(PAYLOAD);
+                .delete(MEMBER_ID);
     }
 
     @DisplayName("인증 없이 회원을 삭제할 수 없다. - 401 Unauthorized")

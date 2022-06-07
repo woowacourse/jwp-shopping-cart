@@ -58,7 +58,9 @@ class MemberDaoTest {
         Member foundMember = memberDao.findByEmail("abc@woowahan.com")
                 .orElseGet(() -> fail("실패"));
 
-        assertThat(foundMember).isEqualTo(member);
+        assertThat(foundMember).usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(member);
     }
 
     @DisplayName("회원의 닉네임을 변경한다.")

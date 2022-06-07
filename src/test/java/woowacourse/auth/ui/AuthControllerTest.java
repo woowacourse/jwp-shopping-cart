@@ -2,7 +2,6 @@ package woowacourse.auth.ui;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.request.LoginRequest;
@@ -32,6 +32,7 @@ import woowacourse.auth.support.TokenProvider;
 class AuthControllerTest {
 
     private static final String TOKEN = "access_token";
+    private static final Long MEMBER_ID = 1L;
 
     @MockBean
     private TokenProvider tokenProvider;
@@ -39,6 +40,8 @@ class AuthControllerTest {
     private HandlerInterceptor handlerInterceptor;
     @MockBean
     private AuthService authService;
+    @MockBean
+    private HandlerMethodArgumentResolver handlerMethodArgumentResolver;
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,8 +53,8 @@ class AuthControllerTest {
     void signUp_Created() throws Exception {
         MemberCreateRequest requestBody = new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "우아한");
 
-        willDoNothing().given(authService)
-                .save(any());
+        given(authService.save(any()))
+                .willReturn(MEMBER_ID);
 
         mockMvc.perform(post("/api/members")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -68,8 +71,8 @@ class AuthControllerTest {
     void signUp_BadRequest(String email, String password, String nickname) throws Exception {
         MemberCreateRequest requestBody = new MemberCreateRequest(email, password, nickname);
 
-        willDoNothing().given(authService)
-                .save(any());
+        given(authService.save(any()))
+                .willReturn(MEMBER_ID);
 
         mockMvc.perform(post("/api/members")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -151,6 +154,8 @@ class AuthControllerTest {
                 .willReturn(true);
         given(tokenProvider.validateToken(any()))
                 .willReturn(true);
+        given(handlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
+                .willReturn(1L);
 
         mockMvc.perform(post("/api/members/password-check")
                         .contentType(MediaType.APPLICATION_JSON)

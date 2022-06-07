@@ -25,29 +25,29 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<MemberResponse> showMember(@AuthenticationPrincipal String payload) {
-        return ResponseEntity.ok(memberService.find(payload));
+    public ResponseEntity<MemberResponse> showMember(@AuthenticationPrincipal Long memberId) {
+        return ResponseEntity.ok(memberService.find(memberId));
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<Void> updateMember(@AuthenticationPrincipal String payload,
+    public ResponseEntity<Void> updateMember(@AuthenticationPrincipal Long memberId,
                                              @RequestBody @Valid MemberUpdateRequest memberUpdateRequest) {
-        memberService.updateMember(payload, memberUpdateRequest);
+        memberService.updateMember(memberId, memberUpdateRequest);
         return ResponseEntity.noContent()
                 .build();
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal String payload,
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal Long memberId,
                                                @RequestBody @Valid PasswordUpdateRequest passwordUpdateRequest) {
-        memberService.updatePassword(payload, passwordUpdateRequest);
+        memberService.updatePassword(memberId, passwordUpdateRequest);
         return ResponseEntity.noContent()
                 .build();
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal String payload) {
-        memberService.delete(payload);
+    public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal Long memberId) {
+        memberService.delete(memberId);
         return ResponseEntity.noContent()
                 .build();
     }

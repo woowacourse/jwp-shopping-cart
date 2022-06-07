@@ -27,36 +27,42 @@ public class MemberService {
         return memberDao.existsEmail(validatedEmail);
     }
 
-    public MemberResponse find(String email) {
-        Member member = memberDao.findByEmail(email)
+//    public MemberResponse find(String email) {
+//        Member member = memberDao.findByEmail(email)
+//                .orElseThrow(() -> new AuthorizationException("회원 정보를 찾지 못했습니다."));
+//        return new MemberResponse(member);
+//    }
+
+    public MemberResponse find(Long id) {
+        Member member = memberDao.findById(id)
                 .orElseThrow(() -> new AuthorizationException("회원 정보를 찾지 못했습니다."));
         return new MemberResponse(member);
     }
 
     @Transactional
-    public void updateMember(String email, MemberUpdateRequest memberUpdateRequest) {
-        validateExists(email);
+    public void updateMember(Long id, MemberUpdateRequest memberUpdateRequest) {
+        validateExists(id);
         String nickname = new Nickname(memberUpdateRequest.getNickname())
                 .getValue();
-        memberDao.updateNicknameByEmail(email, nickname);
+        memberDao.updateNicknameById(id, nickname);
     }
 
     @Transactional
-    public void updatePassword(String email, PasswordUpdateRequest passwordUpdateRequest) {
-        validateExists(email);
+    public void updatePassword(Long id, PasswordUpdateRequest passwordUpdateRequest) {
+        validateExists(id);
         String password = new Password(passwordUpdateRequest.getPassword())
                 .getValue();
-        memberDao.updatePasswordByEmail(email, password);
+        memberDao.updatePasswordById(id, password);
     }
 
     @Transactional
-    public void delete(String email) {
-        validateExists(email);
-        memberDao.deleteByEmail(email);
+    public void delete(Long id) {
+        validateExists(id);
+        memberDao.deleteById(id);
     }
 
-    public void validateExists(String email) {
-        if (!existsEmail(email)) {
+    public void validateExists(Long id) {
+        if (!memberDao.exists(id)) {
             throw new AuthorizationException("회원 정보를 찾지 못했습니다.");
         }
     }

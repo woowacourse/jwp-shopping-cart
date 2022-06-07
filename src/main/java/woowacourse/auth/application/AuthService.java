@@ -24,11 +24,11 @@ public class AuthService {
     }
 
     @Transactional
-    public void save(MemberCreateRequest memberCreateRequest) {
+    public Long save(MemberCreateRequest memberCreateRequest) {
         validateUniqueEmail(memberCreateRequest);
         Member member = new Member(memberCreateRequest.getEmail(), memberCreateRequest.getPassword(),
                 memberCreateRequest.getNickname());
-        memberDao.save(member);
+        return memberDao.save(member);
     }
 
     private void validateUniqueEmail(MemberCreateRequest memberCreateRequest) {
@@ -48,7 +48,7 @@ public class AuthService {
         Member member = memberDao.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
         validatePassword(member.getPassword(), loginRequest.getPassword());
-        String token = jwtTokenProvider.createToken(member.getEmail());
+        String token = jwtTokenProvider.createToken(member.getId().toString());
         return new LoginResponse(token, member.getNickname());
     }
 
@@ -59,8 +59,8 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public PasswordCheckResponse checkPassword(String email, PasswordCheckRequest passwordCheckRequest) {
-        Member member = memberDao.findByEmail(email)
+    public PasswordCheckResponse checkPassword(Long memberId, PasswordCheckRequest passwordCheckRequest) {
+        Member member = memberDao.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
         boolean result = member.getPassword()
                 .equals(passwordCheckRequest.getPassword());

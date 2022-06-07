@@ -31,10 +31,10 @@ class MemberServiceTest {
     @Test
     void updateMember() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        memberDao.save(member);
+        Long memberId = memberDao.save(member);
 
-        memberService.updateMember("abc@woowahan.com", new MemberUpdateRequest("바뀐닉네임"));
-        String nickname = memberService.find("abc@woowahan.com")
+        memberService.updateMember(memberId, new MemberUpdateRequest("바뀐닉네임"));
+        String nickname = memberService.find(memberId)
                 .getNickname();
 
         assertThat(nickname).isEqualTo("바뀐닉네임");
@@ -43,7 +43,7 @@ class MemberServiceTest {
     @DisplayName("존재하지 않는 회원의 정보를 수정하려고 하면 예외를 반환한다.")
     @Test
     void updateMember_NotFoundMember() {
-        assertThatThrownBy(() -> memberService.updateMember("abc@woowahan.com", new MemberUpdateRequest("바뀐닉네임")))
+        assertThatThrownBy(() -> memberService.updateMember(Long.MAX_VALUE, new MemberUpdateRequest("바뀐닉네임")))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("회원 정보를 찾지 못했습니다.");
     }
@@ -52,9 +52,9 @@ class MemberServiceTest {
     @Test
     void updatePassword_InvalidNicknameFormat() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        memberDao.save(member);
+        Long memberId = memberDao.save(member);
 
-        assertThatThrownBy(() -> memberService.updateMember("abc@woowahan.com", new MemberUpdateRequest("1234")))
+        assertThatThrownBy(() -> memberService.updateMember(memberId, new MemberUpdateRequest("1234")))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("닉네임 형식이 올바르지 않습니다.");
     }
@@ -63,9 +63,9 @@ class MemberServiceTest {
     @Test
     void updatePassword() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        memberDao.save(member);
+        Long memberId = memberDao.save(member);
 
-        memberService.updatePassword("abc@woowahan.com", new PasswordUpdateRequest("1q2w3e4r@"));
+        memberService.updatePassword(memberId, new PasswordUpdateRequest("1q2w3e4r@"));
         String password = memberDao.findByEmail("abc@woowahan.com")
                 .orElseGet(() -> fail(""))
                 .getPassword();
@@ -77,9 +77,9 @@ class MemberServiceTest {
     @Test
     void findMember() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        memberDao.save(member);
+        Long memberId = memberDao.save(member);
 
-        MemberResponse memberResponse = memberService.find("abc@woowahan.com");
+        MemberResponse memberResponse = memberService.find(memberId);
 
         assertThat(memberResponse.getEmail()).isEqualTo("abc@woowahan.com");
         assertThat(memberResponse.getNickname()).isEqualTo("닉네임");
@@ -88,7 +88,7 @@ class MemberServiceTest {
     @DisplayName("존재하지 않는 회원의 정보를 요청하면 예외를 반환한다.")
     @Test
     void findMember_NotFoundMember() {
-        assertThatThrownBy(() -> memberService.find("abc@woowahan.com"))
+        assertThatThrownBy(() -> memberService.find(Long.MAX_VALUE))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("회원 정보를 찾지 못했습니다.");
     }
@@ -96,7 +96,7 @@ class MemberServiceTest {
     @DisplayName("존재하지 않는 회원의 비밀번호를 수정하려고 하면 예외를 반환한다.")
     @Test
     void updatePassword_NotFoundMember() {
-        assertThatThrownBy(() -> memberService.updatePassword("abc@woowahan.com", new PasswordUpdateRequest("1q2w3e4r@")))
+        assertThatThrownBy(() -> memberService.updatePassword(Long.MAX_VALUE, new PasswordUpdateRequest("1q2w3e4r@")))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("회원 정보를 찾지 못했습니다.");
     }
@@ -105,9 +105,9 @@ class MemberServiceTest {
     @Test
     void updatePassword_InvalidPasswordFormat() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        memberDao.save(member);
+        Long memberId = memberDao.save(member);
 
-        assertThatThrownBy(() -> memberService.updatePassword("abc@woowahan.com", new PasswordUpdateRequest("1234")))
+        assertThatThrownBy(() -> memberService.updatePassword(memberId, new PasswordUpdateRequest("1234")))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호 형식이 올바르지 않습니다.");
     }
@@ -116,9 +116,9 @@ class MemberServiceTest {
     @Test
     void deleteMember() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
-        memberDao.save(member);
+        Long memberId = memberDao.save(member);
 
-        memberService.delete("abc@woowahan.com");
+        memberService.delete(memberId);
         boolean actual = memberService.existsEmail("abc@woowahan.com");
 
         assertThat(actual).isFalse();
@@ -148,7 +148,7 @@ class MemberServiceTest {
     @DisplayName("존재하지 않는 회원을 삭제하려 하면 예외를 반환한다.")
     @Test
     void deleteMember_NotFoundMember() {
-        assertThatThrownBy(() -> memberService.delete("abc@woowahan.com"))
+        assertThatThrownBy(() -> memberService.delete(Long.MAX_VALUE))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("회원 정보를 찾지 못했습니다.");
     }
