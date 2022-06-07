@@ -26,7 +26,7 @@ public class CartService {
 
     @Transactional
     public Long saveOrUpdateCartItem(Long memberId, CartItemRequest cartItemRequest) {
-        Long productId = cartItemRequest.getId();
+        Long productId = cartItemRequest.getProductId();
         Integer quantity = cartItemRequest.getQuantity();
         checkPurchasable(productId, quantity);
         if (cartItemDao.exists(memberId, productId)) {
@@ -72,8 +72,8 @@ public class CartService {
     }
 
     public void updateCartItemQuantity(Long memberId, CartItemRequest updateRequest) {
-        validateProductExist(memberId, updateRequest.getId());
-        cartItemDao.updateQuantity(memberId, updateRequest.getId(), updateRequest.getQuantity());
+        validateProductExist(memberId, updateRequest.getProductId());
+        cartItemDao.updateQuantity(memberId, updateRequest.getProductId(), updateRequest.getQuantity());
     }
 
     private void validateProductExist(Long memberId, Long productId) {
