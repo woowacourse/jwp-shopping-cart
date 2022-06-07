@@ -170,4 +170,17 @@ public class CartItemDaoTest {
 
         assertThat(productIds).containsExactly(2L);
     }
+
+    @DisplayName("해당 id의 customer_id가 주어진 customer_id와 일치하므로 true를 반환한다.")
+    @Test
+    void isCartItemExistByCustomer_true() {
+        assertThat(cartItemDao.isCartItemExistByCustomer(1L, 1L)).isTrue();
+    }
+
+    @DisplayName("해당 id의 customer_id가 주어진 customer_id와 일치하지 않으므로 false를 반환한다.")
+    @Test
+    void isCartItemExistByCustomer_false() {
+        assertThat(cartItemDao.isCartItemExistByCustomer(1L, 3L)).isFalse();
+    }
+
 }

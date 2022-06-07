@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
@@ -48,9 +49,10 @@ public class CartItemDao {
 
     public CartItem findById(final Long cartItemId) {
         try {
-            final String sql = "SELECT c.id, c.quantity, c.product_id, p.name, p.price, p.stock, p.image_url FROM cart_item c " +
-                    "INNER JOIN product p ON c.product_id = p.id " +
-                    "WHERE c.id = ?";
+            final String sql =
+                    "SELECT c.id, c.quantity, c.product_id, p.name, p.price, p.stock, p.image_url FROM cart_item c " +
+                            "INNER JOIN product p ON c.product_id = p.id " +
+                            "WHERE c.id = ?";
             return jdbcTemplate.queryForObject(sql, cartItemRowMapper, cartItemId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
@@ -58,9 +60,10 @@ public class CartItemDao {
     }
 
     public List<CartItem> findAllByCustomerId(final Long customerId) {
-        final String sql = "SELECT c.id, c.quantity, c.product_id, p.name, p.price, p.stock, p.image_url FROM cart_item c " +
-                "INNER JOIN product p ON c.product_id = p.id " +
-                "WHERE c.customer_id = ?";
+        final String sql =
+                "SELECT c.id, c.quantity, c.product_id, p.name, p.price, p.stock, p.image_url FROM cart_item c " +
+                        "INNER JOIN product p ON c.product_id = p.id " +
+                        "WHERE c.customer_id = ?";
         return jdbcTemplate.query(sql, cartItemRowMapper, customerId);
     }
 
@@ -83,6 +86,11 @@ public class CartItemDao {
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public boolean isCartItemExistByCustomer(final Long cartItemId, final Long customerId) {
+        final String sql = "SELECT EXISTS(select id from cart_item WHERE id = ? AND customer_id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, cartItemId, customerId));
     }
 
     public void updateQuantity(final CartItem cartItem) {
