@@ -55,18 +55,17 @@ public class ProductService {
         }
 
         Long userId = customerDao.findIdByUserName(loginCustomer.getUserName());
-        if (!cartItemDao.existByCustomerIdAndProductId(userId, productId)) {
-            return ProductResponse.of(product);
-        }
-
         return assembleProductResponse(userId, productId);
     }
 
-    private ProductResponse assembleProductResponse(Long customerId, Long productId) {
+    private ProductResponse assembleProductResponse(Long userId, Long productId) {
         Product product = productDao.findProductById(productId);
-        Long cartId = cartItemDao.findIdByCustomerIdAndProductId(customerId, productId);
-        int cartQuantity = cartItemDao.findQuantityById(customerId);
+        if(!cartItemDao.existByCustomerIdAndProductId(userId, productId)){
+            return ProductResponse.of(product);
+        }
 
+        Long cartId = cartItemDao.findIdByCustomerIdAndProductId(userId, productId);
+        int cartQuantity = cartItemDao.findQuantityById(userId);
         return ProductResponse.of(product, cartId, cartQuantity);
     }
 
