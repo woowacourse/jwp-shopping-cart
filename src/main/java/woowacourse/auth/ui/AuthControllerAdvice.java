@@ -26,4 +26,10 @@ public class AuthControllerAdvice {
     public ResponseEntity<ErrorResponse> handleBindException() {
         return ResponseEntity.badRequest().body(new ErrorResponse("입력하지 않은 정보가 있습니다."));
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleInternalServerError(RuntimeException e) {
+        e.printStackTrace();
+        return ResponseEntity.internalServerError().body(new ErrorResponse("internal server error"));
+    }
 }

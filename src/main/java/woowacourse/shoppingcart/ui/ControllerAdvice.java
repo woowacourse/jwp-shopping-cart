@@ -21,7 +21,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleInternalServerError() {
+    public ResponseEntity<ErrorResponse> handleInternalServerError(RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.internalServerError().body(new ErrorResponse("internal server error"));
     }
 }
