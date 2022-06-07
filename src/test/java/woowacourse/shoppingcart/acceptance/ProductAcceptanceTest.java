@@ -41,7 +41,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_목록_포함됨(productId1, productId2, response);
     }
 
-    @DisplayName("상품을 조회한다")
+    @DisplayName("상품을 조회한다.")
     @Test
     void getProduct() {
         // given
@@ -58,6 +58,21 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(resultProductResponse.getName()).isEqualTo("치킨"),
                 () -> assertThat(resultProductResponse.getPrice()).isEqualTo(10_000),
                 () -> assertThat(resultProductResponse.getImageUrl()).isEqualTo("http://example.com/chicken.jpg")
+        );
+    }
+
+    @DisplayName("존재하지 않는 상품을 조회할 경우 404 에러가 발생한다.")
+    @Test
+    void getProductFalse() {
+        // when
+        ExtractableResponse<Response> response = findProductById(1L);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
+                        "존재하지 않는 상품입니다."
+                )
         );
     }
 
