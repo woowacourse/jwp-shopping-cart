@@ -63,6 +63,20 @@ class ProductDaoTest {
     }
 
     @Test
+    void 상품_id_목록으로_상품_목록_조회() {
+        // given
+        Long id1 = productDao.save(new ProductEntity("아이스크림", 1_000, "https://yeonyeon.tistory.com"));
+        Long id2 = productDao.save(new ProductEntity("마카롱", 2_000, "https://yeonyeon.tistory.com"));
+        List<Long> ids = List.of(id1, id2);
+
+        // when
+        List<ProductEntity> products = productDao.findByIds(ids);
+
+        // then
+        assertThat(상품_아이디_목록(products)).containsOnly(id1, id2);
+    }
+
+    @Test
     void 상품_목록_조회() {
         // given
         Long id1 = productDao.save(new ProductEntity("아이스크림", 1_000, "https://yeonyeon.tistory.com"));

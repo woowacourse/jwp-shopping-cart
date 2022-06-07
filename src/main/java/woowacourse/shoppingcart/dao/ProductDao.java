@@ -45,6 +45,12 @@ public class ProductDao {
         return Optional.ofNullable(result);
     }
 
+    public List<ProductEntity> findByIds(List<Long> productIds) {
+        final String query = "SELECT id, name, price, image_url FROM product WHERE id IN (:productIds)";
+        SqlParameterSource source = new MapSqlParameterSource("productIds", productIds);
+        return jdbcTemplate.query(query, source, ROW_MAPPER);
+    }
+
     public List<ProductEntity> findAll() {
         final String query = "SELECT id, name, price, image_url FROM product";
         return jdbcTemplate.query(query, ROW_MAPPER);
