@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 @Service
@@ -55,5 +56,20 @@ public class CartService {
         } catch (InvalidCartItemException e) {
             throw new ProductNotFoundException();
         }
+    }
+
+    public void updateCount(long customerId, long productId, int count) {
+        int quantity;
+
+        try {
+            quantity = productDao.findProductById(productId).getQuantity();
+        } catch (InvalidProductException e) {
+            throw new ProductNotFoundException();
+        }
+
+        if (count > quantity) {
+            throw new InvalidCartItemException("재고가 부족합니다.");
+        }
+        cartItemDao.updateCount(customerId, productId, count);
     }
 }

@@ -17,6 +17,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -63,6 +64,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_아이템_삭제_요청(CUSTOMER_ID, productId1);
 
         장바구니_아이템_삭제됨(response);
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 구매 수 업데이트")
+    void updateCount() {
+        ExtractableResponse<Response> response = 장바구니_아이템_구매_수_업데이트(CUSTOMER_ID, productId1, 7);
+
+        장바구니_아이템_구매_수_업데이트됨(response);
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(long customerId, Long productId, int count) {
@@ -112,5 +121,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private ExtractableResponse<Response> 장바구니_아이템_구매_수_업데이트(long customerId, Long productId, int count) {
+        CartItemUpdateRequest request = new CartItemUpdateRequest(count);
+        return RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(request)
+            .when().patch("/api/customers/{customerId}/carts?productId={productId}", customerId, productId)
+            .then().log().all()
+            .extract();
+    }
+
+    private void 장바구니_아이템_구매_수_업데이트됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

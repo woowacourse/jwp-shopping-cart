@@ -74,11 +74,17 @@ public class CartItemDao {
     }
 
     public void deleteCartItem(final long customerId, final long productId) {
-        final String sql = "DELETE FROM cart_item WHERE customer_id = ? and product_id = ?";
+        final String sql = "DELETE FROM cart_item WHERE customer_id = ? AND product_id = ?";
 
         final int rowCount = jdbcTemplate.update(sql, customerId, productId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public void updateCount(long customerId, long productId, int count) {
+        final String sql = "UPDATE cart_item SET count = ? WHERE customer_id = ? AND product_id = ?";
+
+        final int rowCount = jdbcTemplate.update(sql, count, customerId, productId);
     }
 }
