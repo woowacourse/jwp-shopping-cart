@@ -1,25 +1,28 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.auth.acceptance.AuthAcceptanceTest.로그인_요청;
+import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.사용자_생성_요청;
+import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.shoppingcart.dto.OrderRequest;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
@@ -35,8 +38,13 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
+        LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
+        ExtractableResponse<Response> loginResponse = 로그인_요청(loginRequest);
+        TokenResponse tokenResponse = loginResponse.as(TokenResponse.class);
+
+        cartId1 = 장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken());
+        cartId2 = 장바구니_아이템_추가되어_있음(productId2, tokenResponse.getAccessToken());
     }
 
     @DisplayName("주문하기")
