@@ -6,3 +6,8 @@ values ('ari@wooteco.com', '아리', '1ebe88ec1665d6f66f0925713af52a92cc340bbd95
        ('cocacola@wooteco.com', '코카콜라', '1ebe88ec1665d6f66f0925713af52a92cc340bbd95d168680e26037097baa00f'),
        ('hope@wooteco.com', '호프', '1ebe88ec1665d6f66f0925713af52a92cc340bbd95d168680e26037097baa00f')
 ;
+
+insert into product (name, price, image_url)
+values ('아이스아메리카노', 2500, 'americanoUrl'),
+       ('아이스라떼', 3000, 'latteUrl'),
+       ('아이스초코', 3500, 'chocolateUrl')
