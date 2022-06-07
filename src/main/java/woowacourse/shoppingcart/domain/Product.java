@@ -37,7 +37,7 @@ public class Product {
         }
     }
 
-    private void validateStock(int quantity) {
+    public void validateStock(int quantity) {
         if (this.stock < quantity) {
             throw new IllegalArgumentException("재고가 충분하지 않습니다.");
         }

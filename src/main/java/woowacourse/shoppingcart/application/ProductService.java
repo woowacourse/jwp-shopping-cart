@@ -32,7 +32,8 @@ public class ProductService {
     }
 
     public ProductResponse findProductById(final Long productId) {
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.findProductById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 상품이 없습니다."));
         return new ProductResponse(product);
     }
 

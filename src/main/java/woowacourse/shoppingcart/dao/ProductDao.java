@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.List;
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
 public class ProductDao {
@@ -40,19 +39,23 @@ public class ProductDao {
                 .longValue();
     }
 
-    public Product findProductById(final Long productId) {
-        try {
-            final String sql = "SELECT id, name, price, stock, image_url FROM product WHERE id = :id";
-            MapSqlParameterSource parameters = new MapSqlParameterSource("id", productId);
-            return namedParameterJdbcTemplate.queryForObject(sql, parameters, PRODUCT_MAPPER);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
-        }
+    public Optional<Product> findProductById(final Long productId) {
+        final String sql = "SELECT id, name, price, stock, image_url FROM product WHERE id = :id";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("id", productId);
+        return namedParameterJdbcTemplate.query(sql, parameters, PRODUCT_MAPPER)
+                .stream()
+                .findAny();
     }
 
     public List<Product> findProducts() {
         final String sql = "SELECT id, name, price, stock, image_url FROM product";
         return namedParameterJdbcTemplate.query(sql, PRODUCT_MAPPER);
+    }
+
+    public boolean exists(Long id) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM product WHERE id = :id)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.queryForObject(sql, parameters, Boolean.class);
     }
 
     public void updateStock(Product product) {

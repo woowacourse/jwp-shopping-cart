@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +54,8 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, stock, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(productId)
+                .orElseGet(() -> fail(""));
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -70,6 +72,20 @@ public class ProductDaoTest {
 
         // then
         assertThat(products).size().isEqualTo(size);
+    }
+
+    @DisplayName("상품 존재 여부 확인")
+    @Test
+    void exists() {
+        final String name = "초콜렛";
+        final int price = 1_000;
+        final int stock = 1;
+        final String imageUrl = "www.test.com";
+        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
+
+        boolean exists = productDao.exists(productId);
+
+        assertThat(exists).isTrue();
     }
 
     @DisplayName("싱품 삭제")
@@ -101,10 +117,12 @@ public class ProductDaoTest {
         int stock = 1;
 
         Long productId = productDao.save(new Product(name, price, stock, imageUrl));
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.findProductById(productId)
+                .orElseGet(() -> fail(""));;
         product.receive(1);
         productDao.updateStock(product);
-        Product updated = productDao.findProductById(productId);
+        Product updated = productDao.findProductById(productId)
+                .orElseGet(() -> fail(""));;
 
         assertThat(updated.getStock()).isEqualTo(2);
     }
