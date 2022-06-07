@@ -11,7 +11,6 @@ import woowacourse.shoppingcart.ui.dto.CustomerChangeRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerSignUpRequest;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -26,7 +25,7 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<Void> saveCustomer(@RequestBody @Valid CustomerSignUpRequest customerSignUpRequest) {
         customerService.save(customerSignUpRequest.toServiceRequest());
-        return ResponseEntity.created(URI.create("/api/customers")).build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
