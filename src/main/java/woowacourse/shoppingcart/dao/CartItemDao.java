@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.dao;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -14,10 +16,14 @@ import java.util.List;
 
 @Repository
 public class CartItemDao {
-    private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
+    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public CartItemDao(JdbcTemplate jdbcTemplate,
+      NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
@@ -42,7 +48,8 @@ public class CartItemDao {
     public Long findProductIdById(final Long cartId) {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"),
+              cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
@@ -68,5 +75,14 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public void updateQuantityById(Long customerId, int quantity, Long productId) {
+        final String query = "UPDATE cart_item SET quantity = :quantity WHERE customer_id = :customer_id AND product_id = :product_id";
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+          .addValue("quantity", quantity)
+          .addValue("customer_id", customerId)
+          .addValue("product_id", productId);
+        namedParameterJdbcTemplate.update(query, parameters);
     }
 }

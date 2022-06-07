@@ -19,7 +19,8 @@ import java.util.List;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+    public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
     }
 

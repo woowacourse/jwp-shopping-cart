@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartItemChangeQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -35,6 +36,11 @@ public class CartService {
         return findCartItems(cartIds);
     }
 
+    private List<CartItem> findCartIdsByCustomerName(final String customerName) {
+        final Long customerId = customerDao.findIdByNickname(customerName);
+        return cartItemDao.findIdsByCustomerId(customerId);
+    }
+
     private List<CartItemResponse> findCartItems(List<CartItem> cartItems) {
         final List<CartItemResponse> cartItemResponses = new ArrayList<>();
         for (final CartItem cartItem : cartItems) {
@@ -47,11 +53,6 @@ public class CartService {
     private CartItemResponse toCartItemResponse(CartItem cartItem, Product product) {
         return new CartItemResponse(cartItem.getId(), product.getName(), product.getPrice(),
           cartItem.getQuantity(), product.getImageUrl());
-    }
-
-    private List<CartItem> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
     }
 
     public Long addCart(LoginCustomer loginCustomer, final Long productId) {
@@ -74,5 +75,16 @@ public class CartService {
           .filter(i -> i.matchId(cartId))
           .findAny()
           .orElseThrow(NotInCustomerCartItemException::new);
+    }
+
+    public void changeQuantity(LoginCustomer loginCustomer, CartItemChangeQuantityRequest request, Long productId) {
+        validateQuantityNegativeNumber(request.getQuantity());
+        cartItemDao.updateQuantityById(loginCustomer.getId(), request.getQuantity(), productId);
+    }
+
+    private void validateQuantityNegativeNumber(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("장바구니 상품 수량을 음수로 수정할 수 없습니다.");
+        }
     }
 }

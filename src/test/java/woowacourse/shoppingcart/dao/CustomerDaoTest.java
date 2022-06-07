@@ -56,21 +56,6 @@ public class CustomerDaoTest {
         assertThat(customerId).isNotNull();
     }
 
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
-        // given
-        final String nickname = "Test4";
-        customerDao.save(new Customer("test4@naver.com", "test4", "Password123!"));
-
-        // when
-        final Long customerId = customerDao.findIdByNickname(nickname);
-
-        // then
-        assertThat(customerId).isNotNull();
-    }
-
     @DisplayName("닉네임이 중복될 경우, 참을 반환한다.")
     @Test
     void existsByNickname() {

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CartItemChangeQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @DisplayName("장바구니 관련 기능")
@@ -63,6 +64,23 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartItem() {
         String token = createToken("test1@email.com", "Password123!");
         insertCartItem(productId1, token);
+    }
+
+    @DisplayName("장바구니 상품 수량 변경")
+    @Test
+    void updateCartItemQuantity() {
+        String token = createToken("test1@email.com", "Password123!");
+        insertCartItem(productId1, token);
+        CartItemChangeQuantityRequest cartItemChangeQuantityRequest = new CartItemChangeQuantityRequest(2);
+
+        RestAssured.given().log().all()
+          .auth().oauth2(token)
+          .contentType(MediaType.APPLICATION_JSON_VALUE)
+          .body(cartItemChangeQuantityRequest)
+          .patch("/api/carts/products/" + productId1)
+          .then()
+          .log().all()
+          .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private void insertCartItem(Long productId, String token) {
