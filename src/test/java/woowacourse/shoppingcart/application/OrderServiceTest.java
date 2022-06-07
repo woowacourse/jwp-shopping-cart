@@ -3,8 +3,9 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.fixture.CartItemFixtures.CART_REQUEST_1;
+import static woowacourse.shoppingcart.fixture.CartItemFixtures.CART_REQUEST_2;
 import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_1;
-import static woowacourse.shoppingcart.fixture.OrderFixtures.ORDER_REQUEST_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_2;
 
@@ -26,7 +27,6 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
@@ -56,7 +56,7 @@ class OrderServiceTest {
 
         // when
         final Long orderId = orderService.addOrders(customerId,
-                new OrderRequest(List.of(new CartRequest(productId1, 3), new CartRequest(productId2, 5))));
+               List.of(new CartRequest(productId1, 3), new CartRequest(productId2, 5)));
 
         // then
         assertThat(orderId).isPositive();
@@ -70,7 +70,7 @@ class OrderServiceTest {
         productDao.save(PRODUCT_1);
 
         // when & then
-        assertThatThrownBy(() -> orderService.addOrders(customerId, ORDER_REQUEST_1))
+        assertThatThrownBy(() -> orderService.addOrders(customerId, List.of(CART_REQUEST_1, CART_REQUEST_2)))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
@@ -83,9 +83,9 @@ class OrderServiceTest {
         final Long productId2 = productDao.save(PRODUCT_2);
 
         orderService.addOrders(customerId,
-                new OrderRequest(List.of(new CartRequest(productId1, 3), new CartRequest(productId2, 5))));
+                List.of(new CartRequest(productId1, 3), new CartRequest(productId2, 5)));
         orderService.addOrders(customerId,
-                new OrderRequest(List.of(new CartRequest(productId1, 4), new CartRequest(productId2, 9))));
+                List.of(new CartRequest(productId1, 4), new CartRequest(productId2, 9)));
 
         // when
         List<OrderResponse>  orderResponses = orderService.findOrdersByCustomerId(customerId);
@@ -110,7 +110,7 @@ class OrderServiceTest {
         final Long productId2 = productDao.save(PRODUCT_2);
 
         final Long orderId = orderService.addOrders(customerId,
-                new OrderRequest(List.of(new CartRequest(productId1, 3), new CartRequest(productId2, 5))));
+                List.of(new CartRequest(productId1, 3), new CartRequest(productId2, 5)));
 
         // when
         OrderResponse orderResponse = orderService.findOrder(orderId, customerId);
@@ -132,7 +132,7 @@ class OrderServiceTest {
         final Long productId2 = productDao.save(PRODUCT_2);
 
         final Long orderId = orderService.addOrders(customerId,
-                new OrderRequest(List.of(new CartRequest(productId1, 3), new CartRequest(productId2, 5))));
+                List.of(new CartRequest(productId1, 3), new CartRequest(productId2, 5)));
 
         // when & then
         assertThatThrownBy(() -> orderService.findOrder(orderId + 1, customerId))

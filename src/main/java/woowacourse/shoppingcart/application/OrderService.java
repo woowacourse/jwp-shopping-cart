@@ -12,7 +12,6 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.entity.OrdersDetailEntity;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -30,7 +29,7 @@ public class OrderService {
         this.ordersDetailDao = ordersDetailDao;
     }
 
-    public Long addOrders(int customerId, OrderRequest orderRequest) {
+    public Long addOrders(int customerId, List<CartRequest> orderRequest) {
         final List<Long> productIds = getProductId(orderRequest);
         checkProductIds(productIds);
         // todo quantity까지 점검해야함 -> cart(product, quantity)를 만들기
@@ -40,14 +39,14 @@ public class OrderService {
         return orderId;
     }
 
-    private void addOrdersDetail(Long orderId, OrderRequest orderRequest) {
-        for (CartRequest cart : orderRequest.getCart()) {
+    private void addOrdersDetail(Long orderId, List<CartRequest> orderRequest) {
+        for (CartRequest cart : orderRequest) {
             ordersDetailDao.addOrdersDetail(orderId, cart.getProductId(), cart.getQuantity());
         }
     }
 
-    private List<Long> getProductId(OrderRequest orderRequest) {
-        return orderRequest.getCart()
+    private List<Long> getProductId(List<CartRequest> orderRequest) {
+        return orderRequest
                 .stream()
                 .map(CartRequest::getProductId)
                 .collect(Collectors.toList());

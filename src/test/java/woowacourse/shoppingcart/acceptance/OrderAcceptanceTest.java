@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.createCustomer;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.getTokenResponse;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static woowacourse.shoppingcart.fixture.CartItemFixtures.CART_REQUEST_2;
 import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST_1;
-import static woowacourse.shoppingcart.fixture.OrderFixtures.ORDER_REQUEST_INVALID_PRODUCT;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_REQUEST_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_REQUEST_2;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_REQUEST_3;
@@ -23,7 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 
 @DisplayName("주문 관련 기능")
@@ -32,10 +31,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     public static final String INVALID_TOKEN = "invalidToken";
 
     private String token;
-    private OrderRequest orderRequest1;
-    private OrderRequest orderRequest2;
+    private List<CartRequest> orderRequest1;
+    private List<CartRequest> orderRequest2;
 
-    public static ExtractableResponse<Response> 주문하기_요청(OrderRequest orderRequest, String token) {
+    public static ExtractableResponse<Response> 주문하기_요청(List<CartRequest> orderRequest, String token) {
         return RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
@@ -85,7 +84,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
 
     //
-    public static Long 주문하기_요청_성공되어_있음(OrderRequest orderRequest, String token) {
+    public static Long 주문하기_요청_성공되어_있음(List<CartRequest> orderRequest, String token) {
         ExtractableResponse<Response> response = 주문하기_요청(orderRequest, token);
         return Long.parseLong(response.header("Location").split("/orders/")[1]);
     }
@@ -125,8 +124,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         final Long productId2 = 상품_등록되어_있음(getProductRequestParam(PRODUCT_REQUEST_2));
         final Long productId3 = 상품_등록되어_있음(getProductRequestParam(PRODUCT_REQUEST_3));
 
-        orderRequest1 = new OrderRequest(List.of(new CartRequest(productId1, 3), new CartRequest(productId3, 1)));
-        orderRequest2 = new OrderRequest(List.of(new CartRequest(productId2, 10)));
+        orderRequest1 = List.of(new CartRequest(productId1, 3), new CartRequest(productId3, 1));
+        orderRequest2 = List.of(new CartRequest(productId2, 10));
     }
 
 
@@ -141,7 +140,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("없는 상품을 주문할 때 주문하기 실패")
     @Test
     void addOrderByInvalidProduct() {
-        ExtractableResponse<Response> response = 주문하기_요청(ORDER_REQUEST_INVALID_PRODUCT, token);
+        ExtractableResponse<Response> response = 주문하기_요청(List.of(new CartRequest(999999L, 3), CART_REQUEST_2), token);
 
         주문하기_실패함(response);
     }

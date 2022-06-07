@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 
@@ -28,7 +29,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final int customerId,
-                                         @RequestBody OrderRequest orderRequest) {
+                                         @RequestBody List<CartRequest> orderRequest) {
         final Long orderId = orderService.addOrders(customerId, orderRequest);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
