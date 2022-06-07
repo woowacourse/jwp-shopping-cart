@@ -25,6 +25,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor(authService, jwtTokenProvider))
                 .excludePathPatterns("/login/**")
                 .addPathPatterns("/users/**")
-                .excludePathPatterns("/users");
+                .excludePathPatterns("/users")
+                .addPathPatterns("/cart");
     }
 }
