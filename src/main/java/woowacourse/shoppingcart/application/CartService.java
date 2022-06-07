@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.domain.CartItems;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.DeleteCartItemIdsRequest;
 import woowacourse.shoppingcart.dto.FindAllCartItemResponse;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -31,7 +32,7 @@ public class CartService {
     }
 
     public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+        final List<Long> cartIds = null;
 
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
@@ -42,26 +43,25 @@ public class CartService {
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
     public void addCart(final Long customerId, final AddCartItemRequest addCartItemRequest) {
         cartItemDao.addCartItem(customerId, addCartItemRequest);
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCart(final Long customerId, final DeleteCartItemIdsRequest deleteCartItemIdsRequest) {
+        var cartItemIds = deleteCartItemIdsRequest.getCartItemIds();
+        validateCustomerCart(customerId, cartItemIds);
+
+        for (Long cartItemId : cartItemIds) {
+            cartItemDao.deleteCartItem(cartItemId);
+        }
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
+    private void validateCustomerCart(final Long customerId, final List<Long> cartItemIds) {
+        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+
+        if (!cartIds.containsAll(cartItemIds)) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
     }
 
     public FindAllCartItemResponse getAllCartItem(final Long customerId) {
