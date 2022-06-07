@@ -65,6 +65,22 @@ public class CartServiceTest {
     }
 
     @Test
+    void 존재하지_않는_상품을_장바구니에_추가하는_경우() {
+        AddCartItemRequest addCartItemRequest = new AddCartItemRequest(100L, 1, true);
+        assertThatThrownBy(() -> cartService.addItem("puterism", addCartItemRequest))
+                .isInstanceOf(InvalidCartItemException.class)
+                .hasMessage("[ERROR] 존재하는 상품이 아닙니다.");
+    }
+
+    @Test
+    void 자연수가_아닌_상품_id로_장바구니에_추가하는_경우() {
+        AddCartItemRequest addCartItemRequest = new AddCartItemRequest(0L, 1, true);
+        assertThatThrownBy(() -> cartService.addItem("puterism", addCartItemRequest))
+                .isInstanceOf(InvalidCartItemException.class)
+                .hasMessage("[ERROR] 상품 ID는 자연수여야 합니다.");
+    }
+
+    @Test
     void 장바구니_내의_존재하는_상품의_수량을_변경하는_경우() {
         UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(
                 List.of(new UpdateCartItemElement(1L, 10, false),
@@ -72,6 +88,39 @@ public class CartServiceTest {
         CartResponse updateCartItemResponse =
                 cartService.updateItem("puterism", updateCartItemRequest);
         assertThat(updateCartItemResponse.getProducts().size()).isEqualTo(2);
+    }
+
+    @Test
+    void 유효하지_않은_항목의_수량을_변경하는_경우() {
+        UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(
+                List.of(new UpdateCartItemElement(7L, 10, false),
+                        new UpdateCartItemElement(2L, 1, true)));
+        assertThatThrownBy(
+                () -> cartService.updateItem("puterism", updateCartItemRequest))
+                .isInstanceOf(InvalidCartItemException.class)
+                .hasMessage("[ERROR] 장바구니에 없는 상품이 있습니다.");
+    }
+
+    @Test
+    void 자연수가_아닌_항목의_ID로_수량을_변경하는_경우() {
+        UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(
+                List.of(new UpdateCartItemElement(0L, 10, false),
+                        new UpdateCartItemElement(2L, 1, true)));
+        assertThatThrownBy(
+                () -> cartService.updateItem("puterism", updateCartItemRequest))
+                .isInstanceOf(InvalidCartItemException.class)
+                .hasMessage("[ERROR] 항목 ID는 자연수여야 합니다.");
+    }
+
+    @Test
+    void 자연수가_아닌_상품의_수량으로_수량을_변경하는_경우() {
+        UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(
+                List.of(new UpdateCartItemElement(1L, 0, false),
+                        new UpdateCartItemElement(2L, 1, true)));
+        assertThatThrownBy(
+                () -> cartService.updateItem("puterism", updateCartItemRequest))
+                .isInstanceOf(InvalidCartItemException.class)
+                .hasMessage("[ERROR] 상품 수는 자연수여야 합니다.");
     }
 
     @Test
@@ -83,6 +132,30 @@ public class CartServiceTest {
         cartService.deleteItem("puterism", deleteCartItemRequest);
         CartResponse cartResponse = cartService.findByUserName("puterism");
         assertThat(cartResponse.getProducts().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 자연수가_아닌_항목의_ID로_상품의_일부를_삭제하는_경우() {
+        DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(
+                List.of(
+                        new DeleteCartItemElement(0L),
+                        new DeleteCartItemElement(2L)));
+        assertThatThrownBy(
+                () -> cartService.deleteItem("puterism", deleteCartItemRequest))
+                .isInstanceOf(InvalidCartItemException.class)
+                .hasMessage("[ERROR] 항목 ID는 자연수여야 합니다.");
+    }
+
+    @Test
+    void 장바구니_내의_존재하지_않는_상품의_일부를_삭제하는_경우() {
+        DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(
+                List.of(
+                        new DeleteCartItemElement(10L),
+                        new DeleteCartItemElement(2L)));
+        assertThatThrownBy(
+                () -> cartService.deleteItem("puterism", deleteCartItemRequest))
+                .isInstanceOf(InvalidCartItemException.class)
+                .hasMessage("[ERROR] 장바구니에 없는 상품이 있습니다.");
     }
 
     @Test

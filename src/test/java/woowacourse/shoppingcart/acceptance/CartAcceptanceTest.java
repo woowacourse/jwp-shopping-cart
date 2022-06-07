@@ -133,6 +133,42 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    void 존재하지_않는_사용자의_장바구니에_상품을_추가하는_경우() {
+        String accessToken = jwtTokenProvider.createToken("alpha");
+        AddCartItemRequest addCartItemRequest = new AddCartItemRequest(2L, 3, true);
+        ExtractableResponse extract = createCartItem(accessToken, addCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 존재하지 않는 장바구니입니다.");
+    }
+
+    @Test
+    void 자연수가_아닌_ID로_상품을_추가하는_경우() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        AddCartItemRequest addCartItemRequest = new AddCartItemRequest(0L, 3, true);
+        ExtractableResponse extract = createCartItem(accessToken, addCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 상품 ID는 자연수여야 합니다.");
+    }
+
+    @Test
+    void 자연수가_아닌_수량으로_상품을_추가하는_경우() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        AddCartItemRequest addCartItemRequest = new AddCartItemRequest(1L, 0, true);
+        ExtractableResponse extract = createCartItem(accessToken, addCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 상품 수는 자연수여야 합니다.");
+    }
+
+    @Test
+    void 존재하지_않는_상품으로_장바구니에_상품을_추가하는_경우() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        AddCartItemRequest addCartItemRequest = new AddCartItemRequest(100L, 0, true);
+        ExtractableResponse extract = createCartItem(accessToken, addCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 존재하는 상품이 아닙니다.");
+    }
+
+    @Test
     void 사용자의_장바구니_중_일부_항목을_수정하는_경우() {
         String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
         UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(List.of(new UpdateCartItemElement(3L, 10, false)));
@@ -145,6 +181,42 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(cartResponseElements.get(0).getQuantity()).isEqualTo(10),
                 () -> assertThat(cartResponseElements.get(0).getCheck()).isFalse()
         );
+    }
+
+    @Test
+    void 자연수가_아닌_항목_ID로_일부_항목을_수정하는_경우() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(List.of(new UpdateCartItemElement(0L, 10, false)));
+        ExtractableResponse extract = updateCartItem(accessToken, updateCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 항목 ID는 자연수여야 합니다.");
+    }
+
+    @Test
+    void 장바구니에_없는_항목을_수정하는_경우() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(List.of(new UpdateCartItemElement(5L, 10, false)));
+        ExtractableResponse extract = updateCartItem(accessToken, updateCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 장바구니에 없는 상품이 있습니다.");
+    }
+
+    @Test
+    void 자연수가_아닌_수량으로_수정하는_경우() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(List.of(new UpdateCartItemElement(1L, 0, false)));
+        ExtractableResponse extract = updateCartItem(accessToken, updateCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 상품 수는 자연수여야 합니다.");
+    }
+
+    @Test
+    void 존재하지_않는_사용자의_장바구니로_수정하는_경우() {
+        String accessToken = jwtTokenProvider.createToken("alpha");
+        UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(List.of(new UpdateCartItemElement(1L, 0, false)));
+        ExtractableResponse extract = updateCartItem(accessToken, updateCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 존재하지 않는 장바구니입니다.");
     }
 
     @Test
@@ -161,6 +233,33 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(cartResponseElements.get(0).getQuantity()).isEqualTo(2),
                 () -> assertThat(cartResponseElements.get(0).getCheck()).isFalse()
         );
+    }
+
+    @Test
+    void 자연수가_아닌_항목_ID로_일부_항목을_삭제하는_경우() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(List.of(new DeleteCartItemElement(0L), new DeleteCartItemElement(3L)));
+        ExtractableResponse extract = deleteCartItem(accessToken, deleteCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 항목 ID는 자연수여야 합니다.");
+    }
+
+    @Test
+    void 장바구니에_존재하지_않는_일부_항목을_삭제하는_경우() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(List.of(new DeleteCartItemElement(7L), new DeleteCartItemElement(3L)));
+        ExtractableResponse extract = deleteCartItem(accessToken, deleteCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 장바구니에 없는 상품이 있습니다.");
+    }
+
+    @Test
+    void 존재하지_않는_사용자의_장바구니에_일부_항목을_삭제하는_경우() {
+        String accessToken = jwtTokenProvider.createToken("alpha");
+        DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(List.of(new DeleteCartItemElement(7L), new DeleteCartItemElement(3L)));
+        ExtractableResponse extract = deleteCartItem(accessToken, deleteCartItemRequest, HttpStatus.BAD_REQUEST);
+        assertThat(extract.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 존재하지 않는 장바구니입니다.");
     }
 
     @Test

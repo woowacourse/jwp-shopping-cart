@@ -77,7 +77,7 @@ public class CartService {
             inCartProducts.add(products.stream()
                             .filter(product -> product.isSameId(productId))
                             .findAny()
-                            .orElseThrow(InvalidCartItemException::new)
+                            .orElseThrow(() -> new InvalidCartItemException(NOT_EXIST_CART_ITEM))
             );
         }
         return inCartProducts;
@@ -87,7 +87,10 @@ public class CartService {
         validateExistName(username);
         Long id = customerDao.findIdByUserName(username);
         Long productId = addCartItemRequest.getProductId();
+        validatePositiveProductId(productId);
+        validateExistProductId(productId);
         int quantity = addCartItemRequest.getQuantity();
+        validatePositiveQuantity(quantity);
         if (cartItemDao.isCartContains(id, productId)) {
             cartItemDao.increaseQuantity(id, productId, quantity);
             return;
@@ -95,17 +98,59 @@ public class CartService {
         cartItemDao.saveItemInCart(id, productId, quantity);
     }
 
+    private void validatePositiveQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new InvalidCartItemException("[ERROR] 상품 수는 자연수여야 합니다.");
+        }
+    }
+
+    private void validateExistProductId(Long productId) {
+        if (!productDao.isValidId(productId)) {
+            throw new InvalidCartItemException("[ERROR] 존재하는 상품이 아닙니다.");
+        }
+    }
+
+    private void validatePositiveProductId(Long productId) {
+        if (productId <= 0) {
+            throw new InvalidCartItemException("[ERROR] 상품 ID는 자연수여야 합니다.");
+        }
+    }
+
     public CartResponse updateItem(String username, UpdateCartItemRequest updateCartItemRequest) {
         validateExistName(username);
         Long id = customerDao.findIdByUserName(username);
         List<Long> cartIds = updateCartItemRequest.getCartIds();
+        validatePositiveCartIds(cartIds);
+        validateExistCartIds(cartIds, id);
         List<Integer> quantities = updateCartItemRequest.getQuantities();
+        validatePositiveQuantities(quantities);
         List<Boolean> checked = updateCartItemRequest.getChecked();
         for (int i = 0; i < quantities.size(); i++) {
             cartItemDao.updateQuantityAndCheck(id, cartIds.get(i), quantities.get(i), checked.get(i));
         }
         Cart cart = generateCart(id);
         return new CartResponse(generateUpdatedCart(cart, cartIds, quantities, checked));
+    }
+
+    private void validatePositiveQuantities(List<Integer> quantities) {
+        if (quantities.stream().anyMatch(quantity -> quantity <= 0)) {
+            throw new InvalidCartItemException("[ERROR] 상품 수는 자연수여야 합니다.");
+        }
+    }
+
+    private void validateExistCartIds(List<Long> cartIds, Long customerId) {
+        List<Long> totalIds = cartItemDao.findCartItemByUserId(customerId).stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+        if (cartIds.stream().anyMatch(cartId -> !totalIds.contains(cartId))) {
+            throw new InvalidCartItemException(NOT_EXIST_CART_ITEM);
+        }
+    }
+
+    private void validatePositiveCartIds(List<Long> cartIds) {
+        if (cartIds.stream().anyMatch(cartId -> cartId <= 0)) {
+            throw new InvalidCartItemException("[ERROR] 항목 ID는 자연수여야 합니다.");
+        }
     }
 
     private Cart generateUpdatedCart(Cart cart, List<Long> cartIds, List<Integer> quantities, List<Boolean> checked) {
@@ -121,6 +166,8 @@ public class CartService {
         validateExistName(username);
         Long id = customerDao.findIdByUserName(username);
         List<Long> cartIds = deleteCartItemRequest.getIds();
+        validatePositiveCartIds(cartIds);
+        validateExistCartIds(cartIds, id);
         for (Long cartId : cartIds) {
             cartItemDao.deleteOneItem(id, cartId);
         }
