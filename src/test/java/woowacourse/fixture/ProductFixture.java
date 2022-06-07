@@ -28,8 +28,15 @@ public class ProductFixture {
     public static ExtractableResponse<Response> findProductById(final Long id) {
         return RestAssured
                 .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/products/{productId}", id)
+                .when().get("/products/" + id)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> findProductsInPage(final Long pageNum, final Long limitCount) {
+        return RestAssured
+                .given().log().all()
+                .when().get("/products?page=" + pageNum + "&limit=" + limitCount)
                 .then().log().all()
                 .extract();
     }

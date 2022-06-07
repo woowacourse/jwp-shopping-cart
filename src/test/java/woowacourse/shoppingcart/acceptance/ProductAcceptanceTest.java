@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.ProductFixture.findProductById;
+import static woowacourse.fixture.ProductFixture.findProductsInPage;
 import static woowacourse.fixture.ProductFixture.getProductId;
 
 @DisplayName("상품 관련 기능 인수테스트")
@@ -43,7 +44,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("상품을 조회한다.")
     @Test
-    void getProduct() {
+    void findById() {
         // given
         Long productId = getProductId("치킨", 10_000, "http://example.com/chicken.jpg");
 
@@ -73,6 +74,24 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
                         "존재하지 않는 상품입니다."
                 )
+        );
+    }
+
+    @DisplayName("현재 페이지에 해당하는 상품 목록을 조회한다.")
+    @Test
+    void findInPage() {
+        // given
+        Long productId1 = getProductId("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId2 = getProductId("치킨2", 10_000, "http://example.com/chicken.jpg");
+        Long productId3 = getProductId("치킨3", 10_000, "http://example.com/chicken.jpg");
+        Long productId4 = getProductId("치킨4", 10_000, "http://example.com/chicken.jpg");
+
+        // when
+        ExtractableResponse<Response> response = findProductsInPage(1L, 5L);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
 

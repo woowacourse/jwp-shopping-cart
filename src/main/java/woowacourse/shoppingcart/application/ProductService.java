@@ -19,10 +19,6 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
-    }
-
     public Long addProduct(final Product product) {
         return productDao.save(product);
     }
@@ -31,6 +27,15 @@ public class ProductService {
         Product product = productDao.findById(productId)
                 .orElseThrow(() -> new ProductDataNotFoundException("존재하지 않는 상품입니다."));
         return ProductResponse.from(product);
+    }
+
+    public List<Product> findProducts() {
+        return productDao.findProducts();
+    }
+
+    public List<ProductResponse> findProductsInPage(final Long pageNum, final Long limitCount) {
+        List<Product> products = productDao.findProductsInPage(pageNum, limitCount);
+        return ProductResponse.from(products);
     }
 
     public void deleteProductById(final Long productId) {

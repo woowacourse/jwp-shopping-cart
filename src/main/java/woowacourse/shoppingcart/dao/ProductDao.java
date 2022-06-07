@@ -66,6 +66,12 @@ public class ProductDao {
                         ));
     }
 
+    public List<Product> findProductsInPage(final Long pageNumber, final Long limitCount) {
+        Long startIndex = (pageNumber - 1) * limitCount;
+        String query = "SELECT id, name, price, image_url FROM product ORDERS LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER, limitCount, startIndex);
+    }
+
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);

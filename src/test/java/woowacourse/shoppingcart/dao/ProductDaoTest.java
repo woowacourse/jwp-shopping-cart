@@ -11,8 +11,10 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -57,18 +59,26 @@ public class ProductDaoTest {
         );
     }
 
-    @DisplayName("상품 목록 조회")
+    @DisplayName("현재 페이지에 해당되는 상품 목록을 조회한다.")
     @Test
-    void getProducts() {
-
+    void findProductsInPage() {
         // given
-        final int size = 0;
+        productDao.save(new Product("초콜렛", 1_000, "www.test.com"));
+        productDao.save(new Product("초콜렛2", 1_000, "www.test2.com"));
+        productDao.save(new Product("초콜렛3", 1_000, "www.test3.com"));
+        productDao.save(new Product("초콜렛4", 1_000, "www.test4.com"));
 
         // when
-        final List<Product> products = productDao.findProducts();
+        List<Product> products = productDao.findProductsInPage(1L, 5L);
+        List<String> productNames = products.stream()
+                .map(Product::getName)
+                .collect(Collectors.toList());
 
         // then
-        assertThat(products).size().isEqualTo(size);
+        assertAll(
+                () -> assertThat(products).size().isEqualTo(4),
+                () -> assertThat(productNames).contains("초콜렛", "초콜렛2", "초콜렛3", "초콜렛4")
+        );
     }
 
     @DisplayName("싱품 삭제")

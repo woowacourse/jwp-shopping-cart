@@ -41,6 +41,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.findById(productId));
     }
 
+    @GetMapping(value = "/products", params = {"page", "limit"})
+    public ResponseEntity<List<ProductResponse>> findProductsInPage(@RequestParam final Long page, @RequestParam final Long limit) {
+        return ResponseEntity.ok(productService.findProductsInPage(page, limit));
+    }
+
     @DeleteMapping("/api/products/{productId}")
     public ResponseEntity<Void> delete(@PathVariable final Long productId) {
         productService.deleteProductById(productId);

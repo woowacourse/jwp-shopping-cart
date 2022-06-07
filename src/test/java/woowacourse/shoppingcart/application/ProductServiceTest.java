@@ -10,8 +10,12 @@ import woowacourse.shoppingcart.application.dto.response.ProductResponse;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
@@ -26,14 +30,14 @@ class ProductServiceTest {
     @Test
     void findById() {
         // given
-        Long productId = productService.addProduct(new Product("name", 1_000, "url"));
+        Long productId = productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
 
         // when
         ProductResponse productResponse = productService.findById(productId);
 
         // then
         assertThat(productResponse).usingRecursiveComparison().isEqualTo(
-                new ProductResponse(productId, "name", 1_000, "url")
+                new ProductResponse(productId, "초콜렛", 1_000, "www.test.com")
         );
     }
 
@@ -44,5 +48,27 @@ class ProductServiceTest {
         assertThatThrownBy(() -> productService.findById(1L))
                 .isInstanceOf(ProductDataNotFoundException.class)
                 .hasMessage("존재하지 않는 상품입니다.");
+    }
+
+    @DisplayName("현재 페이지에 해당하는 상품 목록을 조회한다.")
+    @Test
+    void findProductsInPage() {
+        // given
+        productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
+        productService.addProduct(new Product("초콜렛2", 1_000, "www.test2.com"));
+        productService.addProduct(new Product("초콜렛3", 1_000, "www.test3.com"));
+        productService.addProduct(new Product("초콜렛4", 1_000, "www.test4.com"));
+
+        // when
+        List<ProductResponse> productResponses = productService.findProductsInPage(1L, 5L);
+        List<String> productNames = productResponses.stream()
+                .map(ProductResponse::getName)
+                .collect(Collectors.toList());
+
+        // then
+        assertAll(
+                () -> assertThat(productResponses).size().isEqualTo(4),
+                () -> assertThat(productNames).contains("초콜렛", "초콜렛2", "초콜렛3", "초콜렛4")
+        );
     }
 }
