@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> products() {
+    public ResponseEntity<List<ProductResponse>> findProducts() {
         return ResponseEntity.ok(productService.findProducts());
     }
 
@@ -40,7 +40,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
+    public ResponseEntity<ProductResponse> findProduct(@PathVariable final Long productId) {
         return ResponseEntity.ok(productService.findProductById(productId));
     }
 
