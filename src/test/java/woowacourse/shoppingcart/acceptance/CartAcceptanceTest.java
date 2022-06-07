@@ -174,7 +174,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
         final TokenRequest tokenRequest = new TokenRequest(customerRequest.getEmail(), customerRequest.getPassword());
         final ExtractableResponse<Response> loginResponse = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
 
-        // when
         final String accessToken = extractAccessToken(loginResponse);
 
         return new Header("Authorization", BEARER + accessToken);
