@@ -1,15 +1,15 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class ProductDao {
@@ -20,29 +20,47 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
-            return preparedStatement;
-        }, keyHolder);
+    public Product save(final Product product) {
+        final ThumbnailImage thumbnailImage = product.getThumbnailImage();
+        final SimpleJdbcInsert productSimpleInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
+        final SimpleJdbcInsert imagesSimpleInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("images")
+                .usingGeneratedKeyColumns("id");
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        final SqlParameterSource productParams = new MapSqlParameterSource()
+                .addValue("name", product.getName())
+                .addValue("price", product.getPrice())
+                .addValue("stock_quantity", product.getStockQuantity());
+
+        final Long id = productSimpleInsert.executeAndReturnKey(productParams).longValue();
+
+        final SqlParameterSource imagePrams = new MapSqlParameterSource()
+                .addValue("product_id", id)
+                .addValue("url", thumbnailImage.getUrl())
+                .addValue("alt", thumbnailImage.getAlt());
+
+        imagesSimpleInsert.execute(imagePrams);
+
+        return new Product(id, product.getName(), product.getPrice(), product.getStockQuantity(),
+                new ThumbnailImage(thumbnailImage.getUrl(), thumbnailImage.getAlt()));
     }
 
     public Product findProductById(final Long productId) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
+            final String sql =
+                    "select p.id as id, p.name as name, p.price as price, p.stock_quantity as quantity, i.url as url, i.alt as alt "
+                            + "from product as p "
+                            + "inner join images as i on p.id = i.product_id "
+                            + "where p.id = ?";
+            return jdbcTemplate.queryForObject(sql, (resultSet, rowNumber) ->
                     new Product(
                             productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
+                            resultSet.getString("name"),
+                            resultSet.getInt("price"),
+                            resultSet.getLong("quantity"),
+                            new ThumbnailImage(resultSet.getString("url"), resultSet.getString("alt"))
                     ), productId
             );
         } catch (EmptyResultDataAccessException e) {
@@ -51,15 +69,20 @@ public class ProductDao {
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
+        final String sql =
+                "select p.id as id, p.name as name, p.price as price, p.stock_quantity as quantity, i.url as url, i.alt as alt "
+                        + "from product as p "
+                        + "inner join images as i on p.id = i.product_id";
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) ->
                         new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
-                        ));
+                                rs.getLong("id"),
+                                rs.getString("name"),
+                                rs.getInt("price"),
+                                rs.getLong("quantity"),
+                                new ThumbnailImage(rs.getString("url"), rs.getString("alt"))
+                        )
+        );
     }
 
     public void delete(final Long productId) {
