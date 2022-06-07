@@ -51,7 +51,7 @@ public class CartItemDaoTest {
         final Long cartId = cartItemDao.addCartItem(customerId, productId);
 
         // then
-        assertThat(cartId).isEqualTo(3L);
+        assertThat(cartId).isEqualTo(5L);
     }
 
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
@@ -79,7 +79,7 @@ public class CartItemDaoTest {
         final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
 
         // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        assertThat(cartIds).containsExactly(3L, 4L);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
@@ -96,6 +96,6 @@ public class CartItemDaoTest {
         final Long customerId = 1L;
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
-        assertThat(productIds).containsExactly(2L);
+        assertThat(productIds).containsExactly(1L, 2L);
     }
 }

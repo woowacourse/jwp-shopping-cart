@@ -1,3 +1,4 @@
+
 insert into customer (loginId, username, password)
 values ('puterism@gmail.com', 'puterism', '3ff9c39a6c154bf5c37a02c5bfc4656cca8b8d588d70dcd5eb6654b59ca06b56'),
        ('tanney@gmail.com-102','tanney-102', '3ff9c39a6c154bf5c37a02c5bfc4656cca8b8d588d70dcd5eb6654b59ca06b56'),
@@ -25,3 +26,23 @@ values ('puterism@gmail.com', 'puterism', '3ff9c39a6c154bf5c37a02c5bfc4656cca8b8
        ('yujo11@gmail.com','yujo11', '3ff9c39a6c154bf5c37a02c5bfc4656cca8b8d588d70dcd5eb6654b59ca06b56'),
        ('sunhpark42@gmail.com','sunhpark42', '3ff9c39a6c154bf5c37a02c5bfc4656cca8b8d588d70dcd5eb6654b59ca06b56')
 ;
+
+insert into product (id, name, price, image_url)
+values (1, '테스트 1', '1000', 'test'),
+       (2, '테스트 2', '2000', 'test'),
+       (3, '테스트 3', '3000', 'test');
+
+insert into cart_item (id, customer_id, product_id)
+values (1, 25, 1),
+       (2, 25, 2);
+
+insert into orders (id, customer_id)
+values (1, 25),
+       (2, 25);
+
+insert into orders_detail (id, orders_id, product_id, quantity)
+values (1, 1, 1, 1),
+       (2, 1, 2, 2),
+       (3, 2, 2, 3),
+       (4, 2, 3, 4);
+
