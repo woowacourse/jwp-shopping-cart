@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.ShoppingCartFixture.PRODUCT_URI;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -76,7 +75,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     void getProductWithProductIDHasNoResource() {
         //given  // when
-        final ExtractableResponse<Response> 제품_조회 =상품_조회_요청(1L);
+        final ExtractableResponse<Response> 제품_조회 = 상품_조회_요청(1L);
         final ExceptionResponse 제품_조회_예외 = 제품_조회.as(ExceptionResponse.class);
 
         //then

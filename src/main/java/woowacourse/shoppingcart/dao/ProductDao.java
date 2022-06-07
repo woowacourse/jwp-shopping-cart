@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
@@ -19,6 +20,13 @@ public class ProductDao {
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (rs, rowNum) -> new Product(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getInt("price"),
+            rs.getString("image_url")
+    );
 
     public Long save(final Product product) {
         final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
@@ -37,15 +45,8 @@ public class ProductDao {
 
     public Optional<Product> findProductById(final Long productId) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"),
-                            resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
-            ));
+            final String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, productId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -53,14 +54,7 @@ public class ProductDao {
 
     public List<Product> findProducts() {
         final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
-                        ));
+        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
     }
 
     public boolean delete(final Long productId) {
