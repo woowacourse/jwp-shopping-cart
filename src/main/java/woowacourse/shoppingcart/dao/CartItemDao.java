@@ -93,7 +93,12 @@ public class CartItemDao {
     }
 
     public CartItemEntity findCartItemById(long id) {
-        final String sql = "SELECT * FROM cart_item WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, cartItemEntityRowMapper, id);
+        try {
+            final String sql = "SELECT * FROM cart_item WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, cartItemEntityRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
     }
+    
 }
