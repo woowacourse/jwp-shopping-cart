@@ -60,16 +60,18 @@ public class CartItemDao {
         return namedParameterJdbcTemplate.queryForObject(sql, parameters, Boolean.class);
     }
 
-    public void updateQuantity(Long id, Integer quantity) {
-        String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
-        MapSqlParameterSource parameters = new MapSqlParameterSource("id", id)
+    public void updateQuantity(Long memberId, Long productId, Integer quantity) {
+        String sql = "UPDATE cart_item SET quantity = :quantity WHERE member_id = :member_id AND product_id = :product_id";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("member_id", memberId)
+                .addValue("product_id", productId)
                 .addValue("quantity", quantity);
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 
-    public void deleteById(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = :id";
-        MapSqlParameterSource parameters = new MapSqlParameterSource("id", id);
+    public void deleteByMemberIdAndProductId(Long memberId, Long productId) {
+        final String sql = "DELETE FROM cart_item WHERE member_id = :member_id AND product_id = :product_id";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("member_id", memberId)
+                .addValue("product_id", productId);
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 }

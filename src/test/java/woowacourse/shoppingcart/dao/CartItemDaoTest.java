@@ -96,7 +96,7 @@ public class CartItemDaoTest {
         CartItem cartItem = new CartItem(memberId, productId, 1);
         Long cartItemId = cartItemDao.save(cartItem);
 
-        cartItemDao.updateQuantity(cartItemId, 2);
+        cartItemDao.updateQuantity(cartItemId, productId, 2);
         CartItem persistCartItem = cartItemDao.findByMemberId(memberId)
                 .get(0);
 
@@ -109,9 +109,9 @@ public class CartItemDaoTest {
         Long memberId = memberDao.save(new Member("abc@woowahan.com", "1q2w3e4r!", "우테코"));
         Long productId = productDao.save(new Product("banana", 1_000, 1, "woowa1.com"));
         CartItem cartItem = new CartItem(memberId, productId, 1);
-        Long cartItemId = cartItemDao.save(cartItem);
+        cartItemDao.save(cartItem);
 
-        cartItemDao.deleteById(cartItemId);
+        cartItemDao.deleteByMemberIdAndProductId(memberId, productId);
         boolean exists = cartItemDao.exists(memberId, productId);
 
         assertThat(exists).isFalse();
