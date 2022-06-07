@@ -19,15 +19,16 @@ import woowacourse.shoppingcart.product.support.jdbc.dao.ProductDao;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
+class CartItemDaoTest {
+
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartItemDaoTest(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+        this.cartItemDao = new CartItemDao(jdbcTemplate);
+        this.productDao = new ProductDao(jdbcTemplate);
     }
 
     @BeforeEach
@@ -42,7 +43,6 @@ public class CartItemDaoTest {
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
-
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
@@ -57,7 +57,6 @@ public class CartItemDaoTest {
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
@@ -71,7 +70,6 @@ public class CartItemDaoTest {
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
@@ -85,7 +83,6 @@ public class CartItemDaoTest {
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void deleteCartItem() {
-
         // given
         final Long cartId = 1L;
 

@@ -23,7 +23,7 @@ import woowacourse.support.acceptance.AcceptanceTest;
 import woowacourse.support.acceptance.RequestHandler;
 
 @DisplayName("회원 관련 기능")
-public class CustomerAcceptanceTest extends AcceptanceTest {
+class CustomerAcceptanceTest extends AcceptanceTest {
 
     private static final String CUSTOMER_EMAIL = "guest@woowa.com";
     private static final String CUSTOMER_NAME = "guest";
@@ -161,7 +161,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
-        final CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD+"1");
+        final CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD + "1");
 
         // when
         final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",

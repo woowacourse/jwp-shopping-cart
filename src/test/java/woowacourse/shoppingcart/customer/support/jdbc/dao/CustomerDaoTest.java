@@ -37,7 +37,7 @@ class CustomerDaoTest {
         final Customer customer = new Customer(CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD);
         final Long customerId = customerDao.save(customer);
 
-        assertThat(customerId).isGreaterThan(0);
+        assertThat(customerId).isPositive();
     }
 
     @DisplayName("회원을 아이디로 조회한다.")
@@ -100,7 +100,7 @@ class CustomerDaoTest {
 
         customerDao.update(customer);
 
-        Optional<Customer> actual = customerDao.findById(customer.getId());
+        final Optional<Customer> actual = customerDao.findById(customer.getId());
 
         assertThat(actual).isPresent();
         assertThat(actual.get()).extracting("nickname", "password")

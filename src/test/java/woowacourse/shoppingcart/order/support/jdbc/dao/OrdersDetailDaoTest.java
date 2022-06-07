@@ -26,7 +26,7 @@ class OrdersDetailDaoTest {
     private long productId;
     private long customerId;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
+    public OrdersDetailDaoTest(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
     }
@@ -46,10 +46,10 @@ class OrdersDetailDaoTest {
     @Test
     void addOrdersDetail() {
         //given
-        int quantity = 5;
+        final int quantity = 5;
 
         //when
-        Long orderDetailId = ordersDetailDao
+        final Long orderDetailId = ordersDetailDao
                 .addOrdersDetail(ordersId, productId, quantity);
 
         //then
@@ -62,9 +62,8 @@ class OrdersDetailDaoTest {
         //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
-            jdbcTemplate
-                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-                            ordersId, productId, 3);
+            jdbcTemplate.update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
+                    ordersId, productId, 3);
         }
 
         //when

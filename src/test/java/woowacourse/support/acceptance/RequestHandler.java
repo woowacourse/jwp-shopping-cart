@@ -8,7 +8,7 @@ import io.restassured.response.Response;
 
 public class RequestHandler {
 
-    public static ExtractableResponse<Response> getRequest(String url) {
+    public static ExtractableResponse<Response> getRequest(final String url) {
         return RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -17,7 +17,7 @@ public class RequestHandler {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> getRequest(String url, String accessToken) {
+    public static ExtractableResponse<Response> getRequest(final String url, final String accessToken) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -27,7 +27,7 @@ public class RequestHandler {
                 .extract();
     }
 
-    public static <T> ExtractableResponse<Response> postRequest(String url, T requestBody) {
+    public static <T> ExtractableResponse<Response> postRequest(final String url, final T requestBody) {
         return RestAssured.given().log().all()
                 .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -37,7 +37,7 @@ public class RequestHandler {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> postRequest(String url, String accessToken) {
+    public static ExtractableResponse<Response> postRequest(final String url, final String accessToken) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -47,7 +47,7 @@ public class RequestHandler {
                 .extract();
     }
 
-    public static <T> ExtractableResponse<Response> putRequest(String url, T requestBody) {
+    public static <T> ExtractableResponse<Response> putRequest(final String url, final T requestBody) {
         return RestAssured.given().log().all()
                 .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +58,8 @@ public class RequestHandler {
                 .extract();
     }
 
-    public static <T> ExtractableResponse<Response> patchRequest(String url, T requestBody, String accessToken) {
+    public static <T> ExtractableResponse<Response> patchRequest(final String url, final T requestBody,
+                                                                 final String accessToken) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .body(requestBody)
@@ -70,7 +71,7 @@ public class RequestHandler {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> deleteRequest(String url) {
+    public static ExtractableResponse<Response> deleteRequest(final String url) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -79,7 +80,8 @@ public class RequestHandler {
                 .extract();
     }
 
-    public static <T> ExtractableResponse<Response> deleteRequest(String url, T requestBody, String accessToken) {
+    public static <T> ExtractableResponse<Response> deleteRequest(final String url, final T requestBody,
+                                                                  final String accessToken) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .body(requestBody)

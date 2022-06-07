@@ -19,11 +19,11 @@ import woowacourse.shoppingcart.product.domain.Product;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql("classpath:schema.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class ProductDaoTest {
+class ProductDaoTest {
 
     private final ProductDao productDao;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
+    public ProductDaoTest(final JdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 

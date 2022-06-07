@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.customer.dto.CustomerRegisterRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CustomerControllerTest {
+class CustomerControllerTest {
 
     private static final String NORMAL_EMAIL = "guest@woowa.com";
     private static final String NORMAL_NAME = "guest";

@@ -15,12 +15,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class WebConfigTest {
+class WebConfigTest {
+
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void cors() throws Exception {
+    void cors() throws Exception {
         mockMvc.perform(
                         options("/api/products")
                                 .header(HttpHeaders.ORIGIN, "http://localhost:8080")

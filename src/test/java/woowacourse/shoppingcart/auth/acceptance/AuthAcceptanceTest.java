@@ -16,7 +16,7 @@ import woowacourse.support.acceptance.AcceptanceTest;
 import woowacourse.support.acceptance.RequestHandler;
 
 @DisplayName("인증 관련 기능")
-public class AuthAcceptanceTest extends AcceptanceTest {
+class AuthAcceptanceTest extends AcceptanceTest {
 
     private static final String CUSTOMER_EMAIL = "guest@woowa.com";
     private static final String CUSTOMER_NAME = "guest";

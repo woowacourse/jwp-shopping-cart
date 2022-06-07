@@ -20,7 +20,7 @@ class OrderDaoTest {
     private final JdbcTemplate jdbcTemplate;
     private final OrderDao orderDao;
 
-    public OrderDaoTest(JdbcTemplate jdbcTemplate) {
+    public OrderDaoTest(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.orderDao = new OrderDao(jdbcTemplate);
     }

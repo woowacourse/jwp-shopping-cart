@@ -12,6 +12,7 @@ import io.restassured.RestAssured;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Sql("classpath:init.sql")
 public class AcceptanceTest {
+
     @LocalServerPort
     int port;
 

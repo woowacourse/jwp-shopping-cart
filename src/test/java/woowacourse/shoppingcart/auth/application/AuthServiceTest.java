@@ -56,14 +56,16 @@ class AuthServiceTest {
         @DisplayName("이메일에 해당하는 회원이 존재하지 않을 경우")
         @Test
         void loginWithWrongEmail() {
-            assertThatThrownBy(() -> authService.login(new TokenRequest("admin@woowa.com", "qwer1234!@#$")))
+            final TokenRequest tokenRequest = new TokenRequest("admin@woowa.com", "qwer1234!@#$");
+            assertThatThrownBy(() -> authService.login(tokenRequest))
                     .isInstanceOf(NoSuchEmailException.class);
         }
 
         @DisplayName("비밀번호가 일치하지 않을 경우, 로그인에 실패한다.")
         @Test
         void loginWithWrongPassword() {
-            assertThatThrownBy(() -> authService.login(new TokenRequest("guest@woowa.com", "wrongqwe123!@#")))
+            final TokenRequest tokenRequest = new TokenRequest("guest@woowa.com", "wrongqwe123!@#");
+            assertThatThrownBy(() -> authService.login(tokenRequest))
                     .isInstanceOf(WrongPasswordException.class);
         }
     }
