@@ -5,7 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import woowacourse.auth.ui.LoginInterceptor;
+import woowacourse.auth.controller.LoginInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

@@ -1,4 +1,4 @@
-package woowacourse.auth.ui;
+package woowacourse.auth.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
