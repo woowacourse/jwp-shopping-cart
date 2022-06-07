@@ -19,8 +19,8 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public List<Product> findProducts(int size, int page) {
+        return productDao.findProductsByPage(size, page);
     }
 
     public Long addProduct(final Product product) {

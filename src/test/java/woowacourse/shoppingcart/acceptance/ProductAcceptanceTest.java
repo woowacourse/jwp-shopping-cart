@@ -1,62 +1,20 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Product;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
-    @DisplayName("상품을 추가한다")
-    @Test
-    void addProduct() {
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
-
-        상품_추가됨(response);
-    }
-
-    @DisplayName("상품 목록을 조회한다")
-    @Test
-    void getProducts() {
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-
-        ExtractableResponse<Response> response = 상품_목록_조회_요청();
-
-        조회_응답됨(response);
-        상품_목록_포함됨(productId1, productId2, response);
-    }
-
-    @DisplayName("상품을 조회한다")
-    @Test
-    void getProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-
-        ExtractableResponse<Response> response = 상품_조회_요청(productId);
-
-        조회_응답됨(response);
-        상품_조회됨(response, productId);
-    }
-
-    @DisplayName("상품을 삭제한다")
-    @Test
-    void deleteProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-
-        ExtractableResponse<Response> response = 상품_삭제_요청(productId);
-
-        상품_삭제됨(response);
-    }
-
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
         Product productRequest = new Product(name, price, imageUrl);
 
@@ -69,11 +27,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_목록_조회_요청() {
+    public static ExtractableResponse<Response> 상품_목록_조회_요청(int page) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
+                .when().get("/api/products?page=" + page)
                 .then().log().all()
                 .extract();
     }
@@ -114,7 +72,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
                 .map(Product::getId)
                 .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productId1, productId2);
+        assertThat(resultProductIds).containsOnly(productId1, productId2);
     }
 
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
@@ -124,5 +82,56 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static void 상품_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("상품을 추가한다")
+    @Test
+    void addProduct() {
+        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
+
+        상품_추가됨(response);
+    }
+
+    @DisplayName("상품 목록을 조회한다")
+    @Test
+    void getProducts() {
+        Long productId1 = 상품_등록되어_있음("맥주1", 20_000, "http://example.com/beer.jpg");
+        Long productId2 = 상품_등록되어_있음("맥주2", 20_000, "http://example.com/beer.jpg");
+        Long productId3 = 상품_등록되어_있음("맥주3", 20_000, "http://example.com/beer.jpg");
+        Long productId4 = 상품_등록되어_있음("맥주4", 20_000, "http://example.com/beer.jpg");
+        Long productId5 = 상품_등록되어_있음("맥주5", 20_000, "http://example.com/beer.jpg");
+        Long productId6 = 상품_등록되어_있음("맥주6", 20_000, "http://example.com/beer.jpg");
+        Long productId7 = 상품_등록되어_있음("맥주7", 20_000, "http://example.com/beer.jpg");
+        Long productId8 = 상품_등록되어_있음("맥주8", 20_000, "http://example.com/beer.jpg");
+        Long productId9 = 상품_등록되어_있음("맥주9", 20_000, "http://example.com/beer.jpg");
+        Long productId10 = 상품_등록되어_있음("맥주10", 20_000, "http://example.com/beer.jpg");
+        Long productId11 = 상품_등록되어_있음("맥주11", 20_000, "http://example.com/beer.jpg");
+        Long productId12 = 상품_등록되어_있음("맥주12", 20_000, "http://example.com/beer.jpg");
+
+        ExtractableResponse<Response> response = 상품_목록_조회_요청(2);
+
+        조회_응답됨(response);
+        상품_목록_포함됨(productId11, productId12, response);
+    }
+
+    @DisplayName("상품을 조회한다")
+    @Test
+    void getProduct() {
+        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+
+        ExtractableResponse<Response> response = 상품_조회_요청(productId);
+
+        조회_응답됨(response);
+        상품_조회됨(response, productId);
+    }
+
+    @DisplayName("상품을 삭제한다")
+    @Test
+    void deleteProduct() {
+        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+
+        ExtractableResponse<Response> response = 상품_삭제_요청(productId);
+
+        상품_삭제됨(response);
     }
 }
