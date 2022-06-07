@@ -180,27 +180,6 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
         );
     }
 
-    private ExtractableResponse<Response> 회원가입_요청(final CustomerRequest request) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-    }
-
-    private TokenResponse 로그인_요청_토큰_생성됨(final TokenRequest tokenRequest) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract()
-                .as(TokenResponse.class);
-    }
-
     private ExtractableResponse<Response> 내_정보_조회_요청(final TokenResponse tokenResponse) {
         return RestAssured
                 .given().log().all()

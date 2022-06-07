@@ -29,9 +29,9 @@ public class CustomerService {
 
     public Long signUp(final CustomerRequest customerRequest) {
         validateDuplicateName(customerRequest.getUserName());
-        UserName userName = new UserName(customerRequest.getUserName());
-        PlainPassword plainPassword = new PlainPassword(customerRequest.getPassword());
-        EncryptPassword encryptPassword = plainPassword.toEncryptPassword(passwordEncryptor);
+        final UserName userName = new UserName(customerRequest.getUserName());
+        final PlainPassword plainPassword = new PlainPassword(customerRequest.getPassword());
+        final EncryptPassword encryptPassword = plainPassword.toEncryptPassword(passwordEncryptor);
         return customerDao.save(userName.getValue(), encryptPassword.getValue());
     }
 
