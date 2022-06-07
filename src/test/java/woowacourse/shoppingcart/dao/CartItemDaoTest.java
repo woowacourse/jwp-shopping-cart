@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -57,6 +58,21 @@ public class CartItemDaoTest {
         CartItem persist2 = new CartItem(cartItem2Id, memberId, product2Id, 2);
 
         assertThat(cartItems).containsOnly(persist, persist2);
+    }
+
+    @DisplayName("회원의 장바구니에 저장된 특정 상품을 조회한다.")
+    @Test
+    void findByMemberIdAndProductId() {
+        Long memberId = memberDao.save(new Member("abc@woowahan.com", "1q2w3e4r!", "우테코"));
+        Long productId = productDao.save(new Product("banana", 1_000, 10, "woowa1.com"));
+        CartItem cartItem = new CartItem(memberId, productId, 1);
+        Long cartItemId = cartItemDao.save(cartItem);
+
+        CartItem persist = cartItemDao.findByMemberIdAndProductId(memberId, productId)
+                .orElseGet(() -> fail(""));
+        CartItem expected = new CartItem(cartItemId, memberId, productId, 1);
+
+        assertThat(persist).isEqualTo(expected);
     }
 
     @DisplayName("회원의 장바구니에 상품이 저장되어 있는지 확인한다.")

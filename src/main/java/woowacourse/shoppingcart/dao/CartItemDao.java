@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -53,6 +54,15 @@ public class CartItemDao {
         String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE member_id = :member_id";
         MapSqlParameterSource parameters = new MapSqlParameterSource("member_id", memberId);
         return namedParameterJdbcTemplate.query(sql, parameters, CART_ITEM_MAPPER);
+    }
+
+    public Optional<CartItem> findByMemberIdAndProductId(Long memberId, Long productId) {
+        String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE member_id = :member_id AND product_id = :product_id";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("member_id", memberId)
+                .addValue("product_id", productId);
+        return namedParameterJdbcTemplate.query(sql, parameters, CART_ITEM_MAPPER)
+                .stream()
+                .findAny();
     }
 
     public boolean exists(Long memberId, Long productId) {
