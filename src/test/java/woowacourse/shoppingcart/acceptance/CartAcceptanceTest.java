@@ -64,6 +64,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartItem() {
         String token = createToken("test1@email.com", "Password123!");
         insertCartItem(productId1, token);
+
+        RestAssured.given().log().all()
+          .auth().oauth2(token)
+          .delete("/api/carts/products/" + productId1)
+          .then()
+          .log().all()
+          .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("장바구니 상품 수량 변경")

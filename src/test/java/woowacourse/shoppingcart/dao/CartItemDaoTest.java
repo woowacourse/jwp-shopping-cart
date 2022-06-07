@@ -90,18 +90,18 @@ public class CartItemDaoTest {
         assertThat(result).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("customerId, productId를 넣으면, 장바구니에서 해당 제품을 삭제한다.")
     @Test
     void deleteCartItem() {
 
         // given
-        final Long cartId = 1L;
+        final Long customerId = 1L;
+        final Long productId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteCartItem(customerId, productId);
 
         // then
-        final Long customerId = 1L;
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);

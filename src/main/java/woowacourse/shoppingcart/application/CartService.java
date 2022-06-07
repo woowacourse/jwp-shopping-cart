@@ -64,15 +64,15 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCart(LoginCustomer customer, Long productId) {
+        validateCustomerCart(customer.getNickname(), productId);
+        cartItemDao.deleteCartItem(customer.getId(), productId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<CartItem> cartItems = findCartIdsByCustomerName(customerName);
+    private void validateCustomerCart(String nickname, Long productId) {
+        final List<CartItem> cartItems = findCartIdsByCustomerName(nickname);
         cartItems.stream()
-          .filter(i -> i.matchId(cartId))
+          .filter(i -> i.matchId(productId))
           .findAny()
           .orElseThrow(NotInCustomerCartItemException::new);
     }

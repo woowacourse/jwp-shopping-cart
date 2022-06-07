@@ -68,13 +68,12 @@ public class CartItemDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteCartItem(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
-
-        final int rowCount = jdbcTemplate.update(sql, id);
-        if (rowCount == 0) {
-            throw new InvalidCartItemException();
-        }
+    public void deleteCartItem(Long customerId, Long productId) {
+        final String query = "DELETE FROM cart_item WHERE customer_id = :customer_id AND product_id = :product_id";
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+          .addValue("customer_id", customerId)
+          .addValue("product_id", productId);
+        namedParameterJdbcTemplate.update(query, parameters);
     }
 
     public void updateQuantityById(Long customerId, int quantity, Long productId) {
