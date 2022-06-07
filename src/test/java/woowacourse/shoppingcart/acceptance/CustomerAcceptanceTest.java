@@ -15,16 +15,19 @@ import static woowacourse.Fixtures.예외메세지_검증;
 import static woowacourse.Fixtures.회원가입;
 import static woowacourse.Fixtures.회원탈퇴;
 
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @DisplayName("회원 관련 인수테스트")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -345,5 +348,76 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> NOT_FOUND(response),
                 () -> 예외메세지_검증(response, "존재하지 않는 데이터입니다.")
         );
+    }
+
+    @Test
+    void 중복된_회원여부를_검사한다() {
+        // given
+        회원가입(new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!"));
+
+        // when
+        // then
+        OK(아이디중복검사("hunch@naver.com"));
+        BAD_REQUEST(아이디중복검사("jo@naver.com"));
+    }
+
+    private ExtractableResponse<Response> 아이디중복검사(String username) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("userId", username)
+                .when().get("customers/check")
+                .then().log().all()
+                .extract();
+
+    }
+
+    @Test
+    void 중복된_닉네임여부를_검사한다() {
+        // given
+        회원가입(new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!"));
+
+        // when
+        // then
+        OK(닉네임중복검사("hunch"));
+        BAD_REQUEST(닉네임중복검사("jojogreen"));
+    }
+
+    private ExtractableResponse<Response> 닉네임중복검사(String nickname) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("nickname", nickname)
+                .when().get("customers/check")
+                .then().log().all()
+                .extract();
+
+    }
+
+    @Test
+    void 토큰속_아이디의_비밀번호가_요청값과_일치하는지_검증한다() {
+        // given
+        // 회원가입을 하고 로그인을 하여 토큰을 발급받는다.
+        회원가입(new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!"));
+        String accessToken = 로그인(new CustomerLoginRequest("jo@naver.com", "1234abcd!"))
+                .as(CustomerLoginResponse.class)
+                .getAccessToken();
+
+        //when then
+        OK(비밀번호_검증(new PasswordRequest("1234abcd!"), accessToken));
+        BAD_REQUEST(비밀번호_검증(new PasswordRequest("1234abcd@"), accessToken));
+
+
+    }
+
+    private ExtractableResponse<Response> 비밀번호_검증(PasswordRequest passwordRequest, String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(passwordRequest)
+                .when().post("/auth/customers/match/password")
+                .then().log().all()
+                .extract();
     }
 }

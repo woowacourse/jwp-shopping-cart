@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import javax.validation.ConstraintViolationException;
@@ -102,6 +103,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String,String>> unhandledException(final Exception e) {
+        System.err.println(e.getMessage());
+        System.err.println(Arrays.toString(e.getStackTrace()));
         return ResponseEntity.badRequest().body(toMessageMap(UNHANDLED_ERROR_MESSAGE));
     }
 

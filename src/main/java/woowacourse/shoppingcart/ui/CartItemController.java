@@ -42,8 +42,8 @@ public class CartItemController {
     @PatchMapping
     public ResponseEntity<List<CartProductInfoResponse>> updateCartItems(
             @AuthenticationPrincipal final TokenRequest tokenRequest,
-            @RequestBody final List<CartProductInfoRequest> productIdRequests) {
-        return ResponseEntity.ok().body(cartService.patchCart(productIdRequests, tokenRequest.getCustomerId()));
+            @RequestBody final List<CartProductInfoRequest> cartProductInfoRequests) {
+        return ResponseEntity.ok().body(cartService.patchCart(cartProductInfoRequests, tokenRequest.getCustomerId()));
     }
 
     @DeleteMapping()

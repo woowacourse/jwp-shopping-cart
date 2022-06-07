@@ -40,6 +40,18 @@ public class CustomerController {
         return ResponseEntity.ok().body(customerService.login(request));
     }
 
+    @GetMapping(value = "/customers/check", params = "userId")
+    public ResponseEntity<Void> checkDuplicateUsername(final @RequestParam String userId) {
+        customerService.checkDuplicateUsername(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/customers/check", params = "nickname")
+    public ResponseEntity<Void> checkDuplicateNickname(final @RequestParam String nickname) {
+        customerService.checkDuplicateNickname(nickname);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/auth/customers/profile")
     public ResponseEntity<CustomerResponse> getProfile(final @AuthenticationPrincipal TokenRequest request) {
         return ResponseEntity.ok().body(customerService.findById(request));
@@ -63,18 +75,6 @@ public class CustomerController {
     public ResponseEntity<Void> withdraw(final @AuthenticationPrincipal TokenRequest request) {
         customerService.withdraw(request);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping(value = "/auth/customers/check", params = "userId")
-    public ResponseEntity<Void> checkDuplicateUsername(final @RequestParam String username) {
-        customerService.checkDuplicateUsername(username);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(value = "/auth/customers/check", params = "nickname")
-    public ResponseEntity<Void> checkDuplicateNickname(final @RequestParam String nickname) {
-        customerService.checkDuplicateNickname(nickname);
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/auth/customers/match/password")
