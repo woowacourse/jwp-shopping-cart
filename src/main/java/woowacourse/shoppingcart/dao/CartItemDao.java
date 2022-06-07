@@ -1,14 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 
 @Repository
 public class CartItemDao {
@@ -36,6 +36,15 @@ public class CartItemDao {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
+        }
+    }
+
+    public Optional<Integer> findQuantityByProductIdAndCustomerId(Long customerId, Long productId) {
+        final String sql = "SELECT quantity FROM cart_item WHERE customer_id = ? AND product_id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class, customerId, productId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 

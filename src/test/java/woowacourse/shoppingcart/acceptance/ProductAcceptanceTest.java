@@ -1,39 +1,43 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
 
 @DisplayName("상품 관련 기능")
+@Sql(scripts = "classpath:product-data.sql")
 public class ProductAcceptanceTest extends AcceptanceTest {
-    @DisplayName("상품을 추가한다")
-    @Test
-    void addProduct() {
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
-
-        상품_추가됨(response);
-    }
 
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        //given
+        String accessToken = getAccessToken();
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .when().get("/products")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
 
-        ExtractableResponse<Response> response = 상품_목록_조회_요청();
-
-        조회_응답됨(response);
-        상품_목록_포함됨(productId1, productId2, response);
+        List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
+        assertThat(productResponses.size()).isEqualTo(12);
+        //TODO : 전체 상품 확인하는 검증부 추가
     }
 
     @DisplayName("상품을 조회한다")
@@ -73,7 +77,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
+                .when().get("/products")
                 .then().log().all()
                 .extract();
     }
@@ -124,5 +128,25 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static void 상품_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    public String getAccessToken() {
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+
+        RestAssured.given().log().all()
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/customers")
+                .then().log().all()
+                .extract();
+
+        return RestAssured.given().log().all()
+                .body(new TokenRequest("email", "Pw123456!"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/auth/login")
+                .then().log().all()
+                .extract().as(TokenResponse.class).getAccessToken();
     }
 }
