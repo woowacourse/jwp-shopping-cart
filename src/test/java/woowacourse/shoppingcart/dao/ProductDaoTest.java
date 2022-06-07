@@ -21,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ProductDaoTest {
 
     private final ProductDao productDao;
+    private Product product1 = new Product("product1", 10000, null);
+    private Product product2 = new Product("product2", 11000, null);
 
     public ProductDaoTest(JdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
@@ -89,5 +91,21 @@ public class ProductDaoTest {
         // then
         final int afterSize = productDao.findProducts().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
+    }
+
+    @Test
+    @DisplayName("상품을 여러 개 등록한다.")
+    void saveAll() {
+        List<Product> products = List.of(
+                product1,
+                product2
+        );
+
+        productDao.saveAll(products);
+
+        assertThat(productDao.findProducts()).contains(
+                product1,
+                product2
+        );
     }
 }

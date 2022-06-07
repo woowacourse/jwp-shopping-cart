@@ -4,8 +4,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.request.ProductRequestDto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -30,5 +32,12 @@ public class ProductService {
 
     public void deleteProductById(final Long productId) {
         productDao.delete(productId);
+    }
+
+    public int addProducts(List<ProductRequestDto> productDtos) {
+        List<Product> products = productDtos.stream()
+                .map(dto -> new Product(dto.getName(), dto.getPrice(), dto.getImageUrl()))
+                .collect(Collectors.toList());
+        return productDao.saveAll(products);
     }
 }

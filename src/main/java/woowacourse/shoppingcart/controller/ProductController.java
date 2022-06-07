@@ -4,8 +4,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.request.ProductRequestDto;
 import woowacourse.shoppingcart.service.ProductService;
 
 import java.net.URI;
@@ -45,5 +47,11 @@ public class ProductController {
     public ResponseEntity<Void> delete(@PathVariable final Long productId) {
         productService.deleteProductById(productId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/many")
+    public ResponseEntity<Void> addProducts(@RequestBody final List<ProductRequestDto> products){
+        productService.addProducts(products);
+        return ResponseEntity.ok().build();
     }
 }

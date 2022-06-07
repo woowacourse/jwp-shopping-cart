@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,5 +68,22 @@ public class ProductDao {
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
+    }
+
+    public int saveAll(List<Product> products) {
+        final String query = "INSERT INTO product(name, price, image_url) VALUES(?,?,?)";
+        return jdbcTemplate.batchUpdate(query, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setString(1, products.get(i).getName());
+                ps.setInt(2, products.get(i).getPrice());
+                ps.setString(3, products.get(i).getImageUrl());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return products.size();
+            }
+        }).length;
     }
 }
