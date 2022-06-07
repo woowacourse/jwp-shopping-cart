@@ -72,12 +72,24 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_삭제됨(response);
     }
 
+    @DisplayName("장바구니 전체 삭제")
+    @Test
+    void deleteAllCartItem() {
+        TokenResponse tokenResponse = 토큰_생성_요청();
+
+        장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken());
+        장바구니_아이템_추가되어_있음(productId2, tokenResponse.getAccessToken());
+
+        ExtractableResponse<Response> response = 장바구니_전체_삭제_요청(tokenResponse.getAccessToken());
+
+        장바구니_삭제됨(response);
+    }
+
     public static TokenResponse 토큰_생성_요청() {
         사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
         LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
         ExtractableResponse<Response> loginResponse = 로그인_요청(loginRequest);
-        TokenResponse tokenResponse = loginResponse.as(TokenResponse.class);
-        return tokenResponse;
+        return loginResponse.as(TokenResponse.class);
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(Long productId, String accessToken) {
@@ -110,6 +122,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
                 .when().delete("/customers/cart/{cartId}", cartId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_전체_삭제_요청(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().oauth2(accessToken)
+                .when().delete("/customers/cart")
                 .then().log().all()
                 .extract();
     }

@@ -22,6 +22,7 @@ import woowacourse.shoppingcart.dto.Request;
 @RestController
 @RequestMapping("/customers/cart")
 public class CartItemController {
+
     private final CartService cartService;
 
     public CartItemController(final CartService cartService) {
@@ -47,8 +48,14 @@ public class CartItemController {
 
     @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final LoginCustomer loginCustomer,
-                                         @PathVariable final Long cartId) {
+            @PathVariable final Long cartId) {
         cartService.deleteCart(loginCustomer.getUsername(), cartId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteAllCartItem(@AuthenticationPrincipal final LoginCustomer loginCustomer) {
+        cartService.deleteAllCart(loginCustomer.getUsername());
         return ResponseEntity.noContent().build();
     }
 }

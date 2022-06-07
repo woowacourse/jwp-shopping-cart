@@ -58,6 +58,11 @@ public class CartService {
         cartItemDao.deleteCartItem(cartId);
     }
 
+    public void deleteAllCart(final String customerName) {
+        final Long customerId = customerDao.findIdByUserName(customerName);
+        cartItemDao.deleteAllCartItem(customerId);
+    }
+
     private void validateCustomerCart(final Long cartId, final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
         if (cartIds.contains(cartId)) {
