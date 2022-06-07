@@ -23,6 +23,7 @@ public class AcceptanceTest {
     protected static final int CUSTOMER_DUPLICATE_EMAIL_ERROR_CODE = 1001;
     protected static final int CUSTOMER_INVALID_LOGIN_ERROR_CODE = 1002;
     protected static final int CART_DUPLICATE_ERROR_CODE = 1101;
+    protected static final int CART_NOT_EXISTED_ERROR_CODE = 1102;
 
     @LocalServerPort
     int port;

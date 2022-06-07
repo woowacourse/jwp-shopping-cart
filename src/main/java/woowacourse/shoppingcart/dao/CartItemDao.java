@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.ItemNotExistedInCartException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -64,5 +65,14 @@ public class CartItemDao {
     public boolean existByProductId(Long productId) {
         final String query = "SELECT EXISTS(SELECT id FROM cart_item WHERE product_id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, productId);
+    }
+
+    public void deleteByProductIdAndCustomerId(final Long customerId, final Long productId) {
+        final String sql = "DELETE FROM cart_item where customer_id = ? and product_id = ?";
+
+        final int rowCount = jdbcTemplate.update(sql, customerId, productId);
+        if (rowCount == 0) {
+            throw new ItemNotExistedInCartException();
+        }
     }
 }

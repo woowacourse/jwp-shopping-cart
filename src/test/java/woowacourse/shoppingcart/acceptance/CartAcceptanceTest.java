@@ -128,16 +128,67 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
+    @DisplayName("잘못된 토큰으로 장바구니 아이템 삭제시 401 반환")
+    @Test
+    void deleteCartItemWithInvalidToken() {
+        장바구니_아이템_추가_요청2(productId1, token);
 
-    @DisplayName("장바구니 삭제")
+        ExtractableResponse<Response> response = 장바구니_아이템_삭제2("invalidToken", productId1);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("DB에 존재하지 않는 상품일 경우 404 반환")
+    @Test
+    void deleteNotExistedProductItem() {
+        Long notExistProductId = 0L;
+
+        ExtractableResponse<Response> response = 장바구니_아이템_삭제2(token, notExistProductId);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+    
+    @DisplayName("장바구니 삭제 정상 케이스인 경우 204 반환")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(productId1, token);
+        장바구니_아이템_추가_요청2(productId1, token);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        ExtractableResponse<Response> response = 장바구니_아이템_삭제2(token, productId1);
 
-        장바구니_삭제됨(response);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
+
+    @DisplayName("장바구니에 없는 물품을 삭제할 경우 400 반환")
+    @Test
+    void deleteCartItemNotExistedInCart() {
+        장바구니_아이템_추가_요청2(productId1, token);
+
+        장바구니_아이템_삭제2(token, productId1);
+        ExtractableResponse<Response> response = 장바구니_아이템_삭제2(token, productId1);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(CART_NOT_EXISTED_ERROR_CODE);
+        assertThat(response.jsonPath().getString("message")).isNotBlank();
+    }
+
+    private ExtractableResponse<Response> 장바구니_아이템_삭제2(String token, Long productId1) {
+        return RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .when().log().all()
+                .delete("users/me/carts/" + productId1)
+                .then().log().all()
+                .extract();
+    }
+
+//    @DisplayName("장바구니 삭제")
+//    @Test
+//    void deleteCartItem() {
+//        Long cartId = 장바구니_아이템_추가되어_있음(productId1, token);
+//
+//        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+//
+//        장바구니_삭제됨(response);
+//    }
 
     public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
         return RestAssured

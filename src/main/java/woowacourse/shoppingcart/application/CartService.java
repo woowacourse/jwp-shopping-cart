@@ -93,6 +93,13 @@ public class CartService {
         }
     }
 
+    public void deleteCart(final Customer customer, final Long productId) {
+        productDao.findProductById(productId)
+                .orElseThrow(ProductNotFoundException::new);
+
+        cartItemDao.deleteByProductIdAndCustomerId(customer.getId(), productId);
+    }
+
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);

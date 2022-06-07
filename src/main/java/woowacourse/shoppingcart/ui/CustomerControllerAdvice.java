@@ -29,7 +29,8 @@ public class CustomerControllerAdvice {
             InvalidCustomerException.class,
             InvalidProductException.class,
             DuplicateCustomerException.class,
-            DuplicateCartItemException.class
+            DuplicateCartItemException.class,
+            ItemNotExistedInCartException.class
     })
     public ResponseEntity<ErrorResponse> handleShoppingCartException(final ShoppingCartException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
