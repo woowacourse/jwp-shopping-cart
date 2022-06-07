@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CartsDao;
+import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -23,16 +23,16 @@ public class OrderService {
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
     private final ProductDao productDao;
-    private final CartsDao cartsDao;
+    private final CartDao cartDao;
 
     public OrderService(final OrderDao orderDao,
                         final OrdersDetailDao ordersDetailDao,
                         final ProductDao productDao,
-                        final CartsDao cartsDao) {
+                        final CartDao cartDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.productDao = productDao;
-        this.cartsDao = cartsDao;
+        this.cartDao = cartDao;
     }
 
     public Long addOrder(final Long memberId, final List<OrderRequest> orderRequests) {
@@ -40,7 +40,7 @@ public class OrderService {
         final List<Long> cartIds = orderRequests.stream()
                 .map(OrderRequest::getCartId)
                 .collect(Collectors.toList());
-        final List<Cart> cart = cartsDao.findCartsByIds(cartIds);
+        final List<Cart> cart = cartDao.findCartsByIds(cartIds);
         ordersDetailDao.addBatchOrderDetails(toOrderDetails(orderId, cart));
 
         return orderId;

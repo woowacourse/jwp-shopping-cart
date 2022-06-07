@@ -5,8 +5,8 @@ import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
 
-    @JsonProperty(value = "cart_id")
     @NotNull
+    @JsonProperty(value = "cart_id")
     private Long cartId;
 
     private OrderRequest() {

@@ -31,7 +31,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Valid @RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<Void> add(@RequestBody @Valid final ProductRequest productRequest) {
         final Long productId = productService.addProduct(productRequest);
         return ResponseEntity.created(URI.create("/api/products/" + productId)).build();
     }

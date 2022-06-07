@@ -28,6 +28,11 @@ public class Cart {
         }
     }
 
+    public void updateQuantity(final int quantity) {
+        validateCartQuantity(quantity);
+        this.quantity = quantity;
+    }
+
     public Long getId() {
         return id;
     }

@@ -31,6 +31,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.helper.restdocs.RestDocsTest;
+import woowacourse.shoppingcart.dto.CartQuantityUpdateRequest;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 
@@ -43,13 +44,13 @@ public class CartControllerTest extends RestDocsTest {
         given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
         given(cartService.findCartsById(anyLong())).willReturn(cartResponses());
 
-        final ResultActions resultActions = mockMvc.perform(get("/api/members/me/cart")
+        final ResultActions resultActions = mockMvc.perform(get("/api/members/me/carts")
                         .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(cartResponses())));
 
         // docs
-        resultActions.andDo(document("cart-get",
+        resultActions.andDo(document("carts-get",
                 getResponsePreprocessor(),
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
@@ -72,14 +73,14 @@ public class CartControllerTest extends RestDocsTest {
         given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
         given(cartService.addCart(anyLong(), any(CartRequest.class))).willReturn(1L);
 
-        final ResultActions resultActions = mockMvc.perform(post("/api/members/me/cart")
+        final ResultActions resultActions = mockMvc.perform(post("/api/members/me/carts")
                         .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
                         .content(objectMapper.writeValueAsString(cartRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/api/members/me/cart/1"));
+                .andExpect(header().string(HttpHeaders.LOCATION, "/api/members/me/carts/1"));
 
-        resultActions.andDo(document("cart-add",
+        resultActions.andDo(document("carts-add",
                 getRequestPreprocessor(),
                 getResponsePreprocessor(),
                 requestHeaders(
@@ -99,13 +100,38 @@ public class CartControllerTest extends RestDocsTest {
         given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
         doNothing().when(cartService).deleteCart(anyLong(), anyLong());
 
-        final ResultActions resultActions = mockMvc.perform(delete("/api/members/me/cart/1")
+        final ResultActions resultActions = mockMvc.perform(delete("/api/members/me/carts/1")
                         .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN))
                 .andExpect(status().isNoContent());
 
-        resultActions.andDo(document("cart-delete",
+        resultActions.andDo(document("carts-delete",
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                )));
+    }
+
+    @DisplayName("카트의 물품 개수를 업데이트한다.")
+    @Test
+    void updateQuantity() throws Exception {
+        final CartQuantityUpdateRequest cartQuantityUpdateRequest = new CartQuantityUpdateRequest(10);
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+        doNothing().when(cartService).updateCartQuantity(anyLong(), anyLong(), any(CartQuantityUpdateRequest.class));
+
+        final ResultActions resultActions = mockMvc.perform(delete("/api/members/me/carts/1")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .content(objectMapper.writeValueAsString(cartQuantityUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        resultActions.andDo(document("carts-update",
+                getRequestPreprocessor(),
+                getResponsePreprocessor(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                requestFields(
+                        fieldWithPath("quantity").type(NUMBER).description("개수")
                 )));
     }
 

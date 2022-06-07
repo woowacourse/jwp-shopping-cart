@@ -28,14 +28,14 @@ import woowacourse.shoppingcart.domain.Cart;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartDaoTest {
 
-    private CartsDao cartsDao;
+    private CartDao cartDao;
 
     private MemberDao memberDao;
 
     private ProductDao productDao;
 
     public CartDaoTest(final DataSource dataSource) {
-        cartsDao = new CartsDao(dataSource);
+        cartDao = new CartDao(dataSource);
         memberDao = new MemberDao(dataSource);
         productDao = new ProductDao(new JdbcTemplate(dataSource));
     }
@@ -45,8 +45,8 @@ public class CartDaoTest {
     void createCarts() {
         final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
-        cartsDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
-        assertThat(cartsDao.findCartsByMemberId(memberId)).hasSize(1);
+        cartDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
+        assertThat(cartDao.findCartsByMemberId(memberId)).hasSize(1);
     }
 
     @DisplayName("카트 id로 조회한다.")
@@ -54,9 +54,9 @@ public class CartDaoTest {
     void findCartsById() {
         final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
-        final Long cartId = cartsDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
+        final Long cartId = cartDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
 
-        assertThat(cartsDao.findCartById(cartId)).usingRecursiveComparison()
+        assertThat(cartDao.findCartById(cartId)).usingRecursiveComparison()
                 .isEqualTo(new Cart(cartId, memberId, productDao.findProductById(productId), 1));
     }
 
@@ -67,10 +67,10 @@ public class CartDaoTest {
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
         final Long productId2 = productDao.save(createProduct("초콜릿", 1000, "choco"));
 
-        final Long cartId = cartsDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
-        final Long cartId2 = cartsDao.save(new Cart(memberId, productDao.findProductById(productId2), 1));
+        final Long cartId = cartDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
+        final Long cartId2 = cartDao.save(new Cart(memberId, productDao.findProductById(productId2), 1));
 
-        assertThat(cartsDao.findCartsByIds(List.of(cartId, cartId2))).hasSize(2);
+        assertThat(cartDao.findCartsByIds(List.of(cartId, cartId2))).hasSize(2);
     }
 
     @DisplayName("카트를 삭제한다.")
@@ -78,9 +78,22 @@ public class CartDaoTest {
     void delete() {
         final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
-        final Long cartId = cartsDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
-        cartsDao.delete(cartId);
+        final Long cartId = cartDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
+        cartDao.delete(cartId);
 
-        assertThat(cartsDao.findCartsByMemberId(memberId)).isEmpty();
+        assertThat(cartDao.findCartsByMemberId(memberId)).isEmpty();
+    }
+
+    @DisplayName("카트의 물품 개수를 업데이트한다.")
+    @Test
+    void updateQuantity() {
+        final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
+        final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
+        final Long cartId = cartDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
+
+        final Cart foundCart = cartDao.findCartById(cartId);
+        foundCart.updateQuantity(10);
+        cartDao.updateQuantity(foundCart);
+        assertThat(foundCart.getQuantity()).isEqualTo(10);
     }
 }

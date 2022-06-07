@@ -3,10 +3,11 @@ package woowacourse.shoppingcart.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class CartRequest {
 
-    @NotBlank
+    @NotNull
     @JsonProperty(value = "product_id")
     private Long productId;
 

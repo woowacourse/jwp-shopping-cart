@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CartsDao;
+import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartQuantityUpdateRequest;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -16,17 +17,17 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
-    private final CartsDao cartsDao;
+    private final CartDao cartDao;
     private final ProductDao productDao;
 
-    public CartService(final CartsDao cartsDao, final ProductDao productDao) {
-        this.cartsDao = cartsDao;
+    public CartService(final CartDao cartDao, final ProductDao productDao) {
+        this.cartDao = cartDao;
         this.productDao = productDao;
     }
 
     @Transactional(readOnly = true)
     public List<CartResponse> findCartsById(final Long id) {
-        return cartsDao.findCartsByMemberId(id).stream()
+        return cartDao.findCartsByMemberId(id).stream()
                 .map(CartResponse::from)
                 .collect(Collectors.toList());
     }
@@ -34,19 +35,27 @@ public class CartService {
     public Long addCart(final Long memberId, final CartRequest cartRequest) {
         final Product foundProduct = productDao.findProductById(cartRequest.getProductId());
         final Cart cart = new Cart(memberId, foundProduct, cartRequest.getQuantity());
-        return cartsDao.save(cart);
+        return cartDao.save(cart);
     }
 
     public void deleteCart(final Long memberId, final Long cartId) {
-        validateCustomerCart(memberId, cartId);
-        cartsDao.delete(cartId);
+        validateMemberCart(memberId, cartId);
+        cartDao.delete(cartId);
     }
 
-    private void validateCustomerCart(final Long memberId, final Long cartId) {
-        final List<Cart> cart = cartsDao.findCartsByMemberId(memberId);
-        final Cart foundCart = cartsDao.findCartById(cartId);
+    private void validateMemberCart(final Long memberId, final Long cartId) {
+        final List<Cart> cart = cartDao.findCartsByMemberId(memberId);
+        final Cart foundCart = cartDao.findCartById(cartId);
         if (!cart.contains(foundCart)) {
             throw new NotInCustomerCartItemException();
         }
+    }
+
+    public void updateCartQuantity(final Long memberId, final Long cartId,
+                                   final CartQuantityUpdateRequest cartQuantityUpdateRequest) {
+        validateMemberCart(memberId, cartId);
+        final Cart foundCart = cartDao.findCartById(cartId);
+        foundCart.updateQuantity(cartQuantityUpdateRequest.getQuantity());
+        cartDao.updateQuantity(foundCart);
     }
 }

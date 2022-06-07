@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -12,12 +13,12 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 
 @Repository
-public class CartsDao {
+public class CartDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public CartsDao(final DataSource dataSource) {
+    public CartDao(final DataSource dataSource) {
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("cart")
@@ -66,6 +67,12 @@ public class CartsDao {
         final SqlParameterSource parameter = new MapSqlParameterSource("ids", cartIds);
 
         return namedParameterJdbcTemplate.query(sql, parameter, joinRowMapper());
+    }
+
+    public void updateQuantity(final Cart cart) {
+        String sql = "UPDATE cart SET quantity = :quantity WHERE id = :id";
+        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(cart);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 
     private RowMapper<Cart> joinRowMapper() {

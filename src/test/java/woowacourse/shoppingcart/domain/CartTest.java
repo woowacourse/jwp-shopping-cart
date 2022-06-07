@@ -27,4 +27,20 @@ public class CartTest {
         assertThat(cart.calculateTotalPrice()).isEqualTo(10_000);
     }
 
+    @DisplayName("카트 내 품목의 구매 개수를 변경한다.")
+    @Test
+    void updateQuantity() {
+        final Cart cart = new Cart(1L, 1L, createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE), 10);
+        cart.updateQuantity(1);
+        assertThat(cart.getQuantity()).isEqualTo(1);
+    }
+
+    @DisplayName("카트 내 품목의 구매 개수를 올바르게 변경하지 않으면 예외가 발생한다..")
+    @Test
+    void updateQuantityException() {
+        final Cart cart = new Cart(1L, 1L, createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE), 10);
+        assertThatThrownBy(() -> cart.updateQuantity(0))
+                .isInstanceOf(InvalidCartItemException.class);
+    }
+
 }
