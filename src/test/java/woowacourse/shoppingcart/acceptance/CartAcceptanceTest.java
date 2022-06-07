@@ -184,7 +184,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         AuthAcceptanceTest.토큰이_유효하지_않음(response);
     }
 
-    @DisplayName("장바구니 아이템 목록 조회 실패 - 만료된 토큰")
+    @DisplayName("장바구니 삭제 실패 - 만료된 토큰")
     @Test
     void deleteCartItem_failWithExpiredToken() {
         Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);

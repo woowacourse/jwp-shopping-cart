@@ -127,7 +127,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         AuthAcceptanceTest.토큰이_유효하지_않음(response);
     }
 
-    @DisplayName("주문하기 - 만료된 토큰")
+    @DisplayName("주문하기 실패 - 만료된 토큰")
     @Test
     void addOrder_failWithExpiredToken() {
         List<OrderRequest> orderRequests = Stream.of(cartItemId1, cartItemId2)
