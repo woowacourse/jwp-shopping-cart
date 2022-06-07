@@ -30,7 +30,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/members/**")
                 .excludePathPatterns("/api/members")
                 .excludePathPatterns("/api/members/check-email")
-                .excludePathPatterns("/api/carts/products");
+                .excludePathPatterns("/api/products");
     }
 
     @Bean
