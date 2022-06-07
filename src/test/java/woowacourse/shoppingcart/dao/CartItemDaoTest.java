@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartProductResponse;
 
 import javax.sql.DataSource;
 
@@ -37,24 +38,24 @@ public class CartItemDaoTest {
         Product product = productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
         // when
-        final Long cartId = cartItemDao.addCartItem(1L, product.getId());
+        final Long cartId = cartItemDao.addCartItem(1L, product.getId(), 1L, true);
 
         // then
         assertThat(cartId).isNotNull();
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("카트 아이템 번호로 아이템을 찾는다. ")
     @Test
     void findProductIdsByCustomerId() {
-
         // given
-        final Long customerId = 1L;
+        Product product = productDao.save(new Product("apple", 1000, "woowa2.com"));
+        final Long cartItemId = cartItemDao.addCartItem(1L, product.getId(), 1L, true);
 
         // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        CartProductResponse cartProductResponse = cartItemDao.findCartIdById(cartItemId);
 
         // then
-        assertThat(productsIds).containsExactly(1L, 2L);
+        assertThat(cartProductResponse.getQuantity()).isEqualTo(1);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")

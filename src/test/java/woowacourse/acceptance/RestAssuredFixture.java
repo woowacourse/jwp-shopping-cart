@@ -53,6 +53,8 @@ public class RestAssuredFixture {
                 .then().log().all().extract().as(LogInResponse.class);
     }
 
+
+
     public static ValidatableResponse getProducts(String path, int status) {
         return RestAssured
                 .given().log().all()

@@ -25,7 +25,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Void> add(@Valid @RequestBody ProductRequest productRequest) {
         Product product = productService.addProduct(productRequest);
-        return ResponseEntity.created(URI.create("/products" + product.getId())).build();
+        return ResponseEntity.created(URI.create("/products/" + product.getId())).build();
     }
 
     @GetMapping

@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.dto.CartProductResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import javax.sql.DataSource;
@@ -24,10 +26,21 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
+    private RowMapper<CartProductResponse> cartRowMapper = (rs, rowNum) -> new CartProductResponse(
+            rs.getLong("product.id"),
+            rs.getString("product.name"),
+            rs.getLong("product.price"),
+            rs.getString("product.image_url"),
+            rs.getLong("cart_item.quantity"),
+            rs.getBoolean("checked")
+    );
+
+    public Long addCartItem(final Long customerId, final Long productId, final Long quantity, final boolean checked) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("customer_id", customerId)
-                .addValue("product_id", productId);
+                .addValue("product_id", productId)
+                .addValue("quantity", quantity)
+                .addValue("checked", checked);
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
@@ -48,6 +61,18 @@ public class CartItemDao {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public CartProductResponse findCartIdById(final Long cartId) {
+        try {
+            final String query = "SELECT product.id, product.name, product.price, product.image_url, cart_item.quantity, cart_item.checked " +
+                    "FROM cart_item INNER JOIN product ON product.id = cart_item.product_id " +
+                    "WHERE cart_item.id = ?";
+
+            return jdbcTemplate.queryForObject(query, cartRowMapper, cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }

@@ -9,8 +9,9 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.CartProducts;
 import woowacourse.shoppingcart.dto.CartProductRequest;
-import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.CartProductResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -31,22 +32,23 @@ public class CartService {
     public Long addCart(final CartProductRequest cartProductRequest, final String customerName) {
         final Long customerId = customerDao.findByUsername(customerName).getId();
         try {
-            return cartItemDao.addCartItem(customerId, cartProductRequest.getProductId());
+            return cartItemDao.addCartItem(customerId, cartProductRequest.getProductId(), cartProductRequest.getQuantity(), cartProductRequest.isChecked());
         } catch (Exception e) {
             throw new InvalidProductException();
         }
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
+    public CartProducts getCart(String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+        List<CartProductResponse> cartEntities = new ArrayList<>();
+        try {
+            for (Long id : cartIds) {
+                cartEntities.add(cartItemDao.findCartIdById(id));
+            }
+            return new CartProducts(cartEntities);
+        } catch (Exception e) {
+            throw new InvalidProductException();
         }
-        return carts;
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
