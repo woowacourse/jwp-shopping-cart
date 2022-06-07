@@ -115,7 +115,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
                 .body(requestBody)
-                .when().post("/customers/cart")
+                .when().post("/customers/carts")
                 .then().log().all()
                 .extract();
     }
@@ -125,7 +125,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
-                .when().get("/customers/cart")
+                .when().get("/customers/carts")
                 .then().log().all()
                 .extract();
     }
@@ -135,7 +135,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
-                .when().delete("/customers/cart/{cartId}", cartId)
+                .when().delete("/customers/carts/{cartId}", cartId)
                 .then().log().all()
                 .extract();
     }
@@ -145,7 +145,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
-                .when().delete("/customers/cart")
+                .when().delete("/customers/carts")
                 .then().log().all()
                 .extract();
     }
@@ -156,7 +156,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
                 .body(cartQuantityRequest)
-                .when().put("/customers/cart/1")
+                .when().put("/customers/carts/{cartId}", cartId)
                 .then().log().all()
                 .extract();
     }
@@ -168,7 +168,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static Long 장바구니_아이템_추가되어_있음(Long productId, String accessToken) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(productId, accessToken);
-        return Long.parseLong(response.header("Location").split("/cart/")[1]);
+        return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {

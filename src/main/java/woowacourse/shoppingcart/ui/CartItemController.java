@@ -22,7 +22,7 @@ import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
-@RequestMapping("/customers/cart")
+@RequestMapping("/customers/carts")
 public class CartItemController {
 
     private final CartService cartService;
@@ -37,7 +37,7 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
+    public ResponseEntity<CartResponse> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
             @AuthenticationPrincipal final LoginCustomer loginCustomer) {
         final Long cartId = cartService.addCart(product.getId(), loginCustomer.getUsername());
         final URI responseLocation = ServletUriComponentsBuilder
