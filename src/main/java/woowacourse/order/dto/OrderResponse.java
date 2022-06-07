@@ -3,8 +3,13 @@ package woowacourse.order.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import woowacourse.order.domain.OrderDetail;
 
+@JsonTypeName("order")
+@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class OrderResponse {
 
     private Long id;

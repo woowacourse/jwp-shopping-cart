@@ -17,6 +17,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.order.application.OrderService;
 import woowacourse.order.dto.OrderAddRequest;
 import woowacourse.order.dto.OrderResponse;
+import woowacourse.order.dto.OrderResponses;
 
 @RequestMapping("/api/orders")
 @RestController
@@ -45,7 +46,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> findOrders(@AuthenticationPrincipal final String username) {
+    public ResponseEntity<OrderResponses> findOrders(@AuthenticationPrincipal final String username) {
         return ResponseEntity.ok(orderService.findOrdersByCustomerName(username));
     }
 }

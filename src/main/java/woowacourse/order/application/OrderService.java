@@ -13,6 +13,7 @@ import woowacourse.order.dao.OrderDao;
 import woowacourse.order.dao.OrdersDetailDao;
 import woowacourse.order.dto.OrderAddRequest;
 import woowacourse.order.dto.OrderResponse;
+import woowacourse.order.dto.OrderResponses;
 import woowacourse.order.exception.InvalidOrderException;
 import woowacourse.product.dao.ProductDao;
 
@@ -62,13 +63,13 @@ public class OrderService {
         }
     }
 
-    public List<OrderResponse> findOrdersByCustomerName(final String customerName) {
+    public OrderResponses findOrdersByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
-        return orderIds.stream()
-                .map(this::findOrderResponseByOrderId)
-                .collect(Collectors.toList());
+        return OrderResponses.from(orderIds.stream()
+            .map(this::findOrderResponseByOrderId)
+            .collect(Collectors.toList()));
     }
 
     private OrderResponse findOrderResponseByOrderId(final Long orderId) {
