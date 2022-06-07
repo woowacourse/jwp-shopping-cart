@@ -16,6 +16,10 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public boolean isStockAvailable(int quantity) {
+        return stock.isRemain(quantity);
+    }
+
     public Long getId() {
         return id;
     }

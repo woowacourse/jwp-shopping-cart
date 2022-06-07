@@ -15,7 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.dto.product.ProductAddRequest;
 
 @DisplayName("장바구니 관련 기능")
@@ -111,8 +111,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
+        List<Long> resultProductIds = response.jsonPath().getList(".", CartItem.class).stream()
+                .map(cartItem -> cartItem.getProduct().getId())
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }

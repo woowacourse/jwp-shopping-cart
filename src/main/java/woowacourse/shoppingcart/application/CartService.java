@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -26,14 +26,14 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
+    public List<CartItem> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
-        final List<Cart> carts = new ArrayList<>();
+        final List<CartItem> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            carts.add(new CartItem(cartId, product, 1));
         }
         return carts;
     }
@@ -46,7 +46,8 @@ public class CartService {
     public Long addCart(final Long productId, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+//            return cartItemDao.addCartItem(customerId, productId);
+            return 1L;
         } catch (Exception e) {
             throw new InvalidProductException();
         }

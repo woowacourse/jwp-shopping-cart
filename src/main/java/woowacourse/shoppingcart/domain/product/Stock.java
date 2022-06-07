@@ -15,6 +15,10 @@ public class Stock {
         }
     }
 
+    public boolean isRemain(int quantity) {
+        return stock - quantity >= 0;
+    }
+
     public int getStock() {
         return stock;
     }
