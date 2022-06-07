@@ -33,8 +33,8 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({CustomerNotFoundException.class})
-    public ResponseEntity<ExceptionResponse> handleNotFoundException(IllegalArgumentException e) {
+    @ExceptionHandler({CustomerNotFoundException.class, InvalidProductException.class})
+    public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException e) {
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
@@ -82,7 +82,6 @@ public class ControllerAdvice {
     @ExceptionHandler({
             InvalidCustomerException.class,
             InvalidCartItemException.class,
-            InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
