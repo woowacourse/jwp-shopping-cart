@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.request.CartItemsRequest;
+import woowacourse.shoppingcart.dto.request.QuantityRequest;
 import woowacourse.shoppingcart.dto.response.CartItemsResponse;
 
 @RestController
@@ -39,9 +40,9 @@ public class CartItemController {
 
     @PutMapping("/{productId}/quantity")
     public ResponseEntity<Void> updateQuantity(@AuthenticationPrincipal final String username,
-                                               @RequestBody final int quantity,
+                                               @RequestBody final QuantityRequest quantityRequest,
                                                @PathVariable final Long productId) {
-        cartService.updateQuantity(productId, quantity, username);
+        cartService.updateQuantity(productId, quantityRequest, username);
         return ResponseEntity.ok().build();
     }
 

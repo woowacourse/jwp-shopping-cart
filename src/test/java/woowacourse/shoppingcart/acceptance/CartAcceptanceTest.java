@@ -106,7 +106,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     private static SimpleResponse 장바구니_아이템_수량_수정_요청(Long productId) {
         String path = "/cart/" + productId + "/quantity";
-        SimpleResponse response = SimpleRestAssured.putWithToken(path, getTokenByLogin(), 3);
+        Map<String, Integer> param = Map.of("quantity", 3);
+        SimpleResponse response = SimpleRestAssured.putWithToken(path, getTokenByLogin(), param);
         return response;
     }
 
