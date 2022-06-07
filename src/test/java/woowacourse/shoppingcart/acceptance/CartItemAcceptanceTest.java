@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.cartitem.CartItemResponse;
+import woowacourse.shoppingcart.dto.cartitem.CartItemResponse.CartItemResponseNested;
 import woowacourse.shoppingcart.dto.cartitem.CartItemSaveRequest;
 
 @DisplayName("장바구니 관련 기능")
@@ -143,8 +144,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     public static void 장바구니_아이템_추가_실패함(ExtractableResponse<Response> response) {
@@ -153,7 +153,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     public static Long 장바구니_아이템_추가되어_있음(String userName, CartItemSaveRequest request) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, request);
-        return Long.parseLong(response.header("Location").split("/cartItems/")[1]);
+        CartItemResponse cartItemResponse = response.as(CartItemResponse.class);
+        return cartItemResponse.getCartItem().getId();
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
@@ -161,8 +162,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList("cartItems.", CartItemResponse.class).stream()
-                .map(CartItemResponse::getProductId)
+        List<Long> resultProductIds = response.jsonPath().getList("cartItems.", CartItemResponseNested.class).stream()
+                .map(CartItemResponseNested::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }

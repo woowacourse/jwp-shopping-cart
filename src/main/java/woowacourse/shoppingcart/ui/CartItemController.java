@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.ui;
 
-import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartItemService;
+import woowacourse.shoppingcart.dto.cartitem.CartItemResponse;
 import woowacourse.shoppingcart.dto.cartitem.CartItemResponses;
 import woowacourse.shoppingcart.dto.cartitem.CartItemSaveRequest;
 
@@ -32,15 +31,10 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@RequestBody final CartItemSaveRequest cartItemSaveRequest,
-                                            @AuthenticationPrincipal String customerName) {
-        final Long cartId = cartItemService.addCart(cartItemSaveRequest, customerName);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
-        return ResponseEntity.created(responseLocation).build();
+    public ResponseEntity<CartItemResponse> addCartItem(@RequestBody final CartItemSaveRequest cartItemSaveRequest,
+                                                        @AuthenticationPrincipal String customerName) {
+        // TODO 반환 status code 체크
+        return ResponseEntity.ok(cartItemService.addCart(cartItemSaveRequest, customerName));
     }
 
     @PatchMapping({"/{cartItemId}"})
