@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -27,34 +27,14 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_조회_요청(final Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/products/{productId}", productId)
-                .then().log().all()
-                .extract();
-    }
-
     public static Long 상품_등록되어_있음(final String name, final int price, final String imageUrl) {
         final ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 
-    public static void 조회_응답됨(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 상품_조회됨(final ExtractableResponse<Response> response, final Long productId) {
-        final Product resultProduct = response.as(Product.class);
-        assertThat(resultProduct.getId()).isEqualTo(productId);
-    }
-
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
-        // given
-
         // when
         final ValidatableResponse response = RestAssured
                 .given().log().all()
@@ -76,11 +56,23 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
-        final Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        // given
+        final Long productId = 2L;
 
-        final ExtractableResponse<Response> response = 상품_조회_요청(productId);
+        // when
+        final ValidatableResponse response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/products/{productId}", productId)
+                .then().log().all();
 
-        조회_응답됨(response);
-        상품_조회됨(response, productId);
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("id", equalTo(2))
+                .body("name", equalTo("포도"))
+                .body("price", equalTo(700))
+                .body("imageUrl", equalTo("podo.do"));
     }
 }
