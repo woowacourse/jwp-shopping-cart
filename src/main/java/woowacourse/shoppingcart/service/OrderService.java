@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.OrderRepository;
 import woowacourse.shoppingcart.domain.Orders;
@@ -18,19 +19,21 @@ import woowacourse.shoppingcart.domain.cart.CartItems;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.exception.NotMyCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class OrderService {
 
     private final CustomerDao customerDao;
+    private final ProductDao productDao;
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
 
-    public OrderService(CustomerDao customerDao, OrderRepository orderRepository,
+    public OrderService(CustomerDao customerDao, ProductDao productDao,
+        OrderRepository orderRepository,
         CartItemRepository cartItemRepository) {
         this.customerDao = customerDao;
+        this.productDao = productDao;
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
     }
@@ -43,9 +46,10 @@ public class OrderService {
         CartItems cartItems = cartItemRepository.findByCustomer(customerId);
         for (Long cartItemId : cartItemIds) {
             CartItem cartItem = cartItemRepository.findById(cartItemId);
-            if (!cartItems.contains(cartItem)) {
-                throw new NotMyCartItemException();
-            }
+
+            cartItems.checkContain(cartItem);
+            cartItem.checkCanOrder(productDao.findProductStockById(cartItem.getProductId()));
+
             cartItemRepository.delete(cartItem);
             orderDetails.add(new OrderDetail(cartItem.getProduct(), new Quantity(cartItem.getQuantity())));
         }

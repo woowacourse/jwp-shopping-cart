@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
+import woowacourse.shoppingcart.exception.NotMyCartItemException;
+
 public class CartItems implements Iterable<CartItem> {
 
     private final long customerId;
@@ -24,6 +26,12 @@ public class CartItems implements Iterable<CartItem> {
 
     public int size() {
         return cartItems.size();
+    }
+
+    public void checkContain(CartItem cartItem) {
+        if (!cartItems.contains(cartItem)) {
+            throw new NotMyCartItemException();
+        }
     }
 
     public boolean contains(CartItem cartItem) {

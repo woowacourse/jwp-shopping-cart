@@ -4,7 +4,9 @@ import java.util.Objects;
 
 import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.domain.product.ProductStock;
 import woowacourse.shoppingcart.exception.DuplicateProductInCartException;
+import woowacourse.shoppingcart.exception.OutOfStockException;
 
 public class CartItem {
     private Long id;
@@ -24,6 +26,12 @@ public class CartItem {
     public void checkSameProduct(CartItem newCartItem) {
         if (product.equals(newCartItem.product)) {
             throw new DuplicateProductInCartException();
+        }
+    }
+
+    public void checkCanOrder(ProductStock productStock) {
+        if (productStock.getStockQuantity() < getQuantity()) {
+            throw new OutOfStockException();
         }
     }
 

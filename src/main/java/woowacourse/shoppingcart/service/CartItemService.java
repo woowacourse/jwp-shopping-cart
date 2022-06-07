@@ -19,7 +19,6 @@ import woowacourse.shoppingcart.dto.CartItemDeletionRequest;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
-import woowacourse.shoppingcart.exception.NotMyCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -61,7 +60,7 @@ public class CartItemService {
         CartItems cartItems = cartItemRepository.findByCustomer(customerId);
         CartItem cartItem = cartItemRepository.findById(id);
 
-        checkContain(cartItems, cartItem);
+        cartItems.checkContain(cartItem);
 
         return CartItemResponse.from(cartItem);
     }
@@ -71,7 +70,7 @@ public class CartItemService {
         CartItems cartItems = cartItemRepository.findByCustomer(customerId);
         CartItem cartItem = cartItemRepository.findById(cartItemRequest.getCartItemId());
 
-        checkContain(cartItems, cartItem);
+        cartItems.checkContain(cartItem);
 
         CartItem updateCartItem = new CartItem(cartItem.getId(), cartItem.getProduct(),
             new Quantity(cartItemRequest.getQuantity()));
@@ -87,14 +86,8 @@ public class CartItemService {
             .collect(Collectors.toList());
 
         for (CartItem deleteCartItem : deleteCartItems) {
-            checkContain(cartItems, deleteCartItem);
+            cartItems.checkContain(deleteCartItem);
             cartItemRepository.delete(deleteCartItem);
-        }
-    }
-
-    private void checkContain(CartItems cartItems, CartItem cartItem) {
-        if (!cartItems.contains(cartItem)) {
-            throw new NotMyCartItemException();
         }
     }
 
