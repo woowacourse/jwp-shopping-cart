@@ -45,10 +45,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             InvalidCartItemException.class,
-            InvalidProductException.class,
             InvalidOrderException.class,
             IllegalArgumentException.class,
-            NotInCustomerCartItemException.class,
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
@@ -62,7 +60,9 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
-    @ExceptionHandler(InvalidCustomerException.class)
+    @ExceptionHandler({InvalidCustomerException.class,
+            InvalidProductException.class,
+            NotInCustomerCartItemException.class})
     public ResponseEntity handleCustomerNotFound(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
