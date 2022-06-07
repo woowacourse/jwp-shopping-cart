@@ -68,9 +68,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("products.id", contains(2, 1))
-                .body("products.name", contains("규조토 치약 꽂이 스탠드", "붙이는 치약 홀더 / 걸이"))
+                .body("products.name", contains("포도", "사과"))
                 .body("products.image_url", hasSize(2))
-                .body("products.price", contains(4300, 1600))
+                .body("products.price", contains(700, 1600))
                 .body("products.quantity", contains(1, 1));
     }
 
