@@ -33,7 +33,6 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
             throws JsonProcessingException {
         final String accessToken = AuthorizationExtractor.extract(
                 Objects.requireNonNull(webRequest.getHeader(AuthorizationExtractor.AUTHORIZATION)));
-        jwtTokenProvider.validateToken(accessToken);
         final ObjectMapper objectMapper = new JsonMapper();
         return objectMapper.readValue(jwtTokenProvider.getPayload(accessToken), PermissionCustomerRequest.class);
     }
