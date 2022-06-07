@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.*;
+import static woowacourse.shoppingcart.acceptance.CartItemAcceptanceTest.*;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
 
 import java.util.Arrays;

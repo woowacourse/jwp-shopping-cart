@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -61,5 +63,26 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public List<CartItem> findAllByCustomerId(final Long customerId) {
+        final String sql = "SELECT ci.id as cart_item_id, ci.product_id as cart_item_product_id, p.name as product_name,"
+            + " p.price as product_price, ci.stock as cart_item_stock, p.image_url as product_image_url "
+                + "FROM cart_item as ci "
+                + "LEFT JOIN product AS p ON ci.product_id = p.id "
+                + "WHERE ci.customer_id = ?";
+
+        return jdbcTemplate.query(sql, cartItemJoinProductMapper(), customerId);
+    }
+
+    private RowMapper<CartItem> cartItemJoinProductMapper() {
+        return (resultSet, rowNum) -> new CartItem(
+            resultSet.getLong("cart_item_id"),
+            resultSet.getLong("cart_item_product_id"),
+            resultSet.getString("product_name"),
+            resultSet.getInt("product_price"),
+            resultSet.getInt("cart_item_stock"),
+            resultSet.getString("product_image_url")
+        );
     }
 }

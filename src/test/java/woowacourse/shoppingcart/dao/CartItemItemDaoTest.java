@@ -14,18 +14,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
+public class CartItemItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartItemItemDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
@@ -36,8 +37,8 @@ public class CartItemDaoTest {
         productDao.save(new Product("banana", 1_000, 10, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, 20, "woowa2.com"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, stock) VALUES(?, ?, ?)", 1L, 1L, 10);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, stock) VALUES(?, ?, ?)", 1L, 2L, 20);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, stock) VALUES(?, ?, ?)", 1L, 1L, 1);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, stock) VALUES(?, ?, ?)", 1L, 2L, 2);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
@@ -98,5 +99,22 @@ public class CartItemDaoTest {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);
+    }
+
+    @DisplayName("customerId로 cartItem들을 조회해올 수 있어야 한다.")
+    @Test
+    void findAllByCustomerId() {
+
+        // given
+        final Long customerId = 1L;
+
+        // when
+        List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customerId);
+
+        // then
+        assertThat(cartItems).containsExactly(
+            new CartItem(1L, 1L, "banana", 1_000, 1, "woowa1.com"),
+            new CartItem(2L, 2L, "apple", 2_000, 2, "woowa2.com")
+        );
     }
 }

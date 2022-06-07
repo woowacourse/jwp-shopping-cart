@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.ui;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -15,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
@@ -29,12 +27,14 @@ public class CartItemController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/{customerName}/carts")
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    @GetMapping("/cartItems")
+    public ResponseEntity<CartItemsResponse> getCartItems(HttpServletRequest request) {
+        CartItemsResponse cartItemsResponse = cartService.findCartItemsByCustomerName(
+            (String)request.getAttribute("username"));
+        return ResponseEntity.ok().body(cartItemsResponse);
     }
 
-    @PostMapping("/carts")
+    @PostMapping("/cartItems")
     public ResponseEntity<CartItemResponse> addCartItem(@Validated(Request.id.class) @RequestBody final CartItemRequest cartItemRequest,
         HttpServletRequest request) {
 
@@ -46,7 +46,7 @@ public class CartItemController {
         return ResponseEntity.ok().body(cartItemResponse);
     }
 
-    @DeleteMapping("/{customerName}/carts/{cartId}")
+    @DeleteMapping("/{customerName}/cartItems/{cartId}")
     public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
                                          @PathVariable final Long cartId) {
         cartService.deleteCart(customerName, cartId);
