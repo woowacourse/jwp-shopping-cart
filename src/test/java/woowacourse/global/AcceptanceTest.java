@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 public class AcceptanceTest {
 
     @LocalServerPort
-    int port;
+    protected int port;
 
     @BeforeEach
     public void setUp() {

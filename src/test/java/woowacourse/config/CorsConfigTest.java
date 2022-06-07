@@ -4,18 +4,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static woowacourse.config.WebMvcConfig.ALLOWED_METHOD_NAMES;
+import static woowacourse.config.CorsConfig.ALLOWED_METHOD_NAMES;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
-public class WebMvcConfigTest {
+public class CorsConfigTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -24,7 +25,7 @@ public class WebMvcConfigTest {
     public void cors() throws Exception {
         mockMvc.perform(
                         options("/api/products")
-                                .header(HttpHeaders.ORIGIN, "http://localhost:8080")
+                                .header(HttpHeaders.ORIGIN, "http://localhost:8082")
                                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
                 )
                 .andExpect(status().isOk())

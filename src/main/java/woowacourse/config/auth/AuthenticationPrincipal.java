@@ -1,4 +1,4 @@
-package woowacourse.config;
+package woowacourse.config.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

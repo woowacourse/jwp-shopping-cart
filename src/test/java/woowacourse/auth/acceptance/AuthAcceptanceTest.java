@@ -1,6 +1,8 @@
 package woowacourse.auth.acceptance;
 
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.AuthFixture.로그인_요청;
 import static woowacourse.fixture.AuthFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.AuthFixture.회원조회_요청;
@@ -18,7 +20,6 @@ import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
-
 
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
