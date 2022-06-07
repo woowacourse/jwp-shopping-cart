@@ -9,7 +9,7 @@ import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.customer.exception.badrequest.DuplicateEmailException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class CustomerService {
 
     private final CustomerDao customerDao;

@@ -10,7 +10,7 @@ import woowacourse.shoppingcart.customer.exception.notfound.NotFoundCustomerExce
 import woowacourse.shoppingcart.support.JwtTokenProvider;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class AuthService {
 
     private final CustomerService customerService;

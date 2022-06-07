@@ -7,7 +7,7 @@ import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class ProductService {
 
     private final ProductDao productDao;
