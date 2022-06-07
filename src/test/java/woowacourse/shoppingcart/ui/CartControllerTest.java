@@ -11,6 +11,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.helper.restdocs.RestDocsTest;
 import woowacourse.shoppingcart.dto.CartQuantityUpdateRequest;
 import woowacourse.shoppingcart.dto.CartRequest;
@@ -90,7 +92,40 @@ public class CartControllerTest extends RestDocsTest {
                         fieldWithPath("product_id").type(NUMBER).description("제품 id"),
                         fieldWithPath("quantity").type(NUMBER).description("개수")
                 )));
+    }
 
+    @DisplayName("카트에 제품 저장시 id가 존재하지 않아 예외를 발생한다.")
+    @Test
+    void addCartProductIdNull() throws Exception {
+        final CartRequest cartRequest = new CartRequest(null, 1);
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+        ErrorResponse response = new ErrorResponse("product id를 입력하세요.");
+
+        mockMvc.perform(post("/api/members/me/carts")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cartRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(response)));
+    }
+
+    @DisplayName("카트에 제품 저장시 개수가 1개 미만이라 예외를 발생한다.")
+    @Test
+    void addCartQuantityLowerThanMin() throws Exception {
+        final CartRequest cartRequest = new CartRequest(1L, 0);
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+        ErrorResponse response = new ErrorResponse("장바구니 물품 개수를 1개 이상 입력해주세요.");
+
+        mockMvc.perform(post("/api/members/me/carts")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cartRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(response)));
     }
 
     @DisplayName("카트의 제품을 삭제한다.")
@@ -133,6 +168,24 @@ public class CartControllerTest extends RestDocsTest {
                 requestFields(
                         fieldWithPath("quantity").type(NUMBER).description("개수")
                 )));
+    }
+
+
+    @DisplayName("카트에 양 업데이트시 개수가 1개 미만이라 예외를 발생한다.")
+    @Test
+    void updateCartQuantityLowerThanMin() throws Exception {
+        final CartQuantityUpdateRequest cartQuantityUpdateRequest = new CartQuantityUpdateRequest(0);
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+        ErrorResponse response = new ErrorResponse("장바구니 물품 개수를 1개 이상 입력해주세요.");
+
+        mockMvc.perform(put("/api/members/me/carts/1")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cartQuantityUpdateRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(response)));
     }
 
     private List<CartResponse> cartResponses() {

@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
 
-    @NotNull
+    @NotNull(message = "카트 id를 입력하세요.")
     @JsonProperty(value = "cart_id")
     private Long cartId;
 

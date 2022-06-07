@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.helper.restdocs.RestDocsTest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
@@ -61,6 +62,23 @@ public class OrderControllerTest extends RestDocsTest {
                         fieldWithPath("[].cart_id").type(NUMBER).description("카트 id")
                 )));
 
+    }
+
+    @DisplayName("주문시 id가 존재하지 않으면 예외를 발생한다.")
+    @Test
+    void addOrderCartIdNull() throws Exception {
+        final List<OrderRequest> orderRequests = List.of(new OrderRequest(null), new OrderRequest(2L));
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+        ErrorResponse response = new ErrorResponse("카트 id를 입력하세요.");
+
+        mockMvc.perform(post("/api/members/me/orders")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(orderRequests)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(objectMapper.writeValueAsString(response)));
     }
 
     @DisplayName("토큰과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")

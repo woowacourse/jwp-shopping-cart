@@ -4,7 +4,7 @@ import javax.validation.constraints.Min;
 
 public class CartQuantityUpdateRequest {
 
-    @Min(value = 1)
+    @Min(value = 1, message = "장바구니 물품 개수를 1개 이상 입력해주세요.")
     private int quantity;
 
     private CartQuantityUpdateRequest() {
