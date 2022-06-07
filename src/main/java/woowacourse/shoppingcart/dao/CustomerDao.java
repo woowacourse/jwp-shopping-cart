@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -43,7 +44,7 @@ public class CustomerDao {
 
     public String findPasswordByEmail(final Email email) {
         final String query = "SELECT password FROM customer WHERE email = ?";
-        return jdbcTemplate.queryForObject(query, String.class, email.getValue());
+        return DataAccessUtils.singleResult(jdbcTemplate.queryForList(query, String.class, email.getValue()));
     }
 
     public Long findIdByUserName(final String userName) {

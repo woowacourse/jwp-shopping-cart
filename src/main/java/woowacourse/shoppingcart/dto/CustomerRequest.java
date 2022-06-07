@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 public class CustomerRequest {
+
     private Long id;
     private String email;
     private String profileImageUrl;
