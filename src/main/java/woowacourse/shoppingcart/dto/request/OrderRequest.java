@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.request;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -7,9 +7,9 @@ public class OrderRequest {
     @NotNull
     private final Long cartId;
     @Min(0)
-    private final int quantity;
+    private final Integer quantity;
 
-    public OrderRequest(final Long cartId, final int quantity) {
+    public OrderRequest(final Long cartId, final Integer quantity) {
         this.cartId = cartId;
         this.quantity = quantity;
     }
@@ -18,7 +18,7 @@ public class OrderRequest {
         return cartId;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 }
