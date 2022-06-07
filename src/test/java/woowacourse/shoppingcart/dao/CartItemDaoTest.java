@@ -92,12 +92,8 @@ public class CartItemDaoTest {
         final Long cartId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
 
         // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
-        assertThat(productIds).containsExactly(2L);
     }
 }

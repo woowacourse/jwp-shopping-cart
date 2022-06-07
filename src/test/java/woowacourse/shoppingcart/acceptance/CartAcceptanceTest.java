@@ -14,14 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dto.ProductIdsRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @DisplayName("장바구니 관련 기능")
 @Sql(scripts = "classpath:product-data.sql")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "user";
-    private Long productId1;
-    private Long productId2;
 
     @DisplayName("장바구니 아이템 1개 추가 후, 장바구니 아이템 목록 조회")
     @Test
@@ -48,6 +46,21 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
+        //given
+        String accessToken = getAccessToken();
+        장바구니_아이템_추가_요청(accessToken, 1L, 5);
+        장바구니_아이템_추가_요청(accessToken, 2L, 5);
+        장바구니_아이템_추가_요청(accessToken, 3L, 5);
+
+        //when
+        ExtractableResponse<Response> deleteResponse = 장바구니_삭제_요청(accessToken, List.of(2L));
+
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(accessToken);
+        List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
+
+        //then
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(productResponses.size()).isEqualTo(2);
 
     }
 
@@ -76,11 +89,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(String accessToken, List<Long> productIds) {
+        ProductIdsRequest productIdsRequest = new ProductIdsRequest(productIds);
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
+                .body(productIdsRequest)
+                .when().delete("/customers/carts")
                 .then().log().all()
                 .extract();
     }

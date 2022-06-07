@@ -9,9 +9,9 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.ProductIdsRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -42,11 +42,6 @@ public class CartService {
         return new ProductResponse(product, quantity);
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
     public Long addCart(final Long customerId, final CartRequest cartRequest) {
         try {
             validateQuantity(cartRequest.getQuantity());
@@ -62,16 +57,10 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCart(final Long customerId, final ProductIdsRequest productIds) {
+        for (Long productId : productIds.getIds()) {
+            cartItemDao.deleteCartItem(customerId, productId);
+        }
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
-    }
 }
