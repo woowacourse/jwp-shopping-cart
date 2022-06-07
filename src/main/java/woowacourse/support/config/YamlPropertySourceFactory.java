@@ -1,5 +1,6 @@
 package woowacourse.support.config;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
@@ -12,9 +13,20 @@ public class YamlPropertySourceFactory implements PropertySourceFactory {
     @Override
     public PropertySource<?> createPropertySource(final String name, final EncodedResource resource)
             throws IOException {
-        YamlPropertiesFactoryBean factoryBean = new YamlPropertiesFactoryBean();
-        factoryBean.setResources(resource.getResource());
-        Properties properties = factoryBean.getObject();
-        return new PropertiesPropertySource(resource.getResource().getFilename(), properties);
+        return new PropertiesPropertySource(resource.getResource().getFilename(), loadYamlIntoProperties(resource));
+    }
+
+    private Properties loadYamlIntoProperties(EncodedResource resource) throws FileNotFoundException {
+        try {
+            YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
+            factory.setResources(resource.getResource());
+            return factory.getObject();
+        } catch (IllegalStateException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof FileNotFoundException) {
+                throw (FileNotFoundException) e.getCause();
+            }
+            throw e;
+        }
     }
 }

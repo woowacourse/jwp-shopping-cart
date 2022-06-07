@@ -6,7 +6,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource(
-        ignoreResourceNotFound = true,
         value = {
                 "file:/home/ubuntu/application.yml"
         },
