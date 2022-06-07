@@ -10,7 +10,6 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.UsernameDuplicationRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,24 +37,21 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void checkDuplicationUserName_unique() {
         signUpCustomer();
-        UsernameDuplicationRequest request = new UsernameDuplicationRequest("kth990303");
-        checkUsernameIsUnique(request, true);
+
+        checkUsernameIsUnique("kth990303", true);
     }
 
     @DisplayName("아이디가 중복될 때, 아이디 중복 여부를 검사한다.")
     @Test
     void checkDuplicationUserName_duplicated() {
         signUpCustomer();
-        UsernameDuplicationRequest request = new UsernameDuplicationRequest("forky");
-        checkUsernameIsUnique(request, false);
+
+        checkUsernameIsUnique("forky", false);
     }
 
-    private void checkUsernameIsUnique(UsernameDuplicationRequest request, boolean expected) {
+    private void checkUsernameIsUnique(String username, boolean expected) {
         RestAssured.given().log().all()
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/customers/username/duplication")
+                .when().get("/customers/username/uniqueness?username=" + username)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("isUnique", equalTo(expected));

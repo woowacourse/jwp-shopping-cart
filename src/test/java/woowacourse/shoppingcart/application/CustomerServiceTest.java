@@ -63,8 +63,7 @@ class CustomerServiceTest {
     @CsvSource({"forky, true", "kth990303, false"})
     void checkDuplication(String username, boolean expected) {
         customerService.addCustomer(customerRequest1);
-        UsernameDuplicationRequest request = new UsernameDuplicationRequest(username);
-        UsernameDuplicationResponse response = customerService.checkDuplication(request);
+        UsernameDuplicationResponse response = customerService.checkDuplication(username);
         assertThat(response.getIsUnique()).isEqualTo(expected);
     }
 

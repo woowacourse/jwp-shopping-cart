@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.*;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.UsernameDuplicationResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -25,10 +28,9 @@ public class CustomerController {
         return ResponseEntity.created(URI.create("/customers/me")).build();
     }
 
-    @GetMapping("/username/duplication")
-    public ResponseEntity<UsernameDuplicationResponse> checkDuplicationUserName(
-            @Valid @RequestBody UsernameDuplicationRequest usernameDuplicationRequest) {
-        return ResponseEntity.ok(customerService.checkDuplication(usernameDuplicationRequest));
+    @GetMapping("/username/uniqueness")
+    public ResponseEntity<UsernameDuplicationResponse> checkDuplicationUserName(@RequestParam String username) {
+        return ResponseEntity.ok(customerService.checkDuplication(username));
     }
 
     @GetMapping("/me")
