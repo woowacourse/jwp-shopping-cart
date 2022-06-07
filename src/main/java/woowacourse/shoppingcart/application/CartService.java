@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -31,7 +33,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<CartItem> findCartsByCustomerName(LoginCustomer loginCustomer) {
+    public List<CartItemResponse> findCartsByCustomerName(LoginCustomer loginCustomer) {
         List<Long> cartIds = findCartIdsByCustomerName(loginCustomer.getUsername());
 
         List<CartItem> cartItems = new ArrayList<>();
@@ -42,7 +44,9 @@ public class CartService {
                     .orElseThrow(NoSuchCartItemException::new);
             cartItems.add(new CartItem(cartId, product, quantity));
         }
-        return cartItems;
+        return cartItems.stream()
+                .map(CartItemResponse::new)
+                .collect(Collectors.toList());
     }
 
     private List<Long> findCartIdsByCustomerName(String customerName) {

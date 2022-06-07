@@ -16,11 +16,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
-import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 @RestController
 @RequestMapping("/api/customers/me/cart-items")
@@ -32,9 +31,9 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItem>> getCartItems(@AuthenticationPrincipal LoginCustomer loginCustomer) {
-        List<CartItem> cartItems = cartService.findCartsByCustomerName(loginCustomer);
-        return ResponseEntity.ok().body(cartItems);
+    public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        List<CartItemResponse> cartItemResponses = cartService.findCartsByCustomerName(loginCustomer);
+        return ResponseEntity.ok().body(cartItemResponses);
     }
 
     @PostMapping
