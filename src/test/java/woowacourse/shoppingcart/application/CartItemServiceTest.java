@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.shoppingcart.dto.CartItemIdRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityResponse;
 import woowacourse.shoppingcart.dto.CartItemResponse;
@@ -74,5 +75,23 @@ class CartItemServiceTest {
 
         // then
         assertThat(response.getQuantity()).isEqualTo(100);
+    }
+
+    @DisplayName("입력된 장바구니 물품의 id 들을 이용해서 저장된 나의 장바구니 물품을 삭제한다.")
+    @Test
+    void delete() {
+        // given
+        TokenRequest tokenRequest = new TokenRequest(1L);
+        List<CartItemIdRequest> cartItemIdRequests = List.of(new CartItemIdRequest(1L), new CartItemIdRequest(2L));
+
+        // when
+        cartItemService.delete(tokenRequest, cartItemIdRequests);
+
+        // then
+        List<CartItemResponse> responses = cartItemService.findCartItemsByCustomerId(tokenRequest);
+        assertAll(
+                () -> assertThat(responses.size()).isEqualTo(1),
+                () -> assertThat(responses.get(0).getId()).isEqualTo(3L)
+        );
     }
 }
