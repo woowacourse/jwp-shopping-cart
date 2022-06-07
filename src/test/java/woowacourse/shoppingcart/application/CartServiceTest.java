@@ -44,14 +44,43 @@ class CartServiceTest {
 			.willReturn(new CartItem(product, quantity).createWithId(cartItemId));
 
 		// when
-		CartItem cartItem = cartService.addItem(customerId, productId, quantity);
+		CartItem cartItem = cartService.setItem(customerId, productId, quantity);
 
 		// then
 		assertAll(
 			() -> assertThat(cartItem.getId()).isEqualTo(cartItemId),
 			() -> assertThat(cartItem.getQuantity()).isEqualTo(quantity),
 			() -> verify(productDao).findById(productId),
-			() -> verify(cartItemDao).save(eq(customerId), any(CartItem.class))
+			() -> verify(cartItemDao).save(eq(customerId), any(CartItem.class)),
+			() -> verify(cartItemDao).findByCustomerId(customerId),
+			() -> verify(cartItemDao, never()).update(any(CartItem.class))
+		);
+	}
+
+	@DisplayName("존재하는 장바구니 상품의 수량을 변경한다.")
+	@Test
+	void updateItem() {
+		// given
+		long customerId = 1L;
+		long productId = 1L;
+		long cartItemId = 1L;
+		int quantity = 2;
+
+		Product product = new Product(productId, "치킨", 20000, "test.jpg");
+		CartItem existItem = new CartItem(cartItemId, product, 3);
+		given((cartItemDao.findByCustomerId(customerId)))
+			.willReturn(List.of(existItem));
+
+		// when
+		CartItem cartItem = cartService.setItem(customerId, productId, quantity);
+
+		// then
+		assertAll(
+			() -> assertThat(cartItem.getId()).isEqualTo(cartItemId),
+			() -> assertThat(cartItem.getQuantity()).isEqualTo(quantity),
+			() -> verify(productDao, never()).findById(productId),
+			() -> verify(cartItemDao).update(existItem),
+			() -> verify(cartItemDao, never()).save(eq(customerId), any(CartItem.class))
 		);
 	}
 

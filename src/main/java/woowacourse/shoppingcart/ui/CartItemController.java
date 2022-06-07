@@ -1,20 +1,25 @@
 package woowacourse.shoppingcart.ui;
 
+import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.support.Login;
+import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.QuantityRequest;
-import woowacourse.shoppingcart.application.CartService;
-
-import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cart")
@@ -24,11 +29,13 @@ public class CartItemController {
 	private final CartService cartService;
 
 	@PutMapping("/products/{productId}")
-	public ResponseEntity<CartItemResponse> addCartItem(
-		@Login Customer customer,
-		@PathVariable Long productId,
-		@RequestBody QuantityRequest quantityRequest) {
-		CartItem cartItem = cartService.addItem(customer.getId(), productId, quantityRequest.getQuantity());
+	public ResponseEntity<CartItemResponse> addCartItem2(@Login Customer customer,
+		@PathVariable Long productId, @RequestBody QuantityRequest quantityRequest) {
+		if (cartService.existByCustomerAndProduct(customer.getId(), productId)) {
+			CartItem cartItem = cartService.setItem(customer.getId(), productId, quantityRequest.getQuantity());
+			return ResponseEntity.ok(CartItemResponse.from(cartItem));
+		}
+		CartItem cartItem = cartService.setItem(customer.getId(), productId, quantityRequest.getQuantity());
 		return ResponseEntity.created(makeUri(cartItem.getId()))
 			.body(CartItemResponse.from(cartItem));
 	}
@@ -45,8 +52,8 @@ public class CartItemController {
 	public ResponseEntity<List<CartItemResponse>> getCartItems(@Login Customer customer) {
 		List<CartItem> items = cartService.findItemsByCustomer(customer.getId());
 		return ResponseEntity.ok().body(items.stream()
-				.map(CartItemResponse::from)
-				.collect(Collectors.toList())
-			);
+			.map(CartItemResponse::from)
+			.collect(Collectors.toList())
+		);
 	}
 }

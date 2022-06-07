@@ -66,13 +66,34 @@ class CartItemControllerTest extends ControllerTest {
 			.andExpect(content().json(objectMapper.writeValueAsString(response)));
 	}
 
+	@DisplayName("이미 있는 장바구니 상품의 수량을 변경한다.")
+	@Test
+	void updateCartItem() throws Exception {
+		// given
+		cartService.setItem(customerId, productId, 13);
+		int updatedQuantity = 20;
+
+		// when
+		QuantityRequest request = new QuantityRequest(updatedQuantity);
+		ResultActions result = mockMvc.perform(put("/cart/products/" + productId)
+			.header("Authorization", "Bearer " + token)
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(request)));
+
+		// then
+		CartItemResponse response = new CartItemResponse(
+			productId, "치킨", "test.jpg", 20000, updatedQuantity);
+		result.andExpect(status().isOk())
+			.andExpect(content().json(objectMapper.writeValueAsString(response)));
+	}
+
 	@DisplayName("로그인 사용자의 장바구니 목록을 조회한다.")
 	@Test
 	void getItems() throws Exception {
 		// given
-		cartService.addItem(customerId, productId, 2);
+		cartService.setItem(customerId, productId, 2);
 		Long productId2 = productInsertUtil.insert("콜라", 1500, "test.jpg");
-		cartService.addItem(customerId, productId2, 3);
+		cartService.setItem(customerId, productId2, 3);
 
 		// when
 		ResultActions result = mockMvc.perform(get("/cart")

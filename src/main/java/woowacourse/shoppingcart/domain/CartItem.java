@@ -3,12 +3,14 @@ package woowacourse.shoppingcart.domain;
 import static lombok.EqualsAndHashCode.*;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
+@Builder
 public class CartItem {
 
     @Include
@@ -29,5 +31,9 @@ public class CartItem {
 
     public CartItem createWithId(Long id) {
         return new CartItem(id, productId, name, price, imageUrl, quantity);
+    }
+
+    public boolean isSameProductId(Long productId) {
+        return this.productId.equals(productId);
     }
 }

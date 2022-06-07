@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 
 import woowacourse.auth.dao.CustomerDao;
@@ -79,5 +78,20 @@ public class CartItemDaoTest {
         assertThat(items)
             .map(CartItem::getName)
             .containsOnly("banana", "apple");
+    }
+
+    @DisplayName("cartItem 정보를 수정한다.")
+    @Test
+    void update() {
+        // given
+        CartItem item = cartItemDao.save(customerId, new CartItem(product, 3));
+
+        // when
+        cartItemDao.update(new CartItem(item.getId(), product, 10));
+
+        // then
+        CartItem updated = cartItemDao.findByCustomerId(customerId).get(0);
+        assertThat(updated.getId()).isEqualTo(item.getId());
+        assertThat(updated.getQuantity()).isEqualTo(10);
     }
 }

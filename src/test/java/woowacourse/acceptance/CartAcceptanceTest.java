@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,9 +64,7 @@ public class CartAcceptanceTest {
         );
     }
 
-    // todo
     @DisplayName("장바구니에 이미 있는 상품에 수량 변경을 한다.")
-    @Disabled
     @Test
     void addCartItemTwice() {
         // given
