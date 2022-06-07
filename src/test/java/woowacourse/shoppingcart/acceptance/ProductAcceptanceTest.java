@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductResponses;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -79,9 +78,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        final ProductResponses productResponses = response.jsonPath().getObject(".", ProductResponses.class);
+        final List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
 
-        List<Long> resultProductIds = productResponses.getProducts().stream()
+        List<Long> resultProductIds = productResponses.stream()
                 .map(ProductResponse::getId)
                 .collect(Collectors.toList());
 

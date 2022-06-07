@@ -28,7 +28,6 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.dto.OrderResponses;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @JdbcTest

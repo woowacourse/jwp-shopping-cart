@@ -24,7 +24,6 @@ import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.dao.JdbcProductDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.dto.CartItemResponses;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;

@@ -5,13 +5,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_REQUEST_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_REQUEST_2;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.shoppingcart.dao.JdbcProductDao;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductResponses;
 
 @JdbcTest
 class ProductServiceTest {
@@ -40,10 +40,10 @@ class ProductServiceTest {
         productService.addProduct(PRODUCT_REQUEST_2);
 
         //when
-        final ProductResponses productResponses = productService.findProducts();
+        final List<ProductResponse> productResponses = productService.findProducts();
 
         //then
-        assertThat(productResponses.getProducts())
+        assertThat(productResponses)
                 .extracting("name", "price", "imageUrl", "description", "stock")
                 .containsExactly(
                         tuple(PRODUCT_REQUEST_1.getName(), PRODUCT_REQUEST_1.getPrice(),
@@ -74,11 +74,11 @@ class ProductServiceTest {
     void deleteProductById() {
         //given
         final Long id = productService.addProduct(PRODUCT_REQUEST_1);
-        final int beforeSize = productService.findProducts().getProducts().size();
+        final int beforeSize = productService.findProducts().size();
 
         //when
         productService.deleteProductById(id);
-        final int afterSize = productService.findProducts().getProducts().size();
+        final int afterSize = productService.findProducts().size();
 
         //then
         assertThat(beforeSize - 1).isEqualTo(afterSize);

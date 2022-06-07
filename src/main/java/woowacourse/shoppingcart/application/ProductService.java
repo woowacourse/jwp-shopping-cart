@@ -1,21 +1,14 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.address.FullAddress;
-import woowacourse.shoppingcart.domain.customer.privacy.Privacy;
-import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductResponses;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @Service
@@ -33,12 +26,12 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponses findProducts() {
+    public List<ProductResponse>  findProducts() {
         final List<Product> products = productDao.findProducts();
 
-        return new ProductResponses(products.stream()
+        return products.stream()
                 .map(ProductService::convertResponseToProduct)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
