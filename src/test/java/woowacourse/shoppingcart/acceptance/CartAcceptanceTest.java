@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -10,10 +11,9 @@ import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredFixture;
 import woowacourse.auth.dto.LogInRequest;
 import woowacourse.shoppingcart.domain.Id;
-import woowacourse.shoppingcart.dto.CartProductRequest;
-import woowacourse.shoppingcart.dto.DeleteProductRequest;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.*;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,5 +112,27 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
 
         RestAssuredFixture.delete(request, token, "/cart", HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("장바구니 아이템 복수 수정 ")
+    @Test
+    void modifyCartItem() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
+
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
+
+        RestAssuredFixture.postCart(new CartProductRequest(1L, 1L, true),
+                token, "/cart", HttpStatus.CREATED.value());
+        RestAssuredFixture.postCart(new CartProductRequest(2L, 1L, true),
+                token, "/cart", HttpStatus.CREATED.value());
+        RestAssuredFixture.postCart(new CartProductRequest(3L, 1L, true),
+                token, "/cart", HttpStatus.CREATED.value());
+
+        //when & then
+        ModifyProductRequest request = new ModifyProductRequest(1L, 2L, false);
+        RestAssuredFixture.patch(new ModifyProductRequests(List.of(request)), token, "/cart", HttpStatus.OK.value());
     }
 }

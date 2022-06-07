@@ -7,15 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Id;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.CartProducts;
-import woowacourse.shoppingcart.dto.CartProductRequest;
-import woowacourse.shoppingcart.dto.CartProductResponse;
-import woowacourse.shoppingcart.dto.DeleteProductRequest;
+import woowacourse.shoppingcart.dto.*;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -66,5 +61,21 @@ public class CartService {
 
     public void deleteAll() {
         cartItemDao.deleteAll();
+    }
+
+    public CartProducts modify(ModifyProductRequests modifyProductRequests) {
+        for (ModifyProductRequest request : modifyProductRequests.getProducts()) {
+            cartItemDao.update(request.getId(), request.getQuantity(), request.isChecked());
+        }
+
+        List<CartProductResponse> cartEntities = new ArrayList<>();
+        try {
+            for (ModifyProductRequest request : modifyProductRequests.getProducts()) {
+                cartEntities.add(cartItemDao.findCartIdById(request.getId()));
+            }
+            return new CartProducts(cartEntities);
+        } catch (Exception e) {
+            throw new InvalidProductException();
+        }
     }
 }

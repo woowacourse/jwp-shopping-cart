@@ -79,4 +79,19 @@ public class CartItemDaoTest {
                 .hasMessageContaining("유효하지 않은 장바구니입니다.");
 
     }
+
+    @Test
+    @DisplayName("장바구니 상품 정보 수정")
+    void modifyItem() {
+        //given
+        Product product = productDao.save(new Product("apple", 1000, "woowa2.com"));
+        cartItemDao.addCartItem(1L, product.getId(), 1L, true);
+
+        Product product2 = productDao.save(new Product("apple", 1000, "woowa2.com"));
+        final Long cartItemId2 = cartItemDao.addCartItem(1L, product2.getId(), 1L, true);
+
+        cartItemDao.update(cartItemId2, 3L, false);
+
+        assertThat(cartItemDao.findCartIdById(cartItemId2).getQuantity()).isEqualTo(3L);
+    }
 }

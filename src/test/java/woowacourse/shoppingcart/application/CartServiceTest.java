@@ -104,4 +104,27 @@ class CartServiceTest {
         //then
         assertThat(cartService.getCart("greenlawn").getProducts().size()).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("장바구니 복수 수정")
+    void modifyCarts() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
+        customerService.addCustomer(signUpRequest);
+
+        ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
+        ProductRequest productRequest2 = new ProductRequest("치킨", 20000, "http://example.com/chicken.jpg");
+
+        Product product1 = productService.addProduct(productRequest);
+        Product product2 = productService.addProduct(productRequest2);
+
+        cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "greenlawn");
+        cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
+
+        //when
+        cartService.modify(new ModifyProductRequests(List.of(new ModifyProductRequest(1L, 3L, true))));
+
+        //then
+        assertThat(cartService.getCart("greenlawn").getProducts().get(0).getQuantity()).isEqualTo(3L);
+    }
 }
