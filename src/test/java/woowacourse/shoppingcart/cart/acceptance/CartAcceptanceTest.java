@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.cart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.product.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,9 +31,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-
-        this.productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        this.productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }
 
     @DisplayName("장바구니 아이템 추가")

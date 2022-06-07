@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.order.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.product.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,11 +35,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
 
-        final Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        final Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-
-        cartId1 = CartAcceptanceTest.장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = CartAcceptanceTest.장바구니_아이템_추가되어_있음(USER, productId2);
+        cartId1 = CartAcceptanceTest.장바구니_아이템_추가되어_있음(USER, 1L);
+        cartId2 = CartAcceptanceTest.장바구니_아이템_추가되어_있음(USER, 2L);
     }
 
     @DisplayName("주문하기")
