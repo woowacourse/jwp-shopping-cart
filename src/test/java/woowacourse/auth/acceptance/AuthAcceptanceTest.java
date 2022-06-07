@@ -22,8 +22,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
-        LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
+        사용자_생성_요청("loginId@gmail.com", "seungpapang", "12345678aA!");
+        LoginRequest loginRequest = new LoginRequest("loginId@gmail.com", "12345678aA!");
         ExtractableResponse<Response> response = 로그인_요청(loginRequest);
         TokenResponse tokenResponse = response.as(TokenResponse.class);
 
@@ -32,7 +32,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(() -> {
             assertThat(expected).extracting("loginId", "name")
-                    .containsExactly("loginId", "seungpapang");
+                    .containsExactly("loginId@gmail.com", "seungpapang");
             assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         });
 

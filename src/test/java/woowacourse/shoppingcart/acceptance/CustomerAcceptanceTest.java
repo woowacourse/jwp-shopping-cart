@@ -25,7 +25,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
-        ExtractableResponse<Response> response = 사용자_생성_요청("loginId", "seungpapang", "12345678aA");
+        ExtractableResponse<Response> response = 사용자_생성_요청("loginId@gmail.com", "seungpapang", "12345678aA");
 
         사용자_추가됨(response);
     }
@@ -33,8 +33,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     @Test
     void getMe() {
-        사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
-        LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
+        사용자_생성_요청("loginId@gmail.com", "seungpapang", "12345678aA!");
+        LoginRequest loginRequest = new LoginRequest("loginId@gmail.com", "12345678aA!");
         ExtractableResponse<Response> response = 로그인_요청(loginRequest);
         TokenResponse tokenResponse = response.as(TokenResponse.class);
 
@@ -44,7 +44,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(() -> {
             assertThat(getMeResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertThat(customerResponse).extracting("loginId", "name")
-                .containsExactly("loginId", "seungpapang");
+                .containsExactly("loginId@gmail.com", "seungpapang");
         });
     }
 
@@ -52,26 +52,26 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정")
     @Test
     void updateMe() {
-        사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
-        LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
+        사용자_생성_요청("loginId@gmail.com", "seungpapang", "12345678aA!");
+        LoginRequest loginRequest = new LoginRequest("loginId@gmail.com", "12345678aA!");
         ExtractableResponse<Response> response = 로그인_요청(loginRequest);
         TokenResponse tokenResponse = response.as(TokenResponse.class);
 
         ExtractableResponse<Response> updatedResponse = 내정보_수정_요청(tokenResponse.getAccessToken(),
-            "loginId", "angie", "12345678aA!");
+            "loginId@gmail.com", "angie", "12345678aA!");
 
         assertAll(() -> {
             assertThat(updatedResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertThat(updatedResponse.as(CustomerResponse.class)).extracting("loginId", "name")
-                .containsExactly("loginId", "angie");
+                .containsExactly("loginId@gmail.com", "angie");
         });
     }
 
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
-        사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
-        LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
+        사용자_생성_요청("loginId@gmail.com", "seungpapang", "12345678aA!");
+        LoginRequest loginRequest = new LoginRequest("loginId@gmail.com", "12345678aA!");
         ExtractableResponse<Response> response = 로그인_요청(loginRequest);
         TokenResponse tokenResponse = response.as(TokenResponse.class);
 

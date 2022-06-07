@@ -93,18 +93,18 @@ public class CustomerDaoTest {
 
         @Test
         void 데이터가_정상적인_경우_회원가입_성공() {
-            final Customer customer = new Customer("seungpapang", "승팡", "12345678aA!");
+            final Customer customer = new Customer("seungpapang@gmail.com", "승팡", "12345678aA!");
 
             Customer result = customerDao.save(customer).orElseThrow();
 
             assertThat(result)
                 .extracting("id", "loginId", "username", "password")
-                .containsExactly(26L, "seungpapang", "승팡", "12345678aA!");
+                .containsExactly(26L, "seungpapang@gmail.com", "승팡", "12345678aA!");
         }
 
         @Test
         void 이미_존재하는_고객일_경우_empty반환() {
-            final Customer customer = new Customer("seungpapang", "승팡", "12345678aA!");
+            final Customer customer = new Customer("seungpapang@gmail.com", "승팡", "12345678aA!");
             customerDao.save(customer);
 
             Optional<Customer> result = customerDao.save(customer);
@@ -119,24 +119,24 @@ public class CustomerDaoTest {
 
         @Test
         void 정상적인_데이터인_경우_업데이트_성공() {
-            final Customer customer = new Customer("seungpapang", "승팡", "12345678aA!");
+            final Customer customer = new Customer("seungpapang@gmail.com", "승팡", "12345678aA!");
             customerDao.save(customer);
 
-            customerDao.update(new Customer("seungpapang", "승파팡", "12345678aA!"));
-            Customer result = customerDao.findByLoginId("seungpapang").orElseThrow();
+            customerDao.update(new Customer("seungpapang@gmail.com", "승파팡", "12345678aA!"));
+            Customer result = customerDao.findByLoginId("seungpapang@gmail.com").orElseThrow();
 
             assertThat(result).extracting("loginId", "username")
-                .containsExactly("seungpapang", "승파팡");
+                .containsExactly("seungpapang@gmail.com", "승파팡");
         }
 
         @Test
         void 중복되는_이름으로_업데이트_할_경우_예외발생() {
-            final Customer customer = new Customer("seungpapang", "승팡", "12345678aA!");
-            final Customer otherCustomer = new Customer("seungpapang2", "승파팡", "12345678aA!");
+            final Customer customer = new Customer("seungpapang@gmail.com", "승팡", "12345678aA!");
+            final Customer otherCustomer = new Customer("seungpapang2@gmail.com", "승파팡", "12345678aA!");
             customerDao.save(customer);
             customerDao.save(otherCustomer);
 
-            Customer updateCustomer = new Customer("seungpapang", "승파팡", "12345678aA!");
+            Customer updateCustomer = new Customer("seungpapang@gmail.com", "승파팡", "12345678aA!");
 
             assertThatThrownBy(() -> customerDao.update(updateCustomer))
                 .isInstanceOf(DuplicateCustomerException.class);

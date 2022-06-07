@@ -36,17 +36,17 @@ class CustomerServiceTest {
 
         @Test
         void 중복되지_않은_아이디일_경우_성공() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
+            CustomerRequest customerRequest = new CustomerRequest("angie@gmail.com", "angel", "12345678aA!");
 
             CustomerResponse actual = customerService.addCustomer(customerRequest);
 
             assertThat(actual).extracting("loginId", "name")
-                    .containsExactly("angie", "angel");
+                    .containsExactly("angie@gmail.com", "angel");
         }
 
         @Test
         void 중복되는_아이디일_경우_예외발생() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
+            CustomerRequest customerRequest = new CustomerRequest("angie@gmail.com", "angel", "12345678aA!");
 
             customerService.addCustomer(customerRequest);
 
@@ -61,16 +61,16 @@ class CustomerServiceTest {
 
         @Test
         void 정상적인_데이터가_들어올_경우_성공() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
+            CustomerRequest customerRequest = new CustomerRequest("angie@gmail.com", "angel", "12345678aA!");
             customerService.addCustomer(customerRequest);
 
             CustomerUpdateRequest updateCustomerRequest = new CustomerUpdateRequest("seungpapang", "12345678aA!");
-            LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", HashTool.hashing("12345678aA!"));
+            LoginCustomer loginCustomer = new LoginCustomer("angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
 
             CustomerResponse actual = customerService.updateCustomer(updateCustomerRequest, loginCustomer);
 
             assertThat(actual).extracting("loginId", "name")
-                    .containsExactly("angie", "seungpapang");
+                    .containsExactly("angie@gmail.com", "seungpapang");
         }
 
         @Test
@@ -85,10 +85,10 @@ class CustomerServiceTest {
 
         @Test
         void 이미_존재하는_유저네임인_경우_예외발생() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
+            CustomerRequest customerRequest = new CustomerRequest("angie@gmail.com", "angel", "12345678aA!");
             customerService.addCustomer(customerRequest);
 
-            CustomerRequest updateCustomerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
+            CustomerRequest updateCustomerRequest = new CustomerRequest("angie@gmail.com", "angel", "12345678aA!");
 
             assertThatThrownBy(() -> customerService.addCustomer(updateCustomerRequest))
                     .isInstanceOf(DuplicateCustomerException.class);
@@ -101,11 +101,11 @@ class CustomerServiceTest {
 
         @Test
         void 정상적인_데이터가_들어올_경우_성공() {
-            CustomerRequest customerRequest = new CustomerRequest("angie", "angel", "12345678aA!");
+            CustomerRequest customerRequest = new CustomerRequest("angie@gmail.com", "angel", "12345678aA!");
             customerService.addCustomer(customerRequest);
 
             CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("12345678aA!");
-            LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", HashTool.hashing("12345678aA!"));
+            LoginCustomer loginCustomer = new LoginCustomer("angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
 
             assertThatCode(() -> customerService.deleteCustomer(customerPasswordRequest, loginCustomer))
                 .doesNotThrowAnyException();
@@ -115,7 +115,7 @@ class CustomerServiceTest {
         void 존재하지_않는_회원일_경우_예외발생() {
             CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest(
                 "12345678aA!");
-            LoginCustomer loginCustomer = new LoginCustomer("angie", "angel", HashTool.hashing("12345678aA!"));
+            LoginCustomer loginCustomer = new LoginCustomer("angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
 
             assertThatThrownBy(() -> customerService.deleteCustomer(customerPasswordRequest, loginCustomer))
                 .isInstanceOf(InvalidCustomerException.class);

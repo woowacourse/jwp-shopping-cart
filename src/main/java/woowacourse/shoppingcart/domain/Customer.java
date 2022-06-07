@@ -5,27 +5,41 @@ import java.util.function.Function;
 public class Customer {
 
     private Long id;
-    private String loginId;
-    private String username;
-    private String password;
+    private LoginId loginId;
+    private Name username;
+    private Password password;
 
-    public Customer(Long id, String loginId, String username, String password) {
+    private Customer(Long id, LoginId loginId, Name username,
+        Password password) {
         this.id = id;
         this.loginId = loginId;
         this.username = username;
         this.password = password;
     }
 
-    public Customer(String loginId, String username, String password) {
+    private Customer(LoginId loginId, Name username, Password password) {
         this.loginId = loginId;
         this.username = username;
         this.password = password;
     }
 
-    public Customer ofHashPassword(Function<String, String> hashing) {
-        String hashedPassword = hashing.apply(password);
+    public Customer(String loginId, String name, String password) {
+        this(new LoginId(loginId),
+            new Name(name),
+            new Password(password));
+    }
 
-        return new Customer(this.loginId, this.username, hashedPassword);
+    public Customer(Long id, String loginId, String name, String password){
+        this(id,
+            new LoginId(loginId),
+            new Name(name),
+            new Password(password));
+    }
+
+    public Customer ofHashPassword(Function<String, String> hashing) {
+        String hashedPassword = hashing.apply(password.getValue());
+
+        return new Customer(this.loginId, this.username, new Password(hashedPassword));
     }
 
     public Long getId() {
@@ -33,18 +47,18 @@ public class Customer {
     }
 
     public String getLoginId() {
-        return loginId;
+        return loginId.getValue();
     }
 
     public String getUsername() {
-        return username;
+        return username.getValue();
     }
 
     public String getPassword() {
-        return password;
+        return password.getValue();
     }
 
     public boolean isSamePassword(String password) {
-        return this.password.equals(password);
+        return this.password.isSamePassword(password);
     }
 }
