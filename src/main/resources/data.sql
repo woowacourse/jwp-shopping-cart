@@ -25,3 +25,10 @@ values ('puterism', 'password123!', 'nickname', '24'),
        ('yujo11', 'password123!', 'nickname', '24'),
        ('sunhpark42', 'password123!', 'nickname', '24')
 ;
+
+insert into product (name, price, image_url)
+values ('싱싱한 감자', 5000000, 'https://storybook.takealook.kr/image/potato.jpg'),
+       ('양념 감자', 2000, 'https://storybook.takealook.kr/image/potato.jpg'),
+       ('왕 감자', 5000000, 'https://storybook.takealook.kr/image/potato.jpg'),
+       ('눈을 감자', 5000000, 'https://storybook.takealook.kr/image/potato.jpg')
+;
