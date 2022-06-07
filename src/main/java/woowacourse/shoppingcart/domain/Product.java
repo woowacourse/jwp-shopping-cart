@@ -5,8 +5,8 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 public class Product {
     private final Long id;
     private final String name;
-    private final Integer price;
-    private final Integer stock;
+    private final int price;
+    private final int stock;
     private final String imageUrl;
 
     public Product(final Long id, final String name, final int price, final int stock, final String imageUrl) {
