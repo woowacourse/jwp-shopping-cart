@@ -29,12 +29,13 @@ public class ProductDaoTest {
     @Test
     void save() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        String name = "초콜렛";
+        int price = 1_000;
+        String imageUrl = "www.test.com";
 
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        Product product = productDao.save(new Product(name, price, imageUrl));
+        Long productId = product.getId();
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -44,14 +45,14 @@ public class ProductDaoTest {
     @Test
     void findProductById() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        String name = "초콜렛";
+        int price = 1_000;
+        String imageUrl = "www.test.com";
+        Long productId = productDao.save(new Product(name, price, imageUrl)).getId();
+        Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        Product product = productDao.findProductById(productId);
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -75,18 +76,18 @@ public class ProductDaoTest {
     @Test
     void deleteProduct() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        String name = "초콜렛";
+        int price = 1_000;
+        String imageUrl = "www.test.com";
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts().getValue().size();
+        Long productId = productDao.save(new Product(name, price, imageUrl)).getId();
+        int beforeSize = productDao.findProducts().getValue().size();
 
         // when
         productDao.delete(productId);
 
         // then
-        final int afterSize = productDao.findProducts().getValue().size();
+        int afterSize = productDao.findProducts().getValue().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
     }
 }

@@ -172,7 +172,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.as(CartResponses.class).getProducts().stream()
+        List<Long> resultProductIds = response
+                .as(CartResponses.class)
+                .getProducts()
+                .stream()
                 .map(CartResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);

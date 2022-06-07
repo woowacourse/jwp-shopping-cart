@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductResponses;
 import woowacourse.shoppingcart.dto.ProductsPerPageRequest;
 
 @DisplayName("상품 관련 기능")
@@ -119,7 +120,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(List<Long> productIds, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
+        List<Long> resultProductIds = response
+                .as(ProductResponses.class)
+                .getProducts()
+                .stream()
                 .map(ProductResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).containsExactlyElementsOf(productIds);

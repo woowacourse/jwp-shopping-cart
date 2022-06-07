@@ -2,13 +2,13 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductResponses;
 import woowacourse.shoppingcart.dto.ProductsPerPageRequest;
 
 @SpringBootTest
@@ -31,10 +31,10 @@ public class ProductServiceTest {
         ProductsPerPageRequest productsPerPageRequest = new ProductsPerPageRequest(3, 2);
 
         // when
-        List<ProductResponse> products = productService.findProducts(productsPerPageRequest);
+        ProductResponses productResponses = productService.findProducts(productsPerPageRequest);
 
         // then
-        assertThat(products).size().isEqualTo(3);
+        assertThat(productResponses.getProducts()).size().isEqualTo(3);
     }
 
     @Test

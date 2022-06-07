@@ -9,10 +9,11 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductResponses;
 import woowacourse.shoppingcart.dto.ProductsPerPageRequest;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, readOnly = true)
 public class ProductService {
     private final ProductDao productDao;
 
@@ -20,26 +21,25 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Long addProduct(ProductRequest productRequest) {
-        return productDao.save(productRequest.toProduct());
+        Product product = productDao.save(productRequest.toProduct());
+        return product.getId();
     }
 
-    @Transactional(readOnly = true)
-    public List<ProductResponse> findProducts(ProductsPerPageRequest productsPerPageRequest) {
+    public ProductResponses findProducts(ProductsPerPageRequest productsPerPageRequest) {
         Products products = productDao.findProducts();
         Products productsOfPage = products.getProductsOfPage(productsPerPageRequest.getSize(),
                 productsPerPageRequest.getPage());
-        return productsOfPage.getValue().stream()
-                .map(ProductResponse::from)
-                .collect(Collectors.toList());
+        return ProductResponses.from(productsOfPage);
     }
 
-    @Transactional(readOnly = true)
     public ProductResponse findProductById(Long productId) {
         Product product = productDao.findProductById(productId);
         return ProductResponse.from(product);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteProductById(Long productId) {
         productDao.delete(productId);
     }

@@ -33,18 +33,19 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(Product product) {
+    public Product save(Product product) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", product.getName())
                 .addValue("price", product.getPrice())
                 .addValue("image_url", product.getImageUrl());
 
-        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        return new Product(id, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Product findProductById(Long productId) {
         try {
-            final String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
+            String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, productRowMapper, productId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
@@ -52,13 +53,13 @@ public class ProductDao {
     }
 
     public Products findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
+        String query = "SELECT id, name, price, image_url FROM product";
         List<Product> products = jdbcTemplate.query(query, productRowMapper);
         return new Products(products);
     }
 
     public void delete(Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
+        String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
     }
 }
