@@ -3,6 +3,7 @@ package woowacourse.auth.application;
 import org.springframework.stereotype.Service;
 
 import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.PasswordDto;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
@@ -41,5 +42,10 @@ public class AuthService {
         } catch (EmptyResultException exception) {
             throw new UserNotFoundException("해당하는 username이 없습니다.");
         }
+    }
+
+    public void matchPassword(String username, PasswordDto passwordDto) {
+        Customer customer = customerService.findByUsername(username);
+        customer.matchPassword(customerService.convertPassword(passwordDto.getPassword()));
     }
 }
