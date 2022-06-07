@@ -47,7 +47,7 @@ public class CartItemController {
     @PostMapping("/{productId}")
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final String username,
                                             @PathVariable final Long productId) {
-        //Long cartId = cartService.addCart(productId, username);
+        cartService.addCart(productId, username);
         return ResponseEntity.ok().build();
     }
 
