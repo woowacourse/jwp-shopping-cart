@@ -75,6 +75,12 @@ public class CustomerService {
         customerDao.delete(customer.getId());
     }
 
+    public void checkMatchingPassword(final CustomerIdentificationRequest customerIdentificationRequest,
+                                      final PasswordRequest passwordRequest) {
+        Customer customer = findCustomerById(customerIdentificationRequest.getId());
+        customer.validateMatchingLoginPassword(encrypt(passwordRequest.getPassword()));
+    }
+
     private Customer findCustomerByUserId(final String userId) {
         return customerDao.findByUserId(userId)
                 .orElseThrow(() -> new LoginDataNotFoundException("존재하지 않는 회원입니다."));

@@ -26,6 +26,7 @@ import woowacourse.shoppingcart.exception.datanotmatch.LoginDataNotMatchExceptio
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -456,6 +457,35 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.withdraw(customerIdentificationRequest, new PasswordRequest("invalidPassword")))
+                .isInstanceOf(LoginDataNotMatchException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
+    }
+
+    @DisplayName("비밀번호가 일치하는 것을 확인한다.")
+    @Test
+    void checkMatchingPassword() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+        PasswordRequest passwordRequest = new PasswordRequest("1234asdf!");
+
+        // when & then
+        assertThatCode(() -> customerService.checkMatchingPassword(customerIdentificationRequest, passwordRequest))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("비밀번호가 일치하지 않을 경우 예외가 발생한다.")
+    @Test
+    void checkMatchingInvalidPasswordException() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+        PasswordRequest passwordRequest = new PasswordRequest("invalidPassword");
+
+        // when & then
+        assertThatCode(() -> customerService.checkMatchingPassword(customerIdentificationRequest, passwordRequest))
                 .isInstanceOf(LoginDataNotMatchException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }

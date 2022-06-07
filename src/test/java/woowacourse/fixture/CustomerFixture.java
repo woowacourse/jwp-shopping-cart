@@ -77,4 +77,18 @@ public class CustomerFixture {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse<Response> checkMatchingPassword(final String token, final String password) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("password", password);
+
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/auth/customers/match/password")
+                .then().log().all()
+                .extract();
+    }
 }

@@ -58,4 +58,11 @@ public class CustomerController {
         customerService.withdraw(customerIdentificationRequest, passwordRequest);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/auth/customers/match/password")
+    public ResponseEntity<Void> checkMatchingPassword(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest,
+                                                      @RequestBody PasswordRequest passwordRequest) {
+        customerService.checkMatchingPassword(customerIdentificationRequest, passwordRequest);
+        return ResponseEntity.ok().build();
+    }
 }
