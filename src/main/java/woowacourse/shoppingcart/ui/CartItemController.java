@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/carts")
+@RequestMapping("/customers/carts")
 public class CartItemController {
     private final CartService cartService;
 
@@ -23,6 +23,6 @@ public class CartItemController {
     public ResponseEntity<CartItemResponse> addCartItem(HttpServletRequest request, @RequestBody CartItemRequest cartItemRequest) {
         String token = AuthorizationExtractor.extract(request);
         CartItemResponse cartResponse = cartService.addCart(token, cartItemRequest);
-        return ResponseEntity.created(URI.create("/carts")).body(cartResponse);
+        return ResponseEntity.created(URI.create("/customers/carts")).body(cartResponse);
     }
 }
