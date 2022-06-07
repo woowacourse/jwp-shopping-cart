@@ -25,7 +25,6 @@ public class CustomerService {
             throw new JoinException("이미 존재하는 이메일입니다.", ErrorResponse.DUPLICATED_EMAIL);
         }
         final Long newId = customerDao.save(new Customer(Email.of(email), Password.ofWithEncryption(password), Username.of(username)));
-
         return new Customer(newId, Email.of(email), Password.ofWithEncryption(password), Username.of(username));
     }
 

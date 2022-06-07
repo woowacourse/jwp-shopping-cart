@@ -4,9 +4,9 @@ drop table if exists orders;
 
 drop table if exists cart_item;
 
-drop table if exists product;
-
 drop table if exists image;
+
+drop table if exists product;
 
 drop table if exists customer;
 
@@ -14,16 +14,8 @@ create table customer
 (
     id       bigint              not null auto_increment,
     email    varchar(255) unique not null,
-    password varchar(12)        not null,
+    password varchar(255)        not null,
     username varchar(10)        not null,
-    primary key (id)
-) engine=InnoDB default charset=utf8mb4;
-
-create table image
-(
-    id bigint not null auto_increment,
-    image_url varchar(255),
-    image_alt varchar(255),
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -33,13 +25,21 @@ create table product
     name      varchar(255) not null,
     price     integer      not null,
     stock_quantity integer not null,
-    image_id  bigint       not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-alter table product
-    add constraint fk_product_to_image
-        foreign key (image_id) references image (id);
+create table image
+(
+    id bigint not null auto_increment,
+    product_id bigint not null,
+    image_url varchar(255),
+    image_alt varchar(255),
+    primary key (id)
+) engine=InnoDB default charset=utf8mb4;
+
+alter table image
+    add constraint fk_image_to_product
+        foreign key (product_id) references product (id) ON DELETE CASCADE;
 
 create table cart_item
 (

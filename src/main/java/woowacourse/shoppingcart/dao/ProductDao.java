@@ -15,57 +15,62 @@ import woowacourse.shoppingcart.domain.Product;
 public class ProductDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final SimpleJdbcInsert simpleJdbcInsertInProduct;
+    private final SimpleJdbcInsert simpleJdbcInsertInImage;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+        this.simpleJdbcInsertInProduct = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
+                .usingGeneratedKeyColumns("id");
+        this.simpleJdbcInsertInImage = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("image")
                 .usingGeneratedKeyColumns("id");
     }
 
     public Long save(final Product product) {
-        Long imageId = saveImage(product.getImage());
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("name", product.getName());
         parameterSource.addValue("price", product.getPrice());
         parameterSource.addValue("stock_quantity", product.getStockQuantity());
-        parameterSource.addValue("image_id", imageId);
+        final Long productId = simpleJdbcInsertInProduct.executeAndReturnKey(parameterSource).longValue();
+        saveImage(productId, product.getImage());
 
-        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
+        return productId;
     }
 
-    private Long saveImage(Image image) {
+    private Long saveImage(final Long productId, final Image image) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("product_id", productId);
         parameterSource.addValue("image_url", image.getUrl());
         parameterSource.addValue("image_alt", image.getAlt());
 
-        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
+        return simpleJdbcInsertInImage.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public Product findProductById(final Long id) {
-        final String query = "SELECT id, name, price, stock_quantity,"
-                + " image.url AS image_url, image.alt AS image_alt"
-                + " FROM product INNER JOIN image ON product.image_id = image.id"
-                + " WHERE id = :id";
+    public Product findProductById(final Long productId) {
+        final String query = "SELECT product.id, product.name, product.price, product.stock_quantity,"
+                + " image_url, image_alt"
+                + " FROM product INNER JOIN image ON product.id = image.product_id"
+                + " WHERE product.id = :productId";
 
-        return jdbcTemplate.queryForObject(query, Map.of("id", id), PRODUCT_ROW_MAPPER);
+        return jdbcTemplate.queryForObject(query, Map.of("productId", productId), PRODUCT_ROW_MAPPER);
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, stock_quantity,"
-                + " image.url AS image_url, image.alt AS image_alt"
-                + " FROM product INNER JOIN image ON product.image_id = image.id";
+        final String query = "SELECT product.id, product.name, product.price, product.stock_quantity,"
+                + " image_url, image_alt"
+                + " FROM product INNER JOIN image ON product.id = image.product_id";
 
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
     }
 
-    public void deleteById(final Long id) {
-        final String query = "DELETE FROM product WHERE id = :id";
-        jdbcTemplate.update(query, Map.of("id", id));
+    public void deleteById(final Long productId) {
+        final String query = "DELETE FROM product WHERE id = :productId";
+        jdbcTemplate.update(query, Map.of("productId", productId));
     }
 
-    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (resultSet, rowNum) -> new Product(
+    private RowMapper<Product> PRODUCT_ROW_MAPPER = (resultSet, rowNum) -> new Product(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getInt("price"),

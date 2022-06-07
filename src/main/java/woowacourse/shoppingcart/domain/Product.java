@@ -8,9 +8,6 @@ public class Product {
     private int stockQuantity;
     private Image image;
 
-    public Product() {
-    }
-
     public Product(String name, int price, int stockQuantity, Image image) {
         this(null, name, price, stockQuantity, image);
     }

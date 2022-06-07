@@ -12,7 +12,8 @@ public enum ErrorResponse {
     INVALID_TOKEN(3002, "Invalid Token"),
     INVALID_EMAIL(4001, "Invalid Email"),
     INVALID_PASSWORD(4002, "Invalid Password"),
-    INVALID_USERNAME(4003, "Invalid Username");
+    INVALID_USERNAME(4003, "Invalid Username"),
+    Not_EXIST_CART_ITEM(6002, "Not Exist CartItem");
 
     private final int errorCode;
     private final String message;

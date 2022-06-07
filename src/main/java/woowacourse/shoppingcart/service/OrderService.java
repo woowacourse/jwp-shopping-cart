@@ -17,7 +17,6 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.Username;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -40,6 +39,7 @@ public class OrderService {
         this.productDao = productDao;
     }
 
+    /*
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         final Long ordersId = orderDao.addOrders(customerId);
@@ -55,6 +55,7 @@ public class OrderService {
 
         return ordersId;
     }
+     */
 
     public Orders findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);

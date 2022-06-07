@@ -30,8 +30,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         // when
-        final CustomerRequest customerRequest = new CustomerRequest("test@gmail.com", "password0!",
-                "루나");
+        final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
         final ExtractableResponse<Response> response = postMethodRequest(customerRequest,
                 "/api/customers");
 

@@ -15,6 +15,7 @@ public class Username {
     }
 
     public static Username of(String username) {
+        validateUsername(username);
         return new Username(username);
     }
 

@@ -26,7 +26,6 @@ public class CustomerDaoTest {
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
-
         // given
         final String userName = "puterism";
 
@@ -40,9 +39,8 @@ public class CustomerDaoTest {
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
-
         // given
-        final String userName = "gwangyeol-iM";
+        final String userName = "gwangyeol";
 
         // when
         final Long customerId = customerDao.findIdByUserName(userName);

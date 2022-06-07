@@ -3,6 +3,7 @@ TRUNCATE TABLE orders_detail;
 TRUNCATE TABLE cart_item;
 TRUNCATE TABLE orders;
 TRUNCATE TABLE product;
+TRUNCATE TABLE image;
 TRUNCATE TABLE customer;
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -13,23 +14,24 @@ values ('puterism@email.com', 'password1!','puterism'),
        ('365kim@email.com', 'password1!', '365kim'),
        ('dudtjr913@email.com', 'password1!', 'dudtjr913'),
        ('jum0@email.com', 'password1!', 'jum0'),
-       ('hyuuunjukim@email.com', 'password1!', 'hyuuunjukim'),
+       ('hyunjukim@email.com', 'password1!', 'hyunjukim'),
        ('zereight@email.com', 'password1!', 'zereight'),
        ('devhyun637@email.com', 'password1!', 'devhyun637'),
        ('swon3210@email.com', 'password1!', 'swon3210'),
-       ('bigsaigon333@email.com', 'password1!', 'bigsaigon333'),
+       ('bigsaigon3@email.com', 'password1!', 'bigsaigon3'),
        ('yungo1846@email.com', 'password1!', 'yungo1846'),
        ('zigsong@email.com', 'password1!', 'zigsong'),
        ('iborymagic@email.com', 'password1!', 'iborymagic'),
        ('0307kwon@email.com', 'password1!', '0307kwon'),
-       ('gwangyeol-im@email.com', 'password1!', 'gwangyeol-im'),
-       ('shinsehantan@email.com', 'password1!', 'shinsehantan'),
+       ('gwangyeol@email.com', 'password1!', 'gwangyeol'),
+       ('shinsehan@email.com', 'password1!', 'shinsehan'),
        ('ddongule@email.com', 'password1!', 'ddongule'),
        ('seojihwan@email.com', 'password1!', 'seojihwan'),
        ('0imbean0@email.com', 'password1!', '0imbean0'),
-       ('sunyoungkwon@email.com', 'password1!', 'sunyoungkwon'),
+       ('youngkwon@email.com', 'password1!', 'youngkwon'),
        ('hchayan@email.com', 'password1!', 'hchayan'),
        ('2sooy@email.com', 'password1!', '2sooy'),
        ('yujo11@email.com', 'password1!', 'yujo11'),
        ('sunhpark4@email.com2', 'password1!', 'sunhpark42')
 ;
+

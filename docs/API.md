@@ -77,7 +77,7 @@
     Accept:application/json
     Content-Length:35
     Host:localhost:8080
-    **Authorization:Bearer XXXXXXXXXXXXXX**
+    **Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdqZHVkZG5zQGdtYWlsLmNvbSJ9.XsJFHuJAdFPEto1WF__QGZoAOIIX2eJSn6xu0iJCGIQ**
 ```
 
 **HTTP response**
@@ -108,7 +108,7 @@
     Accept:application/json
     Content-Length:35
     Host:localhost:8080
-    **Authorization:Bearer XXXXXXXXXXXXXX**
+    **Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdqZHVkZG5zQGdtYWlsLmNvbSJ9.XsJFHuJAdFPEto1WF__QGZoAOIIX2eJSn6xu0iJCGIQ**
 
     {
     "oldPassword":"oldPassword0!"
@@ -136,7 +136,7 @@
     Accept:application/json
     Content-Length:35
     Host:localhost:8080
-    **Authorization:Bearer XXXXXXXXXXXXXX**
+    **Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdqZHVkZG5zQGdtYWlsLmNvbSJ9.XsJFHuJAdFPEto1WF__QGZoAOIIX2eJSn6xu0iJCGIQ**
 
     {
     "username":"다오"
@@ -167,7 +167,7 @@
     Accept:application/json
     Content-Length:35
     Host:localhost:8080
-    **Authorization:Bearer XXXXXXXXXXXXXX**
+    **Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdqZHVkZG5zQGdtYWlsLmNvbSJ9.XsJFHuJAdFPEto1WF__QGZoAOIIX2eJSn6xu0iJCGIQ**
 
     {
     "password":"newPassword0!"

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.NotExistCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -22,10 +22,10 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException() {
-        return ResponseEntity.badRequest().body("Unhandled Exception");
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity handleUnhandledException() {
+//        return ResponseEntity.badRequest().body("Unhandled Exception");
+//    }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity handle() {
@@ -50,7 +50,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             InvalidCustomerException.class,
-            InvalidCartItemException.class,
+            NotExistCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,

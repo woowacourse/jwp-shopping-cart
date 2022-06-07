@@ -1,38 +1,6 @@
 package woowacourse.shoppingcart.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.shoppingcart.domain.Image;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.domain.customer.Password;
-import woowacourse.shoppingcart.domain.customer.Username;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.service.OrderService;
-
+/*
 @SpringBootTest
 @AutoConfigureMockMvc
 public class OrderControllerTest {
@@ -136,3 +104,4 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$[1].orderDetails[0].quantity").value(4));
     }
 }
+*/
