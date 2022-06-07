@@ -9,6 +9,7 @@ import woowacourse.cartitem.dao.CartItemDao;
 import woowacourse.cartitem.domain.CartItem;
 import woowacourse.cartitem.domain.Quantity;
 import woowacourse.cartitem.dto.CartItemAddRequest;
+import woowacourse.cartitem.dto.CartItemResponse;
 import woowacourse.cartitem.dto.CartItemResponses;
 import woowacourse.cartitem.exception.InvalidCartItemException;
 import woowacourse.customer.application.CustomerService;
@@ -35,12 +36,16 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
-    public Long addCartItem(final String username, final CartItemAddRequest cartItemAddRequest) {
+    public CartItemResponse addCartItem(final String username, final CartItemAddRequest cartItemAddRequest) {
         final Long customerId = customerService.findIdByUsername(username);
         validateProductStock(cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity());
         final Quantity quantity = new Quantity(cartItemAddRequest.getQuantity());
 
-        return cartItemDao.addCartItem(customerId, cartItemAddRequest.getProductId(), quantity.getValue());
+        final Long cartItemId = cartItemDao.addCartItem(customerId, cartItemAddRequest.getProductId(), quantity.getValue());
+        final CartItem cartItem = cartItemDao.findCartItemById(cartItemId)
+            .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
+
+        return CartItemResponse.from(cartItem);
     }
 
     private void validateProductStock(final Long productId, final Integer quantity) {

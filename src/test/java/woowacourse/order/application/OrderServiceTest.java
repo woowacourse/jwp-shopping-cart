@@ -52,8 +52,8 @@ public class OrderServiceTest {
             .getValue();
         productId1 = productService.addProduct(new ProductRequest("짱구", 100_000_000, 10, "jjanggu.jpg"));
         productId2 = productService.addProduct(new ProductRequest("짱아", 10_000_000, 10, "jjanga.jpg"));
-        cartItemId1 = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 5));
-        cartItemId2 = cartItemService.addCartItem(username, new CartItemAddRequest(productId2, 5));
+        cartItemId1 = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 5)).getId();
+        cartItemId2 = cartItemService.addCartItem(username, new CartItemAddRequest(productId2, 5)).getId();
         orderRequests = Stream.of(cartItemId1, cartItemId2)
             .map(OrderAddRequest::new)
             .collect(Collectors.toList());

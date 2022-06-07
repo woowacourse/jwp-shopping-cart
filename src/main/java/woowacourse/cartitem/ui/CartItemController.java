@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.cartitem.application.CartItemService;
 import woowacourse.cartitem.dto.CartItemAddRequest;
+import woowacourse.cartitem.dto.CartItemResponse;
 import woowacourse.cartitem.dto.CartItemResponses;
 
 @RequestMapping("/api/cartItems")
@@ -36,12 +37,11 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(
+    public ResponseEntity<CartItemResponse> addCartItem(
         @AuthenticationPrincipal final String username,
         @Valid @RequestBody final CartItemAddRequest cartItemAddRequest
     ) {
-        final Long cartItemId = cartItemService.addCartItem(username, cartItemAddRequest);
-        return ResponseEntity.created(URI.create("/api/cartItems/" + cartItemId)).build();
+        return ResponseEntity.ok(cartItemService.addCartItem(username, cartItemAddRequest));
     }
 
     @PatchMapping("/{cartItemId}")

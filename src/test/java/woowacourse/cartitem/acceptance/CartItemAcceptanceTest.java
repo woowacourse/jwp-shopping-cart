@@ -132,8 +132,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_추가됨(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body().as(CartItemResponse.class).getId()).isNotNull();
     }
 
     public static Long 장바구니_아이템_추가되어_있음(
@@ -141,7 +141,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         final CartItemAddRequest cartItemAddRequest
     ) {
         final ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, cartItemAddRequest);
-        return Long.parseLong(response.header("Location").split("/")[3]);
+        return response.as(CartItemResponse.class).getId();
     }
 
     public static void 장바구니_아이템_목록_응답됨(final ExtractableResponse<Response> response) {
@@ -150,7 +150,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_목록_포함됨(final ExtractableResponse<Response> response, final Long... productIds) {
         final List<Long> resultProductIds = response.as(CartItemResponses.class).getCartItems().stream()
-            .map(CartItemResponse::getProductId)
+            .map(CartItemResponses.CartItemDetailResponse::getProductId)
             .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }

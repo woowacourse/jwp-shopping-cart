@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.cartitem.dto.CartItemAddRequest;
-import woowacourse.cartitem.dto.CartItemResponse;
+import woowacourse.cartitem.dto.CartItemResponses;
 import woowacourse.cartitem.exception.InvalidCartItemException;
 import woowacourse.customer.application.CustomerService;
 import woowacourse.customer.dto.SignupRequest;
@@ -53,7 +53,7 @@ public class CartItemServiceTest {
     void addCartItem() {
         final CartItemAddRequest cartItemAddRequest = new CartItemAddRequest(productId1, 1);
 
-        final Long cartItemId = cartItemService.addCartItem(username, cartItemAddRequest);
+        final Long cartItemId = cartItemService.addCartItem(username, cartItemAddRequest).getId();
 
         assertThat(cartItemId).isNotNull();
     }
@@ -66,7 +66,7 @@ public class CartItemServiceTest {
 
         final List<Long> productIds = cartItemService.findCartsByCustomerName(username).getCartItems()
             .stream()
-            .map(CartItemResponse::getProductId)
+            .map(CartItemResponses.CartItemDetailResponse::getProductId)
             .collect(Collectors.toList());
 
         assertThat(productIds).contains(productId1, productId2);
@@ -75,14 +75,14 @@ public class CartItemServiceTest {
     @DisplayName("카트 아이템 수량을 수정한다.")
     @Test
     void updateCartItem() {
-        final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1));
+        final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1)).getId();
         assertDoesNotThrow(() -> cartItemService.updateQuantity(username, cartItemId, 5));
     }
 
     @DisplayName("카트 아이템을 삭제한다.")
     @Test
     void deleteCartItem() {
-        final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1));
+        final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1)).getId();
         cartItemService.deleteCart(username, cartItemId);
 
         assertThatThrownBy(() -> cartItemService.findCartById(cartItemId))
