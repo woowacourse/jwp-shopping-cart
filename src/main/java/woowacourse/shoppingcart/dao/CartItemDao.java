@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.dao.dto.EnrollCartDto;
 import woowacourse.shoppingcart.dao.dto.CartItem;
 
 import java.util.List;
@@ -24,22 +25,18 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(Long memberId, Long productId) {
-        CartItem cartItem = new CartItem(memberId, productId);
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cartItem);
+    public Long save(EnrollCartDto enrollCartDto) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(enrollCartDto);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<Long> findProductIdsByMemberId(Long memberId) {
-        String SQL = "SELECT product_id FROM cart_item WHERE member_id = ?";
+    public List<CartItem> findCartItemsByMemberId(Long memberId) {
+        String SQL = "SELECT id, product_id FROM cart_item WHERE member_id = ?";
 
-        return jdbcTemplate.query(SQL, (rs, rowNum) -> rs.getLong("product_id"), memberId);
-    }
-
-    public List<Long> findIdsByMemberId(Long memberId) {
-        String SQL = "SELECT id FROM cart_item WHERE member_id = ?";
-
-        return jdbcTemplate.query(SQL, (rs, rowNum) -> rs.getLong("id"), memberId);
+        return jdbcTemplate.query(SQL, (rs, rowNum) ->
+                new CartItem(
+                        rs.getLong("id"),
+                        rs.getLong("product_id")), memberId);
     }
 
     public Optional<Long> findProductIdById(Long cartId) {

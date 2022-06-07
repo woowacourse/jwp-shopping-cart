@@ -35,7 +35,7 @@ class ProductServiceTest {
         ProductRequest request = new ProductRequest(name, price, imageUrl);
         Long productId = productService.add(request);
 
-        assertThat(productId).isEqualTo(1L);
+        assertThat(productId).isEqualTo(4L);
     }
 
     @DisplayName("올바른 상품 ID로 상품을 조회한다.")
@@ -62,13 +62,9 @@ class ProductServiceTest {
                 .hasMessageContaining("존재하지 않는 상품입니다.");
     }
 
+    @DisplayName("등록된 상품들을 조회한다.")
     @Test
     void findProducts() {
-        ProductRequest request = new ProductRequest(name, price, imageUrl);
-        productService.add(request);
-        productService.add(request);
-        productService.add(request);
-
         List<ProductResponse> products = productService.findProducts();
 
         assertThat(products.size()).isEqualTo(3);
