@@ -33,6 +33,22 @@ public class Cart {
         this.quantity = quantity;
     }
 
+    public int calculateTotalPrice() {
+        return product.getPrice() * quantity;
+    }
+
+    public boolean isSameProduct(final Product product) {
+        return this.product.equals(product);
+    }
+
+    public void addQuantity() {
+        this.quantity++;
+    }
+
+    public boolean isNewlyAdded() {
+        return quantity == 1;
+    }
+
     public Long getId() {
         return id;
     }
@@ -47,10 +63,6 @@ public class Cart {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public int calculateTotalPrice() {
-        return product.getPrice() * quantity;
     }
 
     @Override

@@ -43,15 +43,17 @@ create table cart
 
 alter table cart
     add constraint fk_cart_to_member
-        foreign key (member_id) references member (id);
+        foreign key (member_id) references member (id)
+            on delete cascade;
 
 alter table cart
     add constraint fk_cart_to_product
-        foreign key (product_id) references product (id);
+        foreign key (product_id) references product (id)
+            on delete cascade;
 
 create table orders
 (
-    id          bigint not null auto_increment,
+    id        bigint not null auto_increment,
     member_id bigint not null,
     primary key (id)
 ) engine = InnoDB
@@ -59,7 +61,8 @@ create table orders
 
 alter table orders
     add constraint fk_orders_to_member
-        foreign key (member_id) references member (id);
+        foreign key (member_id) references member (id)
+            on delete cascade;
 
 create table orders_detail
 (
@@ -73,8 +76,10 @@ create table orders_detail
 
 alter table orders_detail
     add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id);
+        foreign key (orders_id) references orders (id)
+            on delete cascade;
 
 alter table orders_detail
     add constraint fk_orders_detail_to_product
-        foreign key (product_id) references product (id);
+        foreign key (product_id) references product (id)
+            on delete cascade;

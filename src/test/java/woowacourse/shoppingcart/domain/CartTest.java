@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.helper.fixture.CartFixture.getFirstCart;
 import static woowacourse.helper.fixture.ProductFixture.PRODUCT_IMAGE;
 import static woowacourse.helper.fixture.ProductFixture.PRODUCT_NAME;
 import static woowacourse.helper.fixture.ProductFixture.PRODUCT_PRICE;
@@ -16,7 +17,7 @@ public class CartTest {
     @DisplayName("물품 개수가 1개 미만일 경우 예외를 발생한다.")
     @Test
     void validateQuantity() {
-        assertThatThrownBy(() -> new Cart(1L, createProduct(PRODUCT_NAME, PRODUCT_PRICE,PRODUCT_IMAGE), 0))
+        assertThatThrownBy(() -> new Cart(1L, createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE), 0))
                 .isInstanceOf(InvalidCartItemException.class);
     }
 
@@ -41,6 +42,21 @@ public class CartTest {
         final Cart cart = new Cart(1L, 1L, createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE), 10);
         assertThatThrownBy(() -> cart.updateQuantity(0))
                 .isInstanceOf(InvalidCartItemException.class);
+    }
+
+    @DisplayName("카트의 물품과 동일한 상품이다.")
+    @Test
+    void isSameProduct() {
+        final Cart cart = getFirstCart();
+        assertThat(cart.isSameProduct(new Product(1L, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE))).isTrue();
+    }
+
+    @DisplayName("개수를 한개 늘린다.")
+    @Test
+    void addQuantity() {
+        final Cart cart = getFirstCart();
+        cart.addQuantity();
+        assertThat(cart.getQuantity()).isEqualTo(2);
     }
 
 }

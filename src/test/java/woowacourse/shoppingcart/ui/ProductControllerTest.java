@@ -108,7 +108,7 @@ public class ProductControllerTest extends RestDocsTest {
     @DisplayName("새 상품 추가시 이미지가 존재하지 않아 실패한다.")
     @Test
     void addImageUrlNotBlank() throws Exception {
-        ProductRequest productRequest = new ProductRequest("", 1000, "");
+        ProductRequest productRequest = new ProductRequest("김치", 1000, "");
         ErrorResponse response = new ErrorResponse("이미지 주소에는 공백이 허용되지 않습니다.");
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)

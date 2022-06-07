@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartQuantityUpdateRequest;
 import woowacourse.shoppingcart.dto.CartRequest;
@@ -35,7 +36,18 @@ public class CartService {
     public Long addCart(final Long memberId, final CartRequest cartRequest) {
         final Product foundProduct = productDao.findProductById(cartRequest.getProductId());
         final Cart cart = new Cart(memberId, foundProduct, cartRequest.getQuantity());
-        return cartDao.save(cart);
+
+        final Carts carts = new Carts(cartDao.findCartsByMemberId(memberId));
+        carts.addOrUpdate(cart);
+        return saveOrUpdate(carts.getCartHave(foundProduct));
+    }
+
+    private Long saveOrUpdate(final Cart cart) {
+        if (cart.isNewlyAdded()) {
+            return cartDao.save(cart);
+        }
+        cartDao.updateQuantity(cart);
+        return cart.getId();
     }
 
     public void deleteCart(final Long memberId, final Long cartId) {
