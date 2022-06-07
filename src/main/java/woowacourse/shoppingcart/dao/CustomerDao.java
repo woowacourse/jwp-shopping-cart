@@ -12,10 +12,11 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Repository
 public class CustomerDao {
     private static final RowMapper<AuthorizedCustomer> CUSTOMER_MAPPER = (rs, rowNum) -> {
+        var id = rs.getLong("id");
         var username = rs.getString("username");
         var email = rs.getString("email");
         var password = rs.getString("password");
-        return new AuthorizedCustomer(username, email, password);
+        return new AuthorizedCustomer(id, username, email, password);
     };
 
     private static final String NOT_EXIST_EMAIL = "[ERROR] 존재하지 않는 이메일 입니다.";

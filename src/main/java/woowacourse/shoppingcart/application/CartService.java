@@ -2,14 +2,18 @@ package woowacourse.shoppingcart.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItems;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.domain.Products;
+import woowacourse.shoppingcart.dto.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.FindAllCartItemResponse;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
@@ -43,13 +47,8 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+    public void addCart(final Long customerId, final AddCartItemRequest addCartItemRequest) {
+        cartItemDao.addCartItem(customerId, addCartItemRequest);
     }
 
     public void deleteCart(final String customerName, final Long cartId) {
@@ -63,5 +62,19 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    public FindAllCartItemResponse getAllCartItem(final Long customerId) {
+        var cartItems = new CartItems(cartItemDao.findByCustomerId(customerId));
+        var products = findProducts(cartItems.getProductIds());
+        return new FindAllCartItemResponse(cartItems, products);
+    }
+
+    private Products findProducts(List<Long> productIds) {
+        var products = productIds.stream()
+                .map(productDao::findProductById)
+                .collect(Collectors.toList());
+
+        return new Products(products);
     }
 }

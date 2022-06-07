@@ -1,20 +1,24 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 
 @Repository
 public class CartItemDao {
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
+    public CartItemDao(final DataSource dataSource, final JdbcTemplate jdbcTemplate) {
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -39,17 +43,18 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+    public void addCartItem(final Long customerId, final AddCartItemRequest addCartItemRequest) {
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity, checked)"
+                + "VALUES(:customer_id, :product_id, :quantity, :checked)";
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        var paramSource = Map.of(
+                "customer_id", customerId,
+                "product_id", addCartItemRequest.getProductId(),
+                "quantity", addCartItemRequest.getQuantity(),
+                "checked", addCartItemRequest.getChecked()
+        );
+
+        namedParameterJdbcTemplate.update(sql, paramSource);
     }
 
     public void deleteCartItem(final Long id) {
@@ -59,5 +64,20 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public List<CartItem> findByCustomerId(long customerId) {
+        final var sql = "SELECT * FROM cart_item WHERE customer_id = :customer_id";
+
+        RowMapper<CartItem> rowMapper = (rs, rowNum) -> {
+            var id = rs.getLong("id");
+            var customer_id = rs.getLong("customer_id");
+            var product_id = rs.getLong("product_id");
+            var quantity = rs.getInt("quantity");
+            var checked = rs.getBoolean("checked");
+            return new CartItem(id, customer_id, product_id, quantity, checked);
+        };
+
+        return namedParameterJdbcTemplate.query(sql, Map.of("customer_id", customerId), rowMapper);
     }
 }
