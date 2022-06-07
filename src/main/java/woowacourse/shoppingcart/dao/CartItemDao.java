@@ -27,7 +27,7 @@ public class CartItemDao {
     }
 
     private RowMapper<CartProductResponse> cartRowMapper = (rs, rowNum) -> new CartProductResponse(
-            rs.getLong("product.id"),
+            rs.getLong("cart_item.id"),
             rs.getString("product.name"),
             rs.getLong("product.price"),
             rs.getString("product.image_url"),
@@ -68,7 +68,7 @@ public class CartItemDao {
 
     public CartProductResponse findCartIdById(final Long cartId) {
         try {
-            final String query = "SELECT product.id, product.name, product.price, product.image_url, cart_item.quantity, cart_item.checked " +
+            final String query = "SELECT cart_item.id, product.name, product.price, product.image_url, cart_item.quantity, cart_item.checked " +
                     "FROM cart_item INNER JOIN product ON product.id = cart_item.product_id " +
                     "WHERE cart_item.id = ?";
 

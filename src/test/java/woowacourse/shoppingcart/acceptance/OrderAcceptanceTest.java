@@ -1,8 +1,6 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -18,31 +16,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.acceptance.AcceptanceTest;
+import woowacourse.acceptance.RestAssuredFixture;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.ProductRequest;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
-    private Long cartId1;
-    private Long cartId2;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
-
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        //given
+        RestAssuredFixture.post(new ProductRequest("치킨", 10000, "http://example.com/chicken.jpg"), "/products", HttpStatus.CREATED.value());
+        RestAssuredFixture.post(new ProductRequest("맥주", 20000, "http://example.com/chicken.jpg"), "/products", HttpStatus.CREATED.value());
     }
 
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
+        List<OrderRequest> orderRequests = Stream.of(1L, 2L)
                 .map(cartId -> new OrderRequest(cartId, 10))
                 .collect(Collectors.toList());
 
@@ -54,8 +49,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(1L, 2)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(2L, 5)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
 
@@ -67,8 +62,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void getOrder() {
         Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
-                new OrderRequest(cartId1, 2),
-                new OrderRequest(cartId2, 4)
+                new OrderRequest(1L, 2),
+                new OrderRequest(2L, 4)
         ));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
