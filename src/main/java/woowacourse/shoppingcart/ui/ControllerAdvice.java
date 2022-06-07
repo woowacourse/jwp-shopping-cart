@@ -18,12 +18,11 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.dto.ErrorResponseWithField;
-import woowacourse.shoppingcart.exception.DuplicateDomainException;
-import woowacourse.shoppingcart.exception.DuplicateEmailException;
-import woowacourse.shoppingcart.exception.DuplicateUsernameException;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.ForbiddenAccessException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidCustomerPropertyException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -52,9 +51,9 @@ public class ControllerAdvice {
         return new ErrorResponseWithField(mainError.getField(), mainError.getDefaultMessage());
     }
 
-    @ExceptionHandler({DuplicateEmailException.class, DuplicateUsernameException.class})
+    @ExceptionHandler(DuplicateCustomerException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponseWithField handleDuplicatedRequest(DuplicateDomainException exception) {
+    public ErrorResponseWithField handleDuplicatedRequest(DuplicateCustomerException exception) {
         return new ErrorResponseWithField(exception.getField(), exception.getMessage());
     }
 
@@ -80,6 +79,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
+        InvalidCustomerPropertyException.class,
         InvalidCustomerException.class,
         InvalidCartItemException.class,
         InvalidProductException.class,

@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.exception;
 
-public class DuplicateDomainException extends RuntimeException {
+public class DuplicateCustomerException extends RuntimeException {
 
     private final String field;
 
-    protected DuplicateDomainException(String field, String message) {
+    public DuplicateCustomerException(String field, String message) {
         super(message);
         this.field = field;
     }
