@@ -41,6 +41,21 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
+    public List<Cart> findAllByCustomerId(final Long customerId) {
+        final String sql = ""
+                + "SELECT ci.id, "
+                + "p.id AS product_id, "
+                + "p.name, "
+                + "p.price, "
+                + "p.image_url, "
+                + "ci.quantity "
+                + "FROM cart_item AS ci "
+                + "INNER JOIN product AS p ON ci.product_id = p.id "
+                + "WHERE ci.customer_id = ?";
+
+        return jdbcTemplate.query(sql, rowMapper, customerId);
+    }
+
     public Long findProductIdById(final Long cartId) {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";

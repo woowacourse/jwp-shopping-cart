@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.unit.cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,6 +62,38 @@ class CartItemDaoTest {
 
         // then
         assertThat(productsIds).containsExactly(1L, 2L);
+    }
+
+    @Test
+    @DisplayName("Customer의 ID에 해당하는 모든 Cart 목록을 조회힌다.")
+    void findAllByCustomerId() {
+        // given
+        final Long customerId = 2L;
+        final List<Cart> expected = new ArrayList<>();
+
+        cartItemDao.addCartItem(customerId, 1L);
+        final Cart cart1 = cartItemDao.findByProductAndCustomerId(1L, customerId);
+        final Cart updatedCart1 = cart1.changeQuantity(4);
+        cartItemDao.updateQuantity(updatedCart1);
+        expected.add(updatedCart1);
+
+        cartItemDao.addCartItem(customerId, 5L);
+        final Cart cart2 = cartItemDao.findByProductAndCustomerId(5L, customerId);
+        final Cart updatedCart2 = cart2.changeQuantity(6);
+        cartItemDao.updateQuantity(updatedCart2);
+        expected.add(updatedCart2);
+
+        cartItemDao.addCartItem(customerId, 3L);
+        final Cart cart3 = cartItemDao.findByProductAndCustomerId(3L, customerId);
+        final Cart updatedCart3 = cart3.changeQuantity(2);
+        cartItemDao.updateQuantity(updatedCart3);
+        expected.add(updatedCart3);
+
+        // when
+        final List<Cart> actual = cartItemDao.findAllByCustomerId(customerId);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
