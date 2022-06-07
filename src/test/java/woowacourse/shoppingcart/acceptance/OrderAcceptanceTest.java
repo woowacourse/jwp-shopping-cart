@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.CartSaveRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,9 +47,9 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         // 카트 담기
         final ExtractableResponse<Response> cartResponse1 =
-                requestPostWithTokenAndBody("/api/customer/carts", accessToken, 1L);
+                requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(1L, 10));
         final ExtractableResponse<Response> cartResponse2 =
-                requestPostWithTokenAndBody("/api/customer/carts", accessToken, 2L);
+                requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(2L, 10));
 
         cartId1 = parseLong(cartResponse1.header("Location").split("/carts/")[1]);
         cartId2 = parseLong(cartResponse2.header("Location").split("/carts/")[1]);

@@ -2,18 +2,16 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.CartSaveServiceRequest;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.exception.DataNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,25 +30,15 @@ public class CartService {
     }
 
     @Transactional
-    public Long add(final Long customerId, final Long productId) {
+    public Long add(final Long customerId, final CartSaveServiceRequest request) {
         final Customer customer = getCustomer(customerId);
-        final Product product = getProduct(productId);
+        final Product product = getProduct(request.getProductId());
 
-        return cartItemDao.addCartItem(customer.getId(), product.getId());
+        return cartItemDao.addCartItem(customer.getId(), product.getId(), request.getQuantity());
     }
 
     public List<CartResponse> findAllByCustomerId(final Long id) {
-        final List<Long> cartIds = findCartIdsByCustomerId(id);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId)
-                    .orElseThrow(DataNotFoundException::new);
-            carts.add(new Cart(cartId, product));
-        }
-
-        return carts.stream()
+        return cartItemDao.findAllByCustomerId(id).stream()
                 .map(CartResponse::from)
                 .collect(Collectors.toList());
     }

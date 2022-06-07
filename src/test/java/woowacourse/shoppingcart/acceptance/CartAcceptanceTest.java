@@ -16,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CartSaveRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private static final Long productId1 = 1L;
     private static final Long productId2 = 2L;
 
-    //    private Long productId1;
-//    private Long productId2;
     private String accessToken;
 
     @Override
@@ -50,7 +49,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void addCartItem() {
         // given, when
         final ExtractableResponse<Response> response =
-                requestPostWithTokenAndBody("/api/customer/carts", accessToken, productId1);
+                requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(productId1, 1));
 
         // then
         assertAll(
@@ -63,8 +62,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Test
     void getCartItems() {
         // given
-        requestPostWithTokenAndBody("/api/customer/carts", accessToken, productId1);
-        requestPostWithTokenAndBody("/api/customer/carts", accessToken, productId2);
+        requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(productId1, 1));
+        requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(productId2, 10));
 
         // when
         final ExtractableResponse<Response> response =
@@ -76,8 +75,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.jsonPath().getList(".", CartResponse.class)).usingRecursiveComparison()
                         .ignoringFields("id")
                         .isEqualTo(List.of(
-                                new CartResponse(null, productId1, "치킨", 10_000, "http://example.com/chicken.jpg"),
-                                new CartResponse(null, productId2, "맥주", 20_000, "http://example.com/beer.jpg")
+                                new CartResponse(null, productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 1),
+                                new CartResponse(null, productId2, "맥주", 20_000, "http://example.com/beer.jpg", 10)
                         ))
         );
     }
@@ -87,7 +86,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartItem() {
         // given
         final ExtractableResponse<Response> createResponse =
-                requestPostWithTokenAndBody("/api/customer/carts", accessToken, productId1);
+                requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(1L, 10));
         final long cartId = parseLong(createResponse.header("Location").split("/carts/")[1]);
 
         // when
@@ -96,18 +95,5 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
-                .then().log().all()
-                .extract();
     }
 }
