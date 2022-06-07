@@ -124,6 +124,10 @@ public class Fixtures {
                 .extract();
     }
 
+    public static void CREATED(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
     public static void BAD_REQUEST(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
