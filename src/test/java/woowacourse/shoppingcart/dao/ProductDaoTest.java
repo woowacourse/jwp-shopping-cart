@@ -62,7 +62,6 @@ public class ProductDaoTest {
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {
-
         // given
         final int size = 0;
 
@@ -91,5 +90,22 @@ public class ProductDaoTest {
         // then
         final int afterSize = productDao.findProducts().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
+    }
+
+    @DisplayName("상품 재고 업데이트")
+    @Test
+    void updateStock() {
+        String name = "초콜렛";
+        int price = 1_000;
+        String imageUrl = "www.test.com";
+        int stock = 1;
+
+        Long productId = productDao.save(new Product(name, price, stock, imageUrl));
+        Product product = productDao.findProductById(productId);
+        product.receive(1);
+        productDao.updateStock(product);
+        Product updated = productDao.findProductById(productId);
+
+        assertThat(updated.getStock()).isEqualTo(2);
     }
 }

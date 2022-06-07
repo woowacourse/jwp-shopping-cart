@@ -55,9 +55,16 @@ public class ProductDao {
         return namedParameterJdbcTemplate.query(sql, PRODUCT_MAPPER);
     }
 
+    public void updateStock(Product product) {
+        String sql = "UPDATE product SET stock = :stock WHERE id = :id";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("id", product.getId())
+                .addValue("stock", product.getStock());
+        namedParameterJdbcTemplate.update(sql, parameters);
+    }
+
     public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = :id";
+        final String sql = "DELETE FROM product WHERE id = :id";
         MapSqlParameterSource parameters = new MapSqlParameterSource("id", productId);
-        namedParameterJdbcTemplate.update(query, parameters);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 }
