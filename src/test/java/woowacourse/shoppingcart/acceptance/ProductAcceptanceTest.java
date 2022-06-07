@@ -29,10 +29,12 @@ class ProductAcceptanceTest extends AcceptanceTest {
                 .stream()
                 .map(ProductResponse::getId)
                 .collect(Collectors.toUnmodifiableList());
+        String xTotalCount = response.header("x-total-count");
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(productIds).containsExactly(1L, 2L, 3L, 4L, 5L)
+                () -> assertThat(productIds).containsExactly(1L, 2L, 3L, 4L, 5L),
+                () -> assertThat(xTotalCount).isEqualTo("19")
         );
     }
 }

@@ -25,6 +25,11 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
+    public int getTotalProductCount() {
+        return productDao.getTotalCount();
+    }
+
     public void validateStock(long productId, int purchasingQuantity) {
         int stock = productDao.findStockById(productId);
         if (stock < purchasingQuantity) {

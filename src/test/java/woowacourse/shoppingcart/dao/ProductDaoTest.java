@@ -43,6 +43,14 @@ class ProductDaoTest {
         );
     }
 
+    @DisplayName("상품의 총 개수를 반환한다.")
+    @Test
+    void getTotalCount() {
+        int count = productDao.getTotalCount();
+
+        assertThat(count).isEqualTo(19);
+    }
+
     @DisplayName("상품의 재고를 반환한다.")
     @Test
     void findStockById() {

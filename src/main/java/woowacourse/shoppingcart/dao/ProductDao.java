@@ -45,4 +45,9 @@ public class ProductDao {
         SqlParameterSource params = new MapSqlParameterSource("id", id);
         return jdbcTemplate.queryForObject(sql, params, Boolean.class);
     }
+
+    public int getTotalCount() {
+        String sql = "SELECT COUNT(*) FROM PRODUCT";
+        return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
+    }
 }

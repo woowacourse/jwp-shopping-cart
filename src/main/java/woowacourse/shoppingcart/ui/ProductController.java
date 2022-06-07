@@ -15,12 +15,14 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(final ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> products(@RequestParam int page, @RequestParam int limit) {
-        return ResponseEntity.ok(productService.findProducts(page, limit));
+        return ResponseEntity.ok()
+                .header("x-total-count", String.valueOf(productService.getTotalProductCount()))
+                .body(productService.findProducts(page, limit));
     }
 }
