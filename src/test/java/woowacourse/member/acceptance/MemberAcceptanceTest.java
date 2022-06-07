@@ -6,10 +6,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.HttpStatus;
 import woowacourse.acceptance.AcceptanceTest;
-import woowacourse.acceptance.RestAssuredConvenienceMethod;
-import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.member.dto.request.*;
+
+import static woowacourse.acceptance.RestAssuredConvenienceMethod.*;
 
 @DisplayName("회원 관련 기능")
 public class MemberAcceptanceTest extends AcceptanceTest {
@@ -19,7 +19,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     void signUpMember() {
         SignUpRequest request = new SignUpRequest("woowacourse12@naver.com", "우테코", "Woowacourse1!");
 
-        RestAssuredConvenienceMethod.postRequest(request, "/api/members")
+        postRequestWithoutToken(request, "/api/members")
                 .statusCode(HttpStatus.CREATED.value());
     }
 
@@ -29,7 +29,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     void signUpMemberWithNullName(String name) {
         SignUpRequest request = new SignUpRequest("woowacourse12@naver.com", name, "Woowacourse1!");
 
-        RestAssuredConvenienceMethod.postRequest(request, "/api/members")
+        postRequestWithoutToken(request, "/api/members")
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -37,21 +37,21 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMember() {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+        postRequestWithoutToken(signUpRequest, "/api/members");
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
-        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+        String accessToken = postRequestWithoutToken(loginRequest, "/api/auth")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         DeleteMemberRequest deleteRequest = new DeleteMemberRequest("Wooteco1!");
-        RestAssuredConvenienceMethod.deleteRequestWithToken(accessToken, deleteRequest, "/api/members/me")
+        deleteRequestWithToken(accessToken, deleteRequest, "/api/members/me")
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("이메일이 중복되는 경우 400 Bad Request를 반환한다.")
     @Test
     void checkDuplicateEmailWithDuplicateEmail() {
-        RestAssuredConvenienceMethod.getRequestWithoutToken("/api/members/duplicate-email?email=ari@wooteco.com")
+        getRequestWithoutToken("/api/members/duplicate-email?email=ari@wooteco.com")
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -59,9 +59,9 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void checkDuplicateEmailWithNotDuplicateEmail() {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+        postRequestWithoutToken(signUpRequest, "/api/members");
 
-        RestAssuredConvenienceMethod.getRequestWithoutToken("/api/members/duplicate-email?email=tony@wooteco.com")
+        getRequestWithoutToken("/api/members/duplicate-email?email=tony@wooteco.com")
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -69,14 +69,14 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void updateName() {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+        postRequestWithoutToken(signUpRequest, "/api/members");
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
-        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+        String accessToken = postRequestWithoutToken(loginRequest, "/api/auth")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         UpdateNameRequest updateNameRequest = new UpdateNameRequest("자바지기");
-        RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updateNameRequest, "/api/members/me/name")
+        putRequestWithToken(accessToken, updateNameRequest, "/api/members/me/name")
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -84,14 +84,14 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void updateNameWithSameName() {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+        postRequestWithoutToken(signUpRequest, "/api/members");
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
-        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+        String accessToken = postRequestWithoutToken(loginRequest, "/api/auth")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         UpdateNameRequest updateNameRequest = new UpdateNameRequest("포비");
-        RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updateNameRequest, "/api/members/me/name")
+        putRequestWithToken(accessToken, updateNameRequest, "/api/members/me/name")
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -99,14 +99,14 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void updatePassword() {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+        postRequestWithoutToken(signUpRequest, "/api/members");
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
-        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+        String accessToken = postRequestWithoutToken(loginRequest, "/api/auth")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("Wooteco1!", "NewPassword1!");
-        RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updatePasswordRequest, "/api/members/me/password")
+        putRequestWithToken(accessToken, updatePasswordRequest, "/api/members/me/password")
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -114,14 +114,14 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void updatePasswordWithSamePassword() {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+        postRequestWithoutToken(signUpRequest, "/api/members");
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
-        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+        String accessToken = postRequestWithoutToken(loginRequest, "/api/auth")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("Wooteco1!", "Wooteco1!");
-        RestAssuredConvenienceMethod.putRequestWithToken(accessToken, updatePasswordRequest, "/api/members/me/password")
+        putRequestWithToken(accessToken, updatePasswordRequest, "/api/members/me/password")
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

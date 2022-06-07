@@ -179,15 +179,4 @@ class MemberControllerTest {
                 ).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", containsString(errorMessage)));
     }
-
-    void testDeleteBadRequest(String uri, Object request, String errorMessage) throws Exception {
-        String token = jwtTokenProvider.createToken("1");
-
-        mockMvc.perform(delete(uri)
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-                ).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message", containsString(errorMessage)));
-    }
 }
