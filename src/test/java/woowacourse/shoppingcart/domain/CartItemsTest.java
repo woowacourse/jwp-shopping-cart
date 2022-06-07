@@ -21,13 +21,13 @@ public class CartItemsTest {
     @Test
     void add() {
         // given
-        CartItem cartItem1 = new CartItem(1L, product1, 10);
-        CartItem cartItem2 = new CartItem(2L, product2, 10);
+        CartItem cartItem1 = new CartItem(1L, product1, new Quantity(10));
+        CartItem cartItem2 = new CartItem(2L, product2, new Quantity(10));
         CartItems cartItems = new CartItems(1L, new ArrayList<>(List.of(cartItem1, cartItem2)));
 
         // when
         Product newProduct = new Product(3L, "에어팟", 5_000, new ThumbnailImage("url", "alt"));
-        cartItems.add(new CartItem(3L, newProduct, 10));
+        cartItems.add(new CartItem(3L, newProduct, new Quantity(10)));
 
         //then
         assertThat(cartItems.size()).isEqualTo(3);
@@ -37,12 +37,12 @@ public class CartItemsTest {
     @Test
     void cantAddAlreadyExists() {
         // given
-        CartItem cartItem1 = new CartItem(1L, product1, 10);
-        CartItem cartItem2 = new CartItem(2L, product2, 10);
+        CartItem cartItem1 = new CartItem(1L, product1, new Quantity(10));
+        CartItem cartItem2 = new CartItem(2L, product2, new Quantity(10));
         CartItems cartItems = new CartItems(1L, new ArrayList<>(List.of(cartItem1, cartItem2)));
 
         // when & then
-        assertThatThrownBy(() -> cartItems.add(new CartItem(3L, product1, 10)))
+        assertThatThrownBy(() -> cartItems.add(new CartItem(3L, product1, new Quantity(10))))
             .isInstanceOf(DuplicateProductInCartException.class);
     }
 }

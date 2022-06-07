@@ -1,10 +1,12 @@
 package woowacourse.shoppingcart.domain.product;
 
+import woowacourse.shoppingcart.domain.Quantity;
+
 public class ProductStock {
     private final Product product;
-    private final int stockQuantity;
+    private final Quantity stockQuantity;
 
-    public ProductStock(Product product, int stockQuantity) {
+    public ProductStock(Product product, Quantity stockQuantity) {
         this.product = product;
         this.stockQuantity = stockQuantity;
     }
@@ -34,6 +36,6 @@ public class ProductStock {
     }
 
     public int getStockQuantity() {
-        return stockQuantity;
+        return stockQuantity.getQuantity();
     }
 }

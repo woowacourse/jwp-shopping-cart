@@ -16,8 +16,8 @@ public class CartItemTest {
     void checkSameProduct() {
         Product product = new Product(1L, "애플워치", 10_000, new ThumbnailImage("url", "alt"));
 
-        CartItem cartItem1 = new CartItem(product, 10);
-        CartItem cartItem2 = new CartItem(product, 20);
+        CartItem cartItem1 = new CartItem(product, new Quantity(10));
+        CartItem cartItem2 = new CartItem(product, new Quantity(20));
 
         assertThatThrownBy(() -> cartItem1.checkSameProduct(cartItem2)).isInstanceOf(
             DuplicateProductInCartException.class);

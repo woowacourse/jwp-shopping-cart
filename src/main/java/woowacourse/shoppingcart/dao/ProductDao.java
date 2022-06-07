@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.domain.product.ProductStock;
 import woowacourse.shoppingcart.domain.product.ThumbnailImage;
@@ -31,7 +32,7 @@ public class ProductDao {
             resultSet.getInt("price"),
             new ThumbnailImage(resultSet.getString("thumbnail_url"), resultSet.getString("thumbnail_alt"))
         ),
-        resultSet.getInt("stock_quantity")
+        new Quantity(resultSet.getInt("stock_quantity"))
     );
 
     private final JdbcTemplate jdbcTemplate;

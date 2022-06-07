@@ -6,13 +6,13 @@ import woowacourse.shoppingcart.exception.DuplicateProductInCartException;
 public class CartItem {
     private Long id;
     private Product product;
-    private int quantity;
+    private Quantity quantity;
 
-    public CartItem(Product product, int quantity) {
+    public CartItem(Product product, Quantity quantity) {
         this(null, product, quantity);
     }
 
-    public CartItem(Long id, Product product, int quantity) {
+    public CartItem(Long id, Product product, Quantity quantity) {
         this.id = id;
         this.product = product;
         this.quantity = quantity;
@@ -27,7 +27,7 @@ public class CartItem {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getQuantity();
     }
 
     public void checkSameProduct(CartItem newCartItem) {
