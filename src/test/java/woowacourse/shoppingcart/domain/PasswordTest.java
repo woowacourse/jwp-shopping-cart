@@ -13,7 +13,7 @@ class PasswordTest {
     @ParameterizedTest
     @ValueSource(strings = {"12345678aA!", "test123A@", "test234234aaA$"})
     void createPassword(String password) {
-        Password actual = new Password(password);
+        Password actual = Password.from(password);
 
         assertThat(actual.getValue()).isEqualTo(password);
     }
@@ -21,8 +21,8 @@ class PasswordTest {
     @DisplayName("비밀번호 형식이 유효하지 않을 경우 예외발생.")
     @ParameterizedTest
     @ValueSource(strings = {"sdf!@#!@#", "123456789", "!@$!23@$"})
-    void throwExceptionValidate(String password) {
-        assertThatThrownBy(() -> new Password(password))
+    void throwExceptionValidateForm(String password) {
+        assertThatThrownBy(() -> Password.from(password))
             .isInstanceOf(IllegalArgumentException.class);
     }
 }

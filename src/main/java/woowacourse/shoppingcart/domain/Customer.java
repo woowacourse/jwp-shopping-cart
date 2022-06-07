@@ -26,7 +26,7 @@ public class Customer {
     public Customer(String loginId, String name, String password) {
         this(new LoginId(loginId),
             new Name(name),
-            new Password(password));
+            Password.from(password));
     }
 
     public Customer(Long id, String loginId, String name, String password){
@@ -39,7 +39,7 @@ public class Customer {
     public Customer ofHashPassword(Function<String, String> hashing) {
         String hashedPassword = hashing.apply(password.getValue());
 
-        return new Customer(this.loginId, this.username, new Password(hashedPassword));
+        return new Customer(null, this.loginId, this.username, new Password(hashedPassword));
     }
 
     public Long getId() {

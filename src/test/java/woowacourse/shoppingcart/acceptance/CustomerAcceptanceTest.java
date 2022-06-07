@@ -25,7 +25,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
-        ExtractableResponse<Response> response = 사용자_생성_요청("loginId@gmail.com", "seungpapang", "12345678aA");
+        ExtractableResponse<Response> response = 사용자_생성_요청("loginId@gmail.com", "seungpapang", "12345678aA!");
 
         사용자_추가됨(response);
     }

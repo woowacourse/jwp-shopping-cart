@@ -89,9 +89,9 @@ class AuthServiceTest {
 
         @Test
         void 회원의_비밀번호가_일치_할_경우_성공() {
-            Customer customer = new Customer("angie@gmail.com", "angel", "12345678aA")
+            Customer customer = new Customer("angie@gmail.com", "angel", "12345678aA!")
                     .ofHashPassword(HashTool::hashing);
-            String validPassword = "12345678aA";
+            String validPassword = "12345678aA!";
 
             assertThatCode(() -> authService.checkPassword(customer, validPassword))
                     .doesNotThrowAnyException();
@@ -99,7 +99,7 @@ class AuthServiceTest {
 
         @Test
         void 회원의_비밀번호가_일치하지_않을_경우_예외발생() {
-            Customer customer = new Customer("angie@gmail.com", "angel", "12345678aA")
+            Customer customer = new Customer("angie@gmail.com", "angel", "12345678aA!")
                     .ofHashPassword(HashTool::hashing);
             String invalidPassword = "devilAngie";
 

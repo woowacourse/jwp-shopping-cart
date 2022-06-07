@@ -18,7 +18,7 @@ public class CustomerRequest {
     }
 
     public Customer toCustomer() {
-        return new Customer(null, loginId, name, password);
+        return new Customer(loginId, name, password);
     }
 
     public String getLoginId() {

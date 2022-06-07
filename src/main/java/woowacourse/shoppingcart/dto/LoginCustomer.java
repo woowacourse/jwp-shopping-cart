@@ -22,7 +22,7 @@ public class LoginCustomer {
     }
 
     public Customer toCustomer() {
-        return new Customer(loginId, username, password);
+        return new Customer(null, loginId, username, password);
     }
 
     public String getLoginId() {
