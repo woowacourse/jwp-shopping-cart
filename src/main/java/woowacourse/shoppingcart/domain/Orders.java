@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.domain;
 import java.util.List;
 
 public class Orders {
-
     private final Long id;
     private final List<OrderedProduct> orderedProducts;
 
@@ -16,7 +15,7 @@ public class Orders {
         return id;
     }
 
-    public List<OrderedProduct> getOrderDetails() {
+    public List<OrderedProduct> orderedProducts() {
         return orderedProducts;
     }
 }

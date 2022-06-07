@@ -1,11 +1,11 @@
 package woowacourse.shoppingcart.domain;
 
 public class OrderedProduct {
-    private Long productId;
-    private int quantity;
-    private int price;
-    private String name;
-    private ThumbnailImage thumbnailImage;
+    private final Long productId;
+    private final int quantity;
+    private final int price;
+    private final String name;
+    private final ThumbnailImage thumbnailImage;
 
     public OrderedProduct(Long productId, int quantity, int price, String name,
                           ThumbnailImage thumbnailImage) {
