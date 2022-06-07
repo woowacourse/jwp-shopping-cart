@@ -32,7 +32,6 @@ import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
 import woowacourse.shoppingcart.exception.badrequest.NoExistCartItemException;
-import woowacourse.shoppingcart.exception.badrequest.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.unit.ControllerTest;
@@ -295,7 +294,7 @@ class CartItemControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errorCode").value("1004"))
+                .andExpect(jsonPath("errorCode").value("1102"))
                 .andExpect(jsonPath("message").value("장바구니에 상품이 존재하지 않습니다."));
 
         // docs
@@ -407,7 +406,7 @@ class CartItemControllerTest extends ControllerTest {
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
         getLoginCustomerByToken(accessToken, customer);
 
-        willThrow(new NotInCustomerCartItemException())
+        willThrow(new NoExistCartItemException())
                 .given(cartService)
                 .deleteCartBy(customer, productId);
 
@@ -421,8 +420,8 @@ class CartItemControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errorCode").value("1101"))
-                .andExpect(jsonPath("message").value("장바구니 상품이 존재하지 않습니다."));
+                .andExpect(jsonPath("errorCode").value("1102"))
+                .andExpect(jsonPath("message").value("장바구니에 상품이 존재하지 않습니다."));
 
         // docs
         perform.andDo(document("delete-cart-item-not-exist-item",

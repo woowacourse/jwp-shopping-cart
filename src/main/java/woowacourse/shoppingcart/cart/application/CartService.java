@@ -9,7 +9,6 @@ import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
 import woowacourse.shoppingcart.exception.badrequest.NoExistCartItemException;
-import woowacourse.shoppingcart.exception.badrequest.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCartException;
 import woowacourse.shoppingcart.product.application.ProductService;
 
@@ -63,7 +62,7 @@ public class CartService {
         try {
             return cartItemDao.findByProductAndCustomerId(productId, customerId);
         } catch (final NotFoundCartException e) {
-            throw new NotInCustomerCartItemException();
+            throw new NoExistCartItemException();
         }
     }
 }
