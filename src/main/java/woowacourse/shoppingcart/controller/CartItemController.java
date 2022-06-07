@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.auth.support.UserNameArgument;
+import woowacourse.auth.support.UserNameResolver;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.CreateCartItemRequest;
 import woowacourse.shoppingcart.dto.request.EditCartItemQuantityRequest;
@@ -31,13 +31,13 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> findCartItems(@UserNameArgument final UserName customerName) {
+    public ResponseEntity<List<CartItemResponse>> findCartItems(@UserNameResolver final UserName customerName) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(@Valid @RequestBody final CreateCartItemRequest request,
-                                            @UserNameArgument final UserName customerName) {
+                                            @UserNameResolver final UserName customerName) {
         final Long cartId = cartService.addCart(customerName, request);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -48,14 +48,14 @@ public class CartItemController {
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@UserNameArgument final UserName customerName,
+    public ResponseEntity<Void> deleteCartItem(@UserNameResolver final UserName customerName,
                                                @PathVariable final Long cartId) {
         cartService.deleteCart(customerName, cartId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{cartId}/quantity")
-    public ResponseEntity<Void> editQuantity(@UserNameArgument final UserName customerName,
+    public ResponseEntity<Void> editQuantity(@UserNameResolver final UserName customerName,
                                              @PathVariable final Long cartId,
                                              @RequestBody final EditCartItemQuantityRequest request) {
         cartService.editQuantity(customerName, cartId, request);

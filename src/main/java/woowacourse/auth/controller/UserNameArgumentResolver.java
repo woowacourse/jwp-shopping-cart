@@ -8,7 +8,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.support.UserNameArgument;
+import woowacourse.auth.support.UserNameResolver;
 import woowacourse.shoppingcart.domain.customer.UserName;
 
 public class UserNameArgumentResolver implements HandlerMethodArgumentResolver {
@@ -21,7 +21,7 @@ public class UserNameArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(UserNameArgument.class);
+        return parameter.hasParameterAnnotation(UserNameResolver.class);
     }
 
     @Override

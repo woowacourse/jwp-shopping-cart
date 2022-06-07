@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.auth.support.UserNameArgument;
+import woowacourse.auth.support.UserNameResolver;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
@@ -29,7 +29,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@UserNameArgument final UserName customerName,
+    public ResponseEntity<Void> addOrder(@UserNameResolver final UserName customerName,
                                          @RequestBody @Valid final List<OrderRequest> orderDetails) {
         final Long orderId = orderService.addOrder(orderDetails, customerName);
         return ResponseEntity.created(
@@ -37,14 +37,14 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@UserNameArgument final UserName customerName,
+    public ResponseEntity<Orders> findOrder(@UserNameResolver final UserName customerName,
                                             @PathVariable final Long orderId) {
         final Orders order = orderService.findOrderById(customerName, orderId);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@UserNameArgument final UserName customerName) {
+    public ResponseEntity<List<Orders>> findOrders(@UserNameResolver final UserName customerName) {
         final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
         return ResponseEntity.ok(orders);
     }

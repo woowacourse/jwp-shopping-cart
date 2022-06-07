@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.auth.support.UserNameArgument;
+import woowacourse.auth.support.UserNameResolver;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
@@ -36,19 +36,19 @@ public class CustomerController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> edit(@UserNameArgument final UserName userName,
+    public ResponseEntity<Void> edit(@UserNameResolver final UserName userName,
                                      @RequestBody @Valid final EditCustomerRequest request) {
         customerService.editCustomerByName(userName, request);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> customer(@UserNameArgument final UserName userName) {
+    public ResponseEntity<CustomerResponse> customer(@UserNameResolver final UserName userName) {
         return ResponseEntity.ok(customerService.findCustomerByName(userName));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> withDraw(@UserNameArgument final UserName userName) {
+    public ResponseEntity<Void> withDraw(@UserNameResolver final UserName userName) {
         customerService.deleteCustomerByName(userName);
         return ResponseEntity.noContent().build();
     }
