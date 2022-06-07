@@ -49,9 +49,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
-
+        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password1234!"));
         // then
         // 토큰 발급 요청이 거부된다
+        assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
@@ -59,8 +60,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithWrongBearerAuth() {
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
+        final ExtractableResponse<Response> tokenResponse = get("/customers", "invalidToken");
         // then
         // 내 정보 조회 요청이 거부된다
+        assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }
