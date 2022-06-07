@@ -1,39 +1,37 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import woowacourse.shoppingcart.domain.PasswordConvertor;
-
 public class Customer {
 
     private final Long id;
     private final String name;
     private final Email email;
-    private final Password password;
+    private final HashedPassword hashedPassword;
 
-    private Customer(final Long id, final String name, final Email email, final Password password) {
+    private Customer(final Long id, final String name, final Email email, final HashedPassword hashedPassword) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.hashedPassword = hashedPassword;
     }
 
-    public Customer(final  Long id, final String name, final String email, final Password password) {
+    public Customer(final Long id, final String name, final String email, final HashedPassword password) {
         this(id, name, new Email(email), password);
     }
 
-    public Customer(final String name, final String email, final Password password) {
+    public Customer(final String name, final String email, final HashedPassword password) {
         this(null, name, new Email(email), password);
     }
 
     public Customer updateName(final String newName) {
-        return new Customer(id, newName, email, password);
+        return new Customer(id, newName, email, hashedPassword);
     }
 
-    public Customer updatePassword(final Password newPassword) {
+    public Customer updatePassword(final HashedPassword newPassword) {
         return new Customer(id, name, email, newPassword);
     }
 
-    public boolean unMatchPasswordWith(final String password, final PasswordConvertor passwordConvertor) {
-        return !this.password.isSamePassword(password, passwordConvertor);
+    public boolean unMatchPasswordWith(final String password) {
+        return !this.hashedPassword.isSameFrom(password);
     }
 
     public Long getId() {
@@ -48,7 +46,7 @@ public class Customer {
         return email;
     }
 
-    public Password getPassword() {
-        return password;
+    public HashedPassword getPassword() {
+        return hashedPassword;
     }
 }

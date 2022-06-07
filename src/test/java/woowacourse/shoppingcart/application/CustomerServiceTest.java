@@ -15,18 +15,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.application.dto.LoginServiceRequest;
-import woowacourse.shoppingcart.exception.NoSuchEmailException;
-import woowacourse.shoppingcart.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.PasswordConvertor;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.HashedPassword;
+import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
+import woowacourse.shoppingcart.exception.NoSuchEmailException;
+import woowacourse.shoppingcart.exception.PasswordNotMatchException;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -34,7 +35,7 @@ class CustomerServiceTest {
     private static final String NAME = "라라";
     private static final String EMAIL = "lala.seeun@gmail.com";
     private static final String RAW_PASSWORD_VALUE = "tpdmstpdms11";
-    private static Password PASSWORD;
+    private static HashedPassword PASSWORD;
 
     @InjectMocks
     private CustomerService customerService;
@@ -47,7 +48,7 @@ class CustomerServiceTest {
 
     @BeforeEach
     void setUp() {
-        PASSWORD = Password.fromRawValue(RAW_PASSWORD_VALUE, passwordConvertor);
+        PASSWORD = HashedPassword.from(new RawPassword(RAW_PASSWORD_VALUE));
     }
 
     @Test
@@ -104,7 +105,7 @@ class CustomerServiceTest {
                 id,
                 request.getName(),
                 request.getEmail(),
-                Password.fromRawValue(request.getPassword(), passwordConvertor)
+                HashedPassword.from(new RawPassword(request.getPassword()))
         );
     }
 
@@ -116,8 +117,6 @@ class CustomerServiceTest {
                 = new CustomerDeleteServiceRequest(1L, RAW_PASSWORD_VALUE);
         when(customerDao.findById(1L))
                 .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
-        when(passwordConvertor.isSamePassword(RAW_PASSWORD_VALUE, PASSWORD.getHashedValue()))
-                .thenReturn(true);
         when(customerDao.deleteById(1L))
                 .thenReturn(1);
 
@@ -163,8 +162,6 @@ class CustomerServiceTest {
                 .thenReturn(Optional.of(new Customer(1L, NAME, EMAIL, PASSWORD)));
         when(customerDao.update(any(Customer.class)))
                 .thenReturn(1);
-        when(passwordConvertor.isSamePassword(RAW_PASSWORD_VALUE, PASSWORD.getHashedValue()))
-                .thenReturn(true);
 
         // when, then
         final CustomerPasswordUpdateServiceRequest request = new CustomerPasswordUpdateServiceRequest(1L,

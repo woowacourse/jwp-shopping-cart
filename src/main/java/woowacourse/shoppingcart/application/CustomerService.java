@@ -1,8 +1,6 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.shoppingcart.exception.NoSuchEmailException;
-import woowacourse.shoppingcart.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
@@ -10,20 +8,20 @@ import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequ
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.Password;
-import woowacourse.shoppingcart.domain.PasswordConvertor;
+import woowacourse.shoppingcart.domain.customer.HashedPassword;
+import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.NoSuchEmailException;
+import woowacourse.shoppingcart.exception.PasswordNotMatchException;
 
 @Service
 public class CustomerService {
 
     private final CustomerDao customerDao;
-    private final PasswordConvertor passwordConvertor;
 
-    public CustomerService(final CustomerDao customerDao, final PasswordConvertor passwordConvertor) {
+    public CustomerService(final CustomerDao customerDao) {
         this.customerDao = customerDao;
-        this.passwordConvertor = passwordConvertor;
     }
 
     public long validateCustomer(final String email, final String password) {
@@ -34,7 +32,7 @@ public class CustomerService {
     }
 
     private void validatePassword(final Customer customer, final String password) {
-        if (customer.unMatchPasswordWith(password, passwordConvertor)) {
+        if (customer.unMatchPasswordWith(password)) {
             throw new PasswordNotMatchException();
         }
     }
@@ -43,7 +41,7 @@ public class CustomerService {
         final Customer customer = new Customer(
                 customerSaveServiceRequest.getName(),
                 customerSaveServiceRequest.getEmail(),
-                Password.fromRawValue(customerSaveServiceRequest.getPassword(), passwordConvertor)
+                HashedPassword.from(new RawPassword(customerSaveServiceRequest.getPassword()))
         );
 
         validateDuplicatedEmail(customer);
@@ -82,7 +80,7 @@ public class CustomerService {
         final Customer customer = findCustomerById(request.getId());
         validatePassword(customer, request.getOldPassword());
         final String newPassword = request.getNewPassword();
-        final Customer updatedCustomer = customer.updatePassword(Password.fromRawValue(newPassword, passwordConvertor));
+        final Customer updatedCustomer = customer.updatePassword(HashedPassword.from(new RawPassword(newPassword)));
         customerDao.update(updatedCustomer);
     }
 }

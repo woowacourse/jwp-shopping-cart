@@ -15,7 +15,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.domain.customer.HashedPassword;
 
 @Repository
 public class CustomerDao {
@@ -31,7 +31,7 @@ public class CustomerDao {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getString("email"),
-                Password.fromHashedValue(rs.getString("password"))
+                new HashedPassword(rs.getString("password"))
         );
     }
 
