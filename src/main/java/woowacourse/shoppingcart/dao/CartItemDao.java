@@ -63,4 +63,11 @@ public class CartItemDao {
             throw new InvalidCartItemException();
         }
     }
+
+    public boolean isProductExisting(Long customerId, Long productId) {
+        final String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE customer_id = ? AND product_id = ?) as is_product_existing";
+        return Boolean.TRUE.equals(
+                jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getBoolean("is_product_existing"), customerId,
+                        productId));
+    }
 }

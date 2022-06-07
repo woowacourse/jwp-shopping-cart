@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.controller.CustomerId;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.ProductExistingInCartResponse;
 import woowacourse.shoppingcart.service.CartService;
 
 @RestController
@@ -46,5 +47,12 @@ public class CartItemController {
     public ResponseEntity<Void> deleteCartItem(@CustomerId final Long customerId, @PathVariable final Long cartId) {
         cartService.deleteCart(customerId, cartId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductExistingInCartResponse> checkIsProductExisting(@CustomerId final Long customerId,
+                                                                                @PathVariable final Long productId) {
+        ProductExistingInCartResponse productExisting = cartService.isProductExisting(customerId, productId);
+        return ResponseEntity.ok(productExisting);
     }
 }

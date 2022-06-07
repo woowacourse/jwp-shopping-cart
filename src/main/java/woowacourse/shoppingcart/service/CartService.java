@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.ProductExistingInCartResponse;
 import woowacourse.shoppingcart.entity.CartItemEntity;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -72,5 +73,10 @@ public class CartService {
                 .stream()
                 .map(CartItemEntity::getId)
                 .collect(Collectors.toList());
+    }
+
+    public ProductExistingInCartResponse isProductExisting(Long customerId, Long productId) {
+        boolean isExisting = cartItemDao.isProductExisting(customerId, productId);
+        return new ProductExistingInCartResponse(isExisting);
     }
 }
