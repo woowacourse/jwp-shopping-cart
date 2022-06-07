@@ -34,7 +34,7 @@ public class CartItemController {
     @PostMapping
     public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
                                             @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
+        final Long cartId = cartService.add(product.getId(), customerName, 1);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")

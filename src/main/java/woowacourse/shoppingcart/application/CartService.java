@@ -26,6 +26,18 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional
+    public Long add(final Long productId, final String customerName, final int quantity) {
+        final Long customerId = customerDao.findIdByUserName(customerName);
+        Product product = productDao.findProductById(productId);
+        CartItem cartItem = new CartItem(product, quantity);
+        try {
+            return cartItemDao.addCartItem(customerId, cartItem);
+        } catch (Exception e) {
+            throw new InvalidProductException();
+        }
+    }
+
     public List<CartItem> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
@@ -41,16 +53,6 @@ public class CartService {
     private List<Long> findCartIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        try {
-//            return cartItemDao.addCartItem(customerId, productId);
-            return 1L;
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
     }
 
     public void deleteCart(final String customerName, final Long cartId) {
