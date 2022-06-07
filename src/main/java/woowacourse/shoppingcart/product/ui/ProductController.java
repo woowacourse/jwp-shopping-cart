@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.shoppingcart.product.application.ProductService;
-import woowacourse.shoppingcart.product.domain.Product;
+import woowacourse.shoppingcart.product.application.dto.response.ProductResponse;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -22,12 +22,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products() {
+    public ResponseEntity<List<ProductResponse>> products() {
         return ResponseEntity.ok(productService.findProducts());
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> product(@PathVariable final Long productId) {
+    public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
         return ResponseEntity.ok(productService.findProductById(productId));
     }
 }

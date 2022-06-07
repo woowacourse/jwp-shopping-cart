@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.shoppingcart.product.domain.Product;
+import woowacourse.shoppingcart.product.application.dto.response.ProductResponse;
 import woowacourse.support.acceptance.AcceptanceTest;
 
 @DisplayName("상품 관련 기능")
@@ -41,7 +41,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
+                .when().get("/products")
                 .then().log().all()
                 .extract();
     }
@@ -50,7 +50,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products/{productId}", productId)
+                .when().get("/products/{productId}", productId)
                 .then().log().all()
                 .extract();
     }
@@ -60,14 +60,14 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(final ExtractableResponse<Response> response, final Long... productIds) {
-        final List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
-                .map(Product::getId)
+        final List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
+                .map(ProductResponse::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }
 
     public static void 상품_조회됨(final ExtractableResponse<Response> response, final Long productId) {
-        final Product resultProduct = response.as(Product.class);
-        assertThat(resultProduct.getId()).isEqualTo(productId);
+        final ProductResponse resultProduct = response.as(ProductResponse.class);
+        assertThat(resultProduct.getProductId()).isEqualTo(productId);
     }
 }
