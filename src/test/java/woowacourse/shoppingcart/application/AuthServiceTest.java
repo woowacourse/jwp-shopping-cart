@@ -4,9 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.shoppingcart.dao.CustomerFixture.connieDto;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -19,7 +16,6 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.BadRequestException;
 import woowacourse.auth.exception.NotFoundException;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
 
@@ -56,14 +52,12 @@ class AuthServiceTest {
 
         @Test
         @DisplayName("로그인이 되면 토큰이 정상적으로 발급된다.")
-        void createAccessToken() throws JsonProcessingException {
+        void createAccessToken() {
             코니_회원_가입();
             final String email = "her0807@naver.com";
             final TokenResponse response = authService.signIn(new SignInDto(email, "password1!"));
-            final ObjectMapper mapper = new JsonMapper();
-            AddressResponse tokenPayloadDto = mapper.readValue(provider.getPayload(response.getAccessToken()),
-                    AddressResponse.class);
-            assertThat(tokenPayloadDto.getEmail()).isEqualTo(email);
+            String payload = provider.getPayload(response.getAccessToken());
+            assertThat(payload).isEqualTo(email);
             assertThat(response.getCustomerId()).isNotNull();
         }
 
@@ -71,9 +65,8 @@ class AuthServiceTest {
         @DisplayName("회원 가입을 하지 않은 유저면 에러가 발생한다.")
         void noSignUpCustomer() {
             final String email = "her0807@naver.com";
-            assertThatThrownBy(() -> authService.signIn(new SignInDto(email, "password1!")))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("가입하지 않은 유저입니다.");
+            assertThatThrownBy(() -> authService.signIn(new SignInDto(email, "password1!"))).isInstanceOf(
+                    NotFoundException.class).hasMessage("가입하지 않은 유저입니다.");
         }
 
         @Test
@@ -81,9 +74,8 @@ class AuthServiceTest {
         void noSignInCausePassword() {
             코니_회원_가입();
             final String email = "her0807@naver.com";
-            assertThatThrownBy(() -> authService.signIn(new SignInDto(email, "password23!")))
-                    .isInstanceOf(BadRequestException.class)
-                    .hasMessage("올바르지 않은 비밀번호입니다.");
+            assertThatThrownBy(() -> authService.signIn(new SignInDto(email, "password23!"))).isInstanceOf(
+                    BadRequestException.class).hasMessage("올바르지 않은 비밀번호입니다.");
         }
 
         @Test
@@ -91,9 +83,8 @@ class AuthServiceTest {
         void noSignInCauseEmail() {
             코니_회원_가입();
             final String email = "sudal@naver.com";
-            assertThatThrownBy(() -> authService.signIn(new SignInDto(email, "password23!")))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("가입하지 않은 유저입니다.");
+            assertThatThrownBy(() -> authService.signIn(new SignInDto(email, "password23!"))).isInstanceOf(
+                    NotFoundException.class).hasMessage("가입하지 않은 유저입니다.");
         }
     }
 

@@ -1,11 +1,7 @@
 package woowacourse.auth.application;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import woowacourse.auth.dto.PermissionCustomerRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.BadRequestException;
 import woowacourse.auth.exception.NotFoundException;
@@ -38,8 +34,7 @@ public class AuthService {
         final Email email = new Email(signInDto.getEmail());
         final CustomerDto customer = checkSignUpCustomer(email);
         verifyPassword(signInDto.getPassword(), customer.getPassword());
-        String payload = createPayload(new PermissionCustomerRequest(email.getValue()));
-        return new TokenResponse(customer.getId(), jwtTokenProvider.createToken(payload));
+        return new TokenResponse(customer.getId(), jwtTokenProvider.createToken(email.getValue()));
     }
 
     private void verifyPassword(final String password, final String hashedPassword) {
@@ -56,14 +51,4 @@ public class AuthService {
             throw new NotFoundException("가입하지 않은 유저입니다.");
         }
     }
-
-    private String createPayload(final PermissionCustomerRequest email) {
-        try {
-            ObjectMapper mapper = new JsonMapper();
-            return mapper.writeValueAsString(email);
-        } catch (JsonProcessingException e) {
-            throw new UnsupportedOperationException(e.getMessage());
-        }
-    }
-
 }
