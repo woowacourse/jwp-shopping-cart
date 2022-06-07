@@ -21,16 +21,8 @@ public class ProductService {
         return productDao.findProducts();
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
-    }
-
     @Transactional(readOnly = true)
     public Product findProductById(final Long productId) {
         return productDao.findProductById(productId);
-    }
-
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
     }
 }
