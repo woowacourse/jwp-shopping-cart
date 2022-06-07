@@ -18,10 +18,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+        RestAssuredConvenienceMethod.postRequestWithoutToken(signUpRequest, "/api/members");
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
-        String accessToken = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+        String accessToken = RestAssuredConvenienceMethod.postRequestWithoutToken(loginRequest, "/api/auth")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         RestAssuredConvenienceMethod.getRequestWithToken(accessToken, "/api/members/me")
@@ -34,10 +34,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBadBearerAuth() {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+        RestAssuredConvenienceMethod.postRequestWithoutToken(signUpRequest, "/api/members");
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco123!");
-        RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+        RestAssuredConvenienceMethod.postRequestWithoutToken(loginRequest, "/api/auth")
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .assertThat().body("message", equalTo("잘못된 비밀번호입니다."));
     }
@@ -46,10 +46,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+        RestAssuredConvenienceMethod.postRequestWithoutToken(signUpRequest, "/api/members");
 
         LoginRequest loginRequest = new LoginRequest("pobi@wooteco.com", "Wooteco1!");
-        String token = RestAssuredConvenienceMethod.postRequest(loginRequest, "/api/auth")
+        String token = RestAssuredConvenienceMethod.postRequestWithoutToken(loginRequest, "/api/auth")
                 .extract().as(TokenResponse.class).getAccessToken();
 
         String invalidToken = token.toLowerCase();

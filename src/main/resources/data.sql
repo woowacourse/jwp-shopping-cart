@@ -11,3 +11,10 @@ insert into product (name, price, image_url)
 values ('아이스아메리카노', 2500, 'americanoUrl'),
        ('아이스라떼', 3000, 'latteUrl'),
        ('아이스초코', 3500, 'chocolateUrl')
+;
+
+insert
+into cart_item (member_id, product_id, quantity)
+values (1, 1, 1),
+       (1, 2, 1)
+;

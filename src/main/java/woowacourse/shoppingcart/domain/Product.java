@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.domain;
 public class Product {
     private long id;
     private String name;
-    private Integer price;
+    private int price;
     private String imageUrl;
 
     public Product() {

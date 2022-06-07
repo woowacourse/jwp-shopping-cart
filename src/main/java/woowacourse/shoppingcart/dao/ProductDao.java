@@ -8,10 +8,10 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.product.ProductNotFoundException;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -39,13 +39,12 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(namedParameterSource).longValue();
     }
 
-    public Optional<Product> findById(final long productId) {
+    public Product findById(final long productId) {
         try {
             final String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
-            Product product = jdbcTemplate.queryForObject(query, rowMapper, productId);
-            return Optional.ofNullable(product);
+            return jdbcTemplate.queryForObject(query, rowMapper, productId);
         } catch (final EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new ProductNotFoundException("존재하지 않는 상품입니다.");
         }
     }
 
@@ -56,6 +55,10 @@ public class ProductDao {
 
     public void delete(final long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+        int count = jdbcTemplate.update(query, productId);
+
+        if (count == 0) {
+            throw new ProductNotFoundException("존재하지 않는 상품입니다.");
+        }
     }
 }

@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.product;
 
 public class ProductException extends RuntimeException {
 
