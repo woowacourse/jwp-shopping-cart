@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.shoppingcart.dto.response.ErrorResponse;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -50,8 +48,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             InvalidException.class,
-            InvalidCustomerException.class,
-            InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
