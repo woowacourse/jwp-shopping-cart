@@ -1,16 +1,16 @@
 package woowacourse.shoppingcart.dto;
 
 public class UserNameDuplicationResponse {
-    private boolean unique;
+    private boolean isUnique;
 
     private UserNameDuplicationResponse() {
     }
 
-    public UserNameDuplicationResponse(boolean unique) {
-        this.unique = unique;
+    public UserNameDuplicationResponse(boolean isUnique) {
+        this.isUnique = isUnique;
     }
 
-    public boolean isUnique() {
-        return unique;
+    public boolean getIsUnique() {
+        return isUnique;
     }
 }

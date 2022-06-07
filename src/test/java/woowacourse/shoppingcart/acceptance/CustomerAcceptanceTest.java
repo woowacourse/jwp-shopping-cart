@@ -47,7 +47,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         //then
         response.assertStatus(HttpStatus.OK);
-        response.assertBody("unique", true);
+        response.assertBody("isUnique", true);
     }
 
     @DisplayName("아이디가 중복될 때, 아이디 중복 여부를 검사한다.")
@@ -62,7 +62,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         //then
         response.assertStatus(HttpStatus.OK);
-        response.assertBody("unique", false);
+        response.assertBody("isUnique", false);
     }
 
     @DisplayName("로그인한 회원이 자신의 정보를 조회한다.")
