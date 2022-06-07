@@ -1,33 +1,17 @@
 package woowacourse.shoppingcart.service;
 
 import java.util.List;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.infra.dao.ProductDao;
+import woowacourse.shoppingcart.service.dto.ProductCreateServiceRequest;
 
-@Service
-@Transactional(rollbackFor = Exception.class)
-public class ProductService {
-    private final ProductDao productDao;
+public interface ProductService {
+    Product create(ProductCreateServiceRequest productCreateServiceRequest);
 
-    public ProductService(final ProductDao productDao) {
-        this.productDao = productDao;
-    }
+    List<Product> findAllWithPage(int page, int size);
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
-    }
+    Product findById(long id);
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
-    }
-
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
-    }
-
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
-    }
+    void deleteById(long productId);
+    
+    long countAll();
 }
