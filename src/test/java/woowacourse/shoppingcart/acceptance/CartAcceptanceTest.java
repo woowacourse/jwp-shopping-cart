@@ -99,8 +99,46 @@ public class CartAcceptanceTest extends AcceptanceTest {
         }
     }
 
+    @DisplayName("장바구니 상품 목록 조회 기능")
+    @Nested
+    class Describe_장바구니_상품_목록_조회 {
+        CartAdditionRequest request1 = new CartAdditionRequest(1L);
+        CartAdditionRequest request2 = new CartAdditionRequest(2L);
+        CartAdditionRequest request3 = new CartAdditionRequest(3L);
+
+        @Nested
+        @DisplayName("유효한 인가로 요청한다면")
+        class Context_valid_token extends AcceptanceTest {
+
+            @Test
+            @DisplayName("장바구니 상품 목록 정보들과 상태코드 200을 반환받는다.")
+            void it_return_carts_200() {
+                postCart(request1, accessToken);
+                postCart(request2, accessToken);
+                postCart(request3, accessToken);
+
+                ValidatableResponse response = getCart(accessToken);
+
+                response.statusCode(HttpStatus.OK.value());
+            }
+        }
+
+        @DisplayName("유효하지 않은 인가로 장바구니를 조회하려고 하면")
+        @Nested
+        class Context_invalid_token extends AcceptanceTest {
+
+            @DisplayName("장바구니 추가에 실패하고, 상태코드 401을 반환받는다.")
+            @Test
+            void it_fail_return_401() {
+                ValidatableResponse response = getCart("invalid-token");
+
+                response.statusCode(HttpStatus.UNAUTHORIZED.value());
+            }
+        }
+    }
+
     private ValidatableResponse postCart(CartAdditionRequest request, String accessToken) {
-        ValidatableResponse response = RestAssured
+        return RestAssured
                 .given().log().all()
                 .header(AuthorizationExtractor.AUTHORIZATION,
                         AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
@@ -108,6 +146,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .body(request)
                 .when().post("/users/me/carts")
                 .then().log().all();
-        return response;
+    }
+
+    private ValidatableResponse getCart(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                .when().get("/users/me/carts")
+                .then().log().all();
     }
 }
