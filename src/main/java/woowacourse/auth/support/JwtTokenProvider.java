@@ -18,6 +18,8 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtTokenProvider {
 
+    private static final String EMAIL = "email";
+
     private final SecretKey secretKey;
     private final long validityInMilliseconds;
 
@@ -32,7 +34,7 @@ public class JwtTokenProvider {
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
-            .claim("email", payload)
+            .claim(EMAIL, payload)
             .setIssuedAt(now)
             .setExpiration(validity)
             .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -45,7 +47,7 @@ public class JwtTokenProvider {
             .build()
             .parseClaimsJws(token)
             .getBody()
-            .get("email", String.class);
+            .get(EMAIL, String.class);
     }
 
     public boolean validateToken(String token) {
