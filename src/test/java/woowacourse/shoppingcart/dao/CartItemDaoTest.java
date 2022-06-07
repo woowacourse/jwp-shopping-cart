@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -34,23 +37,8 @@ public class CartItemDaoTest {
         productDao.save(new Product("banana", 1_000, "woowa1.com", 100));
         productDao.save(new Product("apple", 2_000, "woowa2.com", 100));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
-    }
-
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
-    @Test
-    void addCartItem() {
-
-        // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
-
-        // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
-
-        // then
-        assertThat(cartId).isEqualTo(3L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 1);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 1);
     }
 
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
@@ -81,7 +69,116 @@ public class CartItemDaoTest {
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("Cart Id를 넣으면, 해당 상품 Id를 가져온다.")
+    @Test
+    void findProductIdById() {
+
+        // given
+        final Long cartId = 1L;
+
+        // when
+        final Long productId = cartItemDao.findProductIdById(cartId);
+
+        // then
+        assertThat(productId).isEqualTo(1L);
+    }
+
+    @DisplayName("존재하지 않는 Cart Id를 넣으면 예외가 발생한다.")
+    @Test
+    void findProductIdByIdFail() {
+
+        // given
+        final Long cartId = 3L;
+
+        // when
+        assertThatThrownBy(() -> cartItemDao.findProductIdById(cartId))
+                .isInstanceOf(InvalidCartItemException.class);
+    }
+
+    @DisplayName("Cart Id를 넣으면, 해당 상품 Quantity 를 가져온다.")
+    @Test
+    void findProductQuantityById() {
+
+        // given
+        final Long cartId = 1L;
+
+        // when
+        final int quantity = cartItemDao.findProductQuantityById(cartId);
+
+        // then
+        assertThat(quantity).isEqualTo(1);
+    }
+
+    @DisplayName("존재하지 않는 Cart Id를 넣으면 예외가 발생한다.")
+    @Test
+    void findProductQuantityByIdFail() {
+
+        // given
+        final Long cartId = 3L;
+
+        // when
+        assertThatThrownBy(() -> cartItemDao.findProductQuantityById(cartId))
+                .isInstanceOf(InvalidCartItemException.class);
+    }
+
+    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @Test
+    void addCartItem() {
+
+        // given
+        final Long customerId = 1L;
+        final Long productId = 1L;
+        final int quantity = 1;
+
+        // when
+        final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity);
+
+        // then
+        assertThat(cartId).isEqualTo(3L);
+    }
+
+    @DisplayName("Cart Id를 통해 장바구니 수량을 수정한다.")
+    @Test
+    void modifyQuantity() {
+
+        // given
+        final Long cartId = 1L;
+        final Long productId = 1L;
+        final int quantity = 3;
+
+        // when
+        cartItemDao.modifyQuantity(cartId, productId, quantity);
+
+        // then
+        int actual = cartItemDao.findProductQuantityById(cartId);
+
+        assertThat(actual).isEqualTo(3);
+    }
+
+    @DisplayName("존재하지 않는 Cart Id를 통해 장바구니 수량을 수정할 경우 예외가 발생한다.")
+    @Test
+    void modifyQuantityFail() {
+
+        // given
+        final Long invalidCartId = 3L;
+        final Long invalidProductId = 3L;
+
+        final Long cartId = 1L;
+        final Long productId = 1L;
+        final int quantity = 3;
+
+        // when
+        assertAll(
+                () -> assertThatThrownBy(() -> cartItemDao.modifyQuantity(invalidCartId, productId, quantity))
+                        .isInstanceOf(InvalidCartItemException.class),
+                () -> assertThatThrownBy(() -> cartItemDao.modifyQuantity(cartId, invalidProductId, quantity))
+                        .isInstanceOf(InvalidCartItemException.class),
+                () -> assertThatThrownBy(() -> cartItemDao.modifyQuantity(invalidCartId, invalidProductId, quantity))
+                        .isInstanceOf(InvalidCartItemException.class)
+        );
+    }
+
+    @DisplayName("Cart Id를 통해 장바구니 항목을 제거한다.")
     @Test
     void deleteCartItem() {
 
@@ -96,5 +193,17 @@ public class CartItemDaoTest {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);
+    }
+
+    @DisplayName("존재하지 않는 Cart Id를 통해 장바구니 항목을 제거할 경우 예외가 발생한다.")
+    @Test
+    void deleteCartItemFail() {
+
+        // given
+        final Long cartId = 3L;
+
+        // when
+        assertThatThrownBy(() -> cartItemDao.deleteCartItem(cartId))
+                .isInstanceOf(InvalidCartItemException.class);
     }
 }
