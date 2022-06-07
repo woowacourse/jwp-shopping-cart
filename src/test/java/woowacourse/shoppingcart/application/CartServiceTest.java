@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartDto;
+import woowacourse.shoppingcart.dto.CartUpdationRequest;
 import woowacourse.shoppingcart.exception.IllegalProductException;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
 
@@ -117,6 +118,31 @@ public class CartServiceTest {
 
         // then
         assertThat(carts).containsExactly(cart1, cart2, cart3);
+    }
+
+    @DisplayName("장바구니에서 상품을 수정한다.")
+    @Test
+    void updateProductInCart_success_cartReturned() {
+        // given
+        Long productId = 1L;
+        Product product1 = new Product(productId, "product1", 1000, "url1");
+        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
+
+        Long cartId = 1L;
+        CartUpdationRequest request = new CartUpdationRequest(5);
+        Cart updatedCart = new Cart(cartId, product1, request.getQuantity());
+
+        given(cartItemDao.findCartByProductCustomer(customer.getId(), productId))
+                .willReturn(new CartDto(cartId, productId, request.getQuantity()));
+
+        given(productService.findProductById(productId))
+                .willReturn(product1);
+
+        // when
+        Cart cart = cartService.updateProductInCart(customer, request, productId);
+
+        // then
+        assertThat(cart.getQuantity()).isEqualTo(5);
     }
 
     @DisplayName("장바구니에서 상품을 삭제한다.")

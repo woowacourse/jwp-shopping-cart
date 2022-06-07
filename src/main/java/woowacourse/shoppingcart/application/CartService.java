@@ -12,9 +12,9 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartDto;
+import woowacourse.shoppingcart.dto.CartUpdationRequest;
 import woowacourse.shoppingcart.exception.IllegalProductException;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -78,6 +78,17 @@ public class CartService {
         }
 
         cartItemDao.deleteCartItem(customer.getId(), productId);
+    }
+
+    public Cart updateProductInCart(Customer customer, CartUpdationRequest request, Long productId) {
+        boolean isExist = cartItemDao.existProduct(customer.getId(), productId);
+        if (!isExist) {
+            throw new IllegalProductException("장바구니에 상품이 존재하지 않습니다.");
+        }
+        cartItemDao.updateCartItem(customer.getId(), request.getQuantity(), productId);
+        CartDto cartDto = cartItemDao.findCartByProductCustomer(customer.getId(), productId);
+        Product product = productService.findProductById(cartDto.getProductId());
+        return new Cart(cartDto.getCartId(), product, cartDto.getQuantity());
     }
 
 //    private List<Long> findCartIdsByCustomerName(final String customerName) {
