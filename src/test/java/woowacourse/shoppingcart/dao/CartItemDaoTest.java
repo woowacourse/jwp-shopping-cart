@@ -118,17 +118,15 @@ public class CartItemDaoTest {
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void deleteCartItem() {
-
         // given
-        final Long cartId = 1L;
+        Long customerId = 1L;
+        Long productId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteCartItem(customerId, productId);
 
         // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        assertThat(productIds).containsExactly(2L);
+        List<Long> cartIds = cartItemDao.findIdsByCustomerId(productId);
+        assertThat(cartIds.size()).isEqualTo(1);
     }
 }
