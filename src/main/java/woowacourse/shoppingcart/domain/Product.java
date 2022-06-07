@@ -3,10 +3,10 @@ package woowacourse.shoppingcart.domain;
 import woowacourse.shoppingcart.exception.InvalidInputException;
 
 public class Product {
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
     public Product(final Long id, final String name, final int price, final String imageUrl) {
         validateName(name);

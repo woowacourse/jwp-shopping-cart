@@ -20,7 +20,7 @@ import woowacourse.shoppingcart.exception.ResourceNotFoundException;
 @Repository
 public class CustomerDao {
 
-    public static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname from customer where withdrawal = false) ";
+    private static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname from customer where withdrawal = false) ";
     private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) -> new Customer(
             resultSet.getLong("id"),
             resultSet.getString("username"),
@@ -44,6 +44,8 @@ public class CustomerDao {
             throw new InvalidCustomerException("존재하지 않는 유저입니다.");
         }
     }
+
+    // new method
 
     public Long create(final Customer customer) {
         String query = "insert into customer (username, password, nickname, withdrawal)"
@@ -106,7 +108,7 @@ public class CustomerDao {
     }
 
     public void delete(final Long id) {
-        String query = "update customer set withdrawal = true where id = :id and exists" + REAL_CUSTOMER_QUERY;
+        String query = "update customer set withdrawal = true where id = :id and withdrawal = false";
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
         int affectedRowCount = namedParameterJdbcTemplate.update(query, params);

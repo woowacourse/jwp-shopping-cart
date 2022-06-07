@@ -53,7 +53,7 @@ class CartItemControllerTest {
         TokenRequest request = new TokenRequest(1L);
 
         // when
-        when(cartItemService.findCartsById(any()))
+        when(cartItemService.findCartItemsByCustomerId(any()))
                 .thenReturn(List.of(
                         new CartItemResponse(1L, 1L, "apple", "http://mart/apple", 1000, 3),
                         new CartItemResponse(2L, 2L, "peach", "http://mart/peach", 2000, 5),

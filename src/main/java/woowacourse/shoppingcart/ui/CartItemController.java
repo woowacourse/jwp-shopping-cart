@@ -28,7 +28,7 @@ public class CartItemController {
 
     @GetMapping("/auth/customer/cartItems")
     public ResponseEntity<List<CartItemResponse>> getCartItems(final @AuthenticationPrincipal TokenRequest request) {
-        List<CartItemResponse> responses = cartItemService.findCartsById(request);
+        List<CartItemResponse> responses = cartItemService.findCartItemsByCustomerId(request);
         return ResponseEntity.ok().body(responses);
     }
 

@@ -34,9 +34,10 @@ create table product
 
 create table cart_item
 (
-    id          bigint not null auto_increment,
-    customer_id bigint not null,
-    product_id  bigint not null,
+    id          bigint  not null auto_increment,
+    customer_id bigint  not null,
+    product_id  bigint  not null,
+    quantity    integer not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -75,6 +76,9 @@ alter table orders_detail
 alter table orders_detail
     add constraint fk_orders_detail_to_product
         foreign key (product_id) references product (id);
+
+insert into customer (username, password, nickname, withdrawal)
+values ('first@naver.com', 'abcd1234!', 'firstCustomer', false);
 
 insert into product (name, price, image_url)
 values (
@@ -587,5 +591,9 @@ values (
            '펩시 콜라 500ml 20개',
            14000,
            'https://cdn-mart.baemin.com/goods/93/500.jpg'
-       )
-;
+       );
+
+insert into cart_item (customer_id, product_id, quantity)
+values (1, 1, 5),
+       (1, 2, 7),
+       (1, 3, 9);

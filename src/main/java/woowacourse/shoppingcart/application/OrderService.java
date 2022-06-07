@@ -35,21 +35,21 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
-
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
-
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
-        }
-
-        return ordersId;
-    }
+//    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
+//        final Long customerId = customerDao.findIdByUserName(customerName);
+//        final Long ordersId = orderDao.addOrders(customerId);
+//
+//        for (final OrderRequest orderDetail : orderDetailRequests) {
+//            final Long cartId = orderDetail.getCartId();
+//            final Long productId = cartItemDao.findProductIdById(cartId);
+//            final int quantity = orderDetail.getQuantity();
+//
+//            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
+//            cartItemDao.deleteCartItem(cartId);
+//        }
+//
+//        return ordersId;
+//    }
 
     public Orders findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);

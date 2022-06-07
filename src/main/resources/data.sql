@@ -1,3 +1,6 @@
+insert into customer (username, password, nickname, withdrawal)
+values ('first@naver.com', 'abcd1234!', 'firstCustomer', false);
+
 insert into product (name, price, image_url)
 values (
            'SPC삼립 뉴욕샌드위치식빵 (990g×4ea) BOX',
@@ -509,6 +512,9 @@ values (
            '펩시 콜라 500ml 20개',
            14000,
            'https://cdn-mart.baemin.com/goods/93/500.jpg'
-       )
-;
+       );
 
+insert into cart_item (customer_id, product_id, quantity)
+values (1, 1, 5),
+       (1, 2, 7),
+       (1, 3, 9);
