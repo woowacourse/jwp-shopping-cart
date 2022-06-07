@@ -1,7 +1,5 @@
 package woowacourse.auth.ui;
 
-import java.util.Objects;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -12,6 +10,9 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.ui.dto.LoginCustomer;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 @Component
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
@@ -31,7 +32,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String token = AuthorizationExtractor.extract(Objects.requireNonNull(request));
-        String id= jwtTokenProvider.getPayload(token);
+        String id = jwtTokenProvider.getPayload(token);
 
         return new LoginCustomer(Long.valueOf(id));
     }

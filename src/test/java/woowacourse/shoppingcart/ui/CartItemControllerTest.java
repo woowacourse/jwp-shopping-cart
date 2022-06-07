@@ -13,8 +13,6 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.config.AuthenticationPrincipalConfig;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.ui.dto.CustomerChangeRequest;
 import woowacourse.shoppingcart.ui.dto.ProductChangeRequest;
 
 import static org.junit.jupiter.api.Assertions.assertAll;

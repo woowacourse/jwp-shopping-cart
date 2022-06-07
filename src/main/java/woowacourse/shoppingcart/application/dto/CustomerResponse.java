@@ -1,7 +1,8 @@
 package woowacourse.shoppingcart.application.dto;
 
-import java.util.Objects;
 import woowacourse.shoppingcart.domain.Customer;
+
+import java.util.Objects;
 
 public class CustomerResponse {
 

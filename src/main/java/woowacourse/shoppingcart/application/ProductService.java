@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.global.exception.InvalidCustomerException;
 import woowacourse.global.exception.InvalidProductException;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
 import woowacourse.shoppingcart.application.dto.ProductSaveRequest;

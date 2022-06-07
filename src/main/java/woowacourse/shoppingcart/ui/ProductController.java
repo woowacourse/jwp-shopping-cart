@@ -2,8 +2,8 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import woowacourse.shoppingcart.application.dto.ProductResponse;
 import woowacourse.shoppingcart.application.ProductService;
+import woowacourse.shoppingcart.application.dto.ProductResponse;
 import woowacourse.shoppingcart.ui.dto.ProductAddRequest;
 
 import javax.validation.Valid;

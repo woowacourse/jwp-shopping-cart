@@ -14,7 +14,6 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.config.AuthenticationPrincipalConfig;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.ui.dto.CustomerSignUpRequest;
 import woowacourse.shoppingcart.ui.dto.ProductAddRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;

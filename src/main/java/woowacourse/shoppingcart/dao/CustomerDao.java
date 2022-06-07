@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import java.util.Optional;
-import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -9,8 +7,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.global.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.domain.Customer;
+
+import javax.sql.DataSource;
+import java.util.Optional;
 
 @Repository
 public class CustomerDao {

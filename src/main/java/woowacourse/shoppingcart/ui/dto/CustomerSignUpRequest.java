@@ -1,7 +1,8 @@
 package woowacourse.shoppingcart.ui.dto;
 
-import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.application.dto.CustomerSaveRequest;
+
+import javax.validation.constraints.NotBlank;
 
 public class CustomerSignUpRequest {
 

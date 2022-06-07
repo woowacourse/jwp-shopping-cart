@@ -1,7 +1,8 @@
 package woowacourse.auth.ui.dto;
 
-import javax.validation.constraints.NotBlank;
 import woowacourse.auth.application.dto.TokenCreateRequest;
+
+import javax.validation.constraints.NotBlank;
 
 public class TokenRequest {
 
