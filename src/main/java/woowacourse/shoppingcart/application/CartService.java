@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
@@ -7,11 +9,9 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -27,8 +27,11 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
+    public List<CartResponse> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+        if (cartIds.size() == 0) {
+            return CartResponse.toCartResponses(new ArrayList<>());
+        }
 
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
@@ -36,7 +39,8 @@ public class CartService {
             final Product product = productDao.findProductById(productId);
             carts.add(new Cart(cartId, product));
         }
-        return carts;
+
+        return CartResponse.toCartResponses(carts);
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
@@ -46,6 +50,7 @@ public class CartService {
 
     public Long addCart(final Long productId, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
+
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
