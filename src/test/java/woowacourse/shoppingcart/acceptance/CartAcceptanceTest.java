@@ -101,6 +101,28 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
         assertThat(장바구니_목록_조회().size()).isEqualTo(1);
     }
 
+    @DisplayName("장바구니 비우기")
+    @Test
+    void deleteAllCartItem() {
+        장바구니_아이템_추가_요청(productId1);
+        장바구니_아이템_추가_요청(productId2);
+
+        ExtractableResponse<Response> response = 장바구니_비우기_요청();
+
+        장바구니_삭제됨(response);
+        assertThat(장바구니_목록_조회().size()).isZero();
+    }
+
+    private ExtractableResponse<Response> 장바구니_비우기_요청() {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(유효한_토큰)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/cart")
+                .then().log().all()
+                .extract();
+    }
+
     private List<CartItem> 장바구니_목록_조회() {
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()

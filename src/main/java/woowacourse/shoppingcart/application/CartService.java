@@ -85,4 +85,8 @@ public class CartService {
         }
         cartItemDao.updateQuantity(customerId, productId, quantity);
     }
+
+    public void emptyCart(Long customerId) {
+        cartItemDao.deleteAllCartItem(customerId);
+    }
 }
