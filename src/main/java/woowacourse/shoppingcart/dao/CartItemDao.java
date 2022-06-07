@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.cartitem.CartItem;
+import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -18,6 +20,16 @@ public class CartItemDao {
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final RowMapper<CartItem> cartItemRowMapper = ((rs, rowNum) -> {
+        Product product = Product.builder()
+                .id(rs.getLong("product_id"))
+                .productName(rs.getString("name"))
+                .price(rs.getInt("price"))
+                .stock(rs.getInt("stock"))
+                .build();
+        return new CartItem(rs.getLong("id"), product, rs.getInt("quantity"));
+    });
 
     public Long save(final Long customerId, final CartItem cartItem) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
@@ -31,6 +43,17 @@ public class CartItemDao {
             return preparedStatement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public CartItem findById(final Long cartItemId) {
+        try {
+            final String sql = "SELECT c.id, c.quantity, c.product_id, p.name, p.price, p.stock FROM cart_item c " +
+                    "INNER JOIN product p ON c.product_id = p.id " +
+                    "WHERE c.id = ?";
+            return jdbcTemplate.queryForObject(sql, cartItemRowMapper, cartItemId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
     }
 
     public List<Long> findIdsByCustomerId(final Long customerId) {

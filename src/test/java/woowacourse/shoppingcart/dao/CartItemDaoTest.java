@@ -59,6 +59,29 @@ public class CartItemDaoTest {
         assertThat(cartId).isEqualTo(3L);
     }
 
+    @DisplayName("id로 카트 아이템을 조회한다.")
+    @Test
+    void findById() {
+        // given
+        final Long customerId = 1L;
+        Product product = Product.builder()
+                .id(1L)
+                .productName("banana")
+                .price(1_000)
+                .stock(100)
+                .build();
+        CartItem cartItem = new CartItem(product, 1);
+        final Long cartItemId = cartItemDao.save(customerId, cartItem);
+
+        // when
+        CartItem result = cartItemDao.findById(cartItemId);
+
+        // then
+        assertThat(result).usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(cartItem);
+    }
+
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머 카트 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
