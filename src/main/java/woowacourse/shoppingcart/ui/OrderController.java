@@ -15,6 +15,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.order.OrderResponse;
 
 @Validated
 @RestController
@@ -35,9 +36,8 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> findOrder(@PathVariable final Long orderId, @AuthenticationPrincipal String username) {
-        final Order order = orderService.findOrderById(username, orderId);
-        return ResponseEntity.ok(order);
+    public ResponseEntity<OrderResponse> findOrder(@PathVariable final Long orderId, @AuthenticationPrincipal String username) {
+        return ResponseEntity.ok(orderService.findOrderById(username, orderId));
     }
 
     @GetMapping

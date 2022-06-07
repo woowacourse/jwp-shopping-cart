@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.order.OrderResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -49,10 +50,10 @@ public class OrderService {
         return orderId;
     }
 
-    public Order findOrderById(final String customerName, final Long orderId) {
-        List<OrderDetail> orderDetails = ordersDetailDao.findOrderDetailsByOrderId(orderId);
+    public OrderResponse findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
-        return new Order(orderId, orderDetails);
+        List<OrderDetail> orderDetails = ordersDetailDao.findOrderDetailsByOrderId(orderId);
+        return new OrderResponse(orderId, orderDetails);
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
