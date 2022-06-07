@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.ui.cart.dto;
+package woowacourse.shoppingcart.ui.cart.dto.request;
 
 public class CartItemRegisterRequest {
 

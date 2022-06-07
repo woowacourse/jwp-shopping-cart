@@ -26,25 +26,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private Long productId1;
     private Long productId2;
 
-    public static ExtractableResponse<Response> 장바구니_상품_추가_요청(final String accessToken, final Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("productId", productId);
-
-        return RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customer/carts")
-                .then().log().all()
-                .extract();
-    }
-
-    public static void 장바구니_상품_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
     @Override
     @BeforeEach
     public void setUp() {
@@ -80,5 +61,50 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         // then NOT_FOUND 를 응답한다.
         요청이_NOT_FOUND_응답함(response);
+    }
+
+    @Test
+    @DisplayName("회원의 장바구니에 담긴 상품 목록을 조회한다.")
+    void getCartItems() {
+        //given 회원가입 후 로그인하여
+        requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
+        final String accessToken = 로그인_토큰_발급();
+        장바구니_상품_추가_요청(accessToken, productId1);
+        장바구니_상품_추가_요청(accessToken, productId2);
+
+        //when
+        final ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(accessToken);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    public static ExtractableResponse<Response> 장바구니_상품_추가_요청(final String accessToken, final Long productId) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("productId", productId);
+
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/api/customer/carts")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(final String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customer/carts")
+                .then().log().all()
+                .extract();
+    }
+
+    public static void 장바구니_상품_추가됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isNotBlank();
     }
 }

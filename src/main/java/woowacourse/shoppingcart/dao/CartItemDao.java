@@ -7,10 +7,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
@@ -35,6 +37,22 @@ public class CartItemDao {
         final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
+    }
+
+    public List<Cart> findProductsByCustomerId(final Long customerId) {
+        final String sql =
+                "SELECT cart_item.id, cart_item.product_id, cart_item.quantity, product.name, product.price, product.image_url "
+                        + "FROM cart_item "
+                        + "INNER JOIN product ON cart_item.product_id = product.id "
+                        + "WHERE cart_item.customer_id = ? ";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new Cart(
+                rs.getLong("id"),
+                rs.getLong("product_id"),
+                rs.getString("name"),
+                rs.getInt("price"),
+                rs.getInt("quantity"),
+                rs.getString("image_url")), customerId);
     }
 
     public List<Long> findIdsByCustomerId(final Long customerId) {
