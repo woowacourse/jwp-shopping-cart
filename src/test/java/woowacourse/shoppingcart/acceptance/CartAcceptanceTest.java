@@ -26,19 +26,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private Long productId1;
     private Long productId2;
 
-    // TODO 레거시
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
-                .then().log().all()
-                .extract();
-    }
 
     public static ExtractableResponse<Response> 토큰으로_장바구니_아이템_추가_요청(final String accessToken, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
@@ -46,19 +33,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestBody)
-                .auth().oauth2(accessToken)
                 .when().post("/api/customer/carts")
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 토큰으로_장바구니_아이템_목록_조회_요청(String token) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
+                .when().get("/api/customer/carts")
                 .then().log().all()
                 .extract();
     }
@@ -102,6 +90,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
+        // TODO 레거시
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("id", productId);
+
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/api/customers/{customerName}/carts", userName)
+                .then().log().all()
+                .extract();
+    }
+
     @Override
     @BeforeEach
     public void setUp() {
@@ -123,10 +125,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
+        토큰으로_장바구니_아이템_추가되어_있음(token, productId1);
+        토큰으로_장바구니_아이템_추가되어_있음(token, productId2);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        ExtractableResponse<Response> response = 토큰으로_장바구니_아이템_목록_조회_요청(token);
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);

@@ -29,21 +29,9 @@ public class CartItemController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/customers/{customerName}/carts")
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
-    }
-
-    @PostMapping("/customers/{customerName}/carts") //TODO: 레거시
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                            @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
-        return ResponseEntity.created(responseLocation).build();
+    @GetMapping("/customer/carts")
+    public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal final Long id) {
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(id));
     }
 
     @PostMapping("/customer/carts")
@@ -63,5 +51,24 @@ public class CartItemController {
                                                @PathVariable final Long cartId) {
         cartService.deleteCart(customerName, cartId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/customers/{customerName}/carts")
+    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
+                                            @PathVariable final String customerName) {
+        //TODO: 레거시
+        final Long cartId = cartService.addCart(product.getId(), customerName);
+        final URI responseLocation = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{cartId}")
+                .buildAndExpand(cartId)
+                .toUri();
+        return ResponseEntity.created(responseLocation).build();
+    }
+
+    @GetMapping("/customers/{customerName}/carts")
+    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
+        // TODO 레거시
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
     }
 }
