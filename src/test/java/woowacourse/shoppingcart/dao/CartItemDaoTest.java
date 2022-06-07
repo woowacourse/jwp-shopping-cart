@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
@@ -106,5 +107,13 @@ public class CartItemDaoTest {
 
         // then
         assertThat(affectedRows).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("고객 ID와 제품 ID를 받아 장바구니를 찾는다.")
+    void findByCustomerIdAndProductId() {
+        Cart cart = cartItemDao.findByCustomerIdAndProductId(1L, 1L);
+
+        assertThat(cart).isNotNull();
     }
 }

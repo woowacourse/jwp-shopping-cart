@@ -4,12 +4,14 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -69,5 +71,24 @@ public class CartItemDao {
         SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
         final String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
         return namedParameterJdbcTemplate.update(sql, parameters);
+    }
+
+    public Cart findByCustomerIdAndProductId(final Long customerId, final Long productId) {
+        final String sql =
+                "SELECT c.id as id, c.quantity as quantity, p.id as product_id, p.name as name, p.price as price, p.image_url as image_url"
+                        + " FROM cart_item c INNER JOIN product p ON c.product_id = p.id WHERE c.customer_id = ? and c.product_id = ?";
+        return jdbcTemplate.queryForObject(sql, getRowMapper(), customerId, productId);
+    }
+
+    private RowMapper<Cart> getRowMapper() {
+        return (res, row) ->
+                new Cart(
+                        res.getLong("id"),
+                        res.getLong("product_id"),
+                        res.getString("name"),
+                        res.getInt("price"),
+                        res.getString("image_url"),
+                        res.getInt("quantity")
+                );
     }
 }
