@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.CartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityResponse;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.ProductIdRequest;
@@ -30,14 +30,14 @@ class CartItemServiceTest {
         TokenRequest tokenRequest = new TokenRequest(1L);
 
         // when
-        List<CartItemResponse> cartItemsByCustomerId = cartItemService.findCartItemsByCustomerId(tokenRequest);
+        List<CartItemResponse> responses = cartItemService.findCartItemsByCustomerId(tokenRequest);
 
         // then
         assertAll(
-                () -> assertThat(cartItemsByCustomerId.size()).isEqualTo(3),
-                () -> assertThat(cartItemsByCustomerId.stream().map(CartItemResponse::getProductId).collect(Collectors.toList()))
+                () -> assertThat(responses.size()).isEqualTo(3),
+                () -> assertThat(responses.stream().map(CartItemResponse::getProductId).collect(Collectors.toList()))
                         .containsExactly(1L, 2L, 3L),
-                () -> assertThat(cartItemsByCustomerId.stream().map(CartItemResponse::getQuantity).collect(Collectors.toList()))
+                () -> assertThat(responses.stream().map(CartItemResponse::getQuantity).collect(Collectors.toList()))
                         .containsExactly(5, 7, 9)
         );
     }
@@ -50,8 +50,7 @@ class CartItemServiceTest {
         List<ProductIdRequest> productIdRequests = List.of(new ProductIdRequest(3L), new ProductIdRequest(4L));
 
         // when
-        List<CartItemQuantityResponse> responses =
-                cartItemService.addCartItems(tokenRequest, productIdRequests);
+        List<CartItemQuantityResponse> responses = cartItemService.addCartItems(tokenRequest, productIdRequests);
 
         // then
         assertAll(
@@ -61,5 +60,19 @@ class CartItemServiceTest {
                 () -> assertThat(responses.get(1).getId()).isEqualTo(4L),
                 () -> assertThat(responses.get(1).getQuantity()).isEqualTo(1)
         );
+    }
+
+    @DisplayName("수정된 장바구니 물품의 수량 정보를 반환한다.")
+    @Test
+    void updateCartItem() {
+        // given
+        TokenRequest tokenRequest = new TokenRequest(1L);
+        CartItemQuantityRequest cartItemQuantityRequest = new CartItemQuantityRequest(1L, 100);
+
+        // when
+        CartItemQuantityResponse response = cartItemService.updateCartItem(tokenRequest, cartItemQuantityRequest);
+
+        // then
+        assertThat(response.getQuantity()).isEqualTo(100);
     }
 }
