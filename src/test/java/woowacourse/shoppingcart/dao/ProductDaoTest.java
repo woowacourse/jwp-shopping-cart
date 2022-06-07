@@ -52,7 +52,7 @@ public class ProductDaoTest {
 
     @DisplayName("상품 목록 조회")
     @Test
-    void getProducts() {
+    void findProducts() {
         // given
         Product product1 = new Product(1L, "product1", 1000, "url1");
         Product product2 = new Product(2L, "product2", 2000, "url2");
@@ -72,5 +72,20 @@ public class ProductDaoTest {
         // then
         assertThat(products).containsExactly(product1, product2, product3, product4, product5, product6, product7,
                 product8, product9, product10);
+    }
+
+    @DisplayName("product id들로 product를 조회한다.")
+    @Test
+    void findProductsByIds() {
+        // given
+        Product product1 = new Product(1L, "product1", 1000, "url1");
+        Product product2 = new Product(2L, "product2", 2000, "url2");
+        Product product3 = new Product(3L, "product3", 3000, "url3");
+
+        // when
+        List<Product> products = productDao.findProductsByIds(List.of(3L, 1L, 2L));
+
+        // then
+        assertThat(products).containsExactly(product3, product1, product2);
     }
 }
