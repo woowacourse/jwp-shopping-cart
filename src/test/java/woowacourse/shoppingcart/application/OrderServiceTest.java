@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.application;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Or;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
@@ -15,7 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -44,7 +43,7 @@ class OrderServiceTest {
         Long memberId = 2L;
         List<OrderRequest> orderRequests = List.of(new OrderRequest(7L, 3));
 
-        assertThatThrownBy(()-> orderService.addOrder(orderRequests, memberId))
+        assertThatThrownBy(() -> orderService.addOrder(orderRequests, memberId))
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 상품입니다.");
     }
@@ -58,7 +57,7 @@ class OrderServiceTest {
 
         assertAll(
                 () -> assertThat(ordersResponse.getId()).isEqualTo(orderId),
-                () -> assertThat(ordersResponse.getOrderDetails().size()).isEqualTo(2)
+                () -> assertThat(ordersResponse.getOrderDetailResponses().size()).isEqualTo(2)
         );
     }
 

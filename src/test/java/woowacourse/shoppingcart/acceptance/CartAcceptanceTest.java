@@ -94,8 +94,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
+    public static Long 장바구니_아이템_추가되어_있음(String accessToken, Long productId) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 

@@ -1,17 +1,12 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.Product;
-
 public class OrderDetailResponse {
 
-    private Long productId;
-    private int quantity;
-    private int price;
-    private String name;
-    private String imageUrl;
-
-    public OrderDetailResponse() {
-    }
+    private final Long productId;
+    private final int quantity;
+    private final int price;
+    private final String name;
+    private final String imageUrl;
 
     public OrderDetailResponse(Long productId, int quantity, int price, String name, String imageUrl) {
         this.productId = productId;

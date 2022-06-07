@@ -1,20 +1,16 @@
 package woowacourse.shoppingcart.dto;
 
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
 
 public class CartResponse {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
-    private int totalPrice;
-    private int quantity;
-
-    public CartResponse() {
-    }
+    private final Long id;
+    private final Long productId;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
+    private final int totalPrice;
+    private final int quantity;
 
     private CartResponse(Long id, Long productId, String name, int price, String imageUrl, int totalPrice, int quantity) {
         this.id = id;

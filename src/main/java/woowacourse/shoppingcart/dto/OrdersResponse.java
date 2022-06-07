@@ -16,7 +16,7 @@ public class OrdersResponse {
         return id;
     }
 
-    public List<OrderDetailResponse> getOrderDetails() {
+    public List<OrderDetailResponse> getOrderDetailResponses() {
         return orderDetailResponses;
     }
 }
