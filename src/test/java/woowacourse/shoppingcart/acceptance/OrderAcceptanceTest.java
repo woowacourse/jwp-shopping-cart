@@ -7,10 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.dto.OrderDetailRequest;
-import woowacourse.shoppingcart.dto.OrderDetailResponse;
-import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.dto.OrdersRequest;
+import woowacourse.shoppingcart.dto.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,6 +17,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.auth.acceptance.AcceptanceTestFixture.코린;
+import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_목록_조회_요청;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
@@ -58,6 +56,24 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 주문하기_요청(accessToken, ordersRequest);
 
         주문하기_성공함(response);
+    }
+
+    @DisplayName("장바구니에 있는 물품을 주문하면 장바구니에서 해당 물품들이 삭제된다.")
+    @Test
+    void cartItemsRemovedWhenOrder() {
+        final OrdersRequest ordersRequest = new OrdersRequest(
+                Stream.of(productId1, productId2)
+                        .map(productId -> new OrderDetailRequest(productId, 10))
+                        .collect(Collectors.toList())
+        );
+
+        ExtractableResponse<Response> orderResponse = 주문하기_요청(accessToken, ordersRequest);
+        주문하기_성공함(orderResponse);
+
+        final ExtractableResponse<Response> cartResponse = 장바구니_아이템_목록_조회_요청(accessToken);
+        final List<ProductResponse> cart = cartResponse.jsonPath()
+                .getList("cart", ProductResponse.class);
+        assertThat(cart).hasSize(0);
     }
 
     @DisplayName("주문 내역 조회")
