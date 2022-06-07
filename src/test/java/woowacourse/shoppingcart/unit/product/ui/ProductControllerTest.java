@@ -60,10 +60,10 @@ class ProductControllerTest extends ControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 responseFields(
-                        fieldWithPath("products[].id").description("상품 ID"),
-                        fieldWithPath("products[].name").description("상품명"),
-                        fieldWithPath("products[].price").description("상품 가격"),
-                        fieldWithPath("products[].imageUrl").description("상품 사진 url")
+                        fieldWithPath("productList[].id").description("상품 ID"),
+                        fieldWithPath("productList[].name").description("상품명"),
+                        fieldWithPath("productList[].price").description("상품 가격"),
+                        fieldWithPath("productList[].imageUrl").description("상품 사진 url")
                 )
         ));
     }

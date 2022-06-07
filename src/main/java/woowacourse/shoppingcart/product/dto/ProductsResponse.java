@@ -7,10 +7,10 @@ import woowacourse.shoppingcart.product.domain.Product;
 
 public class ProductsResponse {
 
-    private final List<ProductResponse> products;
+    private final List<ProductResponse> productList;
 
-    private ProductsResponse(final List<ProductResponse> products) {
-        this.products = products;
+    private ProductsResponse(final List<ProductResponse> productList) {
+        this.productList = productList;
     }
 
     public static ProductsResponse from(final List<Product> products) {
@@ -20,8 +20,8 @@ public class ProductsResponse {
         return new ProductsResponse(responses);
     }
 
-    public List<ProductResponse> getProducts() {
-        return products;
+    public List<ProductResponse> getProductList() {
+        return productList;
     }
 
     @Override
@@ -33,11 +33,11 @@ public class ProductsResponse {
             return false;
         }
         final ProductsResponse that = (ProductsResponse) o;
-        return Objects.equals(products, that.products);
+        return Objects.equals(productList, that.productList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(products);
+        return Objects.hash(productList);
     }
 }
