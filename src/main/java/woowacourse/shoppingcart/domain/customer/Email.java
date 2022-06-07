@@ -17,7 +17,7 @@ public class Email {
 
     private void validateEmail(final String email) {
         if (isEmailOutOfForm(email)) {
-            throw new InvalidEmailFormatException();
+            throw new InvalidEmailFormatException(email);
         }
     }
 
