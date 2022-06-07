@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
@@ -12,11 +16,6 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.*;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -59,7 +58,7 @@ public class CartItemDaoTest {
 
         // then
         assertThat(cartItems).extracting("id", "quantity")
-                        .containsExactly(tuple(1L, 10), tuple(2L, 20));
+                .containsExactly(tuple(1L, 10), tuple(2L, 20));
 
         List<Product> products = cartItems.stream()
                 .map(Cart::getProduct)

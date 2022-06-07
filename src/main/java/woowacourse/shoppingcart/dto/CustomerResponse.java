@@ -11,6 +11,7 @@ public class CustomerResponse {
     private final String name;
     private final String phone;
     private final String address;
+
     public CustomerResponse(Long id, String email, String name, String phone, String address) {
         this.id = id;
         this.email = email;
