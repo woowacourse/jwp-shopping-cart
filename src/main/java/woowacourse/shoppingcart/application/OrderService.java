@@ -37,14 +37,13 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(InvalidCustomerException::new);
+    public Long addOrder(final Long customerId, final List<OrderRequest> orderDetailRequests) {
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
+            final Long productId = cartItemDao.findProductIdById(cartId)
+                    .orElseThrow(InvalidProductException::new);
             final int quantity = orderDetail.getQuantity();
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
