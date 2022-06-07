@@ -54,4 +54,8 @@ public class CartItem {
     }
 
     public int getQuantity() { return quantity.value(); }
+
+    public void updateQuantity(int quantity) {
+        this.quantity.updateQuantity(quantity);
+    }
 }

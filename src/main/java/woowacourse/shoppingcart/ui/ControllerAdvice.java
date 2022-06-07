@@ -45,6 +45,7 @@ public class ControllerAdvice {
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
+            IllegalArgumentException.class
     })
     public ResponseEntity<String> handleInvalidRequest(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());

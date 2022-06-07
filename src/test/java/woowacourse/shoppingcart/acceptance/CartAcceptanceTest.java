@@ -72,6 +72,44 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_삭제됨(response);
     }
 
+    @DisplayName("장바구니 수량 변경")
+    @Test
+    void updateCartItem() {
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1);
+        String accessToken = 로그인_후_토큰_가져옴();
+
+        ExtractableResponse<Response> response = 장바구니_수량변경_요청(accessToken, cartId, 10);
+
+        ExtractableResponse<Response> getResponse = 장바구니_아이템_목록_조회_요청(accessToken);
+        List<CartItem> items = getResponse.body().jsonPath().getList(".", CartItem.class);
+        assertThat(items.get(0).getQuantity()).isEqualTo(10);
+    }
+
+    @DisplayName("장바구니 수량이 범위를 넘어간 경우 예외를 발생시킨다.")
+    @Test
+    void updateCartItemExceedRange() {
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1);
+        String accessToken = 로그인_후_토큰_가져옴();
+
+        ExtractableResponse<Response> response = 장바구니_수량변경_요청(accessToken, cartId, 100);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    private ExtractableResponse<Response> 장바구니_수량변경_요청(String accessToken, Long cartId, int quantity) {
+        Map<String, Integer> param = new HashMap<>();
+        param.put("quantity", quantity);
+
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().oauth2(accessToken)
+                .body(param)
+                .when().patch("/api/customers/me/carts/{cartId}", cartId)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);

@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -70,5 +71,10 @@ public class CartItemDao {
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public void updateQuantity(CartItem cartItem) {
+        final String sql = "UPDATE cart_item set quantity=? where id = ?";
+        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 }

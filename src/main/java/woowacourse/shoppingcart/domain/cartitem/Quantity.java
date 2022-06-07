@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain.cartitem;
 
 public class Quantity {
+
     private int quantity;
 
     public Quantity(final int quantity) {
