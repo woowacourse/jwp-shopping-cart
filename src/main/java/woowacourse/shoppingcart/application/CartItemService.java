@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.CartItemIdRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityResponse;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.ProductIdRequest;
+import woowacourse.shoppingcart.dto.TokenRequest;
 import woowacourse.shoppingcart.repository.CartItemRepository;
 import woowacourse.shoppingcart.repository.ProductRepository;
 

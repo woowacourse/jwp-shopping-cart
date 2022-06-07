@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
@@ -12,6 +11,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.TokenRequest;
 import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Service
