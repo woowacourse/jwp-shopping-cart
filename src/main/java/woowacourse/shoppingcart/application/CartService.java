@@ -41,7 +41,7 @@ public class CartService {
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+        return cartItemDao.findIdsByMemberId(customerId);
     }
 
     public Long addCart(final Long productId, final String customerName) {
@@ -55,7 +55,7 @@ public class CartService {
 
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteById(cartId);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {

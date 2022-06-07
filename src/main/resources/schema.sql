@@ -29,9 +29,10 @@ create table product
 
 create table cart_item
 (
-    id          bigint not null auto_increment,
-    member_id bigint not null,
-    product_id  bigint not null,
+    id         bigint not null auto_increment,
+    member_id  bigint not null,
+    product_id bigint not null,
+    quantity   int    not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -45,7 +46,7 @@ alter table cart_item
 
 create table orders
 (
-    id          bigint not null auto_increment,
+    id        bigint not null auto_increment,
     member_id bigint not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
