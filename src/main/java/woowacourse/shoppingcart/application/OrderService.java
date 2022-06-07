@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -11,10 +10,10 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
+import woowacourse.shoppingcart.dto.order.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -64,23 +63,13 @@ public class OrderService {
         }
     }
 
-    public List<Order> findOrdersByCustomerName(final String customerName) {
+    public OrdersResponse findOrdersByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
-        return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
-                .collect(Collectors.toList());
+        return new OrdersResponse(orderIds.stream()
+                .map(orderId -> findOrderById(customerName, orderId))
+                .collect(Collectors.toList()));
     }
 
-    private Order findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
-//        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-//            final Product product = productDao.findProductById(productQuantity.getProductId());
-//            final int quantity = productQuantity.getQuantity();
-//            ordersDetails.add(new OrderDetail(product, quantity));
-//        }
-
-        return new Order(orderId, ordersDetails);
-    }
 }
