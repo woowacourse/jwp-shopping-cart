@@ -13,7 +13,7 @@ import woowacourse.shoppingcart.auth.application.AuthService;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.auth.dto.LoginRequest;
-import woowacourse.shoppingcart.exception.badrequest.InvalidLoginException;
+import woowacourse.shoppingcart.auth.exception.badrequest.InvalidLoginException;
 
 @SpringBootTest
 @Transactional

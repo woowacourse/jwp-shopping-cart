@@ -1,7 +1,6 @@
-package woowacourse.shoppingcart.exception.badrequest;
+package woowacourse.shoppingcart.exception;
 
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.exception.ShoppingCartException;
 
 public class BadRequestException extends ShoppingCartException {
 

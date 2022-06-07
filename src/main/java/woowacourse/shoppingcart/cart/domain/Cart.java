@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.cart.domain;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.exception.badrequest.InvalidQuantityException;
+import woowacourse.shoppingcart.customer.exception.badrequest.InvalidQuantityException;
 import woowacourse.shoppingcart.product.domain.Product;
 
 public class Cart {

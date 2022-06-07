@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.customer.domain;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.exception.badrequest.InvalidNicknameException;
+import woowacourse.shoppingcart.customer.exception.badrequest.InvalidNicknameException;
 
 public class Nickname {
 

@@ -1,4 +1,6 @@
-package woowacourse.shoppingcart.exception.badrequest;
+package woowacourse.shoppingcart.auth.exception.badrequest;
+
+import woowacourse.shoppingcart.exception.BadRequestException;
 
 public class InvalidLoginException extends BadRequestException {
 

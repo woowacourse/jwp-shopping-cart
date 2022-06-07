@@ -8,7 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.customer.domain.Password;
-import woowacourse.shoppingcart.exception.badrequest.InvalidPasswordException;
+import woowacourse.shoppingcart.customer.exception.badrequest.InvalidPasswordException;
 
 class PasswordTest {
 

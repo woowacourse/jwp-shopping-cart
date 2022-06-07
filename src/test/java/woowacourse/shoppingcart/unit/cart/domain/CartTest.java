@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.cart.domain.Cart;
-import woowacourse.shoppingcart.exception.badrequest.InvalidQuantityException;
+import woowacourse.shoppingcart.customer.exception.badrequest.InvalidQuantityException;
 import woowacourse.shoppingcart.product.domain.Product;
 
 class CartTest {

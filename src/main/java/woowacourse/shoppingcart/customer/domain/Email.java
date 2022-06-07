@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.customer.domain;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.badrequest.InvalidEmailException;
+import woowacourse.shoppingcart.customer.exception.badrequest.InvalidEmailException;
 
 public class Email {
 

@@ -6,7 +6,7 @@ import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
-import woowacourse.shoppingcart.exception.badrequest.DuplicateEmailException;
+import woowacourse.shoppingcart.customer.exception.badrequest.DuplicateEmailException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)

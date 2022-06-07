@@ -9,8 +9,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.customer.domain.Customer;
-import woowacourse.shoppingcart.exception.badrequest.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
+import woowacourse.shoppingcart.customer.exception.badrequest.InvalidCustomerException;
+import woowacourse.shoppingcart.customer.exception.notfound.NotFoundCustomerException;
 
 @Repository
 public class CustomerDao {

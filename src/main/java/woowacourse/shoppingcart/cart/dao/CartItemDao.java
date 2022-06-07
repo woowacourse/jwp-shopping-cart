@@ -9,8 +9,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.cart.domain.Cart;
-import woowacourse.shoppingcart.exception.badrequest.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.notfound.NotFoundCartException;
+import woowacourse.shoppingcart.cart.exception.badrequest.InvalidCartItemException;
+import woowacourse.shoppingcart.cart.exception.notfound.NotFoundCartException;
 
 @Repository
 public class CartItemDao {

@@ -16,8 +16,8 @@ import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
-import woowacourse.shoppingcart.exception.badrequest.DuplicateEmailException;
-import woowacourse.shoppingcart.exception.notfound.NotFoundCustomerException;
+import woowacourse.shoppingcart.customer.exception.badrequest.DuplicateEmailException;
+import woowacourse.shoppingcart.customer.exception.notfound.NotFoundCustomerException;
 
 @SpringBootTest
 @Transactional

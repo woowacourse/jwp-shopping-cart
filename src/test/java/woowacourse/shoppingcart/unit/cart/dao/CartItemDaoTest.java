@@ -16,7 +16,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
-import woowacourse.shoppingcart.exception.notfound.NotFoundCartException;
+import woowacourse.shoppingcart.cart.exception.notfound.NotFoundCartException;
 import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
 

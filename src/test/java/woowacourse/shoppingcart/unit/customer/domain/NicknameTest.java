@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.customer.domain.Nickname;
-import woowacourse.shoppingcart.exception.badrequest.InvalidNicknameException;
+import woowacourse.shoppingcart.customer.exception.badrequest.InvalidNicknameException;
 
 class NicknameTest {
 

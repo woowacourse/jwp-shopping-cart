@@ -21,7 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.shoppingcart.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.auth.dto.LoginResponse;
-import woowacourse.shoppingcart.exception.badrequest.InvalidLoginException;
+import woowacourse.shoppingcart.auth.exception.badrequest.InvalidLoginException;
 import woowacourse.shoppingcart.unit.ControllerTest;
 
 @DisplayName("AuthController 단위 테스트")
