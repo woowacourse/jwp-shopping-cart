@@ -168,7 +168,6 @@ class CustomerControllerTest {
     @DisplayName("중복 이름 확인 문서화")
     @Test
     void duplicateUserName() throws Exception {
-        Customer customer = new Customer(1L, "giron", "paA@14sswordd");
 
         DuplicateResponse response = new DuplicateResponse(false);
 
@@ -176,7 +175,6 @@ class CustomerControllerTest {
         given(customerService.isDuplicateUserName(any())).willReturn(response);
 
         ResultActions results = mvc.perform(get("/api/customers/duplication")
-                .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 .param("userName", "giron")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
