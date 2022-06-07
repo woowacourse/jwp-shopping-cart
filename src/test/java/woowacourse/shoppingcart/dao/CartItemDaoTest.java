@@ -72,6 +72,23 @@ public class CartItemDaoTest {
         );
     }
 
+    @DisplayName("커스터머 아이디와 프로덕트 아이디로 장바구니 아이템의 수량을 증가시킨다.")
+    @Test
+    void addCartItemQuantity() {
+        Long customerId = 1L;
+        Long productId = 1L;
+        int quantity = 2;
+
+        cartItemDao.updateQuantity(customerId, productId, quantity);
+
+        List<CartItem> carts =  cartItemDao.findCartItemsByCustomerId(customerId);
+
+        assertThat(carts).usingRecursiveComparison().ignoringFields("id").isEqualTo(
+                List.of(new CartItem(1L, 1L, "banana", 1_000, 2, "woowa1.com"),
+                        new CartItem(2L, 2L, "apple", 2_000, 1, "woowa2.com"))
+        );
+    }
+
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {

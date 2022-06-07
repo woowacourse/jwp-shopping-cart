@@ -78,4 +78,9 @@ public class CartItemDao {
         ), customerId);
         return query;
     }
+
+    public void updateQuantity(Long customerId, Long productId, int quantity) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE product_id = ? and customer_id = ?";
+        jdbcTemplate.update(sql, quantity, productId, customerId);
+    }
 }
