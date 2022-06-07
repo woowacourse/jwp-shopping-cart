@@ -86,4 +86,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(사용자_정보_삭제됨.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
+
+
+    public static TokenResponse 로그인_되어_있음(String email, String password) {
+        ExtractableResponse<Response> response = postLogin(email, password);
+        TokenResponse tokenResponse = response.as(TokenResponse.class);
+
+        return tokenResponse;
+    }
 }

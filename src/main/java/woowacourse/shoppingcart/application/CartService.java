@@ -7,7 +7,6 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 import java.util.ArrayList;
@@ -45,14 +44,12 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+    public Long saveCartItem(final Long productId, final Long customerId) {
+        productDao.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+        return cartItemDao.saveCartItem(customerId, productId);
     }
+
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
