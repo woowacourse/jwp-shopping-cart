@@ -35,7 +35,8 @@ public class JdbcOrderDao implements OrderDao{
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
+    @Override
+    public boolean isValidOrderId(final Long orderId, final int customerId) {
         final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId));
     }

@@ -147,7 +147,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         final List<ProductResponse> productResponses = cartItemResponses.getCart()
                 .stream()
-                .map(CartItemResponse::getProductResponse).collect(
+                .map(CartItemResponse::getProduct).collect(
                         Collectors.toList());
         final List<Integer> quantities = cartItemResponses.getCart().stream().map(CartItemResponse::getQuantity)
                 .collect(Collectors.toList());

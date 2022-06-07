@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.createCustomer;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.getTokenResponse;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
@@ -56,6 +57,16 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 주문_단일_조회_요청(Long orderId, String token) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/orders/{orderId}", orderId)
+                .then().log().all()
+                .extract();
+    }
+
     public static void 주문하기_성공함(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
@@ -73,16 +84,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
-    //
-    //    public static ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
-    //        return RestAssured
-    //                .given().log().all()
-    //                .contentType(MediaType.APPLICATION_JSON_VALUE)
-    //                .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
-    //                .then().log().all()
-    //                .extract();
-    //    }
-    //
+
     //
     public static Long 주문하기_요청_성공되어_있음(OrderRequest orderRequest, String token) {
         ExtractableResponse<Response> response = 주문하기_요청(orderRequest, token);
@@ -90,14 +92,27 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
 
-        public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        }
+    public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
 
-        public static void 주문_내역_포함됨(ExtractableResponse<Response> response, int orderCount) {
-            final List<OrderResponse> orders = response.jsonPath().getObject(".", OrderResponses.class).getOrders();
-            assertThat(orders.size()).isEqualTo(orderCount);
-        }
+    public static void 주문_내역_포함됨(ExtractableResponse<Response> response, int orderCount) {
+        final List<OrderResponse> orders = response.jsonPath().getObject(".", OrderResponses.class).getOrders();
+        assertThat(orders.size()).isEqualTo(orderCount);
+    }
+
+    private void 주문_조회됨(ExtractableResponse<Response> response) {
+        OrderResponse resultOrder = response.as(OrderResponse.class);
+        assertAll(
+                () -> assertThat(resultOrder.getTotalPrice()).isEqualTo(
+                        PRODUCT_REQUEST_1.getPrice() * 3 + PRODUCT_REQUEST_3.getPrice()),
+                () -> assertThat(resultOrder.getProducts()).hasSize(2)
+        );
+    }
+
+    private void 주문_조회_응답_안됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 
     @Override
     @BeforeEach
@@ -160,23 +175,26 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, 2);
     }
-//
-//    @DisplayName("주문 단일 조회")
-//    @Test
-//    void getOrder() {
-//        Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
-//                new OrderRequest(cartId1, 2),
-//                new OrderRequest(cartId2, 4)
-//        ));
-//
-//        ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
-//
-//        주문_조회_응답됨(response);
-//        주문_조회됨(response, orderId);
-//    }
-//
-//    private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-//        Orders resultOrder = response.as(Orders.class);
-//        assertThat(resultOrder.getId()).isEqualTo(orderId);
-//    }
+
+    @DisplayName("주문 단일 조회")
+    @Test
+    void getOrder() {
+        final Long orderId = 주문하기_요청_성공되어_있음(orderRequest1, token);
+
+        ExtractableResponse<Response> response = 주문_단일_조회_요청(orderId, token);
+
+        주문_조회_응답됨(response);
+        주문_조회됨(response);
+    }
+
+    @DisplayName("잘못된 주문 정보 단일 조회 실패")
+    @Test
+    void getOrderByInvalidOrderId() {
+        final Long orderId = 주문하기_요청_성공되어_있음(orderRequest1, token);
+
+        ExtractableResponse<Response> response = 주문_단일_조회_요청(orderId + 1, token);
+
+        주문_조회_응답_안됨(response);
+    }
+
 }

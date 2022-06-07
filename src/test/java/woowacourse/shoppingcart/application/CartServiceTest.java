@@ -199,7 +199,7 @@ class CartServiceTest {
     private List<ProductResponse> getProductResponses(CartItemResponses cartResponses) {
         return cartResponses.getCart()
                 .stream()
-                .map(CartItemResponse::getProductResponse).collect(
+                .map(CartItemResponse::getProduct).collect(
                         Collectors.toList());
     }
 }

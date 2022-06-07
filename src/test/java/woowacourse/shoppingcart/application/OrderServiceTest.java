@@ -29,6 +29,7 @@ import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.dto.OrderResponses;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @JdbcTest
 class OrderServiceTest {
@@ -99,5 +100,43 @@ class OrderServiceTest {
                         PRODUCT_1.getPrice() * 3 + PRODUCT_2.getPrice() * 5,
                         PRODUCT_1.getPrice() * 4 + PRODUCT_2.getPrice() * 9)
         );
+    }
+
+    @DisplayName("사용자의 단건 주문을 조회한다.")
+    @Test
+    public void findOrder() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long productId2 = productDao.save(PRODUCT_2);
+
+        final Long orderId = orderService.addOrders(customerId,
+                new OrderRequest(List.of(new CartRequest(productId1, 3), new CartRequest(productId2, 5))));
+
+        // when
+        OrderResponse orderResponse = orderService.findOrder(orderId, customerId);
+
+        // then
+        assertAll(
+                () -> assertThat(orderResponse.getProducts()).hasSize(2),
+                () -> assertThat(orderResponse.getTotalPrice()).isEqualTo(
+                        PRODUCT_1.getPrice() * 3 + PRODUCT_2.getPrice() * 5)
+        );
+    }
+
+    @DisplayName("없는 주문 정보를 조회 시 예외 발생")
+    @Test
+    public void findOrderByInvalidOrder() {
+        // given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long productId2 = productDao.save(PRODUCT_2);
+
+        final Long orderId = orderService.addOrders(customerId,
+                new OrderRequest(List.of(new CartRequest(productId1, 3), new CartRequest(productId2, 5))));
+
+        // when & then
+        assertThatThrownBy(() -> orderService.findOrder(orderId + 1, customerId))
+                .isInstanceOf(InvalidOrderException.class);
     }
 }

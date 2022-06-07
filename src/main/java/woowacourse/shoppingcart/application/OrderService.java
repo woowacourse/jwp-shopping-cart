@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.dto.OrderResponses;
 import woowacourse.shoppingcart.entity.OrdersDetailEntity;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -84,7 +85,7 @@ public class OrderService {
 
     private int getTotalPrice(List<CartItemResponse> cartItemResponses) {
         return cartItemResponses.stream()
-                .mapToInt(cartItemResponse -> cartItemResponse.getProductResponse().getPrice()
+                .mapToInt(cartItemResponse -> cartItemResponse.getProduct().getPrice()
                         * cartItemResponse.getQuantity())
                 .sum();
     }
@@ -94,5 +95,20 @@ public class OrderService {
         final Product product = productDao.findProductById(ordersDetailEntity.getProduct_id());
         final int quantity = ordersDetailEntity.getQuantity();
         return new CartItemResponse(convertResponseToProduct(product), quantity);
+    }
+
+    public OrderResponse findOrder(Long orderId, int customerId) {
+        validateOrderId(orderId, customerId);
+        final List<OrdersDetailEntity> ordersDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
+        final List<CartItemResponse> cartItemResponses = getCartItemResponse(ordersDetails);
+        final int totalPrice = getTotalPrice(cartItemResponses);
+
+        return new OrderResponse(cartItemResponses, totalPrice);
+    }
+
+    private void validateOrderId(Long orderId, int customerId) {
+        if (!orderDao.isValidOrderId(orderId, customerId)) {
+            throw new InvalidOrderException();
+        }
     }
 }

@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.application.OrderService;
 
-import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
+import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.dto.OrderResponses;
 
 @Validated
@@ -38,8 +36,15 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<OrderResponses> findOrder(@AuthenticationPrincipal final int customerId) {
+    public ResponseEntity<OrderResponses> findOrders(@AuthenticationPrincipal final int customerId) {
         final OrderResponses orderResponses = orderService.findOrdersByCustomerId(customerId);
         return ResponseEntity.ok(orderResponses);
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponse> findOrder(@AuthenticationPrincipal final int customerId,
+                                                    @PathVariable Long orderId) {
+        final OrderResponse orderResponse = orderService.findOrder(orderId, customerId);
+        return ResponseEntity.ok(orderResponse);
     }
 }

@@ -60,4 +60,31 @@ class OrderDaoTest {
         assertThat(orderIdsByCustomerId).hasSize(2).contains(orderId1, orderId2);
     }
 
+    @DisplayName("주어진 orderId, customerId와 일치하는 Order가 있는 지 확인")
+    @Test
+    void hasOrderByOrderIdAndCustomerId() {
+        //given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long orderId1 = orderDao.addOrders(customerId);
+
+        //when
+        final boolean result = orderDao.isValidOrderId(orderId1, customerId);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("주어진 orderId, customerId와 일치하는 Order가 없는 지 확인")
+    @Test
+    void hasOrderByInvalidOrderIdAndCustomerId() {
+        //given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long orderId1 = orderDao.addOrders(customerId);
+
+        //when
+        final boolean result = orderDao.isValidOrderId(orderId1 + 1, customerId);
+
+        //then
+        assertThat(result).isFalse();
+    }
 }

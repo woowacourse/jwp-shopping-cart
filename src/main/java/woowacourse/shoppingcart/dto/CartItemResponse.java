@@ -1,19 +1,19 @@
 package woowacourse.shoppingcart.dto;
 
 public class CartItemResponse {
-    private ProductResponse productResponse;
+    private ProductResponse product;
     private int quantity;
 
     public CartItemResponse() {
     }
 
-    public CartItemResponse(ProductResponse productResponse, int quantity) {
-        this.productResponse = productResponse;
+    public CartItemResponse(ProductResponse product, int quantity) {
+        this.product = product;
         this.quantity = quantity;
     }
 
-    public ProductResponse getProductResponse() {
-        return productResponse;
+    public ProductResponse getProduct() {
+        return product;
     }
 
     public int getQuantity() {
@@ -23,7 +23,7 @@ public class CartItemResponse {
     @Override
     public String toString() {
         return "CartResponse{" +
-                "productResponse=" + productResponse +
+                "product=" + product +
                 ", quantity=" + quantity +
                 '}';
     }
