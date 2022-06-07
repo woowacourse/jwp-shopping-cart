@@ -18,7 +18,6 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -55,10 +54,9 @@ class CustomerServiceTest {
     @ParameterizedTest
     @DisplayName("중복 여부를 검사한다.")
     @CsvSource({"forky, true", "kth990303, false"})
-    void checkDuplication(String userName, boolean expected) {
+    void checkDuplication(String username, boolean expected) {
         customerService.addCustomer(customerRequest1);
-        UserNameDuplicationRequest request = new UserNameDuplicationRequest(userName);
-        UserNameDuplicationResponse response = customerService.checkDuplication(request);
+        UserNameDuplicationResponse response = customerService.checkDuplication(username);
         assertThat(response.getIsUnique()).isEqualTo(expected);
     }
 

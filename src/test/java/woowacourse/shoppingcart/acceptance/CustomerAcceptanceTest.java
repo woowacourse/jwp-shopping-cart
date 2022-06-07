@@ -14,7 +14,6 @@ import woowacourse.fixture.SimpleRestAssured;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @DisplayName("회원 관련 기능")
@@ -38,13 +37,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("아이디가 중복되지 않을 때, 아이디 중복 여부를 검사한다.")
     @Test
     void checkDuplicationUserName_unique() {
-        //given
-        signUpCustomer();
-        UserNameDuplicationRequest request = new UserNameDuplicationRequest("kth990303");
-
-        //when
-        SimpleResponse response = SimpleRestAssured.get("/customers/username/duplication", request);
-
+        //given & when
+        SimpleResponse response = SimpleRestAssured.getWithParam("/customers/username/uniqueness",
+                "username", "pocky");
         //then
         response.assertStatus(HttpStatus.OK);
         response.assertBody("isUnique", true);
@@ -55,10 +50,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void checkDuplicationUserName_duplicated() {
         //given
         signUpCustomer();
-        UserNameDuplicationRequest request = new UserNameDuplicationRequest("forky");
 
         //when
-        SimpleResponse response = SimpleRestAssured.get("/customers/username/duplication", request);
+        SimpleResponse response = SimpleRestAssured.getWithParam("/customers/username/uniqueness",
+                "username", "forky");
 
         //then
         response.assertStatus(HttpStatus.OK);
@@ -89,7 +84,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe_unauthorized() {
         //given & when
-        SimpleResponse response = SimpleRestAssured.get("/customers/me");
+        SimpleResponse response = SimpleRestAssured.getWithBody("/customers/me");
 
         //then
         response.assertStatus(HttpStatus.UNAUTHORIZED);

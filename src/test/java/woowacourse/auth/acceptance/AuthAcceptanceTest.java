@@ -69,7 +69,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("토큰 없이 회원 관련 기능에 접근할 경우 요청이 거부된다.")
     @Test
     void myInfoWithNoAuth() {
-        SimpleRestAssured.get("/customers/me")
+        SimpleRestAssured.getWithBody("/customers/me")
                 .toObject(AuthorizationException.class);
     }
 

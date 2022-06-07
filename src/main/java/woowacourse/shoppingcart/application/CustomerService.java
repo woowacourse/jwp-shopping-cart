@@ -7,7 +7,6 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
 import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
 
 @Transactional
@@ -34,8 +33,8 @@ public class CustomerService {
         }
     }
 
-    public UserNameDuplicationResponse checkDuplication(UserNameDuplicationRequest userNameDuplicationRequest) {
-        boolean isUnique = !customerDao.isUsernameExist(userNameDuplicationRequest.getUsername());
+    public UserNameDuplicationResponse checkDuplication(String username) {
+        boolean isUnique = !customerDao.isUsernameExist(username);
         return new UserNameDuplicationResponse(isUnique);
     }
 

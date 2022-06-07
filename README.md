@@ -56,7 +56,7 @@
 ## 1단계
 
 - 회원 가입 `POST /customers` → `201 CREATED`
-- 아이디 중복 확인 `GET /customers/username/duplication` -> `200 OK`
+- 아이디 중복 확인 `GET /customers/username/uniqueness` -> `200 OK`
   - `{isUnique}`
 - 로그인 `POST /login` → `200 OK`
     - 아이디와 비밀번호 확인
