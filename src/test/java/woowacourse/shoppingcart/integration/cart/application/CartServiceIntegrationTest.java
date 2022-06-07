@@ -50,6 +50,27 @@ class CartServiceIntegrationTest {
     }
 
     @Test
+    @DisplayName("Customer의 장바구니에 들어있는 모든 Cart를 조회한다.")
+    void findCartsBy() {
+        // given
+        final List<Long> expectedProductIds = List.of(3L, 1L, 4L, 2L);
+        for (final Long productId : expectedProductIds) {
+            cartItemDao.addCartItem(customer.getId(), productId);
+        }
+
+        // when
+        final List<Cart> actual = cartService.findCartsBy(customer);
+
+        final List<Long> actualProductIds = actual.stream()
+                .map(Cart::getProduct)
+                .map(Product::getId)
+                .collect(Collectors.toList());
+
+        // then
+        assertThat(actualProductIds).isEqualTo(expectedProductIds);
+    }
+
+    @Test
     @DisplayName("장바구니에 상품을 추가한다.")
     void addCart_newItem_voidReturned() {
         // given
