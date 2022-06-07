@@ -37,3 +37,4 @@ out/
 .vscode/
 
 log
+src/main/resources/application-prod.properties
