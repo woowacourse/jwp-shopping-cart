@@ -80,11 +80,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
-    }
-
     public static Long 토큰으로_장바구니_아이템_추가되어_있음(String accessToken, Long productId) {
         ExtractableResponse<Response> response = 토큰으로_장바구니_아이템_추가_요청(accessToken, productId);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
@@ -107,20 +102,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_제품_갯수_수정됨(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        // TODO 레거시
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
-                .then().log().all()
-                .extract();
     }
 
     @Override

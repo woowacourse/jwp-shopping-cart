@@ -51,15 +51,12 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
+    public Orders findOrderById(final Long customerId, final Long orderId) {
+        validateOrderIdByCustomerName(customerId, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(CustomerNotFoundException::new);
-
+    private void validateOrderIdByCustomerName(final Long customerId, final Long orderId) {
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }

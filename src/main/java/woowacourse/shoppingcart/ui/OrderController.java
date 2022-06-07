@@ -30,10 +30,10 @@ public class OrderController {
                 URI.create("/api/" + customerId + "/orders/" + orderId)).build();
     }
 
-    @GetMapping("/customers/{customerName}/orders/{orderId}")
-    public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
+    @GetMapping("/customer/orders/{orderId}")
+    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal final Long customerId,
                                             @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customerName, orderId);
+        final Orders order = orderService.findOrderById(customerId, orderId);
         return ResponseEntity.ok(order);
     }
 
