@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
+import static woowacourse.auth.acceptance.AuthAcceptanceTest.*;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
 
 import java.util.HashMap;
@@ -13,15 +14,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
+    private Header header;
     private Long productId1;
     private Long productId2;
 
@@ -34,6 +39,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ProductRequest productRequest2 = new ProductRequest("맥주", 20_000, 10,
             new ThumbnailImageDto("http://example.com/beer.jpg", "이미지입니다."));
 
+        header = getTokenHeader();
         productId1 = getAddedProductId(productRequest1);
         productId2 = getAddedProductId(productRequest2);
     }
@@ -42,7 +48,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Test
     void addCartItem() {
         ExtractableResponse<Response> response = requestToAddCartItem(USER, productId1);
-
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
@@ -82,5 +87,19 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public static Long getAddedCartItemId(String userName, Long productId) {
         ExtractableResponse<Response> response = requestToAddCartItem(userName, productId);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
+    }
+
+    private Header getTokenHeader() {
+        final CustomerRequest customerRequest =
+            new CustomerRequest("email@email.com", "password1!", "dwoo");
+        AcceptanceFixture.post(customerRequest, "/api/customers");
+
+        final TokenRequest tokenRequest = new TokenRequest(customerRequest.getEmail(), customerRequest.getPassword());
+        final ExtractableResponse<Response> loginResponse = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
+
+        // when
+        final String accessToken = extractAccessToken(loginResponse);
+
+        return new Header("Authorization", BEARER + accessToken);
     }
 }

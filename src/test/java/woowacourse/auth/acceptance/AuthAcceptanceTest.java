@@ -21,7 +21,7 @@ import woowacourse.shoppingcart.dto.CustomerResponse;
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    private static final String BEARER = "Bearer ";
+    public static final String BEARER = "Bearer ";
     private static final int LOGIN_FAIL = 2001;
     private static final int INVALID_TOKEN = 3002;
 
@@ -80,7 +80,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(extractErrorCode(myInfoResponse)).isEqualTo(INVALID_TOKEN);
     }
 
-    private String extractAccessToken(ExtractableResponse<Response> response) {
+    public static String extractAccessToken(ExtractableResponse<Response> response) {
         return response.jsonPath()
             .getObject(".", TokenResponse.class)
             .getAccessToken();
