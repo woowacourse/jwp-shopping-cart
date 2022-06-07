@@ -99,7 +99,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         }
     }
 
-    private void 회원가입_요청() {
+    public static void 회원가입_요청() {
         SignUpRequest newCustomer = new SignUpRequest(USERNAME, PASSWORD, "닉네임", 15);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -108,13 +108,13 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .then().log().all();
     }
 
-    private String 유효한_로그인_요청() {
+    public static String 유효한_로그인_요청() {
         return 로그인_요청(new TokenRequest(USERNAME, PASSWORD))
                 .as(TokenResponse.class)
                 .getAccessToken();
     }
 
-    private ExtractableResponse<Response> 로그인_요청(Object json) {
+    private static ExtractableResponse<Response> 로그인_요청(Object json) {
         return RestAssured
                 .given().log().all()
                 .body(json)
