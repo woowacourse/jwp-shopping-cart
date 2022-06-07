@@ -35,7 +35,7 @@ public class OrderService {
 
     public Long addOrder(final List<Long> cartIds, final String customerName) {
         final Long customerId = customerDao.getIdByEmail(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
+        final Long ordersId = orderDao.save(customerId);
 
         for (Long cartId : cartIds) {
             Cart cart = cartItemDao.getById(cartId);
@@ -52,7 +52,7 @@ public class OrderService {
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
         final Long customerId = customerDao.getIdByEmail(customerName);
 
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
+        if (!orderDao.validOrderIdAndCustomerId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
@@ -67,7 +67,7 @@ public class OrderService {
     }
 
     private OrderResponse findOrderResponseDtoByOrderId(final Long orderId) {
-        List<OrderedProduct> orderedProducts = orderedProductDao.findOrderedProductByOrderId(orderId);
+        List<OrderedProduct> orderedProducts = orderedProductDao.getAllByOrderId(orderId);
         return new OrderResponse(orderId, orderedProducts);
     }
 }

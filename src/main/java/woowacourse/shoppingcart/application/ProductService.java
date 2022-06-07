@@ -19,7 +19,7 @@ public class ProductService {
     }
 
     public List<ProductResponse> findProducts() {
-        List<Product> products = productDao.findProducts();
+        List<Product> products = productDao.getAll();
 
         return products.stream()
                 .map(ProductResponse::new)
@@ -34,7 +34,7 @@ public class ProductService {
     }
 
     public ProductResponse findProductById(final Long productId) {
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.getById(productId);
         return new ProductResponse(product);
     }
 

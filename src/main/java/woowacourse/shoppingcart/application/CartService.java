@@ -44,7 +44,7 @@ public class CartService {
     public Long addCart(final Long productId, final int quantity, final String email) {
         final Long customerId = customerDao.getIdByEmail(email);
         try {
-            return cartItemDao.addCartItem(customerId, quantity, productId);
+            return cartItemDao.save(customerId, quantity, productId);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -53,7 +53,7 @@ public class CartService {
     public void deleteCarts(final String email, final List<Long> cartIds) {
         for (Long cartId : cartIds) {
             validateCustomerCart(cartId, email);
-            cartItemDao.deleteCartItem(cartId);
+            cartItemDao.delete(cartId);
         }
     }
 

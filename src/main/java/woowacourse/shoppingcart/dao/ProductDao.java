@@ -47,16 +47,16 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Product getById(final Long id) {
         try {
             final String query = "SELECT id, name, price, stock_quantity, url, alt FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, productId);
+            return jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, id);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
         }
     }
 
-    public List<Product> findProducts() {
+    public List<Product> getAll() {
         final String query = "SELECT id, name, price, stock_quantity, url, alt FROM product";
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
     }

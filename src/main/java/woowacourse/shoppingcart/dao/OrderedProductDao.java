@@ -44,10 +44,11 @@ public class OrderedProductDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<OrderedProduct> findOrderedProductByOrderId(final Long orderId) {
+    public List<OrderedProduct> getAllByOrderId(final Long orderId) {
         final String sql = "SELECT op.product_id, op.quantity, p.price, p.name, p.url, p.alt "
                 + "FROM ordered_product as op, product as p "
                 + "WHERE orders_id = ? AND op.product_id = p.id";
+
         return jdbcTemplate.query(sql, ORDERED_PRODUCT_ROW_MAPPER, orderId);
     }
 }
