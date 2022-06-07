@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 public class Cart {
 
@@ -14,10 +15,17 @@ public class Cart {
     }
 
     public Cart(final Long id, final Long memberId, final Product product, final int quantity) {
+        validateCartQuantity(quantity);
         this.id = id;
         this.memberId = memberId;
         this.product = product;
         this.quantity = quantity;
+    }
+
+    private void validateCartQuantity(final int quantity) {
+        if (quantity < 1) {
+            throw new InvalidCartItemException("[ERROR] 장바구니 물품 개수를 1개 이상 입력해주세요.");
+        }
     }
 
     public Long getId() {
