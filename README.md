@@ -119,6 +119,7 @@
 - 장바구니 상품 제거 `DELETE /cart/products` -> `204 No Content`
   - request body {productIds: []}
 - 장바구니 비우기 `DELETE /cart` -> `204 No Content`
-- 장바구니 상품 구매 `POST /orders` -> `200 OK`
+- 장바구니 상품 구매 `POST /orders` -> `201 Created`
   - request body {productIds: []}
   - 구매한 후에는 장바구니 비워짐
+  - Location `/orders/{orderId}`

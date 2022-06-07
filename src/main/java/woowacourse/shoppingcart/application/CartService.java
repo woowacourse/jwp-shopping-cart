@@ -62,6 +62,10 @@ public class CartService {
     }
 
     public void deleteCartItems(CartItemsRequest cartItemsRequest, String username) {
-
+        Long customerId = customerDao.getIdByUserName(username);
+        List<Long> productIds = cartItemsRequest.getProductIds();
+        for (Long productId : productIds) {
+            cartItemDao.deleteCartItem(productId, customerId);
+        }
     }
 }
