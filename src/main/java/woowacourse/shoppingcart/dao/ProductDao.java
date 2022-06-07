@@ -56,6 +56,12 @@ public class ProductDao {
         return jdbcTemplate.query(query, ROW_MAPPER);
     }
 
+    public boolean existsById(Long id) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM product WHERE id = :id)";
+        SqlParameterSource source = new MapSqlParameterSource("id", id);
+        return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, source, Boolean.class));
+    }
+
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = :productId";
         SqlParameterSource source = new MapSqlParameterSource("productId", productId);

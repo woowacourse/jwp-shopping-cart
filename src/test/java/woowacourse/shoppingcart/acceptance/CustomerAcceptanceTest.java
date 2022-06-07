@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.LOCATION;
-import static woowacourse.shoppingcart.acceptance.AcceptanceUtil.findValue;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -581,89 +580,11 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         return String.valueOf(response.body().jsonPath().getMap("phoneNumber").get(value));
     }
 
-    private Map<String, Object> 회원_정보(String account, String nickname, String password, String address, String start,
-                                      String middle, String last) {
-        Map<String, Object> request = new HashMap<>();
-        request.put("account", account);
-        request.put("nickname", nickname);
-        request.put("password", password);
-        request.put("address", address);
-        request.put("phoneNumber", 휴대폰_정보(start, middle, last));
-        return request;
-    }
-
-    private Map<String, String> 휴대폰_정보(String start, String middle, String last) {
-        Map<String, String> phoneNumber = new HashMap<>();
-        phoneNumber.put("start", start);
-        phoneNumber.put("middle", middle);
-        phoneNumber.put("last", last);
-        return phoneNumber;
-    }
-
-    private ExtractableResponse<Response> 회원_가입(Map<String, Object> request) {
-        return RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/signup")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 로그인_후_토큰_발급(String account, String password) {
-        Map<String, Object> request = new HashMap<>();
-        request.put("account", account);
-        request.put("password", password);
-
-        return RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/signin")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private String 회원_가입_후_토큰_발급(String account, String password) {
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
-
-        return findValue(로그인_후_토큰_발급(account, password), "accessToken");
-    }
-
     private ExtractableResponse<Response> 회원_조회(String accessToken) {
-        return RestAssured.given()
-                .log().all()
+        return RestAssured.given().log().all()
                 .header(AUTHORIZATION, BEARER + accessToken)
-                .when()
-                .get("/customers")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 회원_탈퇴(String accessToken, String password) {
-        Map<String, Object> request = new HashMap<>();
-        request.put("password", password);
-
-        return RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + accessToken)
-                .body(request)
-                .when()
-                .delete("/customers")
-                .then()
-                .log().all()
+                .when().get("/customers")
+                .then().log().all()
                 .extract();
     }
 
@@ -676,15 +597,12 @@ class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     private ExtractableResponse<Response> 회원_수정(String accessToken, Map<String, Object> request) {
-        return RestAssured.given()
-                .log().all()
+        return RestAssured.given().log().all()
                 .header(AUTHORIZATION, BEARER + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when()
-                .put("/customers")
-                .then()
-                .log().all()
+                .when().put("/customers")
+                .then().log().all()
                 .extract();
     }
 }

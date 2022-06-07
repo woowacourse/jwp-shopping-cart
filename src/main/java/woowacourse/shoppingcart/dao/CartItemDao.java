@@ -21,8 +21,8 @@ public class CartItemDao {
 
     private static final RowMapper<CartItemEntity> ROW_MAPPER = (rs, rownum) -> new CartItemEntity(
             rs.getLong("id"),
-            rs.getLong("product_id"),
-            rs.getLong("customer_id")
+            rs.getLong("customer_id"),
+            rs.getLong("product_id")
     );
 
     public CartItemDao(NamedParameterJdbcTemplate jdbcTemplate) {

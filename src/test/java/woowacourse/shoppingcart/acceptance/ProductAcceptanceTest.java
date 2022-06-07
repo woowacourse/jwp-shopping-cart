@@ -2,14 +2,11 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
-import static woowacourse.shoppingcart.acceptance.AcceptanceUtil.findValue;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -29,7 +26,13 @@ class ProductAcceptanceTest extends AcceptanceTest {
         // given
 
         // when
-        ExtractableResponse<Response> response = 상품_등록("치킨", 10_000, "http://example.com/chicken.jpg");
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(상품_정보("치킨", 10_000, "http://example.com/chicken.jpg"))
+                .when().post("/products")
+                .then().log().all()
+                .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -116,26 +119,4 @@ class ProductAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private Long 상품_등록_후_id_반환(String name, int price, String imageUrl) {
-        ExtractableResponse<Response> response = 상품_등록(name, price, imageUrl);
-        return Long.parseLong(response.header(LOCATION).split("/products/")[1]);
-    }
-
-    private ExtractableResponse<Response> 상품_등록(String name, int price, String imageUrl) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(상품_정보(name, price, imageUrl))
-                .when().post("/products")
-                .then().log().all()
-                .extract();
-    }
-
-    private Map<String, Object> 상품_정보(String name, int price, String imageUrl) {
-        Map<String, Object> request = new HashMap<>();
-        request.put("name", name);
-        request.put("price", price);
-        request.put("imageUrl", imageUrl);
-        return request;
-    }
 }
