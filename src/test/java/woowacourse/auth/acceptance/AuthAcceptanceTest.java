@@ -68,7 +68,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.getMessage()).isEqualTo("Email 또는 Password가 일치하지 않습니다.");
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @DisplayName("Bearer Auth 유효하지 않은 토큰일 경우, 예외를 발생시킨다.")
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
@@ -85,13 +85,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.getMessage()).isEqualTo("유효하지 않거나 만료된 토큰입니다.");
     }
 
-    @DisplayName("Bearer Auth 토큰이 없는 경우")
+    @DisplayName("Bearer Auth 토큰이 없는 경우 예외를 발생시킨다.")
     @Test
     void myInfoWithEmptyBearerAuth() {
         // when
-        String accessToken = "";
         ExceptionResponse response = RestAssured.given().log().all()
-                .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/customers")
