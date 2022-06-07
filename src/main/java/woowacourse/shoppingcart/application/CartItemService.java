@@ -36,7 +36,9 @@ public class CartItemService {
 
     public List<CartItemQuantityResponse> addCartItems(final TokenRequest tokenRequest,
                                                        final List<ProductIdRequest> productIdRequests) {
-        return null;
+        List<Long> productIds = productIdRequests.stream().map(ProductIdRequest::getId).collect(Collectors.toList());
+        List<CartItem> cartItems = cartItemRepository.addCartItems(tokenRequest.getId(), productIds);
+        return cartItems.stream().map(CartItemQuantityResponse::of).collect(Collectors.toList());
     }
 
     public CartItemQuantityResponse updateCartItem(final TokenRequest tokenRequest,

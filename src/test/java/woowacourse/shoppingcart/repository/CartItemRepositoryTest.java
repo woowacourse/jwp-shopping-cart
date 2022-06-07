@@ -46,4 +46,24 @@ class CartItemRepositoryTest {
                         .containsExactly(5, 7, 9)
         );
     }
+
+    @DisplayName("입력 받은 상품 id 들을 이용해서 장바구니에 새로운 물품을 추가한다.")
+    @Test
+    void addCartItems() {
+        // given
+        Long customerId = 1L;
+        List<Long> productIds = List.of(3L, 4L);
+
+        // when
+        List<CartItem> cartItems = cartItemRepository.addCartItems(customerId, productIds);
+
+        // then
+        assertAll(
+                () -> assertThat(cartItems.size()).isEqualTo(2),
+                () -> assertThat(cartItems.get(0).getProductId()).isEqualTo(3L),
+                () -> assertThat(cartItems.get(0).getQuantity()).isEqualTo(10),
+                () -> assertThat(cartItems.get(1).getProductId()).isEqualTo(4L),
+                () -> assertThat(cartItems.get(1).getQuantity()).isEqualTo(1)
+        );
+    }
 }

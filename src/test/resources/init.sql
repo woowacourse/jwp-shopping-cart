@@ -42,6 +42,9 @@ create table cart_item
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table cart_item
+    add unique key (product_id);
+
+alter table cart_item
     add constraint fk_cart_item_to_customer
         foreign key (customer_id) references customer (id);
 

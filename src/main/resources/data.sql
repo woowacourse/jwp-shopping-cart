@@ -514,7 +514,7 @@ values (
            'https://cdn-mart.baemin.com/goods/93/500.jpg'
        );
 
-insert into cart_item (customer_id, product_id, quantity)
-values (1, 1, 5),
-       (1, 2, 7),
-       (1, 3, 9);
+-- insert into cart_item (customer_id, product_id, quantity)
+-- values (1, 1, 5),
+--        (1, 2, 7),
+--        (1, 3, 9);
