@@ -8,9 +8,7 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,24 +20,24 @@ import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.acceptance.AuthAcceptanceTest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.CartItemRequest;
 
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+public class CartItemAcceptanceTest extends AcceptanceTest {
     private String accessToken;
 
     private Long productId1;
     private Long productId2;
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
+        CartItemRequest cartItemRequest = new CartItemRequest(productId, 10);
 
         return RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
+                .body(cartItemRequest)
                 .when().post("/api/customers/cart")
                 .then().log().all()
                 .extract();
@@ -80,8 +78,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
+        List<Long> resultProductIds = response.jsonPath().getList(".", CartItem.class).stream()
+                .map(cartItem -> cartItem.getProduct().getId())
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }
@@ -161,7 +159,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         AuthAcceptanceTest.토큰이_만료됨(response);
     }
-
 
     @DisplayName("장바구니 삭제")
     @Test

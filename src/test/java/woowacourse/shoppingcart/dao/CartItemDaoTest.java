@@ -1,10 +1,17 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.Fixtures.EMAIL_VALUE_1;
+import static woowacourse.Fixtures.PASSWORD_VALUE_1;
+import static woowacourse.Fixtures.PRODUCT_DESCRIPTION_VALUE_1;
+import static woowacourse.Fixtures.PRODUCT_NAME_VALUE_1;
+import static woowacourse.Fixtures.PRODUCT_PRICE_VALUE_1;
+import static woowacourse.Fixtures.PRODUCT_STOCK_VALUE_1;
+import static woowacourse.Fixtures.PROFILE_IMAGE_URL_VALUE_1;
+import static woowacourse.Fixtures.TERMS_1;
 
-import java.util.List;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,94 +19,46 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.entity.CustomerEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
+    private final CustomerDao customerDao;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private Long customerId;
+
+    public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
+        customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
     }
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", "this is banana", 1_000, 10, "woowa1.com"));
-        productDao.save(new Product("apple", "this is apple", 2_000, 10, "woowa2.com"));
+        customerId = (long) customerDao.save(
+                new CustomerEntity(EMAIL_VALUE_1, PASSWORD_VALUE_1, PROFILE_IMAGE_URL_VALUE_1, TERMS_1));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        productDao.save(new Product(PRODUCT_NAME_VALUE_1, PRODUCT_DESCRIPTION_VALUE_1, PRODUCT_PRICE_VALUE_1,
+                PRODUCT_STOCK_VALUE_1, PROFILE_IMAGE_URL_VALUE_1));
     }
 
-    @Disabled
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")
     @Test
     void addCartItem() {
-
         // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
+        Product product = new Product(1L, "banana", "this is banana", 1_000, 10, "woowa1.com");
+        CartItem cartItem = new CartItem(customerId, product, 10);
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(customerId, cartItem);
 
         // then
-        assertThat(cartId).isEqualTo(3L);
-    }
-
-    @Disabled
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
-    @Test
-    void findProductIdsByCustomerId() {
-
-        // given
-        final Long customerId = 1L;
-
-        // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        // then
-        assertThat(productsIds).containsExactly(1L, 2L);
-    }
-
-    @Disabled
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    @Test
-    void findIdsByCustomerId() {
-
-        // given
-        final Long customerId = 1L;
-
-        // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-
-        // then
-        assertThat(cartIds).containsExactly(1L, 2L);
-    }
-
-    @Disabled
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    @Test
-    void deleteCartItem() {
-
-        // given
-        final Long cartId = 1L;
-
-        // when
-        cartItemDao.deleteCartItem(cartId);
-
-        // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        assertThat(productIds).containsExactly(2L);
+        assertThat(cartId).isNotNull();
     }
 }

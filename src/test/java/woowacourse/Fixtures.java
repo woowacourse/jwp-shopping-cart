@@ -69,7 +69,12 @@ public class Fixtures {
 
     // etc
     public static final String EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJodWRpIiwiaWF0IjoxNjU0NDA1NDkzLCJleHAiOjE2NTQ0MDU0OTN9.azYu1VAO1BkS9u1tfZGK6VlHwi9CPA-CAIgWH5KF1bM\n";
-
+    // product1
+    public static final String PRODUCT_NAME_VALUE_1 = "치킨";
+    public static final String PRODUCT_DESCRIPTION_VALUE_1 = "치킨 입니다";
+    public static final Integer PRODUCT_PRICE_VALUE_1 = 15_000;
+    public static final Integer PRODUCT_STOCK_VALUE_1 = 10;
+    public static final String PRODUCT_IMAGE_URL_VALUE_1 = "http://image.com/1234";
     // invalid fixtures
     public static CustomerRequest CUSTOMER_INVALID_REQUEST_1 = new CustomerRequest("seongwoo0513", "string&123",
             "http://gravatar.com/avatar/1?d=identicon",
