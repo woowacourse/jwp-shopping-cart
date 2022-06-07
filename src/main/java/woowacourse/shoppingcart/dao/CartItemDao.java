@@ -4,14 +4,27 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<CartItem> cartItemRowMapper = ((rs, rowNum) ->
+            new CartItem(
+                    rs.getLong("id"),
+                    rs.getLong("productId"),
+                    rs.getString("name"),
+                    rs.getInt("price"),
+                    rs.getInt("quantity"),
+                    rs.getString("imageUrl")
+            )
+    );
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -27,6 +40,20 @@ public class CartItemDao {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+    }
+
+    public CartItem findById(final Long id) {
+        try {
+            final String sql = "SELECT c.id as id, c.product_id as productId, p.name as name, p.price as price, "
+                    + "c.quantity as quantity, p.image_url as imageUrl "
+                    + "FROM cart_item c "
+                    + "JOIN product p ON c.product_id = p.id "
+                    + "WHERE c.id = ?";
+
+            return jdbcTemplate.queryForObject(sql, cartItemRowMapper, id);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
     }
 
     public Long findProductIdById(final Long cartId) {

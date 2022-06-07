@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
@@ -34,8 +35,8 @@ public class CartItemItemDaoTest {
         productDao.save(new Product("banana", 1_000, 20, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, 10, "woowa2.com"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 30);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 20);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 10);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 5);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
@@ -82,18 +83,34 @@ public class CartItemItemDaoTest {
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
+    @DisplayName("장바구니 정보를 반환한다.")
+    @Test
+    void findById() {
+
+        // given
+        final Long cartId = 1L;
+
+        // when
+        final CartItem cartItem = cartItemDao.findById(cartId);
+
+        // then
+        assertThat(cartItem)
+                .usingRecursiveComparison()
+                .isEqualTo(new CartItem(cartId, 1L, "banana", 1_000, 10, "woowa1.com"));
+    }
+
     @Test
     @DisplayName("카트의 수량을 수정할 수 있다.")
     void updateCartItemQuantity() {
 
         // given
-        final Long cardId = 1L;
+        final Long cartId = 1L;
 
         // when
-        cartItemDao.updateCartItemQuantity(cardId, 50);
+        cartItemDao.updateCartItemQuantity(cartId, 50);
 
         // then
-        assertThat(cartItemDao.findQuantityById(cardId)).isEqualTo(50);
+        assertThat(cartItemDao.findQuantityById(cartId)).isEqualTo(50);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
