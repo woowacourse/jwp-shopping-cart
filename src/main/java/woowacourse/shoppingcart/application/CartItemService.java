@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartItemQuantityResponse;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.ProductIdRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.repository.dao.CartItemDao;
@@ -45,15 +47,6 @@ public class CartItemService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
-    }
-
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
@@ -70,6 +63,11 @@ public class CartItemService {
     // new method
 
     public List<CartItemResponse> findCartsById(final TokenRequest request) {
+        return null;
+    }
+
+    public List<CartItemQuantityResponse> addCartItems(final TokenRequest tokenRequest,
+                                                       final List<ProductIdRequest> productIdRequests) {
         return null;
     }
 }
