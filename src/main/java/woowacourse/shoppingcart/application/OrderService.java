@@ -12,7 +12,6 @@ import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class OrderService {
             final int quantity = orderDetail.getQuantity();
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+            // cartItemDao.deleteCartItem(cartId);
         }
 
         return ordersId;
@@ -87,7 +86,6 @@ public class OrderService {
     }
 
     private Product findProductById(long id) {
-        return productDao.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+        return productDao.findById(id);
     }
 }
