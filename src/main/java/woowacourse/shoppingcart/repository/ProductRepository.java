@@ -18,6 +18,10 @@ public class ProductRepository {
         return productDao.findById(productId);
     }
 
+    public List<Product> findProductsOfPage(final int page, final int limit) {
+        return productDao.findProductsOfPage(page, limit);
+    }
+
     public List<Product> findAll() {
         return productDao.findAll();
     }
