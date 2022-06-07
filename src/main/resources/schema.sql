@@ -35,7 +35,7 @@ create table cart_item
     id          bigint not null auto_increment,
     customer_id bigint not null foreign key references customer(id),
     product_id  bigint not null foreign key references product(id),
-    quantity integer default 0,
+    quantity    integer default 0,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -74,3 +74,13 @@ create table orders_detail
 -- alter table orders_detail
 --     add constraint fk_orders_detail_to_product
 --         foreign key (product_id) references product (id);
+
+INSERT INTO product (name, price, thumbnail)
+VALUES (싱싱한 감자, 10000, https://storybook.takealook.kr/image/potato.jpg);
+INSERT INTO product (name, price, thumbnail)
+VALUES (안싱싱한 감자, 10000, https://storybook.takealook.kr/image/potato.jpg);
+INSERT INTO product (name, price, thumbnail)
+VALUES (약간싱싱한 감자, 10000, https://storybook.takealook.kr/image/potato.jpg);
+INSERT INTO product (name, price, thumbnail)
+VALUES (맛있는 감자, 10000, https://storybook.takealook.kr/image/potato.jpg);
+
