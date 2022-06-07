@@ -2,7 +2,8 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import java.util.Objects;
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.Optional;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -12,7 +13,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.entity.CartItemEntity;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
@@ -33,18 +33,17 @@ public class CartItemDao {
         String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(:customerId, :productId)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource source = new BeanPropertySqlParameterSource(cartItemEntity);
+
         jdbcTemplate.update(sql, source, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public CartItemEntity findById(Long cartId) {
-        try {
-            String sql = "SELECT id, customer_id, product_id FROM cart_item WHERE id = :id";
-            SqlParameterSource source = new MapSqlParameterSource("id", cartId);
-            return jdbcTemplate.queryForObject(sql, source, ROW_MAPPER);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
+    public Optional<CartItemEntity> findById(Long cartId) {
+        String sql = "SELECT id, customer_id, product_id FROM cart_item WHERE id = :id";
+        SqlParameterSource source = new MapSqlParameterSource("id", cartId);
+
+        List<CartItemEntity> cartItemEntities = jdbcTemplate.query(sql, source, ROW_MAPPER);
+        return Optional.ofNullable(DataAccessUtils.singleResult(cartItemEntities));
     }
 
     public List<CartItemEntity> findByCustomerId(Long customerId) {

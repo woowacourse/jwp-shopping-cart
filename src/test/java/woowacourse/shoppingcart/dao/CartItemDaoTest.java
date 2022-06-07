@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -51,7 +52,9 @@ class CartItemDaoTest {
         Long cartId = cartItemDao.save(new CartItemEntity(customerId, productId));
 
         // then
-        assertThat(cartItemDao.findById(cartId).getId()).isEqualTo(cartId);
+        Optional<CartItemEntity> cartItem = cartItemDao.findById(cartId);
+        assertThat(cartItem).isPresent();
+        assertThat(cartItem.get().getId()).isEqualTo(cartId);
     }
 
     @Test
@@ -62,10 +65,11 @@ class CartItemDaoTest {
         Long cartId = cartItemDao.save(new CartItemEntity(customerId, productId));
 
         // when
-        CartItemEntity cartItem = cartItemDao.findById(cartId);
+        Optional<CartItemEntity> cartItem = cartItemDao.findById(cartId);
 
         // then
-        assertThat(cartItem.getId()).isEqualTo(cartId);
+        assertThat(cartItem).isPresent();
+        assertThat(cartItem.get().getId()).isEqualTo(cartId);
     }
 
     @Test
@@ -99,7 +103,6 @@ class CartItemDaoTest {
         cartItemDao.delete(cartId);
 
         // then
-        assertThatThrownBy(() -> cartItemDao.findById(cartId))
-                .isInstanceOf(InvalidCartItemException.class);
+        assertThat(cartItemDao.findById(cartId)).isEmpty();
     }
 }
