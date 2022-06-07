@@ -35,44 +35,19 @@ public class CartService {
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            final int count = cartItemDao.findCountById(cartId);
+            carts.add(new Cart(cartId, count, product));
         }
         return carts;
-    }
-
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
-    }
-
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
     }
 
     private List<Long> findCartIdsByCustomerId(final long customerId) {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long addCart(final Long productId, final long customerId, final int count) {
         try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
-    }
-
-    public Long addCart(final Long productId, final long customerId) {
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.addCartItem(customerId, productId, count);
         } catch (Exception e) {
             throw new InvalidProductException();
         }

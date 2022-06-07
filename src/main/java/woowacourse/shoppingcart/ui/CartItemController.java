@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartItemRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
@@ -30,14 +33,18 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final long customerId) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
+    public ResponseEntity<List<CartResponse>> getCartItems(@PathVariable final long customerId) {
+        List<Cart> carts = cartService.findCartsByCustomerId(customerId);
+        List<CartResponse> cartResponses = carts.stream()
+            .map(CartResponse::new)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok().body(cartResponses);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
+    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final CartItemRequest request,
         @PathVariable final long customerId) {
-        final Long cartId = cartService.addCart(product.getId(), customerId);
+        final Long cartId = cartService.addCart(request.getProductId(), customerId, request.getCount());
         final URI responseLocation = ServletUriComponentsBuilder
             .fromCurrentRequest()
             .path("/{cartId}")

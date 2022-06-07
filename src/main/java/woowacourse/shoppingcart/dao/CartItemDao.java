@@ -32,6 +32,15 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
+    public Integer findCountById(Long cartId) {
+        try {
+            final String sql = "SELECT count FROM cart_item WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("count"), cartId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
     public Long findProductIdById(final Long cartId) {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
@@ -41,14 +50,15 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
+    public Long addCartItem(final Long customerId, final Long productId, final int count) {
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[] {"id"});
             preparedStatement.setLong(1, customerId);
             preparedStatement.setLong(2, productId);
+            preparedStatement.setInt(3, count);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
