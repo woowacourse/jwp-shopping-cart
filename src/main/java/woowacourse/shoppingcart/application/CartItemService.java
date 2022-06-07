@@ -34,10 +34,7 @@ public class CartItemService {
 
         final List<CartItem> cartItems = new ArrayList<>();
         for (final Long cartItemId : cartItemIds) {
-            final Long productId = cartItemDao.findProductIdById(cartItemId);
-            final int quantity = cartItemDao.findQuantityById(cartItemId);
-            final Product product = productDao.findProductById(productId);
-            cartItems.add(new CartItem(cartItemId, product, quantity));
+            cartItems.add(cartItemDao.findById(cartItemId));
         }
         return CartItemsResponse.from(cartItems);
     }
