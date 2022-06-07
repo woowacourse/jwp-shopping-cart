@@ -27,6 +27,7 @@ public class CartItemDao {
                 .productName(rs.getString("name"))
                 .price(rs.getInt("price"))
                 .stock(rs.getInt("stock"))
+                .imageUrl(rs.getString("image_url"))
                 .build();
         return new CartItem(rs.getLong("id"), product, rs.getInt("quantity"));
     });
@@ -47,7 +48,7 @@ public class CartItemDao {
 
     public CartItem findById(final Long cartItemId) {
         try {
-            final String sql = "SELECT c.id, c.quantity, c.product_id, p.name, p.price, p.stock FROM cart_item c " +
+            final String sql = "SELECT c.id, c.quantity, c.product_id, p.name, p.price, p.stock, p.image_url FROM cart_item c " +
                     "INNER JOIN product p ON c.product_id = p.id " +
                     "WHERE c.id = ?";
             return jdbcTemplate.queryForObject(sql, cartItemRowMapper, cartItemId);
