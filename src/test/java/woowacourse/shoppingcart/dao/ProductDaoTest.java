@@ -27,9 +27,10 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "http://www.test.com";
+        final String description = "this is sample-description";
 
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, imageUrl, description));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -42,8 +43,10 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "http://www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        final String description = "this is sample-description";
+
+        final Long productId = productDao.save(new Product(name, price, imageUrl, description));
+        final Product expectedProduct = new Product(productId, name, price, imageUrl, description);
 
         // when
         final Product product = productDao.findProductById(productId);
@@ -73,8 +76,9 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "http://www.test.com";
+        final String description = "this is sample-description";
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, imageUrl, description));
         final int beforeSize = productDao.findProducts().size();
 
         // when

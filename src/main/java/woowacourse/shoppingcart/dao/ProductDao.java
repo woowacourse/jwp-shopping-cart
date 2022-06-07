@@ -22,7 +22,8 @@ public class ProductDao {
     }
 
     public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url, is_deleted) VALUES (?, ?, ?, 0)";
+        final String query = "INSERT INTO product (name, price, image_url, is_deleted, description) "
+            + "VALUES (?, ?, ?, 0, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
@@ -30,6 +31,7 @@ public class ProductDao {
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
             preparedStatement.setString(3, product.getImageUrl());
+            preparedStatement.setString(4, product.getDescription());
             return preparedStatement;
         }, keyHolder);
 
@@ -38,13 +40,14 @@ public class ProductDao {
 
     public Product findProductById(final Long productId) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ? and is_deleted = 0";
+            final String query = "SELECT * FROM product WHERE id = ? and is_deleted = 0";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                 new Product(
                     productId,
                     resultSet.getString("name"),
                     resultSet.getInt("price"),
-                    resultSet.getString("image_url")
+                    resultSet.getString("image_url"),
+                    resultSet.getString("description")
                 ), productId
             );
         } catch (EmptyResultDataAccessException e) {
@@ -53,14 +56,15 @@ public class ProductDao {
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product WHERE is_deleted = 0";
+        final String query = "SELECT * FROM product WHERE is_deleted = 0";
         return jdbcTemplate.query(query,
             (resultSet, rowNumber) ->
                 new Product(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getInt("price"),
-                    resultSet.getString("image_url")
+                    resultSet.getString("image_url"),
+                    resultSet.getString("description")
                 ));
     }
 

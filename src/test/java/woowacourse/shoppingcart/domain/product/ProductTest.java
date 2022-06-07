@@ -14,8 +14,10 @@ class ProductTest {
         String name = "productName";
         int price = 1000;
         String imageUrl = "http://example.com/image.png";
+        final String description = "this is sample-description";
+
         // then
-        assertThatCode(() -> new Product(name, price, imageUrl))
+        assertThatCode(() -> new Product(name, price, imageUrl, description))
             .doesNotThrowAnyException();
     }
 }

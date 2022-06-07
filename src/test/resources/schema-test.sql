@@ -18,11 +18,12 @@ create table customer
 
 create table product
 (
-    id         bigint       not null auto_increment,
-    name       varchar(255) not null,
-    price      integer      not null,
-    image_url  varchar(255),
-    is_deleted tinyint(1)   not null,
+    id          bigint       not null auto_increment,
+    name        varchar(255) not null,
+    price       integer      not null,
+    image_url   varchar(255),
+    is_deleted  tinyint(1)   not null,
+    description varchar(255),
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
@@ -39,7 +40,8 @@ create table cart_item
 ) engine = InnoDB
   default charset = utf8mb4;
 
-alter table cart_item add unique (customer_id, product_id);
+alter table cart_item
+    add unique (customer_id, product_id);
 
 create table orders
 (
@@ -53,7 +55,7 @@ create table orders
 create table order_detail
 (
     id         bigint  not null auto_increment,
-    order_id  bigint  not null,
+    order_id   bigint  not null,
     product_id bigint  not null,
     quantity   integer not null,
     primary key (id),

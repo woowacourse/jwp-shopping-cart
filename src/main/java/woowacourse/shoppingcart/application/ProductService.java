@@ -25,7 +25,8 @@ public class ProductService {
         return productDao.save(
             new Product(request.getName(),
                 request.getPrice(),
-                request.getImageUrl())
+                request.getImageUrl(),
+                request.getDescription())
         );
     }
 

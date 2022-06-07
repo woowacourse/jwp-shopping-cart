@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui.dto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 public class ProductRequest {
 
@@ -13,6 +14,9 @@ public class ProductRequest {
 
     @NotEmpty(message = "이미지 URL은 비어있을 수 없습니다.")
     private String imageUrl;
+
+    @Size(max = 255)
+    private String description;
 
     private ProductRequest() {
         this(null, null, null);
@@ -34,5 +38,9 @@ public class ProductRequest {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
