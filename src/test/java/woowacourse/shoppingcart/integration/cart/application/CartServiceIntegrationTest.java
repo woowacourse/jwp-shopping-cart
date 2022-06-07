@@ -14,7 +14,10 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.cart.application.CartService;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
+import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
+import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
@@ -78,5 +81,34 @@ class CartServiceIntegrationTest {
         // when, then
         assertThatThrownBy(() -> cartService.addCart(productId, customer))
                 .isInstanceOf(DuplicateCartItemException.class);
+    }
+
+    @Test
+    @DisplayName("상품의 수량을 변경한다.")
+    void changeQuantity() {
+        // given
+        final Long productId = 1L;
+        cartItemDao.addCartItem(customer.getId(), productId);
+
+        final int quantity = 4;
+        final QuantityChangingRequest request = new QuantityChangingRequest(quantity);
+
+        // when
+        final Cart actual = cartService.changeQuantity(customer, productId, request);
+
+        // then
+        assertThat(actual.getQuantity()).isEqualTo(quantity);
+    }
+
+    @Test
+    @DisplayName("장바구니에 존재하지 않는 상품의 수량을 변경하면 예외를 던진다.")
+    void changeQuantity_notExistItem_exceptionThrown() {
+        // given
+        final Long productId = 1L;
+        final QuantityChangingRequest request = new QuantityChangingRequest(4);
+
+        // when, then
+        assertThatThrownBy(() -> cartService.changeQuantity(customer, productId, request))
+                .isInstanceOf(NoExistCartItemException.class);
     }
 }
