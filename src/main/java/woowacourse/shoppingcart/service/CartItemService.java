@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +33,26 @@ public class CartItemService {
     }
 
     public CartItemResponse addCart(final String email, final CartItemRequest cartItemRequest) {
-        Customer customer = customerDao.findByEmail(email);
+        long customerId = findCustomerIdByEmail(email);
         Product productById = productDao.findProductById(cartItemRequest.getProductId());
-        CartItems cartItems = cartItemRepository.findByCustomerId(customer.getId());
+        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
         CartItem newCartItem = new CartItem(productById, new Quantity(cartItemRequest.getQuantity()));
         cartItems.add(newCartItem);
-        long addedCartItemID = cartItemRepository.addCartItem(customer.getId(), newCartItem);
+        long addedCartItemID = cartItemRepository.addCartItem(customerId, newCartItem);
         return CartItemResponse.from(cartItemRepository.findById(addedCartItemID));
+    }
+
+    @Transactional(readOnly = true)
+    public List<CartItemResponse> getCartItems(String email) {
+        long customerId = findCustomerIdByEmail(email);
+        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
+        List<CartItemResponse> cartItemResponses = new ArrayList<>();
+        cartItems.forEach(cartItem -> cartItemResponses.add(CartItemResponse.from(cartItem)));
+        return cartItemResponses;
+    }
+
+    private long findCustomerIdByEmail(String email) {
+        Customer customer = customerDao.findByEmail(email);
+        return customer.getId();
     }
 }

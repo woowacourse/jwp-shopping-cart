@@ -18,7 +18,6 @@ import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -69,16 +68,21 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        getAddedCartItemId(USER, productId1);
-        getAddedCartItemId(USER, productId2);
+        // given
+        AcceptanceFixture.post(new CartItemRequest(productId1, 10), "/api/mycarts", header);
+        AcceptanceFixture.post(new CartItemRequest(productId2, 10), "/api/mycarts", header);
 
-        ExtractableResponse<Response> response = AcceptanceFixture.get("/api/customers/" + USER + "/carts");
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-            .map(Cart::getProductId)
+        // when
+        ExtractableResponse<Response> responseAboutGetItems = AcceptanceFixture.get("/api/mycarts", header);
+        List<CartItemResponse> cartItemResponses = responseAboutGetItems.jsonPath()
+            .getList(".", CartItemResponse.class);
+        List<Long> productIds = cartItemResponses.stream()
+            .map(CartItemResponse::getProductId)
             .collect(Collectors.toList());
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(resultProductIds).contains(productId1, productId2);
+        // then
+        assertThat(responseAboutGetItems.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(productIds).contains(productId1, productId2);
     }
 
     @DisplayName("장바구니 삭제")
