@@ -24,6 +24,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
         WebMvcConfigurer.super.addInterceptors(registry);
         registry.addInterceptor(new LoginInterceptor(authService, jwtTokenProvider))
                 .excludePathPatterns("/login/**")
+                .addPathPatterns("/login/auto")
                 .addPathPatterns("/users/**")
                 .excludePathPatterns("/users")
                 .addPathPatterns("/cart");

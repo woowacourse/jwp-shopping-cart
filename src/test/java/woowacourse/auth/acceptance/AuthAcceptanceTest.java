@@ -6,6 +6,8 @@ import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원�
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원조회;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원탈퇴;
 
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -109,5 +111,36 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    @DisplayName("새로운 토큰을 발급하여 로그인할 수 있다.")
+    void reIssueToken() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        회원가입(signUpRequest);
+
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
+        String token = 로그인(signInRequest)
+                .as(SignInResponse.class)
+                .getToken();
+
+        // when
+        String newToken = 토큰_재발급(token)
+                .as(SignInResponse.class)
+                .getToken();
+
+        // then
+        assertThat(newToken).isEqualTo(token);
+    }
+
+    private ExtractableResponse<Response> 토큰_재발급(String token) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().post("/login/auto")
+                .then().log().all()
+                .extract();
     }
 }

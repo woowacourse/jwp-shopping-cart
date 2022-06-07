@@ -98,4 +98,17 @@ class AuthServiceTest {
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("인증되지 않은 회원입니다.");
     }
+    
+    @Test
+    @DisplayName("토큰을 재발급 받는다.")
+    void reIssueToken() {
+        // given
+        customerService.addCustomer(new SignUpRequest("rennon", "rennon@woowa.com", "123456"));
+
+        // when
+        SignInResponse signInResponse = authService.reIssueToken("rennon");
+
+        // then
+        assertThat(signInResponse.getToken()).isNotBlank();
+    }
 }
