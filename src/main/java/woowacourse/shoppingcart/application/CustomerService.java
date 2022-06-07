@@ -26,9 +26,7 @@ public class CustomerService {
 
     @Transactional
     public Long registerCustomer(final CustomerRegisterRequest customerRegisterRequest) {
-        if (customerDao.existsByEmail(customerRegisterRequest.getEmail())) {
-            throw new DuplicatedCustomerEmailException();
-        }
+        validateDuplicatedEmail(customerRegisterRequest);
 
         final Customer customer = new Customer(customerRegisterRequest.getEmail(),
                 customerRegisterRequest.getNickname(),
@@ -39,11 +37,6 @@ public class CustomerService {
     public CustomerResponse findById(final Long customerId) {
         final Customer customer = getById(customerId);
         return new CustomerResponse(customer.getEmail(), customer.getNickname());
-    }
-
-    private Customer getById(final Long customerId) {
-        return customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
     }
 
     @Transactional
@@ -61,6 +54,17 @@ public class CustomerService {
         final Customer customer = getById(customerId);
         validatePassword(customer, customerRemoveRequest.getPassword());
         customerDao.deleteById(customerId);
+    }
+
+    private void validateDuplicatedEmail(CustomerRegisterRequest customerRegisterRequest) {
+        if (customerDao.existsByEmail(customerRegisterRequest.getEmail())) {
+            throw new DuplicatedCustomerEmailException();
+        }
+    }
+
+    private Customer getById(final Long customerId) {
+        return customerDao.findById(customerId)
+                .orElseThrow(InvalidCustomerException::new);
     }
 
     private void validatePassword(final Customer customer, final String password) {
