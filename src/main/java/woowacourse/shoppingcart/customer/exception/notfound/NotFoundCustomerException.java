@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.customer.exception.notfound;
 
-import woowacourse.shoppingcart.exception.notfound.NotFoundException;
+import woowacourse.shoppingcart.exception.NotFoundException;
 
 public class NotFoundCustomerException extends NotFoundException {
 
