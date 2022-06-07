@@ -1,78 +1,66 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.helper.fixture.MemberFixture.EMAIL;
+import static woowacourse.helper.fixture.MemberFixture.NAME;
+import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
+import static woowacourse.helper.fixture.MemberFixture.createMember;
+import static woowacourse.helper.fixture.ProductFixture.createProduct;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.OrderDetail;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.member.dao.MemberDao;
 
 @JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql("classpath:schema.sql")
 class OrdersDetailDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final OrdersDetailDao ordersDetailDao;
-    private long ordersId;
-    private long productId;
-    private long customerId;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
-    }
+    private CartItemDao cartItemDao;
+    private ProductDao productDao;
+    private MemberDao memberDao;
+    private OrderDao orderDao;
+    private OrdersDetailDao ordersDetailDao;
 
     @BeforeEach
     void setUp() {
-        customerId = 1L;
-        jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
-        ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
-
-        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
-                , "name", 1000, "imageUrl");
-        productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        cartItemDao = new CartItemDao(jdbcTemplate);
+        productDao = new ProductDao(jdbcTemplate);
+        memberDao = new MemberDao(jdbcTemplate);
+        orderDao = new OrderDao(jdbcTemplate);
+        ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")
     @Test
     void addOrdersDetail() {
-        //given
-        int quantity = 5;
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long orderId = orderDao.addOrders(memberId);
+        final Long productId = productDao.save(createProduct("초콜렛", 1_000, "www.test.com"));
 
-        //when
-        Long orderDetailId = ordersDetailDao
-                .addOrdersDetail(ordersId, productId, quantity);
+        Long orderDetailId = ordersDetailDao.addOrdersDetail(orderId, productId, 5);
 
-        //then
         assertThat(orderDetailId).isEqualTo(1L);
     }
 
     @DisplayName("OrderId로 OrderDetails 조회하는 기능")
     @Test
     void findOrdersDetailsByOrderId() {
-        //given
-        final int insertCount = 3;
-        for (int i = 0; i < insertCount; i++) {
-            jdbcTemplate
-                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-                            ordersId, productId, 3);
-        }
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long orderId = orderDao.addOrders(memberId);
+        final Long productId = productDao.save(createProduct("초콜렛", 1_000, "www.test.com"));
 
-        //when
-        final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsByOrderId(ordersId);
+        ordersDetailDao.addOrdersDetail(orderId, productId, 5);
 
-        //then
-        assertThat(ordersDetailsByOrderId).hasSize(insertCount);
+        assertThat(ordersDetailDao.findOrdersDetailsByOrderId(orderId)).hasSize(1);
     }
 }
