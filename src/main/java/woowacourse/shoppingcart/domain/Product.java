@@ -8,7 +8,7 @@ public class Product {
     private String imageUrl;
     private int stock;
 
-    public Product() {
+    private Product() {
     }
 
     public Product(final Long id, final String name, final int price, final String imageUrl, final int stock) {

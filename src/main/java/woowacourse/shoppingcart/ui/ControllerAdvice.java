@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,6 +44,12 @@ public class ControllerAdvice {
         final FieldError mainError = fieldErrors.get(0);
         final ErrorResponse errorResponse = new ErrorResponse(mainError.getDefaultMessage());
 
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ErrorResponse> handleBindException(final BindException e) {
+        final ErrorResponse errorResponse = new ErrorResponse(e.getFieldErrors().get(0).getDefaultMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
 

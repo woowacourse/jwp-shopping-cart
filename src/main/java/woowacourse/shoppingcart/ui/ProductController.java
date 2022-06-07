@@ -2,10 +2,12 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.PageRequest;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
@@ -27,8 +30,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
+    public ResponseEntity<List<Product>> products(@ModelAttribute @Valid PageRequest pageRequest) {
+        return ResponseEntity.ok(productService.findProducts(pageRequest));
     }
 
     @PostMapping
