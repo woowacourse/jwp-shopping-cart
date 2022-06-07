@@ -16,6 +16,9 @@ public class CartEntity {
         this.productId = productId;
         this.quantity = quantity;
     }
+    public CartEntity plusQuantity() {
+        return new CartEntity(id,customerId,productId,quantity+1);
+    }
 
     public Long getId() {
         return id;

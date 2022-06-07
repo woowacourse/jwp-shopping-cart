@@ -34,16 +34,9 @@ public class CartService {
 
     public List<CartProductInfoResponse> addCart(final List<ProductIdRequest> productIdRequests,
                                                  final Long customerId) {
-        List<Long> cartIds = new ArrayList<>();
-        List<Long> productIds = productIdRequests.stream()
+        return productIdRequests.stream()
                 .map(ProductIdRequest::getId)
-                .collect(Collectors.toList());
-
-        for (Long id : productIds) {
-            cartIds.add(cartItemRepository.create(customerId, id));
-        }
-
-        return cartIds.stream()
+                .map(productId -> cartItemRepository.create(customerId, productId))
                 .map(cartItemRepository::findById)
                 .map(cart -> new CartProductInfoResponse(cart.getId(), cart.getQuantity()))
                 .collect(Collectors.toList());

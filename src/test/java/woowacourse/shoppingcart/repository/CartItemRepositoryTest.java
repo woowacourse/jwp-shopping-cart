@@ -28,7 +28,7 @@ import woowacourse.shoppingcart.repository.dao.ProductDao;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("/init.sql")
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 public class CartItemRepositoryTest {
 
     private final CartItemRepository cartItemRepository;
@@ -56,13 +56,30 @@ public class CartItemRepositoryTest {
     void addCartItem() {
         // given
         final Long customerId = 1L;
-        final Long productId = 1L;
+        final Long productId = 10L;
 
         // when
         final Long cartId = cartItemRepository.create(customerId, productId);
 
         // then
         assertThat(cartId).isEqualTo(3L);
+    }
+
+    @DisplayName("카트에 이미 해당 아이템이 있을 시 개수 +1을 한다 ")
+    @Test
+    void addCartItem_plus() {
+        // given
+        final Long customerId = 1L;
+        final Long productId = 3L;
+
+        // when
+        cartItemRepository.create(customerId, productId);
+        System.err.println("id1 = " + cartItemRepository.findCartsByCustomerId(customerId));
+        final Long cartId = cartItemRepository.create(customerId, productId);
+        System.err.println("id2 = " + cartItemRepository.findCartsByCustomerId(customerId));
+
+        // then
+        assertThat(cartItemRepository.findById(cartId).getQuantity()).isEqualTo(2);
     }
 
     @DisplayName("카트에 담긴 물품의 개수를 수정한다. ")

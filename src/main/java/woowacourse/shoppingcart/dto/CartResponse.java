@@ -56,4 +56,16 @@ public class CartResponse {
     public int getQuantity() {
         return quantity;
     }
+
+    @Override
+    public String toString() {
+        return "CartResponse{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

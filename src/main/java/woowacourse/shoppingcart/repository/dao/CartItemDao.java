@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -73,6 +74,15 @@ public class CartItemDao {
     public int deleteById(final Long id) {
         final String query = "DELETE FROM cart_item WHERE id = :id";
         return jdbcTemplate.update(query, Map.of("id", id));
+    }
+
+    public Optional<Long> findIdByProductId(Long productId) {
+        final String query = "SELECT id FROM cart_item WHERE product_id = :productId LIMIT 1";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, Map.of("productId", productId), Long.class));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public int[] deleteByIds(final List<Long> ids) {

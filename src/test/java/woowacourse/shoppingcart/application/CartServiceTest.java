@@ -73,10 +73,28 @@ class CartServiceTest {
         //then
         assertThat(cartService.findCartsByCustomerId(사용자아이디))
                 .usingRecursiveComparison()
-                .ignoringFields("id", "")
+                .ignoringFields("id")
                 .isEqualTo(List.of(
                         new Cart(헌치_치킨.getId(), 헌치_치킨.getQuantity(), 치킨)
                 ));
+    }
+
+    @DisplayName("해당 회원의 장바구니에 이미 해당 물품이 있을 시 개수를 +1 한다.")
+    @Test
+    void addCart_plusOne() {
+        //given
+        Long 사용자아이디 = 사용자추가(jdbcTemplate, 헌치);
+        물품추가(jdbcTemplate, 치킨);
+
+        //when
+        cartService.addCart(List.of(new ProductIdRequest(치킨.getId())), 사용자아이디);
+        cartService.addCart(List.of(new ProductIdRequest(치킨.getId())), 사용자아이디);
+
+        //then
+        assertThat(cartService.findCartsByCustomerId(사용자아이디).get(0).getName())
+                .isEqualTo("치킨");
+        assertThat(cartService.findCartsByCustomerId(사용자아이디).get(0).getQuantity())
+                .isEqualTo(2);
     }
 
     @DisplayName("해당 장바구니 물품 정보를 수정한다")
