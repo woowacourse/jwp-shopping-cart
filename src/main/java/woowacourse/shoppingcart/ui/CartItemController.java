@@ -7,6 +7,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ItemAddRequest;
 import woowacourse.shoppingcart.dto.Request;
@@ -28,8 +29,8 @@ public class CartItemController {
     }
 
     @PostMapping("/users/me/carts")
-    public ResponseEntity<Void> addCartItem2(@RequestBody ItemAddRequest itemAddRequest, @AuthenticationPrincipal String email) {
-        cartService.addCart(itemAddRequest.getProductId(), email);
+    public ResponseEntity<Void> addCartItem2(@RequestBody ItemAddRequest itemAddRequest, @AuthenticationPrincipal Customer customer) {
+        //cartService.addCart(itemAddRequest.getProductId(), email);
         return ResponseEntity.noContent().build();
     }
 

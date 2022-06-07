@@ -28,6 +28,11 @@ public class CustomerService {
         return customer.getId();
     }
 
+    public Customer findById(Long id) {
+        return customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
+    }
+
     public Customer findByEmail(String email) {
         return customerDao.findByEmail(email)
                 .orElseThrow(InvalidCustomerException::new);

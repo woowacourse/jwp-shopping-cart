@@ -54,6 +54,16 @@ public class CustomerDao {
         }
     }
 
+    public Optional<Customer> findById(Long id) {
+        try {
+            final String query = "SELECT email, password, nickname, id FROM customer WHERE id = ?";
+            Customer customer = jdbcTemplate.queryForObject(query, ROW_MAPPER, id);
+            return Optional.of(customer);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<Customer> findByEmail(String email) {
         try {
             final String query = "SELECT email, password, nickname, id FROM customer WHERE email = ?";

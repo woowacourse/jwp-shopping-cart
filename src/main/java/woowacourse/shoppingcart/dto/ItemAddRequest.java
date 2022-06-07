@@ -3,6 +3,9 @@ package woowacourse.shoppingcart.dto;
 public class ItemAddRequest {
     private Long productId;
 
+    public ItemAddRequest() {
+    }
+
     public ItemAddRequest(Long productId) {
         this.productId = productId;
     }

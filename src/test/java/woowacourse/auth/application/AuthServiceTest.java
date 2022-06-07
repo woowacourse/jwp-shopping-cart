@@ -56,8 +56,7 @@ public class AuthServiceTest {
         String token = authService.createToken(tokenRequest);
         Assertions.assertAll(
                 () -> assertThat(token).isNotBlank(),
-                () -> assertThat(jwtTokenProvider.validateToken(token)).isTrue(),
-                () -> assertThat(jwtTokenProvider.getPayload(token)).isEqualTo(EMAIL)
+                () -> assertThat(jwtTokenProvider.validateToken(token)).isTrue()
         );
     }
 

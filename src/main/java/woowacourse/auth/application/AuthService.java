@@ -29,7 +29,7 @@ public class AuthService {
             throw new InvalidLoginFormException();
         }
 
-        return jwtTokenProvider.createToken(tokenRequest.getEmail());
+        return jwtTokenProvider.createToken(customer.getId());
     }
 
 }

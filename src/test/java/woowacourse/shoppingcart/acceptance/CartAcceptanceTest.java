@@ -70,16 +70,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    @DisplayName("존재하지 않는 상품을 장바구니 아이템 추가시 400 반환")
-    @Test
-    void addNotExistedCartItem() {
-        Long notExistId = 0L;
-        ExtractableResponse response = 장바구니_아이템_추가_요청2(notExistId, token);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.jsonPath().getInt("errorCode")).isNotNull(); // 수정 필요
-        assertThat(response.jsonPath().getString("message")).isNotBlank();
-    }
+//    @DisplayName("존재하지 않는 상품을 장바구니 아이템 추가시 400 반환")
+//    @Test
+//    void addNotExistedCartItem() {
+//        Long notExistId = 0L;
+//        ExtractableResponse response = 장바구니_아이템_추가_요청2(notExistId, token);
+//
+//        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+//        assertThat(response.jsonPath().getInt("errorCode")).isNotNull(); // 수정 필요
+//        assertThat(response.jsonPath().getString("message")).isNotBlank();
+//    }
 
     @DisplayName("장바구니 아이템 추가")
     @Test

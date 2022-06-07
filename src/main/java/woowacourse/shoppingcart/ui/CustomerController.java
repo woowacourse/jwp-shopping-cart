@@ -27,22 +27,21 @@ public class CustomerController {
     }
 
     @GetMapping("/users/me")
-    public ResponseEntity<CustomerResponse> getCustomer(@AuthenticationPrincipal String email) {
-        Customer customer = customerService.findByEmail(email);
+    public ResponseEntity<CustomerResponse> getCustomer(@AuthenticationPrincipal Customer customer) {
         CustomerResponse customerResponse = new CustomerResponse(customer.getEmail(), customer.getNickname());
         return ResponseEntity.ok(customerResponse);
     }
 
     @DeleteMapping("/users/me")
-    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal String email) {
-        customerService.deleteByEmail(email);
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal Customer customer) {
+        customerService.deleteByEmail(customer.getEmail());
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/users/me")
-    public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal String email,
+    public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal Customer customer,
                                                @RequestBody @Valid CustomerUpdateRequest customerUpdateRequest) {
-        customerService.updateCustomer(email, customerUpdateRequest);
+        customerService.updateCustomer(customer.getEmail(), customerUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 }
