@@ -27,29 +27,27 @@ import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
-    private Long cartId1;
-    private Long cartId2;
+    private Long productId1;
+    private Long productId2;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
-
         ProductRequest productRequest1 = new ProductRequest("치킨", 10_000, 10,
             new ThumbnailImageDto("http://example.com/chicken.jpg", "이미지입니다."));
         ProductRequest productRequest2 = new ProductRequest("맥주", 20_000, 10,
             new ThumbnailImageDto("http://example.com/beer.jpg", "이미지입니다."));
-
-        Long productId1 = getAddedProductId(productRequest1);
-        Long productId2 = getAddedProductId(productRequest2);
-
-        cartId1 = getAddedCartItemId(USER, productId1);
-        cartId2 = getAddedCartItemId(USER, productId2);
+        productId1 = getAddedProductId(productRequest1);
+        productId2 = getAddedProductId(productRequest2);
     }
 
     @DisplayName("주문하기")
     @Test
     void addOrder() {
+        Long cartId1 = getAddedCartItemId(USER, productId1);
+        Long cartId2 = getAddedCartItemId(USER, productId2);
+
         List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
             .map(cartId -> new OrderRequest(cartId, 10))
             .collect(Collectors.toList());
@@ -62,6 +60,9 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
+        Long cartId1 = getAddedCartItemId(USER, productId1);
+        Long cartId2 = getAddedCartItemId(USER, productId2);
+
         Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
         Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
 
@@ -74,6 +75,9 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 단일 조회")
     @Test
     void getOrder() {
+        Long cartId1 = getAddedCartItemId(USER, productId1);
+        Long cartId2 = getAddedCartItemId(USER, productId2);
+
         Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
             new OrderRequest(cartId1, 2),
             new OrderRequest(cartId2, 4)

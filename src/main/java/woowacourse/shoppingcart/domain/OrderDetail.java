@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.domain;
 import woowacourse.shoppingcart.domain.product.Product;
 
 public class OrderDetail {
-    private Long productId;
+    private long productId;
     private int quantity;
     private int price;
     private String name;
@@ -12,7 +12,7 @@ public class OrderDetail {
     public OrderDetail() {
     }
 
-    public OrderDetail(final Long productId, final int quantity) {
+    public OrderDetail(final long productId, final int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }
@@ -30,7 +30,7 @@ public class OrderDetail {
         this.quantity = quantity;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 

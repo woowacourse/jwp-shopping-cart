@@ -13,9 +13,12 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.OrderRepository;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -27,14 +30,17 @@ public class OrderService {
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
+    private final OrderRepository orderRepository;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao,
+        OrderRepository orderRepository) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
+        this.orderRepository = orderRepository;
     }
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
@@ -71,7 +77,7 @@ public class OrderService {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
-            .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+            .map(this::findOrderResponseDtoByOrderId)
             .collect(Collectors.toList());
     }
 
@@ -84,5 +90,18 @@ public class OrderService {
         }
 
         return new Orders(orderId, ordersDetails);
+    }
+
+    public List<OrderResponse> findOrdersByCustomer(String email) {
+        long customerId = findCustomerIdByEmail(email);
+        return orderRepository.findOrders(customerId).stream()
+            .map(OrderResponse::from)
+            .collect(Collectors.toList());
+    }
+
+    // TODO: 중복 제거 뺼 방법 고려
+    private long findCustomerIdByEmail(String email) {
+        Customer customer = customerDao.findByEmail(email);
+        return customer.getId();
     }
 }
