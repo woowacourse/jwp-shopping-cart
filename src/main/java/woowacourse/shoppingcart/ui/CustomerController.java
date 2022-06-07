@@ -45,7 +45,7 @@ public class CustomerController {
 
     @PutMapping("/me")
     public ResponseEntity<Void> updateInfo(@AuthenticationPrincipal Customer customer,
-                                                       @RequestBody CustomerRequest customerRequest) {
+                                           @RequestBody CustomerRequest customerRequest) {
         customerService.updateInfo(customer, customerRequest);
         return ResponseEntity.ok().build();
     }

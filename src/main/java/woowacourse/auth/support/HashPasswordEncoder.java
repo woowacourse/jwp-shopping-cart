@@ -2,8 +2,8 @@ package woowacourse.auth.support;
 
 import org.springframework.stereotype.Component;
 import woowacourse.shoppingcart.domain.customer.EncodePassword;
-import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
+import woowacourse.shoppingcart.domain.customer.RawPassword;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

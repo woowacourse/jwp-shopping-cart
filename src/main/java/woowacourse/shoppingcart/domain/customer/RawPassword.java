@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import org.springframework.util.StringUtils;
 import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 
 import java.util.regex.Pattern;

@@ -6,7 +6,6 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.List;
