@@ -1,14 +1,15 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -26,16 +27,19 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public List<ProductResponse> findCartProductByCustomerId(final Long customerId) {
+        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
 
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
+        return cartIds.stream()
+                .map(this::findProductRequestByCartId)
+                .collect(Collectors.toList());
+    }
+
+    private ProductResponse findProductRequestByCartId(Long cartId) {
+        Long productId = cartItemDao.findProductIdById(cartId);
+        Product product = productDao.findProductById(productId);
+        Integer quantity = cartItemDao.findQuantityById(cartId);
+        return new ProductResponse(product, quantity);
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
@@ -43,12 +47,18 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByName(customerName);
+    public Long addCart(final Long customerId, final CartRequest cartRequest) {
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            validateQuantity(cartRequest.getQuantity());
+            return cartItemDao.addCartItem(customerId, cartRequest.getId(), cartRequest.getQuantity());
         } catch (Exception e) {
             throw new InvalidProductException();
+        }
+    }
+
+    private void validateQuantity(Integer quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("올바르지 않은 상품 수량 형식입니다.");
         }
     }
 
