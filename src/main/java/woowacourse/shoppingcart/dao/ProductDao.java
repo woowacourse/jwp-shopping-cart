@@ -19,12 +19,12 @@ public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<Product> productRowMapper = (rs, rowNum) ->
-        new Product(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getInt("price"),
-                rs.getString("image_url")
-        );
+            new Product(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getInt("price"),
+                    rs.getString("image_url")
+            );
 
     public ProductDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);

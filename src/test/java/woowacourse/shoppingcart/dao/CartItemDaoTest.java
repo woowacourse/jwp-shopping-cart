@@ -24,9 +24,9 @@ public class CartItemDaoTest {
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
+    public CartItemDaoTest(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        cartItemDao = new CartItemDao(dataSource);
         productDao = new ProductDao(dataSource);
     }
 
@@ -35,20 +35,23 @@ public class CartItemDaoTest {
         productDao.save(new Product("banana", 1_000, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)", 1L,
+                1L, 1, true);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)", 1L,
+                2L, 1, true);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
-
         // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
+        Long customerId = 1L;
+        Long productId = 1L;
+        Integer quantity = 1;
+        Boolean checked = true;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity, checked);
 
         // then
         assertThat(cartId).isEqualTo(3L);

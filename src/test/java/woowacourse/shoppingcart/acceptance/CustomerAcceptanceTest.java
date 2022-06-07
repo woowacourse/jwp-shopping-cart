@@ -169,8 +169,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> 회원조회(String token) {
         return RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/me")
                 .then().log().all()

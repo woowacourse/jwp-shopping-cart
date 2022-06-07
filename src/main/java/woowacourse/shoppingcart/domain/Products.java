@@ -19,6 +19,7 @@ public class Products {
     public Products getProductsOfPage(int size, int page) {
         int countOfPage = value.size() / size + 1;
         int sizeOfLastPage = value.size() % size;
+
         if (page < countOfPage) {
             return new Products(value.subList(size * (page - 1), size * page));
         }
