@@ -2,11 +2,11 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.AuthFixture.findById;
-import static woowacourse.fixture.AuthFixture.update;
-import static woowacourse.fixture.AuthFixture.updatePassword;
-import static woowacourse.fixture.AuthFixture.withdraw;
-import static woowacourse.fixture.CustomerFixture.login;
+import static woowacourse.fixture.AuthFixture.login;
+import static woowacourse.fixture.CustomerFixture.findById;
+import static woowacourse.fixture.CustomerFixture.update;
+import static woowacourse.fixture.CustomerFixture.updatePassword;
+import static woowacourse.fixture.CustomerFixture.withdraw;
 import static woowacourse.fixture.CustomerFixture.signUp;
 
 import io.restassured.response.ExtractableResponse;
