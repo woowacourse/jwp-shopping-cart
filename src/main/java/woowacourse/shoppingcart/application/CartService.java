@@ -18,32 +18,26 @@ import java.util.stream.Collectors;
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
+    private final CustomerService customerService;
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CustomerService customerService, final CartItemDao cartItemDao, final ProductDao productDao) {
+        this.customerService = customerService;
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
-    public List<CartItemResponse> findCartsByCustomerEmail(final String customerName) {
-        Customer customer = customerDao.findIdByEmail(customerName).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+    public List<CartItemResponse> findCartsByCustomerEmail(final String email) {
+        Customer customer = customerService.getCustomerByEmail(email);
         List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customer.getId());
         return cartItems.stream()
                 .map(CartItemResponse::from)
                 .collect(Collectors.toList());
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
     public Long addCart(String email, Long productId) {
-        Customer customer = customerDao.findIdByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        Customer customer = customerService.getCustomerByEmail(email);
 
         Product product = productDao.findProductById(productId);
 
@@ -51,27 +45,12 @@ public class CartService {
     }
 
     public void updateQuantity(String email, Long productId, int quantity) {
-        Customer customer = customerDao.findIdByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        Customer customer = customerService.getCustomerByEmail(email);
         cartItemDao.updateQuantity(customer.getId(), productId, quantity);
     }
 
     public void deleteCartItem(String email, Long productId) {
-        Customer customer = customerDao.findIdByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        Customer customer = customerService.getCustomerByEmail(email);
         cartItemDao.deleteCartItem(customer.getId(), productId);
-    }
-
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
-    }
-
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
     }
 }
