@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ProductName;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductsResponse;
 
@@ -18,8 +19,8 @@ import static org.mockito.BDDMockito.given;
 
 class ProductServiceTest {
 
-    public static final Product 상품1 = new Product(1L, "상품1", 1_000, "imageUrl1");
-    public static final Product 상품2 = new Product(2L, "상품2", 2_000, "imageUrl2");
+    public static final Product 상품1 = new Product(1L, new ProductName("상품1"), 1_000, "imageUrl1");
+    public static final Product 상품2 = new Product(2L, new ProductName("상품2"), 2_000, "imageUrl2");
 
     private final ProductService productService;
 
@@ -64,7 +65,7 @@ class ProductServiceTest {
         // given
         given(productDao.save(any())).willReturn(상품1);
         // when
-        final Product expected = new Product(1L, "상품1", 1_000, "imageUrl1");
+        final Product expected = new Product(1L, new ProductName("상품1"), 1_000, "imageUrl1");
         // then
         assertThat(상품1)
                 .usingRecursiveComparison()

@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ProductName;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,7 @@ public class OrderDetailDao {
     private final RowMapper<OrderDetail> orderDetailRowMapper =
             (rs, rowNum) -> new OrderDetail(
                     new Product(rs.getLong("product_id"),
-                            rs.getString("name"),
+                            new ProductName(rs.getString("name")),
                             rs.getInt("price"),
                             rs.getString("image_url")),
                     rs.getInt("quantity")

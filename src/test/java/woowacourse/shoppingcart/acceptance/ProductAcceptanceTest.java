@@ -1,13 +1,11 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 import java.util.List;
@@ -59,42 +57,21 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+        final ProductRequest productRequest = new ProductRequest(name, price, imageUrl);
 
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when().post("/products")
-                .then().log().all()
-                .extract();
+        return post("/products", productRequest);
     }
 
     public static ExtractableResponse<Response> 상품_목록_조회_요청() {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/products")
-                .then().log().all()
-                .extract();
+        return get("/products");
     }
 
     public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/products/{productId}", productId)
-                .then().log().all()
-                .extract();
+        return get("/products/" + productId);
     }
 
     public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/products/{productId}", productId)
-                .then().log().all()
-                .extract();
+        return delete("/products/" + productId);
     }
 
     public static void 상품_추가됨(ExtractableResponse<Response> response) {

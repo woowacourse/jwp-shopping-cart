@@ -7,6 +7,7 @@ import org.mockito.MockitoAnnotations;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ProductName;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
@@ -42,9 +43,9 @@ class CartServiceTest {
         given(cartItemDao.findProductIdsByCustomerId(1L))
                 .willReturn(List.of(1L, 2L));
         given(productDao.findById(1L))
-                .willReturn(Optional.of(new Product(1L, "상품명1", 1000, "imageUrl1")));
+                .willReturn(Optional.of(new Product(1L, new ProductName("상품명1"), 1000, "imageUrl1")));
         given(productDao.findById(2L))
-                .willReturn(Optional.of(new Product(2L, "상품명2", 1000, "imageUrl2")));
+                .willReturn(Optional.of(new Product(2L, new ProductName("상품명2"), 1000, "imageUrl2")));
 
         // when
         final CartResponse cartResponse = cartService.findCartByCustomerId(1L);
@@ -65,7 +66,7 @@ class CartServiceTest {
     void addCart() {
         // given
         given(productDao.findById(1L))
-                .willReturn(Optional.of(new Product(1L, "상품명", 1000, "imageUrl")));
+                .willReturn(Optional.of(new Product(1L, new ProductName("상품명"), 1000, "imageUrl")));
         given(cartItemDao.addCartItem(1L, 1L))
                 .willReturn(1L);
 

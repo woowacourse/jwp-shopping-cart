@@ -84,6 +84,15 @@ public class AcceptanceTest {
                 .extract();
     }
 
+    protected static ExtractableResponse<Response> delete(String uri) {
+        return RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete(uri)
+                .then().log().all()
+                .extract();
+    }
+
     protected static ExtractableResponse<Response> delete(String uri, Object param) {
         return RestAssured.given().log().all()
                 .body(param)

@@ -11,6 +11,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ProductName;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ class OrderDetailDaoTest {
         long customerId = 1L;
         ordersId = orderDao.addOrders(customerId);
 
-        productId = productDao.save(new Product("name", 1000, "imageUrl")).getId();
+        productId = productDao.save(new Product(new ProductName("name"), 1000, "imageUrl")).getId();
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")

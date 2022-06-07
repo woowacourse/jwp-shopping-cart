@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ProductName;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,7 @@ public class ProductDao {
     private final RowMapper<Product> productRowMapper = (resultSet, rowNumber) ->
             new Product(
                     resultSet.getLong("id"),
-                    resultSet.getString("name"),
+                    new ProductName(resultSet.getString("name")),
                     resultSet.getInt("price"),
                     resultSet.getString("image_url")
             );
@@ -36,7 +37,7 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
 
         final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("name", product.getName());
+        parameters.put("name", product.getName().getValue());
         parameters.put("price", product.getPrice());
         parameters.put("image_url", product.getImageUrl());
 

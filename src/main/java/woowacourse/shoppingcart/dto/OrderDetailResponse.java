@@ -21,7 +21,7 @@ public class OrderDetailResponse {
 
     public static OrderDetailResponse of(OrderDetail orderDetail) {
         final Product product = orderDetail.getProduct();
-        return new OrderDetailResponse(product.getId(), product.getName(), product.getPrice() * orderDetail.getQuantity(), orderDetail.getQuantity(), product.getImageUrl());
+        return new OrderDetailResponse(product.getId(), product.getName().getValue(), product.getPrice() * orderDetail.getQuantity(), orderDetail.getQuantity(), product.getImageUrl());
     }
 
     public long getId() {
