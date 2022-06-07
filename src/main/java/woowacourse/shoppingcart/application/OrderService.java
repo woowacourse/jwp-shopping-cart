@@ -8,15 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.ui.dto.OrderDetailRequest;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
 
 @Service
@@ -26,21 +25,18 @@ public class OrderService {
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
 
     public OrderService(OrderDao orderDao, OrdersDetailDao ordersDetailDao,
-                        CartItemDao cartItemDao, CustomerDao customerDao) {
+                        CartItemDao cartItemDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String account) {
-        final Long customerId = getCustomerIdByAccount(account);
+    public Long save(OrderRequest orderRequest, final Long customerId) {
         final Long ordersId = orderDao.addOrders(customerId);
 
-        for (final OrderRequest orderDetail : orderDetailRequests) {
+        for (final OrderDetailRequest orderDetail : orderRequest.getOrder()) {
             final Long cartId = orderDetail.getCartId();
             final Long productId = getCartItemEntity(cartId).getProductId();
             final int quantity = orderDetail.getQuantity();
@@ -57,21 +53,18 @@ public class OrderService {
                 .orElseThrow(InvalidCartItemException::new);
     }
 
-    public OrderResponse findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
+    public OrderResponse findById(final Long customerId, final Long orderId) {
+        validateOrderIdByCustomerName(customerId, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = getCustomerIdByAccount(customerName);
-
+    private void validateOrderIdByCustomerName(final Long customerId, final Long orderId) {
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    public List<OrderResponse> findOrdersByCustomerName(final String account) {
-        final Long customerId = getCustomerIdByAccount(account);
+    public List<OrderResponse> findByCustomerId(final Long customerId) {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
@@ -88,11 +81,5 @@ public class OrderService {
         }
 
         return new OrderResponse(orderId, products);
-    }
-
-    private Long getCustomerIdByAccount(String account) {
-        return customerDao.findByAccount(account)
-                .orElseThrow(InvalidCustomerException::new)
-                .getId();
     }
 }

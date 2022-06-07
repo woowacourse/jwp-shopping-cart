@@ -2,23 +2,23 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import java.util.List;
-import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
 
-@Validated
 @RestController
-@RequestMapping("/api/customers/{customerName}/orders")
+@RequestMapping("/customers/orders")
 public class OrderController {
+
     private final OrderService orderService;
 
     public OrderController(final OrderService orderService) {
@@ -26,23 +26,25 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@PathVariable final String customerName,
-                                         @RequestBody @Valid final List<OrderRequest> orderDetails) {
-        final Long orderId = orderService.addOrder(orderDetails, customerName);
-        return ResponseEntity.created(
-                URI.create("/api/" + customerName + "/orders/" + orderId)).build();
+    public ResponseEntity<Void> add(@AuthenticationPrincipal Long customerId,
+                                    @RequestBody OrderRequest orderRequest) {
+        final Long orderId = orderService.save(orderRequest, customerId);
+        final URI responseLocation = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{orderId}")
+                .buildAndExpand(orderId)
+                .toUri();
+        return ResponseEntity.created(responseLocation).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponse> findOrder(@PathVariable final String customerName,
-                                                   @PathVariable final Long orderId) {
-        final OrderResponse order = orderService.findOrderById(customerName, orderId);
-        return ResponseEntity.ok(order);
+    public OrderResponse findOrder(@AuthenticationPrincipal Long customerId,
+                                   @PathVariable final Long orderId) {
+        return orderService.findById(customerId, orderId);
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> findOrders(@PathVariable final String customerName) {
-        final List<OrderResponse> orders = orderService.findOrdersByCustomerName(customerName);
-        return ResponseEntity.ok(orders);
+    public List<OrderResponse> findAll(@AuthenticationPrincipal Long customerId) {
+        return orderService.findByCustomerId(customerId);
     }
 }
