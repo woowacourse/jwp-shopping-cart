@@ -37,9 +37,9 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
-    @GetMapping("/customers/{customerName}/orders")
-    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
+    @GetMapping("/customer/orders")
+    public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal final Long customerId) {
+        final List<Orders> orders = orderService.findOrdersByCustomerId(customerId);
         return ResponseEntity.ok(orders);
     }
 }
