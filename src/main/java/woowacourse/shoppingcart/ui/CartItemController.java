@@ -34,17 +34,18 @@ public class CartItemController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer,
+                                               @PathVariable final Long productId) {
+        cartService.delete(loginCustomer.getId(), productId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PatchMapping("/products/{productId}")
     public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer,
                                                @PathVariable final Long productId,
                                                @RequestBody @Valid ProductChangeRequest productChangeRequest) {
         cartService.updateQuantity(loginCustomer.getId(), productId, productChangeRequest.getQuantity());
-        return ResponseEntity.noContent().build();
-    }
-    @DeleteMapping("/products/{productId}")
-    public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer,
-                                               @PathVariable final Long productId) {
-        cartService.delete(loginCustomer.getId(), productId);
         return ResponseEntity.noContent().build();
     }
 }

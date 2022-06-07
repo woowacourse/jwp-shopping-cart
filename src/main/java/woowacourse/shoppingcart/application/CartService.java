@@ -54,41 +54,13 @@ public class CartService {
         return cartResponses;
     }
 
+    @Transactional
     public void updateQuantity(Long customerId, long productId, int quantity) {
         cartItemDao.updateQuantity(customerId, productId, quantity);
     }
 
+    @Transactional
     public void delete(Long customerId, Long productId) {
         cartItemDao.deleteByCustomerIdAndProductId(customerId, productId);
     }
-//    public List<Cart> findCartsByCustomerName(final String customerName) {
-//        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-//
-//        final List<Cart> carts = new ArrayList<>();
-//        for (final Long cartId : cartIds) {
-//            final Long productId = cartItemDao.findProductIdById(cartId);
-//            final Product product = productDao.findProductById(productId);
-//            carts.add(new Cart(cartId, product));
-//        }
-//        return carts;
-//    }
-//
-//    private List<Long> findCartIdsByCustomerName(final String customerName) {
-//        final Long customerId = customerDao.findIdByUserName(customerName);
-//        return cartItemDao.findIdsByCustomerId(customerId);
-//    }
-//
-//
-//    public void deleteCart(final String customerName, final Long cartId) {
-//        validateCustomerCart(cartId, customerName);
-//        cartItemDao.deleteCartItem(cartId);
-//    }
-//
-//    private void validateCustomerCart(final Long cartId, final String customerName) {
-//        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-//        if (cartIds.contains(cartId)) {
-//            return;
-//        }
-//        throw new NotInCustomerCartItemException();
-//    }
 }
