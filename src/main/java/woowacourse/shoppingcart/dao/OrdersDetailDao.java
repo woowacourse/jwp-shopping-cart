@@ -1,8 +1,10 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,6 +17,17 @@ public class OrdersDetailDao {
     public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final RowMapper<OrderDetail> orderDetailRowMapper = ((rs, rowNum) -> {
+        Long id = rs.getLong("id");
+        int quantity = rs.getInt("quantity");
+        Long productId = rs.getLong("product_id");
+        int price = rs.getInt("price");
+        String name = rs.getString("name");
+        String imageUrl = rs.getString("image_url");
+
+        return new OrderDetail(id, quantity, productId, price, name, imageUrl);
+    });
 
     public Long save(final Long orderId, final OrderDetail orderDetail) {
         final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)";
@@ -30,11 +43,11 @@ public class OrdersDetailDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-//    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-//        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
-//        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-//                rs.getLong("product_id"),
-//                rs.getInt("quantity")
-//        ), orderId);
-//    }
+    public List<OrderDetail> findOrderDetailsByOrderId(final Long orderId) {
+        final String sql = "SELECT d.id, d.quantity, d.product_id, p.price, p.name, p.image_url "
+                + "FROM orders_detail d "
+                + "INNER JOIN product p ON d.product_id = p.id "
+                + "WHERE d.orders_id = ?";
+        return jdbcTemplate.query(sql, orderDetailRowMapper, orderId);
+    }
 }
