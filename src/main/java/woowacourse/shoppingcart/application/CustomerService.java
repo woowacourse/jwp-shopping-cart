@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.specification.CustomerSpecification;
 import woowacourse.utils.CryptoUtils;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -11,12 +12,14 @@ import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CustomerService {
 
     private final CustomerDao customerDao;
     private final CustomerSpecification customerSpec;
 
+    @Transactional
     public Long save(CustomerCreateRequest request) {
         customerSpec.validateUsernameDuplicate(request.getUsername());
         customerSpec.validateEmailDuplicate(request.getEmail());
@@ -31,6 +34,7 @@ public class CustomerService {
         request.setPassword(encryptPassword);
     }
 
+    @Transactional
     public Customer findById(long id) {
         return customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
@@ -46,6 +50,7 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerException::new);
     }
 
+    @Transactional
     public void update(Long id, CustomerUpdateRequest request) {
         if (isSameOriginUsername(id, request)) {
             return;
@@ -60,6 +65,7 @@ public class CustomerService {
         return foundCustomer.getUsername().equals(request.getUsername());
     }
 
+    @Transactional
     public void delete(Long id) {
         customerSpec.validateCustomerExists(id);
         customerDao.deleteById(id);
