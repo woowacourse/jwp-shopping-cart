@@ -38,8 +38,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg", true);
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg", true);
 
-        cartId1 = 장바구니_아이템_추가되어_있음(accessToken, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(accessToken, productId2);
+        cartId1 = 장바구니_아이템_추가되어_있음(accessToken, productId1, 10);
+        cartId2 = 장바구니_아이템_추가되어_있음(accessToken, productId2, 10);
     }
 
     @DisplayName("주문하기")

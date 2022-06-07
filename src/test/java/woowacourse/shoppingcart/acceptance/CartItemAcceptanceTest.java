@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +41,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     void addCartItem() {
         String accessToken = SimpleRestAssured.getAccessToken(YAHO_TOKEN_REQUEST);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1, 10);
 
         장바구니_아이템_추가됨(response);
     }
@@ -50,8 +51,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     void getCartItems() {
         String accessToken = SimpleRestAssured.getAccessToken(YAHO_TOKEN_REQUEST);
 
-        장바구니_아이템_추가되어_있음(accessToken, productId1);
-        장바구니_아이템_추가되어_있음(accessToken, productId2);
+        장바구니_아이템_추가되어_있음(accessToken, productId1, 10);
+        장바구니_아이템_추가되어_있음(accessToken, productId2, 10);
 
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(accessToken);
 
@@ -63,23 +64,22 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteCartItem() {
         String accessToken = SimpleRestAssured.getAccessToken(YAHO_TOKEN_REQUEST);
-        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1, 10);
 
         ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, cartId);
 
         장바구니_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId, int quantity) {
+        CartItemSaveRequest request = new CartItemSaveRequest(productId, quantity);
 
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/me/cartItems")
+                .body(request)
+                .when().post("/api/customers/me/cart-items")
                 .then().log().all()
                 .extract();
     }
@@ -89,7 +89,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/me/cartItems")
+                .when().get("/api/customers/me/cart-items")
                 .then().log().all()
                 .extract();
     }
@@ -99,7 +99,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/me/cartItems/{cartId}", cartId)
+                .when().delete("/api/customers/me/cart-items/{cartId}", cartId)
                 .then().log().all()
                 .extract();
     }
@@ -109,9 +109,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String accessToken, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId);
-        return Long.parseLong(response.header("Location").split("/cartItems/")[1]);
+    public static Long 장바구니_아이템_추가되어_있음(String accessToken, Long productId, int quantity) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId, quantity);
+        return Long.parseLong(response.header("Location").split("/cart-items/")[1]);
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {

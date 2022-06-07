@@ -11,8 +11,10 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NoSuchCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
@@ -36,7 +38,9 @@ public class CartService {
         for (Long cartId : cartIds) {
             Long productId = cartItemDao.findProductIdById(cartId);
             Product product = productDao.findProductById(productId);
-            cartItems.add(new CartItem(cartId, product));
+            Integer quantity = cartItemDao.findQuantityById(cartId)
+                    .orElseThrow(NoSuchCartItemException::new);
+            cartItems.add(new CartItem(cartId, product, quantity));
         }
         return cartItems;
     }
@@ -46,10 +50,11 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(Long productId, LoginCustomer loginCustomer) {
+    public Long addCart(CartItemSaveRequest cartItemSaveRequest, LoginCustomer loginCustomer) {
         Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername());
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.addCartItem(customerId, cartItemSaveRequest.getProductId(),
+                    cartItemSaveRequest.getQuantity());
         } catch (Exception e) {
             throw new InvalidProductException();
         }

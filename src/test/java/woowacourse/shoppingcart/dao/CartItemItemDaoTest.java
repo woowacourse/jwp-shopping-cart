@@ -37,7 +37,7 @@ public class CartItemItemDaoTest {
         Customer yaho = customerDao.save(YAHO);
         Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
 
-        Long cartId = cartItemDao.addCartItem(yaho.getId(), bananaId);
+        Long cartId = cartItemDao.addCartItem(yaho.getId(), bananaId, 10);
 
         assertThat(cartId).isNotNull();
     }
@@ -48,8 +48,8 @@ public class CartItemItemDaoTest {
         Customer mat = customerDao.save(MAT);
         Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
         Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", true));
-        cartItemDao.addCartItem(mat.getId(), bananaId);
-        cartItemDao.addCartItem(mat.getId(), appleId);
+        cartItemDao.addCartItem(mat.getId(), bananaId, 10);
+        cartItemDao.addCartItem(mat.getId(), appleId, 10);
 
         List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(mat.getId());
 
@@ -62,8 +62,8 @@ public class CartItemItemDaoTest {
         Customer yaho = customerDao.save(YAHO);
         Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
         Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", true));
-        Long bananaCartId = cartItemDao.addCartItem(yaho.getId(), bananaId);
-        Long appleCartId = cartItemDao.addCartItem(yaho.getId(), appleId);
+        Long bananaCartId = cartItemDao.addCartItem(yaho.getId(), bananaId, 10);
+        Long appleCartId = cartItemDao.addCartItem(yaho.getId(), appleId, 10);
 
         List<Long> cartIds = cartItemDao.findIdsByCustomerId(yaho.getId());
 
@@ -76,8 +76,8 @@ public class CartItemItemDaoTest {
         Customer mat = customerDao.save(MAT);
         Long bananaId = productDao.save(new Product("banana", 1_000, "httpwoowa1.com", true));
         Long appleId = productDao.save(new Product("apple", 2_000, "httpwoowa2.com", true));
-        cartItemDao.addCartItem(mat.getId(), bananaId);
-        Long appleCartId = cartItemDao.addCartItem(mat.getId(), appleId);
+        cartItemDao.addCartItem(mat.getId(), bananaId, 10);
+        Long appleCartId = cartItemDao.addCartItem(mat.getId(), appleId, 10);
 
         cartItemDao.deleteCartItem(appleCartId);
 

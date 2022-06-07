@@ -17,12 +17,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 @RestController
-@RequestMapping("/api/customers/me/cartItems")
+@RequestMapping("/api/customers/me/cart-items")
 public class CartItemController {
     private final CartService cartService;
 
@@ -32,14 +33,15 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<List<CartItem>> getCartItems(@AuthenticationPrincipal LoginCustomer loginCustomer) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(loginCustomer));
+        List<CartItem> cartItems = cartService.findCartsByCustomerName(loginCustomer);
+        return ResponseEntity.ok().body(cartItems);
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(
-            @Validated(Request.id.class) @RequestBody ProductResponse productResponse,
+            @Validated(Request.id.class) @RequestBody CartItemSaveRequest cartItemSaveRequest,
             @AuthenticationPrincipal LoginCustomer loginCustomer) {
-        Long cartId = cartService.addCart(productResponse.getId(), loginCustomer);
+        Long cartId = cartService.addCart(cartItemSaveRequest, loginCustomer);
         URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")

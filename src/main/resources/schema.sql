@@ -31,15 +31,16 @@ create table product
     name      varchar(100) not null,
     price     integer      not null,
     image_url varchar(255),
-    selling   varchar(5) not null,
+    selling   varchar(5)   not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
 create table cart_item
 (
-    id          bigint not null auto_increment,
-    customer_id bigint not null,
-    product_id  bigint not null,
+    id          bigint  not null auto_increment,
+    customer_id bigint  not null,
+    product_id  bigint  not null,
+    quantity    integer not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
