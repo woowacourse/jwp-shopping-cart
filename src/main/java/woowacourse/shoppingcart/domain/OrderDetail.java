@@ -10,11 +10,6 @@ public class OrderDetail {
     public OrderDetail() {
     }
 
-    public OrderDetail(final Long productId, final int quantity) {
-        this.productId = productId;
-        this.quantity = quantity;
-    }
-
     public OrderDetail(final Product product, final int quantity) {
         this(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
     }

@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OrderDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
-    private final OrderDao orderDao;
+    private final OrdersDao orderDao;
 
     public OrderDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.orderDao = new OrderDao(jdbcTemplate);
+        this.orderDao = new OrdersDao(jdbcTemplate);
     }
 
     @DisplayName("Order를 추가하는 기능")
