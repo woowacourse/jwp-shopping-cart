@@ -19,7 +19,7 @@ public class CartItemResponse {
         this.productId = cart.getProduct().getId();
         this.name = cart.getProduct().getName();
         this.price = cart.getProduct().getPrice();
-        this.quantity = cart.getProduct().getStockQuantity();
+        this.quantity = cart.getQuantity();
         this.thumbnailImage = cart.getProduct().getThumbnailImage();
     }
 

@@ -64,4 +64,11 @@ public class CartService {
         }
         throw new NotInCustomerCartItemException();
     }
+
+    public void updateCart(final String email, final Long cartItemId, final int quantity) {
+        validateCustomerCart(cartItemId, email);
+        Cart oldCart = cartItemDao.getById(cartItemId);
+        Cart newCart = new Cart(oldCart.getId(), quantity, oldCart.getProduct());
+        cartItemDao.updateCartQuantity(newCart);
+    }
 }

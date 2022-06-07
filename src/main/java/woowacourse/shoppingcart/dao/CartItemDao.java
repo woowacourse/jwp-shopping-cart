@@ -103,4 +103,10 @@ public class CartItemDao {
             throw new InvalidCartItemException();
         }
     }
+
+    public void updateCartQuantity(Cart cart) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql, cart.getQuantity(), cart.getId());
+    }
 }
