@@ -22,10 +22,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.request.CreateOrderDetailRequest;
+import woowacourse.shoppingcart.dto.response.OrderDetailResponse;
+import woowacourse.shoppingcart.dto.response.OrderResponse;
 import woowacourse.shoppingcart.service.OrderService;
 
 @SpringBootTest
@@ -53,8 +53,9 @@ public class OrderControllerTest {
         final Long cartId2 = 1L;
         final int quantity2 = 5;
         final String customerName = "ellie";
-        final List<OrderRequest> requestDtos =
-                Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
+        final List<CreateOrderDetailRequest> requests =
+                Arrays.asList(new CreateOrderDetailRequest(cartId, quantity),
+                        new CreateOrderDetailRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
         when(orderService.addOrder(any(), any(UserName.class)))
@@ -67,7 +68,7 @@ public class OrderControllerTest {
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(requestDtos))
+                        .content(objectMapper.writeValueAsString(requests))
                 ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
@@ -78,12 +79,11 @@ public class OrderControllerTest {
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
     @Test
     void findOrder() throws Exception {
-
         // given
         final String customerName = "ellie";
         final Long orderId = 1L;
-        final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
+        final OrderResponse expected = new OrderResponse(orderId,
+                Collections.singletonList(new OrderDetailResponse(2L, 1_000, "banana", "imageUrl", 2)));
 
         when(orderService.findOrderById(new UserName(customerName), orderId))
                 .thenReturn(expected);
@@ -108,11 +108,11 @@ public class OrderControllerTest {
     void findOrders() throws Exception {
         // given
         final String customerName = "ellie";
-        final List<Orders> expected = Arrays.asList(
-                new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
-                new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
+        final List<OrderResponse> expected = Arrays.asList(
+                new OrderResponse(1L, Collections.singletonList(
+                        new OrderDetailResponse(1L, 1_000, "banana", "imageUrl", 2))),
+                new OrderResponse(2L, Collections.singletonList(
+                        new OrderDetailResponse(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
         when(orderService.findOrdersByCustomerName(new UserName(customerName)))

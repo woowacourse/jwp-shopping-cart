@@ -5,11 +5,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 
 @Repository
 public class ProductDao {
@@ -46,7 +46,7 @@ public class ProductDao {
                     ), productId
             );
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            throw new NotFoundProductException();
         }
     }
 

@@ -11,11 +11,12 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.dto.request.OrderRequest;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.dto.request.CreateOrderDetailRequest;
+import woowacourse.shoppingcart.dto.response.OrderDetailResponse;
+import woowacourse.shoppingcart.dto.response.OrderResponse;
+import woowacourse.shoppingcart.exception.notfound.NotFoundOrderException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -36,11 +37,11 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final UserName customerName) {
+    public Long addOrder(final List<CreateOrderDetailRequest> orderDetailRequests, final UserName customerName) {
         final Long customerId = customerDao.getIdByUserName(customerName);
         final Long ordersId = orderDao.addOrders(customerId);
 
-        for (final OrderRequest orderDetail : orderDetailRequests) {
+        for (final CreateOrderDetailRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
             final Long productId = cartItemDao.findProductIdById(cartId);
             final int quantity = orderDetail.getQuantity();
@@ -53,7 +54,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Orders findOrderById(final UserName customerName, final Long orderId) {
+    public OrderResponse findOrderById(final UserName customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
@@ -62,12 +63,12 @@ public class OrderService {
         final Long customerId = customerDao.getIdByUserName(customerName);
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+            throw new NotFoundOrderException();
         }
     }
 
     @Transactional(readOnly = true)
-    public List<Orders> findOrdersByCustomerName(final UserName customerName) {
+    public List<OrderResponse> findOrdersByCustomerName(final UserName customerName) {
         final Long customerId = customerDao.getIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
@@ -76,15 +77,13 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
+    private OrderResponse findOrderResponseDtoByOrderId(final Long orderId) {
+        final List<OrderDetailResponse> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
             final Product product = productDao.findProductById(productQuantity.getProductId());
             final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
+            ordersDetails.add(new OrderDetailResponse(product, quantity));
         }
-
-        return new Orders(orderId, ordersDetails);
+        return new OrderResponse(orderId, ordersDetails);
     }
 }

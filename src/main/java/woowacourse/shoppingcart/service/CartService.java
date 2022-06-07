@@ -12,8 +12,8 @@ import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.CreateCartItemRequest;
 import woowacourse.shoppingcart.dto.request.EditCartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponse;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -44,7 +44,7 @@ public class CartService {
         try {
             return cartItemDao.addCartItem(customerId, request.getId(), request.getQuantity());
         } catch (Exception e) {
-            throw new InvalidProductException();
+            throw new NotFoundProductException();
         }
     }
 

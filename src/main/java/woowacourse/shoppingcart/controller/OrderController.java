@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.UserNameResolver;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.request.CreateOrderDetailRequest;
+import woowacourse.shoppingcart.dto.response.OrderResponse;
 import woowacourse.shoppingcart.service.OrderService;
 
 @Validated
@@ -30,22 +30,20 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@UserNameResolver final UserName customerName,
-                                         @RequestBody @Valid final List<OrderRequest> orderDetails) {
+                                         @RequestBody @Valid final List<CreateOrderDetailRequest> orderDetails) {
         final Long orderId = orderService.addOrder(orderDetails, customerName);
         return ResponseEntity.created(
                 URI.create("/api/" + customerName.getValue() + "/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@UserNameResolver final UserName customerName,
-                                            @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customerName, orderId);
-        return ResponseEntity.ok(order);
+    public ResponseEntity<OrderResponse> findOrder(@UserNameResolver final UserName customerName,
+                                                   @PathVariable final Long orderId) {
+        return ResponseEntity.ok(orderService.findOrderById(customerName, orderId));
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@UserNameResolver final UserName customerName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
-        return ResponseEntity.ok(orders);
+    public ResponseEntity<List<OrderResponse>> findOrders(@UserNameResolver final UserName customerName) {
+        return ResponseEntity.ok(orderService.findOrdersByCustomerName(customerName));
     }
 }

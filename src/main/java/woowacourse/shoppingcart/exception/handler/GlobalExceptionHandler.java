@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.shoppingcart.dto.response.ErrorResponse;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.duplicate.DuplicateException;
 import woowacourse.shoppingcart.exception.invalid.InvalidException;
@@ -48,8 +46,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             InvalidException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {

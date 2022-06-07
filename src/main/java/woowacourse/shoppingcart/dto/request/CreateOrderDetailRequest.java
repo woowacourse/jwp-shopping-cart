@@ -3,14 +3,14 @@ package woowacourse.shoppingcart.dto.request;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class OrderRequest {
+public class CreateOrderDetailRequest {
 
     @NotNull
     private final Long cartId;
     @Min(0)
     private final int quantity;
 
-    public OrderRequest(final Long cartId, final int quantity) {
+    public CreateOrderDetailRequest(final Long cartId, final int quantity) {
         this.cartId = cartId;
         this.quantity = quantity;
     }
