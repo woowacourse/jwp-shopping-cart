@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 
+import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,8 +23,8 @@ public class ProductDaoTest {
 
     private final ProductDao productDao;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+    public ProductDaoTest(DataSource dataSource) {
+        this.productDao = new ProductDao(dataSource);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")
@@ -41,7 +42,7 @@ public class ProductDaoTest {
         assertThat(productId).isEqualTo(1L);
     }
 
-    @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
+    @DisplayName("productID로 상품을 찾으면, Optional에 담아 반환한다.")
     @Test
     void findProductById() {
         // given
@@ -52,10 +53,19 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findById(productId).get();
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
+    }
+
+    @DisplayName("productID로 상품을 찾는 경우 id가 없다면, 빈 Optional을 반환한다.")
+    @Test
+    void findProductByNotExistId() {
+        final Optional<Product> product = productDao.findById(0L);
+
+        // then
+        assertThat(product).isEmpty();
     }
 
     @DisplayName("상품 목록 조회")

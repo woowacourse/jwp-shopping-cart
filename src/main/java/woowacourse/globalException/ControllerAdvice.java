@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.globalException.dto.ErrorResponse;
 import woowacourse.member.exception.MemberException;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInMemberCartItemException;
+import woowacourse.shoppingcart.exception.*;
 
 import javax.validation.ConstraintViolationException;
 
@@ -37,7 +34,10 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getFieldError().getDefaultMessage()));
     }
 
-    @ExceptionHandler(MemberException.class)
+    @ExceptionHandler({
+            MemberException.class,
+            ProductException.class
+    })
     public ResponseEntity<ErrorResponse> handleMemberException(MemberException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
