@@ -75,7 +75,7 @@ public class CartService {
 
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteById(cartId);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {

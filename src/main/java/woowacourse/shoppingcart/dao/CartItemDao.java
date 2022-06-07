@@ -93,7 +93,7 @@ public class CartItemDao {
         }
     }
 
-    public void deleteCartItem(final Long id) {
+    public void deleteById(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
