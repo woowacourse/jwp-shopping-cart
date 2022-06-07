@@ -1,11 +1,13 @@
 spring:
-  datasource:
-    url: jdbc:h2:~/test;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-  h2.console.enabled: true
-  sql:
-    init:
-      mode: always
   profiles:
-    include: jwt
-
+    default: local
+    group:
+      prod:
+        - prod
+        - jwt
+      local:
+        - local
+        - jwt
+      test:
+        - test
+        - jwt
