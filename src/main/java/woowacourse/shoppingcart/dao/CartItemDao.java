@@ -1,21 +1,27 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public CartItemDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
@@ -39,17 +45,16 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long addCartItem(final Long customerId, final Long productId, final Integer quantity) {
+        final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("customer_id", customerId)
+                .addValue("product_id", productId)
+                .addValue("quantity", quantity);
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public void deleteCartItem(final Long id) {
@@ -59,5 +64,52 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public List<CartItem> findAllByCustomerId(Long customerId) {
+        final String sql =
+                "select c.id as cid, c.quantity as quantity, p.id as pid, p.name as pname, p.price as price, p.stock_quantity as stock_quantity, i.url as url, i.alt as alt "
+                        + "from cart_item as c "
+                        + "inner join product as p on c.product_id = p.id "
+                        + "inner join images as i on p.id = i.product_id "
+                        + "where c.customer_id = ?";
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> new CartItem(
+                        rs.getLong("cid"),
+                        new Product(rs.getLong("pid"), rs.getString("pname"),
+                                rs.getInt("price"), rs.getLong("stock_quantity"),
+                                new ThumbnailImage(rs.getString("url"), rs.getString("alt"))
+                        ),
+                        rs.getInt("quantity")
+                ), customerId);
+    }
+
+    public CartItem findByCustomerId(Long customerId, Long cartItemId) {
+        final String sql =
+                "select c.id as cid, c.quantity as quantity, p.id as pid, p.name as pname, p.price as price, p.stock_quantity as stock_quantity, i.url as url, i.alt as alt "
+                        + "from cart_item as c "
+                        + "inner join product as p on c.product_id = p.id "
+                        + "inner join images as i on p.id = i.product_id "
+                        + "where c.id = ? and c.customer_id = ?";
+        return jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> new CartItem(
+                        rs.getLong("cid"),
+                        new Product(rs.getLong("pid"), rs.getString("pname"),
+                                rs.getInt("price"), rs.getLong("stock_quantity"),
+                                new ThumbnailImage(rs.getString("url"), rs.getString("alt"))
+                        ),
+                        rs.getInt("quantity")
+                ), cartItemId, customerId);
+    }
+
+    public void updateQuantityByCustomerId(Long customerId, Long cartItemId, Integer quantity) {
+        final String sql = "update cart_item set quantity = ? where customer_id = ? and id = ?";
+        jdbcTemplate.update(sql, quantity, customerId, cartItemId);
+    }
+
+    public void deleteCartItemByIds(List<Long> ids) {
+        final String sql = "delete from cart_item where id in (:ids)";
+        final SqlParameterSource params = new MapSqlParameterSource("ids", ids);
+        namedParameterJdbcTemplate.update(sql, params);
     }
 }
