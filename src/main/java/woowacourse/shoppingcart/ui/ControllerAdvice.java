@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailException;
+import woowacourse.auth.exception.NoCustomerTokenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.dto.ErrorResponseWithField;
 import woowacourse.shoppingcart.exception.DuplicateDomainException;
@@ -31,7 +32,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleUnhandledException() {
+    public ErrorResponse handleUnhandledException(RuntimeException exception) {
+        exception.printStackTrace();
         return new ErrorResponse("Unhandled Exception");
     }
 
@@ -56,7 +58,7 @@ public class ControllerAdvice {
         return new ErrorResponseWithField(exception.getField(), exception.getMessage());
     }
 
-    @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
+    @ExceptionHandler({LoginFailException.class, InvalidTokenException.class, NoCustomerTokenException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleLoginFailException(Exception exception) {
         return new ErrorResponse(exception.getMessage());
