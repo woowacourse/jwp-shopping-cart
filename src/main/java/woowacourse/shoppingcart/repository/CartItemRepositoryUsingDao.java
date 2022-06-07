@@ -43,7 +43,8 @@ public class CartItemRepositoryUsingDao implements CartItemRepository {
     @Override
     public CartItem findById(long id) {
         CartItemEntity cartItemEntity = cartItemDao.findCartItemById(id);
-        return new CartItem(cartItemEntity.getCustomerId(), productDao.findProductById(cartItemEntity.getProductId()),
+        return new CartItem(cartItemEntity.getId(), productDao.findProductById(cartItemEntity.getProductId()),
             new Quantity(cartItemEntity.getQuantity()));
     }
+
 }
