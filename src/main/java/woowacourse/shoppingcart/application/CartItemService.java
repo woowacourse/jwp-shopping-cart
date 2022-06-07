@@ -21,13 +21,13 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class CartService {
+public class CartItemService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(CartItemDao cartItemDao, CustomerDao customerDao, ProductDao productDao) {
+    public CartItemService(CartItemDao cartItemDao, CustomerDao customerDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
@@ -64,16 +64,21 @@ public class CartService {
         }
     }
 
-    public void deleteCart(LoginCustomer loginCustomer, Long cartId) {
-        validateCustomerCart(cartId, loginCustomer.getUsername());
-        cartItemDao.deleteCartItem(cartId);
-    }
-
-    private void validateCustomerCart(Long cartId, String username) {
+    private void validateCustomerCart(Long cartItemId, String username) {
         List<Long> cartIds = findCartIdsByCustomerName(username);
-        if (cartIds.contains(cartId)) {
+        if (cartIds.contains(cartItemId)) {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    public void deleteCart(LoginCustomer loginCustomer, Long cartItemId) {
+        validateCustomerCart(cartItemId, loginCustomer.getUsername());
+        cartItemDao.deleteCartItem(cartItemId);
+    }
+
+    public void updateQuantity(LoginCustomer loginCustomer, Long cartItemId, int quantity) {
+        validateCustomerCart(cartItemId, loginCustomer.getUsername());
+        cartItemDao.updateQuantity(cartItemId, quantity);
     }
 }

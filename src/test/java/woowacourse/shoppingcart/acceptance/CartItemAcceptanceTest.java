@@ -22,6 +22,7 @@ import woowacourse.shoppingcart.dto.product.JsonToProduct;
 
 @DisplayName("장바구니 관련 기능")
 public class CartItemAcceptanceTest extends AcceptanceTest {
+
     private Long productId1;
     private Long productId2;
 
@@ -70,6 +71,17 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         장바구니_삭제됨(response);
     }
 
+    @DisplayName("장바구니 수량 수정")
+    @Test
+    void updateCartItem() {
+        String accessToken = SimpleRestAssured.getAccessToken(YAHO_TOKEN_REQUEST);
+        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1, 10);
+
+        ExtractableResponse<Response> response = 장바구니_수량_수정_요청(accessToken, cartId, 5);
+
+        장바구니_수량_수정됨(response);
+    }
+
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId, int quantity) {
         CartItemSaveRequest request = new CartItemSaveRequest(productId, quantity);
 
@@ -93,12 +105,23 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String accessToken, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(String accessToken, Long cartItemId) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/me/cart-items/{cartId}", cartId)
+                .when().delete("/api/customers/me/cart-items/{cartItemId}", cartItemId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_수량_수정_요청(String accessToken, Long cartItemId, int quantity) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(quantity)
+                .when().patch("/api/customers/me/cart-items/{cartItemId}", cartItemId)
                 .then().log().all()
                 .extract();
     }
@@ -125,6 +148,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    public static void 장바구니_수량_수정됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

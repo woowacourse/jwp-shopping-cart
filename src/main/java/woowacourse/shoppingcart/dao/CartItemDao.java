@@ -39,19 +39,19 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public Long findProductIdById(Long cartId) {
+    public Long findProductIdById(Long cartItemId) {
         try {
             String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartItemId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
     }
 
-    public Optional<Integer> findQuantityById(Long cartId) {
+    public Optional<Integer> findQuantityById(Long cartItemId) {
         try {
             String sql = "SELECT quantity FROM cart_item WHERE id = :id";
-            SqlParameterSource parameterSource = new MapSqlParameterSource("id", cartId);
+            SqlParameterSource parameterSource = new MapSqlParameterSource("id", cartItemId);
             return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameterSource, Integer.class));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -65,18 +65,18 @@ public class CartItemDao {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public void deleteCartItem(Long id) {
+    public void deleteCartItem(Long cartItemId) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
 
-        int rowCount = jdbcTemplate.update(sql, id);
+        int rowCount = jdbcTemplate.update(sql, cartItemId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
     }
 
-    public void updateQuantity(Long cartId, int quantity) {
+    public void updateQuantity(Long cartItemId, int quantity) {
         String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
-        SqlParameterSource parameterSource = new MapSqlParameterSource("id", cartId)
+        SqlParameterSource parameterSource = new MapSqlParameterSource("id", cartItemId)
                 .addValue("quantity", quantity);
         namedParameterJdbcTemplate.update(sql, parameterSource);
     }
