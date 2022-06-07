@@ -22,8 +22,14 @@ public class ProductService {
         return productDao.findProducts();
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    public Long addProduct(final ProductRequestDto productRequestDto) {
+        return productDao.save(
+                new Product(
+                        productRequestDto.getName(),
+                        productRequestDto.getPrice(),
+                        productRequestDto.getThumbnailUrl(),
+                        productRequestDto.getQuantity())
+        );
     }
 
     public Product findProductById(final Long productId) {
@@ -36,7 +42,7 @@ public class ProductService {
 
     public int addProducts(List<ProductRequestDto> productDtos) {
         List<Product> products = productDtos.stream()
-                .map(dto -> new Product(dto.getName(), dto.getPrice(), dto.getThumbnailUrl()))
+                .map(dto -> new Product(dto.getName(), dto.getPrice(), dto.getThumbnailUrl(), dto.getQuantity()))
                 .collect(Collectors.toList());
         return productDao.saveAll(products);
     }

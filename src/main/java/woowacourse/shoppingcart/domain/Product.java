@@ -6,20 +6,21 @@ public class Product {
     private Long id;
     private String name;
     private Integer price;
-    private String imageUrl;
+    private String thumbnailUrl;
+    private Integer quantity;
 
-    public Product() {
-    }
+    public Product(){}
 
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
+    public Product(final Long id, final String name, final int price, final String thumbnailUrl, final Integer quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.imageUrl = imageUrl;
+        this.thumbnailUrl = thumbnailUrl;
+        this.quantity = quantity;
     }
 
-    public Product(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl);
+    public Product(final String name, final int price, final String thumbnailUrl, final Integer quantity) {
+        this(null, name, price, thumbnailUrl, quantity);
     }
 
     public String getName() {
@@ -30,24 +31,28 @@ public class Product {
         return price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
     }
 
     public Long getId() {
         return id;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(imageUrl, product.imageUrl);
+        final Product product = (Product) o;
+        return Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(thumbnailUrl, product.thumbnailUrl) && Objects.equals(quantity, product.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, price, imageUrl);
+        return Objects.hash(name, price, thumbnailUrl, quantity);
     }
 }

@@ -20,8 +20,8 @@ class ProductServiceTest {
 
     @Autowired
     private ProductService productService;
-    private Product product1 = new Product("product1", 10000, null);
-    private Product product2 = new Product("product2", 11000, null);
+    private ProductRequestDto product1 = new ProductRequestDto("product1", 10000, null, 10);
+    private ProductRequestDto product2 = new ProductRequestDto("product2", 11000, null, 10);
 
     @Test
     @DisplayName("상품 전체 목록을 불러온다.")
@@ -32,8 +32,8 @@ class ProductServiceTest {
         List<Product> actual = productService.findProducts();
 
         assertThat(actual).containsExactly(
-                product1,
-                product2
+                new Product("product1", 10000, null, 10),
+                new Product("product2", 11000, null, 10)
         );
     }
 
@@ -59,8 +59,8 @@ class ProductServiceTest {
     @DisplayName("상품들을 추가한다.")
     void addProducts() {
         List<ProductRequestDto> productRequestDtos = List.of(
-                new ProductRequestDto("product1", 10000, null),
-                new ProductRequestDto("product2", 11000, null)
+                new ProductRequestDto("product1", 10000, null, 10),
+                new ProductRequestDto("product2", 11000, null, 10)
         );
 
         int actual = productService.addProducts(productRequestDtos);

@@ -65,4 +65,13 @@ public class AcceptanceTest {
                 .then().log().all()
                 .extract();
     }
+
+    protected ExtractableResponse<Response> delete(final String uri, final Header header) {
+            return RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header(header)
+                    .when().delete(uri)
+                    .then().log().all()
+                    .extract();
+        }
 }

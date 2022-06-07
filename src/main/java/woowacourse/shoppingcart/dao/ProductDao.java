@@ -23,14 +23,16 @@ public class ProductDao {
     }
 
     public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
+        final String query = "INSERT INTO product (name, price, thumbnail_url, quantity) VALUES (?, ?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
+            preparedStatement.setString(3, product.getThumbnailUrl());
+            preparedStatement.setInt(4, product.getQuantity());
+
             return preparedStatement;
         }, keyHolder);
 
@@ -39,14 +41,14 @@ public class ProductDao {
 
     public Product findProductById(final Long productId) {
         try {
-            final String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
+            final String query = "SELECT id, name, price, thumbnail_url, quantity FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                     new Product(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
+                            resultSet.getString("thumbnail_url"),
+                            resultSet.getInt("quantity")), productId
             );
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
@@ -61,8 +63,8 @@ public class ProductDao {
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
                                 resultSet.getInt("price"),
-                                resultSet.getString("image_url")
-                        ));
+                                resultSet.getString("thumbnail_url"),
+                                resultSet.getInt("quantity")));
     }
 
     public void delete(final Long productId) {
@@ -77,7 +79,7 @@ public class ProductDao {
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setString(1, products.get(i).getName());
                 ps.setInt(2, products.get(i).getPrice());
-                ps.setString(3, products.get(i).getImageUrl());
+                ps.setString(3, products.get(i).getThumbnailUrl());
             }
 
             @Override
