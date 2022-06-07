@@ -3,9 +3,11 @@ package woowacourse.shoppingcart.unit.product.ui;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static woowacourse.shoppingcart.utils.ApiDocumentUtils.getDocumentRequest;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.product.dto.ProductsResponse;
 import woowacourse.shoppingcart.unit.ControllerTest;
@@ -61,6 +64,66 @@ class ProductControllerTest extends ControllerTest {
                         fieldWithPath("products[].name").description("상품명"),
                         fieldWithPath("products[].price").description("상품 가격"),
                         fieldWithPath("products[].imageUrl").description("상품 사진 url")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("상품을 상세 조회한다.")
+    void product() throws Exception {
+        // given
+        final Product product = new Product(3L, "망고망고", 720, "mangoman.go");
+        given(productService.findProductById(product.getId()))
+                .willReturn(product);
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                get("/products/{productId}", product.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andDo(document("product",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("productId").description("상품 ID")
+                ),
+                responseFields(
+                        fieldWithPath("id").description("상품 ID"),
+                        fieldWithPath("name").description("상품명"),
+                        fieldWithPath("price").description("상품 가격"),
+                        fieldWithPath("imageUrl").description("상품 사진 url")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품을 상세 조회하면 404를 반환한다..")
+    void product_notExistProduct_404() throws Exception {
+        // given
+        final Long productId = 3L;
+        given(productService.findProductById(productId))
+                .willThrow(new NotFoundProductException());
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                get("/products/{productId}", productId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andDo(document("product",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("productId").description("상품 ID")
+                ),
+                responseFields(
+                        fieldWithPath("errorCode").description("에러 코드"),
+                        fieldWithPath("message").description("에러 메시지")
                 )
         ));
     }
