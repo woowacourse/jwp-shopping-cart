@@ -47,4 +47,15 @@ public class OrderRepositoryUsingDao implements OrderRepository {
                 new Quantity(orderDetailEntity.getQuantity())))
             .collect(Collectors.toList());
     }
+
+    @Override
+    public long add(long customerId, NewOrders newOrders) {
+        Long orderId = orderDao.addOrders(customerId);
+        List<NewOrderDetail> orderDetails = newOrders.getOrderDetails();
+
+        for (NewOrderDetail orderDetail : orderDetails) {
+            ordersDetailDao.add(orderId, orderDetail);
+        }
+        return orderId;
+    }
 }

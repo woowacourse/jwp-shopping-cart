@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.shoppingcart.domain.NewOrderDetail;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.entity.OrderDetailEntity;
 
@@ -51,5 +52,19 @@ public class OrdersDetailDao {
     public List<OrderDetailEntity> findOrderDetailsByOrderId(long ordersId) {
         final String sql = "SELECT orders_id, product_id, quantity FROM orders_detail WHERE orders_id = ?";
         return jdbcTemplate.query(sql, ORDER_DETAIL_ENTITY_ROW_MAPPER, ordersId);
+    }
+
+    public Long add(Long orderId, NewOrderDetail orderDetail) {
+        final String query = "INSERT INTO orders_detail(orders_id, product_id, quantity) VALUES(?, ?, ?)";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(query, new String[] {"id"});
+            preparedStatement.setLong(1, orderId);
+            preparedStatement.setLong(2, orderDetail.getProductId());
+            preparedStatement.setLong(3, orderDetail.getQuantity());
+            return preparedStatement;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 }

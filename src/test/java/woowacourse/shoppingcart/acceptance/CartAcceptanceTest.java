@@ -161,11 +161,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return AcceptanceFixture.post(requestBody, "/api/customers/" + userName + "/carts");
     }
 
-    public static Long getAddedCartItemId(String userName, Long productId) {
-        ExtractableResponse<Response> response = requestToAddCartItem(userName, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
-    }
-
     private Header getTokenHeader() {
         final CustomerRequest customerRequest =
             new CustomerRequest("email@email.com", "password1!", "dwoo");
@@ -179,7 +174,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return new Header("Authorization", BEARER + accessToken);
     }
 
-    private CartItemResponse extractCartItem(ExtractableResponse<Response> response) {
+    public static CartItemResponse extractCartItem(ExtractableResponse<Response> response) {
         return response.jsonPath()
             .getObject(".", CartItemResponse.class);
     }
