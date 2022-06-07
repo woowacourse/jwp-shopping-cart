@@ -10,9 +10,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,50 +44,29 @@ public class CartService {
 
     @Transactional
     public void delete(final Long customerId, final CartDeleteServiceRequest request) {
+        validateExistInCart(customerId, request.getCartIds());
+        cartItemDao.deleteAllById(request.getCartIds());
+    }
+
+    private Customer getCustomer(final Long id) {
+        return customerDao.findById(id)
+                .orElseThrow(CustomerNotFoundException::new);
+    }
+
+    private Product getProduct(final Long productId) {
+        return productDao.findProductById(productId)
+                .orElseThrow(ProductNotFoundException::new);
+    }
+
+    private void validateExistInCart(final Long customerId, final List<Long> ids) {
         getCustomer(customerId);
         final List<Long> cartIds = findAllByCustomerId(customerId).stream()
                 .mapToLong(CartResponse::getId)
                 .boxed()
                 .collect(Collectors.toList());
 
-        if (!cartIds.containsAll(request.getCartIds())) {
+        if (!cartIds.containsAll(ids)) {
             throw new NotInCustomerCartItemException();
         }
-
-        cartItemDao.deleteAllById(request.getCartIds());
-    }
-
-//    @Transactional
-//    public void delete(final Long customerId, final Long cartId) {
-//        validateCustomerCart(customerId, cartId);
-//        cartItemDao.deleteCartItem(cartId);
-//    }
-
-    private Customer getCustomer(final Long id) {
-        return customerDao.findById(id)
-                .orElseThrow(InvalidCustomerException::new);
-    }
-
-    private Product getProduct(final Long productId) {
-        return productDao.findProductById(productId)
-                .orElseThrow(InvalidProductException::new);
-    }
-
-    private void validateCustomerCart(final Long customerId, final Long cartId) {
-        getCustomer(customerId);
-        if (notExistsInCart(customerId, cartId)) {
-            throw new NotInCustomerCartItemException();
-        }
-    }
-
-    private boolean notExistsInCart(final Long customerId, final Long cartId) {
-        return findCartIdsByCustomerId(customerId).stream()
-                .noneMatch(id -> id.equals(cartId));
-    }
-
-    private List<Long> findCartIdsByCustomerId(final Long id) {
-        final Customer customer = getCustomer(id);
-
-        return cartItemDao.findIdsByCustomerId(customer.getId());
     }
 }
