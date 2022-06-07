@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ProductsRequest;
+import woowacourse.shoppingcart.dto.product.ProductRequest;
+import woowacourse.shoppingcart.dto.product.ProductsRequest;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:products.sql"})
