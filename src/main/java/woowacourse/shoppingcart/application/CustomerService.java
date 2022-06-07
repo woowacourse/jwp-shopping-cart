@@ -65,7 +65,7 @@ public class CustomerService {
 
     private boolean isSameOriginUsername(Long id, CustomerUpdateRequest request) {
         Customer foundCustomer = findById(id);
-        return foundCustomer.getUsername().equals(request.getUsername());
+        return foundCustomer.isSameUsername(request.getUsername());
     }
 
     public void delete(Long id) {
