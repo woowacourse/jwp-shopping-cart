@@ -50,9 +50,12 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductResponse findProductById(final LoginCustomer loginCustomer, final Long productId) {
         Product product = productDao.findProductById(productId);
-        Long userId = customerDao.findIdByUserName(loginCustomer.getUserName());
+        if(loginCustomer.isUnauthorized()){
+            return ProductResponse.of(product);
+        }
 
-        if (loginCustomer.isUnauthorized() || !cartItemDao.existByCustomerIdAndProductId(userId, productId)) {
+        Long userId = customerDao.findIdByUserName(loginCustomer.getUserName());
+        if (!cartItemDao.existByCustomerIdAndProductId(userId, productId)) {
             return ProductResponse.of(product);
         }
 
