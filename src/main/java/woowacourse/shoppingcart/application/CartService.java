@@ -6,26 +6,74 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
+    private static final String NOT_EXIST_CART = "[ERROR] 존재하지 않는 장바구니입니다.";
 
-//    private final CartItemDao cartItemDao;
-//    private final CustomerDao customerDao;
-//    private final ProductDao productDao;
-//
-//    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
-//        this.cartItemDao = cartItemDao;
-//        this.customerDao = customerDao;
-//        this.productDao = productDao;
-//    }
+    private final CartItemDao cartItemDao;
+    private final CustomerDao customerDao;
+    private final ProductDao productDao;
+
+    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+        this.cartItemDao = cartItemDao;
+        this.customerDao = customerDao;
+        this.productDao = productDao;
+    }
+
+    public CartResponse findByUserName(String username) {
+        validateExistName(username);
+        Long id = customerDao.findIdByUserName(username);
+        Cart cart = generateCart(id);
+        return new CartResponse(cart);
+    }
+
+    private void validateExistName(String username) {
+        if (!customerDao.isValidName(username)) {
+            throw new InvalidCartItemException(NOT_EXIST_CART);
+        }
+    }
+
+    private Cart generateCart(Long customerId) {
+        List<CartItem> cartItems = cartItemDao.findCartItemByUserId(customerId);
+        List<Integer> quantities = generateQuantities(cartItems);
+        List<Boolean> checks = generateChecks(cartItems);
+        List<Product> products = generateProductsInCart(cartItems);
+        return new Cart(products, checks, quantities);
+    }
+
+    private List<Integer> generateQuantities(List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(CartItem::getQuantity)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private List<Boolean> generateChecks(List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(CartItem::getChecked)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private List<Product> generateProductsInCart(List<CartItem> cartItems) {
+        List<Long> productIds = cartItems.stream()
+                .map(CartItem::getProductId)
+                .collect(Collectors.toList());
+        List<Product> products = productDao.findProducts();
+        return products.stream()
+                .filter(product -> product.isContained(productIds))
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+
 //
 //    public List<Cart> findCartsByCustomerName(final String customerName) {
 //        final List<Long> cartIds = findCartIdsByCustomerName(customerName);

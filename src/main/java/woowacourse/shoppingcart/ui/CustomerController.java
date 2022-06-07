@@ -28,7 +28,7 @@ public class CustomerController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity.created(URI.create("/users/me")).body(customerService.signUp(signUpRequest));
     }
 

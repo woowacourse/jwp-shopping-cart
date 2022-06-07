@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Product {
@@ -23,6 +24,11 @@ public class Product {
 
     public Product(final String name, final int price, final String imageUrl) {
         this(null, name, price, imageUrl);
+    }
+
+    public boolean isContained(List<Long> productIds) {
+        return productIds.stream()
+                .anyMatch(productId -> productId.longValue() == this.id);
     }
 
     @Override
