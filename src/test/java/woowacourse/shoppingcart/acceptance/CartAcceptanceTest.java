@@ -115,12 +115,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
     }
 
     public static Long 장바구니_아이템_추가되어_있음(String accessToken, Long productId) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
+        return response.as(Cart.class).getId();
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {

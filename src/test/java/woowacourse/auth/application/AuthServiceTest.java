@@ -38,13 +38,12 @@ class AuthServiceTest {
         // given
         customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
         TokenRequest tokenRequest = new TokenRequest(페퍼_아이디, 페퍼_비밀번호);
-        String expectToken = jwtTokenProvider.createToken(페퍼_아이디);
 
         // when
         TokenResponse tokenResponse = authService.login(tokenRequest);
 
         // then
-        assertThat(tokenResponse.getAccessToken()).isEqualTo(expectToken);
+        assertThat(tokenResponse.getAccessToken()).isEqualTo(jwtTokenProvider.createToken(페퍼_아이디));
     }
 
     @Test
