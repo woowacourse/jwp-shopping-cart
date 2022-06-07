@@ -17,7 +17,6 @@ import static woowacourse.fixture.TokenFixture.BEARER;
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql({"/schema.sql", "/data.sql"})
-@ActiveProfiles("test")
 public class AcceptanceTest {
     @LocalServerPort
     int port;
