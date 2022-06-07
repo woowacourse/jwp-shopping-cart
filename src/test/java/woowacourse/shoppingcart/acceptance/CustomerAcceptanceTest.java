@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.acceptance.AuthAcceptanceTest;
 import woowacourse.auth.dto.*;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
@@ -29,13 +30,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // when
         // 회원 정보를 담은 요청이 오면
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        ExtractableResponse<Response> registerCustomerResponse = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerRequest)
-                .when().post("/customers")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> registerCustomerResponse = 회원가입(customerRequest);
 
         // then
         // 회원가입에 성공하고 상태코드 201과 회원정보를 반환한다.
@@ -58,23 +53,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerRequest)
-                .when().post("/customers")
-                .then().log().all()
-                .extract();
+        회원가입(customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        String accessToken = RestAssured
-                .given().log().all()
-                .body(tokenRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers/login")
-                .then().log().all()
-                .extract().as(TokenResponse.class).getAccessToken();
+        String accessToken = AuthAcceptanceTest.로그인(tokenRequest);
 
         // when
         // 회원 정보를 수정하고 내 정보 조회를 요청하면
@@ -113,23 +95,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerRequest)
-                .when().post("/customers")
-                .then().log().all()
-                .extract();
+        회원가입(customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        String accessToken = RestAssured
-                .given().log().all()
-                .body(tokenRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/customers/login")
-                .then().log().all()
-                .extract().as(TokenResponse.class).getAccessToken();
+        String accessToken = AuthAcceptanceTest.로그인(tokenRequest);
 
         // when
         // 패스워드와 함께 회원 삭제를 요청하면
@@ -152,13 +121,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerRequest)
-                .when().post("/customers")
-                .then().log().all()
-                .extract();
+        회원가입(customerRequest);
 
         // when
         // 이메일 중복을 확인하면
@@ -175,5 +138,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         //  사용 불가능한 이메일인지 확인한다.
         assertThat(validEmailResponse.jsonPath().getBoolean("isValidEmail")).isFalse();
+    }
+
+    public static ExtractableResponse<Response> 회원가입(CustomerRequest customerRequest) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(customerRequest)
+                .when().post("/customers")
+                .then().log().all()
+                .extract();
     }
 }
