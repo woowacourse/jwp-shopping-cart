@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.application.dto.ProductDto;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
+import woowacourse.shoppingcart.dto.response.ProductsResponse;
 import woowacourse.shoppingcart.repository.ProductRepository;
 
 @Service
@@ -20,11 +21,12 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> findProducts() {
+    public ProductsResponse findProducts() {
         final List<Product> products = productRepository.findProducts();
-        return products.stream()
+        final List<ProductResponse> productResponses = products.stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
+        return ProductsResponse.from(productResponses);
     }
 
     public Long addProduct(final ProductDto productDto) {

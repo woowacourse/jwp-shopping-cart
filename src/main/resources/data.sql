@@ -1,3 +1,5 @@
+insert into product (name, price, image_url, description, stock) values ('chicken', 10000, 'chicken.com', 'chicken description', 2);
+insert into product (name, price, image_url, description, stock) values ('pizze', 15000, 'pizza.com', 'pizza description', 3);
 insert into customer (email, password, profileImageUrl, name, gender, birthday, contact, address, detailAddress,
                       zoneCode, terms)
 values ('puterism@example.com', 'password!1', 'profile.com', '이름', 'male', '1999-03-28', '12345678910',
@@ -51,3 +53,4 @@ values ('puterism@example.com', 'password!1', 'profile.com', '이름', 'male', '
        ('sunhpark42@example.com', 'password!1', 'profile.com', '이름', 'male', '1999-03-28', '12345678910',
         'seoulsi seunleung', '14th floor', '12345', true)
 ;
+

@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.application.dto.ProductDto;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
+import woowacourse.shoppingcart.dto.response.ProductsResponse;
 
 @RestController
 @RequestMapping("/api/products")
@@ -29,7 +30,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> products() {
+    public ResponseEntity<ProductsResponse> products() {
         return ResponseEntity.ok(productService.findProducts());
     }
 

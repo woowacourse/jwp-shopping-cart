@@ -13,7 +13,6 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 @Repository
 public class CartRepository {
 
-
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;

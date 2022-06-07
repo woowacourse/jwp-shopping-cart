@@ -31,19 +31,23 @@ public class ProductDao {
         final Map<String, Object> params = Map.ofEntries(
                 Map.entry("name", product.getName()),
                 Map.entry("price", product.getPrice()),
-                Map.entry("image_url", product.getImageUrl())
+                Map.entry("image_url", product.getImageUrl()),
+                Map.entry("description", product.getDescription()) ,
+                Map.entry("stock", product.getStock())
         );
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
 
     public Product findProductById(final Long productId) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = :productId";
+            final String query = "SELECT name, price, image_url, description, stock FROM product WHERE id = :productId";
             final SqlParameterSource params = new MapSqlParameterSource(Map.of("productId", productId));
             return namedJdbcTemplate.queryForObject(query, params, (resultSet, rowNumber) -> {
                 return new Product(productId, resultSet.getString("name"),
                         resultSet.getInt("price"),
-                        resultSet.getString("image_url"));
+                        resultSet.getString("image_url"),
+                        resultSet.getString("description"),
+                        resultSet.getInt("stock"));
             });
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
@@ -51,13 +55,15 @@ public class ProductDao {
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
+        final String query = "SELECT id, name, price, image_url, description, stock FROM product";
         return namedJdbcTemplate.query(query, (resultSet, rowNum) -> {
             return new Product(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getInt("price"),
-                    resultSet.getString("image_url")
+                    resultSet.getString("image_url"),
+                    resultSet.getString("description"),
+                    resultSet.getInt("stock")
             );
         });
     }
