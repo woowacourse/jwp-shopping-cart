@@ -74,10 +74,19 @@ public class CartItemDao {
         }
     }
 
-    public void delete(final Long cartItemId, final Long customerId) {
-        String query = "delete from cart_item where id = :cartItemId and customer_id = :customerId";
+    public void delete(final Long cartItemId) {
+        String query = "delete from cart_item where id = :cartItemId";
         Map<String, Object> params = new HashMap<>();
         params.put("cartItemId", cartItemId);
+        int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
+        if (affectedRowCount == 0) {
+            throw new ResourceNotFoundException("존재하지 않는 장바구니 물품입니다.");
+        }
+    }
+
+    public void deleteByCustomerId(final Long customerId) {
+        String query = "delete from cart_item where customer_id = :customerId";
+        Map<String, Object> params = new HashMap<>();
         params.put("customerId", customerId);
         int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
         if (affectedRowCount == 0) {

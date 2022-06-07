@@ -5,15 +5,18 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.repository.dao.CartItemDao;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
 @Repository
 public class CustomerRepository {
 
     private final CustomerDao customerDao;
+    private final CartItemDao cartItemDao;
 
-    public CustomerRepository(final CustomerDao customerDao) {
+    public CustomerRepository(final CustomerDao customerDao, final CartItemDao cartItemDao) {
         this.customerDao = customerDao;
+        this.cartItemDao = cartItemDao;
     }
 
     public Long create(final Customer customer) {
@@ -39,6 +42,7 @@ public class CustomerRepository {
 
     public void delete(final Long id) {
         customerDao.delete(id);
+        cartItemDao.deleteByCustomerId(id);
     }
 
     public void validateDuplicateUsername(final String username) {

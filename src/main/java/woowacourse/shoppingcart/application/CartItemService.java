@@ -51,9 +51,9 @@ public class CartItemService {
         return CartItemQuantityResponse.of(cartItemRepository.updateCartItem(cartItem));
     }
 
-    public void delete(final TokenRequest tokenRequest, final List<CartItemIdRequest> cartItemIdRequests) {
+    public void delete(final List<CartItemIdRequest> cartItemIdRequests) {
         for (CartItemIdRequest cartItemIdRequest : cartItemIdRequests) {
-            cartItemRepository.delete(cartItemIdRequest.getId(), tokenRequest.getId());
+            cartItemRepository.delete(cartItemIdRequest.getId());
         }
     }
 }

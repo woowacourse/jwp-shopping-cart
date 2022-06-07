@@ -43,7 +43,7 @@ public class CartItemRepository {
         return cartItem;
     }
 
-    public void delete(final Long cartItemId, final Long customerId) {
-        cartItemDao.delete(cartItemId, customerId);
+    public void delete(final Long cartItemId) {
+        cartItemDao.delete(cartItemId);
     }
 }

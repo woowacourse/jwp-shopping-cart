@@ -85,10 +85,9 @@ class CartItemRepositoryTest {
     void delete() {
         // given
         Long cartItemId = 3L;
-        Long customerId = 1L;
 
         // when
-        cartItemRepository.delete(cartItemId, customerId);
+        cartItemRepository.delete(cartItemId);
 
         // then
         assertThat(cartItemRepository.findCartItemsByCustomerId(1L).size()).isEqualTo(2);
