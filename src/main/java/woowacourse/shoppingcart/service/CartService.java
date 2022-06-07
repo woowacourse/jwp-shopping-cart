@@ -1,14 +1,13 @@
 package woowacourse.shoppingcart.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.CreateCartItemRequest;
 import woowacourse.shoppingcart.dto.request.EditCartItemQuantityRequest;
@@ -32,21 +31,12 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> findCartsByCustomerName(final UserName customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        final List<CartItemResponse> responses = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = cartItemDao.getQuantityById(cartId);
-            final Product product = productDao.findProductById(productId);
-            responses.add(CartItemResponse.from(new CartItem(cartId, product, quantity)));
-        }
-        return responses;
-    }
-
-    private List<Long> findCartIdsByCustomerName(final UserName customerName) {
         final Long customerId = customerDao.getIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+        final List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customerId);
+
+        return cartItems.stream()
+                .map(item -> new CartItemResponse(item, productDao.findProductById(item.getProductId())))
+                .collect(Collectors.toList());
     }
 
     public Long addCart(final UserName customerName, final CreateCartItemRequest request) {
@@ -75,5 +65,10 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    private List<Long> findCartIdsByCustomerName(final UserName customerName) {
+        final Long customerId = customerDao.getIdByUserName(customerName);
+        return cartItemDao.findIdsByCustomerId(customerId);
     }
 }

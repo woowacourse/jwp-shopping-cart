@@ -6,7 +6,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.controller.AuthInterceptor;
-import woowacourse.auth.controller.UserNameArgumentResolver;
+import woowacourse.auth.controller.OptionalUserNameResolver;
+import woowacourse.auth.controller.UserNameResolver;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Configuration
@@ -26,6 +27,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new UserNameArgumentResolver(jwtTokenProvider));
+        resolvers.add(new UserNameResolver(jwtTokenProvider));
+        resolvers.add(new OptionalUserNameResolver(jwtTokenProvider));
     }
 }

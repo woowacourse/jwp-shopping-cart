@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCartItemException;
 
 @Repository
@@ -16,6 +17,14 @@ public class CartItemDao {
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<CartItem> findAllByCustomerId(final Long customerId) {
+        final String sql = "SELECT id, product_id, quantity FROM cart_item WHERE customer_id = ?";
+
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> new CartItem(rs.getLong("id"), rs.getLong("product_id"), rs.getInt("quantity")),
+                customerId);
     }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {

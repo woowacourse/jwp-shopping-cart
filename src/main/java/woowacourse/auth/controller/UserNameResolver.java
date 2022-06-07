@@ -8,25 +8,24 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.auth.support.UserNameResolver;
 import woowacourse.shoppingcart.domain.customer.UserName;
 
-public class UserNameArgumentResolver implements HandlerMethodArgumentResolver {
+public class UserNameResolver implements HandlerMethodArgumentResolver {
 
     private JwtTokenProvider jwtTokenProvider;
 
-    public UserNameArgumentResolver(final JwtTokenProvider jwtTokenProvider) {
+    public UserNameResolver(final JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(UserNameResolver.class);
+        return parameter.hasParameterAnnotation(woowacourse.auth.support.UserNameResolver.class);
     }
 
     @Override
     public UserName resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                            final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
+                                    final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String token = AuthorizationExtractor.extract(request);
         return new UserName(jwtTokenProvider.getPayload(token));

@@ -27,7 +27,7 @@
   - quantity는 1~99개로 제한한다. 
 - [X] CartItem의 quantity 변경 API 추가
   - PATCH /api/customers/me/carts
-- [ ] Product 전체 목록 조회 시 cartId, cartQuantity도 보내도록 변경
+- [X] Product 전체 목록 조회 시 cartId, cartQuantity도 보내도록 변경
   - 토큰의 존재 여부에 따라 다르게 동작하게 해야한다. 
 
 <br>
