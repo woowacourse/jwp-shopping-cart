@@ -42,21 +42,19 @@ public class ProductDaoTest {
         assertThat(productId).isEqualTo(1L);
     }
 
-    @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
+    @DisplayName("productID 를 이용하여 상품을 조회한다.")
     @Test
-    void findProductById() {
+    void findById() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        Long productId = productDao.save(new Product("초콜렛", 1_000, "www.test.com"));
 
         // when
-        final Product product = productDao.findProductById(productId);
+        Product product = productDao.findById(productId).get();
 
         // then
-        assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
+        assertThat(product).usingRecursiveComparison().isEqualTo(
+                new Product(productId, "초콜렛", 1_000, "www.test.com")
+        );
     }
 
     @DisplayName("상품 목록 조회")

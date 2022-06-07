@@ -7,12 +7,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.shoppingcart.application.dto.response.ProductResponse;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.fixture.ProductFixture.findProductById;
+import static woowacourse.fixture.ProductFixture.getProductId;
 
 @DisplayName("상품 관련 기능 인수테스트")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -40,12 +44,21 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        // given
+        Long productId = getProductId("치킨", 10_000, "http://example.com/chicken.jpg");
 
-        ExtractableResponse<Response> response = 상품_조회_요청(productId);
+        // when
+        ExtractableResponse<Response> response = findProductById(productId);
 
-        조회_응답됨(response);
-        상품_조회됨(response, productId);
+        // then
+        ProductResponse resultProductResponse = response.as(ProductResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(resultProductResponse.getId()).isEqualTo(productId),
+                () -> assertThat(resultProductResponse.getName()).isEqualTo("치킨"),
+                () -> assertThat(resultProductResponse.getPrice()).isEqualTo(10_000),
+                () -> assertThat(resultProductResponse.getImageUrl()).isEqualTo("http://example.com/chicken.jpg")
+        );
     }
 
     @DisplayName("상품을 삭제한다")

@@ -2,17 +2,27 @@ package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
+
+    private final static RowMapper<Product> PRODUCT_ROW_MAPPER = (resultSet, rowNum) ->  {
+        return new Product(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getString("image_url")
+        );
+    };
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -35,18 +45,12 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Optional<Product> findById(final Long id) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
-            );
+            String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            return Optional.empty();
         }
     }
 
