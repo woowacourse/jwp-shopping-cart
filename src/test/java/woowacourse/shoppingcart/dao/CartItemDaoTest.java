@@ -20,6 +20,10 @@ import woowacourse.shoppingcart.domain.Product;
 @Sql(scripts = {"classpath:schema.sql", "classpath:addCustomers.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
+
+    private static Product BANANA;
+    private static Product APPLE;
+
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
@@ -32,8 +36,10 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        BANANA = new Product("banana", 1_000, "woowa1.com");
+        APPLE = new Product("apple", 2_000, "woowa2.com");
+        productDao.save(BANANA);
+        productDao.save(APPLE);
 
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 1);
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 1);
@@ -115,5 +121,18 @@ public class CartItemDaoTest {
         Cart cart = cartItemDao.findByCustomerIdAndProductId(1L, 1L);
 
         assertThat(cart).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Cart 객체를 받아 데이터를 수정한다.")
+    void update() {
+        // given
+        final Cart bananaCart = new Cart(1L, 1L, "banana", 1000, "woowa1.com", 2);
+
+        // when
+        final int updatedRows = cartItemDao.update(bananaCart);
+
+        // then
+        assertThat(updatedRows).isEqualTo(2);
     }
 }

@@ -91,4 +91,13 @@ public class CartItemDao {
                         res.getInt("quantity")
                 );
     }
+
+    public int update(final Cart cart) {
+        final String cartItemSql = "UPDATE cart_item SET quantity = ? where id = ?";
+        final String productSql = "UPDATE product SET name = ?, price = ?, image_url = ? where id = ?";
+        final int cartItemAffectedRows = jdbcTemplate.update(cartItemSql, cart.getQuantity(), cart.getId());
+        final int productAffectedRows = jdbcTemplate.update(productSql,
+                cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getProductId());
+        return cartItemAffectedRows + productAffectedRows;
+    }
 }
