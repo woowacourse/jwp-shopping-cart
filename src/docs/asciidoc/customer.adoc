@@ -57,6 +57,13 @@ include::{snippets}/create-user-fail-password2/http-request.adoc[]
 
 include::{snippets}/create-user-fail-password1/http-response.adoc[]
 
+[[resources-customer-create-duplicate-email]]
+==== 실패 - 중복된 이메일
+
+===== HTTP response
+
+include::{snippets}/create-user-fail-duplicate-email/http-response.adoc[]
+
 [[resources-customer-get-me]]
 === 회원 정보 조회
 
