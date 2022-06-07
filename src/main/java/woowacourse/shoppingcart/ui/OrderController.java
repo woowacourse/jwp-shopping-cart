@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.dto.OrdersRequest;
+import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrdersResponse;
 
 import javax.validation.Valid;
@@ -25,7 +25,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final long customerId,
-                                         @RequestBody @Valid final OrdersRequest ordersRequest) {
+                                         @RequestBody @Valid final OrderRequest ordersRequest) {
         final long orderId = orderService.addOrder(ordersRequest, customerId);
         return ResponseEntity.created(URI.create("/customers/orders/" + orderId))
                 .build();

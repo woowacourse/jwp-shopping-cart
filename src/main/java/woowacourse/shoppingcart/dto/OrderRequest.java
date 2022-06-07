@@ -2,14 +2,16 @@ package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public class OrdersRequest {
+public class OrderRequest {
 
+    @NotNull
     private final List<OrderDetailRequest> order;
 
     @JsonCreator
-    public OrdersRequest(List<OrderDetailRequest> order) {
+    public OrderRequest(List<OrderDetailRequest> order) {
         this.order = order;
     }
 

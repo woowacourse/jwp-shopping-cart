@@ -44,7 +44,7 @@ class OrderServiceTest {
         given(cartItemDao.findIdByCustomerIdAndProductId(1L, 1L)).willReturn(1L);
         given(cartItemDao.findIdByCustomerIdAndProductId(1L, 2L)).willReturn(2L);
         // when
-        final OrdersRequest ordersRequest = new OrdersRequest(
+        final OrderRequest ordersRequest = new OrderRequest(
                 List.of(new OrderDetailRequest(1L, 1),
                         new OrderDetailRequest(2L, 2))
         );

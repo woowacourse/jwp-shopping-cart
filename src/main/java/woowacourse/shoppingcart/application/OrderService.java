@@ -8,7 +8,7 @@ import woowacourse.shoppingcart.dao.OrderDetailDao;
 import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.dto.OrderDetailRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.dto.OrdersRequest;
+import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
@@ -30,7 +30,7 @@ public class OrderService {
         this.cartItemDao = cartItemDao;
     }
 
-    public long addOrder(final OrdersRequest ordersRequest, final long customerId) {
+    public long addOrder(final OrderRequest ordersRequest, final long customerId) {
         final long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderDetailRequest orderDetail : ordersRequest.getOrder()) {

@@ -3,10 +3,16 @@ package woowacourse.shoppingcart.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import woowacourse.shoppingcart.domain.Product;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class ProductRequest {
 
+    @NotBlank
     private final String name;
+    @NotNull
     private final Integer price;
+    @NotBlank
     private final String imageUrl;
 
     @JsonCreator

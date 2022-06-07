@@ -47,7 +47,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        final OrdersRequest ordersRequest = new OrdersRequest(
+        final OrderRequest ordersRequest = new OrderRequest(
                 Stream.of(productId1, productId2)
                         .map(productId -> new OrderDetailRequest(productId, 10))
                         .collect(Collectors.toList())
@@ -61,7 +61,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 있는 물품을 주문하면 장바구니에서 해당 물품들이 삭제된다.")
     @Test
     void cartItemsRemovedWhenOrder() {
-        final OrdersRequest ordersRequest = new OrdersRequest(
+        final OrderRequest ordersRequest = new OrderRequest(
                 Stream.of(productId1, productId2)
                         .map(productId -> new OrderDetailRequest(productId, 10))
                         .collect(Collectors.toList())
@@ -79,8 +79,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        주문하기_요청_성공되어_있음(accessToken, new OrdersRequest(Collections.singletonList(new OrderDetailRequest(productId1, 2))));
-        주문하기_요청_성공되어_있음(accessToken, new OrdersRequest(Collections.singletonList(new OrderDetailRequest(productId2, 5))));
+        주문하기_요청_성공되어_있음(accessToken, new OrderRequest(Collections.singletonList(new OrderDetailRequest(productId1, 2))));
+        주문하기_요청_성공되어_있음(accessToken, new OrderRequest(Collections.singletonList(new OrderDetailRequest(productId2, 5))));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(accessToken);
 
@@ -91,7 +91,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 단일 조회")
     @Test
     void getOrder() {
-        주문하기_요청_성공되어_있음(accessToken, new OrdersRequest(Arrays.asList(
+        주문하기_요청_성공되어_있음(accessToken, new OrderRequest(Arrays.asList(
                 new OrderDetailRequest(productId1, 2),
                 new OrderDetailRequest(productId2, 4)
         )));
@@ -108,7 +108,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         주문_조회됨(response, order);
     }
 
-    public static ExtractableResponse<Response> 주문하기_요청(String accessToken, OrdersRequest ordersRequest) {
+    public static ExtractableResponse<Response> 주문하기_요청(String accessToken, OrderRequest ordersRequest) {
         return post("/customers/orders", accessToken, ordersRequest);
     }
 
@@ -125,7 +125,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static void 주문하기_요청_성공되어_있음(String accessToken, OrdersRequest orderRequests) {
+    public static void 주문하기_요청_성공되어_있음(String accessToken, OrderRequest orderRequests) {
         ExtractableResponse<Response> response = 주문하기_요청(accessToken, orderRequests);
     }
 
