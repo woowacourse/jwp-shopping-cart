@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -11,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
@@ -32,16 +30,6 @@ public class CartItemDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");
-    }
-
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = :id";
-            MapSqlParameterSource parameters = new MapSqlParameterSource("id", cartId);
-            return namedParameterJdbcTemplate.queryForObject(sql, parameters, (rs, rowNum) -> rs.getLong("product_id"));
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
     }
 
     public Long save(CartItem cartItem) {
