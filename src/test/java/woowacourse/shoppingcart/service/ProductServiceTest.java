@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.ProductRequestDto;
+import woowacourse.shoppingcart.dto.response.ProductResponseDto;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.List;
@@ -29,7 +30,7 @@ class ProductServiceTest {
         productService.addProduct(product1);
         productService.addProduct(product2);
 
-        List<Product> actual = productService.findProducts();
+        final List<Product> actual = productService.findProducts();
 
         assertThat(actual).containsExactly(
                 new Product("product1", 10000, null, 10),
@@ -41,7 +42,8 @@ class ProductServiceTest {
     @DisplayName("상품을 추가한다.")
     void addProduct() {
         Long addedId = productService.addProduct(product1);
-        assertThat(productService.findProductById(addedId)).isEqualTo(product1);
+        ProductResponseDto productDto = productService.findProductById(addedId);
+        assertThat(productDto.getName()).isEqualTo(product1.getName());
     }
 
     @Test

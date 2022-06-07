@@ -56,7 +56,7 @@ public class ProductDao {
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
+        final String query = "SELECT id, name, price, thumbnail_url, quantity FROM product";
         return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
                         new Product(
@@ -73,13 +73,14 @@ public class ProductDao {
     }
 
     public int saveAll(List<Product> products) {
-        final String query = "INSERT INTO product(name, price, image_url) VALUES(?,?,?)";
+        final String query = "INSERT INTO product(name, price, thumbnail_url, quantity) VALUES(?,?,?,?)";
         return jdbcTemplate.batchUpdate(query, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setString(1, products.get(i).getName());
                 ps.setInt(2, products.get(i).getPrice());
                 ps.setString(3, products.get(i).getThumbnailUrl());
+                ps.setInt(4, products.get(i).getQuantity());
             }
 
             @Override

@@ -48,7 +48,7 @@ class CustomerControllerTest extends ControllerTest {
     private String accessToken;
 
     static Stream<UpdateCustomerDto> invalidParams() {
-        return Stream.of(null, new UpdateCustomerDto(" "));
+        return Stream.of(new UpdateCustomerDto(null), new UpdateCustomerDto(" "));
     }
 
     @BeforeEach

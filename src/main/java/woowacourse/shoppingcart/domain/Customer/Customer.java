@@ -19,7 +19,6 @@ public class Customer {
         this.username = username;
     }
 
-
     public static Customer createWithoutId(final String email, final String password, final String username) {
         StringValidator.validateNullOrBlank(email, new EmailValidationException("이메일에는 공백이 들어가면 안됩니다."));
         return new Customer(null, new Email(email), password, new Username(username));

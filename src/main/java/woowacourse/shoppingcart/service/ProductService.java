@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.ProductRequestDto;
+import woowacourse.shoppingcart.dto.response.ProductResponseDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,8 +33,14 @@ public class ProductService {
         );
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponseDto findProductById(final Long productId) {
+        Product product = productDao.findProductById(productId);
+        return new ProductResponseDto(
+                product.getId(),
+                product.getThumbnailUrl(),
+                product.getName(),
+                product.getPrice(),
+                product.getQuantity());
     }
 
     public void deleteProductById(final Long productId) {

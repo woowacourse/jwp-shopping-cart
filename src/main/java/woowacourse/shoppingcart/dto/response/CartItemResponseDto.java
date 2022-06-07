@@ -1,18 +1,25 @@
 package woowacourse.shoppingcart.dto.response;
 
-public class ProductResponseDto {
+public class CartItemResponseDto {
     private final Long productId;
     private final String thumbnailUrl;
     private final String name;
     private final Integer price;
     private final Integer quantity;
+    private final Integer count;
 
-    public ProductResponseDto(final Long productId, final String thumbnailUrl, final String name, final Integer price, final Integer quantity) {
+    public CartItemResponseDto(final Long productId,
+                               final String thumbnailUrl,
+                               final String name,
+                               final Integer price,
+                               final Integer quantity,
+                               final Integer count) {
         this.productId = productId;
         this.thumbnailUrl = thumbnailUrl;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+        this.count = count;
     }
 
     public Long getProductId() {
@@ -33,5 +40,9 @@ public class ProductResponseDto {
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public Integer getCount() {
+        return count;
     }
 }

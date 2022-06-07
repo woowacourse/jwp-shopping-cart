@@ -11,7 +11,8 @@ import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.ProductRequestDto;
 import woowacourse.shoppingcart.dto.request.SignUpDto;
-import woowacourse.shoppingcart.dto.response.ProductResponseDto;
+import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
+import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
 
 import java.util.List;
 
@@ -64,10 +65,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
 
-        final List<ProductResponseDto> productResponseDtos
-                = cartItemsResponse.body().jsonPath().getList(".", ProductResponseDto.class);
+        final List<CartItemResponseDto> cartItemResponseDtos
+                = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
-        assertThat(productResponseDtos.size()).isEqualTo(2);
+        assertThat(cartItemResponseDtos.size()).isEqualTo(2);
     }
 
     @Test
@@ -78,11 +79,28 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
 
         ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
-        final List<ProductResponseDto> productResponseDtos
-                = cartItemsResponse.body().jsonPath().getList(".", ProductResponseDto.class);
+        final List<CartItemResponseDto> cartItemResponseDtos
+                = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
-        assertThat(productResponseDtos.size()).isEqualTo(1);
+        assertThat(cartItemResponseDtos.size()).isEqualTo(1);
 
+    }
+
+    @Test
+    @DisplayName("장바구니에 담긴 물건의 수량을 변경한다.")
+    void updateCartItems() {
+        AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);
+        post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto1);
+
+        UpdateCartItemCountItemRequest updateCartItemCountItemRequest = new UpdateCartItemCountItemRequest(2);
+        put("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader, updateCartItemCountItemRequest);
+
+        ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final List<CartItemResponseDto> cartItemResponseDtos
+                = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
+
+        assertThat(cartItemResponseDtos.size()).isEqualTo(1);
+        assertThat(cartItemResponseDtos.get(0).getCount()).isEqualTo(2);
     }
 
     @Test
@@ -95,9 +113,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         delete("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader);
 
         ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
-        final List<ProductResponseDto> productResponseDtos
-                = cartItemsResponse.body().jsonPath().getList(".", ProductResponseDto.class);
+        final List<CartItemResponseDto> cartItemResponseDtos
+                = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
-        assertThat(productResponseDtos.size()).isEqualTo(0);
+        assertThat(cartItemResponseDtos.size()).isEqualTo(0);
     }
 }
