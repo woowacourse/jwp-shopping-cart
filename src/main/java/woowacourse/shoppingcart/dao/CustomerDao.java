@@ -105,6 +105,13 @@ public class CustomerDao {
         );
     }
 
+    public void delete(Long id) {
+        String sql = "delete from customer where id = :id";
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
+
+        jdbcTemplate.update(sql, namedParameters);
+    }
+
     private RowMapper<Customer> rowMapper() {
         return ((rs, rowNum) -> new Customer(
                 rs.getLong("id"),
@@ -112,12 +119,5 @@ public class CustomerDao {
                 rs.getString("username"),
                 rs.getString("password")
         ));
-    }
-
-    public void delete(Long id) {
-        String sql = "delete from customer where id = :id";
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
-
-        jdbcTemplate.update(sql, namedParameters);
     }
 }
