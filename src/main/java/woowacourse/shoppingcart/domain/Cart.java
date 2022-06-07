@@ -49,4 +49,8 @@ public class Cart {
     public int getQuantity() {
         return quantity;
     }
+
+    public Cart applyQuantity(final int quantityValue) {
+        return new Cart(this.id, this.productId, this.name, this.price, this.imageUrl, this.quantity + quantityValue);
+    }
 }
