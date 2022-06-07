@@ -64,16 +64,6 @@ public class CartItemDaoTest {
         assertThat(isExist).isTrue();
     }
 
-    @DisplayName("Customer id로 Product id들을 조회한다.")
-    @Test
-    void getProductIdsByCustomerId_exist_productIdsReturned() {
-        // when
-        List<Long> productIds = cartItemDao.findProductIdsByCustomerId(1L);
-
-        // then
-        assertThat(productIds).containsExactly(1L, 2L);
-    }
-
     @DisplayName("productId들로 수량들을 조회한다.")
     @Test
     void getQuantitiesByProductIds_exist_quantities() {
@@ -85,19 +75,6 @@ public class CartItemDaoTest {
                 .collect(Collectors.toList());
         // then
         assertThat(quantities).containsExactly(5, 3);
-    }
-
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
-    @Test
-    void findProductIdsByCustomerId() {
-        // given
-        final Long customerId = 1L;
-
-        // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        // then
-        assertThat(productsIds).containsExactly(1L, 2L);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
@@ -122,7 +99,7 @@ public class CartItemDaoTest {
         Long productId = 1L;
 
         // when
-         cartItemDao.updateCartItem(customerId, quantity, productId);
+        cartItemDao.updateCartItem(customerId, quantity, productId);
 
         // then
         CartDto cartDto = cartItemDao.findCartByProductCustomer(customerId, productId);

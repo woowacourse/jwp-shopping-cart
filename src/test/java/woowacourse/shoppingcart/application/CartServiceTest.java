@@ -132,6 +132,9 @@ public class CartServiceTest {
         CartUpdationRequest request = new CartUpdationRequest(5);
         Cart updatedCart = new Cart(cartId, product1, request.getQuantity());
 
+        given(cartItemDao.existProduct(customer.getId(), productId))
+                .willReturn(true);
+
         given(cartItemDao.findCartByProductCustomer(customer.getId(), productId))
                 .willReturn(new CartDto(cartId, productId, request.getQuantity()));
 
@@ -153,7 +156,7 @@ public class CartServiceTest {
         CartUpdationRequest request = new CartUpdationRequest(4);
 
         given(cartItemDao.existProduct(1L, 21L))
-                .willThrow(new IllegalProductException("장바구니에 상품이 존재하지 않습니다."));
+                .willReturn(false);
 
         // when, then
         assertThatThrownBy(() -> cartService.updateProductInCart(customer, request, 21L))
