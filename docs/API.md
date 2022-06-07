@@ -173,7 +173,7 @@
 
 ### 장바구니
 
-- [ ] 장바구니 추가
+- [x] 장바구니 추가
     - `요청`
       ```
       POST [논의 필요] /customers/carts HTTP/1.1
@@ -191,7 +191,7 @@
       [논의 필요] HTTP/1.1 201 Created
       Content-Type: application/json
       ```
-- [ ] 장바구니 삭제
+- [x] 장바구니 삭제
     - `요청`
       ```java
       DELETE /customers/carts HTTP/1.1
@@ -207,7 +207,7 @@
         HTTP/1.1 204 No Content
         Content-Type: application/json
         ```
-- [ ] 장바구니 조회
+- [x] 장바구니 조회
     - `요청`
       ```java
       GET /customers/carts HTTP/1.1
@@ -227,7 +227,7 @@
           }
       ]
       ```
-- [ ] 장바구니 수량 수정
+- [x] 장바구니 수량 수정
     - `요청`
       ```java
       PATCH /customers/carts HTTP/1.1
