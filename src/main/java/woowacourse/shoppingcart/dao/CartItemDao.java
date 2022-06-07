@@ -77,9 +77,9 @@ public class CartItemDao {
         }
     }
 
-    public void updateQuantity(final Long CartItemId, final CartItem cartItem) {
+    public void updateQuantity(final CartItem cartItem) {
         final String query = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        int rowCount = jdbcTemplate.update(query, cartItem.getQuantity(), CartItemId);
+        int rowCount = jdbcTemplate.update(query, cartItem.getQuantity(), cartItem.getId());
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }

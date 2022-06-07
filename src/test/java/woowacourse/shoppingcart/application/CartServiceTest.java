@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -8,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
@@ -20,6 +23,9 @@ class CartServiceTest {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private CartItemDao cartItemDao;
 
     @Autowired
     private CustomerDao customerDao;
@@ -56,6 +62,20 @@ class CartServiceTest {
         Long productId = productDao.save(product);
 
         assertThatThrownBy(() -> cartService.add(customer.getUsername(), new CartItemAddRequest(productId, 11)));
+    }
+
+    @DisplayName("카트 아이템 수량 수정")
+    @Test
+    void updateQuantity() {
+        Long customerId = customerDao.save(customer);
+        Long productId = productDao.save(product);
+        Product savedProduct = productDao.findProductById(productId);
+        Long cartItemId = cartItemDao.save(customerId, new CartItem(savedProduct, 1));
+
+        cartService.updateQuantity(cartItemId, 2);
+        CartItem result = cartItemDao.findById(cartItemId);
+
+        assertThat(result.getQuantity()).isEqualTo(2);
     }
 
 }

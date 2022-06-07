@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -120,12 +121,12 @@ public class CartItemDaoTest {
                 .stock(100)
                 .build();
 
-        CartItem cartItem = new CartItem(product, 1);
-        Long cartItemId = cartItemDao.save(customerId, cartItem);
+        Long cartItemId = cartItemDao.save(customerId, new CartItem(product, 1));
+        CartItem cartItem = cartItemDao.findById(cartItemId);
 
         // when
         cartItem.changeQuantity(10);
-        cartItemDao.updateQuantity(cartItemId, cartItem);
+        assertDoesNotThrow(() -> cartItemDao.updateQuantity(cartItem));
     }
 
     @DisplayName("해당 id의 카트 아이템을 삭제한다.")

@@ -56,6 +56,13 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
+    @Transactional
+    public void updateQuantity(final Long cartItemId, final int quantity) {
+        CartItem cartItem = cartItemDao.findById(cartItemId);
+        cartItem.changeQuantity(quantity);
+        cartItemDao.updateQuantity(cartItem);
+    }
+
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
