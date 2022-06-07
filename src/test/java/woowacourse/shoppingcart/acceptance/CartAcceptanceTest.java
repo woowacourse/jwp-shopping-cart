@@ -66,7 +66,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartItem() {
         TokenResponse tokenResponse = 토큰_생성_요청();
 
-        Long cartId = 장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken());
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken()).getId();
 
         ExtractableResponse<Response> response = 장바구니_삭제_요청(cartId, tokenResponse.getAccessToken());
 
@@ -91,7 +91,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void updateCartItem() {
         TokenResponse tokenResponse = 토큰_생성_요청();
 
-        Long cartId = 장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken());
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken()).getId();
         CartQuantityRequest cartQuantityRequest = new CartQuantityRequest(5);
 
         ExtractableResponse<Response> response = 장바구니_수량_수정_요청(tokenResponse.getAccessToken(), cartId, cartQuantityRequest);
@@ -162,13 +162,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+//        assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(Long productId, String accessToken) {
+    public static CartResponse 장바구니_아이템_추가되어_있음(Long productId, String accessToken) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(productId, accessToken);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
+
+        return response.body().as(CartResponse.class);
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {

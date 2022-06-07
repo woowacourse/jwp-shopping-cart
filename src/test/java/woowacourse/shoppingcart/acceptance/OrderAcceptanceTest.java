@@ -43,8 +43,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> loginResponse = 로그인_요청(loginRequest);
         TokenResponse tokenResponse = loginResponse.as(TokenResponse.class);
 
-        cartId1 = 장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken());
-        cartId2 = 장바구니_아이템_추가되어_있음(productId2, tokenResponse.getAccessToken());
+        cartId1 = 장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken()).getId();
+        cartId2 = 장바구니_아이템_추가되어_있음(productId2, tokenResponse.getAccessToken()).getId();
     }
 
     @DisplayName("주문하기")

@@ -112,10 +112,10 @@ class CartServiceTest {
 
         @Test
         void 장바구니_상품_제거_성공() {
-            Long cartId1 = cartService.addCart(productId1, customerName);
+            CartResponse cartResponse = cartService.addCart(productId1, customerName);
             cartService.addCart(productId2, customerName);
 
-            cartService.deleteCart(customerName, cartId1);
+            cartService.deleteCart(customerName, cartResponse.getId());
 
             List<CartResponse> actual = cartService.findCartsByCustomerName(customerName);
 
@@ -158,12 +158,11 @@ class CartServiceTest {
 
         @Test
         void 장바구니_상품_수량_수정_성공() {
-            Long cartId1 = cartService.addCart(productId1, customerName);
+            CartResponse cartResponse = cartService.addCart(productId1, customerName);
 
-            cartService.updateCart(customerName, cartId1, 5);
+            cartService.updateCart(cartResponse.getId(), 5);
 
             List<CartResponse> actual = cartService.findCartsByCustomerName(customerName);
-
 
             assertThat(actual.get(0)).extracting("productId", "name", "price", "imageUrl", "quantity")
                     .containsExactly(productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 5);
@@ -173,7 +172,7 @@ class CartServiceTest {
         void 장바구니에_상품이_존재하지_않는_상품의_수량을_수정하면_예외_반환() {
             Long invalidCartId = -1L;
 
-            assertThatThrownBy(() -> cartService.updateCart(customerName, invalidCartId, 5))
+            assertThatThrownBy(() -> cartService.updateCart(invalidCartId, 5))
                     .isInstanceOf(InvalidCartItemException.class);
         }
     }
