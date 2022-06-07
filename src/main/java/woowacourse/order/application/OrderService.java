@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import woowacourse.cartitem.application.CartItemService;
+import woowacourse.cartitem.dao.CartItemDao;
 import woowacourse.cartitem.domain.CartItem;
 import woowacourse.customer.dao.CustomerDao;
 import woowacourse.order.dao.OrderDao;
@@ -15,7 +15,6 @@ import woowacourse.order.dto.OrderAddRequest;
 import woowacourse.order.dto.OrderResponse;
 import woowacourse.order.dto.OrderResponses;
 import woowacourse.order.exception.InvalidOrderException;
-import woowacourse.product.dao.ProductDao;
 
 @Transactional(rollbackFor = Exception.class)
 @Service
@@ -23,17 +22,17 @@ public class OrderService {
 
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
-    private final CartItemService cartItemService;
+    private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
-    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-        final CartItemService cartItemService, final CustomerDao customerDao, final ProductDao productDao) {
+    public OrderService(
+        final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
+        final CartItemDao cartItemDao, final CustomerDao customerDao
+    ) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
-        this.cartItemService = cartItemService;
+        this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
     public Long addOrder(final String customerName, final List<OrderAddRequest> orderAddRequests) {
@@ -41,10 +40,11 @@ public class OrderService {
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderAddRequest orderAddRequest : orderAddRequests) {
-            final CartItem cartItem = cartItemService.findCartById(orderAddRequest.getCartItemId());
+            final CartItem cartItem = cartItemDao.findCartItemById(orderAddRequest.getCartItemId())
+                .orElseThrow(() -> new woowacourse.cartitem.exception.InvalidCartItemException("장바구니를 찾을 수 없습니다."));
 
             ordersDetailDao.addOrdersDetail(ordersId, cartItem.getProductId(), cartItem.getQuantity().getValue());
-            cartItemService.deleteCart(customerName, cartItem.getId());
+            cartItemDao.deleteCartItem(cartItem.getId());
         }
 
         return ordersId;

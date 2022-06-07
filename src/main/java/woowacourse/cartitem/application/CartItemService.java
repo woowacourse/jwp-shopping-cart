@@ -60,14 +60,17 @@ public class CartItemService {
         return CartItemResponses.from(cartItems);
     }
 
-    public CartItem findCartById(final Long cartItemId) {
-        return cartItemDao.findCartItemById(cartItemId)
+    public CartItemResponse findCartById(final Long cartItemId) {
+        final CartItem cartItem = cartItemDao.findCartItemById(cartItemId)
             .orElseThrow(() -> new woowacourse.cartitem.exception.InvalidCartItemException("장바구니를 찾을 수 없습니다."));
+
+        return CartItemResponse.from(cartItem);
     }
 
     public void updateQuantity(final String customerName, final Long cartItemId, final int quantity) {
         validateCustomerCart(cartItemId, customerName);
-        final CartItem cartItem = findCartById(cartItemId);
+        final CartItem cartItem = cartItemDao.findCartItemById(cartItemId)
+            .orElseThrow(() -> new woowacourse.cartitem.exception.InvalidCartItemException("장바구니를 찾을 수 없습니다."));
         cartItem.updateQuantity(quantity);
 
         cartItemDao.update(cartItemId, cartItem);
