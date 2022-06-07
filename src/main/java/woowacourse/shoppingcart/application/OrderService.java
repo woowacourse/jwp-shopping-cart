@@ -36,9 +36,7 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(CustomerNotFoundException::new);
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final Long customerId) {
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {

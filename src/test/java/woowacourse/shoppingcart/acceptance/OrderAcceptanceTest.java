@@ -17,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.acceptance.AuthAcceptanceFixture;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
@@ -25,6 +26,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
     private Long cartId1;
     private Long cartId2;
+    private String token;
 
     public static ExtractableResponse<Response> 주문하기_요청(String userName, List<OrderRequest> orderRequests) {
         return RestAssured
@@ -32,6 +34,17 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(orderRequests)
                 .when().post("/api/customers/{customerName}/orders", userName)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 토큰으로_주문하기_요청(String accessToken, List<OrderRequest> orderRequests) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(orderRequests)
+                .when().post("/api/customer/orders")
                 .then().log().all()
                 .extract();
     }
@@ -64,6 +77,11 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         return Long.parseLong(response.header("Location").split("/orders/")[1]);
     }
 
+    public static Long 토큰으로_주문하기_요청_성공되어_있음(String token, List<OrderRequest> orderRequests) {
+        ExtractableResponse<Response> response = 토큰으로_주문하기_요청(token, orderRequests);
+        return Long.parseLong(response.header("Location").split("/orders/")[1]);
+    }
+
     public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
@@ -85,6 +103,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
         cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        token = AuthAcceptanceFixture.registerAndGetToken("klay", "klay@naver.com", "12345678");
     }
 
     @DisplayName("주문하기")
@@ -94,7 +113,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .map(cartId -> new OrderRequest(cartId, 10))
                 .collect(Collectors.toList());
 
-        ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
+        ExtractableResponse<Response> response = 토큰으로_주문하기_요청(token, orderRequests);
 
         주문하기_성공함(response);
     }
