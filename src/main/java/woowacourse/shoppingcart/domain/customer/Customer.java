@@ -42,8 +42,4 @@ public class Customer {
     public String getPassword() {
         return password.getValue();
     }
-
-    public boolean isSameUsername(String username) {
-        return this.username.getValue().equals(username);
-    }
 }
