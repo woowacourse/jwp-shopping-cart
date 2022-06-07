@@ -66,17 +66,17 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCart(final Long customerId, final List<Long> productIds) {
+        validateCustomerCart(customerId, productIds);
+        productIds.forEach(it -> cartItemDao.deleteCartItem(customerId, it));
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
+    private void validateCustomerCart(final Long customerId, final List<Long> productIds) {
+        final List<Long> existingProductIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        boolean allExistProduct = existingProductIds.containsAll(productIds);
+        if (!allExistProduct) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
     }
 
     public void updateQuantity(Long customerId, Long productId, int quantity) {

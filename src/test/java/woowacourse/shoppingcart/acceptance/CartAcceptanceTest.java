@@ -17,6 +17,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.request.DeleteProductIds;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateProductQuantityRequest;
 import woowacourse.shoppingcart.dto.response.GetCartItemsResponse;
@@ -30,7 +31,6 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
 
     private static String 유효한_토큰;
 
-    private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
 
@@ -92,11 +92,27 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(productId1);
+        장바구니_아이템_추가_요청(productId1);
+        장바구니_아이템_추가_요청(productId2);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(new DeleteProductIds(List.of(productId1)));
 
         장바구니_삭제됨(response);
+        assertThat(장바구니_목록_조회().size()).isEqualTo(1);
+    }
+
+    private List<CartItem> 장바구니_목록_조회() {
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .auth().oauth2(유효한_토큰)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/cart")
+                .then().log().all()
+                .extract();
+
+        return response.jsonPath()
+                .getObject(".", GetCartItemsResponse.class)
+                .getCartItems();
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(Long productId) {
@@ -120,11 +136,13 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(DeleteProductIds deleteProductIds) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(유효한_토큰)
+                .body(deleteProductIds)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/cart/products", userName, cartId)
+                .when().delete("/cart/products")
                 .then().log().all()
                 .extract();
     }
