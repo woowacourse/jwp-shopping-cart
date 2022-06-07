@@ -22,8 +22,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartItemRequest;
-import woowacourse.shoppingcart.dto.ProductExistingInCartResponse;
+import woowacourse.shoppingcart.dto.request.CartItemRequest;
+import woowacourse.shoppingcart.dto.response.ProductExistingInCartResponse;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 
 @JdbcTest

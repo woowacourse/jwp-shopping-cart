@@ -1,21 +1,23 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.request;
 
-public class CustomerResponse {
+public class CustomerRequest {
     private String email;
+    private String password;
     private String profileImageUrl;
     private String name;
     private String gender;
     private String birthday;
     private String contact;
-    private AddressResponse fullAddress;
+    private AddressRequest fullAddress;
     private boolean terms;
 
-    public CustomerResponse() {
+    public CustomerRequest() {
     }
 
-    public CustomerResponse(String email, String profileImageUrl, String name, String gender, String birthday,
-                            String contact, AddressResponse fullAddress, boolean terms) {
+    public CustomerRequest(String email, String password, String profileImageUrl, String name, String gender,
+                           String birthday, String contact, AddressRequest fullAddress, boolean terms) {
         this.email = email;
+        this.password = password;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.gender = gender;
@@ -27,6 +29,10 @@ public class CustomerResponse {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getProfileImageUrl() {
@@ -49,7 +55,7 @@ public class CustomerResponse {
         return contact;
     }
 
-    public AddressResponse getFullAddress() {
+    public AddressRequest getFullAddress() {
         return fullAddress;
     }
 
@@ -59,8 +65,9 @@ public class CustomerResponse {
 
     @Override
     public String toString() {
-        return "CustomerResponse{" +
+        return "CustomerRequest{" +
                 "email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", profileImageUrl='" + profileImageUrl + '\'' +
                 ", name='" + name + '\'' +
                 ", gender='" + gender + '\'' +

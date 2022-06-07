@@ -26,8 +26,8 @@ import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
 
 @DisplayName("인증 기능 인수테스트")
 public class AuthAcceptanceTest extends AcceptanceTest {

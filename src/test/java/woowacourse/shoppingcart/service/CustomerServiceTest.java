@@ -17,8 +17,8 @@ import woowacourse.shoppingcart.dao.JdbcAddressDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.dao.JdbcPrivacyDao;
 import woowacourse.shoppingcart.dao.PrivacyDao;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.EmailDuplicationResponse;
 import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @JdbcTest
