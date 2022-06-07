@@ -17,7 +17,7 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrders(final Long customerId) {
+    public Long save(final Long customerId) {
         final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 

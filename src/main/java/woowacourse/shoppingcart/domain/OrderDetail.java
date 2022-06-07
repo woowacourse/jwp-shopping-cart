@@ -1,33 +1,35 @@
 package woowacourse.shoppingcart.domain;
 
-import woowacourse.shoppingcart.domain.product.Product;
-
 public class OrderDetail {
+
+    private Long id;
+    private Quantity quantity;
     private Long productId;
-    private int quantity;
     private int price;
     private String name;
     private String imageUrl;
 
-    public OrderDetail() {
+    private OrderDetail() {
     }
 
-    public OrderDetail(final Long productId, final int quantity) {
-        this.productId = productId;
-        this.quantity = quantity;
-    }
-
-    public OrderDetail(final Product product, final int quantity) {
-        this(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
-    }
-
-    public OrderDetail(final Long productId, final int price, final String name,
-                       final String imageUrl, final int quantity) {
+    public OrderDetail(final int quantity, final Long productId, final int price, final String name,
+                       final String imageUrl) {
+        this.quantity = new Quantity(quantity);
         this.productId = productId;
         this.price = price;
         this.name = name;
         this.imageUrl = imageUrl;
-        this.quantity = quantity;
+    }
+
+    public OrderDetail(final Long id, final int quantity, final Long productId, final int price, final String name,
+                       final String imageUrl) {
+        this(quantity, productId, price, name, imageUrl);
+        this.id = id;
+    }
+
+    public static OrderDetail from(final CartItem cartItem) {
+        return new OrderDetail(cartItem.getQuantity(), cartItem.getProduct().getId(),
+                cartItem.getProduct().getPrice(), cartItem.getProduct().getName(), cartItem.getProduct().getImageUrl());
     }
 
     public Long getProductId() {
@@ -47,6 +49,6 @@ public class OrderDetail {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getQuantity();
     }
 }
