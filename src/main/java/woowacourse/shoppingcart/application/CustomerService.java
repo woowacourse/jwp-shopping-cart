@@ -31,12 +31,14 @@ public class CustomerService {
     public Long signUp(final SignUpRequest signUpRequest) {
         Customer customer = signUpRequest.toEntity();
         validateCustomer(customer);
+
         return customerDao.save(encrypt(customer));
     }
 
     public CustomerResponse login(final LoginRequest loginRequest) {
         Customer customer = findCustomerByUserId(loginRequest.getUserId());
         customer.validateMatchingLoginPassword(encrypt(loginRequest.getPassword()));
+
         return CustomerResponse.from(customer);
     }
 
@@ -48,8 +50,11 @@ public class CustomerService {
     @Transactional
     public void update(final CustomerIdentificationRequest customerIdentificationRequest, final CustomerUpdateRequest customerUpdateRequest) {
         validateDuplicateNickname(customerUpdateRequest.getNickname());
+
         Customer customer = findCustomerById(customerIdentificationRequest.getId());
+        customer.validateMatchingLoginPassword(encrypt(customerUpdateRequest.getPassword()));
         Customer customerForUpdate = createCustomerForUpdate(customerUpdateRequest, customer);
+
         customerDao.updateNickname(customerForUpdate.getId(), customerForUpdate.getNickname());
     }
 

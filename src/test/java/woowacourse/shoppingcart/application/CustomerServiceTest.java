@@ -275,12 +275,12 @@ class CustomerServiceTest {
     void updateNotExistingException() {
         // given
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest("-1");
-        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("nickname");
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("test", "1234asdf!");
 
         // when & then
         assertThatThrownBy(() -> customerService.update(customerIdentificationRequest, customerUpdateRequest))
-                .isInstanceOf(CustomerDuplicatedDataException.class)
-                .hasMessage("이미 존재하는 닉네임입니다.");
+                .isInstanceOf(CustomerDataNotFoundException.class)
+                .hasMessage("존재하지 않는 회원입니다.");
     }
 
     @DisplayName("탈퇴한 사용자를 수정하려고 하면 예외가 발생한다.")
@@ -293,7 +293,7 @@ class CustomerServiceTest {
         customerService.withdraw(customerIdentificationRequest);
 
         // when & then
-        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("test2");
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("test2", "1234asdf!");
         assertThatThrownBy(() -> customerService.update(customerIdentificationRequest, customerUpdateRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
@@ -305,7 +305,7 @@ class CustomerServiceTest {
         // given
         Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
-        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(null);
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(null, "1234asdf!");
 
         // when & than
         assertThatThrownBy(() -> customerService.update(customerIdentificationRequest, customerUpdateRequest))
@@ -320,12 +320,26 @@ class CustomerServiceTest {
         // given
         Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
-        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(nickname);
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(nickname, "1234asdf!");
 
         // when & than
         assertThatThrownBy(() -> customerService.update(customerIdentificationRequest, customerUpdateRequest))
                 .isInstanceOf(CustomerDataEmptyException.class)
                 .hasMessage("닉네임을 입력해주세요.");
+    }
+
+    @DisplayName("회원정보 수정 시 본인 계정의 비밀번호가 아닌 값을 입력하면 예외가 발생한다.")
+    @Test
+    void updateNicknameInvalidPasswordException() {
+        // given
+        Long customerId = customerService.signUp(new SignUpRequest("test@woowacourse.com", "test", "1234asdf!"));
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+        CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("test2", "invalidPassword");
+
+        // when & then
+        assertThatThrownBy(() -> customerService.update(customerIdentificationRequest, customerUpdateRequest))
+                .isInstanceOf(LoginDataNotMatchException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
     }
 
     @DisplayName("존재하지 않는 사용자 비밀번호를 수정하려고 하면 예외가 발생한다.")

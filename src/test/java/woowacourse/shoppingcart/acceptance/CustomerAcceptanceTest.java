@@ -174,13 +174,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("내 정보 수정을 한다.")
     @Test
-    void updateMe() {
+    void updateMeNickname() {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
         // when
-        ExtractableResponse<Response> secondResponse = update(token, "유콩");
+        ExtractableResponse<Response> secondResponse = update(token, "유콩", "1234asdf!");
 
         // then
         assertAll(
@@ -190,14 +190,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("존재하지 않는 사용자가 내 정보 수정을 요청하면 404 에러가 발생한다.")
     @Test
-    void updateMeNotExistingCustomer() {
+    void updateMeNicknameNotExistingCustomer() {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
         withdraw(token);
 
         // when
-        ExtractableResponse<Response> secondResponse = update(token, "유콩");
+        ExtractableResponse<Response> secondResponse = update(token, "유콩", "1234asdf!");
 
         // then
         assertAll(
@@ -207,15 +207,33 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("이미 존재하는 닉네임으로 내 정보 수정을 요청하면 400 에러가 발생한다.")
+    @DisplayName("틀린 비밀번호로 내 정보 수정을 요청하면 402 에러가 발생한다.")
     @Test
-    void updateMeDuplicateNickname() {
+    void updateMeNicknameInvalidPassword() {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
         // when
-        ExtractableResponse<Response> secondResponse = update(token, "nickname");
+        ExtractableResponse<Response> secondResponse = update(token, "유콩", "invalidPassword");
+
+        // then
+        assertAll(
+                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
+                        "비밀번호가 일치하지 않습니다.")
+        );
+    }
+
+    @DisplayName("이미 존재하는 닉네임으로 내 정보 수정을 요청하면 400 에러가 발생한다.")
+    @Test
+    void updateMeNicknameDuplicateNickname() {
+        // given
+        ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
+        String token = firstResponse.body().jsonPath().getString("accessToken");
+
+        // when
+        ExtractableResponse<Response> secondResponse = update(token, "nickname", "1234asdf!");
 
         // then
         assertAll(

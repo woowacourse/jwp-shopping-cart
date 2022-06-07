@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 
 public class AuthFixture {
 
-
     public static ExtractableResponse<Response> findById(final String token) {
         return RestAssured
                 .given().log().all()
@@ -28,9 +27,10 @@ public class AuthFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> update(final String token, final String nickname) {
+    public static ExtractableResponse<Response> update(final String token, final String nickname, final String password) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("nickname", nickname);
+        requestBody.put("password", password);
 
         return RestAssured
                 .given().log().all()
