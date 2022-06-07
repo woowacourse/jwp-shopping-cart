@@ -26,17 +26,15 @@ public class ProductService {
         return productDao.save(product);
     }
 
-    public List<ProductResponse> findProducts() {
-        return productDao.findProducts()
+    public int countAll() {
+        return productDao.countAll();
+    }
+
+    public List<ProductResponse> findProducts(int page, int limit) {
+        return productDao.findProductsByPaging(page, limit)
                 .stream()
                 .map(ProductResponse::new)
                 .collect(Collectors.toUnmodifiableList());
-    }
-
-    public ProductResponse findProductById(final Long productId) {
-        Product product = productDao.findProductById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 상품이 없습니다."));
-        return new ProductResponse(product);
     }
 
     @Transactional
