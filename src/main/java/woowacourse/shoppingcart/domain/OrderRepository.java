@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface OrderRepository {
 
-    List<NewOrders> findOrders(long customerId);
+    List<Orders> findOrders(long customerId);
 
-    long add(long customerId, NewOrders newOrders);
+    long add(long customerId, Orders orders);
 }

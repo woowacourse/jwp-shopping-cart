@@ -18,10 +18,10 @@ import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.shoppingcart.dto.CartItemDeletionRequest;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
@@ -144,9 +144,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
         CartItemResponse createdCartItemResponse2 = extractCartItem(responseAboutCreatedCartItem2);
 
         // when
-        DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(
+        CartItemDeletionRequest cartItemDeletionRequest = new CartItemDeletionRequest(
             List.of(createdCartItemResponse1.getId()));
-        AcceptanceFixture.delete(deleteCartItemRequest, URL, header);
+        AcceptanceFixture.delete(cartItemDeletionRequest, URL, header);
 
         // then
         ExtractableResponse<Response> response = AcceptanceFixture.get(URL, header);

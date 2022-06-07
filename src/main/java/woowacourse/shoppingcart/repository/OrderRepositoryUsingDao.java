@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.NewOrderDetail;
-import woowacourse.shoppingcart.domain.NewOrders;
+import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.OrderRepository;
+import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.entity.OrderDetailEntity;
 
@@ -30,30 +30,30 @@ public class OrderRepositoryUsingDao implements OrderRepository {
     }
 
     @Override
-    public List<NewOrders> findOrders(long customerId) {
+    public List<Orders> findOrders(long customerId) {
         List<Long> ordersIds = orderDao.findOrderIdsByCustomerId(customerId);
-        List<NewOrders> orders = new ArrayList<>();
+        List<Orders> orders = new ArrayList<>();
         for (Long ordersId : ordersIds) {
-            orders.add(new NewOrders(ordersId, findOrderDetails(ordersId)));
+            orders.add(new Orders(ordersId, findOrderDetails(ordersId)));
         }
         return orders;
     }
 
-    private List<NewOrderDetail> findOrderDetails(Long ordersId) {
+    private List<OrderDetail> findOrderDetails(Long ordersId) {
         List<OrderDetailEntity> orderDetailEntities = ordersDetailDao.findOrderDetailsByOrderId(ordersId);
         return orderDetailEntities.stream()
-            .map(orderDetailEntity -> new NewOrderDetail(
+            .map(orderDetailEntity -> new OrderDetail(
                 productDao.findProductById(orderDetailEntity.getProductId()),
                 new Quantity(orderDetailEntity.getQuantity())))
             .collect(Collectors.toList());
     }
 
     @Override
-    public long add(long customerId, NewOrders newOrders) {
+    public long add(long customerId, Orders orders) {
         Long orderId = orderDao.addOrders(customerId);
-        List<NewOrderDetail> orderDetails = newOrders.getOrderDetails();
+        List<OrderDetail> orderDetails = orders.getOrderDetails();
 
-        for (NewOrderDetail orderDetail : orderDetails) {
+        for (OrderDetail orderDetail : orderDetails) {
             ordersDetailDao.add(orderId, orderDetail);
         }
         return orderId;

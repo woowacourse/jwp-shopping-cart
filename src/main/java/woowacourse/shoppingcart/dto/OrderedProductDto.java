@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.NewOrderDetail;
+import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.product.Product;
 
 public class OrderedProductDto {
@@ -20,7 +20,7 @@ public class OrderedProductDto {
         this.thumbnailImage = thumbnailImage;
     }
 
-    public static OrderedProductDto from(NewOrderDetail orderDetail) {
+    public static OrderedProductDto from(OrderDetail orderDetail) {
         Product product = orderDetail.getProduct();
         return new OrderedProductDto(product.getId(), product.getPrice(), product.getName(),
             orderDetail.getQuantity(),

@@ -15,9 +15,9 @@ import woowacourse.shoppingcart.domain.cart.CartItemRepository;
 import woowacourse.shoppingcart.domain.cart.CartItems;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.CartItemDeletionRequest;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 import woowacourse.shoppingcart.exception.NotMyCartItemException;
 
@@ -78,11 +78,11 @@ public class CartItemService {
         cartItemRepository.update(updateCartItem);
     }
 
-    public void delete(String email, DeleteCartItemRequest deleteCartItemRequest) {
+    public void delete(String email, CartItemDeletionRequest cartItemDeletionRequest) {
         long customerId = findCustomerIdByEmail(email);
         CartItems cartItems = cartItemRepository.findByCustomer(customerId);
 
-        List<CartItem> deleteCartItems = deleteCartItemRequest.getCartItemIds().stream()
+        List<CartItem> deleteCartItems = cartItemDeletionRequest.getCartItemIds().stream()
             .map(cartItemRepository::findById)
             .collect(Collectors.toList());
 

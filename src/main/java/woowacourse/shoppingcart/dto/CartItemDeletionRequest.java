@@ -2,13 +2,13 @@ package woowacourse.shoppingcart.dto;
 
 import java.util.List;
 
-public class NewOrderRequest {
+public class CartItemDeletionRequest {
     private List<Long> cartItemIds;
 
-    public NewOrderRequest() {
+    public CartItemDeletionRequest() {
     }
 
-    public NewOrderRequest(List<Long> cartItemIds) {
+    public CartItemDeletionRequest(List<Long> cartItemIds) {
         this.cartItemIds = cartItemIds;
     }
 

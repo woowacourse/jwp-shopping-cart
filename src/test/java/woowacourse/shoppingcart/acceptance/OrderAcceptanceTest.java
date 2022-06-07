@@ -19,7 +19,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.NewOrderRequest;
+import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ThumbnailImageDto;
@@ -55,7 +55,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         AcceptanceFixture.post(cartItemRequest2, "/api/mycarts", header);
 
         // when
-        NewOrderRequest orderRequest = new NewOrderRequest(List.of(cartItemResponse1.getId()));
+        OrderRequest orderRequest = new OrderRequest(List.of(cartItemResponse1.getId()));
         ExtractableResponse<Response> addOrderResponse = AcceptanceFixture.post(orderRequest, "/api/myorders", header);
 
         // then
@@ -75,7 +75,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             AcceptanceFixture.post(cartItemRequest2, "/api/mycarts", header));
 
         // when
-        NewOrderRequest orderRequest = new NewOrderRequest(
+        OrderRequest orderRequest = new OrderRequest(
             List.of(cartItemResponse1.getId(), cartItemResponse2.getId()));
         AcceptanceFixture.post(orderRequest, "/api/myorders", header);
 
