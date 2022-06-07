@@ -12,12 +12,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.transaction.annotation.Transactional;
-
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
 
 @SpringBootTest

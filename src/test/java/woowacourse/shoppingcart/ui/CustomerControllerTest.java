@@ -13,8 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,7 +30,7 @@ public class CustomerControllerTest {
     @ParameterizedTest
     @NullSource
     @ValueSource(strings = {"abcd", "abcd@", "abcd@a", "abcd@a.", "@a", "@a.", "@."})
-    void validateEmail(final String email) throws Exception{
+    void validateEmail(final String email) throws Exception {
         validateRequest(email, NORMAL_NAME, NORMAL_PASSWORD);
     }
 
@@ -39,7 +38,7 @@ public class CustomerControllerTest {
     @ParameterizedTest
     @NullSource
     @ValueSource(strings = {"a", "12345678901"})
-    void validateNickname(final String nickname) throws Exception{
+    void validateNickname(final String nickname) throws Exception {
         validateRequest(NORMAL_EMAIL, nickname, NORMAL_PASSWORD);
     }
 
@@ -47,7 +46,7 @@ public class CustomerControllerTest {
     @ParameterizedTest
     @NullSource
     @ValueSource(strings = {"abc123!@#", "aaaaa11111", "aaaaa!!!!!", "11111!!!!!"})
-    void validatePassword(final String password) throws Exception{
+    void validatePassword(final String password) throws Exception {
         validateRequest(NORMAL_EMAIL, NORMAL_NAME, password);
     }
 

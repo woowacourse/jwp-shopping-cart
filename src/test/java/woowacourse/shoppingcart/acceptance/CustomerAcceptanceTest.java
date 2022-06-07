@@ -3,20 +3,18 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
-import woowacourse.shoppingcart.dto.CustomerRemoveRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRemoveRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicatedCustomerEmailException;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
 
@@ -102,7 +100,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
                 "newGuest", CUSTOMER_PASSWORD, "qwer1234!@#$");
         RequestHandler.patchRequest("/customers", customerUpdateRequest, tokenResponse.getAccessToken());
-        ExtractableResponse<Response> getResponse = RequestHandler.getRequest("/customers", tokenResponse.getAccessToken());
+        ExtractableResponse<Response> getResponse = RequestHandler.getRequest("/customers",
+                tokenResponse.getAccessToken());
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(getResponse.jsonPath().getObject(".", CustomerResponse.class)
@@ -158,7 +157,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
-        final CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD+"1");
+        final CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD + "1");
 
         // when
         final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",

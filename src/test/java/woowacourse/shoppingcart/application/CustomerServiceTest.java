@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -11,13 +12,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import javax.sql.DataSource;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
-import woowacourse.shoppingcart.dto.CustomerRemoveRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRemoveRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicatedCustomerEmailException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
@@ -112,7 +110,7 @@ class CustomerServiceTest {
 
         customerService.removeCustomer(customerId, new CustomerRemoveRequest(CUSTOMER_PASSWORD));
 
-        assertThatThrownBy(() ->customerService.findById(customerId))
+        assertThatThrownBy(() -> customerService.findById(customerId))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 }

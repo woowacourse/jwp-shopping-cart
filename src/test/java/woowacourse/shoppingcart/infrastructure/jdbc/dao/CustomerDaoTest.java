@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.infrastructure.jdbc.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
-
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -11,8 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import javax.sql.DataSource;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest

@@ -2,18 +2,17 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.acceptance.RequestHandler;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {

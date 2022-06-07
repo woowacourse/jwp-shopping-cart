@@ -1,7 +1,6 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidTokenException;
