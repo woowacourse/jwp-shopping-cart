@@ -45,7 +45,6 @@ public class CartItemDaoTest {
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
-
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
@@ -84,6 +83,22 @@ public class CartItemDaoTest {
 
         // then
         assertThat(quantity).isEqualTo(1);
+    }
+
+    @DisplayName("상품 id와 회원 id로 장바구니에 담은 수량을 수정한다.")
+    @Test
+    void updateQuantity() {
+        // given
+        final Long customerId = 1L;
+        final Long productId = 1L;
+        Product product = productDao.findProductById(productId);
+
+        // when
+        cartItemDao.updateQuantity(new CartItem(product, 2), customerId);
+        int quantity = cartItemDao.findQuantity(productId, customerId);
+
+        // then
+        assertThat(quantity).isEqualTo(2);
     }
 
     @DisplayName("상품 id와 회원 id로 장바구니의 상품을 삭제한다.")

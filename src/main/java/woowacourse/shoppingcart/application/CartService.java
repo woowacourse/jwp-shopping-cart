@@ -53,6 +53,13 @@ public class CartService {
         }
     }
 
+    public void updateQuantity(Long productId, int quantity, String username) {
+        Long customerId = customerDao.getIdByUsername(username);
+        Product product = productDao.findProductById(productId);
+        CartItem cartItem = new CartItem(product, quantity);
+        cartItemDao.updateQuantity(cartItem, customerId);
+    }
+
     public void deleteCart(final String username) {
         Long customerId = customerDao.getIdByUsername(username);
         cartItemDao.deleteCartItemByCustomer(customerId);

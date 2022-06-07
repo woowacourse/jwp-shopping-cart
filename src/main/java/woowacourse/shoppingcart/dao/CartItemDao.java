@@ -54,19 +54,27 @@ public class CartItemDao {
         return keyHolder.getKey().longValue();
     }
 
+    public void updateQuantity(final CartItem cartItem, final Long customerId) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE product_id = ? and customer_id = ?";
+        int rowCount = jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getProductId(), customerId);
+        validateRowCount(rowCount);
+    }
+
     public void deleteCartItemByCustomer(final Long customerId) {
         final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
 
         final int rowCount = jdbcTemplate.update(sql, customerId);
-        if (rowCount == 0) {
-            throw new InvalidCartItemException();
-        }
+        validateRowCount(rowCount);
     }
 
     public void deleteCartItem(Long productId, Long customerId) {
         final String sql = "DELETE FROM cart_item WHERE product_id = ? AND customer_id = ? ";
 
         final int rowCount = jdbcTemplate.update(sql, productId, customerId);
+        validateRowCount(rowCount);
+    }
+
+    private void validateRowCount(int rowCount) {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }

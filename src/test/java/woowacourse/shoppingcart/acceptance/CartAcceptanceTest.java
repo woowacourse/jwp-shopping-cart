@@ -57,6 +57,18 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
+    @DisplayName("장바구니 아이템 수량 수정")
+    @Test
+    void updateQuantity() {
+        장바구니_아이템_추가되어_있음(productId1);
+
+        SimpleResponse response = 장바구니_아이템_수량_수정_요청(productId1);
+        장바구니_수량_수정_요청_응답됨(response);
+
+        SimpleResponse itemsResponse = 장바구니_아이템_목록_조회_요청();
+        장바구니_아이템_수량_일치함(itemsResponse, productId1, 3);
+    }
+
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
@@ -90,6 +102,25 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static SimpleResponse 장바구니_아이템_목록_조회_요청() {
         return SimpleRestAssured.getWithToken("/cart", getTokenByLogin());
+    }
+
+    private static SimpleResponse 장바구니_아이템_수량_수정_요청(Long productId) {
+        String path = "/cart/" + productId + "/quantity";
+        SimpleResponse response = SimpleRestAssured.putWithToken(path, getTokenByLogin(), 3);
+        return response;
+    }
+
+    private static void 장바구니_수량_수정_요청_응답됨(SimpleResponse response) {
+        response.assertStatus(HttpStatus.OK);
+    }
+
+    private static void 장바구니_아이템_수량_일치함(SimpleResponse itemsResponse, Long productId, int quantity) {
+        CartItemResponse itemResponse = itemsResponse.toObject(CartItemsResponse.class)
+                .getCartItems().stream()
+                .filter(cartItemResponse -> cartItemResponse.getProduct().getId().equals(productId))
+                .findAny()
+                .get();
+        assertThat(itemResponse.getQuantity()).isEqualTo(quantity);
     }
 
     public static SimpleResponse 장바구니_상품_삭제_요청(Long productId) {
