@@ -143,6 +143,6 @@ public class Fixtures {
     }
 
     public static void 예외메세지_검증(final ExtractableResponse<Response> response, final String message) {
-        assertThat(response.body().asString()).isEqualTo(message);
+        assertThat(response.body().asString()).contains(message);
     }
 }

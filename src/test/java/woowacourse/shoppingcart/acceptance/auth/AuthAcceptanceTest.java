@@ -67,7 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode())
                         .isEqualTo(HttpStatus.FORBIDDEN.value()),
                 () -> assertThat(response.body().asString())
-                        .isEqualTo("토큰이 유효하지 않습니다.")
+                        .contains("토큰이 유효하지 않습니다.")
         );
     }
 
@@ -94,7 +94,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode())
                         .isEqualTo(HttpStatus.FORBIDDEN.value()),
                 () -> assertThat(response.body().asString())
-                        .isEqualTo("토큰이 유효하지 않습니다.")
+                        .contains("토큰이 유효하지 않습니다.")
         );
     }
 }
