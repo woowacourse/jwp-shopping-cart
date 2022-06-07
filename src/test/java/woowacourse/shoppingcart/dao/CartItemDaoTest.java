@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +25,6 @@ public class CartItemDaoTest {
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
-    private final CustomerDao customerDao;
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -33,7 +33,6 @@ public class CartItemDaoTest {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
-        customerDao = new CustomerDao(namedParameterJdbcTemplate);
     }
 
     @BeforeEach
@@ -79,7 +78,7 @@ public class CartItemDaoTest {
         final Long customerId = 1L;
 
         //when
-        final List<Cart> actual = cartItemDao.findProductsByCustomerId(customerId);
+        final List<Cart> actual = cartItemDao.findCartItemsByCustomerId(customerId);
 
         //then
         assertThat(actual.size()).isEqualTo(2);
@@ -96,6 +95,21 @@ public class CartItemDaoTest {
 
         // then
         assertThat(cartIds).containsExactly(1L, 2L);
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 수량을 수정한다.")
+    void updateQuantity() {
+        //given
+        final Long customerId = 1L;
+        final long cartItemId = 1L;
+
+        //when
+        cartItemDao.updateQuantity(cartItemId, 10);
+
+        //then
+        assertThatCode(() -> cartItemDao.findCartItemsByCustomerId(customerId))
+                .doesNotThrowAnyException();
     }
 
     @Test

@@ -41,7 +41,7 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
-    public List<Cart> findProductsByCustomerId(final Long customerId) {
+    public List<Cart> findCartItemsByCustomerId(final Long customerId) {
         final String sql =
                 "SELECT cart_item.id, cart_item.product_id, cart_item.quantity, product.name, product.price, product.image_url "
                         + "FROM cart_item "
@@ -70,6 +70,11 @@ public class CartItemDao {
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public void updateQuantity(final Long cartItemId, final int quantity) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        jdbcTemplate.update(sql, quantity, cartItemId);
     }
 
     public void deleteCartItem(final Long id) {

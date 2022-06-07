@@ -15,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotFoundCustomerCartItemException;
@@ -29,10 +27,6 @@ public class CartServiceTest {
 
     @Mock
     private CartItemDao cartItemDao;
-    @Mock
-    private CustomerDao customerDao;
-    @Mock
-    private ProductDao productDao;
 
     @Test
     @DisplayName("장바구니에 상품을 담다.")
@@ -67,7 +61,7 @@ public class CartServiceTest {
         //given
         final long customerId = 1L;
         final List<Cart> expected = List.of(new Cart(1L, 2L, "카레", 1000, 3, "www.na/e"));
-        when(cartItemDao.findProductsByCustomerId(customerId))
+        when(cartItemDao.findCartItemsByCustomerId(customerId))
                 .thenReturn(expected);
 
         //when
@@ -76,6 +70,32 @@ public class CartServiceTest {
         //then
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("장바구니 상품의 수량을 수정한다.")
+    void updateCartItemQuantity() {
+        //given
+        final long cartItemId = 1L;
+        when(cartItemDao.findIdsByCustomerId(any(Long.class)))
+                .thenReturn(List.of(1L, 2L));
+
+        //when
+        assertThatCode(() -> cartService.updateCartItemQuantity(1L, cartItemId, 10))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 수량 수정시 존재하지 않는 장바구니 상품이면 예외를 던진다.")
+    void updateCartItemQuantity_invalidCartItem_throwsException() {
+        //given
+        final long cartItemId = 51L;
+        when(cartItemDao.findIdsByCustomerId(any(Long.class)))
+                .thenReturn(List.of(1L, 2L));
+
+        //when, then
+        assertThatThrownBy(() -> cartService.updateCartItemQuantity(1L, cartItemId, 10))
+                .isInstanceOf(NotFoundCustomerCartItemException.class);
     }
 
     @Test

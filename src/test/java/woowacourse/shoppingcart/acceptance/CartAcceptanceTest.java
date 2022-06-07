@@ -18,7 +18,7 @@ import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.ui.customer.dto.request.CustomerRegisterRequest;
 
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+class CartAcceptanceTest extends AcceptanceTest {
 
     private static final String NAME = "클레이";
     private static final String EMAIL = "djwhy5510@naver.com";
@@ -86,8 +86,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         //given 회원가입 후 로그인하여 장바구니에 상품을 담고
         requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
         final String accessToken = 로그인_토큰_발급();
-        Long cartId1 = 장바구니_아이템_추가되어_있음(accessToken, productId1);
-        Long cartId2 = 장바구니_아이템_추가되어_있음(accessToken, productId2);
+        final Long cartId1 = 장바구니_상품_추가되어_있음(accessToken, productId1);
+        final Long cartId2 = 장바구니_상품_추가되어_있음(accessToken, productId2);
 
         // when 상품을 삭제하면
         ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, List.of(cartId1, cartId2));
@@ -108,6 +108,21 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         // then NOT_FOUND 를 응답한다.
         요청이_NOT_FOUND_응답함(response);
+    }
+
+    @Test
+    @DisplayName("장바구니 상품의 수량을 변경한다.")
+    void updateCartItemQuantity() {
+        //given 회원가입 후 로그인하여 장바구니에 상품을 담고
+        requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
+        final String accessToken = 로그인_토큰_발급();
+        final Long cartItemId = 장바구니_상품_추가되어_있음(accessToken, productId1);
+
+        //when 장바구니 상품의 수량을 변경하면
+        final ExtractableResponse<Response> response = 장바구니_수정_요청(accessToken, cartItemId, 10);
+
+        //then 성공적으로 수량이 변경된다.
+        장바구니_수정됨(response);
     }
 
     public static ExtractableResponse<Response> 장바구니_상품_추가_요청(final String accessToken, final Long productId) {
@@ -148,17 +163,37 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 장바구니_수정_요청(final String accessToken, final Long cartItemId,
+                                                           final int quantity) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("cartItemId", cartItemId);
+        requestBody.put("quantity", quantity);
+
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .body(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().put("/api/customer/carts")
+                .then().log().all()
+                .extract();
+    }
+
     public static void 장바구니_상품_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(final String accessToken, final Long productId) {
+    public static Long 장바구니_상품_추가되어_있음(final String accessToken, final Long productId) {
         ExtractableResponse<Response> response = 장바구니_상품_추가_요청(accessToken, productId);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    public static void 장바구니_수정됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }
