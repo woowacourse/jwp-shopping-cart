@@ -12,7 +12,7 @@ public class CartItemResponse {
     private final int quantity;
     private final ThumbnailImageDto thumbnailImage;
 
-    public CartItemResponse(long id, long productId, int price, String name, int quantity,
+    private CartItemResponse(long id, long productId, int price, String name, int quantity,
         ThumbnailImageDto thumbnailImage) {
         this.id = id;
         this.productId = productId;
