@@ -39,6 +39,10 @@ public class CartService {
         }
     }
 
+    public CartItem findById(final Long cartItemId) {
+        return cartItemDao.findById(cartItemId);
+    }
+
     public List<CartItem> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 

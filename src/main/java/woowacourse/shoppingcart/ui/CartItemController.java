@@ -18,6 +18,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
 
 @RestController
 @RequestMapping("/api/cartItems")
@@ -34,15 +35,16 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@Valid @RequestBody final CartItemAddRequest request,
-                                            @AuthenticationPrincipal String username) {
+    public ResponseEntity<CartItemResponse> addCartItem(@Valid @RequestBody final CartItemAddRequest request,
+                                                        @AuthenticationPrincipal String username) {
         final Long cartItemId = cartService.add(username, request);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartItemId}")
                 .buildAndExpand(cartItemId)
                 .toUri();
-        return ResponseEntity.created(responseLocation).build();
+        final CartItem cartItem = cartService.findById(cartItemId);
+        return ResponseEntity.created(responseLocation).body(CartItemResponse.from(cartItem));
     }
 
     @PatchMapping("/{cartItemId}")
