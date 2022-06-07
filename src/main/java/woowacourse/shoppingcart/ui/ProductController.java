@@ -4,9 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
-import woowacourse.shoppingcart.application.ProductService;
 
 import java.net.URI;
 import java.util.List;
@@ -33,6 +33,7 @@ public class ProductController {
                 .fromCurrentRequest()
                 .path("/" + productId)
                 .build().toUri();
+
         return ResponseEntity.created(uri).build();
     }
 
@@ -44,6 +45,7 @@ public class ProductController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> delete(@PathVariable final Long productId) {
         productService.deleteProductById(productId);
+
         return ResponseEntity.noContent().build();
     }
 }

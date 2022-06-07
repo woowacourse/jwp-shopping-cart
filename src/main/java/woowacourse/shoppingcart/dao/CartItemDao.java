@@ -1,10 +1,12 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Repository
 public class CartItemDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
@@ -54,7 +57,6 @@ public class CartItemDao {
 
     public void deleteCartItem(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
-
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
             throw new InvalidCartItemException();

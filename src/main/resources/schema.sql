@@ -12,8 +12,11 @@ create table customer
 (
     id       bigint       not null auto_increment,
     username varchar(255) not null,
+    password varchar(255),
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
+
+create index customer_idx on customer(username);
 
 alter table customer
     add unique key (username);

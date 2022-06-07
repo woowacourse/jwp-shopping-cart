@@ -1,9 +1,19 @@
 package woowacourse.auth.acceptance;
 
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -11,36 +21,82 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CustomerRequest("testx", "1aB45678!"))
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        String accessToken = RestAssured
+                .given().log().all()
+                .body(new TokenRequest("testx", "1aB45678!"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/login")
+                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
 
         // then
-        // 내 정보가 조회된다
+        CustomerResponse customer = RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+
+        assertThat(customer.getName()).isEqualTo("testx");
     }
 
     @DisplayName("Bearer Auth 로그인 실패")
     @Test
     void myInfoWithBadBearerAuth() {
         // given
-        // 회원이 등록되어 있고
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CustomerRequest("testx", "1aB45678!"))
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
 
         // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
+        ExtractableResponse<Response> tokenResponse = RestAssured
+                .given().log().all()
+                .body(new TokenRequest("testx", "1aB4567C!"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/login")
+                .then().log().all().extract();
 
         // then
-        // 토큰 발급 요청이 거부된다
+        assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
+        // given
+        RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CustomerRequest("testx", "1aB45678!"))
+                .when().post("/api/customers")
+                .then().log().all()
+                .extract();
+
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        ExtractableResponse<Response> invalidTokenResponse = RestAssured
+                .given().log().all()
+                .auth().oauth2("invalid_token")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/me")
+                .then().log().all()
+                .extract();
 
         // then
-        // 내 정보 조회 요청이 거부된다
+        assertThat(invalidTokenResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }
