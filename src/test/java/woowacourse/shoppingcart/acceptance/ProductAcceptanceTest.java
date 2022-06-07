@@ -1,14 +1,19 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.utils.Fixture.signupRequest;
+import static woowacourse.utils.Fixture.tokenRequest;
 import static woowacourse.utils.Fixture.맥주;
 import static woowacourse.utils.Fixture.치킨;
+import static woowacourse.utils.RestAssuredUtils.httpPost;
+import static woowacourse.utils.RestAssuredUtils.login;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -21,10 +26,21 @@ import woowacourse.utils.AcceptanceTest;
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
 
+    private String token;
+    private Long productId1;
+    private Long productId2;
+
+    @BeforeEach
+    public void setUp() {
+        httpPost("/customers", signupRequest);
+        ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
+        token = loginResponse.jsonPath().getString("accessToken");
+    }
+
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
-        ExtractableResponse<Response> response = 상품_등록_요청(치킨);
+        ExtractableResponse<Response> response = 상품_등록_요청(치킨, token);
 
         상품_추가됨(response);
     }
@@ -32,10 +48,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
-        Long productId1 = 상품_등록되어_있음(치킨);
-        Long productId2 = 상품_등록되어_있음(맥주);
+        Long productId1 = 상품_등록되어_있음(치킨, token);
+        Long productId2 = 상품_등록되어_있음(맥주, token);
 
-        ExtractableResponse<Response> response = 상품_목록_조회_요청();
+        ExtractableResponse<Response> response = 상품_목록_조회_요청(token);
 
         조회_응답됨(response);
         상품_목록_포함됨(productId1, productId2, response);
@@ -44,9 +60,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
-        Long productId = 상품_등록되어_있음(치킨);
+        Long productId = 상품_등록되어_있음(치킨, token);
 
-        ExtractableResponse<Response> response = 상품_조회_요청(productId);
+        ExtractableResponse<Response> response = 상품_조회_요청(productId, token);
 
         조회_응답됨(response);
         상품_조회됨(response, productId);
@@ -55,18 +71,19 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 삭제한다")
     @Test
     void deleteProduct() {
-        Long productId = 상품_등록되어_있음(치킨);
+        Long productId = 상품_등록되어_있음(치킨, token);
 
-        ExtractableResponse<Response> response = 상품_삭제_요청(productId);
+        ExtractableResponse<Response> response = 상품_삭제_요청(productId, token);
 
         상품_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 상품_등록_요청(Product product) {
+    public static ExtractableResponse<Response> 상품_등록_요청(Product product, String token) {
         ProductSaveRequest productRequest = new ProductSaveRequest(product.getName(), product.getPrice(), product.getImage());
 
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when().post("/products")
@@ -74,27 +91,30 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_목록_조회_요청() {
+    public static ExtractableResponse<Response> 상품_목록_조회_요청(String token) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/products")
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
+    public static ExtractableResponse<Response> 상품_조회_요청(Long productId, String token) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/products/{productId}", productId)
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
+    public static ExtractableResponse<Response> 상품_삭제_요청(Long productId, String token) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/products/{productId}", productId)
                 .then().log().all()
@@ -106,8 +126,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 상품_등록되어_있음(Product product) {
-        ExtractableResponse<Response> response = 상품_등록_요청(product);
+    public static Long 상품_등록되어_있음(Product product, String token) {
+        ExtractableResponse<Response> response = 상품_등록_요청(product, token);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 

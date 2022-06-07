@@ -32,7 +32,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     private boolean isSignUpRequest(HttpServletRequest request) {
-        return request.getRequestURI().contains("/customer")
+        return request.getRequestURI().contains("/customers")
                 && request.getMethod().equalsIgnoreCase("post");
     }
 

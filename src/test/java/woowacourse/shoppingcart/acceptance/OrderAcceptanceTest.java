@@ -3,8 +3,12 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static woowacourse.utils.Fixture.signupRequest;
+import static woowacourse.utils.Fixture.tokenRequest;
 import static woowacourse.utils.Fixture.맥주;
 import static woowacourse.utils.Fixture.치킨;
+import static woowacourse.utils.RestAssuredUtils.httpPost;
+import static woowacourse.utils.RestAssuredUtils.login;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -28,17 +32,21 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
     private Long cartId1;
     private Long cartId2;
+    private String token;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
+        httpPost("/customers", signupRequest);
+        ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
+        token = loginResponse.jsonPath().getString("accessToken");
 
-        Long productId1 = 상품_등록되어_있음(치킨);
-        Long productId2 = 상품_등록되어_있음(맥주);
+        Long productId1 = 상품_등록되어_있음(치킨, token);
+        Long productId2 = 상품_등록되어_있음(맥주, token);
 
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        cartId1 = 장바구니_아이템_추가되어_있음("token",1L,  productId1);
+        cartId2 = 장바구니_아이템_추가되어_있음("token", 1L, productId2);
     }
 
     @DisplayName("주문하기")

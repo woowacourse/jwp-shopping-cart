@@ -47,15 +47,6 @@ public class CustomerDao {
         }
     }
 
-    private RowMapper<Customer> getCustomerMapper() {
-        return (rs, rowNum) -> new Customer(
-                rs.getLong("id"),
-                rs.getString("email"),
-                rs.getString("nickname"),
-                rs.getString("password")
-        );
-    }
-
     public void delete(Long id) {
         String sql = "DELETE FROM customer WHERE id = :id";
         jdbcTemplate.update(sql, Map.of("id", id));
@@ -74,5 +65,19 @@ public class CustomerDao {
 
     public Long findIdByUserName(String customerName) {
         return null;
+    }
+
+    public Long findIdByEmail(String email) {
+        String sql = "SELECT id FROM customer WHERE email = :email";
+        return jdbcTemplate.queryForObject(sql, Map.of("email", email), Long.class);
+    }
+
+    private RowMapper<Customer> getCustomerMapper() {
+        return (rs, rowNum) -> new Customer(
+                rs.getLong("id"),
+                rs.getString("email"),
+                rs.getString("nickname"),
+                rs.getString("password")
+        );
     }
 }

@@ -17,11 +17,9 @@ public class LoginConfig implements WebMvcConfigurer {
     public static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH";
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CustomerService customerService;
 
     public LoginConfig(JwtTokenProvider jwtTokenProvider, CustomerService customerService) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.customerService = customerService;
     }
 
     @Override

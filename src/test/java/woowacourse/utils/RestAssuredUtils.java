@@ -73,4 +73,22 @@ public class RestAssuredUtils {
                 .when().get(path)
                 .then().log().all().extract();
     }
+
+    public static ExtractableResponse<Response> postWithToken(String path, String token, Object object) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(object)
+                .auth().oauth2(token)
+                .when().post(path)
+                .then().log().all().extract();
+    }
+
+    public static ExtractableResponse<Response> putWithToken(String path, String token, Object object) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(object)
+                .auth().oauth2(token)
+                .when().put(path)
+                .then().log().all().extract();
+    }
 }

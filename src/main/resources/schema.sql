@@ -1,12 +1,10 @@
+set FOREIGN_KEY_CHECKS = 0;
 drop table if exists orders_detail;
-
 drop table if exists orders;
-
-drop table if exists cart_item;
-
+drop table if exists cart;
 drop table if exists product;
-
 drop table if exists customer;
+set FOREIGN_KEY_CHECKS = 1;
 
 create table customer
 (
@@ -26,15 +24,16 @@ create table product
     primary key (id)
 );
 
-create table cart_item
+create table cart
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
     product_id  bigint not null,
+    quantity   integer not null,
 
-    primary key (id),
-    foreign key (customer_id) references customer(id),
-    foreign key (product_id) references product(id)
+    primary key (id)
+--    foreign key (customer_id) references customer(id),
+--    foreign key (product_id) references product(id)
 );
 
 create table orders

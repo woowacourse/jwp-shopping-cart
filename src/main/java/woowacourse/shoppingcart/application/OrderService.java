@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -22,12 +22,12 @@ public class OrderService {
 
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
-    private final CartItemDao cartItemDao;
+    private final CartDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+                        final CartDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
@@ -41,11 +41,11 @@ public class OrderService {
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
+            //final Long productId = cartItemDao.findProductIdById(cartId);
             final int quantity = orderDetail.getQuantity();
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+            //ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
+            //cartItemDao.deleteCartItem(cartId);
         }
 
         return ordersId;
