@@ -7,7 +7,6 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderResponse;
@@ -36,8 +35,7 @@ public class OrderService {
 
     @Transactional
     public Long addOrder(final Long customerId, final List<OrderRequestDto> orderRequestDtos) {
-        getCustomer(customerId);
-
+        validateCustomerExists(customerId);
         final Long ordersId = orderDao.addOrders(customerId);
         for (final OrderRequestDto orderRequestDto : orderRequestDtos) {
             final Long cartId = orderRequestDto.getCartId();
@@ -69,23 +67,23 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private void validateCustomerOrderExists(final Long customerId) {
-        getCustomer(customerId);
-        if (!orderDao.existsOrderByCustomerId(customerId)) {
-            throw new OrderNotFoundException();
-        }
+    private void validateCustomerExists(final Long customerId) {
+        customerDao.findById(customerId)
+                .orElseThrow(CustomerNotFoundException::new);
     }
 
     private void validateOrderIdByCustomerId(final Long customerId, final Long orderId) {
-        getCustomer(customerId);
+        validateCustomerExists(customerId);
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    private Customer getCustomer(final Long customerId) {
-        return customerDao.findById(customerId)
-                .orElseThrow(CustomerNotFoundException::new);
+    private void validateCustomerOrderExists(final Long customerId) {
+        validateCustomerExists(customerId);
+        if (!orderDao.existsOrderByCustomerId(customerId)) {
+            throw new OrderNotFoundException();
+        }
     }
 
     private Orders getOrders(final Long orderId) {
