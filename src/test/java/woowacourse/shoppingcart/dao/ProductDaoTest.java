@@ -11,7 +11,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.ProductRequest;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -31,10 +32,10 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        final String imageUrl = "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTAyMjJfMjE4%2FMDAxNjEzOTIzNTY4NTUz.dladUcTemSByKMV6UZQIeQ2Q0uZPmEY-QSaCZziy2tMg.12F4zUdWqGZGEGdMLTYhm7tsRuSUe39mYYPIQpJf0vAg.PNG.looh2040%2F%25C8%25AD%25B8%25E9_%25C4%25B8%25C3%25B3_2021-02-22_005905-removebg-preview_%25281%2529.png&type=sc960_832";
 
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new ProductRequest(name, price, imageUrl, "description"));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -46,9 +47,10 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        final String imageUrl = "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTAyMjJfMjE4%2FMDAxNjEzOTIzNTY4NTUz.dladUcTemSByKMV6UZQIeQ2Q0uZPmEY-QSaCZziy2tMg.12F4zUdWqGZGEGdMLTYhm7tsRuSUe39mYYPIQpJf0vAg.PNG.looh2040%2F%25C8%25AD%25B8%25E9_%25C4%25B8%25C3%25B3_2021-02-22_005905-removebg-preview_%25281%2529.png&type=sc960_832";
+        final String description = "description";
+        final Long productId = productDao.save(new ProductRequest(name, price, imageUrl, description));
+        final Product expectedProduct = new Product(productId, name, price, imageUrl, description);
 
         // when
         final Product product = productDao.findProductById(productId);
@@ -77,9 +79,9 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        final String imageUrl = "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTAyMjJfMjE4%2FMDAxNjEzOTIzNTY4NTUz.dladUcTemSByKMV6UZQIeQ2Q0uZPmEY-QSaCZziy2tMg.12F4zUdWqGZGEGdMLTYhm7tsRuSUe39mYYPIQpJf0vAg.PNG.looh2040%2F%25C8%25AD%25B8%25E9_%25C4%25B8%25C3%25B3_2021-02-22_005905-removebg-preview_%25281%2529.png&type=sc960_832";
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new ProductRequest(name, price, imageUrl, "description"));
         final int beforeSize = productDao.findProducts().size();
 
         // when

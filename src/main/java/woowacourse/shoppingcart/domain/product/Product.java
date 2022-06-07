@@ -5,14 +5,19 @@ public class Product {
     private final Long id;
     private final ProductName name;
     private final Price price;
-    private final ProductImage imageUrl;
-    private final Description description;
+    private final ImageUrl imageUrl;
+    private final String description;
 
-    public Product(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl, null);
+    public Product(Long id, String name, int price, String imageUrl, String description) {
+        this(id,
+                new ProductName(name),
+                new Price(price),
+                new ImageUrl(imageUrl),
+                description
+        );
     }
 
-    public Product(Long id, String name, Integer price, String imageUrl, String description) {
+    public Product(Long id, ProductName name, Price price, ImageUrl imageUrl, String description) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -20,19 +25,23 @@ public class Product {
         this.description = description;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public int getPrice() {
-        return price;
+        return price.getValue();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.getValue();
     }
 
-    public Long getId() {
-        return id;
+    public String getDescription() {
+        return description;
     }
 }
