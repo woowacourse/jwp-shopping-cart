@@ -56,6 +56,12 @@ public class CartService {
         cartItemDao.updateQuantity(customer.getId(), productId, quantity);
     }
 
+    public void deleteCartItem(String email, Long productId) {
+        Customer customer = customerDao.findIdByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        cartItemDao.deleteCartItem(customer.getId(), productId);
+    }
+
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);

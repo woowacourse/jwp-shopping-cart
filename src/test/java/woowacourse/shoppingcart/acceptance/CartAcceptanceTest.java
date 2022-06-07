@@ -104,12 +104,24 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-//        String accessToken = loginAndGetAccessToken(new TokenRequest(EMAIL, PASSWORD));
-//        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
-//
-//        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-//
-//        장바구니_삭제됨(response);
+        String accessToken = loginAndGetAccessToken(new TokenRequest(EMAIL, PASSWORD));
+        장바구니_아이템_추가_요청(accessToken, productId1);
+
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, productId1);
+
+        ExtractableResponse<Response> cartResponse = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .when().log().all()
+                .get("/api/carts")
+                .then().log().all()
+                .extract();
+
+        List<CartItemResponse> carts = cartResponse.body().jsonPath().getList(".", CartItemResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(carts.size()).isEqualTo(0)
+        );
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
@@ -137,11 +149,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(String accessToken, Long productId) {
         return RestAssured
                 .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
+                .auth().oauth2(accessToken)
+                .when().delete("/api/carts/products/{productId}", productId)
                 .then().log().all()
                 .extract();
     }
