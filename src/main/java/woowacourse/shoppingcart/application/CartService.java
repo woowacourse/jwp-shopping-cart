@@ -77,4 +77,8 @@ public class CartService {
 
         return new Products(products);
     }
+
+    public void deleteAll(Long customerId) {
+        cartItemDao.deleteAllByCustomerId(customerId);
+    }
 }

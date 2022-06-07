@@ -59,4 +59,13 @@ public class CartServiceTest {
                 .isInstanceOf(NotInCustomerCartItemException.class);
 
     }
+
+    @Test
+    void 장바구니_전체_상품_제거() {
+        cartService.deleteAll(1L);
+
+        var findAllCartItemResponse = cartService.getAllCartItem(1L);
+        assertThat(findAllCartItemResponse.getProducts().size()).isEqualTo(0);
+
+    }
 }

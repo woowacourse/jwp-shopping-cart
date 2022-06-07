@@ -57,10 +57,10 @@ public class CartItemDao {
         namedParameterJdbcTemplate.update(sql, paramSource);
     }
 
-    public void deleteCartItem(final Long id) {
+    public void deleteCartItem(final Long cartItemId) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
-        final int rowCount = jdbcTemplate.update(sql, id);
+        final int rowCount = jdbcTemplate.update(sql, cartItemId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
@@ -79,5 +79,11 @@ public class CartItemDao {
         };
 
         return namedParameterJdbcTemplate.query(sql, Map.of("customer_id", customerId), rowMapper);
+    }
+
+    public void deleteAllByCustomerId(Long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
+
+        jdbcTemplate.update(sql, customerId);
     }
 }

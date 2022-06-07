@@ -46,4 +46,12 @@ public class CartItemDaoTest {
         var cart = cartDao.findByCustomerId(1L);
         assertThat(cart.size()).isEqualTo(0);
     }
+
+    @Test
+    void 장바구니_전체_상품_제거() {
+        cartDao.deleteAllByCustomerId(1L);
+
+        var cart = cartDao.findByCustomerId(1L);
+        assertThat(cart.size()).isEqualTo(0);
+    }
 }
