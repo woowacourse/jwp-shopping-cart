@@ -115,7 +115,7 @@ class ProductControllerTest extends ControllerTest {
         ).andDo(print());
 
         // then
-        perform.andDo(document("product",
+        perform.andDo(document("product-not-exist-product",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(
