@@ -463,7 +463,7 @@ class CustomerServiceTest {
 
     @DisplayName("비밀번호가 일치하는 것을 확인한다.")
     @Test
-    void checkMatchingPassword() {
+    void matchPassword() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
@@ -471,13 +471,13 @@ class CustomerServiceTest {
         PasswordRequest passwordRequest = new PasswordRequest("1234asdf!");
 
         // when & then
-        assertThatCode(() -> customerService.checkMatchingPassword(customerIdentificationRequest, passwordRequest))
+        assertThatCode(() -> customerService.matchPassword(customerIdentificationRequest, passwordRequest))
                 .doesNotThrowAnyException();
     }
 
     @DisplayName("비밀번호가 일치하지 않을 경우 예외가 발생한다.")
     @Test
-    void checkMatchingInvalidPasswordException() {
+    void matchingInvalidPasswordException() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
@@ -485,7 +485,7 @@ class CustomerServiceTest {
         PasswordRequest passwordRequest = new PasswordRequest("invalidPassword");
 
         // when & then
-        assertThatCode(() -> customerService.checkMatchingPassword(customerIdentificationRequest, passwordRequest))
+        assertThatCode(() -> customerService.matchPassword(customerIdentificationRequest, passwordRequest))
                 .isInstanceOf(LoginDataNotMatchException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }

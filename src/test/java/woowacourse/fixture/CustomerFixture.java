@@ -78,7 +78,7 @@ public class CustomerFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> checkMatchingPassword(final String token, final String password) {
+    public static ExtractableResponse<Response> matchPassword(final String token, final String password) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("password", password);
 

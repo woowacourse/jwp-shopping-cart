@@ -60,9 +60,9 @@ public class CustomerController {
     }
 
     @PostMapping("/auth/customers/match/password")
-    public ResponseEntity<Void> checkMatchingPassword(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest,
+    public ResponseEntity<Void> matchPassword(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest,
                                                       @RequestBody PasswordRequest passwordRequest) {
-        customerService.checkMatchingPassword(customerIdentificationRequest, passwordRequest);
+        customerService.matchPassword(customerIdentificationRequest, passwordRequest);
         return ResponseEntity.ok().build();
     }
 }

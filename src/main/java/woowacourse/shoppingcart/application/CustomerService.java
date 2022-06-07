@@ -75,7 +75,7 @@ public class CustomerService {
         customerDao.delete(customer.getId());
     }
 
-    public void checkMatchingPassword(final CustomerIdentificationRequest customerIdentificationRequest,
+    public void matchPassword(final CustomerIdentificationRequest customerIdentificationRequest,
                                       final PasswordRequest passwordRequest) {
         Customer customer = findCustomerById(customerIdentificationRequest.getId());
         customer.validateMatchingLoginPassword(encrypt(passwordRequest.getPassword()));

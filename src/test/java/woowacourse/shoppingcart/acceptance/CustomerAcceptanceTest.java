@@ -8,7 +8,7 @@ import static woowacourse.fixture.CustomerFixture.update;
 import static woowacourse.fixture.CustomerFixture.updatePassword;
 import static woowacourse.fixture.CustomerFixture.withdraw;
 import static woowacourse.fixture.CustomerFixture.signUp;
-import static woowacourse.fixture.CustomerFixture.checkMatchingPassword;
+import static woowacourse.fixture.CustomerFixture.matchPassword;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -351,13 +351,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("비밀번호가 일치하는지 확인한다.")
     @Test
-    void checkMatchingCustomerPassword() {
+    void matchingCustomerPassword() {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
         // when
-        ExtractableResponse<Response> secondResponse = checkMatchingPassword(token, "1234asdf!");
+        ExtractableResponse<Response> secondResponse = matchPassword(token, "1234asdf!");
 
         // then
         assertAll(
@@ -367,13 +367,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("비밀번호가 일치하지 않은지 확인한다.")
     @Test
-    void checkMatchingCustomerInvalidPassword() {
+    void matchingCustomerInvalidPassword() {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
         // when
-        ExtractableResponse<Response> secondResponse = checkMatchingPassword(token, "invalidPassword");
+        ExtractableResponse<Response> secondResponse = matchPassword(token, "invalidPassword");
 
         // then
         assertAll(
