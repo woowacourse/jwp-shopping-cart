@@ -33,7 +33,7 @@ public class CartItemController {
     @PostMapping
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal long memberId,
                                             @Valid @RequestBody CartItemAddRequest cartItemAddRequest) {
-        cartService.addCart(memberId, cartItemAddRequest.getId(), cartItemAddRequest.getQuantity());
+        cartService.addCart(memberId, cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -47,13 +47,13 @@ public class CartItemController {
                                                                  @Valid @RequestBody CartItemQuantityUpdateRequest
                                                                          cartItemQuantityUpdateRequest) {
         List<CartItemResponse> cartItemResponses = cartService.updateQuantity(
-                memberId, cartItemQuantityUpdateRequest.getId(), cartItemQuantityUpdateRequest.getQuantity());
+                memberId, cartItemQuantityUpdateRequest.getProductId(), cartItemQuantityUpdateRequest.getQuantity());
         return ResponseEntity.ok(cartItemResponses);
     }
 
     @DeleteMapping
     public ResponseEntity<List<CartItemResponse>> deleteCartItem(@AuthenticationPrincipal long memberId,
-                                                                 @RequestParam long id) {
-        return ResponseEntity.ok(cartService.deleteCartItem(memberId, id));
+                                                                 @RequestParam long productId) {
+        return ResponseEntity.ok(cartService.deleteCartItem(memberId, productId));
     }
 }

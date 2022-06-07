@@ -181,7 +181,7 @@ class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartItem_OK() {
         postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
 
-        ExtractableResponse<Response> response = deleteWithAuthorization(CART_URI + "?id=1", token);
+        ExtractableResponse<Response> response = deleteWithAuthorization(CART_URI + "?productId=1", token);
         List<CartItemResponse> cartItems = response.jsonPath()
                 .getList(".", CartItemResponse.class);
 
