@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
-import woowacourse.shoppingcart.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.dao.OrderedProductDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -21,33 +21,28 @@ import woowacourse.shoppingcart.exception.InvalidOrderException;
 public class OrderService {
 
     private final OrderDao orderDao;
-    private final OrdersDetailDao ordersDetailDao;
+    private final OrderedProductDao orderedProductDao;
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
+    public OrderService(final OrderDao orderDao, final OrderedProductDao orderedProductDao,
                         final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
         this.orderDao = orderDao;
-        this.ordersDetailDao = ordersDetailDao;
+        this.orderedProductDao = orderedProductDao;
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
+    public Long addOrder(final List<Long> cartIds, final String customerName) {
         final Long customerId = customerDao.getIdByEmail(customerName);
         final Long ordersId = orderDao.addOrders(customerId);
 
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
-
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+        for (Long cartId : cartIds) {
+            Cart cart = cartItemDao.getById(cartId);
+            orderedProductDao.save(ordersId, cart);
         }
-
         return ordersId;
     }
 
@@ -75,7 +70,7 @@ public class OrderService {
 
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
+        for (final OrderDetail productQuantity : orderedProductDao.findOrdersDetailsByOrderId(orderId)) {
             final Product product = productDao.findProductById(productQuantity.getProductId());
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));

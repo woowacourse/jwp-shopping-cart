@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static woowacourse.AcceptanceTestFixture.postMethodRequest;
+import static woowacourse.AcceptanceTestFixture.postMethodRequestWithBearerAuth;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -11,16 +11,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.common.AcceptanceTest;
-import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
+import woowacourse.shoppingcart.dto.OrderCreateRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
@@ -32,25 +36,27 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-
         ThumbnailImage chickenThumbnailImage = new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
         ThumbnailImage beerThumbnailImage = new ThumbnailImage("http://example.com/beer.jpg", "chicken");
 
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, 10, chickenThumbnailImage);
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, 10, beerThumbnailImage);
+        ProductRequest chickenRequest = new ProductRequest("치킨", 1000, 10, chickenThumbnailImage);
+        ProductRequest beerRequest = new ProductRequest("치킨", 1000, 10, beerThumbnailImage);
 
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        postMethodRequest(chickenRequest, "/api/products");
+        postMethodRequest(beerRequest, "/api/products");
     }
 
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
-                .map(cartId -> new OrderRequest(cartId, 10))
-                .collect(Collectors.toList());
+        String token = loginAndGetToken("test@gmail.com", "password0!", "name");
+        addCartItem(token, 1L, 1);
+        addCartItem(token, 2L, 1);
 
-        ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
+        OrderCreateRequest orderCreateRequest = new OrderCreateRequest(List.of(1L, 2L));
+
+        ExtractableResponse<Response> response = postMethodRequestWithBearerAuth(orderCreateRequest,
+                token, "/api/myorders");
 
         주문하기_성공함(response);
     }
@@ -133,5 +139,21 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
         Orders resultOrder = response.as(Orders.class);
         assertThat(resultOrder.getId()).isEqualTo(orderId);
+    }
+
+    private String loginAndGetToken(String email, String password, String username) {
+        final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
+        postMethodRequest(customerRequest, "/api/customers");
+
+        final LoginRequest loginRequest = new LoginRequest(email, password);
+        final ExtractableResponse<Response> tokenResponse = postMethodRequest(loginRequest,
+                "/api/auth/login");
+
+        return tokenResponse.jsonPath().getString("accessToken");
+    }
+
+    private ExtractableResponse<Response> addCartItem(String token, Long productId, int quantity) {
+        CartItemAddRequest firstCartItemRequest = new CartItemAddRequest(productId, quantity);
+        return postMethodRequestWithBearerAuth(firstCartItemRequest, token, "/api/mycarts");
     }
 }

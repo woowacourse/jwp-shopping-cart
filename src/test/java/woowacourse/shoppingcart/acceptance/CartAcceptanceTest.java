@@ -30,7 +30,6 @@ import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
 
-
     @Override
     @BeforeEach
     public void setUp() {

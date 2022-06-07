@@ -12,23 +12,26 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class OrdersDetailDaoTest {
+class OrderedProductDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
-    private final OrdersDetailDao ordersDetailDao;
+    private final OrderedProductDao orderedProductDao;
     private long ordersId;
     private long productId;
     private long customerId;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
+    public OrderedProductDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
+        this.orderedProductDao = new OrderedProductDao(jdbcTemplate);
     }
 
     @BeforeEach
@@ -46,11 +49,13 @@ class OrdersDetailDaoTest {
     @Test
     void addOrdersDetail() {
         //given
-        int quantity = 5;
+        ThumbnailImage image = new ThumbnailImage("url", "alt");
+        Product product = new Product(1L, "name", 1000, 10, image);
+        Cart cart = new Cart(1L, 10, product);
 
         //when
-        Long orderDetailId = ordersDetailDao
-                .addOrdersDetail(ordersId, productId, quantity);
+        Long orderDetailId = orderedProductDao
+                .save(ordersId,cart);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);
@@ -68,7 +73,7 @@ class OrdersDetailDaoTest {
         }
 
         //when
-        final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
+        final List<OrderDetail> ordersDetailsByOrderId = orderedProductDao
                 .findOrdersDetailsByOrderId(ordersId);
 
         //then

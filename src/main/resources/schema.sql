@@ -1,4 +1,4 @@
-drop table if exists orders_detail;
+drop table if exists ordered_product;
 
 drop table if exists orders;
 
@@ -63,7 +63,7 @@ alter table orders
     add constraint fk_orders_to_customer
         foreign key (customer_id) references customer (id);
 
-create table orders_detail
+create table ordered_product
 (
     id         bigint  not null auto_increment,
     orders_id  bigint  not null,
@@ -76,10 +76,10 @@ create table orders_detail
 ) engine = InnoDB
   default charset = utf8mb4;
 
-alter table orders_detail
+alter table ordered_product
     add constraint fk_orders_detail_to_orders
         foreign key (orders_id) references orders (id);
 
-alter table orders_detail
+alter table ordered_product
     add constraint fk_orders_detail_to_product
         foreign key (product_id) references product (id);

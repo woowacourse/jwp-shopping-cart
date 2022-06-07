@@ -1,5 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE orders_detail;
+TRUNCATE TABLE ordered_product;
 TRUNCATE TABLE cart_item;
 TRUNCATE TABLE orders;
 TRUNCATE TABLE product;
