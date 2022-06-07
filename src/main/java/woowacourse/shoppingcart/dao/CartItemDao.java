@@ -1,15 +1,12 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCartItemException;
 
 @Repository
@@ -69,6 +66,16 @@ public class CartItemDao {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
         final int rowCount = jdbcTemplate.update(sql, id);
+        validateUpdate(rowCount);
+    }
+
+    public void updateQuantity(final Long cartId, final int quantity) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        final int rowCount = jdbcTemplate.update(sql, quantity, cartId);
+        validateUpdate(rowCount);
+    }
+
+    private void validateUpdate(final int rowCount) {
         if (rowCount == 0) {
             throw new NotFoundCartItemException();
         }

@@ -18,7 +18,6 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.dto.response.CartItemResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -82,6 +81,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_삭제됨(response);
     }
 
+    @Test
+    void 장바구니_아이템_수량_변경() {
+        // given
+        String accessToken = 로그인_및_토큰_발급(USER_NAME, PASSWORD);
+
+        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1, 5);
+
+        // when
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_변경_요청(accessToken, cartId, 10);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
     private String 로그인_및_토큰_발급(String name, String password) {
         return RestAssured
                 .given().log().all()
@@ -124,6 +137,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/api/customers/me/carts/{cartId}", cartId)
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 장바구니_아이템_수량_변경_요청(String accessToken, Long cartId, int quantity) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("quantity", quantity);
+
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().patch("/api/customers/me/carts/" + cartId + "/quantity")
                 .then().log().all()
                 .extract();
     }

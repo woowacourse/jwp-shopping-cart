@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.CreateCartItemRequest;
+import woowacourse.shoppingcart.dto.request.EditCartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -60,6 +61,12 @@ public class CartService {
     public void deleteCart(final UserName customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
+    }
+
+    public void editQuantity(final UserName customerName, final Long cartId,
+                             final EditCartItemQuantityRequest request) {
+        validateCustomerCart(cartId, customerName);
+        cartItemDao.updateQuantity(cartId, request.getQuantity());
     }
 
     private void validateCustomerCart(final Long cartId, final UserName customerName) {
