@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dto.CustomerNameResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -84,9 +85,9 @@ class CustomerServiceTest {
                 new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
         customerService.save(customer);
 
-        String name = customerService.findNameById(1L);
+        CustomerNameResponse name = customerService.findNameById(1L);
 
-        assertThat(name).isEqualTo("name");
+        assertThat(name.getName()).isEqualTo("name");
     }
 
     @DisplayName("회원 정보를 수정한다.")

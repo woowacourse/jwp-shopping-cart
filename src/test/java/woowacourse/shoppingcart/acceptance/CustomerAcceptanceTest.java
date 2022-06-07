@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CustomerNameResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -123,6 +124,40 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertThat(customerResponse).extracting("email", "name", "phone", "address")
                 .containsExactly("email", "judy", "010-1111-2222", "address2");
+    }
+
+    @DisplayName("회원 이름 조회")
+    @Test
+    void findName() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+
+        RestAssured.given().log().all()
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/customers")
+                .then().log().all()
+                .extract();
+
+        String accessToken = RestAssured.given().log().all()
+                .body(new TokenRequest("email", "Pw123456!"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/auth/login")
+                .then().log().all()
+                .extract().as(TokenResponse.class).getAccessToken();
+
+        //then
+        CustomerNameResponse name = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .when()
+                .get("/customers/name")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(CustomerNameResponse.class);
+
+        assertThat(name.getName()).isEqualTo("name");
     }
 
     @DisplayName("회원탈퇴")

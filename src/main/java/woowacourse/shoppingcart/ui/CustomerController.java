@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.CustomerNameResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -35,6 +36,12 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerResponse save(@RequestBody CustomerRequest customerRequest) {
         return customerService.save(customerRequest);
+    }
+
+    @GetMapping("/name")
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerNameResponse findName(@AuthenticationPrincipal Long customerId) {
+        return customerService.findNameById(customerId);
     }
 
     @GetMapping
