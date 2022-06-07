@@ -35,7 +35,7 @@ include::{snippets}/add-cart-item-duplicate-product/http-response.adoc[]
 include::{snippets}/add-cart-item-not-exist-product/http-response.adoc[]
 
 [[resources-cart-get-cart-items]]
-=== 장바구니에 들어있는 상품 목록 조회
+=== 장바구니 상품 목록 조회
 
 ==== HTTP Request
 
@@ -50,7 +50,7 @@ include::{snippets}/get-cart-items/http-response.adoc[]
 include::{snippets}/get-cart-items/response-fields.adoc[]
 
 [[resources-cart-delete-cart-item]]
-=== 장바구니에 들어있는 상품 삭제
+=== 장바구니 상품 삭제
 
 ==== HTTP Request
 
@@ -75,7 +75,7 @@ include::{snippets}/delete-cart-item/http-response.adoc[]
 include::{snippets}/delete-cart-item-not-exist-item/http-response.adoc[]
 
 [[resources-cart-change-quantity]]
-=== 장바구니에 들어있는 상품 수량 변경
+=== 장바구니 상품 수량 변경
 
 ==== HTTP Request
 
