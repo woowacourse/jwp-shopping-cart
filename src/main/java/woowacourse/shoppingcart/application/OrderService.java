@@ -34,15 +34,22 @@ public class OrderService {
         final long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderDetailRequest orderDetail : ordersRequest.getOrder()) {
-            final long productId = orderDetail.getId();
-            final int quantity = orderDetail.getQuantity();
-            final long cartId = cartItemDao.findIdByCustomerIdAndProductId(customerId, productId);
-
-            orderDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteById(cartId);
+            saveOrderDetail(ordersId, orderDetail);
+            deleteCartItem(customerId, orderDetail);
         }
 
         return ordersId;
+    }
+
+    private void saveOrderDetail(final long orderId, final OrderDetailRequest orderDetail) {
+        final long productId = orderDetail.getId();
+        final int quantity = orderDetail.getQuantity();
+        orderDetailDao.addOrderDetail(orderId, productId, quantity);
+    }
+
+    private void deleteCartItem(final long customerId, final OrderDetailRequest orderDetail) {
+        final long cartId = cartItemDao.findIdByCustomerIdAndProductId(customerId, orderDetail.getId());
+        cartItemDao.deleteById(cartId);
     }
 
     @Transactional(readOnly = true)

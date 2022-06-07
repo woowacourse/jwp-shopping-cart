@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
+    private static final int DELETED_ROW_BY_ID = 1;
+
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
 
@@ -33,30 +35,35 @@ public class CartService {
     @Transactional(readOnly = true)
     public CartResponse findCartByCustomerId(final long customerId) {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        final List<Product> products = findProducts(productIds);
+        return CartResponse.of(products);
+    }
 
-        final List<Product> products = productIds.stream()
+    private List<Product> findProducts(List<Long> productIds) {
+        return productIds.stream()
                 .map(id -> productDao.findById(id)
                         .orElseThrow(InvalidProductException::new))
                 .collect(Collectors.toList());
-
-        return CartResponse.of(products);
     }
 
     public int deleteCart(final long customerId, final long productId) {
         validateCustomerCart(productId, customerId);
         final Long cartId = cartItemDao.findIdByCustomerIdAndProductId(customerId, productId);
         final int affectedRows = cartItemDao.deleteById(cartId);
-        if (affectedRows != 1) {
-            throw new InvalidCartItemException();
-        }
+        validateAffectedRows(affectedRows);
         return affectedRows;
     }
 
     private void validateCustomerCart(final long productId, final long customerId) {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-        if (productIds.contains(productId)) {
-            return;
+        if (!productIds.contains(productId)) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
+    }
+
+    private void validateAffectedRows(int affectedRows) {
+        if (affectedRows != DELETED_ROW_BY_ID) {
+            throw new InvalidCartItemException();
+        }
     }
 }

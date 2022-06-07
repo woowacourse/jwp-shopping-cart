@@ -52,9 +52,9 @@ public class ProductDao {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", productId);
 
-        final List<Product> query = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), productRowMapper);
+        final List<Product> queryResult = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), productRowMapper);
 
-        return Optional.ofNullable(DataAccessUtils.singleResult(query));
+        return Optional.ofNullable(DataAccessUtils.singleResult(queryResult));
     }
 
     public List<Product> findAll() {

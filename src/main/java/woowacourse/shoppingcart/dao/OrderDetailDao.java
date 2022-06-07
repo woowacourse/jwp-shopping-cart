@@ -21,7 +21,8 @@ public class OrderDetailDao {
 
     private final RowMapper<OrderDetail> orderDetailRowMapper =
             (rs, rowNum) -> new OrderDetail(
-                    new Product(rs.getLong("product_id"),
+                    new Product(
+                            rs.getLong("product_id"),
                             new ProductName(rs.getString("name")),
                             rs.getInt("price"),
                             new ImageUrl(rs.getString("image_url"))),
@@ -32,13 +33,13 @@ public class OrderDetailDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Long addOrdersDetail(final long ordersId, final long productId, final int quantity) {
+    public Long addOrderDetail(final long orderId, final long productId, final int quantity) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("orders_detail")
                 .usingGeneratedKeyColumns("id");
 
         final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("orders_id", ordersId);
+        parameters.put("orders_id", orderId);
         parameters.put("product_id", productId);
         parameters.put("quantity", quantity);
 

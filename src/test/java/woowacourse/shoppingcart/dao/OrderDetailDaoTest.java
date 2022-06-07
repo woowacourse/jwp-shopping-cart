@@ -52,7 +52,7 @@ class OrderDetailDaoTest {
         int quantity = 5;
 
         //when
-        Long orderDetailId = orderDetailDao.addOrdersDetail(ordersId, productId, quantity);
+        Long orderDetailId = orderDetailDao.addOrderDetail(ordersId, productId, quantity);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);
@@ -64,7 +64,7 @@ class OrderDetailDaoTest {
         //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
-            orderDetailDao.addOrdersDetail(ordersId, productId, 3);
+            orderDetailDao.addOrderDetail(ordersId, productId, 3);
         }
 
         //when
