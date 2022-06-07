@@ -10,11 +10,11 @@ import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Encoder;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
-import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUpdateProfileRequest;
 
 @Service
 public class CustomerService {

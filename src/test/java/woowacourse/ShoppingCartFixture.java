@@ -1,10 +1,10 @@
 package woowacourse;
 
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUpdateProfileRequest;
 
 public class ShoppingCartFixture {
     public static final CustomerRequest 잉_회원생성요청 = new CustomerRequest("잉", "ing@woowahan.com", "ing_woowahan");

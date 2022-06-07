@@ -14,12 +14,11 @@ import woowacourse.exception.EmailDuplicateException;
 import woowacourse.exception.PasswordIncorrectException;
 import woowacourse.exception.TokenInvalidException;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
-import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
 
 public class CustomerControllerTest extends ControllerTest {
-    private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MjcsImlhdCI6MTY1NDA2NjczOCwiZXhwIjoxNjU0MDcwMzM4fQ.AvAJuT4YmyL-hAU2WrukGMT1Tt3k-J92DED9rGyDl38";
 
     @DisplayName("회원 생성 시도 시, 입력한 이메일이 이미 존재할 경우 400을 응답한다")
     @Test

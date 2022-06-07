@@ -20,9 +20,9 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
-import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.ExceptionResponse;
 
 @DisplayName("인증 관련 기능")
 @Sql("/truncate.sql")

@@ -17,6 +17,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -119,7 +120,7 @@ public class AcceptanceTest {
 
     protected void signUp() {
         RestAssured.given().log().all()
-                .body(toJson(잉_회원생성요청))
+                .body(toJson(new CustomerRequest("잉", "ing@woowahan.com", "ing_woowahan")))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post(CUSTOMER_URI)

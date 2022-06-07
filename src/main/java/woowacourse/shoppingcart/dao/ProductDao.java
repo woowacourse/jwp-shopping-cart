@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
 public class ProductDao {
@@ -43,12 +44,12 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Optional<Product> findProductById(final Long productId) {
+    public Product findProductById(final Long productId) {
         try {
             final String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, productId));
+            return jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, productId);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new InvalidProductException();
         }
     }
 

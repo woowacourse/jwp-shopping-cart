@@ -16,12 +16,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
+import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.response.ExceptionResponse;
 
 @DisplayName("회원 관련 기능")
 @Sql("/truncate.sql")

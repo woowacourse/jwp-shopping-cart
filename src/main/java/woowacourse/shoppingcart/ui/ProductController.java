@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.ui.dto.request.ProductRequest;
-import woowacourse.shoppingcart.ui.dto.response.ProductResponse;
-import woowacourse.shoppingcart.ui.dto.response.ProductsResponse;
+import woowacourse.shoppingcart.dto.request.ProductRequest;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
+import woowacourse.shoppingcart.dto.response.ProductsResponse;
 
 @RestController
 @RequestMapping("/api/products")
@@ -28,7 +29,9 @@ public class ProductController {
 
     // TODO: page 쿼리 추가
     @GetMapping
-    public ResponseEntity<ProductsResponse> products() {
+    public ResponseEntity<ProductsResponse> products(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         return ResponseEntity.ok(productService.findProducts());
     }
 

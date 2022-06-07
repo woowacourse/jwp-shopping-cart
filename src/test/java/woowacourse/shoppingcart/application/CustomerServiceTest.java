@@ -16,11 +16,11 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.exception.EmailDuplicateException;
 import woowacourse.exception.PasswordIncorrectException;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
-import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.response.CustomerResponse;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUpdateProfileRequest;
 
 @SpringBootTest
 @TestConstructor(autowireMode = AutowireMode.ALL)
