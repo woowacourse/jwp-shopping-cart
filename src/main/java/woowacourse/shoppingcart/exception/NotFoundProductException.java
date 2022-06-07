@@ -1,9 +1,10 @@
 package woowacourse.shoppingcart.exception;
 
-public class NotFoundProductException extends NotFoundException {
+import org.springframework.http.HttpStatus;
+
+public class NotFoundProductException extends NotBodyToReturnException {
 
     public NotFoundProductException() {
-        super("", "물품이 존재하지 않습니다.");
-
+        super(HttpStatus.NOT_FOUND);
     }
 }

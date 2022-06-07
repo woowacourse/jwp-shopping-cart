@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartAdditionRequest;
 import woowacourse.shoppingcart.dto.CartUpdationRequest;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
@@ -57,18 +56,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
             }
         }
 
-        @DisplayName("유효한 인가와 장바구니에 추가되지 않은 상품을 추가하면")
+        @DisplayName("존재하지 않은 상품을 장바구니에 추가하려고 하면")
         @Nested
         class Context_not_exist_product extends AcceptanceTest {
 
 
-            @DisplayName("장바구니 추가에 실패하고, 상태코드 400을 반환받는다.")
+            @DisplayName("장바구니 추가에 실패하고, 상태코드 404를 반환받는다.")
             @Test
             void it_fail_return_400() {
                 ValidatableResponse response = postCart(notExistProductRequest, accessToken);
 
-                response.statusCode(HttpStatus.BAD_REQUEST.value())
-                        .body("message", equalTo("물품이 존재하지 않습니다."));
+                response.statusCode(HttpStatus.NOT_FOUND.value());
             }
         }
 
