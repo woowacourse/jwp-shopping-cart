@@ -72,7 +72,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartItem() {
         Long cartItemId = 장바구니_아이템_추가되어_있음(new CartItemAddRequest(productId1, 1), token);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartItemId);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(cartItemId, token);
 
         장바구니_삭제됨(response);
     }
@@ -108,11 +108,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(Long cartItemId, String token) {
         return RestAssured
                 .given().log().all()
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
+                .when().delete("/api/cartItems/" + cartItemId)
                 .then().log().all()
                 .extract();
     }
@@ -124,7 +125,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static Long 장바구니_아이템_추가되어_있음(CartItemAddRequest request, String token) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(request, token);
-        return Long.parseLong(response.header("Location").split("/cartItems/")[1]);
+        return response.jsonPath().getLong("cartItem.id");
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {

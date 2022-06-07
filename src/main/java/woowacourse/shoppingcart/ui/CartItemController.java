@@ -53,10 +53,10 @@ public class CartItemController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                               @PathVariable final Long cartId) {
-        cartService.deleteOneById(customerName, cartId);
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity<Void> deleteCartItem(@PathVariable final Long cartItemId,
+                                               @AuthenticationPrincipal String username) {
+        cartService.deleteOneById(username, cartItemId);
         return ResponseEntity.noContent().build();
     }
 }
