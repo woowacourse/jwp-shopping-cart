@@ -21,6 +21,16 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public CartItem findById(Long id) {
+        final String sql = "SELECT ci.id as cart_item_id, ci.product_id as cart_item_product_id, p.name as product_name,"
+            + " p.price as product_price, ci.stock as cart_item_stock, p.image_url as product_image_url "
+            + "FROM cart_item as ci "
+            + "LEFT JOIN product AS p ON ci.product_id = p.id "
+            + "WHERE ci.id = ?";
+
+        return jdbcTemplate.queryForObject(sql, cartItemJoinProductMapper(), id);
+    }
+
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
 
@@ -63,6 +73,15 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public void update(final CartItem cartItem) {
+        final String sql = "UPDATE cart_item SET stock = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql,
+            cartItem.getStock(),
+            cartItem.getId()
+        );
     }
 
     public List<CartItem> findAllByCustomerId(final Long customerId) {

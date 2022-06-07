@@ -83,6 +83,31 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         장바구니_삭제됨(deleteResponse);
     }
 
+    @DisplayName("장바구니 아이템 수량 수정")
+    @Test
+    void updateCartItemQuantity() {
+        // given
+        CartItemRequest cartItemRequest = new CartItemRequest(productId1, 5);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청_토큰(cartItemRequest, accessToken);
+        CartItemResponse cartItemResponse = response.jsonPath().getObject(".", CartItemResponse.class);
+
+        // when
+        ExtractableResponse<Response> patchResponse = 장바구니_아이템_수량수정_토큰(accessToken, cartItemResponse);
+
+        // then
+        장바구니_아이템_수량_수정됨(patchResponse);
+    }
+
+    private ExtractableResponse<Response> 장바구니_아이템_수량수정_토큰(String token, CartItemResponse cartItemResponse) {
+        return RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().oauth2(token)
+            .when().patch("/api/cartItems/{cartItemId}?quantity={quantity}", cartItemResponse.getId(), 3)
+            .then().log().all()
+            .extract();
+    }
+
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);
@@ -102,7 +127,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().oauth2(token)
             .body(cartItemRequest)
-            .when().post("/api/customers/cartItems")
+            .when().post("/api/cartItems")
             .then().log().all()
             .extract();
     }
@@ -112,7 +137,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
-                .when().get("/api/customers/cartItems")
+                .when().get("/api/cartItems")
                 .then().log().all()
                 .extract();
     }
@@ -122,7 +147,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().oauth2(token)
-            .when().delete("/api/customers/cartItems/{cartId}", cartId)
+            .when().delete("/api/cartItems/{cartId}", cartId)
             .then().log().all()
             .extract();
     }
@@ -164,5 +189,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void 장바구니_아이템_수량_수정됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

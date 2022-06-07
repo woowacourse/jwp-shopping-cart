@@ -57,6 +57,14 @@ public class CartItem {
         return imageUrl;
     }
 
+    public void updateStock(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("수량은 음수로 지정할 수 없습니다.");
+        }
+
+        this.stock = quantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

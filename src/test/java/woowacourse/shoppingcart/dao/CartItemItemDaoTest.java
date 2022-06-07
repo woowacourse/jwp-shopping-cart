@@ -117,4 +117,19 @@ public class CartItemItemDaoTest {
             new CartItem(2L, 2L, "apple", 2_000, 2, "woowa2.com")
         );
     }
+
+    @DisplayName("cartItem의 수량을 수정한다.")
+    @Test
+    void updateStock() {
+
+        // given
+        CartItem cartItem = new CartItem(1L, 1L, "banana", 1_000, 5, "woowa1.com");
+
+        // when
+        cartItemDao.update(cartItem);
+        CartItem findCartItem = cartItemDao.findById(1L);
+
+        // then
+        assertThat(findCartItem.getStock()).isEqualTo(5);
+    }
 }

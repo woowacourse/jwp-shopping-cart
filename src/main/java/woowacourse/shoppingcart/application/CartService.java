@@ -84,4 +84,10 @@ public class CartService {
         }
         throw new NotInCustomerCartItemException();
     }
+
+    public void updateQuantity(final Long cartId, final int quantity) {
+        CartItem cartItem = cartItemDao.findById(cartId);
+        cartItem.updateStock(quantity);
+        cartItemDao.update(cartItem);
+    }
 }
