@@ -1,19 +1,19 @@
 package woowacourse.shoppingcart.dao.dto;
 
-public class EnrollCartDto {
+public class SaveOrderDetailDto {
 
-    private final Long memberId;
+    private final Long ordersId;
     private final Long productId;
     private final int quantity;
 
-    public EnrollCartDto(Long memberId, Long productId) {
-        this.memberId = memberId;
+    public SaveOrderDetailDto(Long ordersId, Long productId, int quantity) {
+        this.ordersId = ordersId;
         this.productId = productId;
-        this.quantity = 1;
+        this.quantity = quantity;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Long getOrdersId() {
+        return ordersId;
     }
 
     public Long getProductId() {

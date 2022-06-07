@@ -4,7 +4,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
-    @NotNull
+
+    @NotNull(message = "카트 아이디는 빈 값이 올 수 없습니다.")
     private final Long cartId;
     @Min(0)
     private final int quantity;

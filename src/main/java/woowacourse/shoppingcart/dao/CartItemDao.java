@@ -63,5 +63,4 @@ public class CartItemDao {
         String SQL = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(SQL, id);
     }
-
 }

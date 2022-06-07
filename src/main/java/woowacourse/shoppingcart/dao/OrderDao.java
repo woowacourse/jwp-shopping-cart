@@ -29,12 +29,12 @@ public class OrderDao {
         return keyHolder.getKey().longValue();
     }
 
-    public List<Long> findOrderIdsByMemberId(final Long memberId) {
+    public List<Long> findOrderIdsByMemberId(Long memberId) {
         final String sql = "SELECT id FROM orders WHERE member_id = ? ";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), memberId);
     }
 
-    public boolean isValidOrderId(final Long memberId, final Long orderId) {
+    public boolean isExistOrderId(Long memberId, Long orderId) {
         final String query = "SELECT EXISTS(SELECT * FROM orders WHERE member_id = ? AND id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, memberId, orderId);
     }
