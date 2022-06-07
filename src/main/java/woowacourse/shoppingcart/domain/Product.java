@@ -1,13 +1,10 @@
 package woowacourse.shoppingcart.domain;
 
 public class Product {
-    private Long id;
-    private String name;
-    private Integer price;
-    private String imageUrl;
-
-    public Product() {
-    }
+    private final Long id;
+    private final String name;
+    private final Integer price;
+    private final String imageUrl;
 
     public Product(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;

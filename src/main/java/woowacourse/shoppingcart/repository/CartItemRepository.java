@@ -32,19 +32,31 @@ public class CartItemRepository {
     }
 
     public Cart findById(final Long id) {
-        return getCart(cartItemDao.findById(id));
+        return toCart(cartItemDao.findById(id));
     }
 
-    private Cart getCart(CartEntity cartEntity) {
+    private Cart toCart(CartEntity cartEntity) {
         return new Cart(cartEntity.getId(), cartEntity.getQuantity(), productDao.findById(
                 cartEntity.getProductId()));
     }
 
+    private List<Cart> toCarts(List<CartEntity> cartEntities) {
+        return cartEntities.stream()
+                .map(this::toCart)
+                .collect(Collectors.toList());
+    }
+
     public List<Cart> findCartsByCustomerId(final Long customerId) {
         customerDao.findById(customerId).orElseThrow(ResourceNotFoundException::new);
-        return cartItemDao.findCartsByCustomerId(customerId).stream()
-                .map(this::getCart)
-                .collect(Collectors.toList());
+        return toCarts(cartItemDao.findCartsByCustomerId(customerId));
+    }
+
+    public List<Cart> updateAll(List<CartEntity> cartEntities) {
+        int[] updatedRowNums = cartItemDao.updateAll(cartEntities);
+        if (updatedRowNums.length != cartEntities.size()) {
+            throw new InvalidCartItemException();
+        }
+        return toCarts(cartEntities);
     }
 
     public void deleteById(final Long id) {

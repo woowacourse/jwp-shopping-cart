@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.Entity.CartEntity;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -80,6 +81,20 @@ public class CartItemDao {
         return jdbcTemplate.batchUpdate(query, SqlParameterSourceUtils.createBatch(
                 ids.stream()
                         .map(id -> Map.of("id", id))
+                        .collect(Collectors.toList()))
+        );
+    }
+
+    public int[] updateAll(List<CartEntity> cartEntities) {
+        final String query =
+                "UPDATE cart_item SET customer_id = :customerId, product_id = :productId, quantity = :quantity";
+        return jdbcTemplate.batchUpdate(query, SqlParameterSourceUtils.createBatch(
+                cartEntities.stream()
+                        .map(cartEntity -> Map.of(
+                                "customerId", cartEntity.getCustomerId(),
+                                "productId", cartEntity.getProductId(),
+                                "quantity", cartEntity.getQuantity()
+                                ))
                         .collect(Collectors.toList()))
         );
     }

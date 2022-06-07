@@ -18,8 +18,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartIdRequest;
+import woowacourse.shoppingcart.dto.CartProductInfoRequest;
+import woowacourse.shoppingcart.dto.CartProductInfoResponse;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.ProductIdRequest;
 
@@ -49,6 +51,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(토큰, 물품추가요청);
 
         장바구니_아이템_추가됨(response);
+    }
+
+    @DisplayName("장바구니 아이템 수량변경")
+    @Test
+    void updateCartItems() {
+        int quantity = 2;
+        List<CartProductInfoRequest> 물품추가요청 = List.of(new CartProductInfoRequest(치킨아이디, quantity));
+        ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(토큰, 물품추가요청);
+
+        장바구니_아이템_수정됨(response);
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
@@ -83,6 +95,18 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 장바구니_아이템_수정_요청(String accessToken,
+                                                               List<CartProductInfoRequest> productIdRequests) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().oauth2(accessToken)
+                .body(productIdRequests)
+                .when().patch("/auth/customer/cartItems")
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String accessToken) {
         return RestAssured
                 .given().log().all()
@@ -109,6 +133,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.body()).isNotNull();
     }
 
+    public static void 장바구니_아이템_수정됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body()).isNotNull();
+    }
+
     public static Long 장바구니_아이템_추가되어_있음(String token, Long productId) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, List.of(new ProductIdRequest(productId)));
         return 장바구니목록_변환(response).get(0).getId();
@@ -120,7 +149,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
         List<Long> resultProductIds = 장바구니목록_변환(response).stream()
-                .map(Cart::getProductId)
+                .map(CartResponse::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }
@@ -129,7 +158,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    private static List<Cart> 장바구니목록_변환(ExtractableResponse<Response> response) {
-        return response.body().jsonPath().getList(".", Cart.class);
+    private static List<CartResponse> 장바구니목록_변환(ExtractableResponse<Response> response) {
+        return response.body().jsonPath().getList(".", CartResponse.class);
     }
 }

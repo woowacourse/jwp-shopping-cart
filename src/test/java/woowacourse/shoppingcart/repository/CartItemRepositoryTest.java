@@ -8,6 +8,7 @@ import static woowacourse.Fixtures.카트추가;
 import static woowacourse.Fixtures.피자;
 import static woowacourse.Fixtures.헌치;
 import static woowacourse.Fixtures.헌치_치킨;
+import static woowacourse.Fixtures.헌치_치킨_2;
 import static woowacourse.Fixtures.헌치_피자;
 
 import java.util.List;
@@ -62,6 +63,22 @@ public class CartItemRepositoryTest {
 
         // then
         assertThat(cartId).isEqualTo(3L);
+    }
+
+    @DisplayName("카트에 담긴 물품의 개수를 수정한다. ")
+    @Test
+    void updateAll() {
+        // given
+        final Long customerId = 1L;
+        final Long productId = 1L;
+        cartItemRepository.create(customerId, productId);
+
+        // when
+        List<Cart> carts = cartItemRepository.updateAll(List.of(헌치_치킨_2));
+
+        // then
+        assertThat(carts).hasSize(1);
+        assertThat(carts.get(0).getQuantity()).isEqualTo(2);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니들을 가져온다.")

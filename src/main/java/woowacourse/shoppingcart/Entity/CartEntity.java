@@ -1,13 +1,10 @@
 package woowacourse.shoppingcart.Entity;
 
 public class CartEntity {
-    private Long id;
-    private Long customerId;
-    private Long productId;
-    private int quantity;
-
-    public CartEntity() {
-    }
+    private final Long id;
+    private final Long customerId;
+    private final Long productId;
+    private final int quantity;
 
     public CartEntity(Long customerId, Long productId, int quantity) {
         this(null, customerId, productId, quantity);
