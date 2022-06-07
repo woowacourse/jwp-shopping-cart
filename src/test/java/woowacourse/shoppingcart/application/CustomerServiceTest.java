@@ -37,17 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class CustomerServiceTest {
 
     @Autowired
-    private CustomerDao customerDao;
-
-    @Autowired
-    private EncryptionStrategy encryptionStrategy;
-
     private CustomerService customerService;
-
-    @BeforeEach
-    void setUp() {
-        customerService = new CustomerService(customerDao, encryptionStrategy);
-    }
 
     @DisplayName("아이디에 null 을 입력하면 예외가 발생한다.")
     @Test
