@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.application.OrderService;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import woowacourse.shoppingcart.dto.OrderResponses;
 
 @Validated
 @RestController
@@ -36,16 +37,9 @@ public class OrderController {
         return ResponseEntity.created(responseLocation).build();
     }
 
-//    @GetMapping("/{orderId}")
-//    public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
-//                                            @PathVariable final Long orderId) {
-//        final Orders order = orderService.findOrderById(customerName, orderId);
-//        return ResponseEntity.ok(order);
-//    }
-//
-//    @GetMapping
-//    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-//        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
-//        return ResponseEntity.ok(orders);
-//    }
+    @GetMapping
+    public ResponseEntity<OrderResponses> findOrder(@AuthenticationPrincipal final int customerId) {
+        final OrderResponses orderResponses = orderService.findOrdersByCustomerId(customerId);
+        return ResponseEntity.ok(orderResponses);
+    }
 }

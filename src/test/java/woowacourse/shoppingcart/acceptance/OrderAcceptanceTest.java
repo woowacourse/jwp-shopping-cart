@@ -5,21 +5,28 @@ import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.createC
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.getTokenResponse;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST_1;
-import static woowacourse.shoppingcart.fixture.OrderFixtures.ORDER_REQUEST_1;
 import static woowacourse.shoppingcart.fixture.OrderFixtures.ORDER_REQUEST_INVALID_PRODUCT;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_REQUEST_1;
+import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_REQUEST_2;
+import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_REQUEST_3;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.getProductRequestParam;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
+import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrderResponse;
+import woowacourse.shoppingcart.dto.OrderResponses;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
@@ -27,6 +34,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     public static final String INVALID_TOKEN = "invalidToken";
 
     private String token;
+    private OrderRequest orderRequest1;
+    private OrderRequest orderRequest2;
 
     public static ExtractableResponse<Response> 주문하기_요청(OrderRequest orderRequest, String token) {
         return RestAssured
@@ -35,6 +44,16 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(orderRequest)
                 .when().post("/api/customers/orders")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 주문_내역_조회_요청(String token) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers//orders")
                 .then().log().all()
                 .extract();
     }
@@ -57,15 +76,6 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     //
-    //    public static ExtractableResponse<Response> 주문_내역_조회_요청(String userName) {
-    //        return RestAssured
-    //                .given().log().all()
-    //                .contentType(MediaType.APPLICATION_JSON_VALUE)
-    //                .when().get("/api/customers/{customerName}/orders", userName)
-    //                .then().log().all()
-    //                .extract();
-    //    }
-    //
     //    public static ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
     //        return RestAssured
     //                .given().log().all()
@@ -76,22 +86,21 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     //    }
     //
     //
-    //    public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
-    //        ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
-    //        return Long.parseLong(response.header("Location").split("/orders/")[1]);
-    //    }
-    //
-    //    public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
-    //        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    //    }
-    //
-    //    public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-    //        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-    //                .map(Orders::getId)
-    //                .collect(Collectors.toList());
-    //        assertThat(resultOrderIds).contains(orderIds);
-    //    }
-    //
+    public static Long 주문하기_요청_성공되어_있음(OrderRequest orderRequest, String token) {
+        ExtractableResponse<Response> response = 주문하기_요청(orderRequest, token);
+        return Long.parseLong(response.header("Location").split("/orders/")[1]);
+    }
+
+
+        public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        }
+
+        public static void 주문_내역_포함됨(ExtractableResponse<Response> response, int orderCount) {
+            final List<OrderResponse> orders = response.jsonPath().getObject(".", OrderResponses.class).getOrders();
+            assertThat(orders.size()).isEqualTo(orderCount);
+        }
+
     @Override
     @BeforeEach
     public void setUp() {
@@ -100,17 +109,19 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         token = getTokenResponse(CUSTOMER_REQUEST_1.getEmail(),
                 CUSTOMER_REQUEST_1.getPassword()).getAccessToken();
 
-        상품_등록되어_있음(getProductRequestParam(PRODUCT_REQUEST_1));
-        상품_등록되어_있음(getProductRequestParam(PRODUCT_REQUEST_1));
+        final Long productId1 = 상품_등록되어_있음(getProductRequestParam(PRODUCT_REQUEST_1));
+        final Long productId2 = 상품_등록되어_있음(getProductRequestParam(PRODUCT_REQUEST_2));
+        final Long productId3 = 상품_등록되어_있음(getProductRequestParam(PRODUCT_REQUEST_3));
 
+        orderRequest1 = new OrderRequest(List.of(new CartRequest(productId1, 3), new CartRequest(productId3, 1)));
+        orderRequest2 = new OrderRequest(List.of(new CartRequest(productId2, 10)));
     }
 
-//
 
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        ExtractableResponse<Response> response = 주문하기_요청(ORDER_REQUEST_1, token);
+        ExtractableResponse<Response> response = 주문하기_요청(orderRequest1, token);
 
         주문하기_성공함(response);
     }
@@ -126,7 +137,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("유효하지 않은 토큰으로 주문 시 실패")
     @Test
     void addOrderByInvalidToken() {
-        ExtractableResponse<Response> response = 주문하기_요청(ORDER_REQUEST_INVALID_PRODUCT, INVALID_TOKEN);
+        ExtractableResponse<Response> response = 주문하기_요청(orderRequest1, INVALID_TOKEN);
 
         유효하지_않은_토큰_응답(response);
     }
@@ -134,23 +145,23 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("만료된 토큰으로 주문 시 실패")
     @Test
     void addOrderByExpiredToken() {
-        ExtractableResponse<Response> response = 주문하기_요청(ORDER_REQUEST_INVALID_PRODUCT, EXPIRED_TOKEN);
+        ExtractableResponse<Response> response = 주문하기_요청(orderRequest1, EXPIRED_TOKEN);
 
         만료된_토큰_응답(response);
     }
 
-//
-//    @DisplayName("주문 내역 조회")
-//    @Test
-//    void getOrders() {
-//        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-//        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
-//
-//        ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
-//
-//        주문_조회_응답됨(response);
-//        주문_내역_포함됨(response, orderId1, orderId2);
-//    }
+
+    @DisplayName("주문 내역 조회")
+    @Test
+    void getOrders() {
+        Long orderId1 = 주문하기_요청_성공되어_있음(orderRequest1, token);
+        Long orderId2 = 주문하기_요청_성공되어_있음(orderRequest2, token);
+
+        ExtractableResponse<Response> response = 주문_내역_조회_요청(token);
+
+        주문_조회_응답됨(response);
+        주문_내역_포함됨(response, 2);
+    }
 //
 //    @DisplayName("주문 단일 조회")
 //    @Test

@@ -1,15 +1,13 @@
 package woowacourse.auth.ui;
 
-import java.util.Map;
 import java.util.Objects;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import org.springframework.web.servlet.HandlerMapping;
-import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {

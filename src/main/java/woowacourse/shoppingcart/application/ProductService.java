@@ -37,7 +37,7 @@ public class ProductService {
         final List<Product> products = productDao.findProducts();
 
         return new ProductResponses(products.stream()
-                .map(this::convertResponseToProduct)
+                .map(ProductService::convertResponseToProduct)
                 .collect(Collectors.toList()));
     }
 
@@ -59,7 +59,7 @@ public class ProductService {
                 productRequest.getDescription(), productRequest.getStock());
     }
 
-    private ProductResponse convertResponseToProduct(Product product) {
+    public static ProductResponse convertResponseToProduct(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(),
                 product.getDescription(), product.getStock());
     }

@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.application;
 
+import static woowacourse.shoppingcart.application.ProductService.convertResponseToProduct;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -7,8 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrderResponse;
+import woowacourse.shoppingcart.dto.OrderResponses;
+import woowacourse.shoppingcart.entity.OrdersDetailEntity;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -50,53 +57,42 @@ public class OrderService {
         productIds.forEach(productDao::findProductById);
     }
 
-//
-//    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String email) {
-//        final int customerId = customerDao.findByEmail(email).getId();
-//        final Long ordersId = orderDao.addOrders((long) customerId);
-//
-//        for (final OrderRequest orderDetail : orderDetailRequests) {
-//            final Long cartId = orderDetail.getCartId();
-//            final Long productId = cartItemDao.findProductIdById(cartId);
-//            final int quantity = orderDetail.getQuantity();
-//
-//            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-//            cartItemDao.deleteCartItem(cartId);
-//        }
-//
-//        return ordersId;
-//    }
-//
-//    public Orders findOrderById(final String customerName, final Long orderId) {
-//        validateOrderIdByCustomerName(customerName, orderId);
-//        return findOrderResponseDtoByOrderId(orderId);
-//    }
-//
-//    private void validateOrderIdByCustomerName(final String email, final Long orderId) {
-//        final int customerId = customerDao.findByEmail(email).getId();
-//
-//        if (!orderDao.isValidOrderId((long) customerId, orderId)) {
-//            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
-//        }
-//    }
-//
-//    public List<Orders> findOrdersByCustomerName(final String email) {
-//        final int customerId = customerDao.findByEmail(email).getId();
-//        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId((long) customerId);
-//
-//        return orderIds.stream()
-//                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
-//                .collect(Collectors.toList());
-//    }
-//
-//    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-//        final List<OrderDetail> ordersDetails = new ArrayList<>();
-//        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-//            final Product product = productDao.findProductById(productQuantity.getProductId());
-//            final int quantity = productQuantity.getQuantity();
-//            ordersDetails.add(new OrderDetail(product, quantity));
-//        }
-//
-//        return new Orders(orderId, ordersDetails);
-//    }
+    public OrderResponses findOrdersByCustomerId(final int customerId) {
+        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+        return getOrderResponses(orderIds);
+    }
+
+    private OrderResponses getOrderResponses(List<Long> orderIds) {
+        return new OrderResponses(
+                orderIds.stream()
+                        .map(ordersDetailDao::findOrdersDetailsByOrderId)
+                        .map(ordersDetailEntity -> {
+                            final List<CartItemResponse> cartItemResponses = getCartItemResponse(ordersDetailEntity);
+
+                            final int totalPrice = getTotalPrice(cartItemResponses);
+
+                            return new OrderResponse(cartItemResponses, totalPrice);
+                        })
+                        .collect(Collectors.toList()));
+    }
+
+    private List<CartItemResponse> getCartItemResponse(List<OrdersDetailEntity> ordersDetailEntity) {
+        return ordersDetailEntity.stream()
+                .map(this::getCartResponse)
+                .collect(Collectors.toList());
+    }
+
+    private int getTotalPrice(List<CartItemResponse> cartItemResponses) {
+        return cartItemResponses.stream()
+                .mapToInt(cartItemResponse -> cartItemResponse.getProductResponse().getPrice()
+                        * cartItemResponse.getQuantity())
+                .sum();
+    }
+
+
+    private CartItemResponse getCartResponse(OrdersDetailEntity ordersDetailEntity) {
+        final Product product = productDao.findProductById(ordersDetailEntity.getProduct_id());
+        final int quantity = ordersDetailEntity.getQuantity();
+        return new CartItemResponse(convertResponseToProduct(product), quantity);
+    }
 }

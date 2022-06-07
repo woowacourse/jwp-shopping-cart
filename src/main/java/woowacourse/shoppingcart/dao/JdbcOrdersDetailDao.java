@@ -8,9 +8,10 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import woowacourse.shoppingcart.entity.OrdersDetailEntity;
 
 @Repository
-public class JdbcOrdersDetailDao implements OrdersDetailDao{
+public class JdbcOrdersDetailDao implements OrdersDetailDao {
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcOrdersDetailDao(final JdbcTemplate jdbcTemplate) {
@@ -32,11 +33,18 @@ public class JdbcOrdersDetailDao implements OrdersDetailDao{
         return keyHolder.getKey().longValue();
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-                rs.getLong("product_id"),
-                rs.getInt("quantity")
-        ), orderId);
+    @Override
+    public List<OrdersDetailEntity> findOrdersDetailsByOrderId(Long orderId) {
+        final String sql = "SELECT id, orders_id, product_id, quantity FROM orders_detail WHERE orders_id = ?";
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) ->
+                        new OrdersDetailEntity(
+                                rs.getLong("id"),
+                                rs.getLong("orders_id"),
+                                rs.getLong("product_id"),
+                                rs.getInt("quantity")
+                        )
+                , orderId);
     }
+
 }

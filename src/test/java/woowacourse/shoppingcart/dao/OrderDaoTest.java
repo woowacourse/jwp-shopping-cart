@@ -45,19 +45,19 @@ class OrderDaoTest {
         assertThat(orderId).isNotNull();
     }
 
-//    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
-//    @Test
-//    void findOrderIdsByCustomerId() {
-//        //given
-//        final Long customerId = 1L;
-//        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-//        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-//
-//        //when
-//        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
-//
-//        //then
-//        assertThat(orderIdsByCustomerId).hasSize(2);
-//    }
+    @DisplayName("customerId를 이용하여 OrderId 집합을 얻는 기능")
+    @Test
+    void findOrderIdsByCustomerId() {
+        //given
+        final int customerId = customerDao.save(CUSTOMER_1);
+        final Long orderId1 = orderDao.addOrders(customerId);
+        final Long orderId2 = orderDao.addOrders(customerId);
+
+        //when
+        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
+
+        //then
+        assertThat(orderIdsByCustomerId).hasSize(2).contains(orderId1, orderId2);
+    }
 
 }

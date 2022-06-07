@@ -16,6 +16,12 @@ public class ProductFixtures {
             "https://user-images.githubusercontent.com/44823900/167772500-dff4dfb5-6ad2-48fe-937d-lamen.jpg",
             "개매움", 80);
 
+    public static final ProductRequest PRODUCT_REQUEST_3 = new ProductRequest(
+            "아이패드", 1300000,
+            "https://user-images.githubusercontent.com/44823900/16777d2-48fe-937d-lamen.jpg",
+            "튼튼해요", 70);
+
+
 
     public static final Product PRODUCT_1 = new Product(1L, PRODUCT_REQUEST_1.getName(), PRODUCT_REQUEST_1.getPrice(),
             PRODUCT_REQUEST_1.getImageUrl(), PRODUCT_REQUEST_1.getDescription(), PRODUCT_REQUEST_1.getStock());

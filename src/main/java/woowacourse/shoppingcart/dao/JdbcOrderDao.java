@@ -30,7 +30,7 @@ public class JdbcOrderDao implements OrderDao{
         return keyHolder.getKey().longValue();
     }
 
-    public List<Long> findOrderIdsByCustomerId(final Long customerId) {
+    public List<Long> findOrderIdsByCustomerId(final int customerId) {
         final String sql = "SELECT id FROM orders WHERE customer_id = ? ";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
