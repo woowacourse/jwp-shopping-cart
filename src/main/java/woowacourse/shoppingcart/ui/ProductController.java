@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.application.ProductService;
 
 import java.net.URI;
 import java.util.List;
+import woowacourse.shoppingcart.dto.response.GetProductResponse;
 
 @RestController
 @RequestMapping("/products")
@@ -22,8 +23,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
+    public ResponseEntity<GetProductResponse> products() {
+        List<Product> products = productService.findProducts();
+        return ResponseEntity.ok(new GetProductResponse(products));
     }
 
     @PostMapping
