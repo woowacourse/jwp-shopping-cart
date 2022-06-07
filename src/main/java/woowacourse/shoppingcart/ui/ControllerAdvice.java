@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.exception.datanotmatch.CustomerDataNotMatchException;
 import woowacourse.shoppingcart.exception.datanotmatch.LoginDataNotMatchException;
+import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 import woowacourse.shoppingcart.ui.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.dataempty.DataEmptyException;
 import woowacourse.shoppingcart.exception.dataformat.DataFormatException;
@@ -33,7 +34,8 @@ public class ControllerAdvice {
             DataEmptyException.class,
             DataFormatException.class,
             DataNotMatchException.class,
-            CustomerDataNotMatchException.class
+            CustomerDataNotMatchException.class,
+            CustomerDuplicatedDataException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidData(final RuntimeException e) {
         return ResponseEntity.badRequest().body(ErrorResponse.from(e));

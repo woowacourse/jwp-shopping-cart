@@ -461,6 +461,29 @@ class CustomerServiceTest {
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }
 
+    @DisplayName("중복되는 아이디가 없는 것을 확인한다.")
+    @Test
+    void validateDuplicatedUserId() {
+        // when & then
+        assertThatCode(() -> customerService.validateDuplicateUserId("newUserId@woowacourse.com"))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("중복되는 아이디가 있을 경우 예외가 발생한다.")
+    @Test
+    void validateDuplicatedUserIdException() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+        CustomerResponse customerResponse = customerService.findByCustomerId(customerIdentificationRequest);
+
+        // when & then
+        assertThatCode(() -> customerService.validateDuplicateUserId(customerResponse.getUserId()))
+                .isInstanceOf(CustomerDuplicatedDataException.class)
+                .hasMessage("이미 존재하는 아이디입니다.");
+    }
+
     @DisplayName("비밀번호가 일치하는 것을 확인한다.")
     @Test
     void matchPassword() {

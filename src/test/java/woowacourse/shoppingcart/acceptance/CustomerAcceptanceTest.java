@@ -9,6 +9,7 @@ import static woowacourse.fixture.CustomerFixture.updatePassword;
 import static woowacourse.fixture.CustomerFixture.withdraw;
 import static woowacourse.fixture.CustomerFixture.signUp;
 import static woowacourse.fixture.CustomerFixture.matchPassword;
+import static woowacourse.fixture.CustomerFixture.validateDuplicatedUserId;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
+import woowacourse.fixture.CustomerFixture;
 
 @DisplayName("회원 관련 기능 인수테스트")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -349,6 +351,36 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("중복되는 아이디가 없는 것을 확인한다.")
+    @Test
+    void validateDuplicatedCustomerUserId() {
+        // when
+        ExtractableResponse<Response> secondResponse = validateDuplicatedUserId("newUserId@woowacourse.com");
+
+        // then
+        assertAll(
+                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
+    }
+
+    @DisplayName("중복되는 아이디가 있을 경우 400 에러가 발생한다.")
+    @Test
+    void validateDuplicatedCustomerUserIdFalse() {
+        // given
+        ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
+        String token = firstResponse.body().jsonPath().getString("accessToken");
+
+        // when
+        ExtractableResponse<Response> secondResponse = validateDuplicatedUserId("puterism@woowacourse.com");
+
+        // then
+        assertAll(
+                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
+                        "이미 존재하는 아이디입니다.")
+        );
+    }
+
     @DisplayName("비밀번호가 일치하는지 확인한다.")
     @Test
     void matchingCustomerPassword() {
@@ -365,9 +397,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("비밀번호가 일치하지 않은지 확인한다.")
+    @DisplayName("비밀번호가 일치하지 않을 경우 402 에러가 발생한다.")
     @Test
-    void matchingCustomerInvalidPassword() {
+    void matchingCustomerInvalidPasswordFalse() {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");

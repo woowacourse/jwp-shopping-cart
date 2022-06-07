@@ -75,6 +75,12 @@ public class CustomerService {
         customerDao.delete(customer.getId());
     }
 
+    public void validateDuplicateUserId(final String userId) {
+        if (customerDao.findByUserId(userId).isPresent()) {
+            throw new CustomerDuplicatedDataException("이미 존재하는 아이디입니다.");
+        }
+    }
+
     public void matchPassword(final CustomerIdentificationRequest customerIdentificationRequest,
                                       final PasswordRequest passwordRequest) {
         Customer customer = findCustomerById(customerIdentificationRequest.getId());
@@ -102,12 +108,6 @@ public class CustomerService {
     private void validateCustomer(final Customer customer) {
         validateDuplicateUserId(customer.getUserId());
         validateDuplicateNickname(customer.getNickname());
-    }
-
-    private void validateDuplicateUserId(final String userId) {
-        if (customerDao.findByUserId(userId).isPresent()) {
-            throw new CustomerDuplicatedDataException("이미 존재하는 아이디입니다.");
-        }
     }
 
     private void validateDuplicateNickname(final String nickname) {

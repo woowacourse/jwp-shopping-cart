@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
@@ -57,6 +58,12 @@ public class CustomerController {
                                          @RequestBody PasswordRequest passwordRequest) {
         customerService.withdraw(customerIdentificationRequest, passwordRequest);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/customers/check", params = "userId")
+    public ResponseEntity<Void> validateDuplicatedUserId(@RequestParam String userId) {
+        customerService.validateDuplicateUserId(userId);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/auth/customers/match/password")
