@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -61,5 +62,20 @@ class CartServiceTest {
 
         // then
         assertThat(carts).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("장바구니 수량을 수정하는 기능")
+    void updateCartItem() {
+        // given
+        final Cart rice = new Cart(1L, 1L, "밥", 1000, "www.naver.com", 1);
+        when(cartItemDao.findByCustomerIdAndProductId(1L, 1L))
+                .thenReturn(rice);
+        when(cartItemDao.update(rice))
+                .thenReturn(2);
+
+        // when, then
+        assertThatCode(() -> cartService.update(1L, 1L, 2))
+                .doesNotThrowAnyException();
     }
 }

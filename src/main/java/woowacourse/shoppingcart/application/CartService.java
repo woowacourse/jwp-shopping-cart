@@ -17,7 +17,8 @@ import woowacourse.shoppingcart.exception.notfound.NotInCustomerCartItemExceptio
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
-    private static final int INITIAL_QUANTITY = 0;
+    private static final int INITIAL_QUANTITY = 1;
+
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
@@ -74,5 +75,11 @@ public class CartService {
 
     private boolean containSameElements(final List<Long> from, final List<Long> to) {
         return from.containsAll(to) && to.containsAll(from);
+    }
+
+    public void update(final Long customerId, final Long productId, final Integer quantity) {
+        final Cart cart = cartItemDao.findByCustomerIdAndProductId(customerId, productId);
+        final Cart updatedCart = cart.applyQuantity(quantity);
+        cartItemDao.update(updatedCart);
     }
 }
