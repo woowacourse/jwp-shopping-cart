@@ -26,6 +26,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.dto.response.ProductExistingInCartResponse;
 import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.exception.notfound.CartItemNotFoundException;
 import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
 
 @JdbcTest
@@ -77,6 +78,22 @@ class CartServiceTest {
 
         // then
         assertThat(actual).isEqualTo(100);
+    }
+
+    @DisplayName("카트 아이템 수정 요청시 카트 아이템을 찾을 수 없다면 예외가 발생한다.")
+    @Test
+    void updateCartItem_cartItemNotFound() {
+        // when & then
+        assertThatThrownBy(() -> cartService.updateCartItem(999L, new CartItemRequest(productId, 100)))
+                .isInstanceOf(CartItemNotFoundException.class);
+    }
+
+    @DisplayName("카트 아이템 제거 요청시 카트 아이템을 찾을 수 없다면 예외가 발생한다.")
+    @Test
+    void deleteCartItem_cartItemNotFound() {
+        // when & then
+        assertThatThrownBy(() -> cartService.deleteCart(customerId, 999L))
+                .isInstanceOf(CartItemNotFoundException.class);
     }
 
     @DisplayName("특정 유저가 특정 품목을 장바구니에 담았는지 확인")

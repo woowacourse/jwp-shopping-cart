@@ -21,8 +21,7 @@ import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.format.FormatException;
-import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
-import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -38,8 +37,8 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
-    @ExceptionHandler({CustomerNotFoundException.class, ProductNotFoundException.class})
-    public ResponseEntity<ErrorResponse> handleNotFoundException(RuntimeException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException() {
         return ResponseEntity.notFound().build();
     }
 

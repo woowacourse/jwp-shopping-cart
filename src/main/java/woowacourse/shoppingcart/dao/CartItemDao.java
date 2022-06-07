@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.entity.CartItemEntity;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.notfound.CartItemNotFoundException;
 
 @Repository
 public class CartItemDao {
@@ -28,8 +29,12 @@ public class CartItemDao {
     }
 
     public CartItemEntity findCartItemById(Long cartItemId) {
-        final String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, CART_ITEM_ENTITY_MAPPER, cartItemId);
+        try {
+            final String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, CART_ITEM_ENTITY_MAPPER, cartItemId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CartItemNotFoundException();
+        }
     }
 
     public List<CartItemEntity> findCartItemsByCustomerId(Long customerId) {

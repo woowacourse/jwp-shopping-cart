@@ -119,7 +119,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         assertThat(response.jsonPath().getBoolean("exists")).isTrue();
     }
 
-    public static void 상품_ID_존재하지_않음(ExtractableResponse<Response> response) {
+    public static void NOT_FOUND_에러(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
@@ -164,7 +164,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void addCartItem_productNotFound() {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1 + 999);
-        상품_ID_존재하지_않음(response);
+        NOT_FOUND_에러(response);
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
@@ -205,9 +205,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, cartId);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, cartItemId);
 
         장바구니_삭제됨(response);
     }
@@ -298,5 +298,24 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         AuthAcceptanceTest.토큰이_만료됨(response);
     }
 
+    @DisplayName("장바구니 상품 수정 시 존재하지 않는 장바구니일 경우 404에러가 발생")
+    @Test
+    void updateCartItem_notFoundCartItem() {
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        CartItemRequest newCartItemRequest = new CartItemRequest(productId1, 500);
 
+        ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(accessToken, cartItemId + 1, newCartItemRequest);
+
+        NOT_FOUND_에러(response);
+    }
+
+    @DisplayName("장바구니 상품 제거 시 존재하지 않는 장바구니일 경우 404에러가 발생")
+    @Test
+    void deleteCartItem_notFoundCartItem() {
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, cartItemId + 1);
+
+        NOT_FOUND_에러(response);
+    }
 }

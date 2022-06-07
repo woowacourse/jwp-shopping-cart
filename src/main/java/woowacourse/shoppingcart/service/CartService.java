@@ -55,9 +55,9 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final Long customerId, final Long cartId) {
-        validateCustomerCart(cartId, customerId);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCart(final Long customerId, final Long cartItemId) {
+        validateCustomerCart(cartItemId, customerId);
+        cartItemDao.deleteCartItem(cartItemId);
     }
 
     public void updateCartItem(Long cartItemId, CartItemRequest cartItemRequest) {
@@ -69,19 +69,11 @@ public class CartService {
         cartItemDao.updateCartItem(cartItemId, newCartItem);
     }
 
-    private void validateCustomerCart(final Long cartId, final Long customerId) {
-        final List<Long> cartIds = findCartItemIdsByCustomerId(customerId);
-        if (cartIds.contains(cartId)) {
-            return;
+    private void validateCustomerCart(final Long cartItemId, final Long customerId) {
+        CartItemEntity cartItemEntity = cartItemDao.findCartItemById(cartItemId);
+        if (!cartItemEntity.getCustomerId().equals(customerId)) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
-    }
-
-    private List<Long> findCartItemIdsByCustomerId(final Long customerId) {
-        return cartItemDao.findCartItemsByCustomerId(customerId)
-                .stream()
-                .map(CartItemEntity::getId)
-                .collect(Collectors.toList());
     }
 
     public ProductExistingInCartResponse isProductExisting(Long customerId, Long productId) {
