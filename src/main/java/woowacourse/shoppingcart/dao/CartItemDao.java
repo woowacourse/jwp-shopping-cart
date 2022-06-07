@@ -52,7 +52,7 @@ public class CartItemDao {
 
             return jdbcTemplate.queryForObject(sql, cartItemRowMapper, id);
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
+            throw new InvalidCartItemException("존재하지 않는 장바구니입니다.");
         }
     }
 
@@ -61,7 +61,7 @@ public class CartItemDao {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
+            throw new InvalidCartItemException("존재하지 않는 장바구니입니다.");
         }
     }
 
@@ -84,7 +84,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, quantity, id);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new InvalidCartItemException("장바구니 수량변경에 실패했습니다.");
         }
     }
 
@@ -93,7 +93,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new InvalidCartItemException("장바구니 삭제에 실패했습니다.");
         }
     }
 }
