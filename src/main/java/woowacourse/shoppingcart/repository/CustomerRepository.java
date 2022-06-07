@@ -1,21 +1,26 @@
 package woowacourse.shoppingcart.repository;
 
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.Entity.CartEntity;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.custum.DuplicatedValueException;
 import woowacourse.shoppingcart.exception.custum.InvalidLoginException;
 import woowacourse.shoppingcart.exception.custum.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.custum.ResourceNotFoundException;
+import woowacourse.shoppingcart.repository.dao.CartItemDao;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
 @Repository
 public class CustomerRepository {
 
     private final CustomerDao customerDao;
+    private final CartItemDao cartItemDao;
 
-    public CustomerRepository(final CustomerDao customerDao) {
+    public CustomerRepository(final CustomerDao customerDao,
+                              CartItemDao cartItemDao) {
         this.customerDao = customerDao;
+        this.cartItemDao = cartItemDao;
     }
 
     public Long create(final Customer customer) {
@@ -53,6 +58,14 @@ public class CustomerRepository {
         if (customerDao.delete(id) == 0) {
             throw new ResourceNotFoundException();
         }
+        deleteCartItemById(id);
+    }
+
+    private void deleteCartItemById(Long id) {
+        cartItemDao.findCartsByCustomerId(id)
+                .stream()
+                .map(CartEntity::getId)
+                .forEach(cartItemDao::deleteById);
     }
 
     public void matchPassword(final Long id, final String password) {

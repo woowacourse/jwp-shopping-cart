@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 import woowacourse.shoppingcart.exception.custum.ResourceNotFoundException;
+import woowacourse.shoppingcart.repository.dao.CartItemDao;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
 
@@ -28,8 +29,10 @@ class CustomerRepositoryTest {
     private final CustomerRepository customerRepository;
 
     @Autowired
-    public CustomerRepositoryTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.customerRepository = new CustomerRepository(new CustomerDao(namedParameterJdbcTemplate));
+    public CustomerRepositoryTest(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.customerRepository = new CustomerRepository(
+                new CustomerDao(jdbcTemplate),
+                new CartItemDao(jdbcTemplate));
     }
 
     @DisplayName("customer 를 DB에 저장하고 아이디로 customer 를 찾는다.")

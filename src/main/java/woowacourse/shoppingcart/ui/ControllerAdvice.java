@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.custum.AuthorizationException;
@@ -54,7 +53,6 @@ public class ControllerAdvice {
     @ExceptionHandler({
             InvalidCartItemException.class,
             InvalidProductException.class,
-            InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {

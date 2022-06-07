@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+
 public class Cart {
 
     private final Long id;
@@ -14,12 +16,19 @@ public class Cart {
     }
 
     public Cart(Long id, Long productId, String name, int price, String imageUrl, int quantity) {
+        validateQuantity(quantity);
         this.id = id;
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
+    }
+
+    private void validateQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new InvalidCartItemException();
+        }
     }
 
     public Long getId() {

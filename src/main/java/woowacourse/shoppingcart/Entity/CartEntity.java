@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.Entity;
 
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+
 public class CartEntity {
     private final Long id;
     private final Long customerId;
@@ -16,6 +18,7 @@ public class CartEntity {
         this.productId = productId;
         this.quantity = quantity;
     }
+
     public CartEntity plusQuantity() {
         return new CartEntity(id,customerId,productId,quantity+1);
     }
