@@ -123,8 +123,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // when
         final ExtractableResponse<Response> response =
                 requestDeleteWithTokenAndBody("/api/customer/carts", accessToken, new CartDeleteRequest(List.of(cartId1, cartId2)));
-        final ExtractableResponse<Response> responsee = requestGetWithTokenAndBody("/api/customer/carts", accessToken);
-        final int size = responsee.jsonPath().getList(".", CartResponse.class).size();
+        final ExtractableResponse<Response> getResponse = requestGetWithTokenAndBody("/api/customer/carts", accessToken);
+        final int size = getResponse.jsonPath().getList(".", CartResponse.class).size();
 
         // then
         assertAll(

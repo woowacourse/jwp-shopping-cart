@@ -46,4 +46,12 @@ public class OrderDao {
 
         return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
+
+    public boolean existsOrderByCustomerId(final Long customerId) {
+        final String sql = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = :customerId)";
+        final Map<String, Object> params = new HashMap<>();
+        params.put("customerId", customerId);
+
+        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
 }

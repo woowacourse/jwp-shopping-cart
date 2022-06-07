@@ -32,13 +32,18 @@ public class OrdersDetailDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = :orderId";
+    public List<OrderDetail> findAllByOrderId(final Long orderId) {
+        final String sql = "SELECT P.id, P.price, P.name, P.image_url, OD.quantity " +
+                "FROM orders_detail OD JOIN product P ON P.id = OD.product_id " +
+                "WHERE orders_id = :orderId";
         final Map<String, Object> params = new HashMap<>();
         params.put("orderId", orderId);
 
         return namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> new OrderDetail(
-                rs.getLong("product_id"),
+                rs.getLong("id"),
+                rs.getInt("price"),
+                rs.getString("name"),
+                rs.getString("image_url"),
                 rs.getInt("quantity")
         ));
     }

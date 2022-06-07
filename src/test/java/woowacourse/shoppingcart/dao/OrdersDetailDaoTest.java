@@ -69,7 +69,7 @@ class OrdersDetailDaoTest {
 
         //when
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsByOrderId(ordersId);
+                .findAllByOrderId(ordersId);
 
         //then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);
