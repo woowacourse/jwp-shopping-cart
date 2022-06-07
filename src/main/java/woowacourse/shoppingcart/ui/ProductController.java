@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +32,10 @@ public class ProductController {
         return ResponseEntity.created(uri).build();
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<Product>> products() {
-//        return ResponseEntity.ok(productService.findProducts());
-//    }
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> showProducts() {
+        return ResponseEntity.ok(productService.findAll());
+    }
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> showProduct(@PathVariable final Long productId) {

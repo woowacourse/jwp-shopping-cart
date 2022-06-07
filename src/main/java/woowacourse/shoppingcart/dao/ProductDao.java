@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -51,17 +52,11 @@ public class ProductDao {
         }
     }
 
-//    public List<Product> findProducts() {
-//        final String query = "SELECT id, name, price, image_url FROM product";
-//        return jdbcTemplate.query(query,
-//                (resultSet, rowNumber) ->
-//                        new Product(
-//                                resultSet.getLong("id"),
-//                                resultSet.getString("name"),
-//                                resultSet.getInt("price"),
-//                                resultSet.getString("image_url")
-//                        ));
-//    }
+    public List<Product> findAll() {
+        String query = "SELECT id, name, price, image_url FROM product";
+
+        return template.query(query, PRODUCT_ROW_MAPPER);
+    }
 
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";

@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,21 @@ public class ProductDaoTest {
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
+    }
+
+    @DisplayName("상품 목록 조회")
+    @Test
+    void getProducts() {
+        // given
+        for (int i = 1; i <= 3; i++) {
+            productDao.save(new Product("상품 " + i, 1000 * i, "https://www.test.com"));
+        }
+
+        // when
+        List<Product> products = productDao.findAll();
+
+        // then
+        assertThat(products).hasSize(3);
     }
 
 //    @DisplayName("싱품 삭제")
