@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +38,11 @@ public class NewCartItemController {
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> findCartItems(@AuthenticationPrincipal String email) {
         return ResponseEntity.ok(cartItemService.getCartItems(email));
+    }
+
+    @GetMapping("/{cartItemId}")
+    public ResponseEntity<CartItemResponse> findCartItem(@AuthenticationPrincipal String email,
+        @PathVariable(value = "cartItemId") long id) {
+        return ResponseEntity.ok(cartItemService.getCartItem(email, id));
     }
 }

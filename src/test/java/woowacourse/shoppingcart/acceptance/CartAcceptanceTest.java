@@ -85,6 +85,29 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(productIds).contains(productId1, productId2);
     }
 
+    @DisplayName("장바구니 단건 조회")
+    @Test
+    void getCartItem() {
+        // given
+        ExtractableResponse<Response> responseAboutCreatedCartItem1 = AcceptanceFixture.post(
+            new CartItemRequest(productId1, 10), "/api/mycarts",
+            header);
+        AcceptanceFixture.post(new CartItemRequest(productId2, 10), "/api/mycarts", header);
+        CartItemResponse createdCartItemResponse = responseAboutCreatedCartItem1.jsonPath()
+            .getObject(".", CartItemResponse.class);
+
+        // when
+        ExtractableResponse<Response> responseAboutGetItem = AcceptanceFixture.get(
+            "/api/mycarts/" + createdCartItemResponse.getId(), header);
+        CartItemResponse cartItemResponse = responseAboutGetItem.jsonPath().getObject(".", CartItemResponse.class);
+
+        // then
+        assertThat(cartItemResponse)
+            .extracting("id", "productId", "price", "quantity")
+            .containsExactly(createdCartItemResponse.getId(), createdCartItemResponse.getProductId(),
+                createdCartItemResponse.getPrice(), createdCartItemResponse.getQuantity());
+    }
+
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {

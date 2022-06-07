@@ -51,6 +51,19 @@ public class CartItemService {
         return cartItemResponses;
     }
 
+    @Transactional(readOnly = true)
+    public CartItemResponse getCartItem(String email, long id) {
+        long customerId = findCustomerIdByEmail(email);
+        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
+        CartItem cartItem = cartItemRepository.findById(id);
+
+        if (!cartItems.contains(cartItem)) {
+            throw new IllegalArgumentException();
+        }
+
+        return CartItemResponse.from(cartItem);
+    }
+
     private long findCustomerIdByEmail(String email) {
         Customer customer = customerDao.findByEmail(email);
         return customer.getId();

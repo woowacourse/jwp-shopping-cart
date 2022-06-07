@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.entity;
 public class CartItemEntity {
     private final long id;
     private final long customerId;
-
     private final long productId;
     private final int quantity;
 

@@ -26,6 +26,10 @@ public class CartItems implements Iterable<CartItem> {
         return cartItems.size();
     }
 
+    public boolean contains(CartItem cartItem) {
+        return cartItems.contains(cartItem);
+    }
+
     public long getCustomerId() {
         return customerId;
     }
