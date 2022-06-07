@@ -18,7 +18,6 @@ import woowacourse.shoppingcart.cart.dto.CartItemResponse;
 import woowacourse.shoppingcart.cart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.customer.domain.Customer;
-import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.support.Login;
 
 @RestController
@@ -53,9 +52,8 @@ public class CartItemController {
     public ResponseEntity<CartItemResponse> changeQuantity(@Login final Customer customer,
                                                            @PathVariable final Long productId,
                                                            @RequestBody @Valid final QuantityChangingRequest request) {
-        final Cart item = cartService.changeQuantity(customer, productId, request);
-        final Product product = new Product(item.getProductId(), item.getName(), item.getPrice(), item.getImageUrl());
-        final CartItemResponse response = new CartItemResponse(product, request.getQuantity());
+        final Cart changedCart = cartService.changeQuantity(customer, productId, request);
+        final CartItemResponse response = new CartItemResponse(changedCart);
         return ResponseEntity
                 .ok(response);
     }

@@ -92,12 +92,13 @@ class CartServiceTest extends ServiceMockTest {
         final String name = "치약";
         final int price = 1200;
         final String imageUrl = "fake.org";
+        final Product product = new Product(productId, name, price, imageUrl);
 
-        final Cart existCart = new Cart(1L, productId, name, price, imageUrl, 8);
+        final Cart existCart = new Cart(1L, product, 8);
         given(cartItemDao.findByProductAndCustomerId(productId, customer.getId()))
                 .willReturn(existCart);
 
-        final Cart expected = new Cart(1L, productId, name, price, imageUrl, quantity);
+        final Cart expected = new Cart(1L, product, quantity);
 
         // when
         final Cart actual = cartService.changeQuantity(customer, productId, request);
@@ -130,13 +131,14 @@ class CartServiceTest extends ServiceMockTest {
         // given
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
         final Long productId = 1L;
+        final Product product = new Product(productId, "망고", 1990, "man.go");
 
-        final Cart cart = new Cart(1L, productId, "망고", 1990, "man.go", 3);
+        final Cart cart = new Cart(1L, product, 3);
         given(cartItemDao.findByProductAndCustomerId(productId, customer.getId()))
                 .willReturn(cart);
 
         // when, then
         assertThatCode(() -> cartService.deleteCartBy(customer, productId))
-                .doesNotThrowAnyException();;
+                .doesNotThrowAnyException();
     }
 }

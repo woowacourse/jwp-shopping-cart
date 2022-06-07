@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.cart.dto;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.product.domain.Product;
 
 public class CartItemResponse {
@@ -11,12 +12,14 @@ public class CartItemResponse {
     private final String imageUrl;
     private final int quantity;
 
-    public CartItemResponse(Product product, Integer quantity) {
+    public CartItemResponse(final Cart cart) {
+        final Product product = cart.getProduct();
+
         this.id = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();
-        this.quantity = quantity;
+        this.quantity = cart.getQuantity();
     }
 
     public Long getId() {
@@ -40,14 +43,14 @@ public class CartItemResponse {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CartItemResponse that = (CartItemResponse) o;
+        final CartItemResponse that = (CartItemResponse) o;
         return price == that.price && quantity == that.quantity && Objects.equals(id, that.id)
                 && Objects.equals(name, that.name) && Objects.equals(imageUrl, that.imageUrl);
     }

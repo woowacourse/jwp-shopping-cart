@@ -96,7 +96,8 @@ class CartItemDaoTest {
         // then
         final List<Long> productIds = cartItemDao.findAllByCustomerId(customerId)
                 .stream()
-                .map(Cart::getProductId)
+                .map(Cart::getProduct)
+                .map(Product::getId)
                 .collect(Collectors.toList());
 
         assertThat(productIds).containsExactly(2L);
@@ -141,8 +142,7 @@ class CartItemDaoTest {
         final Long cartId = cartItemDao.addCartItem(customerId, productId);
 
         final Product product = productDao.findProductById(productId);
-        final Cart expected = new Cart(cartId, productId, product.getName(), product.getPrice(), product.getImageUrl(),
-                1);
+        final Cart expected = new Cart(cartId, product, 1);
 
         // when
         final Cart actual = cartItemDao.findByProductAndCustomerId(productId, customerId);
@@ -173,8 +173,7 @@ class CartItemDaoTest {
 
         final int quantity = 77;
         final Product product = productDao.findProductById(productId);
-        final Cart cart = new Cart(cartId, productId, product.getName(), product.getPrice(), product.getImageUrl(),
-                quantity);
+        final Cart cart = new Cart(cartId, product, quantity);
 
         // when
         cartItemDao.updateQuantity(cart);
