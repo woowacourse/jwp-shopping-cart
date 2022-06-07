@@ -36,7 +36,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ErrorResponse handle(Exception ex) {
-        log.error("error: {}", ex.getMessage());
         return new ErrorResponse("존재하지 않는 데이터 요청입니다.");
     }
 
@@ -50,7 +49,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             ConstraintViolationException.class
     })
     public ErrorResponse handleInvalidAccess(final RuntimeException ex) {
-        log.error("error: {}", ex.getMessage());
+        log.info("handleInvalidAccess ! ");
         return new ErrorResponse(ex.getMessage());
     }
 
@@ -63,21 +62,18 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
     public ErrorResponse handleLoginFailException(Exception ex) {
-        log.error("error: {}", ex.getMessage());
-        return new ErrorResponse(ex.getMessage());
+        return new ErrorResponse(ex.getMessage() + "somethingg");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(ForbiddenAccessException.class)
     public ErrorResponse handleForbiddenAccessException(Exception ex) {
-        log.error("error: {}", ex.getMessage());
         return new ErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleAllOtherErrors(final Exception ex) {
-        log.error("error: {}", ex.getMessage());
         return new ErrorResponse(ex.getMessage());
     }
 
@@ -85,7 +81,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
-        log.error("error: {}", ex.getMessage());
         BindingResult bindingResult = ex.getBindingResult();
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
@@ -99,7 +94,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
                                                              HttpStatus status, WebRequest request) {
-        log.error("error: {}", ex.getMessage());
         ErrorResponse response = new ErrorResponse(ex.getMessage());
         return ResponseEntity
                 .status(status)

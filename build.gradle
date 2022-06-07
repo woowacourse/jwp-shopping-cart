@@ -13,9 +13,10 @@ repositories {
 }
 
 dependencies {
-    // spring(boot): jdbc, web
+    // spring(boot): jdbc, web, aop
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 
     // test: boot & rest
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -35,6 +36,10 @@ dependencies {
     // lombok 적용
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // lombok 적용: test 용도
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 test {
