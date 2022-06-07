@@ -27,6 +27,7 @@ import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.InvalidQuantityException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.NotMyCartItemException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -94,7 +95,12 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(final InvalidCartItemException e) {
-        return ResponseEntity.status(NOT_FOUND).body(ErrorResponse.NOT_EXIST_CARTITEM);
+        return ResponseEntity.status(NOT_FOUND).body(ErrorResponse.NOT_EXIST_CART_ITEM);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final NotMyCartItemException e) {
+        return ResponseEntity.status(NOT_FOUND).body(ErrorResponse.NOT_MY_CART_ITEM);
     }
 
     @ExceptionHandler

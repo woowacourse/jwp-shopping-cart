@@ -19,8 +19,9 @@ public enum ErrorResponse {
     INVALID_USERNAME(4003, "Invalid Username"),
     ALREADY_EXIST_IN_CART(5001, "Already Exists"),
     INVALID_QUANTITY(5002, "Invalid Quantity"),
+    NOT_MY_CART_ITEM(5003, "Invalid CartItem"),
     NOT_EXIST_PRODUCT(6001, "Not Exist Product"),
-    NOT_EXIST_CARTITEM(6002, "Not Exist CartItem"),
+    NOT_EXIST_CART_ITEM(6002, "Not Exist CartItem"),
     NOT_EXIST_CUSTOMER(6004, "Not Exist Customer");
 
     private final int errorCode;

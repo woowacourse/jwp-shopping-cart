@@ -34,10 +34,6 @@ public class CartItems implements Iterable<CartItem> {
         return customerId;
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
-    }
-
     private class CartItemIterator implements Iterator<CartItem> {
 
         private int current = 0;

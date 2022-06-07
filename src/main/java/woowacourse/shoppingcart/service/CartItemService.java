@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
+import woowacourse.shoppingcart.exception.NotMyCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -93,7 +94,7 @@ public class CartItemService {
 
     private void checkContain(CartItems cartItems, CartItem cartItem) {
         if (!cartItems.contains(cartItem)) {
-            throw new IllegalArgumentException();
+            throw new NotMyCartItemException();
         }
     }
 
