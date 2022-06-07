@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.dto.OrderRequest;
 
 @Validated
 @RestController
-@RequestMapping("/api/customers/{customerName}/orders")
+@RequestMapping("/customers/{customerName}/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -30,7 +30,7 @@ public class OrderController {
                                          @RequestBody @Valid final List<OrderRequest> orderDetails) {
         final Long orderId = orderService.addOrder(orderDetails, customerName);
         return ResponseEntity.created(
-                URI.create("/api/" + customerName + "/orders/" + orderId)).build();
+                URI.create("/" + customerName + "/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")

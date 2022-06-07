@@ -57,7 +57,7 @@ class OrderControllerTest {
                 .thenReturn(expectedOrderId);
 
         // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
+        mockMvc.perform(post("/customers/" + customerName + "/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(objectMapper.writeValueAsString(requestDtos))
@@ -65,7 +65,7 @@ class OrderControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
-                        "/api/" + customerName + "/orders/" + expectedOrderId));
+                        "/" + customerName + "/orders/" + expectedOrderId));
     }
 
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
@@ -82,7 +82,7 @@ class OrderControllerTest {
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
+        mockMvc.perform(get("/customers/" + customerName + "/orders/" + orderId)
                 ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
@@ -109,7 +109,7 @@ class OrderControllerTest {
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
+        mockMvc.perform(get("/customers/" + customerName + "/orders/")
                 ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))

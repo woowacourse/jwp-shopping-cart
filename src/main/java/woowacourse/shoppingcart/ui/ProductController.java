@@ -17,18 +17,13 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
 
     public ProductController(final ProductService productService) {
         this.productService = productService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
     }
 
     @PostMapping
@@ -39,6 +34,11 @@ public class ProductController {
                 .path("/" + productId)
                 .build().toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Product>> products() {
+        return ResponseEntity.ok(productService.findProducts());
     }
 
     @GetMapping("/{productId}")

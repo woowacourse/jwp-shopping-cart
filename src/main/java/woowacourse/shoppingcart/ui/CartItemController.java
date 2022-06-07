@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
-@RequestMapping("/api/customers/{customerName}/carts")
+@RequestMapping("/customers/{customerName}/carts")
 public class CartItemController {
     private final CartService cartService;
 
