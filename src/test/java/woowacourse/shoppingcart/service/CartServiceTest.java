@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.Fixtures.EMAIL_VALUE_1;
 import static woowacourse.Fixtures.PASSWORD_VALUE_1;
 import static woowacourse.Fixtures.PRODUCT_DESCRIPTION_VALUE_1;
@@ -25,6 +26,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.dto.response.ProductExistingInCartResponse;
 import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
 
 @JdbcTest
 class CartServiceTest {
@@ -53,6 +55,14 @@ class CartServiceTest {
         productId = productDao.save(
                 new Product(PRODUCT_NAME_VALUE_1, PRODUCT_DESCRIPTION_VALUE_1, PRODUCT_PRICE_VALUE_1,
                         PRODUCT_STOCK_VALUE_1, PROFILE_IMAGE_URL_VALUE_1));
+    }
+
+    @DisplayName("카트 아이템 추가 요청시 제품을 찾을 수 없다면 예외가 발생한다.")
+    @Test
+    void addCartItem_productNotFound() {
+        // when & then
+        assertThatThrownBy(() -> cartService.addCart(new CartItemRequest(productId + 1, 10), customerId))
+                .isInstanceOf(ProductNotFoundException.class);
     }
 
     @DisplayName("유저의 특정 카트 아이템 수정")

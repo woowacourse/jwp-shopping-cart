@@ -119,6 +119,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         assertThat(response.jsonPath().getBoolean("exists")).isTrue();
     }
 
+    public static void 상품_ID_존재하지_않음(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
     @Override
     @BeforeEach
     public void setUp() {
@@ -154,6 +158,13 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     void addCartItem_failWithExpiredToken() {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(EXPIRED_TOKEN, productId1);
         AuthAcceptanceTest.토큰이_만료됨(response);
+    }
+
+    @DisplayName("장바구니에 아이템 추가시 제품 아이디가 존재하지 않는 경우 404에러 발생")
+    @Test
+    void addCartItem_productNotFound() {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1 + 999);
+        상품_ID_존재하지_않음(response);
     }
 
     @DisplayName("장바구니 아이템 목록 조회")

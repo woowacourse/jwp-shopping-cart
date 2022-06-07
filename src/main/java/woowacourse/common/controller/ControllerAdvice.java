@@ -38,9 +38,9 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<String> handle() {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    @ExceptionHandler({CustomerNotFoundException.class, ProductNotFoundException.class})
+    public ResponseEntity<ErrorResponse> handleNotFoundException(RuntimeException e) {
+        return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler({FormatException.class, DisagreeToTermsException.class})
@@ -49,9 +49,9 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler({CustomerNotFoundException.class, ProductNotFoundException.class})
-    public ResponseEntity<ErrorResponse> handleNotFoundException(RuntimeException e) {
-        return ResponseEntity.notFound().build();
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity<String> handle() {
+        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
