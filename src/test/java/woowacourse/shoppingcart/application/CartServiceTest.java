@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -18,6 +19,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotFoundCustomerCartItemException;
 
 @ExtendWith(MockitoExtension.class)
 public class CartServiceTest {
@@ -74,5 +76,33 @@ public class CartServiceTest {
         //then
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("고객 id 에 해당하는 장바구니에서 상품 id 들에 해당하는 상품을 삭제한다.")
+    void deleteCart() {
+        //given
+        final long customerId = 1L;
+        when(cartItemDao.findIdsByCustomerId(customerId))
+                .thenReturn(List.of(1L, 2L, 3L));
+        final List<Long> cartItemIds = List.of(1L, 2L);
+
+        //when, then
+        assertThatCode(() -> cartService.deleteCart(customerId, cartItemIds))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 삭제시 존재하지 않는 상품일 경우 예외를 던진다.")
+    void deleteCart_invalidProduct_throwsException() {
+        //given
+        final long customerId = 1L;
+        when(cartItemDao.findIdsByCustomerId(customerId))
+                .thenReturn(List.of(1L, 2L, 3L));
+        final List<Long> cartItemIds = List.of(5L, 6L);
+
+        //when, then
+        assertThatThrownBy(() -> cartService.deleteCart(customerId, cartItemIds))
+                .isInstanceOf(NotFoundCustomerCartItemException.class);
     }
 }

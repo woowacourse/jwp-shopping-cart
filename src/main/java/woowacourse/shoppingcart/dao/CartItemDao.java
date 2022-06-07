@@ -1,8 +1,10 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -77,5 +79,22 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public void deleteCartItems(final List<Long> cartItemIds) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                final Long id = cartItemIds.get(i);
+                ps.setLong(1, id);
+            }
+
+            @Override
+            public int getBatchSize() {
+                return cartItemIds.size();
+            }
+        });
     }
 }

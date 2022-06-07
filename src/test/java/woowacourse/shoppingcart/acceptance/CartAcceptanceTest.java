@@ -8,6 +8,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -79,6 +80,36 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @DisplayName("회원의 장바구니에서 상품을 삭제한다.")
+    @Test
+    void deleteCartItem() {
+        //given 회원가입 후 로그인하여 장바구니에 상품을 담고
+        requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
+        final String accessToken = 로그인_토큰_발급();
+        Long cartId1 = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        Long cartId2 = 장바구니_아이템_추가되어_있음(accessToken, productId2);
+
+        // when 상품을 삭제하면
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, List.of(cartId1, cartId2));
+
+        // then 정상적으로 상품이 삭제된다.
+        장바구니_삭제됨(response);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 장바구니 상품을 삭제할 경우 404 NOT_FOUND 를 응답한다..")
+    void deleteCartItem_invalidProduct_returnsNotFound() {
+        //given 회원가입 후 로그인하여 장바구니에 상품을 담고
+        requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
+        final String accessToken = 로그인_토큰_발급();
+
+        // when 상품을 삭제하면
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, List.of(1L, 2L));
+
+        // then NOT_FOUND 를 응답한다.
+        요청이_NOT_FOUND_응답함(response);
+    }
+
     public static ExtractableResponse<Response> 장바구니_상품_추가_요청(final String accessToken, final Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("productId", productId);
@@ -103,8 +134,31 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(final String accessToken, final List<Long> cartIds) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("cartIds", cartIds);
+
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .body(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/api/customer/carts")
+                .then().log().all()
+                .extract();
+    }
+
     public static void 장바구니_상품_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
+    }
+
+    public static Long 장바구니_아이템_추가되어_있음(final String accessToken, final Long productId) {
+        ExtractableResponse<Response> response = 장바구니_상품_추가_요청(accessToken, productId);
+        return Long.parseLong(response.header("Location").split("/carts/")[1]);
+    }
+
+    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

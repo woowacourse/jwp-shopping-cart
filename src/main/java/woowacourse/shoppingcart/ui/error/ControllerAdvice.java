@@ -20,7 +20,7 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.NotFoundCustomerCartItemException;
 import woowacourse.shoppingcart.ui.error.dto.response.ErrorResponse;
 
 @RestControllerAdvice
@@ -58,7 +58,6 @@ public class ControllerAdvice {
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
             NoSuchEmailException.class,
             PasswordNotMatchException.class,
     })
@@ -66,7 +65,10 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(InvalidProductException.class)
+    @ExceptionHandler({
+            InvalidProductException.class,
+            NotFoundCustomerCartItemException.class
+    })
     public ResponseEntity<ErrorResponse> handleNotFountException(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
