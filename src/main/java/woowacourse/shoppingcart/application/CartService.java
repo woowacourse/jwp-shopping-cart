@@ -33,7 +33,7 @@ public class CartService {
         Product product = productDao.findProductById(request.getProductId());
         CartItem cartItem = new CartItem(product, request.getQuantity());
         try {
-            return cartItemDao.addCartItem(customerId, cartItem);
+            return cartItemDao.save(customerId, cartItem);
         } catch (Exception e) {
             throw new InvalidProductException();
         }

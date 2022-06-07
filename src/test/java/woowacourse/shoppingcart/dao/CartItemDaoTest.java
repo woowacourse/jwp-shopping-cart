@@ -53,7 +53,7 @@ public class CartItemDaoTest {
                 .stock(100)
                 .build();
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, new CartItem(product, 1));
+        final Long cartId = cartItemDao.save(customerId, new CartItem(product, 1));
 
         // then
         assertThat(cartId).isEqualTo(3L);
@@ -83,6 +83,26 @@ public class CartItemDaoTest {
 
         // then
         assertThat(cartIds).containsExactly(1L, 2L);
+    }
+    
+    @DisplayName("수량을 변경한다.")
+    @Test
+    void updateQuantity() {
+        // given
+        final Long customerId = 1L;
+        Product product = Product.builder()
+                .id(1L)
+                .productName("banana")
+                .price(1_000)
+                .stock(100)
+                .build();
+
+        CartItem cartItem = new CartItem(product, 1);
+        Long cartItemId = cartItemDao.save(customerId, cartItem);
+
+        // when
+        cartItem.changeQuantity(10);
+        cartItemDao.updateQuantity(cartItemId, cartItem);
     }
 
     @DisplayName("해당 id의 카트 아이템을 삭제한다.")

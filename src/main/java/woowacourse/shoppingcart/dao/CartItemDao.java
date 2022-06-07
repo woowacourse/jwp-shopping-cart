@@ -19,7 +19,7 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addCartItem(final Long customerId, final CartItem cartItem) {
+    public Long save(final Long customerId, final CartItem cartItem) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -54,9 +54,16 @@ public class CartItemDao {
         }
     }
 
+    public void updateQuantity(final Long CartItemId, final CartItem cartItem) {
+        final String query = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        int rowCount = jdbcTemplate.update(query, cartItem.getQuantity(), CartItemId);
+        if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
     public void deleteCartItem(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
-
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
