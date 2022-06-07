@@ -8,4 +8,6 @@ public interface CartItemRepository {
     CartItem findById(long id);
 
     void update(CartItem updateCartItem);
+
+    void delete(CartItem deleteCartItem);
 }

@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 
 @Service
@@ -73,6 +75,20 @@ public class CartItemService {
         CartItem updateCartItem = new CartItem(cartItem.getId(), cartItem.getProduct(),
             new Quantity(cartItemRequest.getQuantity()));
         cartItemRepository.update(updateCartItem);
+    }
+
+    public void delete(String email, DeleteCartItemRequest deleteCartItemRequest) {
+        long customerId = findCustomerIdByEmail(email);
+        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
+
+        List<CartItem> deleteCartItems = deleteCartItemRequest.getCartItemIds().stream()
+            .map(cartItemRepository::findById)
+            .collect(Collectors.toList());
+
+        for (CartItem deleteCartItem : deleteCartItems) {
+            checkContain(cartItems, deleteCartItem);
+            cartItemRepository.delete(deleteCartItem);
+        }
     }
 
     private void checkContain(CartItems cartItems, CartItem cartItem) {

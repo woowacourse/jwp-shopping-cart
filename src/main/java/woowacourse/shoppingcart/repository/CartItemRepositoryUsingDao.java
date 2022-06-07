@@ -52,4 +52,9 @@ public class CartItemRepositoryUsingDao implements CartItemRepository {
         cartItemDao.update(updateCartItem);
     }
 
+    @Override
+    public void delete(CartItem deleteCartItem) {
+        cartItemDao.delete(deleteCartItem.getId());
+    }
+
 }

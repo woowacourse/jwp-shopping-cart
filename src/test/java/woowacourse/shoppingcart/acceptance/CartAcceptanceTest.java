@@ -21,13 +21,15 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
+
+    private final static String URL = "/api/mycarts";
     private Header header;
     private Long productId1;
     private Long productId2;
@@ -53,13 +55,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
         CartItemRequest cartItemRequest = new CartItemRequest(productId1, 10);
 
         // when
-        ExtractableResponse<Response> responseAddedCartItem = AcceptanceFixture.post(cartItemRequest, "/api/mycarts",
-            header);
-        CartItemResponse cartItemResponse = responseAddedCartItem.jsonPath().getObject(".", CartItemResponse.class);
+        ExtractableResponse<Response> responseAddedCartItem = AcceptanceFixture.post(cartItemRequest, URL, header);
+        CartItemResponse cartItemResponse = extractCartItem(responseAddedCartItem);
 
         // then
         assertThat(responseAddedCartItem.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(responseAddedCartItem.header("Location")).isEqualTo("/api/mycarts/" + cartItemResponse.getId());
+        assertThat(responseAddedCartItem.header("Location")).isEqualTo(URL + "/" + cartItemResponse.getId());
         assertThat(cartItemResponse)
             .extracting("productId", "price", "name", "quantity")
             .containsExactly(cartItemRequest.getProductId(), 10_000, "치킨",
@@ -70,11 +71,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Test
     void getCartItems() {
         // given
-        AcceptanceFixture.post(new CartItemRequest(productId1, 10), "/api/mycarts", header);
-        AcceptanceFixture.post(new CartItemRequest(productId2, 10), "/api/mycarts", header);
+        AcceptanceFixture.post(new CartItemRequest(productId1, 10), URL, header);
+        AcceptanceFixture.post(new CartItemRequest(productId2, 10), URL, header);
 
         // when
-        ExtractableResponse<Response> responseAboutGetItems = AcceptanceFixture.get("/api/mycarts", header);
+        ExtractableResponse<Response> responseAboutGetItems = AcceptanceFixture.get(URL, header);
         List<CartItemResponse> cartItemResponses = responseAboutGetItems.jsonPath()
             .getList(".", CartItemResponse.class);
         List<Long> productIds = cartItemResponses.stream()
@@ -91,16 +92,15 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void getCartItem() {
         // given
         ExtractableResponse<Response> responseAboutCreatedCartItem1 = AcceptanceFixture.post(
-            new CartItemRequest(productId1, 10), "/api/mycarts",
+            new CartItemRequest(productId1, 10), URL,
             header);
-        AcceptanceFixture.post(new CartItemRequest(productId2, 10), "/api/mycarts", header);
-        CartItemResponse createdCartItemResponse = responseAboutCreatedCartItem1.jsonPath()
-            .getObject(".", CartItemResponse.class);
+        AcceptanceFixture.post(new CartItemRequest(productId2, 10), URL, header);
+        CartItemResponse createdCartItemResponse = extractCartItem(responseAboutCreatedCartItem1);
 
         // when
         ExtractableResponse<Response> responseAboutGetItem = AcceptanceFixture.get(
-            "/api/mycarts/" + createdCartItemResponse.getId(), header);
-        CartItemResponse cartItemResponse = responseAboutGetItem.jsonPath().getObject(".", CartItemResponse.class);
+            URL + "/" + createdCartItemResponse.getId(), header);
+        CartItemResponse cartItemResponse = extractCartItem(responseAboutGetItem);
 
         // then
         assertThat(cartItemResponse)
@@ -114,31 +114,44 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void update() {
         // given
         ExtractableResponse<Response> responseAboutCreatedCartItem1 = AcceptanceFixture.post(
-            new CartItemRequest(productId1, 10), "/api/mycarts",
+            new CartItemRequest(productId1, 10), URL,
             header);
-        AcceptanceFixture.post(new CartItemRequest(productId2, 10), "/api/mycarts", header);
-        CartItemResponse createdCartItemResponse = responseAboutCreatedCartItem1.jsonPath()
-            .getObject(".", CartItemResponse.class);
+        AcceptanceFixture.post(new CartItemRequest(productId2, 10), URL, header);
+        CartItemResponse createdCartItemResponse = extractCartItem(responseAboutCreatedCartItem1);
 
         // when
         ExtractableResponse<Response> patchResponse = AcceptanceFixture.patch(
-            new UpdateCartItemRequest(createdCartItemResponse.getId(), 15), "/api/mycarts", header);
+            new UpdateCartItemRequest(createdCartItemResponse.getId(), 15), URL, header);
         ExtractableResponse<Response> responseAboutGetItem = AcceptanceFixture.get(
-            "/api/mycarts/" + createdCartItemResponse.getId(), header);
-        CartItemResponse cartItemResponse = responseAboutGetItem.jsonPath().getObject(".", CartItemResponse.class);
+            URL + "/" + createdCartItemResponse.getId(), header);
+        CartItemResponse cartItemResponse = extractCartItem(responseAboutGetItem);
 
         // then
         assertThat(cartItemResponse.getQuantity()).isEqualTo(15);
     }
 
-    @DisplayName("장바구니 삭제")
+    @DisplayName("장바구니에서 선택적으로 삭제")
     @Test
-    void deleteCartItem() {
-        Long cartId = getAddedCartItemId(USER, productId1);
+    void delete() {
+        // given
+        ExtractableResponse<Response> responseAboutCreatedCartItem1 = AcceptanceFixture.post(
+            new CartItemRequest(productId1, 10), URL,
+            header);
+        ExtractableResponse<Response> responseAboutCreatedCartItem2 = AcceptanceFixture.post(
+            new CartItemRequest(productId2, 10), URL,
+            header);
+        CartItemResponse createdCartItemResponse1 = extractCartItem(responseAboutCreatedCartItem1);
+        CartItemResponse createdCartItemResponse2 = extractCartItem(responseAboutCreatedCartItem2);
 
-        ExtractableResponse<Response> response = AcceptanceFixture.delete(
-            "/api/customers/" + USER + "/carts/" + cartId);
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        // when
+        DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(
+            List.of(createdCartItemResponse1.getId()));
+        AcceptanceFixture.delete(deleteCartItemRequest, URL, header);
+
+        // then
+        ExtractableResponse<Response> response = AcceptanceFixture.get(URL, header);
+        List<CartItemResponse> cartItemResponses = response.jsonPath().getList(".", CartItemResponse.class);
+        assertThat(cartItemResponses.size()).isEqualTo(1);
     }
 
     public static ExtractableResponse<Response> requestToAddCartItem(String userName, Long productId) {
@@ -165,5 +178,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
         final String accessToken = extractAccessToken(loginResponse);
 
         return new Header("Authorization", BEARER + accessToken);
+    }
+
+    private CartItemResponse extractCartItem(ExtractableResponse<Response> response) {
+        return response.jsonPath()
+            .getObject(".", CartItemResponse.class);
     }
 }
