@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.response.ErrorResponse;
 
 public class SimpleResponse {
     private final Response response;

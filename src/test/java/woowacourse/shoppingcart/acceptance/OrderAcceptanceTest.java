@@ -21,8 +21,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.fixture.SimpleResponse;
 import woowacourse.fixture.SimpleRestAssured;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.CartItemsRequest;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.request.CartItemsRequest;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {

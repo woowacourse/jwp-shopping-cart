@@ -11,9 +11,9 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.fixture.SimpleResponse;
 import woowacourse.fixture.SimpleRestAssured;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @DisplayName("회원 관련 기능")

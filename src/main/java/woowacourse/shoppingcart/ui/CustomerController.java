@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.UserNameDuplicationResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.PasswordRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.UserNameDuplicationResponse;
 
 @RestController
 @RequestMapping("/customers")

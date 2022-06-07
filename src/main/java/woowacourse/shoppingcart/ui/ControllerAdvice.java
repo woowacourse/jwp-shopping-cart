@@ -13,7 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.response.ErrorResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;

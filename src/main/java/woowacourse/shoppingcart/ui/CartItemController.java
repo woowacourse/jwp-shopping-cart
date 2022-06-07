@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.dto.CartItemsRequest;
-import woowacourse.shoppingcart.dto.CartItemsResponse;
+import woowacourse.shoppingcart.dto.request.CartItemsRequest;
+import woowacourse.shoppingcart.dto.response.CartItemsResponse;
 
 @RestController
 @RequestMapping("/cart")
@@ -39,15 +39,15 @@ public class CartItemController {
 
     @PutMapping("/{productId}/quantity")
     public ResponseEntity<Void> updateQuantity(@AuthenticationPrincipal final String username,
-                                            @RequestBody final int quantity,
-                                            @PathVariable final Long productId) {
+                                               @RequestBody final int quantity,
+                                               @PathVariable final Long productId) {
         cartService.updateQuantity(productId, quantity, username);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/products")
     public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal final String username,
-                                               @RequestBody final CartItemsRequest cartItemsRequest) {
+                                                @RequestBody final CartItemsRequest cartItemsRequest) {
         cartService.deleteCartItems(cartItemsRequest, username);
         return ResponseEntity.noContent().build();
     }

@@ -17,9 +17,9 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.fixture.SimpleResponse;
 import woowacourse.fixture.SimpleRestAssured;
-import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.dto.CartItemsResponse;
-import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.response.CartItemResponse;
+import woowacourse.shoppingcart.dto.response.CartItemsResponse;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {

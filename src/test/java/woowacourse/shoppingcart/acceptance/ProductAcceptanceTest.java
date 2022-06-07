@@ -11,8 +11,8 @@ import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductsResponse;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
+import woowacourse.shoppingcart.dto.response.ProductsResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
