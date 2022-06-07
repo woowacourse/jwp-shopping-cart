@@ -6,7 +6,10 @@ import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.password.NewPassword;
 import woowacourse.member.domain.password.Password;
-import woowacourse.member.dto.*;
+import woowacourse.member.dto.MemberInfoResponse;
+import woowacourse.member.dto.SignUpRequest;
+import woowacourse.member.dto.UpdateNameRequest;
+import woowacourse.member.dto.UpdatePasswordRequest;
 import woowacourse.member.exception.*;
 
 import java.util.Optional;
@@ -37,8 +40,8 @@ public class MemberService {
         return new MemberInfoResponse(member);
     }
 
-    public void checkDuplicateEmail(EmailDuplicateCheckRequest request) {
-        if (memberDao.existMemberByEmail(request.getEmail())) {
+    public void checkDuplicateEmail(String email) {
+        if (memberDao.existMemberByEmail(email)) {
             throw new DuplicateEmailException();
         }
     }
@@ -79,7 +82,7 @@ public class MemberService {
 
     @Transactional
     public void withdraw(long id) {
-        Member member = validateExistMember(memberDao.findMemberById(id));
+        validateExistMember(memberDao.findMemberById(id));
         int deletedRowCount = memberDao.deleteById(id);
         if (deletedRowCount == 0) {
             throw new MemberNotFoundException();

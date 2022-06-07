@@ -7,8 +7,14 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.member.dto.*;
-import woowacourse.member.exception.*;
+import woowacourse.member.dto.MemberInfoResponse;
+import woowacourse.member.dto.SignUpRequest;
+import woowacourse.member.dto.UpdateNameRequest;
+import woowacourse.member.dto.UpdatePasswordRequest;
+import woowacourse.member.exception.InvalidMemberEmailException;
+import woowacourse.member.exception.InvalidMemberNameException;
+import woowacourse.member.exception.InvalidPasswordException;
+import woowacourse.member.exception.MemberNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -63,23 +69,6 @@ class MemberServiceTest {
                 () -> memberService.findMemberInfo(100L)
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
-    }
-
-    @DisplayName("존재하지 않는 이메일인 경우 중복체크에서 문제가 발생하지 않는다.")
-    @Test
-    void checkDuplicateEmailWithNotDuplicateEmail() {
-        assertDoesNotThrow(
-                () -> memberService.checkDuplicateEmail(new EmailDuplicateCheckRequest("pobi@wooteco.com"))
-        );
-    }
-
-    @DisplayName("이미 존재하는 이메일인 경우 중복체크시 예외가 발생한다.")
-    @Test
-    void checkDuplicateEmailWithDuplicateEmail() {
-        assertThatThrownBy(
-                () -> memberService.checkDuplicateEmail(new EmailDuplicateCheckRequest("ari@wooteco.com"))
-        ).isInstanceOf(DuplicateEmailException.class)
-                .hasMessageContaining("이메일은 중복될 수 없습니다.");
     }
 
     @DisplayName("올바른 id로 회원 이름을 변경한다.")

@@ -4,7 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.application.MemberService;
-import woowacourse.member.dto.*;
+import woowacourse.member.dto.MemberInfoResponse;
+import woowacourse.member.dto.SignUpRequest;
+import woowacourse.member.dto.UpdateNameRequest;
+import woowacourse.member.dto.UpdatePasswordRequest;
 
 import javax.validation.Valid;
 
@@ -30,10 +33,10 @@ public class MemberController {
         return memberService.findMemberInfo(id);
     }
 
-    @PostMapping("/duplicate-email")
+    @GetMapping("/duplicate-email")
     @ResponseStatus(HttpStatus.OK)
-    public void checkDuplicateEmail(@Valid @RequestBody EmailDuplicateCheckRequest request) {
-        memberService.checkDuplicateEmail(request);
+    public void checkDuplicateEmail(@RequestParam String email) {
+        memberService.checkDuplicateEmail(email);
     }
 
     @PutMapping("/me/name")

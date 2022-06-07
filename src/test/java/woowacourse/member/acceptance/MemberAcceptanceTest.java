@@ -7,8 +7,11 @@ import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
-import woowacourse.member.dto.*;
+import woowacourse.member.dto.SignUpRequest;
+import woowacourse.member.dto.UpdateNameRequest;
+import woowacourse.member.dto.UpdatePasswordRequest;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class MemberAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("회원가입에 성공한 경우 201 Created가 반환된다.")
@@ -32,22 +35,20 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @DisplayName("이메일이 중복되는 경우 400 Bad Request를 반환한다.")
     @Test
     void checkDuplicateEmailWithDuplicateEmail() {
-        SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
+        String email = "pobi@wooteco.com";
+        SignUpRequest signUpRequest = new SignUpRequest(email, "포비", "Wooteco1!");
         RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
 
-        EmailDuplicateCheckRequest emailDuplicateCheckRequest = new EmailDuplicateCheckRequest("pobi@wooteco.com");
-        RestAssuredConvenienceMethod.postRequest(emailDuplicateCheckRequest, "/api/members/duplicate-email")
+        RestAssuredConvenienceMethod.getRequest("/api/members/duplicate-email?email=" + email)
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("이메일이 중복되지 않는 경우 200 OK를 반환한다.")
     @Test
     void checkDuplicateEmailWithNotDuplicateEmail() {
-        SignUpRequest signUpRequest = new SignUpRequest("pobi@wooteco.com", "포비", "Wooteco1!");
-        RestAssuredConvenienceMethod.postRequest(signUpRequest, "/api/members");
+        String email = "pobi@wooteco.com";
 
-        EmailDuplicateCheckRequest emailDuplicateCheckRequest = new EmailDuplicateCheckRequest("woni@wooteco.com");
-        RestAssuredConvenienceMethod.postRequest(emailDuplicateCheckRequest, "/api/members/duplicate-email")
+        RestAssuredConvenienceMethod.getRequest("/api/members/duplicate-email?email=" + email)
                 .statusCode(HttpStatus.OK.value());
     }
 
