@@ -18,6 +18,10 @@ public class CartItem {
         this.checked = checked;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Long getProductId() {
         return productId;
     }

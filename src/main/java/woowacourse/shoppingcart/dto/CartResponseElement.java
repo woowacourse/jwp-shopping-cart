@@ -14,8 +14,8 @@ public class CartResponseElement {
     public CartResponseElement() {
     }
 
-    public CartResponseElement(Product product, boolean checked, int quantity) {
-        this.id = product.getId();
+    public CartResponseElement(Long id, Product product, boolean checked, int quantity) {
+        this.id = id;
         this.name = product.getName();
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();

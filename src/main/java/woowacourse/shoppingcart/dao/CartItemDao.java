@@ -45,10 +45,10 @@ public class CartItemDao {
         jdbcTemplate.update(sql, quantity, customerId, productId);
     }
 
-    public CartItem findCartItemByIds(Long customerId, Long productId) {
+    public CartItem findCartItemByIds(Long customerId, Long cartId) {
         try {
-            String sql = "SELECT * FROM cart_item WHERE customer_id = ? AND product_id = ?";
-            return jdbcTemplate.queryForObject(sql, CART_ITEM_MAPPER, customerId, productId);
+            String sql = "SELECT * FROM cart_item WHERE customer_id = ? AND id = ?";
+            return jdbcTemplate.queryForObject(sql, CART_ITEM_MAPPER, customerId, cartId);
         }
         catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException("[ERROR] 해당 상품은 장바구니에 없습니다.");
@@ -58,5 +58,15 @@ public class CartItemDao {
     public void saveItemInCart(Long customerId, Long productId, int quantity) {
         final var sql = "INSERT INTO cart_item (customer_id, product_id, quantity) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, customerId, productId, quantity);
+    }
+
+    public void updateQuantity(Long customerId, Long cartId, int quantity) {
+        final var sql = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND id = ?";
+        jdbcTemplate.update(sql, quantity, customerId, cartId);
+    }
+
+    public void updateCheck(Long customerId, Long cartId, boolean checked) {
+        final var sql = "UPDATE cart_item SET checked = ? WHERE customer_id = ? AND id = ?";
+        jdbcTemplate.update(sql, checked, customerId, cartId);
     }
 }

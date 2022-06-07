@@ -48,7 +48,7 @@ public class CartDaoTest {
     }
 
     @Test
-    void 특정_사용자의_특정_제품의_수량을_바꾸는_경우() {
+    void 특정_사용자의_특정_제품의_수량을_증가시키는_경우() {
         Long customerId = 1L;
         Long productId = 1L;
 
@@ -71,6 +71,34 @@ public class CartDaoTest {
         CartItem actual = cartItemDao.findCartItemByIds(customerId, productId);
 
         CartItem expected = new CartItem(4L, 1L, 4L, 2, true);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void 특정_사용자의_특정_제품의_수량을_바꾸는_경우() {
+        Long customerId = 1L;
+        Long cartId = 1L;
+
+        cartItemDao.updateQuantity(customerId, cartId, 2);
+
+        CartItem actual = cartItemDao.findCartItemByIds(customerId, cartId);
+
+        CartItem expected = new CartItem(1L, 1L, 1L, 2, true);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void 특정_사용자의_특정_제품의_체크상태를_바꾸는_경우() {
+        Long customerId = 1L;
+        Long cartId = 1L;
+
+        cartItemDao.updateCheck(customerId, cartId, false);
+
+        CartItem actual = cartItemDao.findCartItemByIds(customerId, cartId);
+
+        CartItem expected = new CartItem(1L, 1L, 1L, 1, false);
 
         assertThat(actual).isEqualTo(expected);
     }

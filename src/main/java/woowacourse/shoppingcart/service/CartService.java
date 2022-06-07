@@ -14,7 +14,9 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +52,11 @@ public class CartService {
         List<Integer> quantities = generateQuantities(cartItems);
         List<Boolean> checks = generateChecks(cartItems);
         List<Product> products = generateProductsInCart(cartItems);
-        return new Cart(products, checks, quantities);
+        Map<Long, Product> cart = new HashMap<>();
+        for (int i = 0; i < products.size(); i++) {
+            cart.put(cartItems.get(i).getId(), products.get(i));
+        }
+        return new Cart(cart, checks, quantities);
     }
 
     private List<Integer> generateQuantities(List<CartItem> cartItems) {
