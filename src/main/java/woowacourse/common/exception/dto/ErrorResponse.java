@@ -22,7 +22,7 @@ public enum ErrorResponse {
     INVALID_CART_ITEM(5003, "Invalid Cart Item"),
 
     NOT_EXIST_PRODUCT(6001, "Not Exist Product"),
-    NOT_EXIST_CART_ITEM(6002, "Not Exist Item"),
+    NOT_EXIST_CART_ITEM(6002, "Not Exist CartItem"),
     NOT_EXIST_ORDER(6003, "Not Exist Order"),
     NOT_EXIST_CUSTOMER(6004, "Not Exist customer"),
 
