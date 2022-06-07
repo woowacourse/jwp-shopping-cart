@@ -11,12 +11,19 @@ import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class ProductService {
+
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
+    }
+
+    @Transactional
+    public Long save(final ProductRequest productRequest) {
+        Product product = productRequest.toProduct();
+        return productDao.save(product);
     }
 
     public List<ProductResponse> findProducts() {
@@ -26,17 +33,13 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public Long addProduct(final ProductRequest productRequest) {
-        Product product = productRequest.toProduct();
-        return productDao.save(product);
-    }
-
     public ProductResponse findProductById(final Long productId) {
         Product product = productDao.findProductById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 상품이 없습니다."));
         return new ProductResponse(product);
     }
 
+    @Transactional
     public void deleteProductById(final Long productId) {
         productDao.delete(productId);
     }

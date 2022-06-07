@@ -34,7 +34,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final ProductRequest productRequest) {
-        final Long productId = productService.addProduct(productRequest);
+        final Long productId = productService.save(productRequest);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/" + productId)
