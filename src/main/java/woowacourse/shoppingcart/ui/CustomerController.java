@@ -36,25 +36,24 @@ public class CustomerController {
 
     @PutMapping("/me")
     public ResponseEntity<Void> edit(@AuthenticationPrincipal String customerName,
-                                     HttpServletRequest request,
                                      @RequestBody @Valid CustomerRequest editRequest) {
         customerService.editCustomerByName(customerName, editRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> customer(@AuthenticationPrincipal String customerName, HttpServletRequest request) {
+    public ResponseEntity<CustomerResponse> customer(@AuthenticationPrincipal String customerName) {
         return ResponseEntity.ok(customerService.findCustomerByName(customerName));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> withDraw(@AuthenticationPrincipal String customerName, HttpServletRequest request) {
+    public ResponseEntity<Void> withDraw(@AuthenticationPrincipal String customerName) {
         customerService.deleteCustomerByName(customerName);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/duplication")
-    public ResponseEntity<CheckDuplicateResponse> checkDuplicate(@RequestBody CheckDuplicateRequest request) {
-        return ResponseEntity.ok(customerService.isExistUser(request));
+    @PostMapping("/exists")
+    public ResponseEntity<CheckDuplicateResponse> checkDuplicate(@RequestParam String userName) {
+        return ResponseEntity.ok(customerService.isExistUser(userName));
     }
 }

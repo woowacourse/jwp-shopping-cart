@@ -68,8 +68,8 @@ public class CustomerService {
         throw new AuthorizationException("로그인에 실패했습니다.");
     }
 
-    public CheckDuplicateResponse isExistUser(final CheckDuplicateRequest request) {
-        UserName userName = new UserName(request.getUserName());
+    public CheckDuplicateResponse isExistUser(final String rawUserName) {
+        UserName userName = new UserName(rawUserName);
         return new CheckDuplicateResponse(customerDao.existsByName(userName));
     }
 }
