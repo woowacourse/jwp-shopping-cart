@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.Fixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.Fixtures.EXPIRED_TOKEN;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
@@ -16,6 +17,8 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
@@ -112,6 +115,29 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         주문하기_성공함(response);
     }
 
+    @DisplayName("주문하기 실패 - 유효하지 않은 토큰")
+    @ValueSource(strings = {"", "abcd"})
+    @ParameterizedTest
+    void addOrder_failWithInvalidToken(String accessToken) {
+        List<OrderRequest> orderRequests = Stream.of(cartItemId1, cartItemId2)
+                .map(cartId -> new OrderRequest(cartId, 10))
+                .collect(Collectors.toList());
+
+        ExtractableResponse<Response> response = 주문하기_요청(accessToken, orderRequests);
+        AuthAcceptanceTest.토큰이_유효하지_않음(response);
+    }
+
+    @DisplayName("주문하기 - 만료된 토큰")
+    @Test
+    void addOrder_failWithExpiredToken() {
+        List<OrderRequest> orderRequests = Stream.of(cartItemId1, cartItemId2)
+                .map(cartId -> new OrderRequest(cartId, 10))
+                .collect(Collectors.toList());
+
+        ExtractableResponse<Response> response = 주문하기_요청(EXPIRED_TOKEN, orderRequests);
+        AuthAcceptanceTest.토큰이_만료됨(response);
+    }
+
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
@@ -122,6 +148,29 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, orderId1, orderId2);
+    }
+
+    @DisplayName("주문 내역 조회 실패 - 유효하지 않은 토큰")
+    @ValueSource(strings = {"", "abcd"})
+    @ParameterizedTest
+    void getOrders_failWithInvalidToken(String invalidToken) {
+        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(cartItemId1, 2)));
+        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(cartItemId2, 5)));
+
+        ExtractableResponse<Response> response = 주문_내역_조회_요청(invalidToken);
+
+        AuthAcceptanceTest.토큰이_유효하지_않음(response);
+    }
+
+    @DisplayName("주문 내역 조회 - 만료된 토큰")
+    @Test
+    void getOrders_failWithExpiredToken() {
+        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(cartItemId1, 2)));
+        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(cartItemId2, 5)));
+
+        ExtractableResponse<Response> response = 주문_내역_조회_요청(EXPIRED_TOKEN);
+
+        AuthAcceptanceTest.토큰이_만료됨(response);
     }
 
     @DisplayName("주문 단일 조회")
@@ -136,6 +185,33 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         주문_조회_응답됨(response);
         주문_조회됨(response, orderId);
+    }
+
+    @DisplayName("주문 단일 조회 실패 - 유효하지 않은 토큰")
+    @ValueSource(strings = {"", "abcd"})
+    @ParameterizedTest
+    void getOrder_failWithInvalidToken(String invalidToken) {
+        Long orderId = 주문하기_요청_성공되어_있음(accessToken, Arrays.asList(
+                new OrderRequest(cartItemId1, 2),
+                new OrderRequest(cartItemId2, 4)
+        ));
+
+        ExtractableResponse<Response> response = 주문_단일_조회_요청(invalidToken, orderId);
+
+        AuthAcceptanceTest.토큰이_유효하지_않음(response);
+    }
+
+    @DisplayName("주문 단일 조회 - 만료된 토큰")
+    @Test
+    void getOrder_failWithExpiredToken() {
+        Long orderId = 주문하기_요청_성공되어_있음(accessToken, Arrays.asList(
+                new OrderRequest(cartItemId1, 2),
+                new OrderRequest(cartItemId2, 4)
+        ));
+
+        ExtractableResponse<Response> response = 주문_단일_조회_요청(EXPIRED_TOKEN, orderId);
+
+        AuthAcceptanceTest.토큰이_만료됨(response);
     }
 
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {

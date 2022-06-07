@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.Fixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.Fixtures.EXPIRED_TOKEN;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
@@ -67,8 +70,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
+    public static Long 장바구니_아이템_추가되어_있음(String accessToken, Long productId) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId);
         return Long.parseLong(response.header("Location").split("/cart/")[1]);
     }
 
@@ -101,12 +104,27 @@ public class CartAcceptanceTest extends AcceptanceTest {
         productId2 = 상품_등록되어_있음("맥주", "맥주 입니다.", 20_000, 10, "http://example.com/beer.jpg");
     }
 
-    @DisplayName("장바구니 아이템 추가")
+    @DisplayName("장바구니에 아이템 추가 성공")
     @Test
     void addCartItem() {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1);
 
         장바구니_아이템_추가됨(response);
+    }
+
+    @DisplayName("장바구니에 아이템 추가 실패 - 유효하지 않은 토큰")
+    @ValueSource(strings = {"", "abcd"})
+    @ParameterizedTest
+    void addCartItem_failWithInvalidToken(String invalidToken) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(invalidToken, productId1);
+        AuthAcceptanceTest.토큰이_유효하지_않음(response);
+    }
+
+    @DisplayName("장바구니에 아이템 추가 실패 - 만료된 토큰")
+    @Test
+    void addCartItem_failWithExpiredToken() {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(EXPIRED_TOKEN, productId1);
+        AuthAcceptanceTest.토큰이_만료됨(response);
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
@@ -121,6 +139,30 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
+    @DisplayName("장바구니 아이템 목록 조회 실패 - 유효하지 않은 토큰")
+    @ValueSource(strings = {"", "abcd"})
+    @ParameterizedTest
+    void getCartItems_failWithInvalidToken(String invalidToken) {
+        장바구니_아이템_추가되어_있음(accessToken, productId1);
+        장바구니_아이템_추가되어_있음(accessToken, productId2);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(invalidToken);
+
+        AuthAcceptanceTest.토큰이_유효하지_않음(response);
+    }
+
+    @DisplayName("장바구니 아이템 목록 조회 실패 - 만료된 토큰")
+    @Test
+    void getCartItems_failWithExpiredToken() {
+        장바구니_아이템_추가되어_있음(accessToken, productId1);
+        장바구니_아이템_추가되어_있음(accessToken, productId2);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(EXPIRED_TOKEN);
+
+        AuthAcceptanceTest.토큰이_만료됨(response);
+    }
+
+
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
@@ -129,5 +171,26 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, cartId);
 
         장바구니_삭제됨(response);
+    }
+
+    @DisplayName("장바구니 삭제 실패 - 유효하지 않은 토큰")
+    @ValueSource(strings = {"", "abcd"})
+    @ParameterizedTest
+    void deleteCartItem_failWithInvalidToken(String invalidToken) {
+        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(invalidToken, cartId);
+
+        AuthAcceptanceTest.토큰이_유효하지_않음(response);
+    }
+
+    @DisplayName("장바구니 아이템 목록 조회 실패 - 만료된 토큰")
+    @Test
+    void deleteCartItem_failWithExpiredToken() {
+        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(EXPIRED_TOKEN, cartId);
+
+        AuthAcceptanceTest.토큰이_만료됨(response);
     }
 }
