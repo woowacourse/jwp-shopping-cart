@@ -3,9 +3,11 @@ package woowacourse.shoppingcart.ui;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CartItemService;
+import woowacourse.shoppingcart.dto.CartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityResponse;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.ProductIdRequest;
@@ -98,5 +101,29 @@ class CartItemControllerTest {
                                 + "{\"id\":2,\"quantity\":5},"
                                 + "{\"id\":3,\"quantity\":7}]"
                 ));
+    }
+
+    @DisplayName("장바구니 속 물품의 정보를 수정한다.")
+    @Test
+    void updateCartItem() throws Exception {
+        // given
+        TokenRequest tokenRequest = new TokenRequest(1L);
+        CartItemQuantityRequest cartItemQuantityRequest = new CartItemQuantityRequest(1L, 4);
+
+        // when
+        when(cartItemService.updateCartItem(any(), any()))
+                .thenReturn(new CartItemQuantityResponse(1L, 4));
+
+        // then
+        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getId()));
+        mockMvc.perform(patch("/auth/customer/cartItems")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(cartItemQuantityRequest)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("quantity").value(4));
     }
 }
