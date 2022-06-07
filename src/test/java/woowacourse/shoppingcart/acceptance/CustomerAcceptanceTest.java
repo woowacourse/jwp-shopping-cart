@@ -98,7 +98,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(회원수정응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(비밀번호수정실패응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(비밀번호수정실패응답.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(비밀번호수정실패.getMessage()).contains("비밀번호가 일치하지 않습니다.")
         );
     }

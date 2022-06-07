@@ -103,7 +103,9 @@ public class CustomerControllerTest extends ControllerTest {
         when(customerService.findById(101L)).thenThrow(new CustomerNotFoundException());
 
         // when then
-        mockMvc.perform(getWithToken("/api/customer", token)).andDo(print()).andExpect(status().isBadRequest());
+        mockMvc.perform(getWithToken("/api/customer", token))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @DisplayName("회원 이름 변경 시도 시, 이름이 비어있으면 400을 응답한다")
