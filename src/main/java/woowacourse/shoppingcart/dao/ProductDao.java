@@ -88,6 +88,11 @@ public class ProductDao {
 
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+        try {
+            jdbcTemplate.update(query, productId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
     }
 }
