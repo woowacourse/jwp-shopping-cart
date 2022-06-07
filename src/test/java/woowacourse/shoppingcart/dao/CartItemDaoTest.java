@@ -178,8 +178,6 @@ class CartItemDaoTest extends DatabaseTest {
     }
 
     private void saveCartItems(CartItemEntity... cartItems) {
-        for (CartItemEntity cartItem : cartItems) {
-            cartItemDao.save(cartItem);
-        }
+        databaseFixture.save(List.of(cartItems));
     }
 }

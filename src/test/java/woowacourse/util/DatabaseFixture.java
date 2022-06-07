@@ -38,11 +38,15 @@ public class DatabaseFixture {
     }
 
     public void save(Customer customer, CartItem... cartItems) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) "
-                + "VALUES(:customerId, :productId, :quantity)";
         List<CartItemEntity> cartItemEntities = Arrays.stream(cartItems)
                 .map(it -> new CartItemEntity(customer, it))
                 .collect(Collectors.toList());
+        save(cartItemEntities);
+    }
+
+    public void save(List<CartItemEntity> cartItemEntities) {
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) "
+                + "VALUES(:customerId, :productId, :quantity)";
 
         jdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(cartItemEntities));
     }
