@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,5 +94,23 @@ public class CartItemDao {
         parameters.put("id", id);
 
         return namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(parameters));
+    }
+
+    public void deleteAll(final List<Long> ids) {
+        final List<Map<String, Object>> batchValues = makeBatchValues(ids);
+
+        final String sql = "DELETE FROM cart_item WHERE id = :id";
+
+        namedParameterJdbcTemplate.batchUpdate(sql, batchValues.toArray(new Map[ids.size()]));
+    }
+
+    private List<Map<String, Object>> makeBatchValues(List<Long> ids) {
+        final List<Map<String, Object>> batchValues = new ArrayList<>(ids.size());
+        for (long id : ids) {
+            final Map<String, Object> mapping = new HashMap<>();
+            mapping.put("id", id);
+            batchValues.add(mapping);
+        }
+        return batchValues;
     }
 }
