@@ -19,6 +19,7 @@ import static woowacourse.member.acceptance.MemberAcceptanceTest.로그인_요�
 import static woowacourse.member.acceptance.MemberAcceptanceTest.회원가입_요청;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class CartAcceptanceTest extends AcceptanceTest {
 
     private Long productId1;

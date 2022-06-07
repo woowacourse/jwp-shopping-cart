@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class ProductAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("상품을 추가한다")

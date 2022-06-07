@@ -23,10 +23,9 @@ import static woowacourse.member.acceptance.MemberAcceptanceTest.회원가입_�
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class OrderAcceptanceTest extends AcceptanceTest {
 
-    private Long productId1;
-    private Long productId2;
     private Long cartId1;
     private Long cartId2;
     private String accessToken;
@@ -43,8 +42,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         회원가입_요청(memberEmail, memberName, memberPassword);
         accessToken = 로그인_요청(memberEmail, memberPassword);
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
         cartId1 = 장바구니_아이템_추가되어_있음(accessToken, productId1);
         cartId2 = 장바구니_아이템_추가되어_있음(accessToken, productId2);
