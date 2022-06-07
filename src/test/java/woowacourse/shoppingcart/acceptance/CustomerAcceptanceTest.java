@@ -36,7 +36,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExceptionResponse response = RestAssured.given().log().all()
                 .param("email", "email")
                 .when()
-                .post("/customers/email")
+                .post("/customers/email/validate")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().as(ExceptionResponse.class);
@@ -51,7 +51,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .param("email", "email")
                 .when()
-                .post("/customers/email")
+                .post("/customers/email/validate")
                 .then().log().all()
                 .extract();
 

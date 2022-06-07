@@ -15,10 +15,6 @@ public class Customer {
     private String phone;
     private String address;
 
-    private Customer() {
-
-    }
-
     public Customer(String email, String password, String name, String phone, String address) {
         this(null, email, Password.encrypt(password), name, phone, address);
     }
