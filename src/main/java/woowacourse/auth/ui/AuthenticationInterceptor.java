@@ -1,6 +1,7 @@
 package woowacourse.auth.ui;
 
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -9,6 +10,7 @@ import woowacourse.shoppingcart.exception.TokenExpiredException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private static final String TOKEN_PAYLOAD = "TOKEN_PAYLOAD";
