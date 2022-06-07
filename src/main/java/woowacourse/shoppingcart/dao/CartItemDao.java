@@ -73,10 +73,21 @@ public class CartItemDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteCartItem(final Long id) {
+    public void deleteCartItemByCartId(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
-
         final int rowCount = jdbcTemplate.update(sql, id);
+        if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public void deleteCartItem(final Long customerId, final Long productId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = :customerId and product_id = :productId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("customerId", customerId);
+        params.addValue("productId", productId);
+
+        final int rowCount = namedJdbcTemplate.update(sql, params);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
@@ -90,7 +101,7 @@ public class CartItemDao {
         params.addValue("productId", productId);
         return Objects.requireNonNull(namedJdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
-    
+
     public void updateQuantity(Long customerId, Long productId, int quantity) {
         String sql = "update cart_item set quantity = :quantity"
                 + " where customer_id = :customerId"
