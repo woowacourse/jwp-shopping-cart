@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -25,5 +26,11 @@ class PriceTest {
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> new Price(value))
                 .withMessageContaining("가격은 1원 이상이어야 합니다.");
+    }
+
+    @Test
+    void 가격에_숫자를_곱한_결과() {
+        Price price = new Price(1_000);
+        assertThat(price.multiple(5)).isEqualTo(5_000);
     }
 }

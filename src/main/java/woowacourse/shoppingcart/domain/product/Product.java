@@ -6,13 +6,10 @@ import woowacourse.shoppingcart.domain.product.vo.Price;
 
 public class Product {
 
-    private Long id;
-    private Name name;
-    private Price price;
-    private ImageUrl imageUrl;
-
-    public Product() {
-    }
+    private final Long id;
+    private final Name name;
+    private final Price price;
+    private final ImageUrl imageUrl;
 
     public Product(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;
@@ -23,6 +20,10 @@ public class Product {
 
     public Product(final String name, final int price, final String imageUrl) {
         this(null, name, price, imageUrl);
+    }
+
+    public int multiplePrice(int number) {
+        return price.multiple(number);
     }
 
     public Name getName() {

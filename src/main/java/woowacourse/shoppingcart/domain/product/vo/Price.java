@@ -20,6 +20,10 @@ public class Price {
         }
     }
 
+    public int multiple(int number) {
+        return value * number;
+    }
+
     public int getValue() {
         return value;
     }

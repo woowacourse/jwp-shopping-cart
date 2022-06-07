@@ -12,6 +12,10 @@ public class OrderDetail {
         this.quantity = quantity;
     }
 
+    public int calculateCost() {
+        return product.multiplePrice(quantity);
+    }
+
     public int getQuantity() {
         return quantity;
     }
