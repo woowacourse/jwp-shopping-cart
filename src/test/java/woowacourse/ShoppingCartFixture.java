@@ -15,4 +15,6 @@ public class ShoppingCartFixture {
     public static final CustomerDeleteRequest 잉_회원탈퇴요청 = new CustomerDeleteRequest("ing_woowahan");
     public static final String CUSTOMER_URI = "/api/customer";
     public static final String LOGIN_URI = "/api/login";
+    public static final String PRODUCT_URI = "api/products";
+
 }
