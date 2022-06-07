@@ -20,9 +20,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CartItemService;
+import woowacourse.shoppingcart.dto.CartItemIdRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityResponse;
 import woowacourse.shoppingcart.dto.CartItemResponse;
@@ -125,5 +127,23 @@ class CartItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("quantity").value(4));
+    }
+
+    @DisplayName("장바구니 물품들을 제거한다.")
+    @Test
+    void delete() throws Exception {
+        // given
+        TokenRequest tokenRequest = new TokenRequest(1L);
+        List<CartItemIdRequest> cartItemIdRequests = List.of(new CartItemIdRequest(2L), new CartItemIdRequest(3L));
+
+        // when then
+        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getId()));
+        mockMvc.perform(MockMvcRequestBuilders.delete("/auth/customer/cartItems")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(cartItemIdRequests)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

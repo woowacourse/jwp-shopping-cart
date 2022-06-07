@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartItemIdRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemQuantityResponse;
 import woowacourse.shoppingcart.dto.CartItemResponse;
@@ -75,5 +76,8 @@ public class CartItemService {
     public CartItemQuantityResponse updateCartItem(final TokenRequest tokenRequest,
                                                    final CartItemQuantityRequest cartItemQuantityRequest) {
         return null;
+    }
+
+    public void delete(final TokenRequest tokenRequest, final List<CartItemIdRequest> cartItemIdRequests) {
     }
 }
