@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest
 @Transactional
-@Sql("/schema.sql")
+@Sql("/test_db.sql")
 class CartServiceTest {
     private final CustomerRequest customerRequest =
             new CustomerRequest("kth990303", "kth@@123", "케이", 23);
