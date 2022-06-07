@@ -12,8 +12,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.exception.shoppingcart.InvalidCustomerException;
+import woowacourse.shoppingcart.domain.Customer;
 
 @Repository
 public class CustomerDao {
@@ -79,8 +79,15 @@ public class CustomerDao {
             params.put("loginId", customer.getLoginId());
             params.put("name", customer.getName());
             params.put("password", customer.getPassword());
-            namedParameterJdbcTemplate.update(query, params);
+            int affectedRows = namedParameterJdbcTemplate.update(query, params);
+            checkAffectedRow(affectedRows);
         } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    private void checkAffectedRow(int rows) {
+        if (rows == 0) {
             throw new InvalidCustomerException();
         }
     }
