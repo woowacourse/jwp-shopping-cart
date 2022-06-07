@@ -26,7 +26,7 @@ class ProductServiceTest {
     @DisplayName("장바구니에 담으려는 상품의 id가 존재하지 않는다면 예외를 발생시킨다.")
     @Test
     void validateProductId() {
-        assertThatThrownBy(() -> productService.validateProductId(4L))
+        assertThatThrownBy(() -> productService.validateProductId(20L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 상품입니다.");
     }

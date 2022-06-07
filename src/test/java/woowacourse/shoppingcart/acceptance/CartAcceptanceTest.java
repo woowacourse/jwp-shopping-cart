@@ -40,7 +40,7 @@ class CartAcceptanceTest extends AcceptanceTest {
     private static final CartItemAddRequest VALID_CART_ITEM_ADD_REQUEST2 =
             new CartItemAddRequest(2L, 8);
     private static final CartItemAddRequest INVALID_PRODUCT_ID_CART_ITEM_ADD_REQUEST =
-            new CartItemAddRequest(4L, 5);
+            new CartItemAddRequest(20L, 5);
     private static final CartItemQuantityUpdateRequest VALID_CART_ITEM_QUANTITY_UPDATE_REQUEST =
             new CartItemQuantityUpdateRequest(1L, 8);
 

@@ -39,7 +39,7 @@ class CartServiceTest {
     @DisplayName("존재하지 않는 id의 상품을 장바구니에 담으려 하면 예외를 발생시킨다.")
     @Test
     void addCartItem_InvalidProductId() {
-        assertThatThrownBy(() -> cartService.addCart(1L, 4L, 10))
+        assertThatThrownBy(() -> cartService.addCart(1L, 20L, 10))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 상품입니다.");
     }

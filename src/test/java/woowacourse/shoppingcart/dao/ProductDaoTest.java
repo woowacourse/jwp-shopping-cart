@@ -30,16 +30,9 @@ class ProductDaoTest {
     @DisplayName("상품 목록 조회")
     @Test
     void findAll() {
-        Product firstExpected = new Product(1L, "캠핑 의자", 35000,
-                100, "https://thawing-fortress-83192.herokuapp.com/static/images/camping-chair.jpg");
-        Product secondExpected = new Product(2L, "그릴", 100000,
-                100, "https://thawing-fortress-83192.herokuapp.com/static/images/grill.jpg");
-        Product thirdExpected = new Product(3L, "아이스박스", 20000,
-                100, "https://thawing-fortress-83192.herokuapp.com/static/images/icebox.jpg");
-
         List<Product> products = productDao.findAll();
 
-        assertThat(products).isEqualTo(List.of(firstExpected, secondExpected, thirdExpected));
+        assertThat(products).hasSize(19);
     }
 
     @DisplayName("상품의 재고를 반환한다.")
@@ -52,7 +45,7 @@ class ProductDaoTest {
 
     @DisplayName("상품 id가 존재하는지 반환한다.")
     @ParameterizedTest
-    @CsvSource({"3, true", "4, false"})
+    @CsvSource({"3, true", "20, false"})
     void existsId(long id, boolean expected) {
         boolean actual = productDao.existsId(id);
 
