@@ -78,4 +78,11 @@ public class CartService {
         }
         throw new NotInCustomerCartItemException();
     }
+
+    public void updateQuantity(Long customerId, Long productId, int quantity) {
+        if (!cartItemDao.isExistItem(customerId, productId)) {
+            throw new InvalidProductException();
+        }
+        cartItemDao.updateQuantity(customerId, productId, quantity);
+    }
 }

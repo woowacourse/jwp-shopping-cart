@@ -63,6 +63,32 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
+    @DisplayName("장바구니 품목 수량 변경")
+    @Test
+    void updateCartItemQuantity() {
+        int 수량 = 3;
+        장바구니_아이템_추가_요청(productId1);
+
+        ExtractableResponse<Response> response = 장바구니_품복_수량_변경(productId1, 수량);
+
+        장바구니_아이템_수량_응답됨(response);
+    }
+
+    private void 장바구니_아이템_수량_응답됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    private ExtractableResponse<Response> 장바구니_품복_수량_변경(Long productId, int 수량) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(유효한_토큰)
+                .body(new UpdateProductQuantityRequest(수량))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().put("/cart/{productId}/quantity", productId)
+                .then().log().all()
+                .extract();
+    }
+
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
