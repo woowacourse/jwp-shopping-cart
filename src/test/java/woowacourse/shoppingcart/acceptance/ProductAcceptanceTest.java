@@ -5,15 +5,19 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.application.dto.response.ProductResponse;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.ProductFixture.findProductById;
 import static woowacourse.fixture.ProductFixture.findProductsInPage;
@@ -81,10 +85,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     void findInPage() {
         // given
-        Long productId1 = getProductId("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = getProductId("치킨2", 10_000, "http://example.com/chicken.jpg");
-        Long productId3 = getProductId("치킨3", 10_000, "http://example.com/chicken.jpg");
-        Long productId4 = getProductId("치킨4", 10_000, "http://example.com/chicken.jpg");
+        getProductId("치킨", 10_000, "http://example.com/chicken.jpg");
+        getProductId("치킨2", 10_000, "http://example.com/chicken.jpg");
+        getProductId("치킨3", 10_000, "http://example.com/chicken.jpg");
+        getProductId("치킨4", 10_000, "http://example.com/chicken.jpg");
 
         // when
         ExtractableResponse<Response> response = findProductsInPage(1L, 5L);
@@ -92,6 +96,38 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {-1L, 0L})
+    @DisplayName("상품 목록을 조회할 때 페이지가 0 이하이면 404 에러가 발생한다.")
+    void findProductsInPageInvalidPageException(Long pageNum) {
+        // when
+        ExtractableResponse<Response> response = findProductsInPage(pageNum, 5L);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
+                        "페이지는 1 이상이어야 합니다."
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {-1L, 0L})
+    @DisplayName("상품 목록을 조회할 때 상품을 조회할 개수가 0 이하이면 404 에러가 발생한다.")
+    void findProductsInPageInvalidLimitException(Long limitCount) {
+        // when
+        ExtractableResponse<Response> response = findProductsInPage(1L, limitCount);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
+                        "상품을 조회할 개수는 1 이상이어야 합니다."
+                )
         );
     }
 

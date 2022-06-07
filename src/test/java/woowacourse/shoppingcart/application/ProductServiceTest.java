@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.application;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
@@ -70,5 +72,25 @@ class ProductServiceTest {
                 () -> assertThat(productResponses).size().isEqualTo(4),
                 () -> assertThat(productNames).contains("초콜렛", "초콜렛2", "초콜렛3", "초콜렛4")
         );
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {-1L, 0L})
+    @DisplayName("상품 목록을 조회할 때 페이지가 0 이하이면 예외가 발생한다.")
+    void findProductsInPageInvalidPageException(Long pageNum) {
+        // when & then
+        assertThatThrownBy(() -> productService.findProductsInPage(pageNum, 5L))
+                .isInstanceOf(ProductDataNotFoundException.class)
+                .hasMessage("페이지는 1 이상이어야 합니다.");
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {-1L, 0L})
+    @DisplayName("상품 목록을 조회할 때 상품을 조회할 개수가 0 이하이면 예외가 발생한다.")
+    void findProductsInPageInvalidLimitException(Long limitCount) {
+        // when & then
+        assertThatThrownBy(() -> productService.findProductsInPage(1L, limitCount))
+                .isInstanceOf(ProductDataNotFoundException.class)
+                .hasMessage("상품을 조회할 개수는 1 이상이어야 합니다.");
     }
 }
