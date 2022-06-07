@@ -15,6 +15,8 @@ import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.FindCartItemResponse;
 import woowacourse.shoppingcart.dto.SignInRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemsRequest;
 
 public class CartAcceptanceTest extends AcceptanceTest {
 
@@ -155,5 +157,54 @@ public class CartAcceptanceTest extends AcceptanceTest {
         var signInResponse = createSignInResult(new SignInRequest("crew01@naver.com", "a12345"), HttpStatus.OK);
 
         return signInResponse.body().jsonPath().getString("token");
+    }
+
+    @Test
+    void 장바구니_상품_추가한뒤_장바구니_상품_수정() {
+        String accessToken = getAccessToken();
+
+        createCart(accessToken, 1L);
+
+        createCart(accessToken, 2L);
+
+        var response = updateCartItem(1L, 2L, accessToken, HttpStatus.OK);
+        var findCartItemResponses = getFindCartItemResponses(response);
+
+        var cartItemResponse1 = findCartItemResponses.get(0);
+        var cartItemResponse2 = findCartItemResponses.get(1);
+
+        assertAll(
+                () -> assertThat(cartItemResponse1.getId()).isEqualTo(1L),
+                () -> assertThat(cartItemResponse1.getName()).isEqualTo("water"),
+                () -> assertThat(cartItemResponse1.getPrice()).isEqualTo(1000),
+                () -> assertThat(cartItemResponse1.getImageUrl()).isEqualTo("image_url"),
+                () -> assertThat(cartItemResponse1.getQuantity()).isEqualTo(10),
+                () -> assertThat(cartItemResponse1.getChecked()).isFalse(),
+                () -> assertThat(cartItemResponse2.getId()).isEqualTo(2L),
+                () -> assertThat(cartItemResponse2.getName()).isEqualTo("cheese"),
+                () -> assertThat(cartItemResponse2.getPrice()).isEqualTo(2000),
+                () -> assertThat(cartItemResponse2.getImageUrl()).isEqualTo("image_url"),
+                () -> assertThat(cartItemResponse2.getQuantity()).isEqualTo(5),
+                () -> assertThat(cartItemResponse2.getChecked()).isTrue()
+        );
+    }
+
+    private ExtractableResponse<Response> updateCartItem(Long cartId1, Long cartId2, String accessToken,
+                                                         HttpStatus httpStatus) {
+        var updateCartItemRequests = List.of(
+                new UpdateCartItemRequest(cartId1, 10, false),
+                new UpdateCartItemRequest(cartId2, 5, true)
+        );
+
+        var updateCartItemsRequest = new UpdateCartItemsRequest(updateCartItemRequests);
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .body(updateCartItemsRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .patch("/cart")
+                .then().log().all()
+                .statusCode(httpStatus.value())
+                .extract();
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -85,5 +86,18 @@ public class CartItemDao {
         final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
 
         jdbcTemplate.update(sql, customerId);
+    }
+
+    public void update(long customerId, UpdateCartItemRequest updateCartItemRequest) {
+        final String sql = "UPDATE cart_item SET quantity = (:quantity), checked = (:checked) WHERE customer_id = (:customer_id) AND id = (:id)";
+
+        var paramSource = Map.of(
+                "id", updateCartItemRequest.getCartId(),
+                "customer_id", customerId,
+                "quantity", updateCartItemRequest.getQuantity(),
+                "checked", updateCartItemRequest.getChecked()
+        );
+
+        namedParameterJdbcTemplate.update(sql, paramSource);
     }
 }

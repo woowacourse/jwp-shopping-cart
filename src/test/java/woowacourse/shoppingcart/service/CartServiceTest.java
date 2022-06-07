@@ -13,6 +13,8 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemIdsRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemsRequest;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @SpringBootTest
@@ -67,5 +69,25 @@ public class CartServiceTest {
         var findAllCartItemResponse = cartService.getAllCartItem(1L);
         assertThat(findAllCartItemResponse.getProducts().size()).isEqualTo(0);
 
+    }
+
+    @Test
+    void 장바구니_상품_정보_수정() {
+        var updateCartItemRequest = new UpdateCartItemRequest(1L, 3, false);
+        var updateCartItemsRequest = new UpdateCartItemsRequest(List.of(updateCartItemRequest));
+
+        cartService.update(1L, updateCartItemsRequest);
+
+        var allCartItem = cartService.getAllCartItem(1L);
+        var cartItem = allCartItem.getProducts().get(0);
+
+        assertAll(
+                () -> assertThat(cartItem.getId()).isEqualTo(1L),
+                () -> assertThat(cartItem.getName()).isEqualTo("water"),
+                () -> assertThat(cartItem.getPrice()).isEqualTo(1000),
+                () -> assertThat(cartItem.getImageUrl()).isEqualTo("image_url"),
+                () -> assertThat(cartItem.getQuantity()).isEqualTo(3),
+                () -> assertThat(cartItem.getChecked()).isFalse()
+        );
     }
 }

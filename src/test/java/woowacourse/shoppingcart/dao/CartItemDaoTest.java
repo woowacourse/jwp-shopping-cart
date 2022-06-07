@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -53,5 +55,19 @@ public class CartItemDaoTest {
 
         var cart = cartDao.findByCustomerId(1L);
         assertThat(cart.size()).isEqualTo(0);
+    }
+
+    @Test
+    void 장바구니_상품_정보_수정() {
+        var updateCartItemRequest = new UpdateCartItemRequest(1L, 3, false);
+        cartDao.update(1L, updateCartItemRequest);
+
+        var cartItem = cartDao.findByCustomerId(1L).get(0);
+
+        assertAll(
+                () -> assertThat(cartItem.getCartItemId()).isEqualTo(1L),
+                () -> assertThat(cartItem.getQuantity()).isEqualTo(3),
+                () -> assertThat(cartItem.getChecked()).isFalse()
+        );
     }
 }

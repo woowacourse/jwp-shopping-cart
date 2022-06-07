@@ -83,9 +83,9 @@ public class CustomerDao {
 
     public AuthorizedCustomer findCustomerByEmail(String email) {
         try {
-            final String query = "SELECT * FROM customer WHERE email = :email";
+            final String sql = "SELECT * FROM customer WHERE email = :email";
             var namedParameters = new MapSqlParameterSource("email", email);
-            return jdbcTemplate.queryForObject(query, namedParameters, CUSTOMER_MAPPER);
+            return jdbcTemplate.queryForObject(sql, namedParameters, CUSTOMER_MAPPER);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException(NOT_EXIST_EMAIL);
         }

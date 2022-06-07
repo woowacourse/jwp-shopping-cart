@@ -15,6 +15,8 @@ import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemIdsRequest;
 import woowacourse.shoppingcart.dto.FindAllCartItemResponse;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemsRequest;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
@@ -80,5 +82,11 @@ public class CartService {
 
     public void deleteAll(Long customerId) {
         cartItemDao.deleteAllByCustomerId(customerId);
+    }
+
+    public void update(Long customerId, UpdateCartItemsRequest updateCartItemsRequest) {
+        for (UpdateCartItemRequest updateCartItemRequest : updateCartItemsRequest.getProducts()) {
+            cartItemDao.update(customerId, updateCartItemRequest);
+        }
     }
 }
