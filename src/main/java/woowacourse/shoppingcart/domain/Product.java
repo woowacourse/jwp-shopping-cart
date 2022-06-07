@@ -6,19 +6,21 @@ public class Product {
     private String name;
     private Integer price;
     private String imageUrl;
+    private Integer quantity;
 
     public Product() {
     }
 
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
+    public Product(final Long id, final String name, final int price, final String imageUrl, final int quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.quantity = quantity;
     }
 
-    public Product(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl);
+    public Product(final String name, final int price, final String imageUrl, final int quantity) {
+        this(null, name, price, imageUrl, quantity);
     }
 
     public String getName() {
@@ -35,5 +37,9 @@ public class Product {
 
     public Long getId() {
         return id;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }
