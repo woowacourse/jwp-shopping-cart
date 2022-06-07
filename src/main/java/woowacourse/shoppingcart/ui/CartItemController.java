@@ -38,7 +38,7 @@ public class CartItemController {
         return ResponseEntity.ok().body(cartService.findCarts(memberId));
     }
 
-    @PostMapping("/{cartId}")
+    @PutMapping("/{cartId}")
     public ResponseEntity<Void> updateQuantity(@AuthenticationPrincipal Long memberId,
                                                  @PathVariable Long cartId,
                                                  @RequestBody UpdateQuantityRequest request) {
