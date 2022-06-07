@@ -17,7 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.response.CartItemResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -43,7 +44,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         String accessToken = 로그인_및_토큰_발급(USER_NAME, PASSWORD);
 
         // when
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1, 3);
 
         // then
         장바구니_아이템_추가됨(response);
@@ -55,8 +56,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = 로그인_및_토큰_발급(USER_NAME, PASSWORD);
 
-        장바구니_아이템_추가되어_있음(accessToken, productId1);
-        장바구니_아이템_추가되어_있음(accessToken, productId2);
+        장바구니_아이템_추가되어_있음(accessToken, productId1, 10);
+        장바구니_아이템_추가되어_있음(accessToken, productId2, 2);
 
         // when
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(accessToken);
@@ -72,7 +73,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = 로그인_및_토큰_발급(USER_NAME, PASSWORD);
 
-        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1, 5);
 
         // when
         ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, cartId);
@@ -92,9 +93,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .as(TokenResponse.class).getAccessToken();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId, int quantity) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);
+        requestBody.put("quantity", quantity);
 
         return RestAssured
                 .given().log().all()
@@ -131,8 +133,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String accessToken, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId);
+    public static Long 장바구니_아이템_추가되어_있음(String accessToken, Long productId, int quantity) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId, quantity);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 
@@ -141,8 +143,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
+        List<Long> resultProductIds = response.jsonPath().getList(".", CartItem.class).stream()
+                .map(CartItem::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }
