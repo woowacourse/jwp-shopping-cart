@@ -48,7 +48,7 @@ public class ProductDao {
                     ), productId
             );
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            throw new InvalidProductException("상품을 찾을 수 없습니다.");
         }
     }
 
@@ -70,7 +70,7 @@ public class ProductDao {
 
         final int rowCount = jdbcTemplate.update(query, product.getStock(), product.getId());
         if (rowCount == 0) {
-            throw new InvalidProductException();
+            throw new InvalidProductException("상품 수량 수정에 실패했습니다.");
         }
     }
 

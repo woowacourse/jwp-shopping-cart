@@ -47,7 +47,7 @@ public class CartItemService {
             Long savedId = cartItemDao.addCartItem(customerId, request.getProductId(), request.getQuantity());
             return CartItemResponse.from(cartItemDao.findById(savedId));
         } catch (Exception e) {
-            throw new InvalidProductException();
+            throw new InvalidProductException("올바르지 않은 사용자 이름이거나 상품 아이디 입니다.");
         }
     }
 
