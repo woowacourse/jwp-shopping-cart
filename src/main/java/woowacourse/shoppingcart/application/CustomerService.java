@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.request.PasswordRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Encryption.EncryptionStrategy;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -67,8 +68,10 @@ public class CustomerService {
     }
 
     @Transactional
-    public void withdraw(final CustomerIdentificationRequest customerIdentificationRequest) {
+    public void withdraw(final CustomerIdentificationRequest customerIdentificationRequest, final PasswordRequest passwordRequest) {
         Customer customer = findCustomerById(customerIdentificationRequest.getId());
+        customer.validateMatchingLoginPassword(encrypt(passwordRequest.getPassword()));
+
         customerDao.delete(customer.getId());
     }
 

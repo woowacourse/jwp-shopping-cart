@@ -18,15 +18,6 @@ public class AuthFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> withdraw(final String token) {
-        return RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + token)
-                .when().delete("/auth/customers/profile")
-                .then().log().all()
-                .extract();
-    }
-
     public static ExtractableResponse<Response> update(final String token, final String nickname, final String password) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("nickname", nickname);
@@ -53,6 +44,20 @@ public class AuthFixture {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestBody)
                 .when().patch("/auth/customers/profile/password")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> withdraw(final String token, final String password) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("password", password);
+
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().delete("/auth/customers/profile")
                 .then().log().all()
                 .extract();
     }

@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdateRequest;
+import woowacourse.shoppingcart.application.dto.request.PasswordRequest;
 import woowacourse.shoppingcart.application.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.request.SignUpRequest;
 
@@ -37,12 +38,6 @@ public class CustomerController {
         return ResponseEntity.ok().body(customerResponse);
     }
 
-    @DeleteMapping("/auth/customers/profile")
-    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest) {
-        customerService.withdraw(customerIdentificationRequest);
-        return ResponseEntity.noContent().build();
-    }
-
     @PatchMapping("/auth/customers/profile")
     public ResponseEntity<Void> update(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest,
                                        @RequestBody CustomerUpdateRequest customerUpdateRequest) {
@@ -55,5 +50,12 @@ public class CustomerController {
                                                @RequestBody CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         customerService.updatePassword(customerIdentificationRequest, customerUpdatePasswordRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/auth/customers/profile")
+    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest,
+                                         @RequestBody PasswordRequest passwordRequest) {
+        customerService.withdraw(customerIdentificationRequest, passwordRequest);
+        return ResponseEntity.noContent().build();
     }
 }

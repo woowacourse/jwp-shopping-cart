@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.request.PasswordRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerUpdateRequest;
@@ -243,7 +244,7 @@ class CustomerServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
-        customerService.withdraw(customerIdentificationRequest);
+        customerService.withdraw(customerIdentificationRequest, new PasswordRequest("1234asdf!"));
 
         // when & then
         assertThatThrownBy(() -> customerService.findByCustomerId(customerIdentificationRequest))
@@ -290,7 +291,7 @@ class CustomerServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
-        customerService.withdraw(customerIdentificationRequest);
+        customerService.withdraw(customerIdentificationRequest, new PasswordRequest("1234asdf!"));
 
         // when & then
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest("test2", "1234asdf!");
@@ -362,7 +363,7 @@ class CustomerServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
-        customerService.withdraw(customerIdentificationRequest);
+        customerService.withdraw(customerIdentificationRequest, new PasswordRequest("1234asdf!"));
         CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234asdf!", "47374*ffff");
 
         // when & then
@@ -409,7 +410,7 @@ class CustomerServiceTest {
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
 
         // when
-        customerService.withdraw(customerIdentificationRequest);
+        customerService.withdraw(customerIdentificationRequest, new PasswordRequest("1234asdf!"));
 
         // then
         assertThatThrownBy(() -> customerService.findByCustomerId(customerIdentificationRequest))
@@ -424,7 +425,7 @@ class CustomerServiceTest {
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest("9999999");
 
         // when & then
-        assertThatThrownBy(() -> customerService.withdraw(customerIdentificationRequest))
+        assertThatThrownBy(() -> customerService.withdraw(customerIdentificationRequest, new PasswordRequest("1234asdf!")))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -437,11 +438,25 @@ class CustomerServiceTest {
         Long customerId = customerService.signUp(signUpRequest);
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
 
-        customerService.withdraw(customerIdentificationRequest);
+        customerService.withdraw(customerIdentificationRequest, new PasswordRequest("1234asdf!"));
 
         // when & then
-        assertThatThrownBy(() -> customerService.withdraw(customerIdentificationRequest))
+        assertThatThrownBy(() -> customerService.withdraw(customerIdentificationRequest, new PasswordRequest("1234asdf!")))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("틀린 비밀번호로 탈퇴하면 예외가 발생한다.")
+    @Test
+    void withdrawInvalidPasswordException() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+
+        // when & then
+        assertThatThrownBy(() -> customerService.withdraw(customerIdentificationRequest, new PasswordRequest("invalidPassword")))
+                .isInstanceOf(LoginDataNotMatchException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
     }
 }

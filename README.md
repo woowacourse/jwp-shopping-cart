@@ -39,6 +39,7 @@
 - [x] 탈퇴한다.
   - [x] [예외처리] 회원가입한 사용자 정보를 수정해야 한다.
   - [x] [예외처리] 탈퇴한 사용자 정보를 수정하면 안된다.
+  - [x] [예외처리] 탈퇴 시 올바른 본인 계정의 비밀번호를 입력해야한다.
 
 ## ✏️ Code Review Process
 [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)

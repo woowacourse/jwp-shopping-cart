@@ -159,7 +159,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
-        withdraw(token);
+        withdraw(token, "1234asdf!");
 
         // when
         ExtractableResponse<Response> secondResponse = findById(token);
@@ -194,7 +194,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
-        withdraw(token);
+        withdraw(token, "1234asdf!");
 
         // when
         ExtractableResponse<Response> secondResponse = update(token, "유콩", "1234asdf!");
@@ -303,7 +303,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
         // when
-        ExtractableResponse<Response> secondResponse = withdraw(token);
+        ExtractableResponse<Response> secondResponse = withdraw(token, "1234asdf!");
 
         // then
         assertAll(
@@ -317,16 +317,34 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
-        withdraw(token);
+        withdraw(token, "1234asdf!");
 
         // when
-        ExtractableResponse<Response> secondResponse = withdraw(token);
+        ExtractableResponse<Response> secondResponse = withdraw(token, "1234asdf!");
 
         // then
         assertAll(
                 () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
                 () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
                         "존재하지 않는 회원입니다.")
+        );
+    }
+
+    @DisplayName("틀린 비밀번호로 탈퇴할 경우 402 에러가 발생한다.")
+    @Test
+    void deleteMeInvalidPassword() {
+        // given
+        ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
+        String token = firstResponse.body().jsonPath().getString("accessToken");
+
+        // when
+        ExtractableResponse<Response> secondResponse = withdraw(token, "invalidPassword");
+
+        // then
+        assertAll(
+                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
+                        "비밀번호가 일치하지 않습니다.")
         );
     }
 }
