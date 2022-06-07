@@ -70,6 +70,7 @@ public class CartItemDaoTest {
                 .productName("banana")
                 .price(1_000)
                 .stock(100)
+                .imageUrl("woowa1.com")
                 .build();
         CartItem cartItem = new CartItem(product, 1);
         final Long cartItemId = cartItemDao.save(customerId, cartItem);
@@ -81,6 +82,31 @@ public class CartItemDaoTest {
         assertThat(result).usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(cartItem);
+    }
+
+    @DisplayName("회원 id로 모든 카트 아이템을 가져온다.")
+    @Test
+    void findAllByCustomerId() {
+        final Long customerId = 2L;
+        Product product1 = new Product(null, new ProductName("coffee"), new Price(2_000), new Stock(10), "coffee.png");
+        Product product2 = new Product(null, new ProductName("tea"), new Price(3_000), new Stock(10), "tea.png");
+
+        Long productId1 = productDao.save(product1);
+        Long productId2 = productDao.save(product2);
+
+        CartItem cartItem1 = new CartItem(
+                new Product(productId1, new ProductName("coffee"), new Price(2_000), new Stock(10), "coffee.png"), 1);
+        CartItem cartItem2 = new CartItem(
+                new Product(productId2, new ProductName("tea"), new Price(3_000), new Stock(10), "tea.png"), 1);
+
+        cartItemDao.save(customerId, cartItem1);
+        cartItemDao.save(customerId, cartItem2);
+
+        List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customerId);
+
+        assertThat(cartItems).usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(List.of(cartItem1, cartItem2));
     }
 
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머 카트 상품의 아이디 목록을 가져온다.")
@@ -108,7 +134,7 @@ public class CartItemDaoTest {
         // then
         assertThat(cartIds).containsExactly(1L, 2L);
     }
-    
+
     @DisplayName("수량을 변경한다.")
     @Test
     void updateQuantity() {
