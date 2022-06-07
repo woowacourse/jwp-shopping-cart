@@ -26,12 +26,6 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    }
-
     public Long findProductIdById(final Long cartId) {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
@@ -39,6 +33,11 @@ public class CartItemDao {
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public int findQuantity(Long productId, Long customerId) {
+        final String query = "SELECT quantity FROM cart_item WHERE product_id = ? and customer_id = ?";
+        return jdbcTemplate.queryForObject(query, Integer.class, productId, customerId);
     }
 
     public Long addCartItem(final CartItem cartItem, final Long customerId) {
@@ -55,10 +54,10 @@ public class CartItemDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteCartItemByCustomer(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
+    public void deleteCartItemByCustomer(final Long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
 
-        final int rowCount = jdbcTemplate.update(sql, id);
+        final int rowCount = jdbcTemplate.update(sql, customerId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }

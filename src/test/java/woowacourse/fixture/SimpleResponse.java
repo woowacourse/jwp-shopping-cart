@@ -33,7 +33,7 @@ public class SimpleResponse {
     }
 
     public void assertStatus(HttpStatus status) {
-        response.then()
+        response.then().log().all()
                 .statusCode(status.value());
     }
 

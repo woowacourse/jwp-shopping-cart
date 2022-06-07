@@ -52,7 +52,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.getIdByUserName(userName);
+        final Long customerId = customerDao.getIdByUsername(userName);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -66,7 +66,7 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.getIdByUserName(userName);
+        final Long customerId = customerDao.getIdByUsername(userName);
 
         // then
         assertThat(customerId).isEqualTo(16L);

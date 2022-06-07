@@ -61,10 +61,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteCartItem() {
         장바구니_아이템_추가되어_있음(productId1);
+        장바구니_아이템_추가되어_있음(productId2);
 
         SimpleResponse response = 장바구니_상품_삭제_요청(productId1);
-
         장바구니_삭제됨(response);
+
+        SimpleResponse itemsResponse = 장바구니_아이템_목록_조회_요청();
+        장바구니_아이템_목록_포함안됨(itemsResponse, productId1);
     }
 
     @DisplayName("장바구니 비우기")
@@ -75,6 +78,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
         SimpleResponse response = 장바구니_비우기_요청();
 
         장바구니_삭제됨(response);
+
+        SimpleResponse itemsResponse = 장바구니_아이템_목록_조회_요청();
+        CartItemsResponse cartItemsResponse = itemsResponse.toObject(CartItemsResponse.class);
+        assertThat(cartItemsResponse.getCartItems()).hasSize(0);
     }
 
     public static SimpleResponse 장바구니_아이템_추가_요청(Long productId) {
@@ -113,6 +120,15 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .map(ProductResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
+    }
+
+    private static void 장바구니_아이템_목록_포함안됨(SimpleResponse response, Long... productIds) {
+        List<Long> resultProductIds = response.toObject(CartItemsResponse.class)
+                .getCartItems().stream()
+                .map(CartItemResponse::getProduct)
+                .map(ProductResponse::getId)
+                .collect(Collectors.toList());
+        assertThat(resultProductIds).doesNotContain(productIds);
     }
 
     public static void 장바구니_삭제됨(SimpleResponse response) {

@@ -72,18 +72,18 @@ public class CartItemDaoTest {
         assertThat(productsIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("상품 id와 회원 id로 장바구니에 담은 수량을 찾는다.")
     @Test
-    void findIdsByCustomerId() {
-
+    void findQuantity() {
         // given
         final Long customerId = 1L;
+        final Long productId = 1L;
 
         // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        int quantity = cartItemDao.findQuantity(productId, customerId);
 
         // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        assertThat(quantity).isEqualTo(1);
     }
 
     @DisplayName("상품 id와 회원 id로 장바구니의 상품을 삭제한다.")
@@ -100,5 +100,20 @@ public class CartItemDaoTest {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);
+    }
+
+    @DisplayName("회원 id로 장바구니를 비운다.")
+    @Test
+    void deleteCartItemByCustomer() {
+        // given
+        final Long customerId = 1L;
+
+        // when
+        cartItemDao.deleteCartItemByCustomer(customerId);
+
+        // then
+        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+
+        assertThat(productIds).hasSize(0);
     }
 }
