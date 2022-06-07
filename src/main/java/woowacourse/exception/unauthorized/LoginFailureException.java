@@ -1,6 +1,8 @@
-package woowacourse.exception;
+package woowacourse.exception.unauthorized;
 
-public class LoginFailureException extends IllegalArgumentException {
+import woowacourse.exception.UnauthorizedException;
+
+public class LoginFailureException extends UnauthorizedException {
     private static final String DEFAULT_MESSAGE = "로그인에 실패했습니다";
 
     public LoginFailureException() {

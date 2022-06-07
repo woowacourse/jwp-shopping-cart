@@ -13,7 +13,7 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import woowacourse.auth.domain.TokenProvider;
-import woowacourse.exception.TokenInvalidException;
+import woowacourse.exception.unauthorized.TokenInvalidException;
 
 @Component
 public class JwtTokenProvider implements TokenProvider {

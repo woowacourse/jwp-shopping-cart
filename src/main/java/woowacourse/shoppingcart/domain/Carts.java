@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import woowacourse.exception.CartNotFoundException;
+import woowacourse.exception.notfound.CartNotFoundException;
 
 public class Carts {
     private final long memberId;

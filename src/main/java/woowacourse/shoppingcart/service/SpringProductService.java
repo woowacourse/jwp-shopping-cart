@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.exception.ProductNotFoundException;
+import woowacourse.exception.notfound.ProductNotFoundException;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.infra.ProductRepository;
 import woowacourse.shoppingcart.service.dto.ProductCreateServiceRequest;

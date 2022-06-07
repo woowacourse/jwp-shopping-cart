@@ -1,6 +1,8 @@
-package woowacourse.exception;
+package woowacourse.exception.notfound;
 
-public class CartNotFoundException extends IllegalArgumentException {
+import woowacourse.exception.NotFoundException;
+
+public class CartNotFoundException extends NotFoundException {
     private static final String DEFAULT_MESSAGE = "장바구니에 없는 상품입니다";
 
     public CartNotFoundException() {

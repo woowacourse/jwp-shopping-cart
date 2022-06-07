@@ -1,6 +1,8 @@
-package woowacourse.exception;
+package woowacourse.exception.unauthorized;
 
-public class PasswordIncorrectException extends IllegalArgumentException {
+import woowacourse.exception.UnauthorizedException;
+
+public class PasswordIncorrectException extends UnauthorizedException {
     private static final String DEFAULT_MESSAGE = "비밀번호가 일치하지 않습니다.";
 
     public PasswordIncorrectException() {
