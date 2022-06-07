@@ -46,4 +46,8 @@ public class ProductRepository {
                 productEntity.getPrice(),
                 productEntity.getImageUrl());
     }
+
+    public void delete(Long productId) {
+        productDao.delete(productId);
+    }
 }

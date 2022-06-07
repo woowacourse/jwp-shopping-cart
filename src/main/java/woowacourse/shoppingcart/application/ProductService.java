@@ -13,12 +13,9 @@ import woowacourse.shoppingcart.repository.ProductRepository;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ProductService {
-    private final ProductDao productDao;
     private final ProductRepository productRepository;
 
-    public ProductService(final ProductDao productDao,
-            ProductRepository productRepository) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -32,7 +29,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public Long addProduct(final ProductRequest productRequest) {
+    public Long addProduct(ProductRequest productRequest) {
         Product product = new Product(
                 productRequest.getName(),
                 productRequest.getPrice(),
@@ -40,7 +37,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public ProductResponse findProductById(final Long productId) {
+    public ProductResponse findProductById(Long productId) {
         Product product = productRepository.findById(productId);
         return new ProductResponse(
                 product.getId(),
@@ -49,7 +46,7 @@ public class ProductService {
                 product.getImageUrl());
     }
 
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+    public void deleteProductById(Long productId) {
+        productRepository.delete(productId);
     }
 }
