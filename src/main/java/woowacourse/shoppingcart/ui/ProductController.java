@@ -33,8 +33,8 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public void product(@PathVariable final Long productId) {
-        productService.findProductById(productId);
+    public Product product(@PathVariable final Long productId) {
+        return productService.findProductById(productId);
     }
 
     @DeleteMapping("/{productId}")
