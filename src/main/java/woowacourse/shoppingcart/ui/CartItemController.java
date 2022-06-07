@@ -3,17 +3,12 @@ package woowacourse.shoppingcart.ui;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.CartProducts;
 import woowacourse.shoppingcart.dto.CartProductRequest;
+import woowacourse.shoppingcart.dto.DeleteProductRequest;
 
 @RestController
 @RequestMapping("/cart")
@@ -41,10 +36,9 @@ public class CartItemController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                               @PathVariable final Long cartId) {
-        cartService.deleteCart(customerName, cartId);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String userNameByToken, @RequestBody DeleteProductRequest deleteProductRequest) {
+        cartService.deleteCart(deleteProductRequest);
         return ResponseEntity.noContent().build();
     }
 }

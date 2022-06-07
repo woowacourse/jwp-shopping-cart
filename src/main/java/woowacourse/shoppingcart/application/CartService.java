@@ -8,10 +8,12 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Id;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.CartProducts;
 import woowacourse.shoppingcart.dto.CartProductRequest;
 import woowacourse.shoppingcart.dto.CartProductResponse;
+import woowacourse.shoppingcart.dto.DeleteProductRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -56,17 +58,10 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
-    }
-
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
+    public void deleteCart(DeleteProductRequest deleteProductRequest) {
+        for (Id id : deleteProductRequest.getProducts()) {
+            cartItemDao.deleteCartItem(id.getId());
         }
-        throw new NotInCustomerCartItemException();
     }
 
     public void deleteAll() {

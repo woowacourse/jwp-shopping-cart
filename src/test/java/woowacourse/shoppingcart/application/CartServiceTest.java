@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Id;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartProductRequest;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.SignUpResponse;
+import woowacourse.shoppingcart.dto.*;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -62,7 +62,7 @@ class CartServiceTest {
 
     @Test
     @DisplayName("장바구니 전체 삭제")
-    void deleteCarts() {
+    void deleteAllCarts() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
         customerService.addCustomer(signUpRequest);
@@ -77,6 +77,29 @@ class CartServiceTest {
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
         //when
         cartService.deleteAll();
+
+        //then
+        assertThat(cartService.getCart("greenlawn").getProducts().size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("장바구니 복수 삭제")
+    void deleteCarts() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
+        customerService.addCustomer(signUpRequest);
+
+        ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
+        ProductRequest productRequest2 = new ProductRequest("치킨", 20000, "http://example.com/chicken.jpg");
+
+        Product product1 = productService.addProduct(productRequest);
+        Product product2 = productService.addProduct(productRequest2);
+
+        cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "greenlawn");
+        cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
+
+        //when
+        cartService.deleteCart(new DeleteProductRequest(List.of(new Id(1L), new Id(2L))));
 
         //then
         assertThat(cartService.getCart("greenlawn").getProducts().size()).isEqualTo(0);

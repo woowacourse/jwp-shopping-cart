@@ -79,35 +79,4 @@ public class CartItemDaoTest {
                 .hasMessageContaining("유효하지 않은 장바구니입니다.");
 
     }
-
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    @Test
-    void findIdsByCustomerId() {
-
-        // given
-        final Long customerId = 1L;
-
-        // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-
-        // then
-        assertThat(cartIds).containsExactly(1L, 2L);
-    }
-
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    @Test
-    void deleteCartItem() {
-
-        // given
-        final Long cartId = 1L;
-
-        // when
-        cartItemDao.deleteCartItem(cartId);
-
-        // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        assertThat(productIds).containsExactly(2L);
-    }
 }
