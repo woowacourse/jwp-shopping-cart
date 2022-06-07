@@ -30,7 +30,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_추가됨(response);
     }
 
-    @DisplayName("상품 목록을 조회한다")
+    @DisplayName("상품 목록 조회 성공시 200 및 상품 목록 반환")
     @Test
     void getProducts() {
         Long productId1 = 상품_등록되어_있음(NAME, PRICE, IMAGE_URL);
@@ -42,6 +42,15 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_목록_포함됨(productId1, productId2, response);
     }
 
+    @DisplayName("빈 상품 목록 조회시 200 및 빈 리스트 반환")
+    @Test
+    void getEmptyProducts() {
+        ExtractableResponse<Response> response = 상품_목록_조회_요청();
+
+        조회_응답됨(response);
+        assertThat(response.jsonPath().getList(".", ProductResponse.class).size()).isZero();
+    }
+
     @DisplayName("없는 상품을 조회할 시 404 반환")
     @Test
     void getNotExistedProduct() {
@@ -50,7 +59,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
-    @DisplayName("상품을 조회한다")
+    @DisplayName("상품 조회 성공시 200 및 상품 정보 반환")
     @Test
     void getProduct() {
         Long productId = 상품_등록되어_있음(NAME, PRICE, IMAGE_URL);
@@ -78,7 +87,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
-                .when().post("/api/products")
+                .when().post("/products")
                 .then().log().all()
                 .extract();
     }
@@ -87,7 +96,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
+                .when().get("/products")
                 .then().log().all()
                 .extract();
     }
@@ -105,7 +114,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
+                .when().delete("/products/{productId}", productId)
                 .then().log().all()
                 .extract();
     }
@@ -125,8 +134,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
-                .map(Product::getId)
+        List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
+                .map(ProductResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
     }
