@@ -35,17 +35,18 @@ public class ProductDaoTest {
         Product product = new Product("이름", 1000, "이미지주소");
 
         // when
-        final long productId = productDao.save(product);
+        productDao.save(product);
 
         // then
-        assertThat(productId).isEqualTo(4L);
+        List<Product> products = productDao.findProducts();
+        assertThat(products.get(products.size() - 1).getName()).isEqualTo("이름");
     }
 
     @DisplayName("id로 상품을 찾아 반환한다.")
     @Test
     void findById() {
         Product product = productDao.findById(1L);
-        assertThat(product.getName()).isEqualTo("아이스아메리카노");
+        assertThat(product.getName()).isEqualTo("캐스터네츠 커스텀캣타워H_가드형");
     }
 
     @DisplayName("존재하지 않는 id인 경우 예외가 발생한다.")

@@ -34,9 +34,9 @@ public class ProductDao {
                     resultSet.getString("image_url")
             );
 
-    public long save(final Product product) {
+    public void save(final Product product) {
         SqlParameterSource namedParameterSource = new BeanPropertySqlParameterSource(product);
-        return simpleJdbcInsert.executeAndReturnKey(namedParameterSource).longValue();
+        simpleJdbcInsert.execute(namedParameterSource);
     }
 
     public Product findById(final long productId) {

@@ -21,8 +21,8 @@ public class ProductService {
         return productDao.findProducts();
     }
 
-    public long addProduct(final AddProductRequest request) {
-        return productDao.save(new Product(request.getName(), request.getPrice(), request.getImageUrl()));
+    public void addProduct(final AddProductRequest request) {
+        productDao.save(new Product(request.getName(), request.getPrice(), request.getImageUrl()));
     }
 
     public Product findProductById(final long productId) {
