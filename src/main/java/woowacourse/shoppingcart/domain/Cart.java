@@ -4,6 +4,7 @@ public class Cart {
 
     private Long id;
     private Long productId;
+    private Integer quantity;
     private String name;
     private int price;
     private String imageUrl;
@@ -23,12 +24,24 @@ public class Cart {
         this.imageUrl = imageUrl;
     }
 
+    public Cart(Long id, Integer quantity, String name, int price, String imageUrl) {
+        this.id = id;
+        this.quantity = quantity;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public Long getId() {
         return id;
     }
 
     public Long getProductId() {
         return productId;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 
     public String getName() {
