@@ -12,7 +12,6 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -51,13 +50,9 @@ public class CartService {
         validateProductExist(productId);
         validateProductAlreadyExistInCart(productId, customerId);
 
-        try {
-            Long cartItemId = cartItemDao.save(customerId, quantity, productId);
-            CartItem cartItem = cartItemDao.getById(cartItemId);
-            return new CartItemResponse(cartItem);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+        Long cartItemId = cartItemDao.save(customerId, quantity, productId);
+        CartItem cartItem = cartItemDao.getById(cartItemId);
+        return new CartItemResponse(cartItem);
     }
 
     private void validateProductExist(Long productId) {

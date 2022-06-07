@@ -41,10 +41,9 @@ public class CartItemDao {
 
     public CartItem getById(final Long cartId) {
         final String sql =
-                "SELECT c.id AS id, c.quantity, p.id AS productId, p.name, p.price, p.stock_quantity, p.url, p.alt "
-                        + "FROM cart_item AS c, product AS p "
-                        + "WHERE c.id = ? AND c.product_id = p.id";
-
+                "SELECT c.id, c.quantity, p.id AS productId, p.name, p.price, p.stock_quantity, t.url, t.alt "
+                        + "FROM cart_item AS c, product AS p, thumbnail_image as t "
+                        + "WHERE c.id = ? AND (c.product_id = p.id AND t.product_id = p.id)";
         try {
             return jdbcTemplate.queryForObject(sql, CART_ROW_MAPPER, cartId);
         } catch (EmptyResultDataAccessException e) {
@@ -54,9 +53,9 @@ public class CartItemDao {
 
     public List<CartItem> getAllByCustomerId(final Long customerId) {
         final String sql =
-                "SELECT c.id AS id, c.quantity, p.id AS productId, p.name, p.price, p.stock_quantity, p.url, p.alt "
-                        + "FROM cart_item AS c, product AS p "
-                        + "WHERE c.customer_id = ? AND c.product_id = p.id";
+                "SELECT c.id, c.quantity, p.id AS productId, p.name, p.price, p.stock_quantity, t.url, t.alt "
+                        + "FROM cart_item AS c, product AS p, thumbnail_image as t "
+                        + "WHERE c.customer_id = ? AND (c.product_id = p.id AND t.product_id = p.id)";
 
         return jdbcTemplate.query(sql, CART_ROW_MAPPER, customerId);
     }

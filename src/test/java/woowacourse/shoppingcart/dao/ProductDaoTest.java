@@ -11,8 +11,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -21,9 +21,11 @@ import woowacourse.shoppingcart.domain.Product;
 public class ProductDaoTest {
 
     private final ProductDao productDao;
+    private final ThumbnailImageDao thumbnailImageDao;
 
     public ProductDaoTest(JdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
+        this.thumbnailImageDao = new ThumbnailImageDao(jdbcTemplate);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")
@@ -52,6 +54,7 @@ public class ProductDaoTest {
         final ThumbnailImage thumbnailImage = new ThumbnailImage("url", "alt");
 
         final Long productId = productDao.save(new Product(name, price, stockQuantity, thumbnailImage));
+        thumbnailImageDao.save(thumbnailImage, productId);
         final Product expectedProduct = new Product(productId, name, price, stockQuantity, thumbnailImage);
 
         // when
@@ -75,7 +78,7 @@ public class ProductDaoTest {
         assertThat(products).size().isEqualTo(size);
     }
 
-    @DisplayName("싱품 삭제")
+    @DisplayName("상품 삭제")
     @Test
     void deleteProduct() {
         // given
@@ -85,6 +88,7 @@ public class ProductDaoTest {
         final ThumbnailImage thumbnailImage = new ThumbnailImage("url", "alt");
 
         final Long productId = productDao.save(new Product(name, price, stockQuantity, thumbnailImage));
+        thumbnailImageDao.save(thumbnailImage, productId);
         final int beforeSize = productDao.getAll().size();
 
         // when

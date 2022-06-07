@@ -4,6 +4,8 @@ drop table if exists orders;
 
 drop table if exists cart_item;
 
+drop table if exists thumbnail_image;
+
 drop table if exists product;
 
 drop table if exists customer;
@@ -27,11 +29,24 @@ create table product
     name           varchar(255) not null,
     price          integer      not null,
     stock_quantity integer      not null,
-    url            varchar(255),
-    alt            varchar(255),
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
+
+create table thumbnail_image
+(
+    id         bigint not null auto_increment,
+    product_id bigint not null,
+    url        varchar(255),
+    alt        varchar(255),
+    primary key (id)
+) engine = InnoDB
+  default charset = utf8mb4;
+
+alter table thumbnail_image
+    add constraint fk_thumbnail_image_to_product
+        foreign key (product_id) references product (id)
+        ON DELETE CASCADE ;
 
 create table cart_item
 (

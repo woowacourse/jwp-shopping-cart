@@ -12,11 +12,10 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.common.exception.NotFoundException;
 import woowacourse.common.exception.OrderException;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.dto.ProductRequest;
 
 @SpringBootTest
 @Sql("classpath:truncate.sql")
@@ -25,9 +24,8 @@ class OrderServiceTest {
     @Autowired
     private CustomerDao customerDao;
 
-
     @Autowired
-    private ProductDao productDao;
+    private ProductService productService;
 
     @Autowired
     private OrderService orderService;
@@ -54,8 +52,8 @@ class OrderServiceTest {
     void addOrderFailByQuantity() {
         //given
         ThumbnailImage image = new ThumbnailImage("url", "alt");
-        Product product = new Product("name", 1000, 10, image);
-        productDao.save(product);
+        ProductRequest productRequest = new ProductRequest("name", 1000, 10, image);
+        productService.addProduct(productRequest);
 
         cartService.addCart(1L, 11, "test@email.com");
 

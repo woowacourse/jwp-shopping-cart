@@ -42,15 +42,15 @@ public class ProductDao {
         params.put("name", product.getName());
         params.put("price", product.getPrice());
         params.put("stock_quantity", product.getStockQuantity());
-        params.put("url", product.getThumbnailImage().getUrl());
-        params.put("alt", product.getThumbnailImage().getAlt());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public Product getById(final Long id) {
         try {
-            final String query = "SELECT id, name, price, stock_quantity, url, alt FROM product WHERE id = ?";
+            final String query = "SELECT p.id, p.name, p.price, p.stock_quantity, t.url, t.alt "
+                    + "FROM product as p, thumbnail_image as t "
+                    + "WHERE p.id = ? AND p.id = t.product_id";
             return jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, id);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("존재하지 않는 상품입니다.", ErrorResponse.NOT_EXIST_PRODUCT);
@@ -58,7 +58,10 @@ public class ProductDao {
     }
 
     public List<Product> getAll() {
-        final String query = "SELECT id, name, price, stock_quantity, url, alt FROM product";
+        final String query = "SELECT p.id, p.name, p.price, p.stock_quantity, t.url, t.alt "
+                + "FROM product as p, thumbnail_image as t "
+                + "WHERE p.id = t.product_id";
+
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
     }
 

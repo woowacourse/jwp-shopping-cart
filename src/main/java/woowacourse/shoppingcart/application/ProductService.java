@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dao.ThumbnailImageDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
@@ -13,9 +14,11 @@ import woowacourse.shoppingcart.dto.ProductResponse;
 @Transactional(rollbackFor = Exception.class)
 public class ProductService {
     private final ProductDao productDao;
+    private final ThumbnailImageDao thumbnailImageDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(ProductDao productDao, ThumbnailImageDao thumbnailImageDao) {
         this.productDao = productDao;
+        this.thumbnailImageDao = thumbnailImageDao;
     }
 
     public List<ProductResponse> findProducts() {
@@ -31,6 +34,7 @@ public class ProductService {
                 productRequest.getStockQuantity(), productRequest.getThumbnailImage());
 
         Long productId = productDao.save(product);
+        thumbnailImageDao.save(productRequest.getThumbnailImage(), productId);
 
         return new Product(productId, productRequest.getName(), productRequest.getPrice(),
                 product.getStockQuantity(), product.getThumbnailImage());
