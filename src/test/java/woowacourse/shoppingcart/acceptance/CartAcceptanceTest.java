@@ -1,22 +1,24 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Cart;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -47,10 +49,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_추가되어_있음(USER, productId1);
         장바구니_아이템_추가되어_있음(USER, productId2);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        String token = createToken("test1@email.com", "Password123!");
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token);
 
         장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, productId1, productId2);
+        장바구니_아이템_목록_포함됨(response, "치킨", "맥주");
     }
 
     @DisplayName("장바구니 삭제")
@@ -76,11 +79,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
+                .when().get("/api/carts")
                 .then().log().all()
                 .extract();
     }
@@ -108,14 +112,25 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
+    public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, String... productIds) {
+        List<String> resultProductIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
+                .map(CartItemResponse::getName)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+
+    private String createToken(String email, String password) {
+        TokenRequest tokenRequest = new TokenRequest(email, password);
+        TokenResponse tokenResponse = RestAssured.given()
+          .contentType(MediaType.APPLICATION_JSON_VALUE)
+          .body(tokenRequest)
+          .post("/api/login")
+          .then().extract().as(TokenResponse.class);
+        return tokenResponse.getAccessToken();
     }
 }

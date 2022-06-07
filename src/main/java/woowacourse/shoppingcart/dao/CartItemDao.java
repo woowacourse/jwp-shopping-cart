@@ -2,9 +2,11 @@ package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -24,11 +26,18 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
+    public List<CartItem> findIdsByCustomerId(final Long customerId) {
+        final String sql = "SELECT * FROM cart_item WHERE customer_id = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        return jdbcTemplate.query(sql, CART_ITEM_ROW_MAPPER, customerId);
     }
+
+    private static RowMapper<CartItem> CART_ITEM_ROW_MAPPER = (rs, rowNum) -> new CartItem(
+      rs.getLong("id"),
+      rs.getLong("customer_id"),
+      rs.getLong("product_id"),
+      rs.getInt("quantity")
+    );
 
     public Long findProductIdById(final Long cartId) {
         try {

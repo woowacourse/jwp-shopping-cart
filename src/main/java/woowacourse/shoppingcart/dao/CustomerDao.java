@@ -24,6 +24,7 @@ public class CustomerDao {
         rs.getString("nickname"),
         rs.getString("password")
     );
+
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
