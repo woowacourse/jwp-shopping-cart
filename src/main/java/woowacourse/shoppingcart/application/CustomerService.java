@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import woowacourse.auth.exception.NoSuchEmailException;
+import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
@@ -11,9 +13,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.HashedPassword;
 import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.NoSuchEmailException;
-import woowacourse.shoppingcart.exception.PasswordNotMatchException;
+import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @Service
 public class CustomerService {
@@ -61,7 +61,7 @@ public class CustomerService {
 
     private Customer findCustomerById(final Long id) {
         return customerDao.findById(id)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(CustomerNotFoundException::new);
     }
 
     public void updateProfile(final CustomerProfileUpdateServiceRequest request) {

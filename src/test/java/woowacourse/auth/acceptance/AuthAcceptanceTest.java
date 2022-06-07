@@ -65,9 +65,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         // then 토큰 발급 요청이 거부된다
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(response.body().as(ErrorResponse.class).getMessage())
-                        .isEqualTo("입력된 사용자 정보가 일치하지 않습니다.")
+                        .isEqualTo("사용자 인증에 실패했습니다.")
         );
     }
 
@@ -92,9 +92,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         // then 토큰 발급 요청이 거부된다
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(response.body().as(ErrorResponse.class).getMessage())
-                        .isEqualTo("입력된 사용자 정보가 일치하지 않습니다.")
+                        .isEqualTo("사용자 인증에 실패했습니다.")
         );
     }
 

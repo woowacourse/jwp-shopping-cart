@@ -9,9 +9,9 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
+import woowacourse.shoppingcart.exception.notfound.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -41,13 +41,13 @@ public class CartService {
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(CustomerNotFoundException::new);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
     public Long addCart(final Long productId, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(CustomerNotFoundException::new);
         try {
             //TODO: 적절한 수량을 받도록 수정해야함.
             return cartItemDao.addCartItem(customerId, productId, 0);

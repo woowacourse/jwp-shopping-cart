@@ -15,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.application.dto.LoginServiceRequest;
+import woowacourse.auth.exception.NoSuchEmailException;
+import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
@@ -26,8 +28,6 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.HashedPassword;
 import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
-import woowacourse.shoppingcart.exception.NoSuchEmailException;
-import woowacourse.shoppingcart.exception.PasswordNotMatchException;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {

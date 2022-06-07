@@ -1,6 +1,6 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.notfound;
 
-public class NotInCustomerCartItemException extends DomainException {
+public class NotInCustomerCartItemException extends NotFoundException {
 
     public NotInCustomerCartItemException() {
         this("장바구니 아이템이 없습니다.");
