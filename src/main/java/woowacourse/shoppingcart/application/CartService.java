@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 public class CartService {
 
     private final CustomerService customerService;
+    private final ProductService productService;
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
 
-    public CartService(final CustomerService customerService, final CartItemDao cartItemDao, final ProductDao productDao) {
+    public CartService(final CustomerService customerService, final ProductService productService, final CartItemDao cartItemDao) {
         this.customerService = customerService;
+        this.productService = productService;
         this.cartItemDao = cartItemDao;
-        this.productDao = productDao;
     }
 
     public List<CartItemResponse> findCartsByCustomerEmail(final String email) {
@@ -39,7 +39,7 @@ public class CartService {
     public Long addCart(String email, Long productId) {
         Customer customer = customerService.getCustomerByEmail(email);
 
-        Product product = productDao.findProductById(productId);
+        Product product = productService.findProductById(productId);
 
         return cartItemDao.addCartItem(customer.getId(), product.getId());
     }
