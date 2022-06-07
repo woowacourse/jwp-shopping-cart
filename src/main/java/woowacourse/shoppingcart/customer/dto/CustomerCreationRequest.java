@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.customer.dto;
 
+import java.util.Objects;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import woowacourse.shoppingcart.customer.domain.Customer;
@@ -38,5 +39,23 @@ public class CustomerCreationRequest {
 
     public String getNickname() {
         return nickname;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final CustomerCreationRequest that = (CustomerCreationRequest) o;
+        return Objects.equals(email, that.email) && Objects.equals(password, that.password)
+                && Objects.equals(nickname, that.nickname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, password, nickname);
     }
 }

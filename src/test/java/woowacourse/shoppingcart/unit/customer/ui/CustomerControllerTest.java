@@ -31,6 +31,7 @@ import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.customer.dto.CustomerResponse;
 import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
+import woowacourse.shoppingcart.customer.exception.badrequest.DuplicateEmailException;
 import woowacourse.shoppingcart.unit.ControllerTest;
 
 @DisplayName("CustomerController 단위 테스트")
@@ -89,7 +90,8 @@ class CustomerControllerTest extends ControllerTest {
             "password2:email@email.com:12345678:rick:비밀번호 양식",
             "nickname:email@email.com:1q2w3e4r:릭:닉네임 양식"
     }, delimiter = ':')
-    void create_invalidForm_400(final String docName, final String email, final String password, final String nickname, final String message)
+    void create_invalidForm_400(final String docName, final String email, final String password, final String nickname,
+                                final String message)
             throws Exception {
         // given
         final CustomerCreationRequest request = new CustomerCreationRequest(
@@ -114,6 +116,45 @@ class CustomerControllerTest extends ControllerTest {
 
         // docs
         perform.andDo(document("create-user-fail-" + docName,
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                        fieldWithPath("email").type(STRING).description("이메일"),
+                        fieldWithPath("password").type(STRING).description("비밀번호"),
+                        fieldWithPath("nickname").type(STRING).description("닉네임")
+                ),
+                responseFields(
+                        fieldWithPath("errorCode").type(STRING).description("에러 코드"),
+                        fieldWithPath("message").type(STRING).description("에러 메시지")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("중복된 이메일로 회원가입을 요청하믄 400을 반환한다.")
+    void create_duplicateEmail_400() throws Exception {
+        // given
+        final CustomerCreationRequest request = new CustomerCreationRequest("rick@gmail.com", "1q2w3e4r", "rick");
+        final String json = objectMapper.writeValueAsString(request);
+
+        given(customerService.create(request))
+                .willThrow(new DuplicateEmailException());
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                post("/users")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errorCode").value("1001"))
+                .andExpect(jsonPath("message").value("이메일이 중복입니다."));
+
+        // docs
+        perform.andDo(document("create-user-fail-duplicate-email",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestFields(
