@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.product.*;
@@ -21,6 +22,11 @@ public class ProductDao {
     public List<Product> getProducts() {
         final String sql = "select id, name, price, thumbnail from product";
         return jdbcTemplate.query(sql, new ProductMapper());
+    }
+
+    public boolean exists(ProductId productId) {
+        final String sql = "select exists(select id from product where id = :productId)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("productId", productId.getValue()), Boolean.class));
     }
 
     private static class ProductMapper implements RowMapper<Product> {

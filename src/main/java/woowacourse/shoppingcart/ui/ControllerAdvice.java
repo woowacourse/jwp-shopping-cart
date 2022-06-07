@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.*;
 
 import javax.validation.ConstraintViolationException;
@@ -42,13 +43,13 @@ public class ControllerAdvice {
 //        return ResponseEntity.badRequest().body(e.getMessage());
 //    }
 //
-//    @ExceptionHandler({
-//            InvalidCustomerException.class,
-//            InvalidCartItemException.class,
-//            InvalidProductException.class,
-//            NotInCustomerCartItemException.class,
-//    })
-//    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
-//        return ResponseEntity.badRequest().body(e.getMessage());
-//    }
+    @ExceptionHandler({
+            InvalidCustomerException.class,
+            InvalidCartItemException.class,
+            InvalidProductException.class,
+            NotInCustomerCartItemException.class,
+    })
+    public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
 }
