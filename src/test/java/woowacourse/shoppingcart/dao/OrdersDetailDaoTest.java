@@ -19,14 +19,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
+import woowacourse.helper.annotations.DaoTest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@DaoTest
 public class OrdersDetailDaoTest {
 
     private final OrdersDetailDao ordersDetailDao;

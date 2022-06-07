@@ -11,12 +11,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.helper.annotations.DaoTest;
 import woowacourse.shoppingcart.domain.Product;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@DaoTest
 public class ProductDaoTest {
 
     private final ProductDao productDao;
@@ -37,7 +35,7 @@ public class ProductDaoTest {
         final Long productId = productDao.save(new Product(name, price, imageUrl));
 
         // then
-        assertThat(productId).isEqualTo(1L);
+        assertThat(productId).isNotNull();
     }
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
@@ -60,11 +58,7 @@ public class ProductDaoTest {
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {
-
-        // given
         final int size = 0;
-
-        // when
         final List<Product> products = productDao.findProducts();
 
         // then
