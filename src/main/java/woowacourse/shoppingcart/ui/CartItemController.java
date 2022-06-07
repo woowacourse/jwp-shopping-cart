@@ -30,16 +30,10 @@ public class CartItemController {
         return ResponseEntity.ok().body(cartItemResponses);
     }
 
-    @PostMapping("/customers/{customerName}/carts")
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                      @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
-        return ResponseEntity.created(responseLocation).build();
+    @PostMapping("/carts/products/{productId}")
+    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal LoginCustomer loginCustomer, @PathVariable Long productId) {
+        cartService.addCart(loginCustomer, productId);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/customers/{customerName}/carts/{cartId}")

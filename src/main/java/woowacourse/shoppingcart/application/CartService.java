@@ -54,8 +54,8 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
+    public Long addCart(LoginCustomer loginCustomer, final Long productId) {
+        final Long customerId = customerDao.findIdByNickname(loginCustomer.getNickname());
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
