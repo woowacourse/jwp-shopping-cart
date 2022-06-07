@@ -19,6 +19,7 @@ public class LoginConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/api/customers")
                 .addPathPatterns("/api/cartItems/**")
+                .addPathPatterns("/api/orders/**")
                 .addPathPatterns("/api/customers/password")
                 .excludePathPatterns("/api/customers/signup", "/api/customers/login");
     }

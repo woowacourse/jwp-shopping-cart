@@ -50,8 +50,9 @@ public class OrderService {
     }
 
     public Order findOrderById(final String customerName, final Long orderId) {
+        List<OrderDetail> orderDetails = ordersDetailDao.findOrderDetailsByOrderId(orderId);
         validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+        return new Order(orderId, orderDetails);
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {

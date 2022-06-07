@@ -32,6 +32,10 @@ public class OrderDetail {
                 cartItem.getProduct().getPrice(), cartItem.getProduct().getName(), cartItem.getProduct().getImageUrl());
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Long getProductId() {
         return productId;
     }
