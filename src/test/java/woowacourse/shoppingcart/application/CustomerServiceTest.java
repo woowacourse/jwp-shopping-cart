@@ -16,7 +16,6 @@ import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
 import woowacourse.shoppingcart.domain.customer.RawPassword;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.UsernameDuplicationRequest;
 import woowacourse.shoppingcart.dto.UsernameDuplicationResponse;
 import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -75,12 +74,26 @@ class CustomerServiceTest {
                 customerRequest1.getNickname(), customerRequest1.getAge());
 
         String newPassword = "forky@forky123";
-        PasswordRequest passwordRequest = new PasswordRequest(customer.getPassword(), newPassword);
+        PasswordRequest passwordRequest = new PasswordRequest("kth@@123", newPassword);
         customerService.updatePassword(customer, passwordRequest);
 
         Customer actual = customerDao.findCustomerByUsername(customerRequest1.getUsername())
                 .orElseThrow(InvalidCustomerException::new);
         assertThat(actual.getPassword()).isEqualTo(encode(newPassword).getPassword());
+    }
+
+    @DisplayName("비밀번호를 변경할 때, 올바르지 않은 기존 비밀번호를 보낼 경우 예외를 발생시킨다.")
+    @Test
+    void updatePassword_invalidOldPassword() {
+        customerService.addCustomer(customerRequest1);
+        Customer customer = Customer.of(customerRequest1.getUsername(), encode(customerRequest1.getPassword()),
+                customerRequest1.getNickname(), customerRequest1.getAge());
+
+        String newPassword = "forky@forky123";
+        PasswordRequest passwordRequest = new PasswordRequest(newPassword, newPassword);
+        assertThatExceptionOfType(InvalidArgumentRequestException.class)
+                .isThrownBy(() -> customerService.updatePassword(customer, passwordRequest))
+                .withMessageContaining("일치");
     }
 
     @DisplayName("비밀번호를 제외한 회원 정보를 성공적으로 변경한다.")
