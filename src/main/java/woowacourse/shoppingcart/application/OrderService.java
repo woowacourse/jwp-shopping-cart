@@ -37,7 +37,7 @@ public class OrderService {
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderDetailRequest orderDetail : orderRequest.getOrder()) {
-            final Long cartId = orderDetail.getCartId();
+            final Long cartId = orderDetail.getId();
             final Long productId = getCartItemEntity(cartId).getProductId();
             final int quantity = orderDetail.getQuantity();
 

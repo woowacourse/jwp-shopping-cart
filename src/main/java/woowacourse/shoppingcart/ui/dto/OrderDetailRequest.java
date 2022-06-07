@@ -2,19 +2,19 @@ package woowacourse.shoppingcart.ui.dto;
 
 public class OrderDetailRequest {
 
-    private Long cartId;
+    private Long id;
     private int quantity;
 
     private OrderDetailRequest() {
     }
 
-    public OrderDetailRequest(Long cartId, int quantity) {
-        this.cartId = cartId;
+    public OrderDetailRequest(Long id, int quantity) {
+        this.id = id;
         this.quantity = quantity;
     }
 
-    public Long getCartId() {
-        return cartId;
+    public Long getId() {
+        return id;
     }
 
     public int getQuantity() {
