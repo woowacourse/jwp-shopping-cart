@@ -83,7 +83,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartItem() {
         장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 10));
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(token, productId1);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(token, List.of(productId1));
 
         장바구니_삭제됨(response);
     }
@@ -105,8 +105,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, Long productId) {
-        return requestHttpDelete(token, productId, "/customers/carts").extract();
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, List<Long> productIds) {
+        return requestHttpDelete(token, productIds, "/customers/carts").extract();
     }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
@@ -116,9 +116,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .containsExactly(1L, 10);
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String token, CartRequest cartRequest) {
+    public static void 장바구니_아이템_추가되어_있음(String token, CartRequest cartRequest) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, cartRequest);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]); // TODO
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {

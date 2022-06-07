@@ -53,8 +53,13 @@ public class CartItemDao {
     }
 
     public Boolean existByCustomerIdAndProductId(Long customerId, Long productId) {
-        final String query = "SELECT EXISTS (SELECT id FROM CART_ITEM WHERE customer_id = ? AND product_id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, customerId, productId);
+        String sql = "SELECT EXISTS (SELECT id FROM CART_ITEM WHERE customer_id = ? AND product_id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId);
+    }
+
+    public void updateQuantityByCustomerIdAndProductId(Long customerId, Long productId, Integer quantity) {
+        String sql = "UPDATE CART_ITEM SET quantity = ? WHERE customer_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql, quantity, customerId, productId);
     }
 
     public void deleteByCustomerIdAndProductId(Long customerId, Long productId) {

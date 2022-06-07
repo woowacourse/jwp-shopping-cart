@@ -4,7 +4,10 @@ import java.util.List;
 
 public class CartItemsResponse {
 
-    private final List<CartItemResponse> carts;
+    private List<CartItemResponse> carts;
+
+    public CartItemsResponse() {
+    }
 
     public CartItemsResponse(List<CartItemResponse> carts) {
         this.carts = carts;

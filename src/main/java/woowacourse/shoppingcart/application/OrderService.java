@@ -41,11 +41,11 @@ public class OrderService {
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
+//            final Long productId = cartItemDao.findProductIdById(cartId);
             final int quantity = orderDetail.getQuantity();
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+//            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
+//            cartItemDao.deleteByCustomerIdAndProductId(cartId);
         }
 
         return ordersId;

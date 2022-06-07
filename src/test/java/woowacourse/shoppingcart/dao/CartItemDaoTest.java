@@ -65,26 +65,41 @@ public class CartItemDaoTest {
                 .map(Cart::getProduct)
                 .collect(Collectors.toList());
         assertThat(products).extracting("id", "name")
-                .containsExactly(tuple(1L, "banana"), tuple(2L, "apple"));
+                .containsExactly(
+                        tuple(product1.getId(), product1.getName()),
+                        tuple(product2.getId(), product2.getName()));
     }
 
     @DisplayName("Customer Id와 Product Id를 이용하여 장바구니 데이터 존재 여부를 확인한다.")
     @Test
     void existByCustomerIdAndProductId() {
         // when
-        boolean result = cartItemDao.existByCustomerIdAndProductId(1L, 2L);
+        boolean result = cartItemDao.existByCustomerIdAndProductId(1L, product2.getId());
 
         // then
         assertThat(result).isTrue();
+    }
+
+    @DisplayName("Customer Id와 Product Id를 이용하여 장바구니 아이템의 수량을 업데이트한다.")
+    @Test
+    void updateQuantityByCustomerIdAndProductId() {
+        // when
+        cartItemDao.updateQuantityByCustomerIdAndProductId(1L, product1.getId(), 3);
+        cartItemDao.updateQuantityByCustomerIdAndProductId(1L, product2.getId(), 25);
+
+        // then
+        List<Cart> carts = cartItemDao.findByCustomerId(1L);
+        assertThat(carts).extracting("id", "quantity")
+                .containsExactly(tuple(1L, 3), tuple(2L, 25));
     }
 
     @DisplayName("Customer Id와 Product Id를 이용하여 장바구니 아이템을 삭제한다.")
     @Test
     void deleteCartItem() {
         // when
-        cartItemDao.deleteByCustomerIdAndProductId(1L, 2L);
+        cartItemDao.deleteByCustomerIdAndProductId(1L, product2.getId());
 
         // then
-        assertThat(cartItemDao.existByCustomerIdAndProductId(1L, 2L)).isFalse();
+        assertThat(cartItemDao.existByCustomerIdAndProductId(1L, product2.getId())).isFalse();
     }
 }

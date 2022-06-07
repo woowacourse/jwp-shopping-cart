@@ -44,8 +44,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         회원_추가되어_있음();
         token = 로그인_후_토큰_획득();
 
-        cartId1 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 10));
-        cartId2 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId2, 20));
+//        cartId1 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 10));
+//        cartId2 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId2, 20));
     }
 
     @DisplayName("주문하기")
