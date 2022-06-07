@@ -1,20 +1,23 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.acceptance.fixture.ProductSimpleAssured.상품_등록;
+import static woowacourse.shoppingcart.acceptance.fixture.ProductSimpleAssured.상품_등록되어_있음;
+import static woowacourse.shoppingcart.acceptance.fixture.ProductSimpleAssured.상품_목록_조회_요청;
+import static woowacourse.shoppingcart.acceptance.fixture.ProductSimpleAssured.상품_삭제_요청;
+import static woowacourse.shoppingcart.acceptance.fixture.ProductSimpleAssured.상품_삭제됨;
+import static woowacourse.shoppingcart.acceptance.fixture.ProductSimpleAssured.상품_조회_요청;
+
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.product.Product;
-
-import java.util.List;
-import java.util.stream.Collectors;
 import woowacourse.shoppingcart.dto.ProductRequest;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -75,51 +78,5 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 상품_삭제_요청(productId);
 
         상품_삭제됨(response);
-    }
-
-    private static ExtractableResponse<Response> 상품_등록(ProductRequest productRequest) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when().post("/products")
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 상품_목록_조회_요청() {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/products")
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/products/{productId}", productId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/products/{productId}", productId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
-        ExtractableResponse<Response> response = 상품_등록(new ProductRequest(name, price, imageUrl));
-        return Long.parseLong(response.header("Location").split("/products/")[1]);
-    }
-
-    public static void 상품_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

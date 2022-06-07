@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.badrequest.BadRequestException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundException;
@@ -23,11 +23,13 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(0, e.getMessage()));
+        e.printStackTrace();
+        return ResponseEntity.internalServerError().body(new ErrorResponse(0, e.getMessage()));
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(final BadRequestException e) {
+        e.printStackTrace();
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 
@@ -42,6 +44,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(final NotFoundException e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 
@@ -64,6 +67,7 @@ public class ControllerAdvice {
             NotInCustomerCartItemException.class,
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.badRequest().body(new ErrorResponse(0, e.getMessage()));
     }
 }

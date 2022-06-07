@@ -1,14 +1,19 @@
 set foreign_key_checks = 0;
 
 truncate table orders_detail;
+alter table orders_detail auto_increment = 1;
 
 truncate table orders;
+alter table orders auto_increment = 1;
 
 truncate table cart_item;
+alter table cart_item auto_increment = 1;
 
 truncate table product;
+alter table product auto_increment = 1;
 
 truncate table customer;
+alter table customer auto_increment = 1;
 
 set foreign_key_checks = 1;
 

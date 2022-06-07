@@ -7,11 +7,15 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.domain.user.Customer;
+import woowacourse.shoppingcart.exception.badrequest.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 import java.util.ArrayList;
 import java.util.List;
+import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidProductIdException;
+import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedException;
 
 @Service
 @Transactional
@@ -44,10 +48,16 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long addCart(Long productId, String email) {
+        Customer customer = customerDao.findByEmail(email)
+                .orElseThrow(UnauthorizedException::new);
+        Product product = productDao.findProductById(productId)
+                .orElseThrow(InvalidProductIdException::new);
+        if (cartItemDao.findProductIdsByCustomerId(customer.getId()).contains(product.getId())) {
+            throw new DuplicateCartItemException();
+        }
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.addCartItem(customer.getId(), product.getId());
         } catch (Exception e) {
             throw new InvalidProductException();
         }

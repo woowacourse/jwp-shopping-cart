@@ -29,7 +29,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         String password = "12345678a";
         String nickname = "토닉";
 
-        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));;
+        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -38,7 +38,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @MethodSource("provideInvalidSignUpForm")
     void invalidSignUpFormatRequest(String email, String password, String nickname) {
-        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));;
+        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1000);
@@ -64,7 +64,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         String nickname = "토닉";
         회원가입_요청(new SignUpRequest(email, password, nickname));
 
-        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));;
+        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1001);
