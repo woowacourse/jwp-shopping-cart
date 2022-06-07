@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.common.exception.NotFoundException;
+import woowacourse.common.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ThumbnailImage;
@@ -46,7 +48,7 @@ public class CartItemDao {
         try {
             return jdbcTemplate.queryForObject(sql, CART_ROW_MAPPER, cartId);
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
+            throw new NotFoundException("존재하지 않는 장바구니입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
         }
     }
 
@@ -85,5 +87,10 @@ public class CartItemDao {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
 
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public boolean existsProductIdAndCustomerId(Long productId, Long customerId) {
+        final String sql = "SELECT exists(SELECT id FROM cart_item WHERE customer_id = ? AND product_id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId));
     }
 }

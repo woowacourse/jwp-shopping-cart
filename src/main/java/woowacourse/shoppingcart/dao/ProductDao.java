@@ -66,4 +66,9 @@ public class ProductDao {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
     }
+
+    public boolean existsById(Long id) {
+        final String sql = "SELECT exists(SELECT id FROM product WHERE id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
+    }
 }

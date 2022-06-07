@@ -42,16 +42,18 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@RequestBody final CartItemAddRequest cartItemAddRequest,
+    public ResponseEntity<CartItemResponse> addCartItem(@RequestBody final CartItemAddRequest cartItemAddRequest,
                                             @AuthenticationPrincipal final String email) {
-        final Long cartId = cartService.addCart(cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity(),
-                email);
+        final CartItemResponse cartItemResponse = cartService.addCart(cartItemAddRequest.getProductId(),
+                cartItemAddRequest.getQuantity(), email);
+
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
-                .buildAndExpand(cartId)
+                .buildAndExpand(cartItemResponse.getId())
                 .toUri();
-        return ResponseEntity.created(responseLocation).build();
+
+        return ResponseEntity.created(responseLocation).body(cartItemResponse);
     }
 
     @PatchMapping

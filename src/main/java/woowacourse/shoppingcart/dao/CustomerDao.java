@@ -75,7 +75,7 @@ public class CustomerDao {
     }
 
     public boolean existsByEmail(String email) {
-        final String sql = "SELECT exists(SELECT * FROM customer WHERE email = ?)";
+        final String sql = "SELECT exists(SELECT id FROM customer WHERE email = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, email);
     }
 }

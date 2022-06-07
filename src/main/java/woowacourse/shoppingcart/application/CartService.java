@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.common.exception.CartItemException;
+import woowacourse.common.exception.NotFoundException;
+import woowacourse.common.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -17,10 +20,12 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
+    private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao) {
+    public CartService(CartItemDao cartItemDao, CustomerDao customerDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
+        this.productDao = productDao;
     }
 
     public List<CartItemResponse> findCartsByEmail(final String email) {
@@ -41,12 +46,29 @@ public class CartService {
         return new CartItemResponse(cartItem);
     }
 
-    public Long addCart(final Long productId, final int quantity, final String email) {
+    public CartItemResponse addCart(final Long productId, final int quantity, final String email) {
         final Long customerId = customerDao.getIdByEmail(email);
+        validateProductExist(productId);
+        validateProductAlreadyExistInCart(productId, customerId);
+
         try {
-            return cartItemDao.save(customerId, quantity, productId);
+            Long cartItemId = cartItemDao.save(customerId, quantity, productId);
+            CartItem cartItem = cartItemDao.getById(cartItemId);
+            return new CartItemResponse(cartItem);
         } catch (Exception e) {
             throw new InvalidProductException();
+        }
+    }
+
+    private void validateProductExist(Long productId) {
+        if (!productDao.existsById(productId)) {
+            throw new NotFoundException("존재하지 않는 상품입니다.", ErrorResponse.NOT_EXIST_PRODUCT);
+        }
+    }
+
+    private void validateProductAlreadyExistInCart(Long productId, Long customerId) {
+        if (cartItemDao.existsProductIdAndCustomerId(productId, customerId)) {
+            throw new CartItemException("이미 장바구니에 존재하는 제품입니다.", ErrorResponse.ALREADY_EXIST);
         }
     }
 
@@ -64,7 +86,7 @@ public class CartService {
         if (cartIds.contains(cartId)) {
             return;
         }
-        throw new NotInCustomerCartItemException();
+        throw new NotFoundException("존재하지 않는 장바구니입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
     }
 
     public void updateCart(final String email, final Long cartItemId, final int quantity) {
