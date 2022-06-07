@@ -3,9 +3,7 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
-import static woowacourse.utils.Fixture.customer;
 import static woowacourse.utils.Fixture.email;
-import static woowacourse.utils.Fixture.password;
 
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.dto.CartSetRequest;
 import woowacourse.shoppingcart.dto.CartSetResponse;
 

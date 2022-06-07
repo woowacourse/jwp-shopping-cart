@@ -3,22 +3,17 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.utils.Fixture.customer_id없음;
-import static woowacourse.utils.Fixture.맥주;
 import static woowacourse.utils.Fixture.맥주_id없음;
-import static woowacourse.utils.Fixture.치킨;
 import static woowacourse.utils.Fixture.치킨_id없음;
 
 import java.util.List;
-import java.util.Optional;
 import javax.sql.DataSource;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.domain.cart.Cart;
 
 @JdbcTest
 public class CartDaoTest {
