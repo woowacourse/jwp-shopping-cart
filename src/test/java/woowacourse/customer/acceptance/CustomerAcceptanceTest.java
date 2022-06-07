@@ -12,12 +12,13 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
-import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.customer.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.customer.dto.ConfirmPasswordRequest;
+import woowacourse.customer.dto.PasswordConfirmRequest;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
+import woowacourse.customer.dto.UpdatePasswordRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.ExceptionResponse;
 
@@ -55,15 +56,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
             () -> assertThat(exceptionResponse.getMessages())
                 .hasSize(1)
-                .containsExactly("username의 길이는 3자 이상 15자 이하여야 합니다.")
+                .containsExactly("사용자 이름의 길이는 3자 이상 15자 이하여야 합니다.")
         );
     }
 
-    @DisplayName("여러 필드의 검증이 실패한경우 에러메세지를 모두 리스트로 담아 보내야 한다.")
+    @DisplayName("비밀번호는 8자 이상 ~ 20자 이하로만 이루어져 있어야 한다.")
     @Test
     void validateFields() {
         // given
-        final SignupRequest signupRequest = new SignupRequest("do", "a", "1", "인천 서구");
+        final SignupRequest signupRequest = new SignupRequest("domain", "a", "01011112222", "인천 서구");
 
         // when
         final ExtractableResponse<Response> response = 회원_가입_요청(signupRequest);
@@ -72,8 +73,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-            () -> assertThat(exceptionResponse.getMessages())
-                .hasSize(3)
+            () -> assertThat(exceptionResponse.getMessages()).contains("비밀번호의 길이는 8자 이상 20자 이하여야 합니다.")
         );
     }
 
@@ -127,10 +127,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final LoginRequest loginRequest = new LoginRequest(username, password);
         final String accessToken = 로그인되어_토큰_가져옴(loginRequest);
 
-        final ConfirmPasswordRequest confirmPasswordRequest = new ConfirmPasswordRequest(password);
+        final PasswordConfirmRequest passwordConfirmRequest = new PasswordConfirmRequest(password);
         RestAssured.given().log().all()
             .auth().oauth2(accessToken)
-            .body(confirmPasswordRequest)
+            .body(passwordConfirmRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when().post("/api/customers/password")
@@ -177,11 +177,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final LoginRequest loginRequest = new LoginRequest(username, password);
         final String accessToken = 로그인되어_토큰_가져옴(loginRequest);
 
-        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("password1234");
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("password1234");
         RestAssured
             .given().log().all()
             .auth().oauth2(accessToken)
-            .body(updateCustomerRequest)
+            .body(updatePasswordRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when().patch("/api/customers/password")

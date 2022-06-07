@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import woowacourse.customer.domain.PhoneNumber;
+import woowacourse.customer.exception.InvalidPhoneNumberException;
 
 class PhoneNumberTest {
 
@@ -28,8 +28,8 @@ class PhoneNumberTest {
     @ValueSource(strings = {"01212341234", "01512341234", "공일공일이삼사일이삼사", "010-1234-1234", "02-123-1234"})
     void createInvalidPhoneNumber(final String value) {
         assertThatThrownBy(() -> new PhoneNumber(value))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("휴대폰 번호를 정확히 입력해주세요.");
+            .isInstanceOf(InvalidPhoneNumberException.class)
+            .hasMessage("전화번호를 정확히 입력해주세요.");
     }
 
     @DisplayName("phoneNumber를 변경한다.")
@@ -46,7 +46,7 @@ class PhoneNumberTest {
         final PhoneNumber phoneNumber = new PhoneNumber(originalPhoneNumber);
 
         assertThatThrownBy(() -> phoneNumber.update(wrongPhoneNumber))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("휴대폰 번호를 정확히 입력해주세요.");
+            .isInstanceOf(InvalidPhoneNumberException.class)
+            .hasMessage("전화번호를 정확히 입력해주세요.");
     }
 }

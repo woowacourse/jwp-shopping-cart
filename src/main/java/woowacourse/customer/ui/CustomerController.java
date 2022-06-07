@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.customer.dto.CustomerResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.customer.application.CustomerService;
 import woowacourse.customer.domain.Customer;
-import woowacourse.customer.dto.ConfirmPasswordRequest;
+import woowacourse.customer.dto.PasswordConfirmRequest;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
+import woowacourse.customer.dto.UpdatePasswordRequest;
 
 @RequestMapping("/api/customers")
 @RestController
@@ -45,28 +46,28 @@ public class CustomerController {
 
     @PutMapping
     public ResponseEntity<Void> updateInfo(
-        @RequestBody final UpdateCustomerRequest request,
+        @Valid @RequestBody final UpdateCustomerRequest updateCustomerRequest,
         @AuthenticationPrincipal final String username
     ) {
-        customerService.updateInfo(username, request);
+        customerService.updateInfo(username, updateCustomerRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 
     @PostMapping("/password")
     public ResponseEntity<Void> confirmPassword(
-        @RequestBody final ConfirmPasswordRequest confirmPasswordRequest,
+        @Valid @RequestBody final PasswordConfirmRequest passwordConfirmRequest,
         @AuthenticationPrincipal final String username
     ) {
-        customerService.confirmPassword(username, confirmPasswordRequest.getPassword());
+        customerService.confirmPassword(username, passwordConfirmRequest.getPassword());
         return ResponseEntity.status(HttpStatus.OK.value()).build();
     }
 
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(
-        @RequestBody final UpdateCustomerRequest updateCustomerRequest,
+        @Valid @RequestBody final UpdatePasswordRequest updatePasswordRequest,
         @AuthenticationPrincipal final String username
     ) {
-        customerService.updatePassword(username, updateCustomerRequest);
+        customerService.updatePassword(username, updatePasswordRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 

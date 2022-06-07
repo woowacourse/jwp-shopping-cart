@@ -8,6 +8,7 @@ import woowacourse.customer.domain.Customer;
 import woowacourse.customer.domain.PlainPassword;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
+import woowacourse.customer.dto.UpdatePasswordRequest;
 import woowacourse.customer.support.passwordencoder.PasswordEncoder;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.UserNotFoundException;
@@ -65,9 +66,9 @@ public class CustomerService {
         customer.getPassword().matches(passwordEncoder, password);
     }
 
-    public void updatePassword(final String username, final UpdateCustomerRequest updateCustomerRequest) {
+    public void updatePassword(final String username, final UpdatePasswordRequest updatePasswordRequest) {
         final Customer customer = findByUsername(username);
-        final PlainPassword plainPassword = new PlainPassword(updateCustomerRequest.getPassword());
+        final PlainPassword plainPassword = new PlainPassword(updatePasswordRequest.getPassword());
         customer.updatePassword(passwordEncoder.encode(plainPassword.getValue()));
         customerDao.update(customer);
     }

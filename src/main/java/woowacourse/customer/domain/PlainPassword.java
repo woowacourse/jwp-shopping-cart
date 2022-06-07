@@ -2,6 +2,8 @@ package woowacourse.customer.domain;
 
 import java.util.regex.Pattern;
 
+import woowacourse.customer.exception.InvalidPasswordException;
+
 public class PlainPassword {
 
     private static final int MIN_LENGTH = 8;
@@ -19,13 +21,13 @@ public class PlainPassword {
 
     private void validateLength(final String value) {
         if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("비밀번호의 길이는 " + MIN_LENGTH + "자 이상 " + MAX_LENGTH + "자 이하여야 합니다.");
+            throw new InvalidPasswordException("비밀번호의 길이는 " + MIN_LENGTH + "자 이상 " + MAX_LENGTH + "자 이하여야 합니다.");
         }
     }
 
     private void validatePattern(final String value) {
         if (!PATTERN.matcher(value).find()) {
-            throw new IllegalArgumentException("password는 영어와 숫자로 이루어져야 합니다.");
+            throw new InvalidPasswordException("비밀번호는 영어와 숫자로 이루어져야 합니다.");
         }
     }
 

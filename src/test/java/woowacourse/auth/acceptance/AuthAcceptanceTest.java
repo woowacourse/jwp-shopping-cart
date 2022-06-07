@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.customer.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;

@@ -2,6 +2,8 @@ package woowacourse.customer.domain;
 
 import java.util.regex.Pattern;
 
+import woowacourse.customer.exception.InvalidPhoneNumberException;
+
 public class PhoneNumber {
 
     private static final Pattern PATTERN = Pattern.compile("^01(?:0|1|[6-9])(\\d{4})(\\d{4})$");
@@ -16,7 +18,7 @@ public class PhoneNumber {
 
     private void validate(final String value) {
         if (!PATTERN.matcher(value).find()) {
-            throw new IllegalArgumentException("휴대폰 번호를 정확히 입력해주세요.");
+            throw new InvalidPhoneNumberException("전화번호를 정확히 입력해주세요.");
         }
     }
 

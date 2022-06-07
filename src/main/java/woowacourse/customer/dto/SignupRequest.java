@@ -1,28 +1,21 @@
 package woowacourse.customer.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 
 import woowacourse.customer.domain.Customer;
 
 public class SignupRequest {
 
-    @NotNull
-    @Size(min = 3, max = 15, message = "username의 길이는 3자 이상 15자 이하여야 합니다.")
-    @Pattern(regexp = "^[0-9a-zA-Z]*$", message = "username는 영어 또는 숫자로 이루어져야 합니다.")
+    @NotBlank(message = "사용자 이름을 입력해 주세요.")
     private String username;
 
-    @NotNull
-    @Size(min = 8, max = 20, message = "password의 길이는 8자 이상 20자 이하여야 합니다.")
-    @Pattern(regexp = "^[0-9a-zA-Z]*$", message = "password는 영어 또는 숫자로 이루어져야 합니다.")
+    @NotBlank(message = "비밀번호를 입력해 주세요.")
     private String password;
 
-    @NotNull
-    @Pattern(regexp = "^01(?:0|1|[6-9])(\\d{4})(\\d{4})$", message = "phoneNumber는 휴대폰번호 형식으로 입력해야 합니다.")
+    @NotBlank(message = "전화번호를 입력해 주세요.")
     private String phoneNumber;
 
-    @NotNull
+    @NotBlank(message = "주소를 입력해 주세요.")
     private String address;
 
     private SignupRequest() {

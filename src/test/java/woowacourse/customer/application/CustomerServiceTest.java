@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.customer.domain.Customer;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.customer.dto.UpdateCustomerRequest;
+import woowacourse.customer.dto.UpdatePasswordRequest;
 import woowacourse.customer.support.passwordencoder.PasswordEncoder;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.UserNotFoundException;
@@ -118,8 +119,8 @@ class CustomerServiceTest {
         // given
         customerService.save(signupRequest);
 
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("ehdgh1111");
-        customerService.updatePassword(username, updateCustomerRequest);
+        final UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("ehdgh1111");
+        customerService.updatePassword(username, updatePasswordRequest);
 
         final Customer customer = customerService.findByUsername(username);
 
