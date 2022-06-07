@@ -6,6 +6,10 @@ public class CartAddRequest {
     public CartAddRequest() {
     }
 
+    public CartAddRequest(Long productId) {
+        this.productId = productId;
+    }
+
     public Long getProductId() {
         return productId;
     }
