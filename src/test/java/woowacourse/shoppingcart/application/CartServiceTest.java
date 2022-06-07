@@ -50,6 +50,18 @@ class CartServiceTest {
                 .hasMessage("존재하지 않는 상품입니다.");
     }
 
+    @DisplayName("상품 재고보다 많은 양을 장바구니에 담으려 하면 예외가 발생한다.")
+    @Test
+    void saveInsufficientProduct() {
+        Long memberId = memberService.save(new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "우테코"));
+        Long productId = productService.save(new ProductRequest("상품1", 1_000, 1, "www.woowa1.com"));
+        CartItemRequest cartItemRequest = new CartItemRequest(productId, 2);
+
+        assertThatThrownBy(() -> cartService.saveOrUpdateCartItem(memberId, cartItemRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("재고가 충분하지 않습니다.");
+    }
+
     @DisplayName("장바구니의 모든 상품 정보를 조회한다.")
     @Test
     void findAll() {

@@ -72,7 +72,10 @@ public class CartService {
     }
 
     public void updateCartItemQuantity(Long memberId, CartItemRequest updateRequest) {
-        validateProductExist(memberId, updateRequest.getProductId());
+        Long productId = updateRequest.getProductId();
+        Integer quantity = updateRequest.getQuantity();
+        validateProductExist(memberId, productId);
+        checkPurchasable(productId, quantity);
         cartItemDao.updateQuantity(memberId, updateRequest.getProductId(), updateRequest.getQuantity());
     }
 
