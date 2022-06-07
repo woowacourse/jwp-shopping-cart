@@ -49,16 +49,16 @@ public class LoginInterceptor implements HandlerInterceptor {
             return matchesMethod(api, request) && matchesUri(api, request);
         }
 
+        private static boolean matchesMethod(AllowApiList api, HttpServletRequest request) {
+            return api.method.matches(request.getMethod());
+        }
+
         private static boolean matchesUri(AllowApiList api, HttpServletRequest request) {
             if (api.uri.endsWith(ANY_STRING)) {
                 String uri = api.uri.replace(ANY_STRING, "");
                 return request.getRequestURI().startsWith(uri);
             }
             return request.getRequestURI().equals(api.uri);
-        }
-
-        private static boolean matchesMethod(AllowApiList api, HttpServletRequest request) {
-            return api.method.matches(request.getMethod());
         }
     }
 }

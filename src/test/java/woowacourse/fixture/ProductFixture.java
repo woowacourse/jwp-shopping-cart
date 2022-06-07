@@ -74,11 +74,6 @@ public class ProductFixture {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
-        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl);
-        return Long.parseLong(response.header("Location").split("/products/")[1]);
-    }
-
     public static Long 상품_등록되어_있음2(String token, String name, int price, String imageUrl) {
         Product productRequest = new Product(name, price, imageUrl);
         String path = "/api/products";

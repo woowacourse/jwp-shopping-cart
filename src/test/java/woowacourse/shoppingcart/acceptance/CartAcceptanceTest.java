@@ -1,21 +1,25 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static woowacourse.fixture.CartFixture.장바구니_삭제_요청;
-import static woowacourse.fixture.CartFixture.장바구니_삭제됨;
-import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_응답됨;
+import static woowacourse.fixture.CartFixture.장바구니_삭제_검증;
+import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_응답_검증;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_조회_요청;
-import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_포함됨;
+import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_포함_검증;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_요청;
-import static woowacourse.fixture.CartFixture.장바구니_아이템_추가되어_있음;
-import static woowacourse.fixture.CartFixture.장바구니_아이템_추가됨;
-import static woowacourse.fixture.ProductFixture.상품_등록되어_있음;
+import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_ID_반환;
+import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_검증;
+import static woowacourse.fixture.CustomFixture.로그인_요청_및_토큰발급;
+import static woowacourse.fixture.CustomFixture.회원가입_요청;
+import static woowacourse.fixture.ProductFixture.상품_등록되어_있음2;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.global.AcceptanceTest;
+import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -28,38 +32,52 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
+        String token = getToken();
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        productId1 = 상품_등록되어_있음2(token, "치킨", 10_000, "http://example.com/chicken.jpg");
+        productId2 = 상품_등록되어_있음2(token, "맥주", 20_000, "http://example.com/beer.jpg");
     }
 
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
+        String token = getToken();
 
-        장바구니_아이템_추가됨(response);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, USER, productId1);
+
+        장바구니_아이템_추가_검증(response);
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
+        String token = getToken();
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        장바구니_아이템_추가_ID_반환(token, USER, productId1);
+        장바구니_아이템_추가_ID_반환(token, USER, productId2);
 
-        장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, productId1, productId2);
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token, USER);
+
+        장바구니_아이템_목록_응답_검증(response);
+        장바구니_아이템_목록_포함_검증(response, productId1, productId2);
     }
 
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        String token = getToken();
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        Long cartId = 장바구니_아이템_추가_ID_반환(token, USER, productId1);
 
-        장바구니_삭제됨(response);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(token, USER, cartId);
+
+        장바구니_삭제_검증(response);
+    }
+
+    private String getToken() {
+        회원가입_요청(
+                new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+        return token;
     }
 }
