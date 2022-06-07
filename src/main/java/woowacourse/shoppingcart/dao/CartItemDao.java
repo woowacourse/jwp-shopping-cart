@@ -70,4 +70,9 @@ public class CartItemDao {
         final var sql = "DELETE FROM cart_item WHERE customer_id = ? AND id = ?";
         jdbcTemplate.update(sql, customerId, cartId);
     }
+
+    public void deleteCart(Long customerId) {
+        final var sql = "DELETE FROM cart_item WHERE customer_id = ?";
+        jdbcTemplate.update(sql, customerId);
+    }
 }

@@ -160,4 +160,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(cartResponseElements.get(0).getCheck()).isFalse()
         );
     }
+
+    @Test
+    void 사용자의_장바구니를_삭제하는_경우() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        deleteCart(accessToken, HttpStatus.NO_CONTENT);
+        ExtractableResponse extract = findCustomerCart(accessToken, HttpStatus.OK);
+        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("products", CartResponseElement.class);
+        assertThat(cartResponseElements.size()).isEqualTo(0);
+    }
 }

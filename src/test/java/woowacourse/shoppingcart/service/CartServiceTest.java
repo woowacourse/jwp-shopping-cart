@@ -84,4 +84,11 @@ public class CartServiceTest {
         CartResponse cartResponse = cartService.findByUserName("puterism");
         assertThat(cartResponse.getProducts().size()).isEqualTo(1);
     }
+
+    @Test
+    void 장바구니를_삭제하는_경우() {
+        cartService.deleteCart("puterism");
+        CartResponse cartResponse = cartService.findByUserName("puterism");
+        assertThat(cartResponse.getProducts().size()).isEqualTo(0);
+    }
 }

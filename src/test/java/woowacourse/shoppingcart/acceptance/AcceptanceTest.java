@@ -156,4 +156,16 @@ public class AcceptanceTest {
                 .then().log().all()
                 .statusCode(httpStatus.value()).extract();
     }
+
+    protected ExtractableResponse deleteCart(String accessToken, HttpStatus httpStatus) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .delete("/cart/all")
+                .then().log().all()
+                .statusCode(httpStatus.value()).extract();
+    }
 }

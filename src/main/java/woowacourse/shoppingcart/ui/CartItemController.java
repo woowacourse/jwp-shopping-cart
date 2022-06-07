@@ -41,4 +41,10 @@ public class CartItemController {
         cartService.deleteItem(username, deleteCartItemRequest);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/all")
+    public ResponseEntity deleteCart(@AuthenticationPrincipal String username) {
+        cartService.deleteCart(username);
+        return ResponseEntity.noContent().build();
+    }
 }

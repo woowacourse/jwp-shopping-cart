@@ -125,4 +125,10 @@ public class CartService {
             cartItemDao.deleteOneItem(id, cartId);
         }
     }
+
+    public void deleteCart(String username) {
+        validateExistName(username);
+        Long id = customerDao.findIdByUserName(username);
+        cartItemDao.deleteCart(id);
+    }
 }

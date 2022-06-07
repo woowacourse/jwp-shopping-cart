@@ -114,4 +114,15 @@ public class CartDaoTest {
 
         assertThat(cartItems.size()).isEqualTo(2);
     }
+
+    @Test
+    void 장바구니_자체를_삭제하는_경우() {
+        Long customerId = 1L;
+
+        cartItemDao.deleteCart(customerId);
+
+        List<CartItem> cartItems = cartItemDao.findCartItemByUserId(customerId);
+
+        assertThat(cartItems.size()).isEqualTo(0);
+    }
 }
