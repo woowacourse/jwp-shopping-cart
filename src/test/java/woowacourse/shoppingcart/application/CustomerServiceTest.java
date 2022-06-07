@@ -484,6 +484,29 @@ class CustomerServiceTest {
                 .hasMessage("이미 존재하는 아이디입니다.");
     }
 
+    @DisplayName("중복되는 닉네임이 없는 것을 확인한다.")
+    @Test
+    void validateDuplicatedNickname() {
+        // when & then
+        assertThatCode(() -> customerService.validateDuplicateNickname("newNickname"))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("중복되는 닉네임이 있을 경우 예외가 발생한다.")
+    @Test
+    void validateDuplicatedNicknameException() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+        CustomerResponse customerResponse = customerService.findByCustomerId(customerIdentificationRequest);
+
+        // when & then
+        assertThatCode(() -> customerService.validateDuplicateNickname(customerResponse.getNickname()))
+                .isInstanceOf(CustomerDuplicatedDataException.class)
+                .hasMessage("이미 존재하는 닉네임입니다.");
+    }
+
     @DisplayName("비밀번호가 일치하는 것을 확인한다.")
     @Test
     void matchPassword() {

@@ -66,6 +66,12 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping(value = "/customers/check", params = "nickname")
+    public ResponseEntity<Void> validateDuplicatedNickname(@RequestParam String nickname) {
+        customerService.validateDuplicateNickname(nickname);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/auth/customers/match/password")
     public ResponseEntity<Void> matchPassword(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest,
                                                       @RequestBody PasswordRequest passwordRequest) {

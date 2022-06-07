@@ -86,6 +86,14 @@ public class CustomerFixture {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> validateDuplicatedNickname(final String nickname) {
+        return RestAssured
+                .given().log().all()
+                .when().get("/customers/check?nickname=" + nickname)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> matchPassword(final String token, final String password) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("password", password);

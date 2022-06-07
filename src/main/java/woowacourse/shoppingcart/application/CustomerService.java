@@ -81,6 +81,12 @@ public class CustomerService {
         }
     }
 
+    public void validateDuplicateNickname(final String nickname) {
+        if (customerDao.findByNickname(nickname).isPresent()) {
+            throw new CustomerDuplicatedDataException("이미 존재하는 닉네임입니다.");
+        }
+    }
+
     public void matchPassword(final CustomerIdentificationRequest customerIdentificationRequest,
                                       final PasswordRequest passwordRequest) {
         Customer customer = findCustomerById(customerIdentificationRequest.getId());
@@ -108,12 +114,6 @@ public class CustomerService {
     private void validateCustomer(final Customer customer) {
         validateDuplicateUserId(customer.getUserId());
         validateDuplicateNickname(customer.getNickname());
-    }
-
-    private void validateDuplicateNickname(final String nickname) {
-        if (customerDao.findByNickname(nickname).isPresent()) {
-            throw new CustomerDuplicatedDataException("이미 존재하는 닉네임입니다.");
-        }
     }
 
     private Customer createCustomerForUpdate(final CustomerUpdateRequest customerUpdateRequest, final Customer customer) {

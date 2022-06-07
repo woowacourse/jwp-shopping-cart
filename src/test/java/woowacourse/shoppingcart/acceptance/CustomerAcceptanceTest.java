@@ -10,6 +10,7 @@ import static woowacourse.fixture.CustomerFixture.withdraw;
 import static woowacourse.fixture.CustomerFixture.signUp;
 import static woowacourse.fixture.CustomerFixture.matchPassword;
 import static woowacourse.fixture.CustomerFixture.validateDuplicatedUserId;
+import static woowacourse.fixture.CustomerFixture.validateDuplicatedNickname;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
-import woowacourse.fixture.CustomerFixture;
 
 @DisplayName("회원 관련 기능 인수테스트")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -355,29 +355,51 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void validateDuplicatedCustomerUserId() {
         // when
-        ExtractableResponse<Response> secondResponse = validateDuplicatedUserId("newUserId@woowacourse.com");
+        ExtractableResponse<Response> firstResponse = validateDuplicatedUserId("newUserId@woowacourse.com");
 
         // then
         assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+                () -> assertThat(firstResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
 
     @DisplayName("중복되는 아이디가 있을 경우 400 에러가 발생한다.")
     @Test
     void validateDuplicatedCustomerUserIdFalse() {
-        // given
-        ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
-        String token = firstResponse.body().jsonPath().getString("accessToken");
-
         // when
-        ExtractableResponse<Response> secondResponse = validateDuplicatedUserId("puterism@woowacourse.com");
+        ExtractableResponse<Response> firstResponse = validateDuplicatedUserId("puterism@woowacourse.com");
 
         // then
         assertAll(
-                () -> assertThat(secondResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(secondResponse.body().jsonPath().getString("message")).isEqualTo(
+                () -> assertThat(firstResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(firstResponse.body().jsonPath().getString("message")).isEqualTo(
                         "이미 존재하는 아이디입니다.")
+        );
+    }
+
+    @DisplayName("중복되는 닉네임이 없는 것을 확인한다.")
+    @Test
+    void validateDuplicatedCustomerNickname() {
+        // when
+        ExtractableResponse<Response> firstResponse = validateDuplicatedNickname("newNickname");
+
+        // then
+        assertAll(
+                () -> assertThat(firstResponse.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
+    }
+
+    @DisplayName("중복되는 닉네임이 있을 경우 400 에러가 발생한다.")
+    @Test
+    void validateDuplicatedCustomerNicknameFalse() {
+        // when
+        ExtractableResponse<Response> firstResponse = validateDuplicatedNickname("nickname");
+
+        // then
+        assertAll(
+                () -> assertThat(firstResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(firstResponse.body().jsonPath().getString("message")).isEqualTo(
+                        "이미 존재하는 닉네임입니다.")
         );
     }
 
