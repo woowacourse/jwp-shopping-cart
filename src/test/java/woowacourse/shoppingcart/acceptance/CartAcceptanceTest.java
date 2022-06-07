@@ -181,9 +181,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
             @DisplayName("장바구니 삭제에 실패하고, 상태코드 400을 반환받는다.")
             @Test
             void it_fail_return_400() {
-                ValidatableResponse response = getCart("invalid-token");
+                ValidatableResponse response = deleteCart(21L, accessToken);
 
-                response.statusCode(HttpStatus.UNAUTHORIZED.value());
+                response.statusCode(HttpStatus.BAD_REQUEST.value())
+                        .body("message", equalTo("장바구니에 상품이 존재하지 않습니다."));
             }
         }
     }

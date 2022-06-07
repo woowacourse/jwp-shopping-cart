@@ -37,7 +37,7 @@ public class CartService {
     }
 
     public void addCart(final Long productId, final Customer customer) {
-        boolean isExist = cartItemDao.existProduct(productId);
+        boolean isExist = cartItemDao.existProduct(customer.getId(), productId);
         if (isExist) {
             throw new IllegalProductException("중복된 물품입니다.");
         }
@@ -72,6 +72,11 @@ public class CartService {
     }
 
     public void deleteProductInCart(Customer customer, Long productId) {
+        boolean isExist = cartItemDao.existProduct(customer.getId(), productId);
+        if (!isExist) {
+            throw new IllegalProductException("장바구니에 상품이 존재하지 않습니다.");
+        }
+
         cartItemDao.deleteCartItem(customer.getId(), productId);
     }
 

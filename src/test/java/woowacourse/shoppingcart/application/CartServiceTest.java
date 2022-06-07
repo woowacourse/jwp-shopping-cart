@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import java.util.List;
@@ -42,10 +41,10 @@ public class CartServiceTest {
         Long productId = 1L;
         Product product = new Product(productId, "product1", 1000, "imageUrl1");
 
+        given(cartItemDao.existProduct(customer.getId(), productId))
+                .willReturn(false);
         given(productService.findProductById(productId))
                 .willReturn(product);
-        given(cartItemDao.addCartItem(customer.getId(), productId))
-                .willReturn(anyLong());
 
         // when, then
         assertThatCode(() -> cartService.addCart(product.getId(), customer))
@@ -75,7 +74,7 @@ public class CartServiceTest {
         // given
         Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
 
-        given(cartItemDao.existProduct(1L))
+        given(cartItemDao.existProduct(1L, 1L))
                 .willThrow(new IllegalProductException("중복된 물품입니다."));
 
         // when, then
@@ -127,8 +126,26 @@ public class CartServiceTest {
         Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
         Product product1 = new Product(1L, "product1", 1000, "url1");
 
+        given(cartItemDao.existProduct(1L, 1L))
+                .willReturn(true);
+
         // when, then
         assertThatCode(() -> cartService.deleteProductInCart(customer, product1.getId()))
                 .doesNotThrowAnyException();
+    }
+
+    @DisplayName("장바구니에 존재하지 않는 상품을 삭제하려고 하면 예외가 발생한다.")
+    @Test
+    void deleteProductInCart_notExist_exceptionThrown() {
+        //given
+        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
+
+        given(cartItemDao.existProduct(1L, 21L))
+                .willThrow(new IllegalProductException("장바구니에 상품이 존재하지 않습니다."));
+
+        // when, then
+        assertThatThrownBy(() -> cartService.deleteProductInCart(customer, 21L))
+                .isInstanceOf(IllegalProductException.class)
+                .hasMessage("장바구니에 상품이 존재하지 않습니다.");
     }
 }
