@@ -41,6 +41,11 @@ public class CustomerService {
         return CustomerResponse.from(customer);
     }
 
+    public String findNameById(Long customerId) {
+        checkExistById(customerId);
+        return customerDao.findNameById(customerId);
+    }
+
     private void checkExistById(Long customerId) {
         if (!customerDao.existById(customerId)) {
             throw new InvalidCustomerException();

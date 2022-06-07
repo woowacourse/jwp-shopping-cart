@@ -77,6 +77,18 @@ class CustomerServiceTest {
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
+    @DisplayName("customer id을 이용하여 회원 이름을 조회한다.")
+    @Test
+    void findCustomerNameById() {
+        CustomerRequest customer =
+                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
+        customerService.save(customer);
+
+        String name = customerService.findNameById(1L);
+
+        assertThat(name).isEqualTo("name");
+    }
+
     @DisplayName("회원 정보를 수정한다.")
     @Test
     void update() {
