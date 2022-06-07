@@ -42,6 +42,6 @@ public class CustomerTest {
     void 이름이_32자_초과인_경우() {
         String invalidName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         assertThatThrownBy(() -> new Customer(invalidName, "crew01@naver.com", "a12345")).isInstanceOf(InvalidInformationException.class)
-                .hasMessage("[ERROR] 상품 이름은 최대 32자 이하여야 합니다.");
+                .hasMessage("[ERROR] 사용자 이름은 최대 32자 이하여야 합니다.");
     }
 }

@@ -4,6 +4,7 @@ import io.restassured.response.ExtractableResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
@@ -14,6 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@Sql(scripts = {"classpath:schema.sql", "classpath:cartData.sql"})
 public class CartAcceptanceTest extends AcceptanceTest {
     private static final String EMAIL = "crew01@naver.com";
     private static final String VALID_PASSWORD = "a12345";

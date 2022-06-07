@@ -15,3 +15,8 @@ values ('맛있는 치킨', 100, 'https://www.naver.com'),
        ('맛있는 보쌈', 1100, 'https://www.naver.com'),
        ('맛있는 돈까스', 1200, 'https://www.naver.com'),
        ('맛있는 육회', 1300, 'https://www.naver.com');
+
+insert into cart_item (customer_id, product_id, quantity, checked)
+values (1, 1, 1, 1),
+       (1, 3, 2, 0),
+       (1, 5, 1, 1);
