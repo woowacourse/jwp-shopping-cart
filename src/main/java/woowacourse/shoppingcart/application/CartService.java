@@ -9,9 +9,11 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Username;
+import woowacourse.shoppingcart.dto.CartIdRequest;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartResponses;
+import woowacourse.shoppingcart.dto.DeleteProductRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
@@ -49,6 +51,13 @@ public class CartService {
     private List<Cart> findCartIdsByUsername(String username) {
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
         return cartItemDao.findIByCustomerId(customerId);
+    }
+
+    public void deleteCart(DeleteProductRequest deleteProductRequest) {
+        List<Long> cartIds = deleteProductRequest.getProducts().stream()
+                .map(CartIdRequest::getId)
+                .collect(Collectors.toList());
+        cartItemDao.deleteCartItem(cartIds);
     }
 
     public void deleteAllCart(String username) {

@@ -17,9 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
+import woowacourse.shoppingcart.dto.CartIdRequest;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartResponses;
+import woowacourse.shoppingcart.dto.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @DisplayName("장바구니 관련 기능")
@@ -62,13 +64,25 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
-    @DisplayName("장바구니 삭제")
     @Test
+    @DisplayName("장바구니 일부 삭제")
     void deleteCartItem() {
         장바구니_아이템_추가_요청(token, productId1);
         장바구니_아이템_추가_요청(token, productId2);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(token);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(token,
+                new DeleteProductRequest(List.of(new CartIdRequest(1L))));
+
+        장바구니_삭제됨(response);
+    }
+
+    @DisplayName("장바구니 전체 삭제")
+    @Test
+    void deleteAllCartItem() {
+        장바구니_아이템_추가_요청(token, productId1);
+        장바구니_아이템_추가_요청(token, productId2);
+
+        ExtractableResponse<Response> response = 장바구니_전체_삭제_요청(token);
 
         장바구니_삭제됨(response);
     }
@@ -96,7 +110,18 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token) {
+    private ExtractableResponse<Response> 장바구니_삭제_요청(String token, DeleteProductRequest deleteProductRequest) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .body(deleteProductRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/cart")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_전체_삭제_요청(String token) {
         return RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)

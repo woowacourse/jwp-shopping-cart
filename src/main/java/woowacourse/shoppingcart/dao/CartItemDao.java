@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,7 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<Cart> cartRowMapper = (rs, rowNum) ->
             new Cart(
                     rs.getLong("id"),
@@ -29,6 +31,7 @@ public class CartItemDao {
 
     public CartItemDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("CART_ITEM")
                 .usingGeneratedKeyColumns("id");
@@ -59,6 +62,14 @@ public class CartItemDao {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
+        }
+    }
+
+    public void deleteCartItem(List<Long> cartIds) {
+        String sql = "DELETE FROM cart_item WHERE id = ?";
+
+        for (Long cartId : cartIds) {
+            jdbcTemplate.update(sql, cartId);
         }
     }
 

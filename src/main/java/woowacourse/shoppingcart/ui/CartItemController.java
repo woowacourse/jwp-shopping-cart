@@ -14,6 +14,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponses;
+import woowacourse.shoppingcart.dto.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
@@ -41,8 +42,15 @@ public class CartItemController {
         return ResponseEntity.ok().body(cartService.findCartsByUsername(usernameByToken));
     }
 
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String usernameByToken,
+                                               @RequestBody DeleteProductRequest deleteProductRequest) {
+        cartService.deleteCart(deleteProductRequest);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/all")
-    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String usernameByToken) {
+    public ResponseEntity<Void> deleteAllCartItem(@AuthenticationPrincipal String usernameByToken) {
         cartService.deleteAllCart(usernameByToken);
         return ResponseEntity.noContent().build();
     }

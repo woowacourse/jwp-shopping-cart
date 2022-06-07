@@ -36,11 +36,14 @@ public class CartItemDaoTest {
     void setUp() {
         productDao.save(new Product("banana", 1_000, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        productDao.save(new Product("chicken", 3_000, "woowa3.com"));
 
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)", 1L,
                 1L, 1, true);
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)", 1L,
                 2L, 1, true);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)", 1L,
+                3L, 1, true);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
@@ -56,7 +59,7 @@ public class CartItemDaoTest {
         Long cartId = cartItemDao.addCartItem(customerId, productId, quantity, checked);
 
         // then
-        assertThat(cartId).isEqualTo(3L);
+        assertThat(cartId).isEqualTo(4L);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니를 가져온다.")
@@ -71,7 +74,24 @@ public class CartItemDaoTest {
                 .map(cart -> cart.getId())
                 .collect(Collectors.toList());
         // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        assertThat(cartIds).containsExactly(1L, 2L, 3L);
+    }
+
+    @Test
+    @DisplayName("장바구니의 아이템 일부를 삭제한다.")
+    void deleteCartItem() {
+        // given
+        Long customerId = 1L;
+
+        // when
+        cartItemDao.deleteCartItem(List.of(1L, 2L));
+        List<Cart> carts = cartItemDao.findIByCustomerId(customerId);
+        List<Long> cartIds = carts.stream()
+                .map(cart -> cart.getId())
+                .collect(Collectors.toList());
+
+        // then
+        assertThat(cartIds).containsExactly(3L);
     }
 
     @Test
