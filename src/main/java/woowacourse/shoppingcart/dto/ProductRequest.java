@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import woowacourse.shoppingcart.domain.ImageUrl;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ProductName;
 
@@ -24,7 +25,7 @@ public class ProductRequest {
     }
 
     public Product toEntity() {
-        return new Product(new ProductName(name), price, imageUrl);
+        return new Product(new ProductName(name), price, new ImageUrl(imageUrl));
     }
 
     public String getName() {

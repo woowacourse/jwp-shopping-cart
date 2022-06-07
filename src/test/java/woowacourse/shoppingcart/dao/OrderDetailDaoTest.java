@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.ImageUrl;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ProductName;
@@ -41,7 +42,7 @@ class OrderDetailDaoTest {
         long customerId = 1L;
         ordersId = orderDao.addOrders(customerId);
 
-        productId = productDao.save(new Product(new ProductName("name"), 1000, "imageUrl")).getId();
+        productId = productDao.save(new Product(new ProductName("name"), 1000, new ImageUrl("imageUrl"))).getId();
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")

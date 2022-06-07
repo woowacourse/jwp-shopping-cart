@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.ImageUrl;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ProductName;
@@ -23,7 +24,7 @@ public class OrderDetailDao {
                     new Product(rs.getLong("product_id"),
                             new ProductName(rs.getString("name")),
                             rs.getInt("price"),
-                            rs.getString("image_url")),
+                            new ImageUrl(rs.getString("image_url"))),
                     rs.getInt("quantity")
             );
 

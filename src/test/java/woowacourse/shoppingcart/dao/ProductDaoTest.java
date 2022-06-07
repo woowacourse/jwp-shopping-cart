@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.ImageUrl;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ProductName;
 
@@ -36,7 +37,7 @@ public class ProductDaoTest {
         final String imageUrl = "www.test.com";
 
         // when
-        final Product product = productDao.save(new Product(new ProductName(name), price, imageUrl));
+        final Product product = productDao.save(new Product(new ProductName(name), price, new ImageUrl(imageUrl)));
 
         // then
         assertThat(product.getId()).isEqualTo(5L);
@@ -49,8 +50,8 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
-        final Product product = productDao.save(new Product(new ProductName(name), price, imageUrl));
-        final Product expectedProduct = new Product(5L, new ProductName(name), price, imageUrl);
+        final Product product = productDao.save(new Product(new ProductName(name), price, new ImageUrl(imageUrl)));
+        final Product expectedProduct = new Product(5L, new ProductName(name), price, new ImageUrl(imageUrl));
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -74,7 +75,7 @@ public class ProductDaoTest {
         final int price = 1_000;
         final String imageUrl = "www.test.com";
 
-        final Product product = productDao.save(new Product(new ProductName(name), price, imageUrl));
+        final Product product = productDao.save(new Product(new ProductName(name), price, new ImageUrl(imageUrl)));
         final int beforeSize = productDao.findAll().size();
 
         // when

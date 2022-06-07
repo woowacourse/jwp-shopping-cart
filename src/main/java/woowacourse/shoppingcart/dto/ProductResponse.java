@@ -33,6 +33,6 @@ public class ProductResponse {
     }
 
     public static ProductResponse of(final Product product) {
-        return new ProductResponse(product.getId(), product.getName().getValue(), product.getPrice(), product.getImageUrl());
+        return new ProductResponse(product.getId(), product.getName().getValue(), product.getPrice(), product.getImageUrl().getValue());
     }
 }

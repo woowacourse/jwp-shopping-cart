@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.ImageUrl;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ProductName;
 
@@ -24,7 +25,7 @@ public class ProductDao {
                     resultSet.getLong("id"),
                     new ProductName(resultSet.getString("name")),
                     resultSet.getInt("price"),
-                    resultSet.getString("image_url")
+                    new ImageUrl(resultSet.getString("image_url"))
             );
 
     public ProductDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -39,7 +40,7 @@ public class ProductDao {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", product.getName().getValue());
         parameters.put("price", product.getPrice());
-        parameters.put("image_url", product.getImageUrl());
+        parameters.put("image_url", product.getImageUrl().getValue());
 
         final Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
         return new Product(number.longValue(), product.getName(), product.getPrice(), product.getImageUrl());
