@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.cartItem;
 
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.ThumbnailImage;

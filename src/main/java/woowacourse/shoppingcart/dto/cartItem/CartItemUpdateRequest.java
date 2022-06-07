@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.cartItem;
 
 public class CartItemUpdateRequest {
     private final Long cartItemId;

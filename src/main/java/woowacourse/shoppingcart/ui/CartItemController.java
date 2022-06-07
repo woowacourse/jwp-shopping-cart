@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.dto.CartItemAddRequest;
-import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemDeleteRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
+import woowacourse.shoppingcart.dto.cartItem.CartItemUpdateRequest;
 
 @RestController
 @RequestMapping("/api/mycarts")
@@ -60,10 +61,10 @@ public class CartItemController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final String email,
-                                               @PathVariable final Long cartId) {
-        cartService.deleteCart(email, cartId);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCartItem(@RequestBody final CartItemDeleteRequest cartItemDeleteRequest,
+                                               @AuthenticationPrincipal final String email) {
+        cartService.deleteCarts(email, cartItemDeleteRequest.getCartItemIds());
         return ResponseEntity.noContent().build();
     }
 }

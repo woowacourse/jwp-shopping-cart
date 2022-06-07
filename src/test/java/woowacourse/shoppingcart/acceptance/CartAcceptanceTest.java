@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.AcceptanceTestFixture.deleteMethodRequestWithBearerAuth;
+import static woowacourse.AcceptanceTestFixture.deleteMethodRequestWithBearerAuthAndBody;
 import static woowacourse.AcceptanceTestFixture.getMethodRequestWithBearerAuth;
 import static woowacourse.AcceptanceTestFixture.postMethodRequest;
 import static woowacourse.AcceptanceTestFixture.postMethodRequestWithBearerAuth;
@@ -21,9 +21,10 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.common.AcceptanceTest;
 import woowacourse.shoppingcart.domain.ThumbnailImage;
-import woowacourse.shoppingcart.dto.CartItemAddRequest;
-import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemDeleteRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 
 @DisplayName("장바구니 관련 기능")
@@ -76,7 +77,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         addCartItem(token, 1L, 10);
 
-        ExtractableResponse<Response> response = deleteMethodRequestWithBearerAuth(token, "/api/mycarts/1");
+        CartItemDeleteRequest cartItemDeleteRequest = new CartItemDeleteRequest(List.of(1L));
+        ExtractableResponse<Response> response = deleteMethodRequestWithBearerAuthAndBody(cartItemDeleteRequest, token, "/api/mycarts");
 
         장바구니_삭제됨(response);
     }

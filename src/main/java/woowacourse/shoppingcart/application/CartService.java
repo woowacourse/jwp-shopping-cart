@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -50,9 +50,11 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String email, final Long cartId) {
-        validateCustomerCart(cartId, email);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCarts(final String email, final List<Long> cartIds) {
+        for (Long cartId : cartIds) {
+            validateCustomerCart(cartId, email);
+            cartItemDao.deleteCartItem(cartId);
+        }
     }
 
     private void validateCustomerCart(final Long cartId, final String email) {
