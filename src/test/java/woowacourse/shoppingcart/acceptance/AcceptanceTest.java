@@ -23,7 +23,7 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    private static <T> RequestSpecification createBody(String token, T request) {
+    public static <T> RequestSpecification createBody(String token, T request) {
         return RestAssured.given().log().all()
                 .auth().oauth2(token)
                 .body(request);
@@ -56,6 +56,14 @@ public class AcceptanceTest {
     public static ValidatableResponse requestHttpDelete(String token, String uri) {
         return RestAssured.given().log().all()
                 .auth().oauth2(token)
+                .when()
+                .delete(uri)
+                .then().log().all();
+    }
+
+    public static <T> ValidatableResponse requestHttpDelete(String token, T request, String uri) {
+        return createBody(token, request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .delete(uri)
                 .then().log().all();

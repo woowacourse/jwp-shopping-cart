@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductsResponse;
@@ -33,12 +34,13 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     void getProductsByMember() {
         // given
-        회원_추가되어_있음();
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-        장바구니_아이템_추가되어_있음("user", productId1);
 
+        회원_추가되어_있음();
         String accessToken = 로그인_후_토큰_획득();
+        장바구니_아이템_추가되어_있음(accessToken, new CartRequest(productId1, 10));
+
 
         ExtractableResponse<Response> response = 상품_목록_조회_요청_회원(accessToken);
 
@@ -47,13 +49,13 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         장바구니에_추가되어_있는_상품만_추가여부가_true(response);
     }
 
-    private void 회원_추가되어_있음() {
+    public static void 회원_추가되어_있음() {
         CustomerRequest customer = new CustomerRequest(
                 "email", "Pw123456!", "user", "010-1234-5678", "address");
         requestHttpPost("", customer, "/customers");
     }
 
-    private String 로그인_후_토큰_획득() {
+    public static String 로그인_후_토큰_획득() {
         return requestHttpPost("", new LoginRequest("email", "Pw123456!"), "/auth/login")
                 .extract().as(TokenResponse.class).getAccessToken();
     }
