@@ -29,7 +29,8 @@ CREATE TABLE cart_item
     customer_id BIGINT  NOT NULL,
     product_id  BIGINT  NOT NULL,
     quantity    INTEGER NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE KEY unique_product_per_customer (customer_id, product_id)
 ) engine=InnoDB default charset=utf8mb4;
 
 CREATE TABLE orders
