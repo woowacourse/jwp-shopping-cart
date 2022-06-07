@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.application;
+package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,10 +8,12 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,9 +70,27 @@ public class CartService {
                 .map(CartItem::getProductId)
                 .collect(Collectors.toList());
         List<Product> products = productDao.findProducts();
-        return products.stream()
-                .filter(product -> product.isContained(productIds))
-                .collect(Collectors.toUnmodifiableList());
+        List<Product> inCartProducts = new ArrayList<>();
+        for (Long productId : productIds) {
+            inCartProducts.add(products.stream()
+                            .filter(product -> product.isSameId(productId))
+                            .findAny()
+                            .orElseThrow(InvalidCartItemException::new)
+            );
+        }
+        return inCartProducts;
+    }
+
+    public void addItem(String username, AddCartItemRequest addCartItemRequest) {
+        validateExistName(username);
+        Long id = customerDao.findIdByUserName(username);
+        Long productId = addCartItemRequest.getProductId();
+        int quantity = addCartItemRequest.getQuantity();
+        if (cartItemDao.isCartContains(id, productId)) {
+            cartItemDao.increaseQuantity(id, productId, quantity);
+            return;
+        }
+        cartItemDao.saveItemInCart(id, productId, quantity);
     }
 
 

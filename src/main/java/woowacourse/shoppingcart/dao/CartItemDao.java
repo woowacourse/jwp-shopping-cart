@@ -34,4 +34,29 @@ public class CartItemDao {
         String sql = "SELECT * FROM cart_item WHERE customer_id = ?";
         return jdbcTemplate.query(sql, CART_ITEM_MAPPER, customerId);
     }
+
+    public boolean isCartContains(Long customerId, Long productId) {
+        final var sql = "SELECT * FROM cart_item WHERE exists (SELECT id FROM cart_item WHERE customer_id = ? AND product_id = ?)";
+        return jdbcTemplate.query(sql, CART_ITEM_MAPPER, customerId, productId).size() > 0;
+    }
+
+    public void increaseQuantity(Long customerId, Long productId, int quantity) {
+        final var sql = "UPDATE cart_item SET quantity = quantity + ? WHERE customer_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql, quantity, customerId, productId);
+    }
+
+    public CartItem findCartItemByIds(Long customerId, Long productId) {
+        try {
+            String sql = "SELECT * FROM cart_item WHERE customer_id = ? AND product_id = ?";
+            return jdbcTemplate.queryForObject(sql, CART_ITEM_MAPPER, customerId, productId);
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException("[ERROR] 해당 상품은 장바구니에 없습니다.");
+        }
+    }
+
+    public void saveItemInCart(Long customerId, Long productId, int quantity) {
+        final var sql = "INSERT INTO cart_item (customer_id, product_id, quantity) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, customerId, productId, quantity);
+    }
 }

@@ -35,11 +35,11 @@ public class CartItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CartItem cartItem = (CartItem) o;
-        return checked == cartItem.checked && Objects.equals(id, cartItem.id) && Objects.equals(customerId, cartItem.customerId) && Objects.equals(productId, cartItem.productId);
+        return quantity == cartItem.quantity && checked == cartItem.checked && Objects.equals(id, cartItem.id) && Objects.equals(customerId, cartItem.customerId) && Objects.equals(productId, cartItem.productId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, productId, checked);
+        return Objects.hash(id, customerId, productId, quantity, checked);
     }
 }

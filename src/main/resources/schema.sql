@@ -38,7 +38,7 @@ create table cart_item
     customer_id bigint not null,
     product_id  bigint not null,
     quantity    integer not null,
-    checked tinyint(1) not null,
+    checked tinyint(1) not null default 1,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 

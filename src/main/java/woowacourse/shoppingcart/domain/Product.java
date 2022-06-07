@@ -26,9 +26,8 @@ public class Product {
         this(null, name, price, imageUrl);
     }
 
-    public boolean isContained(List<Long> productIds) {
-        return productIds.stream()
-                .anyMatch(productId -> productId.longValue() == this.id);
+    public boolean isSameId(Long productId) {
+        return this.id == productId.longValue();
     }
 
     @Override

@@ -46,4 +46,16 @@ public class CartResponseElement {
     public boolean getCheck() {
         return check;
     }
+
+    @Override
+    public String toString() {
+        return "CartResponseElement{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", quantity=" + quantity +
+                ", check=" + check +
+                '}' + "\n";
+    }
 }

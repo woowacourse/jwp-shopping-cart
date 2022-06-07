@@ -9,10 +9,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
-import woowacourse.shoppingcart.dto.SignInRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -117,6 +114,19 @@ public class AcceptanceTest {
                 .when()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .get("/cart")
+                .then().log().all()
+                .statusCode(httpStatus.value()).extract();
+    }
+
+    protected ExtractableResponse createCartItem(String accessToken, AddCartItemRequest addCartItemRequest, HttpStatus httpStatus) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .body(addCartItemRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .post("/cart")
                 .then().log().all()
                 .statusCode(httpStatus.value()).extract();
     }

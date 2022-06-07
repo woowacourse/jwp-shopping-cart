@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
@@ -18,6 +20,9 @@ public class CartServiceTest {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private CartItemDao cartItemDao;
+
     @Test
     void 장바구니_조회() {
         CartResponse cartResponse = cartService.findByUserName("puterism");
@@ -27,6 +32,32 @@ public class CartServiceTest {
     @Test
     void 존재하지_않는_사용자의_장바구니_조회() {
         assertThatThrownBy(() -> cartService.findByUserName("alpha"))
+                .isInstanceOf(InvalidCartItemException.class)
+                .hasMessage("[ERROR] 존재하지 않는 장바구니입니다.");
+    }
+
+    @Test
+    void 장바구니_내의_존재하는_상품을_추가로_담는_경우() {
+        AddCartItemRequest addCartItemRequest = new AddCartItemRequest(1L, 3, true);
+        cartService.addItem("puterism", addCartItemRequest);
+        CartItem actual = cartItemDao.findCartItemByIds(1L, 1L);
+        CartItem expected = new CartItem(1L, 1L, 1L, 4, true);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void 장바구니_내의_존재하지_않는_상품을_추가로_담는_경우() {
+        AddCartItemRequest addCartItemRequest = new AddCartItemRequest(2L, 3, true);
+        cartService.addItem("puterism", addCartItemRequest);
+        CartItem actual = cartItemDao.findCartItemByIds(1L, 2L);
+        CartItem expected = new CartItem(4L, 1L, 2L, 3, true);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void 존재하지_않는_사용자의_장바구니의_상품을_추가하는_경우() {
+        AddCartItemRequest addCartItemRequest = new AddCartItemRequest(1L, 1, true);
+        assertThatThrownBy(() -> cartService.addItem("alpha", addCartItemRequest))
                 .isInstanceOf(InvalidCartItemException.class)
                 .hasMessage("[ERROR] 존재하지 않는 장바구니입니다.");
     }
