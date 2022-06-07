@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -98,5 +99,12 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new DataNotFoundException();
         }
+    }
+
+    public void deleteAllById(final List<Long> ids) {
+        final SqlParameterSource params = new MapSqlParameterSource("ids", ids);
+        final String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+
+        namedParameterJdbcTemplate.update(sql, params);
     }
 }

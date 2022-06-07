@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.dto.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartSaveRequest;
 import javax.validation.Valid;
@@ -41,10 +42,10 @@ public class CartItemController {
         return ResponseEntity.ok().body(responses);
     }
 
-    @DeleteMapping("/{cartId}")
+    @DeleteMapping
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final Long id,
-                                               @PathVariable final Long cartId) {
-        cartService.delete(id, cartId);
+                                               @RequestBody final CartDeleteRequest request) {
+        cartService.delete(id, request.toServiceDto());
 
         return ResponseEntity.noContent().build();
     }

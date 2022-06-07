@@ -4,28 +4,24 @@ import static java.lang.Long.parseLong;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartSaveRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @DisplayName("장바구니 관련 기능")
 @Sql("/testData.sql")
 public class CartAcceptanceTest extends AcceptanceTest {
 
-    private static final String NAME = "썬";
     private static final String EMAIL = "sun@gmail.com";
     private static final String PASSWORD = "12345678";
     private static final Long productId1 = 1L;
@@ -81,9 +77,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("장바구니 삭제")
+    @DisplayName("장바구니 단일 품목 삭제")
     @Test
-    void deleteCartItem() {
+    void deleteSingleCartItem() {
         // given
         final ExtractableResponse<Response> createResponse =
                 requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(1L, 10));
@@ -91,9 +87,33 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         // when
         final ExtractableResponse<Response> response =
-                requestDeleteWithTokenAndBody("/api/customer/carts/" + cartId, accessToken, productId1);
+                requestDeleteWithTokenAndBody("/api/customer/carts/", accessToken, new CartDeleteRequest(List.of(cartId)));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("장바구니 여러 품목 삭제")
+    @Test
+    void deleteSeveralCartItem() {
+        // given
+        final ExtractableResponse<Response> createResponse1 =
+                requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(1L, 10));
+        final ExtractableResponse<Response> createResponse2 =
+                requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(2L, 10));
+        final long cartId1 = parseLong(createResponse1.header("Location").split("/carts/")[1]);
+        final long cartId2 = parseLong(createResponse2.header("Location").split("/carts/")[1]);
+
+        // when
+        final ExtractableResponse<Response> response =
+                requestDeleteWithTokenAndBody("/api/customer/carts", accessToken, new CartDeleteRequest(List.of(cartId1, cartId2)));
+        final ExtractableResponse<Response> responsee = requestGetWithTokenAndBody("/api/customer/carts", accessToken);
+        final int size = responsee.jsonPath().getList(".", CartResponse.class).size();
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(size).isEqualTo(0)
+        );
     }
 }

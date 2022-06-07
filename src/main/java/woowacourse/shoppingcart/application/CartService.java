@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.CartDeleteServiceRequest;
 import woowacourse.shoppingcart.application.dto.CartSaveServiceRequest;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -44,10 +45,25 @@ public class CartService {
     }
 
     @Transactional
-    public void delete(final Long customerId, final Long cartId) {
-        validateCustomerCart(customerId, cartId);
-        cartItemDao.deleteCartItem(cartId);
+    public void delete(final Long customerId, final CartDeleteServiceRequest request) {
+        getCustomer(customerId);
+        final List<Long> cartIds = findAllByCustomerId(customerId).stream()
+                .mapToLong(CartResponse::getId)
+                .boxed()
+                .collect(Collectors.toList());
+
+        if (!cartIds.containsAll(request.getCartIds())) {
+            throw new NotInCustomerCartItemException();
+        }
+
+        cartItemDao.deleteAllById(request.getCartIds());
     }
+
+//    @Transactional
+//    public void delete(final Long customerId, final Long cartId) {
+//        validateCustomerCart(customerId, cartId);
+//        cartItemDao.deleteCartItem(cartId);
+//    }
 
     private Customer getCustomer(final Long id) {
         return customerDao.findById(id)
