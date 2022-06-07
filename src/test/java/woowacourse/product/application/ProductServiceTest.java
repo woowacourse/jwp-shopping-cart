@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.product.dto.ProductRequest;
 import woowacourse.product.dto.ProductResponse;
-import woowacourse.product.dto.ProductsResponse;
+import woowacourse.product.dto.ProductResponses;
 
 @Transactional
 @SpringBootTest
@@ -47,10 +47,10 @@ public class ProductServiceTest {
         final ProductRequest productRequest2 = new ProductRequest("짱아", price, stock, imageURL);
         final Long id2 = productService.addProduct(productRequest2);
 
-        final ProductsResponse findProducts = productService.findProducts();
+        final ProductResponses findProducts = productService.findProducts();
 
         final List<Long> findIds = findProducts.getProducts().stream()
-            .map(ProductResponse::getId)
+            .map(ProductResponses.ProductDetailResponse::getId)
             .collect(Collectors.toList());
 
         assertThat(findIds).contains(id1, id2);

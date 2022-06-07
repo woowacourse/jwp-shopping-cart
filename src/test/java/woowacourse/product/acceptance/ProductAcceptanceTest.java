@@ -15,7 +15,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.product.dto.ProductRequest;
 import woowacourse.product.dto.ProductResponse;
-import woowacourse.product.dto.ProductsResponse;
+import woowacourse.product.dto.ProductResponses;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("상품 관련 기능")
@@ -122,8 +122,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static void 상품_목록_포함됨(final Long productId1, final Long productId2,
         final ExtractableResponse<Response> response) {
-        final List<Long> resultProductIds = response.as(ProductsResponse.class).getProducts().stream()
-            .map(ProductResponse::getId)
+        final List<Long> resultProductIds = response.as(ProductResponses.class).getProducts().stream()
+            .map(ProductResponses.ProductDetailResponse::getId)
             .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
     }

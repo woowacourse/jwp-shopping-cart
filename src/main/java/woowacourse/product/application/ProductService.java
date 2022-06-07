@@ -7,7 +7,7 @@ import woowacourse.product.dao.ProductDao;
 import woowacourse.product.domain.Product;
 import woowacourse.product.dto.ProductRequest;
 import woowacourse.product.dto.ProductResponse;
-import woowacourse.product.dto.ProductsResponse;
+import woowacourse.product.dto.ProductResponses;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Transactional(rollbackFor = Exception.class)
@@ -24,8 +24,8 @@ public class ProductService {
         return productDao.save(productRequest.toProduct());
     }
 
-    public ProductsResponse findProducts() {
-        return ProductsResponse.from(productDao.findProducts());
+    public ProductResponses findProducts() {
+        return ProductResponses.from(productDao.findProducts());
     }
 
     public ProductResponse findProductById(final Long id) {
