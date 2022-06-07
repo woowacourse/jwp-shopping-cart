@@ -20,12 +20,7 @@ public class AcceptanceTest {
     @LocalServerPort
     int port;
 
-    @BeforeEach
-    public void setUp() {
-        RestAssured.port = port;
-    }
-
-    protected ExtractableResponse<Response> requestPostWithBody(final String path, final Object requestBody) {
+    protected static ExtractableResponse<Response> requestPostWithBody(final String path, final Object requestBody) {
         return RestAssured.given().log().all()
                 .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -34,9 +29,9 @@ public class AcceptanceTest {
                 .then().log().all().extract();
     }
 
-    protected ExtractableResponse<Response> requestPutWithTokenAndBody(final String path,
-                                                                       final String accessToken,
-                                                                       final Object requestBody) {
+    protected static ExtractableResponse<Response> requestPutWithTokenAndBody(final String path,
+                                                                              final String accessToken,
+                                                                              final Object requestBody) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .body(requestBody)
@@ -46,9 +41,9 @@ public class AcceptanceTest {
                 .then().log().all().extract();
     }
 
-    protected ExtractableResponse<Response> requestDeleteWithTokenAndBody(final String path,
-                                                                          final String accessToken,
-                                                                          final Object requestBody) {
+    protected static ExtractableResponse<Response> requestDeleteWithTokenAndBody(final String path,
+                                                                                 final String accessToken,
+                                                                                 final Object requestBody) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .body(requestBody)
@@ -58,7 +53,12 @@ public class AcceptanceTest {
                 .then().log().all().extract();
     }
 
-    protected void 요청이_NOT_FOUND_응답함(ExtractableResponse<Response> response) {
+    protected static void 요청이_NOT_FOUND_응답함(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @BeforeEach
+    public void setUp() {
+        RestAssured.port = port;
     }
 }
