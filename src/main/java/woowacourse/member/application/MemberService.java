@@ -76,8 +76,7 @@ public class MemberService {
     }
 
     private Member findMemberByEmail(String email) {
-        return memberDao.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException("해당 이메일로 가입된 회원은 존재하지 않습니다."));
+        return memberDao.findByEmail(email);
     }
 
     private void validateDuplicateEmail(String email) {
@@ -87,8 +86,7 @@ public class MemberService {
     }
 
     private Member findMemberById(long id) {
-        return memberDao.findById(id)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+        return memberDao.findById(id);
     }
 
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {
