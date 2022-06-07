@@ -28,6 +28,18 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    public List<Cart> findCartsByCustomerId(long customerId) {
+        List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+
+        final List<Cart> carts = new ArrayList<>();
+        for (final Long cartId : cartIds) {
+            final Long productId = cartItemDao.findProductIdById(cartId);
+            final Product product = productDao.findProductById(productId);
+            carts.add(new Cart(cartId, product));
+        }
+        return carts;
+    }
+
     public List<Cart> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
@@ -45,6 +57,10 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
+    private List<Long> findCartIdsByCustomerId(final long customerId) {
+        return cartItemDao.findIdsByCustomerId(customerId);
+    }
+
     public Long addCart(final Long productId, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         try {
@@ -54,13 +70,21 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
+    public Long addCart(final Long productId, final long customerId) {
+        try {
+            return cartItemDao.addCartItem(customerId, productId);
+        } catch (Exception e) {
+            throw new InvalidProductException();
+        }
+    }
+
+    public void deleteCart(final long customerId, final Long cartId) {
+        validateCustomerCart(cartId, customerId);
         cartItemDao.deleteCartItem(cartId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    private void validateCustomerCart(final Long cartId, final long customerId) {
+        final List<Long> cartIds = findCartIdsByCustomerId(customerId);
         if (cartIds.contains(cartId)) {
             return;
         }

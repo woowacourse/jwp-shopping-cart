@@ -20,7 +20,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
-@RequestMapping("/api/customers/{customerName}/carts")
+@RequestMapping("/api/customers/{customerId}/carts")
 public class CartItemController {
 
     private final CartService cartService;
@@ -30,14 +30,14 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final long customerId) {
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-        @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
+        @PathVariable final long customerId) {
+        final Long cartId = cartService.addCart(product.getId(), customerId);
         final URI responseLocation = ServletUriComponentsBuilder
             .fromCurrentRequest()
             .path("/{cartId}")
@@ -47,9 +47,9 @@ public class CartItemController {
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
+    public ResponseEntity<Void> deleteCartItem(@PathVariable final long customerId,
         @PathVariable final Long cartId) {
-        cartService.deleteCart(customerName, cartId);
+        cartService.deleteCart(customerId, cartId);
         return ResponseEntity.noContent().build();
     }
 }

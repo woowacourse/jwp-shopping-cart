@@ -53,9 +53,35 @@ public class OrderService {
         return ordersId;
     }
 
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final long customerId) {
+        final Long ordersId = orderDao.addOrders(customerId);
+
+        for (final OrderRequest orderDetail : orderDetailRequests) {
+            final Long cartId = orderDetail.getCartId();
+            final Long productId = cartItemDao.findProductIdById(cartId);
+            final int quantity = orderDetail.getQuantity();
+
+            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
+            cartItemDao.deleteCartItem(cartId);
+        }
+
+        return ordersId;
+    }
+
     public Orders findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
         return findOrderResponseDtoByOrderId(orderId);
+    }
+
+    public Orders findOrderById(final long customerId, final Long orderId) {
+        validateOrderIdByCustomerId(customerId, orderId);
+        return findOrderResponseDtoByOrderId(orderId);
+    }
+
+    private void validateOrderIdByCustomerId(long customerId, Long orderId) {
+        if (!orderDao.isValidOrderId(customerId, orderId)) {
+            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+        }
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
@@ -71,7 +97,15 @@ public class OrderService {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
-            .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+            .map(this::findOrderResponseDtoByOrderId)
+            .collect(Collectors.toList());
+    }
+
+    public List<Orders> findOrdersByCustomerId(final long customerId) {
+        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+
+        return orderIds.stream()
+            .map(this::findOrderResponseDtoByOrderId)
             .collect(Collectors.toList());
     }
 

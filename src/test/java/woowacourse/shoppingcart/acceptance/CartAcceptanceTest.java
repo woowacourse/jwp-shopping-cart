@@ -22,7 +22,8 @@ import woowacourse.shoppingcart.domain.Cart;
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
 
-    private static final String USER = "puterism";
+    private static final long CUSTOMER_ID = 1L;
+
     private Long productId1;
     private Long productId2;
 
@@ -38,7 +39,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(CUSTOMER_ID, productId1);
 
         장바구니_아이템_추가됨(response);
     }
@@ -46,10 +47,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
+        장바구니_아이템_추가되어_있음(CUSTOMER_ID, productId1);
+        장바구니_아이템_추가되어_있음(CUSTOMER_ID, productId2);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(CUSTOMER_ID);
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
@@ -58,14 +59,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        Long cartId = 장바구니_아이템_추가되어_있음(CUSTOMER_ID, productId1);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(CUSTOMER_ID, cartId);
 
         장바구니_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(long customerId, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);
 
@@ -73,25 +74,25 @@ public class CartAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(requestBody)
-            .when().post("/api/customers/{customerName}/carts", userName)
+            .when().post("/api/customers/{customerId}/carts", customerId)
             .then().log().all()
             .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(long customerId) {
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/api/customers/{customerName}/carts", userName)
+            .when().get("/api/customers/{customerId}/carts", customerId)
             .then().log().all()
             .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(long customerId, Long cartId) {
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
+            .when().delete("/api/customers/{customerId}/carts/{cartId}", customerId, cartId)
             .then().log().all()
             .extract();
     }
@@ -101,8 +102,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
+    public static Long 장바구니_아이템_추가되어_있음(long customerId, Long productId) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(customerId, productId);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 
