@@ -52,6 +52,15 @@ public class ProductDao {
         return namedParameterJdbcTemplate.query(sql, PRODUCT_MAPPER);
     }
 
+    public List<Product> findProductsByPaging(int page, int limit) {
+        int passedId = (page - 1) * limit;
+        String sql = "SELECT id, name, price, stock, image_url FROM product "
+                + "WHERE id > :passed_id ORDER BY id LIMIT 0, :limit";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("passed_id", passedId)
+                .addValue("limit", limit);
+        return namedParameterJdbcTemplate.query(sql, parameters, PRODUCT_MAPPER);
+    }
+
     public boolean exists(Long id) {
         String sql = "SELECT EXISTS (SELECT 1 FROM product WHERE id = :id)";
         MapSqlParameterSource parameters = new MapSqlParameterSource("id", id);
@@ -69,5 +78,10 @@ public class ProductDao {
         final String sql = "DELETE FROM product WHERE id = :id";
         MapSqlParameterSource parameters = new MapSqlParameterSource("id", productId);
         namedParameterJdbcTemplate.update(sql, parameters);
+    }
+
+    public int countAll() {
+        String sql = "SELECT COUNT(id) FROM product";
+        return namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
     }
 }
