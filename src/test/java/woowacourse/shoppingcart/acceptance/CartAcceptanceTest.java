@@ -41,7 +41,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        String token = 회원_가입_후_로그인();
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(new CartItemAddRequest(productId1, 1), token);
 
         장바구니_아이템_추가됨(response);
@@ -57,6 +56,15 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
+    }
+    
+    @DisplayName("장바구니 아이템 수량 정정")
+    @Test
+    void updateCartItemQuantity() {
+        Long cartItemId = 장바구니_아이템_추가되어_있음(new CartItemAddRequest(productId1, 1), token);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청(cartItemId, 2, token);
+        장바구니_아이템_수정_응답됨(response);
     }
 
     @DisplayName("장바구니 삭제")
@@ -76,6 +84,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().post("/api/cartItems")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_아이템_수량_수정_요청(Long cartItemId, int quantity, String token) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("/api/cartItems/" + cartItemId + "?quantity=" + quantity)
                 .then().log().all()
                 .extract();
     }
@@ -105,7 +123,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static Long 장바구니_아이템_추가되어_있음(CartItemAddRequest request, String token) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(request, token);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
+        return Long.parseLong(response.header("Location").split("/cartItems/")[1]);
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
@@ -117,6 +135,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .map(cartItem -> cartItem.getProduct().getId())
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
+    }
+
+    public static void 장바구니_아이템_수정_응답됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
