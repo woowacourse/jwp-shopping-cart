@@ -29,7 +29,8 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor(tokenManager))
                 .addPathPatterns("/api/members/**")
                 .excludePathPatterns("/api/members")
-                .excludePathPatterns("/api/members/check-email");
+                .excludePathPatterns("/api/members/check-email")
+                .excludePathPatterns("/api/carts/products");
     }
 
     @Bean
