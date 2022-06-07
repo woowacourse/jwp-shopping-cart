@@ -55,17 +55,17 @@ public class CartItemDao {
 
     public Long findProductIdById(Long cartId) {
         try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
+            String sql = "SELECT product_id FROM cart_item WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
     }
 
-    public void deleteCartItem(Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
+    public void deleteAllCartItem(Long customerId) {
+        String sql = "DELETE FROM cart_item WHERE customer_id = ?";
 
-        final int rowCount = jdbcTemplate.update(sql, id);
+        int rowCount = jdbcTemplate.update(sql, customerId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }

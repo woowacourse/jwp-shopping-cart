@@ -73,4 +73,17 @@ public class CartItemDaoTest {
         // then
         assertThat(cartIds).containsExactly(1L, 2L);
     }
+
+    @Test
+    @DisplayName("장바구니의 아이템 전체를 삭제한다.")
+    void deleteAllCartItem() {
+        // given
+        Long customerId = 1L;
+
+        // when
+        cartItemDao.deleteAllCartItem(customerId);
+
+        // then
+        assertThat(cartItemDao.findIByCustomerId(customerId)).size().isEqualTo(0);
+    }
 }

@@ -53,4 +53,19 @@ class CartServiceTest {
         // then
         assertThat(cartResponses.getProducts()).size().isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("회원의 장바구니를 비울 수 있다.")
+    void deleteAllCart() {
+        // given
+        customerService.addCustomer(new SignUpRequest("rennon", "rennon@woowa.com", "123456"));
+        productService.addProduct(new ProductRequest("치킨", 20_000, "http://example.com/chicken.jpg"));
+        cartService.addCart("rennon", new CartRequest(1L, 1, true));
+
+        // when
+        cartService.deleteAllCart("rennon");
+
+        // then
+        assertThat(cartService.findCartsByUsername("rennon").getProducts()).size().isEqualTo(0);
+    }
 }

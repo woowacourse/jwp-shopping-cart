@@ -13,7 +13,6 @@ import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartResponses;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -52,16 +51,8 @@ public class CartService {
         return cartItemDao.findIByCustomerId(customerId);
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
-    }
-
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Cart> cartIds = findCartIdsByUsername(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
+    public void deleteAllCart(String username) {
+        Long customerId = customerDao.findByUsername(new Username(username)).getId();
+        cartItemDao.deleteAllCartItem(customerId);
     }
 }

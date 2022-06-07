@@ -62,15 +62,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
-//    @DisplayName("장바구니 삭제")
-//    @Test
-//    void deleteCartItem() {
-//        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
-//
-//        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-//
-//        장바구니_삭제됨(response);
-//    }
+    @DisplayName("장바구니 삭제")
+    @Test
+    void deleteCartItem() {
+        장바구니_아이템_추가_요청(token, productId1);
+        장바구니_아이템_추가_요청(token, productId2);
+
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(token);
+
+        장바구니_삭제됨(response);
+    }
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, Long productId) {
         CartRequest cartRequest = new CartRequest(productId, 1, true);
@@ -94,15 +95,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .extract();
     }
-//
-//    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
-//        return RestAssured
-//                .given().log().all()
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
-//                .then().log().all()
-//                .extract();
-//    }
+
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/cart/all")
+                .then().log().all()
+                .extract();
+    }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -120,8 +122,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }
-//
-//    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
-//        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-//    }
+
+    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
 }
