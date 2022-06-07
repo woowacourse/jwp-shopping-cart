@@ -25,7 +25,8 @@ public class ProductService {
     }
 
     public ProductResponse findById(Long saveId) {
-        Product product = productDao.findById(saveId);
+        Product product = productDao.findById(saveId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
         return new ProductResponse(product);
     }
 

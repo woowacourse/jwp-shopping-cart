@@ -32,8 +32,9 @@ public class CartService {
 
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findById(productId);
+            Long productId = cartItemDao.findProductIdById(cartId);
+            Product product = productDao.findById(productId)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
             carts.add(new Cart(cartId, product));
         }
         return carts;
@@ -52,7 +53,6 @@ public class CartService {
             throw new InvalidProductException();
         }
     }
-
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
