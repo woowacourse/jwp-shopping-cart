@@ -64,6 +64,11 @@ public class CustomerDao {
         }
     }
 
+    public String findNameById(Long customerId) {
+        String query = "SELECT name FROM CUSTOMER WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, String.class, customerId);
+    }
+
     public Customer findById(Long customerId) {
         String query = "SELECT * FROM CUSTOMER WHERE id = ?";
         return jdbcTemplate.queryForObject(query, customerRowMapper, customerId);
