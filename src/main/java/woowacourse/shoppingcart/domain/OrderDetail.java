@@ -4,17 +4,17 @@ public class OrderDetail {
 
     private Long id;
     private Long orderId;
-    private Product product;
+    private Long productId;
     private int quantity;
 
-    public OrderDetail(final Long orderId, final Product product, final int quantity) {
-        this(null, orderId, product, quantity);
+    public OrderDetail(final Long orderId, final Long productId, final int quantity) {
+        this(null, orderId, productId, quantity);
     }
 
-    public OrderDetail(final Long id, final Long orderId, final Product product, final int quantity) {
+    public OrderDetail(final Long id, final Long orderId, final Long productId, final int quantity) {
         this.id = id;
         this.orderId = orderId;
-        this.product = product;
+        this.productId = productId;
         this.quantity = quantity;
     }
 
@@ -26,8 +26,8 @@ public class OrderDetail {
         return orderId;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
     public int getQuantity() {

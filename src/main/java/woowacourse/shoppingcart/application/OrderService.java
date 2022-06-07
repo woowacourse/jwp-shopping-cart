@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartsDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
@@ -20,13 +21,16 @@ public class OrderService {
 
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
+    private final ProductDao productDao;
     private final CartsDao cartsDao;
 
     public OrderService(final OrderDao orderDao,
                         final OrdersDetailDao ordersDetailDao,
+                        final ProductDao productDao,
                         final CartsDao cartsDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
+        this.productDao = productDao;
         this.cartsDao = cartsDao;
     }
 
@@ -43,7 +47,7 @@ public class OrderService {
 
     private List<OrderDetail> toOrderDetails(final Long orderId, final List<Carts> carts) {
         return carts.stream()
-                .map(cart -> new OrderDetail(orderId, cart.getProduct(), cart.getQuantity()))
+                .map(cart -> new OrderDetail(orderId, cart.getProduct().getId(), cart.getQuantity()))
                 .collect(Collectors.toList());
     }
 
@@ -55,7 +59,7 @@ public class OrderService {
 
     private List<OrderDetailResponse> toOrderDetailResponses(final List<OrderDetail> orderDetails) {
         return orderDetails.stream()
-                .map(OrderDetailResponse::from)
+                .map(detail -> OrderDetailResponse.from(detail, productDao.findProductById(detail.getProductId())))
                 .collect(Collectors.toList());
     }
 

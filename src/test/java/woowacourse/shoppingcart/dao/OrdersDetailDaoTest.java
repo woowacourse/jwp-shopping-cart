@@ -49,8 +49,8 @@ public class OrdersDetailDaoTest {
         final Long productId2 = saveProduct("김치볶음밥", 5000, "url.com");
         final Long orderId = orderDao.save(memberId);
 
-        final OrderDetail orderDetail = new OrderDetail(orderId, productDao.findProductById(productId), 10);
-        final OrderDetail orderDetail2 = new OrderDetail(orderId, productDao.findProductById(productId2), 10);
+        final OrderDetail orderDetail = new OrderDetail(orderId, productId, 10);
+        final OrderDetail orderDetail2 = new OrderDetail(orderId, productId2, 10);
 
         ordersDetailDao.addBatchOrderDetails(List.of(orderDetail, orderDetail2));
         assertThat(ordersDetailDao.findOrdersDetailsByOrderId(orderId)).hasSize(2);

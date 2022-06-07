@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Product;
 
 public class OrderDetailResponse {
 
@@ -33,12 +34,12 @@ public class OrderDetailResponse {
         this.quantity = quantity;
     }
 
-    public static OrderDetailResponse from(final OrderDetail orderDetail) {
+    public static OrderDetailResponse from(final OrderDetail orderDetail, final Product product) {
         return new OrderDetailResponse(orderDetail.getId(),
-                orderDetail.getProduct().getId(),
-                orderDetail.getProduct().getName(),
-                orderDetail.getProduct().getPrice(),
-                orderDetail.getProduct().getImageUrl(),
+                product.getId(),
+                product.getName(),
+                product.getPrice() * orderDetail.getQuantity(),
+                product.getImageUrl(),
                 orderDetail.getQuantity());
     }
 

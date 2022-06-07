@@ -34,9 +34,7 @@ public class OrderDao {
     }
 
     private RowMapper<Long> rowMapper() {
-        return (rs, rowNum) -> {
-            return rs.getLong("id");
-        };
+        return (rs, rowNum) -> rs.getLong("id");
     }
 
     public boolean isValidOrderId(final Long memberId, final Long orderId) {
