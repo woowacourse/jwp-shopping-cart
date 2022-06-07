@@ -9,10 +9,8 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,15 +41,6 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
-    }
-
     public Long addCart(String email, Long productId) {
         Customer customer = customerDao.findIdByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
@@ -59,6 +48,12 @@ public class CartService {
         Product product = productDao.findProductById(productId);
 
         return cartItemDao.addCartItem(customer.getId(), product.getId());
+    }
+
+    public void updateQuantity(String email, Long productId, int quantity) {
+        Customer customer = customerDao.findIdByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        cartItemDao.updateQuantity(customer.getId(), productId, quantity);
     }
 
     public void deleteCart(final String customerName, final Long cartId) {

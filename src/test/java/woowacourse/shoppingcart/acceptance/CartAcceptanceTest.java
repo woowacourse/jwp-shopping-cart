@@ -12,8 +12,11 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CreateCustomerRequest;
+import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +25,6 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
     private static final String EMAIL = "awesomeo@gmail.com";
     private static final String NICKNAME = "awesome";
     private static final String PASSWORD = "Password123!";
@@ -69,6 +71,32 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(list).usingRecursiveComparison().isEqualTo(
                         List.of(new CartItemResponse(productId1, "치킨", 10_000, 1, "http://example.com/chicken.jpg"),
                                 new CartItemResponse(productId2, "맥주", 20_000, 1, "http://example.com/beer.jpg"))
+                )
+        );
+    }
+
+    @DisplayName("장바구니에 담긴 상품의 수량을 변경한다.")
+    @Test
+    void addCartItemQuantity() {
+        String accessToken = loginAndGetAccessToken(new TokenRequest(EMAIL, PASSWORD));
+        장바구니_아이템_추가_요청(accessToken, productId1);
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new UpdateQuantityRequest(2))
+                .when().log().all()
+                .patch("/api/carts/products/{productId}", productId1)
+                .then().log().all()
+                .extract();
+
+        ExtractableResponse<Response> cartResponse = 장바구니_아이템_목록_조회_요청(accessToken);
+        List<CartItemResponse> list = cartResponse.body().jsonPath().getList(".", CartItemResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(list).usingRecursiveComparison().isEqualTo(
+                        List.of(new CartItemResponse(productId1, "치킨", 10_000, 2, "http://example.com/chicken.jpg"))
                 )
         );
     }

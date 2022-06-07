@@ -6,6 +6,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 
 import java.util.List;
 
@@ -27,6 +28,15 @@ public class CartItemController {
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal String email, @PathVariable Long productId) {
         cartService.addCart(email, productId);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/products/{productId}")
+    public ResponseEntity<Void> updateCartItemQuantity(
+            @AuthenticationPrincipal String email,
+            @PathVariable Long productId,
+            @RequestBody UpdateQuantityRequest request) {
+        cartService.updateQuantity(email, productId, request.getQuantity());
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{cartId}")
