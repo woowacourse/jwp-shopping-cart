@@ -174,7 +174,7 @@ class CustomerControllerTest {
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
         given(customerService.isDuplicateUserName(any())).willReturn(response);
 
-        ResultActions results = mvc.perform(get("/api/customers/duplication")
+        ResultActions results = mvc.perform(get("/api/customers/exists")
                 .param("userName", "giron")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
@@ -182,9 +182,6 @@ class CustomerControllerTest {
         results.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("customer-duplication-check-name",
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 뒤에 accessToken이 들어있습니다")
-                        ),
                         requestParameters(
                                 parameterWithName("userName").description("중복검사 확인 할 유저 이름")
                         ),

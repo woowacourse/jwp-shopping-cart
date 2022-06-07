@@ -35,6 +35,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtTokenInterceptor)
                 .addPathPatterns("/api/**")
                 .excludePathPatterns("/api/login", "/api/products/**",
-                        "/api/customers", "/api/customers/duplication");
+                        "/api/customers", "/api/customers/exists");
     }
 }

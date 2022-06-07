@@ -136,7 +136,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .param("userName", userName)
                 .body(userName)
-                .when().get("/api/customers/duplication")
+                .when().get("/api/customers/exists")
                 .then().log().all()
                 .extract();
 
