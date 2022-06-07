@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
@@ -10,6 +11,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartDto;
 import woowacourse.shoppingcart.exception.IllegalProductException;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -47,14 +49,24 @@ public class CartService {
         }
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public List<Cart> getCarts(Customer customer) {
+        List<Long> cartIds = cartItemDao.findIdsByCustomerId(customer.getId());
 
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+        List<CartDto> cartDtos = cartItemDao.getCartinfosByIds(cartIds);
+
+        List<Long> productIds = cartDtos.stream()
+                .map(cartDto -> cartDto.getProductId())
+                .collect(Collectors.toList());
+
+        List<Product> products = productService.getProductsByIds(productIds);
+
+        List<Integer> quantities = cartDtos.stream()
+                .map(CartDto::getQuantity)
+                .collect(Collectors.toList());
+
+        List<Cart> carts = new ArrayList<>();
+        for (int i = 0; i < cartIds.size(); i++) {
+            carts.add(new Cart(cartIds.get(i), products.get(i), quantities.get(i)));
         }
         return carts;
     }
