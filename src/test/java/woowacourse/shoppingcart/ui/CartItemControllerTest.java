@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -19,6 +20,7 @@ import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.ui.ControllerTest;
 import woowacourse.shoppingcart.ProductInsertUtil;
 import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.dto.CartItemDeleteRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.QuantityRequest;
 
@@ -107,5 +109,49 @@ class CartItemControllerTest extends ControllerTest {
 		result.andExpect(status().isOk())
 			.andExpect(content().json(
 				objectMapper.writeValueAsString(List.of(response1, response2))));
+	}
+
+	@DisplayName("장바구니 상품들을 삭제한다.")
+	@Test
+	void deleteItems() throws Exception {
+		// given
+		cartService.setItem(customerId, productId, 2);
+		Long productId2 = productInsertUtil.insert("콜라", 1500, "test.jpg");
+		cartService.setItem(customerId, productId2, 3);
+
+		// when
+		String request = objectMapper.writeValueAsString(
+			new CartItemDeleteRequest(List.of(productId, productId2)));
+
+		ResultActions result = mockMvc.perform(delete("/cart")
+			.header("Authorization", "Bearer " + token)
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(request));
+
+		// then
+		result.andExpect(status().isNoContent());
+		assertThat(cartService.findItemsByCustomer(customerId)).isEmpty();
+	}
+
+	@DisplayName("장바구니에 없는 상품을 삭제하면 404 예외가 발생한다.")
+	@Test
+	void deleteItemsFail() throws Exception {
+		// given
+		cartService.setItem(customerId, productId, 2);
+		Long productId2 = productInsertUtil.insert("콜라", 1500, "test.jpg");
+		cartService.setItem(customerId, productId2, 3);
+
+		// when
+		String request = objectMapper.writeValueAsString(
+			new CartItemDeleteRequest(List.of(productId, productId2, productId + productId2)));
+
+		ResultActions result = mockMvc.perform(delete("/cart")
+			.header("Authorization", "Bearer " + token)
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(request));
+
+		// then
+		result.andExpect(status().isNotFound());
+		assertThat(cartService.findItemsByCustomer(customerId).size()).isEqualTo(2);
 	}
 }

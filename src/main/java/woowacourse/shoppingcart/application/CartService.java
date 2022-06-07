@@ -1,12 +1,15 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import woowacourse.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
@@ -59,8 +62,28 @@ public class CartService {
         return cartItemDao.findByCustomerId(customerId);
     }
 
+    @Transactional(readOnly = true)
     public boolean existByCustomerAndProduct(Long customerId, Long productId) {
         return findItemsByCustomer(customerId).stream()
             .anyMatch(item -> item.isSameProductId(productId));
+    }
+
+    public void deleteItem(Long customerId, List<Long> productIds) {
+        List<Long> deletedCartItemIds = findMatchWithProductId(customerId, productIds);
+        validateDeleteNotExistItem(productIds, deletedCartItemIds);
+        cartItemDao.deleteAll(deletedCartItemIds);
+    }
+
+    private List<Long> findMatchWithProductId(Long customerId, List<Long> productIds) {
+        return cartItemDao.findByCustomerId(customerId).stream()
+            .filter(item -> productIds.contains(item.getProductId()))
+            .map(CartItem::getId)
+            .collect(Collectors.toList());
+    }
+
+    private void validateDeleteNotExistItem(List<Long> productIds, List<Long> deletedCartItemIds) {
+        if (deletedCartItemIds.size() < productIds.size()) {
+            throw new NoSuchElementException("장바구니에 없는 상품을 삭제할 수 없습니다.");
+        }
     }
 }

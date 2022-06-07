@@ -94,4 +94,23 @@ public class CartItemDaoTest {
         assertThat(updated.getId()).isEqualTo(item.getId());
         assertThat(updated.getQuantity()).isEqualTo(10);
     }
+
+    @DisplayName("id 리스트를 받아 해당하는 item을 전부 삭제한다.")
+    @Test
+    void deleteAll() {
+        // given
+        Long cartItemId1 = cartItemDao.save(customerId, new CartItem(product, 3))
+            .getId();
+
+        Long productId2 = productInsertUtil.insert("apple", 1_000, "woowa1.com");
+        Product product2 = new Product(productId2, "apple", 1000, "woowa1.com");
+        Long cartItemId2 = cartItemDao.save(customerId, new CartItem(product2, 2))
+            .getId();
+
+        // when
+        cartItemDao.deleteAll(List.of(cartItemId1, cartItemId2));
+
+        // then
+        assertThat(cartItemDao.findByCustomerId(customerId)).isEmpty();
+    }
 }

@@ -1,16 +1,19 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -83,5 +86,13 @@ public class CartItemDao {
 		if (rowCount == 0) {
 			throw new InvalidCartItemException();
 		}
+	}
+
+	public void deleteAll(List<Long> cartItemIds) {
+		String sql = "DELETE FROM cart_item WHERE id = :id";
+		jdbcTemplate.batchUpdate(sql, createBatch(cartItemIds.stream()
+			.map(id -> Map.of("id", id))
+			.collect(Collectors.toList()))
+		);
 	}
 }

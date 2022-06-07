@@ -111,9 +111,17 @@ public class CartAcceptanceTest {
         );
     }
 
-    @DisplayName("장바구니 삭제")
+    @DisplayName("장바구니 상품을 삭제한다.")
     @Test
     void deleteCartItem() {
+        // given
+        RestUtils.addCartItem(token, productId1, 2);
+        RestUtils.addCartItem(token, productId2, 3);
 
+        // when
+        ExtractableResponse<Response> response = RestUtils.deleteCartItem(token, List.of(productId1, productId2));
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

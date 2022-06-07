@@ -4,11 +4,16 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -96,5 +101,59 @@ class CartServiceTest {
 
 		// then
 		verify(cartItemDao).findByCustomerId(1L);
+	}
+
+	@DisplayName("삭제할 상품 id로 장바구니 상품을 전부 삭제한다.")
+	@ParameterizedTest
+	@ValueSource(strings = {"1,2", "1", "2"})
+	void deleteAllItems(String inputs) {
+		List<Long> ids = Arrays.stream(inputs.split(","))
+			.map(Long::parseLong)
+			.collect(Collectors.toList());
+
+		long customerId = 1L;
+
+		Product product1 = new Product(1L, "치킨", 20000, "test");
+		Product product2 = new Product(2L, "콜라", 1500, "test");
+		// given
+		given(cartItemDao.findByCustomerId(customerId))
+			.willReturn(List.of(
+				new CartItem(1L, product1, 2),
+				new CartItem(2L, product2, 3))
+			);
+
+		// when
+		cartService.deleteItem(customerId, ids);
+
+		// then
+		assertAll(
+			() -> verify(cartItemDao).findByCustomerId(customerId),
+			() -> verify(cartItemDao).deleteAll(ids)
+		);
+	}
+
+	@DisplayName("장바구니에 없는 상품 id로 삭제하려 하면 예외가 발생한다.")
+	@Test
+	void deleteAllItemsException() {
+		long customerId = 1L;
+
+		Product product1 = new Product(1L, "치킨", 20000, "test");
+		Product product2 = new Product(2L, "콜라", 1500, "test");
+		// given
+		given(cartItemDao.findByCustomerId(customerId))
+			.willReturn(List.of(
+				new CartItem(1L, product1, 2),
+				new CartItem(2L, product2, 3))
+			);
+
+		// when
+		assertThatThrownBy(() -> cartService.deleteItem(customerId, List.of(3L)))
+			.isInstanceOf(NoSuchElementException.class);
+
+		// then
+		assertAll(
+			() -> verify(cartItemDao).findByCustomerId(customerId),
+			() -> verify(cartItemDao, never()).deleteAll(any())
+		);
 	}
 }
