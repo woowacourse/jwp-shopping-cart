@@ -20,6 +20,7 @@ public class ProductDao {
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getInt("price"),
+                    resultSet.getInt("stock"),
                     resultSet.getString("image_url")
             );
 
@@ -41,7 +42,7 @@ public class ProductDao {
 
     public Product findProductById(final Long productId) {
         try {
-            final String sql = "SELECT id, name, price, image_url FROM product WHERE id = :id";
+            final String sql = "SELECT id, name, price, stock, image_url FROM product WHERE id = :id";
             MapSqlParameterSource parameters = new MapSqlParameterSource("id", productId);
             return namedParameterJdbcTemplate.queryForObject(sql, parameters, PRODUCT_MAPPER);
         } catch (EmptyResultDataAccessException e) {
@@ -50,7 +51,7 @@ public class ProductDao {
     }
 
     public List<Product> findProducts() {
-        final String sql = "SELECT id, name, price, image_url FROM product";
+        final String sql = "SELECT id, name, price, stock, image_url FROM product";
         return namedParameterJdbcTemplate.query(sql, PRODUCT_MAPPER);
     }
 
