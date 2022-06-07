@@ -39,7 +39,6 @@ public class CartItemDaoTest {
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
-
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
@@ -56,9 +55,10 @@ public class CartItemDaoTest {
     void existProduct_exist_true() {
         // given
         Long productId = 1L;
+        Long customerId = 1L;
 
         // when
-        boolean isExist = cartItemDao.existProduct(productId);
+        boolean isExist = cartItemDao.existProduct(customerId, productId);
 
         // then
         assertThat(isExist).isTrue();
@@ -90,7 +90,6 @@ public class CartItemDaoTest {
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
@@ -104,7 +103,6 @@ public class CartItemDaoTest {
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
