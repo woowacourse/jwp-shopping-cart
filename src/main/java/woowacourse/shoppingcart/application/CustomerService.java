@@ -9,7 +9,6 @@ import woowacourse.shoppingcart.domain.Nickname;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.response.GetMeResponse;
@@ -44,8 +43,8 @@ public class CustomerService {
         return new GetMeResponse(customer);
     }
 
-    public UniqueUsernameResponse checkUniqueUsername(UniqueUsernameRequest request) {
-        boolean isUnique = customerDao.findByUserName(request.getUsername()).isEmpty();
+    public UniqueUsernameResponse checkUniqueUsername(String username) {
+        boolean isUnique = customerDao.findByUserName(username).isEmpty();
         return new UniqueUsernameResponse(isUnique);
     }
 
