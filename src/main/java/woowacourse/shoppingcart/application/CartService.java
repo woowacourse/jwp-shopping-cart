@@ -31,10 +31,19 @@ public class CartService {
     }
 
     public void addCartItem(final long memberId, final AddCartItemRequest request) {
-        validateMember(memberId);
-        validateProduct(request.getProduct_id());
+        long productId = request.getProduct_id();
 
-        cartItemDao.add(memberId, request.getProduct_id(), 1);
+        validateMember(memberId);
+        validateProduct(productId);
+
+        long cartId = cartItemDao.findIdIfExistByMemberProductId(memberId, productId);
+
+        if (cartId > 0) {
+            cartItemDao.plusQuantityById(cartId);
+            return;
+        }
+
+        cartItemDao.add(memberId, productId, 1);
 
     }
 

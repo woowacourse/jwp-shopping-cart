@@ -42,6 +42,20 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, cartRowMapper, memberId);
     }
 
+    public long findIdIfExistByMemberProductId(final long memberId, final long productId) {
+        try {
+            final String sql = "SELECT id FROM cart_item WHERE member_id = ? AND product_id = ?";
+            return jdbcTemplate.queryForObject(sql, Integer.class, memberId, productId);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+    public void plusQuantityById(long cartId) {
+        final String sql = "UPDATE cart_item SET quantity = ((SELECT quantity FROM cart_item WHERE id = ?) + 1 ) WHERE id = ?";
+        jdbcTemplate.update(sql, cartId, cartId);
+    }
+
     public void add(final long memberId, final long productId, final int quantity) {
         simpleJdbcInsert.execute(Map.of(
                 "member_id", memberId,
