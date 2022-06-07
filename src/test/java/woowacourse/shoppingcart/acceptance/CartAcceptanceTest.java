@@ -16,6 +16,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartSaveRequest;
+import woowacourse.shoppingcart.dto.CartUpdateRequest;
 import java.util.List;
 
 @DisplayName("장바구니 관련 기능")
@@ -75,6 +76,21 @@ public class CartAcceptanceTest extends AcceptanceTest {
                                 new CartResponse(null, productId2, "맥주", 20_000, "http://example.com/beer.jpg", 10)
                         ))
         );
+    }
+
+    @DisplayName("장바구니 수량 변경")
+    @Test
+    void update() {
+        // given
+        requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(productId1, 1));
+
+        // when
+        final ExtractableResponse<Response> response =
+                requestPutWithTokenAndBody("/api/customer/carts", accessToken, new CartUpdateRequest(1L, 100));
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
     }
 
     @DisplayName("장바구니 단일 품목 삭제")

@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartSaveRequest;
+import woowacourse.shoppingcart.dto.CartUpdateRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -40,6 +41,13 @@ public class CartItemController {
         final List<CartResponse> responses = cartService.findAllByCustomerId(id);
 
         return ResponseEntity.ok().body(responses);
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> update(@AuthenticationPrincipal final Long id,
+                                       @RequestBody @Valid final CartUpdateRequest request) {
+        cartService.updateQuantity(id, request.toServiceDto());
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping

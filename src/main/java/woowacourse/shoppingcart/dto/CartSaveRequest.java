@@ -5,7 +5,7 @@ import woowacourse.shoppingcart.application.dto.CartSaveServiceRequest;
 public class CartSaveRequest {
 
     private Long productId;
-    private Integer quantity;
+    private Integer quantity = 1;
 
     private CartSaveRequest() {
     }

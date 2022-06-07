@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -12,10 +13,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.DataNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
 public class CartItemDao {
@@ -104,6 +102,32 @@ public class CartItemDao {
     public void deleteAllById(final List<Long> ids) {
         final SqlParameterSource params = new MapSqlParameterSource("ids", ids);
         final String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    public Optional<Cart> findCartByCustomerIdAndProductId(final Long customerId, final Long productId) {
+        final String sql = "SELECT CI.id, CI.product_id, P.name, P.price, P.image_url, CI.quantity " +
+                "FROM cart_item CI JOIN product P ON CI.product_id = P.id " +
+                "WHERE CI.customer_id = :customerId AND P.id = :productId";
+
+        final Map<String, Object> params = new HashMap<>();
+        params.put("customerId", customerId);
+        params.put("productId", productId);
+
+        final List<Cart> carts = namedParameterJdbcTemplate.query(sql, params, CartItemDao::rowMapper);
+        return Optional.ofNullable(DataAccessUtils.singleResult(carts));
+    }
+
+    public void update(final Cart cart, final Long customerId) {
+        final String sql = "UPDATE cart_item SET quantity = :quantity " +
+                "WHERE customer_id = :customerId AND product_id = :productId";
+
+        final Map<String, Object> params = new HashMap<>();
+        params.put("customerId", customerId);
+        params.put("productId", cart.getProductId());
+        params.put("quantity", cart.getQuantity());
+
 
         namedParameterJdbcTemplate.update(sql, params);
     }

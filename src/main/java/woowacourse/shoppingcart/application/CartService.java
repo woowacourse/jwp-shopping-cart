@@ -4,13 +4,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.CartDeleteServiceRequest;
 import woowacourse.shoppingcart.application.dto.CartSaveServiceRequest;
+import woowacourse.shoppingcart.application.dto.CartUpdateServiceRequest;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.exception.*;
+import woowacourse.shoppingcart.exception.CustomerNotFoundException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,5 +72,15 @@ public class CartService {
         if (!cartIds.containsAll(ids)) {
             throw new NotInCustomerCartItemException();
         }
+    }
+
+    public void updateQuantity(final Long customerId, final CartUpdateServiceRequest request) {
+        getCustomer(customerId);
+        final Cart cart = cartItemDao.findCartByCustomerIdAndProductId(customerId, request.getProductId())
+                .orElseThrow(NotInCustomerCartItemException::new);
+
+        cart.updateQuantity(request.getQuantity());
+
+        cartItemDao.update(cart, customerId);
     }
 }

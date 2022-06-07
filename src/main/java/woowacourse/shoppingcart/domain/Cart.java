@@ -2,11 +2,11 @@ package woowacourse.shoppingcart.domain;
 
 public class Cart {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final Long id;
+    private final Long productId;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
     private int quantity;
 
     public Cart(final Long id, final Product product, final int quantity) {
@@ -20,6 +20,10 @@ public class Cart {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.quantity = quantity;
+    }
+
+    public void updateQuantity(final Integer quantity) {
         this.quantity = quantity;
     }
 
