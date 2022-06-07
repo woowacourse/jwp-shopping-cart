@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:customer.sql"})
 @DisplayName("Customer 서비스 테스트")
 class CustomerServiceTest {
 
