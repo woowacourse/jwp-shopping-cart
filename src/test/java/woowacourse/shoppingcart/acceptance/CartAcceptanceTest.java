@@ -19,19 +19,6 @@ import woowacourse.shoppingcart.dto.CartResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
-    private Long productId1;
-    private Long productId2;
-
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-
-        jdbcTemplate.update("INSERT INTO customer (username) VALUES ('"+ USER +"')");
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-    }
 
     @DisplayName("장바구니 아이템 추가")
     @Test
@@ -39,6 +26,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         MARU.register();
         MARU.login();
         final String token = MARU.getToken();
+
+        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
 
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, new CartRequest(productId1, 1));
 
@@ -51,6 +40,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
         MARU.register();
         MARU.login();
         final String token = MARU.getToken();
+
+        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
         장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 1));
         장바구니_아이템_추가되어_있음(token, new CartRequest(productId2, 1));
@@ -67,6 +59,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         MARU.register();
         MARU.login();
         final String token = MARU.getToken();
+
+        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
 
         Long cartId = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 1));
 
