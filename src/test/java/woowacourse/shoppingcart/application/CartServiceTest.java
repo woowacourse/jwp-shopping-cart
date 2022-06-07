@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -32,7 +33,7 @@ class CartServiceTest {
     @DisplayName("장바구니에 상품 추가하는 기능")
     void addCart() {
         // given
-        when(cartItemDao.addCartItem(1L, 1L, 0))
+        when(cartItemDao.addCartItem(1L, 1L, 1))
                 .thenReturn(1L);
 
         // when
@@ -71,7 +72,7 @@ class CartServiceTest {
         final Cart rice = new Cart(1L, 1L, "밥", 1000, "www.naver.com", 1);
         when(cartItemDao.findByCustomerIdAndProductId(1L, 1L))
                 .thenReturn(rice);
-        when(cartItemDao.update(rice))
+        when(cartItemDao.update(any(Cart.class)))
                 .thenReturn(2);
 
         // when, then

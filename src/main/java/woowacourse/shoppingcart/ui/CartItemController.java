@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 
 @RestController
 @RequestMapping("/api")
@@ -51,6 +53,13 @@ public class CartItemController {
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final Long customerId,
                                                @Valid @RequestBody DeleteCartItemRequest request) {
         cartService.deleteCart(customerId, request.getCartIds());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/customer/carts")
+    public ResponseEntity<Void> updateCartItem(@AuthenticationPrincipal final Long customerId,
+                                               @Valid @RequestBody UpdateCartItemRequest request) {
+        cartService.update(customerId, request.getProductId(), request.getQuantity());
         return ResponseEntity.noContent().build();
     }
 

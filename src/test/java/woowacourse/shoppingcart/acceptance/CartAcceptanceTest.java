@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.acceptance.AuthAcceptanceFixture;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -63,6 +64,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 토큰으로_장바구니_갯수_수정_요청(String token, UpdateCartItemRequest data) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(data)
+                .when().put("/api/customer/carts")
+                .then().log().all()
+                .extract();
+    }
+
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
@@ -90,6 +102,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    public static void 장바구니_제품_갯수_수정됨(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
@@ -147,5 +163,19 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 = 토큰으로_장바구니_삭제_요청(token, new DeleteCartItemRequest(List.of(cartId1, cartId2)));
 
         장바구니_삭제됨(response);
+    }
+
+    @Test
+    @DisplayName("장바구니 제품 갯수 수정")
+    void updateCartItemQuantity() {
+        // given
+        Long cartId1 = 토큰으로_장바구니_아이템_추가되어_있음(token, productId1);
+
+        // when
+        final ExtractableResponse<Response> response = 토큰으로_장바구니_갯수_수정_요청(token,
+                new UpdateCartItemRequest(1L, 2));
+
+        // then
+        장바구니_제품_갯수_수정됨(response);
     }
 }
