@@ -1,21 +1,22 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.acceptance.fixture.CartSimpleAssured.장바구니_상품_등록;
+import static woowacourse.shoppingcart.acceptance.fixture.CartSimpleAssured.장바구니_상품_조회;
 import static woowacourse.shoppingcart.acceptance.fixture.ProductSimpleAssured.상품_등록;
 import static woowacourse.shoppingcart.acceptance.fixture.UserSimpleAssured.회원가입_요청;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Map;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.acceptance.fixture.UserSimpleAssured;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
@@ -76,13 +77,25 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.jsonPath().getString("message")).isEqualTo("중복된 물품입니다.");
     }
 
-    private ExtractableResponse<Response> 장바구니_상품_등록(String token, String productId) {
-        return RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .when().log().all()
-                .body(Map.of("productId", productId))
-                .post("/users/me/carts")
-                .then().log().all().extract();
+    @DisplayName("장바구니 상품을 조회할 때 인가가 잘못되면 401을 응답한다.")
+    @Test
+    void getCartItemsUnAuthorized() {
+        ExtractableResponse<Response> response = 장바구니_상품_조회("invalidToken");
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("장바구니 상품을 조회할 때 정상 케이스인 경우 장바구니 상품 목록과 200을 응답한다.")
+    @Test
+    void getCartItemsOk() {
+        상품_등록(new ProductRequest("상품", 10000, "image.url"));
+
+        장바구니_상품_등록(로그인된_토큰, "1");
+        ExtractableResponse<Response> response = 장바구니_상품_조회(로그인된_토큰);
+        List<CartItemResponse> list = response.jsonPath().getList("cartList", CartItemResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(list).hasSize(1)
+        );
     }
 }

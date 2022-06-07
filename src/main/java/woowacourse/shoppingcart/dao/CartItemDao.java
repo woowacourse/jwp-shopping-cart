@@ -1,10 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -16,6 +20,28 @@ public class CartItemDao {
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<CartItem> findByCustomerId(final Long customerId) {
+        final String sql = "SELECT ci.id, pr.name product_name, pr.price product_price, "
+                + "pr.image_url product_image_url, ci.quantity "
+                + "FROM cart_item AS ci "
+                + "JOIN customer AS cu ON ci.customer_id = cu.id "
+                + "JOIN product AS pr ON ci.product_id = pr.id "
+                + "WHERE ci.customer_id = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapToCartItem(rs), customerId);
+    }
+
+    private CartItem mapToCartItem(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getLong("id");
+        String name = resultSet.getString("product_name");
+        int price = resultSet.getInt("product_price");
+        String image_url = resultSet.getString("product_image_url");
+        int quantity = resultSet.getInt("quantity");
+
+        Product product = new Product(name, price, image_url);
+        return new CartItem(id, product, quantity);
     }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {

@@ -1,18 +1,14 @@
 package woowacourse.shoppingcart.ui;
 
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.application.UserService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.application.CartService;
 
-import java.net.URI;
 import java.util.List;
-import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.domain.user.Customer;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.ProductIdRequest;
 
 @RestController
@@ -26,8 +22,9 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<Object> getCartItems(@AuthenticationPrincipal String email) {
+        List<CartItemResponse> cartItemsResponse = cartService.findCartsByCustomerEmail(email);
+        return ResponseEntity.ok().body(Map.of("cartList", cartItemsResponse));
     }
 
     @PostMapping
