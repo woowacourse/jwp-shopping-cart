@@ -3,9 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.*;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +15,8 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartItemRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -49,8 +46,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(CUSTOMER_ID, productId1, 5);
-        장바구니_아이템_추가되어_있음(CUSTOMER_ID, productId2, 5);
+        장바구니_아이템_추가_요청(CUSTOMER_ID, productId1, 5);
+        장바구니_아이템_추가_요청(CUSTOMER_ID, productId2, 5);
 
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(CUSTOMER_ID);
 
@@ -58,14 +55,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
-    @DisplayName("장바구니 삭제")
+    @DisplayName("장바구니 상품 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(CUSTOMER_ID, productId1, 5);
+        장바구니_아이템_추가_요청(CUSTOMER_ID, productId1, 5);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(CUSTOMER_ID, cartId);
+        ExtractableResponse<Response> response = 장바구니_아이템_삭제_요청(CUSTOMER_ID, productId1);
 
-        장바구니_삭제됨(response);
+        장바구니_아이템_삭제됨(response);
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(long customerId, Long productId, int count) {
@@ -89,23 +86,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(long customerId, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_아이템_삭제_요청(long customerId, long productId) {
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().delete("/api/customers/{customerId}/carts/{cartId}", customerId, cartId)
+            .when().delete("/api/customers/{customerId}/carts?productId={productId}", customerId, productId)
             .then().log().all()
             .extract();
     }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static Long 장바구니_아이템_추가되어_있음(long customerId, Long productId, int count) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(customerId, productId, count);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
@@ -113,13 +104,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", CartResponse.class).stream()
-            .map(CartResponse::getProductId)
+        List<Long> resultProductIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
+            .map(CartItemResponse::getProductId)
             .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }
 
-    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
+    public static void 장바구니_아이템_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

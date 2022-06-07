@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 
-public class CartResponse {
+public class CartItemResponse {
 
     private Long productId;
     private String thumbnailUrl;
@@ -11,7 +11,7 @@ public class CartResponse {
     private Integer quantity;
     private Integer count;
 
-    public CartResponse(Long productId, String thumbnailUrl, String name, Integer price, Integer quantity,
+    public CartItemResponse(Long productId, String thumbnailUrl, String name, Integer price, Integer quantity,
         Integer count) {
         this.productId = productId;
         this.thumbnailUrl = thumbnailUrl;
@@ -21,10 +21,10 @@ public class CartResponse {
         this.count = count;
     }
 
-    public CartResponse() {
+    public CartItemResponse() {
     }
 
-    public CartResponse(Cart cart) {
+    public CartItemResponse(CartItem cart) {
         this.productId = cart.getProductId();
         this.thumbnailUrl = cart.getImageUrl();
         this.name = cart.getName();

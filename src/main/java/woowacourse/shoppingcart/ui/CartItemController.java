@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.ui;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,14 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.CartItemRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
@@ -33,10 +31,10 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> getCartItems(@PathVariable final long customerId) {
-        List<Cart> carts = cartService.findCartsByCustomerId(customerId);
-        List<CartResponse> cartResponses = carts.stream()
-            .map(CartResponse::new)
+    public ResponseEntity<List<CartItemResponse>> getCartItems(@PathVariable final long customerId) {
+        List<CartItem> carts = cartService.findCartItemsByCustomerId(customerId);
+        List<CartItemResponse> cartResponses = carts.stream()
+            .map(CartItemResponse::new)
             .collect(Collectors.toList());
         return ResponseEntity.ok().body(cartResponses);
     }
@@ -44,19 +42,14 @@ public class CartItemController {
     @PostMapping
     public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final CartItemRequest request,
         @PathVariable final long customerId) {
-        final Long cartId = cartService.addCart(request.getProductId(), customerId, request.getCount());
-        final URI responseLocation = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{cartId}")
-            .buildAndExpand(cartId)
-            .toUri();
-        return ResponseEntity.created(responseLocation).build();
+        cartService.addCartItem(request.getProductId(), customerId, request.getCount());
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{cartId}")
+    @DeleteMapping
     public ResponseEntity<Void> deleteCartItem(@PathVariable final long customerId,
-        @PathVariable final Long cartId) {
-        cartService.deleteCart(customerId, cartId);
+        @RequestParam long productId) {
+        cartService.deleteCartItem(customerId, productId);
         return ResponseEntity.noContent().build();
     }
 }
