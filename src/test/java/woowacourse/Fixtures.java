@@ -23,7 +23,9 @@ import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 public class Fixtures {
 
     public static CustomerRequest 조조그린_요청 = new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!");
+    public static CustomerRequest 헌치_요청 = new CustomerRequest("hunch@naver.com", "hunch", "1234abcd!");
     public static CustomerLoginRequest 조조그린_로그인_요청 = new CustomerLoginRequest("jo@naver.com", "1234abcd!");
+    public static CustomerLoginRequest 헌치_로그인_요청 = new CustomerLoginRequest("hunch@naver.com", "1234abcd!");
     public static Customer 헌치 = new Customer(1L, "hunch@gmail.com", "asdf1234@", "헌치");
     public static Product 치킨 = new Product(1L, "치킨", 10000, "http://example.com/chicken.jpg");
     public static Product 피자 = new Product(2L, "맥주", 20000, "http://example.com/beer.jpg");
@@ -136,6 +138,10 @@ public class Fixtures {
 
     public static void UNAUTHORIZED(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    public static void FORBIDDEN(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     public static void NOT_FOUND(final ExtractableResponse<Response> response) {

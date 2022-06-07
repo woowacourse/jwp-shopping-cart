@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.Fixtures.BAD_REQUEST;
+import static woowacourse.Fixtures.예외메세지_검증;
 import static woowacourse.Fixtures.치킨;
 import static woowacourse.Fixtures.피자;
 
@@ -21,19 +23,74 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProductsOfPage() {
-        ExtractableResponse<Response> response = 상품_목록_조회_요청(1, 2);
+        // given
+        int page = 1;
+        int limit = 2;
 
+        // when
+        ExtractableResponse<Response> response = 상품_목록_조회_요청(page, limit);
+
+        // then
         조회_응답됨(response);
         상품_목록_포함됨(치킨.getId(), 피자.getId(), response);
+    }
+
+    @DisplayName("없는 페이지일 경우 조회할 수 없다.")
+    @Test
+    void getProductsOfPage_noPageError() {
+        // given
+        int page = 100;
+        int limit = 10;
+
+        // when
+        ExtractableResponse<Response> response = 상품_목록_조회_요청(page, limit);
+
+        // then
+        BAD_REQUEST(response);
+        예외메세지_검증(response, "올바르지 않은 포맷의 페이지 입니다.");
+    }
+
+    @DisplayName("상품 개수가 1 이상이어야 한다.")
+    @Test
+    void getProductsOfPage_limitError() {
+        // given
+        int page = 2;
+        int limit = 0;
+
+        // when
+        ExtractableResponse<Response> response = 상품_목록_조회_요청(page, limit);
+
+        // then
+        BAD_REQUEST(response);
+        예외메세지_검증(response, "올바르지 않은 포맷의 페이지 입니다.");
     }
 
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
-        ExtractableResponse<Response> response = 상품_조회_요청(치킨.getId());
+        // given
+        Long 치킨Id = 치킨.getId();
 
+        // when
+        ExtractableResponse<Response> response = 상품_조회_요청(치킨Id);
+
+        //then
         조회_응답됨(response);
-        상품_조회됨(response, 치킨.getId());
+        상품_조회됨(response, 치킨Id);
+    }
+
+    @DisplayName("해당 아이디의 상품이 없을 경우 조회할 수 없다.")
+    @Test
+    void getProduct_noIdError() {
+        // given
+        long productId = 1000L;
+
+        // when
+        ExtractableResponse<Response> response = 상품_조회_요청(productId);
+
+        //then
+        BAD_REQUEST(response);
+        예외메세지_검증(response, "올바르지 않은 사용자 이름이거나 상품 아이디 입니다.");
     }
 
     public static ExtractableResponse<Response> 상품_목록_조회_요청(int page, int limit) {
