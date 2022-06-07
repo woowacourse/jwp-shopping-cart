@@ -1,8 +1,8 @@
-drop table if exists cart_item;
+drop table if exists cart_item cascade;
 
-drop table if exists product;
+drop table if exists product cascade;
 
-drop table if exists member;
+drop table if exists member cascade;
 
 create table member
 (
