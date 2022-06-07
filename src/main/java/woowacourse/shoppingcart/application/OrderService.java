@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.repository.OrderRepository;
 import woowacourse.shoppingcart.repository.dao.CartItemDao;
-import woowacourse.shoppingcart.repository.dao.OrderDao;
-import woowacourse.shoppingcart.repository.dao.OrdersDetailDao;
 
 @Service
 @Transactional(rollbackFor = Exception.class)

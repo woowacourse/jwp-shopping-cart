@@ -5,9 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.Fixtures.치킨;
 import static woowacourse.Fixtures.피자;
 
-import java.io.File;
 import java.util.List;
-import java.util.Scanner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.shoppingcart.exception.custum.InvalidInputException;

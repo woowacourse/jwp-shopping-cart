@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponse;
 
 @SpringBootTest
 @Sql("/init.sql")
@@ -32,7 +32,7 @@ class ProductServiceTest {
         물품추가(jdbcTemplate, 피자);
 
         // when
-        List<Product> productsOfPage = productService.findProductsOfPage(1, 1);
+        List<ProductResponse> productsOfPage = productService.findProductsOfPage(1, 1);
 
         //then
         assertThat(productsOfPage)
@@ -49,7 +49,7 @@ class ProductServiceTest {
         Long 피자아이디 = 물품추가(jdbcTemplate, 피자);
 
         // when
-        Product product = productService.findProductById(치킨아이디);
+        ProductResponse product = productService.findProductById(치킨아이디);
 
         //then
         assertThat(product)

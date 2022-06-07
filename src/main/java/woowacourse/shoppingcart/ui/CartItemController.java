@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartIdRequest;
 import woowacourse.shoppingcart.dto.CartProductInfoRequest;
 import woowacourse.shoppingcart.dto.CartProductInfoResponse;
@@ -41,8 +40,9 @@ public class CartItemController {
     }
 
     @PatchMapping
-    public ResponseEntity<List<CartProductInfoResponse>> updateCartItems(@AuthenticationPrincipal final TokenRequest tokenRequest,
-                                                      @RequestBody final List<CartProductInfoRequest> productIdRequests) {
+    public ResponseEntity<List<CartProductInfoResponse>> updateCartItems(
+            @AuthenticationPrincipal final TokenRequest tokenRequest,
+            @RequestBody final List<CartProductInfoRequest> productIdRequests) {
         return ResponseEntity.ok().body(cartService.patchCart(productIdRequests, tokenRequest.getCustomerId()));
     }
 

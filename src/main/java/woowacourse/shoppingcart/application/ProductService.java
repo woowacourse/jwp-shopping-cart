@@ -1,10 +1,11 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.Products;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.repository.dao.ProductDao;
 
 @Service
@@ -16,12 +17,14 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProductsOfPage(final int pageNumber, final int limit) {
+    public List<ProductResponse> findProductsOfPage(final int pageNumber, final int limit) {
         Products products = new Products(productDao.findAll());
-        return products.calculatePage(pageNumber, limit);
+        return products.calculatePage(pageNumber, limit).stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findById(productId);
+    public ProductResponse findProductById(final Long productId) {
+        return ProductResponse.of(productDao.findById(productId));
     }
 }
