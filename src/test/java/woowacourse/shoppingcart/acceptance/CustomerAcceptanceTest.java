@@ -27,6 +27,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.CREATED.value());
         response.body(
+                "id", equalTo(1),
                 "email", equalTo("email"),
                 "name", equalTo("name"),
                 "phone", equalTo("010-1234-5678"),
@@ -67,6 +68,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ValidatableResponse response = requestHttpGet(accessToken, "/customers");
         response.statusCode(HttpStatus.OK.value());
         response.body(
+                "id", equalTo(1),
                 "email", equalTo("email"),
                 "name", equalTo("judy"),
                 "phone", equalTo("010-1111-2222"),

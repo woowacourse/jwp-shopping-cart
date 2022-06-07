@@ -27,15 +27,15 @@ public class CustomerService {
     public CustomerResponse save(CustomerRequest customerRequest) {
         validateEmailDuplication(customerRequest.getEmail());
         Customer customer = customerRequest.createCustomer();
-        customerDao.save(customer);
-        return CustomerResponse.from(customer);
+        Long id = customerDao.save(customer);
+        return CustomerResponse.of(id, customer);
     }
 
     @Transactional(readOnly = true)
     public CustomerResponse find(Long customerId) {
         checkExistById(customerId);
         Customer customer = customerDao.findById(customerId);
-        return CustomerResponse.from(customer);
+        return CustomerResponse.of(customer);
     }
 
     private void checkExistById(Long customerId) {
