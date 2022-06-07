@@ -13,11 +13,20 @@
 - [X] 로그인
 
 ### 리팩토링
+- [ ] POST /api/customers/duplication를 GET /api/customers/exists?userName=ellie로 변경
 
-- [X] 회원 이름, 비밀번호 제약 변경
-  - 8-16자 , 소문자, 대문자, 숫자, 특수문자(!, @, #, $, %, ^, &, *, -, _), 전부 다 하나 이상!!
-- [X] 회원 이름 중복 검사 기능 추가
-- [X] DTO 필드의 회원 이름을 userName으로 통일
+<br>
+
+## 🛠 2단계 기능 목록
+
+- [ ] 장바구니, 주문 요청 URL에서 {customerName} 제거
+  - Access Token을 사용해 사용자 정보를 확인할 수 있도록 한다. 
+- [ ] CartItem에 quantity 추가
+  - quantity는 1~99개로 제한한다. 
+- [ ] CartItem의 quantity 변경 API 추가
+  - PATCH /api/customers/me/carts
+- [ ] Product 전체 목록 조회 시 cartId, cartQuantity도 보내도록 변경
+  - 토큰의 존재 여부에 따라 다르게 동작하게 해야한다. 
 
 <br>
 
@@ -33,6 +42,32 @@
 | DELETE | /api/customers/me | 회원 탈퇴       |
 | POST   | /api/login        | 로그인         |
 | POST   |/api/customers/duplication | 회원 이름 중복 검사 |
+
+### 제품 기능 API 명세
+
+| Method | Url                        | Description |
+|--------|----------------------------|-------------|
+| POST   | /api/products              | 제품 추가       |
+| GET    | /api/products            | 제품 목록 조회    |
+| GET    | /api/products/{productId}          | 제품 정보 조회    |
+| DELETE | /api/products/{productId}          | 제품 삭제       |
+
+### 장바구니 기능 API 명세
+
+| Method | Url                                       | Description    |
+|--------|-------------------------------------------|----------------|
+| POST   | /api/customers/me/carts                   | 장바구니에 제품 추가    |
+| GET    | /api/customers/me/carts                   | 장바구니 제품 목록 조회  |
+| DELETE | /api/customers/me/carts/{cartId}          | 장바구니의 제품 삭제    |
+| PATCH  | /api/customers/me/carts/{cartId}/quantity | 장바구니의 제품 수량 변경 |
+
+### 주문 기능 API 명세
+
+| Method | Url                                       | Description    |
+|--------|-------------------------------------------|----------------|
+| POST   | /api/customers/me/orders                   | 주문 추가          |
+| GET    | /api/customers/me/orders                   | 주문 목록 조회       |
+| GET    | /api/customers/me/orders/{orderId}        | 주문 정보 조회       |
 
 <br>
 
