@@ -43,7 +43,7 @@ public class ProductDaoTest {
     @Test
     void getProducts() {
         // given
-        final int size = 2;
+        final int size = 101;
 
         // when
         final List<Product> products = productDao.findAll();
