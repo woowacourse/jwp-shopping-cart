@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 
 @RestController
-@RequestMapping("/api/members/me/carts")
+@RequestMapping("/api/members/me/cart")
 public class CartController {
     private final CartService cartService;
 
@@ -33,7 +33,7 @@ public class CartController {
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final Long memberId,
                                             @RequestBody final CartRequest cartRequest) {
         final Long id = cartService.addCart(memberId, cartRequest);
-        return ResponseEntity.created(URI.create("/api/members/me/carts/" + id)).build();
+        return ResponseEntity.created(URI.create("/api/members/me/cart/" + id)).build();
     }
 
     @DeleteMapping("/{cartId}")

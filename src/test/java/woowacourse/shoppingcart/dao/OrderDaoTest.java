@@ -25,7 +25,6 @@ import woowacourse.member.dao.MemberDao;
 import woowacourse.shoppingcart.domain.LazyOrders;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

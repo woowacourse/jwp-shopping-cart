@@ -9,7 +9,6 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -75,7 +74,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequest)
-                .when().post("/api/members/me/carts")
+                .when().post("/api/members/me/cart")
                 .then().log().all()
                 .extract();
     }
@@ -85,7 +84,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/members/me/carts")
+                .when().get("/api/members/me/cart")
                 .then().log().all()
                 .extract();
     }
@@ -95,7 +94,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/members/me/carts/{cartId}", cartId)
+                .when().delete("/api/members/me/cart/{cartId}", cartId)
                 .then().log().all()
                 .extract();
     }
@@ -107,7 +106,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static Long 장바구니_아이템_추가되어_있음(String token, CartRequest cartRequest) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, cartRequest);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
+        return Long.parseLong(response.header("Location").split("/cart/")[1]);
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {

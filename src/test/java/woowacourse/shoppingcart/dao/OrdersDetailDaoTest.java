@@ -53,7 +53,7 @@ public class OrdersDetailDaoTest {
         final OrderDetail orderDetail2 = new OrderDetail(orderId, productId2, 10);
 
         ordersDetailDao.addBatchOrderDetails(List.of(orderDetail, orderDetail2));
-        assertThat(ordersDetailDao.findOrdersDetailsByOrderId(orderId)).hasSize(2);
+        assertThat(orderDao.findOrderByIdLazyOrderDetails(orderId).getOrderDetails()).hasSize(2);
     }
 
     private Long saveMember() {

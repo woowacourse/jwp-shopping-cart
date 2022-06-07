@@ -59,17 +59,17 @@ include::{snippets}/products-delete/http-response.adoc[]
 
 = Carts
 
-== carts create
-include::{snippets}/carts-add/http-request.adoc[]
-include::{snippets}/carts-add/http-response.adoc[]
+== cart create
+include::{snippets}/cart-add/http-request.adoc[]
+include::{snippets}/cart-add/http-response.adoc[]
 
-== carts find
-include::{snippets}/carts-get/http-request.adoc[]
-include::{snippets}/carts-get/http-response.adoc[]
+== cart find
+include::{snippets}/cart-get/http-request.adoc[]
+include::{snippets}/cart-get/http-response.adoc[]
 
-== carts delete
-include::{snippets}/carts-delete/http-request.adoc[]
-include::{snippets}/carts-delete/http-response.adoc[]
+== cart delete
+include::{snippets}/cart-delete/http-request.adoc[]
+include::{snippets}/cart-delete/http-response.adoc[]
 
 = Order
 

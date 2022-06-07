@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartsDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Carts;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
@@ -33,8 +33,8 @@ public class CartService {
 
     public Long addCart(final Long memberId, final CartRequest cartRequest) {
         final Product foundProduct = productDao.findProductById(cartRequest.getProductId());
-        final Carts carts = new Carts(memberId, foundProduct, cartRequest.getQuantity());
-        return cartsDao.save(carts);
+        final Cart cart = new Cart(memberId, foundProduct, cartRequest.getQuantity());
+        return cartsDao.save(cart);
     }
 
     public void deleteCart(final Long memberId, final Long cartId) {
@@ -43,9 +43,9 @@ public class CartService {
     }
 
     private void validateCustomerCart(final Long memberId, final Long cartId) {
-        final List<Carts> carts = cartsDao.findCartsByMemberId(memberId);
-        final Carts foundCart = cartsDao.findCartById(cartId);
-        if (!carts.contains(foundCart)) {
+        final List<Cart> cart = cartsDao.findCartsByMemberId(memberId);
+        final Cart foundCart = cartsDao.findCartById(cartId);
+        if (!cart.contains(foundCart)) {
             throw new NotInCustomerCartItemException();
         }
     }

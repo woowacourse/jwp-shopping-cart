@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import woowacourse.shoppingcart.domain.Carts;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 
 public class CartResponse {
@@ -34,7 +34,7 @@ public class CartResponse {
         this.quantity = quantity;
     }
 
-    public static CartResponse from(final Carts cart) {
+    public static CartResponse from(final Cart cart) {
         final Product product = cart.getProduct();
         return new CartResponse(cart.getId(),
                 product.getId(),

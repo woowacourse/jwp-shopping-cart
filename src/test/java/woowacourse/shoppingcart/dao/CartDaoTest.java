@@ -21,12 +21,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import woowacourse.helper.fixture.MemberFixture;
 import woowacourse.member.dao.MemberDao;
-import woowacourse.shoppingcart.domain.Carts;
+import woowacourse.shoppingcart.domain.Cart;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartsDaoTest {
+public class CartDaoTest {
 
     private CartsDao cartsDao;
 
@@ -34,7 +34,7 @@ public class CartsDaoTest {
 
     private ProductDao productDao;
 
-    public CartsDaoTest(final DataSource dataSource) {
+    public CartDaoTest(final DataSource dataSource) {
         cartsDao = new CartsDao(dataSource);
         memberDao = new MemberDao(dataSource);
         productDao = new ProductDao(new JdbcTemplate(dataSource));
@@ -45,7 +45,7 @@ public class CartsDaoTest {
     void createCarts() {
         final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
-        cartsDao.save(new Carts(memberId, productDao.findProductById(productId), 1));
+        cartsDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
         assertThat(cartsDao.findCartsByMemberId(memberId)).hasSize(1);
     }
 
@@ -54,10 +54,10 @@ public class CartsDaoTest {
     void findCartsById() {
         final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
-        final Long cartId = cartsDao.save(new Carts(memberId, productDao.findProductById(productId), 1));
+        final Long cartId = cartsDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
 
         assertThat(cartsDao.findCartById(cartId)).usingRecursiveComparison()
-                .isEqualTo(new Carts(cartId, memberId, productDao.findProductById(productId), 1));
+                .isEqualTo(new Cart(cartId, memberId, productDao.findProductById(productId), 1));
     }
 
     @DisplayName("여러 카트를 조회한다.")
@@ -67,8 +67,8 @@ public class CartsDaoTest {
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
         final Long productId2 = productDao.save(createProduct("초콜릿", 1000, "choco"));
 
-        final Long cartId = cartsDao.save(new Carts(memberId, productDao.findProductById(productId), 1));
-        final Long cartId2 = cartsDao.save(new Carts(memberId, productDao.findProductById(productId2), 1));
+        final Long cartId = cartsDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
+        final Long cartId2 = cartsDao.save(new Cart(memberId, productDao.findProductById(productId2), 1));
 
         assertThat(cartsDao.findCartsByIds(List.of(cartId, cartId2))).hasSize(2);
     }
@@ -78,7 +78,7 @@ public class CartsDaoTest {
     void delete() {
         final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
-        final Long cartId = cartsDao.save(new Carts(memberId, productDao.findProductById(productId), 1));
+        final Long cartId = cartsDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
         cartsDao.delete(cartId);
 
         assertThat(cartsDao.findCartsByMemberId(memberId)).isEmpty();
