@@ -1,3 +1,9 @@
+drop table if exists order_detail;
+drop table if exists orders;
+drop table if exists cart_item;
+drop table if exists product;
+drop table if exists customer;
+
 create table customer
 (
     id           bigint       not null auto_increment,

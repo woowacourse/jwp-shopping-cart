@@ -52,7 +52,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         Assertions.assertAll(
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-            () -> assertThat(customerResponse.getName()).isEqualTo("username")
+            () -> assertThat(customerResponse.getUsername()).isEqualTo("username")
         );
 
     }

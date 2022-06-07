@@ -41,7 +41,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         );
 
         // then
-        assertThat(customerResponse.getName()).isEqualTo("my-username");
+        assertThat(customerResponse.getUsername()).isEqualTo("my-username");
     }
 
     @DisplayName("Bearer Auth 로그인 실패")

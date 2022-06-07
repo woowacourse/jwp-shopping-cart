@@ -7,7 +7,6 @@ import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.EmailDuplicationResponse;
 import woowacourse.shoppingcart.application.dto.UserNameDuplicationResponse;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.customer.BcryptPasswordEncryptor;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
@@ -32,7 +31,7 @@ public class CustomerService {
 
     public Long createCustomer(CustomerRequest request) {
         Customer customer = Customer.fromInput(
-            request.getName(),
+            request.getUsername(),
             request.getPassword(),
             request.getEmail(),
             request.getAddress(),

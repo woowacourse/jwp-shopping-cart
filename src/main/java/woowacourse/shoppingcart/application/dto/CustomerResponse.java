@@ -4,7 +4,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerResponse {
 
-    private final String name;
+    private final String username;
     private final String email;
     private final String address;
     private final String phoneNumber;
@@ -13,8 +13,8 @@ public class CustomerResponse {
         this(null, null, null, null);
     }
 
-    public CustomerResponse(String name, String email, String address, String phoneNumber) {
-        this.name = name;
+    public CustomerResponse(String username, String email, String address, String phoneNumber) {
+        this.username = username;
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -28,8 +28,8 @@ public class CustomerResponse {
             customer.getPhoneNumber());
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {

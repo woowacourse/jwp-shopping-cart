@@ -4,11 +4,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public class CustomerRequest {
 
     @NotEmpty(message = "이름은 비어있을 수 없습니다.")
     @Size(min = 5, max = 20)
-    private final String name;
+    private final String username;
 
     @NotEmpty(message = "패스워드는 비어있을 수 없습니다.")
     @Size(min = 8, max = 16)
@@ -29,16 +31,16 @@ public class CustomerRequest {
         this(null, null, null, null, null);
     }
 
-    public CustomerRequest(String name, String password, String email, String address, String phoneNumber) {
-        this.name = name;
+    public CustomerRequest(String username, String password, String email, String address, String phoneNumber) {
+        this.username = username;
         this.password = password;
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {

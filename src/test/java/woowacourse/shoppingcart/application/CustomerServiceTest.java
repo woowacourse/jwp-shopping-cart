@@ -59,7 +59,7 @@ class CustomerServiceTest {
         // when
         final CustomerResponse customer = customerService.findCustomer(findCustomerRequest);
         // then
-        assertThat(customer.getName()).isEqualTo("some-name");
+        assertThat(customer.getUsername()).isEqualTo("some-name");
     }
 
     @DisplayName("id가 들어있는 요청으로 사용자정보를 수정한다.")

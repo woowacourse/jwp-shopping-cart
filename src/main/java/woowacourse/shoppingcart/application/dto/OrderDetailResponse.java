@@ -35,6 +35,10 @@ public class OrderDetailResponse {
         );
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Long getProductId() {
         return productId;
     }
