@@ -41,11 +41,16 @@ public class OrderService {
 
         for (Long cartId : cartIds) {
             CartItem cartItem = cartItemDao.getById(cartId);
-            validateProduct(cartItem.getProduct());
-            cartItem.checkQuantity();
+            validateCartItem(cartItem);
             orderedProductDao.save(ordersId, cartItem);
+            cartItemDao.delete(cartId);
         }
         return ordersId;
+    }
+
+    private void validateCartItem(CartItem cartItem) {
+        validateProduct(cartItem.getProduct());
+        cartItem.checkQuantity();
     }
 
     private void validateProduct(Product product) {

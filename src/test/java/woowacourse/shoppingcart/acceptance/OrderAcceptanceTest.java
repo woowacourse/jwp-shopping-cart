@@ -60,8 +60,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         addCartItem(token, 1L, 1);
         addCartItem(token, 2L, 1);
 
-        OrderCreateRequest firstOrder = new OrderCreateRequest(List.of(1L, 2L));
-        OrderCreateRequest secondOrder = new OrderCreateRequest(List.of(1L, 2L));
+        OrderCreateRequest firstOrder = new OrderCreateRequest(List.of(1L));
+        OrderCreateRequest secondOrder = new OrderCreateRequest(List.of(2L));
         postMethodRequestWithBearerAuth(firstOrder, token, "/api/myorders");
         postMethodRequestWithBearerAuth(secondOrder, token, "/api/myorders");
 
