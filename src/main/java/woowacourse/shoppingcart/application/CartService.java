@@ -68,4 +68,8 @@ public class CartService {
         }
         throw new NotInCustomerCartItemException();
     }
+
+    public void deleteAll() {
+        cartItemDao.deleteAll();
+    }
 }

@@ -93,6 +93,16 @@ public class RestAssuredFixture {
                 .statusCode(status);
     }
 
+    public static void deleteAllCart(String token, String path, int status) {
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+                .when().delete(path)
+                .then().log().all()
+                .statusCode(status);
+    }
+
     public static void deleteProduct(String path, int status) {
         RestAssured
                 .given().log().all()

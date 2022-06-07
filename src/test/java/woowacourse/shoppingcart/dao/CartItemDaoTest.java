@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartProductResponse;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import javax.sql.DataSource;
 
@@ -56,6 +58,26 @@ public class CartItemDaoTest {
 
         // then
         assertThat(cartProductResponse.getQuantity()).isEqualTo(1);
+    }
+
+    @DisplayName("장바구니 아이템 전체 삭제")
+    @Test
+    void deleteAll() {
+        //given
+        Product product = productDao.save(new Product("apple", 1000, "woowa2.com"));
+        cartItemDao.addCartItem(1L, product.getId(), 1L, true);
+
+        Product product2 = productDao.save(new Product("apple", 1000, "woowa2.com"));
+        final Long cartItemId2 = cartItemDao.addCartItem(1L, product2.getId(), 1L, true);
+
+        //when
+        cartItemDao.deleteAll();
+
+        //then
+        assertThatThrownBy(() -> cartItemDao.findCartIdById(cartItemId2))
+                .isInstanceOf(InvalidCartItemException.class)
+                .hasMessageContaining("유효하지 않은 장바구니입니다.");
+
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")

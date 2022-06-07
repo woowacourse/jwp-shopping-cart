@@ -23,8 +23,6 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
-    private Long productId1;
-    private Long productId2;
 
     @Override
     @BeforeEach
@@ -73,62 +71,22 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .body("products.size()", is(2));
     }
 
-    @DisplayName("장바구니 삭제")
+    @DisplayName("장바구니 전체 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
-        장바구니_삭제됨(response);
-    }
+        RestAssuredFixture.postCart(new CartProductRequest(1L, 1L, true),
+                token, "/cart", HttpStatus.CREATED.value());
+        RestAssuredFixture.postCart(new CartProductRequest(2L, 1L, true),
+                token, "/cart", HttpStatus.CREATED.value());
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
-    }
-
-    public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        //when & then
+        RestAssuredFixture.deleteAllCart(token, "/cart/all", HttpStatus.NO_CONTENT.value());
     }
 }
