@@ -78,13 +78,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void withdraw(long id, WithdrawalRequest request) {
+    public void withdraw(long id) {
         Member member = validateExistMember(memberDao.findMemberById(id));
-        Password requestPassword = new NewPassword(request.getPassword());
-        if (!member.isSamePassword(requestPassword)) {
-            throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
-        }
-
         int deletedRowCount = memberDao.deleteById(id);
         if (deletedRowCount == 0) {
             throw new MemberNotFoundException("존재하지 않는 회원입니다.");

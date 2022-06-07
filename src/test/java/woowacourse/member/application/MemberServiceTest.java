@@ -126,7 +126,7 @@ class MemberServiceTest {
     @DisplayName("올바른 id로 회원 정보를 삭제한다.")
     @Test
     void withdraw() {
-        memberService.withdraw(1L, new WithdrawalRequest("Wooteco1!"));
+        memberService.withdraw(1L);
 
         assertThatThrownBy(
                 () -> memberService.findMemberInfo(100L)
@@ -138,17 +138,8 @@ class MemberServiceTest {
     @Test
     void withdrawWithNotExistId() {
         assertThatThrownBy(
-                () -> memberService.withdraw(100L, new WithdrawalRequest("Wooteco1!"))
+                () -> memberService.withdraw(100L)
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
-    }
-
-    @DisplayName("잘못된 비밀번호로 삭제하려는 경우 예외가 발생한다.")
-    @Test
-    void withdrawWithWrongPassword() {
-        assertThatThrownBy(
-                () -> memberService.withdraw(1L, new WithdrawalRequest("WrongPassword1!"))
-        ).isInstanceOf(InvalidPasswordException.class)
-                .hasMessageContaining("현재 비밀번호와 일치하지 않습니다.");
     }
 }

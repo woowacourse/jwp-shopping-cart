@@ -50,7 +50,7 @@ public class MemberController {
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMember(@AuthenticationPrincipal Long id, @Valid @RequestBody WithdrawalRequest request) {
-        memberService.withdraw(id, request);
+    public void deleteMember(@AuthenticationPrincipal Long id) {
+        memberService.withdraw(id);
     }
 }
