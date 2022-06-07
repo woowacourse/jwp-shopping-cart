@@ -1,10 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.validation.PasswordCheck;
-import woowacourse.shoppingcart.validation.UserNameCheck;
-
-import javax.validation.constraints.*;
-
 public class SignUpRequest {
 
     private String username;

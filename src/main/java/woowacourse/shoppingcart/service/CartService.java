@@ -10,19 +10,18 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.UpdateCartItemElement;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
     private static final String NOT_EXIST_CART = "[ERROR] 존재하지 않는 장바구니입니다.";
+    public static final String NOT_EXIST_CART_ITEM = "[ERROR] 장바구니에 없는 상품이 있습니다.";
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
@@ -99,44 +98,26 @@ public class CartService {
         cartItemDao.saveItemInCart(id, productId, quantity);
     }
 
+    public CartResponse updateItem(String username, UpdateCartItemRequest updateCartItemRequest) {
+        validateExistName(username);
+        Long id = customerDao.findIdByUserName(username);
+        List<Long> cartIds = updateCartItemRequest.getCartIds();
+        List<Integer> quantities = updateCartItemRequest.getQuantities();
+        List<Boolean> checked = updateCartItemRequest.getChecked();
+        for (int i = 0; i < quantities.size(); i++) {
+            cartItemDao.updateQuantityAndCheck(id, cartIds.get(i), quantities.get(i), checked.get(i));
+        }
+        Cart cart = generateCart(id);
+        return new CartResponse(generateUpdatedCart(cart, cartIds, quantities, checked));
+    }
 
-//
-//    public List<Cart> findCartsByCustomerName(final String customerName) {
-//        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-//
-//        final List<Cart> carts = new ArrayList<>();
-//        for (final Long cartId : cartIds) {
-//            final Long productId = cartItemDao.findProductIdById(cartId);
-//            final Product product = productDao.findProductById(productId);
-//            carts.add(new Cart(cartId, product));
-//        }
-//        return carts;
-//    }
-//
-//    private List<Long> findCartIdsByCustomerName(final String customerName) {
-//        final Long customerId = customerDao.findIdByUserName(customerName);
-//        return cartItemDao.findIdsByCustomerId(customerId);
-//    }
-//
-//    public Long addCart(final Long productId, final String customerName) {
-//        final Long customerId = customerDao.findIdByUserName(customerName);
-//        try {
-//            return cartItemDao.addCartItem(customerId, productId);
-//        } catch (Exception e) {
-//            throw new InvalidProductException();
-//        }
-//    }
-//
-//    public void deleteCart(final String customerName, final Long cartId) {
-//        validateCustomerCart(cartId, customerName);
-//        cartItemDao.deleteCartItem(cartId);
-//    }
-//
-//    private void validateCustomerCart(final Long cartId, final String customerName) {
-//        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-//        if (cartIds.contains(cartId)) {
-//            return;
-//        }
-//        throw new NotInCustomerCartItemException();
-//    }
+    private Cart generateUpdatedCart(Cart cart, List<Long> cartIds, List<Integer> quantities, List<Boolean> checked) {
+        Map<Long, Product> updatedCart = new HashMap<>();
+        Collections.sort(cartIds);
+        for (Long cartId : cartIds) {
+            updatedCart.put(cartId, cart.pickOneProduct(cartId));
+        }
+        return new Cart(updatedCart, checked, quantities);
+    }
+
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 import woowacourse.shoppingcart.service.CartService;
 
 import java.net.URI;
@@ -27,6 +28,11 @@ public class CartItemController {
     public ResponseEntity addItem(@AuthenticationPrincipal String username, @RequestBody AddCartItemRequest addCartItemRequest) {
         cartService.addItem(username, addCartItemRequest);
         return ResponseEntity.created(URI.create("/cart")).build();
+    }
+
+    @PatchMapping
+    public ResponseEntity<CartResponse> updateCartItems(@AuthenticationPrincipal String username, @RequestBody UpdateCartItemRequest updateCartItemRequest) {
+        return ResponseEntity.ok().body(cartService.updateItem(username, updateCartItemRequest));
     }
 //
 //    @PostMapping

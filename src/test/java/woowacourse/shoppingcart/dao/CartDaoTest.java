@@ -80,7 +80,7 @@ public class CartDaoTest {
         Long customerId = 1L;
         Long cartId = 1L;
 
-        cartItemDao.updateQuantity(customerId, cartId, 2);
+        cartItemDao.updateQuantityAndCheck(customerId, cartId, 2, true);
 
         CartItem actual = cartItemDao.findCartItemByIds(customerId, cartId);
 
@@ -94,7 +94,7 @@ public class CartDaoTest {
         Long customerId = 1L;
         Long cartId = 1L;
 
-        cartItemDao.updateCheck(customerId, cartId, false);
+        cartItemDao.updateQuantityAndCheck(customerId, cartId, 1, false);
 
         CartItem actual = cartItemDao.findCartItemByIds(customerId, cartId);
 

@@ -24,6 +24,13 @@ public class Cart {
         }
     }
 
+    public Product pickOneProduct(Long cartId) {
+        if (!cart.containsKey(cartId)) {
+            throw new InvalidCartItemException("[ERROR] 대응되는 상품이 존재하지 않습니다.");
+        }
+        return cart.get(cartId);
+    }
+
     public List<Long> getIds() {
         return new ArrayList<>(cart.keySet());
     }

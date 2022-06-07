@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -60,13 +61,8 @@ public class CartItemDao {
         jdbcTemplate.update(sql, customerId, productId, quantity);
     }
 
-    public void updateQuantity(Long customerId, Long cartId, int quantity) {
-        final var sql = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND id = ?";
-        jdbcTemplate.update(sql, quantity, customerId, cartId);
-    }
-
-    public void updateCheck(Long customerId, Long cartId, boolean checked) {
-        final var sql = "UPDATE cart_item SET checked = ? WHERE customer_id = ? AND id = ?";
-        jdbcTemplate.update(sql, checked, customerId, cartId);
+    public void updateQuantityAndCheck(Long customerId, Long cartId, int quantity, boolean checked) {
+        final var sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE customer_id = ? AND id = ?";
+        jdbcTemplate.update(sql, quantity, checked, customerId, cartId);
     }
 }

@@ -1,9 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.validation.PasswordCheck;
-
-import javax.validation.constraints.*;
-
 public class SignInRequest {
 
     private final String password;

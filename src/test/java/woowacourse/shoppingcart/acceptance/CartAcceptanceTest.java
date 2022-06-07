@@ -129,4 +129,19 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(cartResponseElements.get(3).getCheck()).isTrue()
         );
     }
+
+    @Test
+    void 사용자의_장바구니_중_일부_항목을_수정하는_경우() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+        UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(List.of(new UpdateCartItemElement(3L, 10, false)));
+        ExtractableResponse extract = updateCartItem(accessToken, updateCartItemRequest, HttpStatus.OK);
+        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("products", CartResponseElement.class);
+        assertAll(() -> assertThat(cartResponseElements.get(0).getId()).isEqualTo(3L),
+                () -> assertThat(cartResponseElements.get(0).getName()).isEqualTo("맛있는 짬뽕"),
+                () -> assertThat(cartResponseElements.get(0).getPrice()).isEqualTo(500),
+                () -> assertThat(cartResponseElements.get(0).getImageUrl()).isEqualTo("https://www.naver.com"),
+                () -> assertThat(cartResponseElements.get(0).getQuantity()).isEqualTo(10),
+                () -> assertThat(cartResponseElements.get(0).getCheck()).isFalse()
+        );
+    }
 }

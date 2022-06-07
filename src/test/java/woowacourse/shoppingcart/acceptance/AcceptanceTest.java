@@ -130,4 +130,17 @@ public class AcceptanceTest {
                 .then().log().all()
                 .statusCode(httpStatus.value()).extract();
     }
+
+    protected ExtractableResponse updateCartItem(String accessToken, UpdateCartItemRequest updateCartItemRequest, HttpStatus httpStatus) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .body(updateCartItemRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .patch("/cart")
+                .then().log().all()
+                .statusCode(httpStatus.value()).extract();
+    }
 }
