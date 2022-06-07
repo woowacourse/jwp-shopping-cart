@@ -25,7 +25,10 @@ public class ControllerAdvice {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
-        return ResponseEntity.badRequest().body(new ErrorResponse("1000", mainError.getDefaultMessage()));
+        String defaultMessage = mainError.getDefaultMessage();
+        String[] messages = defaultMessage.split(":");
+
+        return ResponseEntity.badRequest().body(new ErrorResponse(messages[0], messages[1]));
     }
 
     @ExceptionHandler({BodyToReturnException.class})
