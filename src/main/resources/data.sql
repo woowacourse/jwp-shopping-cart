@@ -12,3 +12,24 @@ values ('꼬북칩', 2500, '꼬북칩.jpg'),
        ('포카칩', 1500, '포카칩.jpg'),
        ('콜라', 1200, '콜라.jpg')
 ;
+
+insert into cart_item (member_id, product_id, quantity)
+values (1, 1, 4),
+       (1, 2, 10),
+       (2, 1, 3),
+       (4, 1, 3),
+       (4, 2, 3)
+;
+
+insert into orders (member_id)
+values (1),
+       (4),
+       (4)
+;
+
+insert into orders_detail(orders_id, product_id, quantity)
+values (1, 1, 4),
+       (1, 2, 10),
+       (2, 1, 3),
+       (3, 2, 3)
+;

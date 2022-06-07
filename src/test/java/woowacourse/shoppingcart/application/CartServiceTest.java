@@ -36,7 +36,7 @@ class CartServiceTest {
     @Test
     void add() {
         Long cartId = cartService.add(2L, 1L);
-        assertThat(cartId).isEqualTo(1L);
+        assertThat(cartId).isEqualTo(6L);
     }
 
     @DisplayName("등록되지 않은 회원으로 장바구니를 동록하면 예외가 발생한다.")
@@ -59,25 +59,23 @@ class CartServiceTest {
     @DisplayName("회원이 등록한 장바구니 리스트를 올바르게 가져온다.")
     @Test
     void findCarts() {
-        Long cartId1 = cartService.add(1L, 1L);
-        Long cartId2 = cartService.add(1L, 2L);
-        Long cartId3 = cartService.add(1L, 3L);
-
+        int expected = 2;
         List<CartResponse> carts = cartService.findCarts(1L);
 
-        assertThat(carts.size()).isEqualTo(3);
+        assertThat(carts.size()).isEqualTo(expected);
     }
 
     @DisplayName("장바구니에 담긴 물품 수량을 변경한다.")
     @Test
     void updateQuantity() {
-        Long cartId1 = cartService.add(1L, 1L);
+        Long memberId = 4L;
+        Long cartId = 4L;
         int quantityToBeUpdated = 10;
 
-        cartService.updateQuantity(1L, cartId1, new UpdateQuantityRequest(quantityToBeUpdated));
-        List<CartResponse> carts = cartService.findCarts(1L);
+        cartService.updateQuantity(memberId, cartId, new UpdateQuantityRequest(quantityToBeUpdated));
+        List<CartResponse> carts = cartService.findCarts(memberId);
         boolean result = carts.stream()
-                .filter(v -> v.getId().equals(cartId1))
+                .filter(v -> v.getId().equals(cartId))
                 .anyMatch(v -> v.getQuantity() == quantityToBeUpdated);
 
         assertThat(result).isTrue();
@@ -86,10 +84,10 @@ class CartServiceTest {
     @DisplayName("1개 미만의 수량으로 장바구니 업데이트시 예외가 발생한다.")
     @Test
     void updateQuantityWithUnderOneQuantity() {
-        Long cartId1 = cartService.add(1L, 1L);
+        Long cartId = 1L;
         int quantityToBeUpdated = 0;
 
-        assertThatThrownBy(() -> cartService.updateQuantity(1L, cartId1, new UpdateQuantityRequest(quantityToBeUpdated)))
+        assertThatThrownBy(() -> cartService.updateQuantity(1L, cartId, new UpdateQuantityRequest(quantityToBeUpdated)))
                 .isInstanceOf(InvalidCartQuantityException.class)
                 .hasMessageContaining("상품 개수는 1개 이상이어야 합니다.");
     }
@@ -97,7 +95,7 @@ class CartServiceTest {
     @DisplayName("등록된 장바구니를 삭제한다.")
     @Test
     void deleteCart() {
-        Long cartId = cartService.add(1L, 1L);
+        Long cartId = 1L;
         cartService.deleteCart(1L, cartId);
         Optional<Long> result = cartItemDao.findProductIdById(cartId);
 
