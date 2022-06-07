@@ -85,7 +85,7 @@ class CartItemServiceTest {
         List<CartItemIdRequest> cartItemIdRequests = List.of(new CartItemIdRequest(1L), new CartItemIdRequest(2L));
 
         // when
-        cartItemService.delete(tokenRequest, cartItemIdRequests);
+        cartItemService.delete(cartItemIdRequests);
 
         // then
         List<CartItemResponse> responses = cartItemService.findCartItemsByCustomerId(tokenRequest);

@@ -50,6 +50,15 @@ public class CartItemDao {
         return namedParameterJdbcTemplate.query(query, params, ROW_MAPPER);
     }
 
+    public boolean isExist(final Long customerId, final Long productId) {
+        String query = "select exists"
+                + " (select id from cart_item where customer_id = :customerId and product_id = :productId)";
+        Map<String, Object> params = new HashMap<>();
+        params.put("customerId", customerId);
+        params.put("productId", productId);
+        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
+    }
+
     public CartItem findByCustomerIdAndProductId(final Long customerId, final Long productId) {
         String query = "select id, customer_id, product_id, quantity from cart_item"
                 + " where customer_id = :customerId and product_id = :productId";
@@ -59,7 +68,7 @@ public class CartItemDao {
         try {
             return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
         } catch (EmptyResultDataAccessException exception) {
-            return null;
+            throw new ResourceNotFoundException("존재하지 않는 장바구니 물품입니다.");
         }
     }
 
@@ -88,9 +97,6 @@ public class CartItemDao {
         String query = "delete from cart_item where customer_id = :customerId";
         Map<String, Object> params = new HashMap<>();
         params.put("customerId", customerId);
-        int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
-        if (affectedRowCount == 0) {
-            throw new ResourceNotFoundException("존재하지 않는 장바구니 물품입니다.");
-        }
+        namedParameterJdbcTemplate.update(query, params);
     }
 }

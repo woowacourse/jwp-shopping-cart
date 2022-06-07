@@ -47,13 +47,13 @@ public class CustomerRepository {
 
     public void validateDuplicateUsername(final String username) {
         if (customerDao.checkDuplicatedUsername(username)) {
-            throw new DuplicateKeyException("");
+            throw new DuplicateKeyException("중복된 값이 존재합니다.");
         }
     }
 
     public void validateDuplicateNickname(final String nickname) {
         if (customerDao.checkDuplicatedNickname(nickname)) {
-            throw new DuplicateKeyException("");
+            throw new DuplicateKeyException("중복된 값이 존재합니다.");
         }
     }
 

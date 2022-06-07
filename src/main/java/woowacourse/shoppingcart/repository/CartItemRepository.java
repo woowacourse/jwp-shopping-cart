@@ -29,11 +29,12 @@ public class CartItemRepository {
     }
 
     private void addCartItem(final Long customerId, final Long productId) {
-        CartItem cartItem = cartItemDao.findByCustomerIdAndProductId(customerId, productId);
-        if (cartItem != null) {
+        boolean isExist = cartItemDao.isExist(customerId, productId);
+        if (isExist) {
+            CartItem cartItem = cartItemDao.findByCustomerIdAndProductId(customerId, productId);
             cartItemDao.updateCartItem(cartItem.getId(), cartItem.getQuantity() + 1);
         }
-        if (cartItem == null) {
+        if (!isExist) {
             cartItemDao.create(customerId, productId);
         }
     }
