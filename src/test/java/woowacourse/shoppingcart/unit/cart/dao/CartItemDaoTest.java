@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -49,21 +50,6 @@ class CartItemDaoTest {
         assertThat(cartId).isEqualTo(1L);
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
-    @Test
-    void findProductIdsByCustomerId() {
-        // given
-        final Long customerId = 1L;
-        cartItemDao.addCartItem(customerId, 1L);
-        cartItemDao.addCartItem(customerId, 2L);
-
-        // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        // then
-        assertThat(productsIds).containsExactly(1L, 2L);
-    }
-
     @Test
     @DisplayName("Customer의 ID에 해당하는 모든 Cart 목록을 조회힌다.")
     void findAllByCustomerId() {
@@ -98,32 +84,20 @@ class CartItemDaoTest {
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
-    void findIdsByCustomerId() {
-        // given
-        final Long customerId = 1L;
-        cartItemDao.addCartItem(customerId, 1L);
-        cartItemDao.addCartItem(customerId, 2L);
-
-        // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-
-        // then
-        assertThat(cartIds).containsExactly(1L, 2L);
-    }
-
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    @Test
     void deleteCartItem() {
         // given
         final Long customerId = 1L;
-        final Long cartId =cartItemDao.addCartItem(customerId, 1L);
+        final Long cartId = cartItemDao.addCartItem(customerId, 1L);
         cartItemDao.addCartItem(customerId, 2L);
 
         // when
         cartItemDao.deleteCartItem(cartId);
 
         // then
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        final List<Long> productIds = cartItemDao.findAllByCustomerId(customerId)
+                .stream()
+                .map(Cart::getProductId)
+                .collect(Collectors.toList());
 
         assertThat(productIds).containsExactly(2L);
     }
