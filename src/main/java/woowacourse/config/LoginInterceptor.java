@@ -5,6 +5,7 @@ import static java.util.Arrays.stream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.utils.AuthorizationExtractor;
@@ -17,7 +18,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (AllowList.matches(request)) {
+        if (AllowApiList.matches(request)) {
             return true;
         }
         String token = AuthorizationExtractor.extract(request);
@@ -28,25 +29,21 @@ public class LoginInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private enum AllowList {
+    @RequiredArgsConstructor
+    private enum AllowApiList {
 
-        CUSTOMERS_POST("POST", "/api/customers");
+        CUSTOMERS_POST(HttpMethod.POST, "/api/customers");
 
-        private final String method;
+        private final HttpMethod method;
         private final String uri;
-
-        AllowList(String method, String uri) {
-            this.method = method;
-            this.uri = uri;
-        }
 
         public static boolean matches(HttpServletRequest request) {
             return stream(values())
-                    .anyMatch(api -> matchesInternal(request, api));
+                    .anyMatch(api -> matchesInternal(api, request));
         }
 
-        private static boolean matchesInternal(HttpServletRequest request, AllowList api) {
-            return request.getMethod().equals(api.method) && request.getRequestURI().equals(api.uri);
+        private static boolean matchesInternal(AllowApiList api, HttpServletRequest request) {
+            return api.method.matches(request.getMethod()) && api.uri.equals(request.getRequestURI());
         }
     }
 }

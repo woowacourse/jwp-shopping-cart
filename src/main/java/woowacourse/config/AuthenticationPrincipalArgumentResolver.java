@@ -1,4 +1,4 @@
-package woowacourse.auth.ui;
+package woowacourse.config;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;

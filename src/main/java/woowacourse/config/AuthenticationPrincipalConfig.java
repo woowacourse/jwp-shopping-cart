@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.utils.JwtTokenProvider;
-import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 
 @Configuration
 @RequiredArgsConstructor
