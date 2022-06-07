@@ -33,4 +33,11 @@ public class CartItemController {
         cartService.removeCartItems(token, removedCartItemsRequest);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping
+    public ResponseEntity<Void> editCartItem(HttpServletRequest request, @RequestBody CartItemRequest cartItemRequest) {
+        String token = AuthorizationExtractor.extract(request);
+        cartService.editCartItem(token, cartItemRequest);
+        return ResponseEntity.ok().build();
+    }
 }

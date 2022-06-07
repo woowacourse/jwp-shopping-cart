@@ -39,18 +39,6 @@ public class CartService {
         return new CartItemResponse(customerId.getValue(), cartItemRequest.getQuantity());
     }
 
-    private void checkExistenceInCart(CustomerId customerId, ProductId productId) {
-        if (cartItemDao.exists(customerId, productId)) {
-            throw new InvalidCartItemException("이미 해당하는 상품이 장바구니에 있습니다.");
-        }
-    }
-
-    private void checkExistenceInAllProducts(ProductId productId) {
-        if (!productService.exists(productId)) {
-            throw new InvalidProductException();
-        }
-    }
-
     public void removeCartItems(String token, RemovedCartItemsRequest removedCartItemsRequest) {
         final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
         List<ProductId> productIds = removedCartItemsRequest.getIds().stream()
@@ -61,5 +49,31 @@ public class CartService {
             throw new InvalidCartItemException();
         }
         cartItemDao.deleteCartItems(customerId, productIds);
+    }
+
+    public void editCartItem(String token, CartItemRequest cartItemRequest) {
+        final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
+        final ProductId productId = new ProductId(cartItemRequest.getId());
+        checkExistenceInAllProducts(productId);
+        checkNoneExistenceInCart(customerId, productId);
+        cartItemDao.edit(customerId, productId, new Quantity(cartItemRequest.getQuantity()));
+    }
+
+    private void checkExistenceInAllProducts(ProductId productId) {
+        if (!productService.exists(productId)) {
+            throw new InvalidProductException();
+        }
+    }
+
+    private void checkExistenceInCart(CustomerId customerId, ProductId productId) {
+        if (cartItemDao.exists(customerId, productId)) {
+            throw new InvalidCartItemException("이미 해당하는 상품이 장바구니에 있습니다.");
+        }
+    }
+
+    private void checkNoneExistenceInCart(CustomerId customerId, ProductId productId) {
+        if (!cartItemDao.exists(customerId, productId)) {
+            throw new InvalidCartItemException("해당하는 상품이 장바구니에 없습니다.");
+        }
     }
 }

@@ -52,4 +52,12 @@ public class CartItemDao {
         query.addValue("productId", productId.getValue());
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, query, Boolean.class));
     }
+
+    public void edit(CustomerId customerId, ProductId productId, Quantity quantity) {
+        final String sql = "update cart_item set quantity = :quantity where customer_id = :customerId and product_id = :productId";
+        final MapSqlParameterSource query = new MapSqlParameterSource("customerId", customerId.getValue());
+        query.addValue("productId", productId.getValue());
+        query.addValue("quantity", quantity.getValue());
+        jdbcTemplate.update(sql, query);
+    }
 }
