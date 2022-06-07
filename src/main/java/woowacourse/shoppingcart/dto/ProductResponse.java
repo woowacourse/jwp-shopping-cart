@@ -1,14 +1,17 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 
 public class ProductResponse {
-    private final Long id;
-    private final String name;
-    private final int price;
-    private final int stockQuantity;
-    private final ThumbnailImage thumbnailImage;
+    private Long id;
+    private String name;
+    private int price;
+    private int stockQuantity;
+    private ThumbnailImage thumbnailImage;
+
+    public ProductResponse() {
+    }
 
     public ProductResponse(Product product) {
         this.id = product.getId();
