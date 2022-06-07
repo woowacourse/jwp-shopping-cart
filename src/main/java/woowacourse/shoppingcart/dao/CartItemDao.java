@@ -36,8 +36,9 @@ public class CartItemDao {
         jdbcTemplate.update(sql, query);
     }
 
-    public List<ProductId> getAllProductIds() {
-        final String sql = "select product_id from cart_item";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new ProductId(rs.getInt("product_id")));
+    public List<ProductId> getProductIdsBy(CustomerId customerId) {
+        final String sql = "select product_id from cart_item where customer_id = :customerId";
+        return jdbcTemplate.query(sql, new MapSqlParameterSource("customerId", customerId.getValue()),
+                (rs, rowNum) -> new ProductId(rs.getInt("product_id")));
     }
 }

@@ -29,7 +29,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("로그인 상태에서 상품 목록을 조회한다")
     @Test
-    void getProducts() {
+    void getProductsWhenMember() {
         // given
         // 로그인하여 토큰이 발급 되어 있고
         회원가입(new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS));
@@ -37,7 +37,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         // when
         // 상품 목록을 조회하면
-        ExtractableResponse<Response> response = 상품_목록_조회_요청(token);
+        ExtractableResponse<Response> response = 회원_상품_목록_조회_요청(token);
 
         // then
         // 상품 목록이 조회된다.
@@ -47,7 +47,32 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(products.size()).isEqualTo(3));
     }
 
-    private ExtractableResponse<Response> 상품_목록_조회_요청(String token) {
+    @DisplayName("비 로그인 상태에서 상품 목록을 조회한다")
+    @Test
+    void getProductsWhenGuest() {
+        // when
+        // 상품 목록을 조회하면
+        ExtractableResponse<Response> response = 비회원_상품_목록_조회_요청();
+
+        // then
+        // 장바구니 보관여부가 모두 false로 설정되어 상품 목록이 조회된다.
+        List<ProductResponse> products = response.body().jsonPath().getList("products", ProductResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(products.get(0).getIsStored()).isFalse(),
+                () -> assertThat(products.get(1).getIsStored()).isFalse(),
+                () -> assertThat(products.get(2).getIsStored()).isFalse());
+    }
+
+    private ExtractableResponse<Response> 비회원_상품_목록_조회_요청() {
+        return RestAssured
+                .given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/products")
+                .then().log().all().extract();
+    }
+
+    private ExtractableResponse<Response> 회원_상품_목록_조회_요청(String token) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(token)

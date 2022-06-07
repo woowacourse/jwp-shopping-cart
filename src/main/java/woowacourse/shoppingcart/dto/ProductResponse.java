@@ -32,7 +32,7 @@ public class ProductResponse {
         return thumbnail;
     }
 
-    public boolean isIsStored() {
+    public boolean getIsStored() {
         return isStored;
     }
 }
