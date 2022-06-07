@@ -23,8 +23,9 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByCustomerId(final Long customerId) {
-        final String sql = "SELECT ci.id, pr.name product_name, pr.price product_price, "
-                + "pr.image_url product_image_url, ci.quantity "
+        final String sql = "SELECT ci.id, pr.id product_id, pr.name product_name, "
+                + "pr.price product_price, pr.image_url product_image_url, "
+                + "ci.quantity "
                 + "FROM cart_item AS ci "
                 + "JOIN customer AS cu ON ci.customer_id = cu.id "
                 + "JOIN product AS pr ON ci.product_id = pr.id "
@@ -35,25 +36,14 @@ public class CartItemDao {
 
     private CartItem mapToCartItem(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong("id");
+        Long productId = resultSet.getLong("product_id");
         String name = resultSet.getString("product_name");
         int price = resultSet.getInt("product_price");
         String image_url = resultSet.getString("product_image_url");
         int quantity = resultSet.getInt("quantity");
 
-        Product product = new Product(name, price, image_url);
+        Product product = new Product(productId, name, price, image_url);
         return new CartItem(id, product, quantity);
-    }
-
-    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
-    }
-
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
     public Long findProductIdById(final Long cartId) {

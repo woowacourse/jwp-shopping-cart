@@ -14,12 +14,20 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public boolean hasProductById(Long productId) {
+        return product.hasId(productId);
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getName() {
         return product.getName();
+    }
+
+    public Long getProductId() {
+        return product.getId();
     }
 
     public int getPrice() {

@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.badrequest.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.badrequest.BadRequestException;
 import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedException;
@@ -23,13 +21,11 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException e) {
-        e.printStackTrace();
         return ResponseEntity.internalServerError().body(new ErrorResponse(0, e.getMessage()));
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(final BadRequestException e) {
-        e.printStackTrace();
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 
@@ -44,7 +40,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(final NotFoundException e) {
-        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 
@@ -62,12 +57,9 @@ public class ControllerAdvice {
     //TODO: BadRequestException으로 상속하여 사용할 수 있도록 수정
     @ExceptionHandler({
             InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
+            InvalidOrderException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
-        e.printStackTrace();
         return ResponseEntity.badRequest().body(new ErrorResponse(0, e.getMessage()));
     }
 }

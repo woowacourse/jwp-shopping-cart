@@ -26,4 +26,13 @@ public class CartSimpleAssured {
                 .get("/users/me/carts")
                 .then().log().all().extract();
     }
+
+    public static ExtractableResponse<Response> 장바구니_상품_삭제(String token, Long productId) {
+        return RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .pathParam("productId", productId)
+                .when().log().all()
+                .delete("/users/me/carts/{productId}")
+                .then().log().all().extract();
+    }
 }

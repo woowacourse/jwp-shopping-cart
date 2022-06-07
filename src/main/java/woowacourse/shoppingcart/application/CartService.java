@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,12 +12,11 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.domain.user.Customer;
 import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.exception.badrequest.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
-import java.util.List;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidProductException;
 import woowacourse.shoppingcart.exception.badrequest.InvalidProductIdException;
+import woowacourse.shoppingcart.exception.badrequest.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedException;
 
 @Service
@@ -33,8 +34,7 @@ public class CartService {
     }
 
     public List<CartItemResponse> findCartsByCustomerEmail(final String email) {
-        Long customerId = customerDao.findByEmail(email)
-                .orElseThrow(UnauthorizedException::new)
+        Long customerId = findCustomerByEmail(email)
                 .getId();
         List<CartItem> cartItems = cartItemDao.findByCustomerId(customerId);
         return cartItems.stream()
@@ -43,21 +43,11 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    private List<Long> findCartIdsByCustomerName(final String email) {
-        final Long customerId = customerDao.findByEmail(email)
-                .orElseThrow(UnauthorizedException::new)
-                .getId();
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
     public Long addCart(Long productId, String email) {
-        Customer customer = customerDao.findByEmail(email)
-                .orElseThrow(UnauthorizedException::new);
-        Product product = productDao.findProductById(productId)
-                .orElseThrow(InvalidProductIdException::new);
-        if (cartItemDao.findProductIdsByCustomerId(customer.getId()).contains(product.getId())) {
-            throw new DuplicateCartItemException();
-        }
+        Customer customer = findCustomerByEmail(email);
+        Product product = findProductById(productId, InvalidProductIdException::new);
+        List<CartItem> cartItems = cartItemDao.findByCustomerId(customer.getId());
+        validateDuplicateProduct(product, cartItems);
         try {
             return cartItemDao.addCartItem(customer.getId(), product.getId());
         } catch (Exception e) {
@@ -65,16 +55,35 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    private void validateDuplicateProduct(Product product, List<CartItem> cartItems) {
+        if (cartItems.stream()
+                .anyMatch(cartItem -> cartItem.hasProductById(product.getId()))) {
+            throw new DuplicateCartItemException();
+        }
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
+    public void deleteCart(final String email, final Long productId) {
+        Customer customer = findCustomerByEmail(email);
+        Product product = findProductById(productId, NotFoundProductException::new);
+        List<CartItem> cartItems = cartItemDao.findByCustomerId(customer.getId());
+        CartItem deletedCartItem = findCartItemByProductId(product.getId(), cartItems);
+        cartItemDao.deleteCartItem(deletedCartItem.getId());
+    }
+
+    private Customer findCustomerByEmail(String email) {
+        return customerDao.findByEmail(email)
+                .orElseThrow(UnauthorizedException::new);
+    }
+
+    private Product findProductById(Long productId, Supplier<RuntimeException> exceptionSupplier) {
+        return productDao.findProductById(productId)
+                .orElseThrow(exceptionSupplier);
+    }
+
+    private CartItem findCartItemByProductId(Long productId, List<CartItem> cartItems) {
+        return cartItems.stream()
+                .filter(cartItem -> cartItem.hasProductById(productId))
+                .findAny()
+                .orElseThrow(NotInCustomerCartItemException::new);
     }
 }

@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.acceptance.fixture.CartSimpleAssured.장바구니_상품_등록;
+import static woowacourse.shoppingcart.acceptance.fixture.CartSimpleAssured.장바구니_상품_삭제;
 import static woowacourse.shoppingcart.acceptance.fixture.CartSimpleAssured.장바구니_상품_조회;
 import static woowacourse.shoppingcart.acceptance.fixture.ProductSimpleAssured.상품_등록;
 import static woowacourse.shoppingcart.acceptance.fixture.UserSimpleAssured.회원가입_요청;
@@ -79,7 +80,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("장바구니 상품을 조회할 때 인가가 잘못되면 401을 응답한다.")
     @Test
-    void getCartItemsUnAuthorized() {
+    void getCartItemsUnauthorized() {
         ExtractableResponse<Response> response = 장바구니_상품_조회("invalidToken");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -96,6 +97,48 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(list).hasSize(1)
+        );
+    }
+
+    @DisplayName("장바구니 상품을 삭제할 때 인가가 잘못되면 401을 응답한다.")
+    @Test
+    void deleteCartItemUnauthorized() {
+        ExtractableResponse<Response> response = 장바구니_상품_삭제("invalid token", 1L);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("장바구니에 없는 상품을 삭제할 때 400을 응답한다.")
+    @Test
+    void deleteCartItemBadRequest() {
+        상품_등록(new ProductRequest("상품", 10000, "image.url"));
+
+        ExtractableResponse<Response> response = 장바구니_상품_삭제(로그인된_토큰, 1L);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("장바구니에 상품을 삭제할 때 없는 상품인 경우 404를 응답한다.")
+    @Test
+    void deleteCartItemNotFound() {
+        ExtractableResponse<Response> response = 장바구니_상품_삭제(로그인된_토큰, 1L);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @DisplayName("장바구니에 상품을 삭제할 때 정상 케이스인 경우 상품을 삭제하고 204를 응답한다.")
+    @Test
+    void deleteCartItemNoContent() {
+        상품_등록(new ProductRequest("상품", 10000, "image.url"));
+        장바구니_상품_등록(로그인된_토큰, "1");
+        ExtractableResponse<Response> response = 장바구니_상품_삭제(로그인된_토큰, 1L);
+
+        List<Object> cartList = 장바구니_상품_조회(로그인된_토큰).jsonPath()
+                .getList("cartList");
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(cartList).hasSize(0)
         );
     }
 }

@@ -35,4 +35,8 @@ public class Product {
     public Long getId() {
         return id;
     }
+
+    public boolean hasId(Long productId) {
+        return id.equals(productId);
+    }
 }
