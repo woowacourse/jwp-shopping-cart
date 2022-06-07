@@ -78,7 +78,7 @@ public class MemberDao {
         jdbcTemplate.update(SQL, id);
     }
 
-    public Long findIdByName(final String userName) {
+    public long findIdByName(final String userName) {
         try {
             final String query = "SELECT id FROM member WHERE name = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));

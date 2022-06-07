@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 public class OrderDetail {
-    private Long productId;
+    private long productId;
     private int quantity;
     private int price;
     private String name;

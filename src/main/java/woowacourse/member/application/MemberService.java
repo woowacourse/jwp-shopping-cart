@@ -22,7 +22,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Long logIn(LoginRequest request) {
+    public long logIn(LoginRequest request) {
         Member member = findMemberByEmail(request.getEmail());
         Password password = new InputPassword(request.getPassword());
 

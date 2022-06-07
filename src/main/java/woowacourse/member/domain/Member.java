@@ -18,7 +18,7 @@ public class Member {
         this(0L, new Email(email), new Name(name), password);
     }
 
-    public Member(Long id, String email, String name, Password password) {
+    public Member(long id, String email, String name, Password password) {
         this(id, new Email(email), new Name(name), password);
     }
 
@@ -30,7 +30,7 @@ public class Member {
         return password.equals(comparison);
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

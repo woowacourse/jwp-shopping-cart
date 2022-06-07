@@ -35,7 +35,7 @@ public class ProductDaoTest {
         Product product = new Product("이름", 1000, "이미지주소");
 
         // when
-        final Long productId = productDao.save(product);
+        final long productId = productDao.save(product);
 
         // then
         assertThat(productId).isEqualTo(4L);
