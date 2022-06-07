@@ -17,8 +17,8 @@ public class OrderRepository {
     }
 
     public Long create(final Long customerId, final Long productId, final int quantity) {
-        Long orderId = orderDao.create(customerId);
-        ordersDetailDao.create(orderId, productId, quantity);
-        return orderId;
+        Long ordersId = orderDao.create(customerId);
+        ordersDetailDao.create(ordersId, productId, quantity);
+        return ordersId;
     }
 }

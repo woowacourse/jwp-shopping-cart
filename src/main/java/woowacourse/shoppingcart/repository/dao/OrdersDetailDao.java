@@ -17,13 +17,15 @@ public class OrdersDetailDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long create(final Long ordersId, final Long productId, final int quantity) {
+    public void create(final Long ordersId, final Long productId, final int quantity) {
+        System.out.println("ordersId = " + ordersId);
+        System.out.println("productId = " + productId);
+        System.out.println("quantity = " + quantity);
         final String query = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (:ordersId, :productId, :quantity)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource source = new MapSqlParameterSource(
                 Map.of("ordersId", ordersId, "productId", productId, "quantity", quantity)
         );
-        jdbcTemplate.update(query, source, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        System.err.println("gggggggwer");
+        jdbcTemplate.update(query, source);
     }
 }

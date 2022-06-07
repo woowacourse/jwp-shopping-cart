@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.Fixtures.헌치;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,61 +36,56 @@ class CustomerRepositoryTest {
     @Test
     void createAndFindById() {
         // given
-        Customer customer = Customer.ofNullId("jo@naver.com", "abcde123!", "jojogreen");
-
         // when
-        Long id = customerRepository.create(customer);
+        Long id = customerRepository.create(헌치);
 
         // then
         Customer createdCustomer = customerRepository.findById(id);
         assertThat(createdCustomer)
                 .usingRecursiveComparison()
                 .ignoringFields("id")
-                .isEqualTo(customer);
+                .isEqualTo(헌치);
     }
 
     @DisplayName("입력된 비밀번호를 대조하고 로그인한 customer 를 반환한다.")
     @Test
     void login() {
         // given
-        Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
-        customerRepository.create(customer);
+        customerRepository.create(헌치);
 
         // when
-        Customer loginCustomerResult = customerRepository.findValidUser("jo@naver.com", "1234abcd!");
+        Customer loginCustomerResult = customerRepository.findValidUser(헌치.getUsername(), 헌치.getPassword());
 
         // then
         assertThat(loginCustomerResult)
                 .usingRecursiveComparison()
                 .ignoringFields("id")
-                .isEqualTo(customer);
+                .isEqualTo(헌치);
     }
 
     @DisplayName("해당 아이디의 회원정보를 변경한다.")
     @Test
     void update() {
         // given
-        Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
-        Long id = customerRepository.create(customer);
-        Customer newCustomer = new Customer(id, "jo@naver.com", "1234abcd!", "hunch");
+        Long id = customerRepository.create(헌치);
+        Customer 새_헌치 = new Customer(id, 헌치.getUsername(), 헌치.getPassword(), "newHunch");
 
         // when
-        customerRepository.update(newCustomer);
+        customerRepository.update(새_헌치);
 
         // then
         assertThat(customerRepository.findById(id))
                 .usingRecursiveComparison()
                 .ignoringFields("id")
-                .isEqualTo(newCustomer);
+                .isEqualTo(새_헌치);
     }
 
     @DisplayName("해당 아이디의 비밀번호를 변경한다.")
     @Test
     void updatePassword() {
         // given
-        Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
-        Long id = customerRepository.create(customer);
-        PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest("1234abcd!", "1234abcd@");
+        Long id = customerRepository.create(헌치);
+        PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest(헌치.getPassword(), "1234abcd@");
         Password oldPassword = new Password(passwordChangeRequest.getOldPassword());
         Password newPassword = new Password(passwordChangeRequest.getNewPassword());
 
@@ -105,8 +101,7 @@ class CustomerRepositoryTest {
     @Test
     void delete() {
         // given
-        Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
-        Long id = customerRepository.create(customer);
+        Long id = customerRepository.create(헌치);
         TokenRequest tokenRequest = new TokenRequest(id);
 
         // when
