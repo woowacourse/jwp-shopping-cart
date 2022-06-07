@@ -57,4 +57,9 @@ public class ProductDao {
         final String query = "DELETE FROM product WHERE id = ?";
         return jdbcTemplate.update(query, productId);
     }
+
+    public List<Product> findProductsByPage(final int limit, final int page) {
+        final String sql = "SELECT id, name, price, image_url FROM product limit ? OFFSET ?";
+        return jdbcTemplate.query(sql, getRowMapper(), limit, (page - 1) * limit);
+    }
 }
