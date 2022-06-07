@@ -1,39 +1,29 @@
 package woowacourse.shoppingcart.cart.domain;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.cart.exception.badrequest.InvalidQuantityException;
 import woowacourse.shoppingcart.product.domain.Product;
 
 public class Cart {
 
-    private static final int MIN_QUANTITY = 1;
-
     private Long id;
     private Product product;
-    private int quantity;
+    private Quantity quantity;
 
     private Cart() {
     }
 
     public Cart(final Long id, final Product product) {
-        this(id, product, MIN_QUANTITY);
+        this(id, product, 1);
     }
 
     public Cart(final Long id, final Product product, final int quantity) {
         this.id = id;
         this.product = product;
-        this.quantity = quantity;
+        this.quantity = Quantity.from(quantity);
     }
 
     public Cart changeQuantity(final int quantity) {
-        if (quantity < MIN_QUANTITY) {
-            throw new InvalidQuantityException();
-        }
         return new Cart(id, product, quantity);
-    }
-
-    public boolean hasSameProduct(final Product product) {
-        return this.product.equals(product);
     }
 
     public Long getId() {
@@ -45,7 +35,7 @@ public class Cart {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 
     @Override
@@ -57,8 +47,8 @@ public class Cart {
             return false;
         }
         final Cart cart = (Cart) o;
-        return quantity == cart.quantity && Objects.equals(id, cart.id) && Objects.equals(product,
-                cart.product);
+        return Objects.equals(id, cart.id) && Objects.equals(product, cart.product)
+                && Objects.equals(quantity, cart.quantity);
     }
 
     @Override
