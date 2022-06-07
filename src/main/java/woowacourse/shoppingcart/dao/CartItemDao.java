@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.dto.EnrollCartDto;
-import woowacourse.shoppingcart.dao.dto.CartItem;
+import woowacourse.shoppingcart.domain.Cart;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,13 +30,18 @@ public class CartItemDao {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<CartItem> findCartItemsByMemberId(Long memberId) {
-        String SQL = "SELECT id, product_id FROM cart_item WHERE member_id = ?";
+    public List<Cart> findCartByMemberId(Long memberId) {
+        String SQL = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
+                "FROM cart_item as c JOIN product as p ON c.product_id = p.id WHERE c.member_id = ?";
 
         return jdbcTemplate.query(SQL, (rs, rowNum) ->
-                new CartItem(
+                new Cart(
                         rs.getLong("id"),
-                        rs.getLong("product_id")), memberId);
+                        rs.getLong("product_id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        rs.getString("image_url"),
+                        rs.getInt("quantity")), memberId);
     }
 
     public Optional<Long> findProductIdById(Long cartId) {
@@ -49,8 +54,14 @@ public class CartItemDao {
         }
     }
 
+    public void updateQuantity(Long cartId, int quantity) {
+        String SQL = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        jdbcTemplate.update(SQL, quantity, cartId);
+    }
+
     public void deleteById(Long id) {
         String SQL = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(SQL, id);
     }
+
 }

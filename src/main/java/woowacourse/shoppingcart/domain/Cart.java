@@ -9,17 +9,21 @@ public class Cart {
     private final String name;
     private final int price;
     private final String imageUrl;
+    private final int totalPrice;
+    private final int quantity;
 
-    private Cart(Long id, Long productId, String name, int price, String imageUrl) {
+    public Cart(Long id, Long productId, String name, int price, String imageUrl, int quantity) {
         this.id = id;
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.totalPrice = calculateTotalPrice(quantity, price);
     }
 
-    public Cart(Long id, Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    private int calculateTotalPrice(int quantity, int price) {
+        return price * quantity;
     }
 
     public Long getId() {
@@ -42,12 +46,21 @@ public class Cart {
         return imageUrl;
     }
 
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cart cart = (Cart) o;
         return getPrice() == cart.getPrice() &&
+                getQuantity() == cart.getQuantity() &&
                 getId().equals(cart.getId()) &&
                 getProductId().equals(cart.getProductId()) &&
                 getName().equals(cart.getName()) &&
@@ -56,6 +69,6 @@ public class Cart {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getProductId(), getName(), getPrice(), getImageUrl());
+        return Objects.hash(getId(), getProductId(), getName(), getPrice(), getImageUrl(), getQuantity());
     }
 }

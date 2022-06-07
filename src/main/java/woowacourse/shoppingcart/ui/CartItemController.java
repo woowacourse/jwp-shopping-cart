@@ -7,6 +7,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.AddCartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 
 import java.net.URI;
 import java.util.List;
@@ -35,6 +36,14 @@ public class CartItemController {
     @GetMapping
     public ResponseEntity<List<CartResponse>> getCartItems(@AuthenticationPrincipal Long memberId) {
         return ResponseEntity.ok().body(cartService.findCarts(memberId));
+    }
+
+    @PostMapping("/{cartId}")
+    public ResponseEntity<Void> updateQuantity(@AuthenticationPrincipal Long memberId,
+                                                 @PathVariable Long cartId,
+                                                 @RequestBody UpdateQuantityRequest request) {
+        cartService.updateQuantity(memberId, cartId, request);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{cartId}")

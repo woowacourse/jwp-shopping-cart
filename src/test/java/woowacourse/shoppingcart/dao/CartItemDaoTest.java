@@ -9,11 +9,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.dto.CartItem;
 import woowacourse.shoppingcart.dao.dto.EnrollCartDto;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,13 +59,26 @@ public class CartItemDaoTest {
 
     @DisplayName("고객 아이디를 넣으면, 해당 고객이 장바구니 목록을 가져온다.")
     @Test
-    void findProductIdsByMemberId() {
-        List<CartItem> cartItems = cartItemDao.findCartItemsByMemberId(memberId);
-        List<Long> productIds = cartItems.stream()
-                .map(CartItem::getProduct_id)
+    void findCartByMemberId() {
+        List<Cart> carts = cartItemDao.findCartByMemberId(memberId);
+        List<Long> productIds = carts.stream()
+                .map(Cart::getProductId)
                 .collect(Collectors.toList());
 
         assertThat(productIds).containsExactly(bananaId, appleId);
+    }
+
+    @DisplayName("상품 수량을 업데이트 한다.")
+    @Test
+    void updateQuantity() {
+        cartItemDao.updateQuantity(cartItemId_1, 10);
+
+        List<Cart> carts = cartItemDao.findCartByMemberId(memberId);
+        Optional<Cart> updatedCart = carts.stream()
+                .filter(v -> v.getId().equals(cartItemId_1))
+                .findAny();
+
+        assertThat(updatedCart.get().getQuantity()).isEqualTo(10);
     }
 
     @DisplayName("CartItem Id를 넣으면, 해당 아이템을 장바구니에서 삭제한다.")
@@ -72,9 +86,9 @@ public class CartItemDaoTest {
     void deleteById() {
         cartItemDao.deleteById(cartItemId_1);
 
-        List<CartItem> cartItems = cartItemDao.findCartItemsByMemberId(memberId);
+        List<Cart> cartItems = cartItemDao.findCartByMemberId(memberId);
         List<Long> productIds = cartItems.stream()
-                .map(CartItem::getProduct_id)
+                .map(Cart::getProductId)
                 .collect(Collectors.toList());
 
         assertThat(productIds).doesNotContain(cartItemId_1);

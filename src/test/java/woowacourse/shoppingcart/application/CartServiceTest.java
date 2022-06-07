@@ -7,8 +7,9 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.exception.MemberNotFoundException;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
+import woowacourse.shoppingcart.exception.InvalidCartQuantityException;
 import woowacourse.shoppingcart.exception.NotInMemberCartItemException;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
@@ -65,6 +66,32 @@ class CartServiceTest {
         List<CartResponse> carts = cartService.findCarts(1L);
 
         assertThat(carts.size()).isEqualTo(3);
+    }
+
+    @DisplayName("장바구니에 담긴 물품 수량을 변경한다.")
+    @Test
+    void updateQuantity() {
+        Long cartId1 = cartService.add(1L, 1L);
+        int quantityToBeUpdated = 10;
+
+        cartService.updateQuantity(1L, cartId1, new UpdateQuantityRequest(quantityToBeUpdated));
+        List<CartResponse> carts = cartService.findCarts(1L);
+        boolean result = carts.stream()
+                .filter(v -> v.getId().equals(cartId1))
+                .anyMatch(v -> v.getQuantity() == quantityToBeUpdated);
+
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("1개 미만의 수량으로 장바구니 업데이트시 예외가 발생한다.")
+    @Test
+    void updateQuantityWithUnderOneQuantity() {
+        Long cartId1 = cartService.add(1L, 1L);
+        int quantityToBeUpdated = 0;
+
+        assertThatThrownBy(() -> cartService.updateQuantity(1L, cartId1, new UpdateQuantityRequest(quantityToBeUpdated)))
+                .isInstanceOf(InvalidCartQuantityException.class)
+                .hasMessageContaining("상품 개수는 1개 이상이어야 합니다.");
     }
 
     @DisplayName("등록된 장바구니를 삭제한다.")

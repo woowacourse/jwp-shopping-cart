@@ -40,7 +40,7 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handlerException() {
-        return ResponseEntity.badRequest().body(new ErrorResponse("다뤄지지 않은 에러입니다."));
+    public ResponseEntity<ErrorResponse> handlerException(Exception e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 }
