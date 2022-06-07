@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.CartItemQuantityResponse;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.ProductIdRequest;
 
 @SpringBootTest
 @Sql("/init.sql")
@@ -36,6 +39,27 @@ class CartItemServiceTest {
                         .containsExactly(1L, 2L, 3L),
                 () -> assertThat(cartItemsByCustomerId.stream().map(CartItemResponse::getQuantity).collect(Collectors.toList()))
                         .containsExactly(5, 7, 9)
+        );
+    }
+
+    @DisplayName("사용자의 모든 장바구니 물품들의 수량 정보를 반환한다.")
+    @Test
+    void addCartItems() {
+        // given
+        TokenRequest tokenRequest = new TokenRequest(1L);
+        List<ProductIdRequest> productIdRequests = List.of(new ProductIdRequest(3L), new ProductIdRequest(4L));
+
+        // when
+        List<CartItemQuantityResponse> responses =
+                cartItemService.addCartItems(tokenRequest, productIdRequests);
+
+        // then
+        assertAll(
+                () -> assertThat(responses.size()).isEqualTo(2),
+                () -> assertThat(responses.get(0).getId()).isEqualTo(3L),
+                () -> assertThat(responses.get(0).getQuantity()).isEqualTo(10),
+                () -> assertThat(responses.get(1).getId()).isEqualTo(4L),
+                () -> assertThat(responses.get(1).getQuantity()).isEqualTo(1)
         );
     }
 }
