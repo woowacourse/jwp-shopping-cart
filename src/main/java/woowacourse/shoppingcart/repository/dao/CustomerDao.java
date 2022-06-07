@@ -12,7 +12,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidLoginException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.ResourceNotFoundException;
@@ -33,19 +32,6 @@ public class CustomerDao {
     public CustomerDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
-
-    public Long findIdByUserName(final String username) {
-        try {
-            final String query = "SELECT id FROM customer WHERE username = :username";
-            Map<String, Object> params = new HashMap<>();
-            params.put("username", username);
-            return namedParameterJdbcTemplate.queryForObject(query, params, Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException("존재하지 않는 유저입니다.");
-        }
-    }
-
-    // new method
 
     public Long create(final Customer customer) {
         String query = "insert into customer (username, password, nickname, withdrawal)"

@@ -73,4 +73,15 @@ public class CartItemDao {
             throw new ResourceNotFoundException("존재하지 않는 장바구니 물품입니다.");
         }
     }
+
+    public void delete(final Long cartItemId, final Long customerId) {
+        String query = "delete from cart_item where id = :cartItemId and customer_id = :customerId";
+        Map<String, Object> params = new HashMap<>();
+        params.put("cartItemId", cartItemId);
+        params.put("customerId", customerId);
+        int affectedRowCount = namedParameterJdbcTemplate.update(query, params);
+        if (affectedRowCount == 0) {
+            throw new ResourceNotFoundException("존재하지 않는 장바구니 물품입니다.");
+        }
+    }
 }

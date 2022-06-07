@@ -79,4 +79,18 @@ class CartItemRepositoryTest {
         // then
         assertThat(updatedCartItem.getQuantity()).isEqualTo(100);
     }
+
+    @DisplayName("장바구니 물품을 삭제한다")
+    @Test
+    void delete() {
+        // given
+        Long cartItemId = 3L;
+        Long customerId = 1L;
+
+        // when
+        cartItemRepository.delete(cartItemId, customerId);
+
+        // then
+        assertThat(cartItemRepository.findCartItemsByCustomerId(1L).size()).isEqualTo(2);
+    }
 }

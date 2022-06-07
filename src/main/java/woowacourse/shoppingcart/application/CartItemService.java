@@ -52,5 +52,8 @@ public class CartItemService {
     }
 
     public void delete(final TokenRequest tokenRequest, final List<CartItemIdRequest> cartItemIdRequests) {
+        for (CartItemIdRequest cartItemIdRequest : cartItemIdRequests) {
+            cartItemRepository.delete(cartItemIdRequest.getId(), tokenRequest.getId());
+        }
     }
 }

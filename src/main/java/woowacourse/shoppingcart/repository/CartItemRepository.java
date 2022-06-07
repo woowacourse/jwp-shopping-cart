@@ -43,8 +43,7 @@ public class CartItemRepository {
         return cartItem;
     }
 
-    //
-    public CartItem  findByCustomerIdAndProductId(final Long customerId, final Long productId) {
-        return cartItemDao.findByCustomerIdAndProductId(customerId, productId);
+    public void delete(final Long cartItemId, final Long customerId) {
+        cartItemDao.delete(cartItemId, customerId);
     }
 }

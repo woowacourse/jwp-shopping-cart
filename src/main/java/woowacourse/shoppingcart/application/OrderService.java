@@ -51,27 +51,27 @@ public class OrderService {
 //        return ordersId;
 //    }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
-    }
+//    public Orders findOrderById(final String customerName, final Long orderId) {
+//        validateOrderIdByCustomerName(customerName, orderId);
+//        return findOrderResponseDtoByOrderId(orderId);
+//    }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
-        }
-    }
-
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
-
-        return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
-                .collect(Collectors.toList());
-    }
+//    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
+//        final Long customerId = customerDao.findIdByUserName(customerName);
+//
+//        if (!orderDao.isValidOrderId(customerId, orderId)) {
+//            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+//        }
+//    }
+//
+//    public List<Orders> findOrdersByCustomerName(final String customerName) {
+//        final Long customerId = customerDao.findIdByUserName(customerName);
+//        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+//
+//        return orderIds.stream()
+//                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+//                .collect(Collectors.toList());
+//    }
 
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
