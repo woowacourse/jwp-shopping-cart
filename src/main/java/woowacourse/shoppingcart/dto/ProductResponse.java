@@ -23,7 +23,7 @@ public class ProductResponse {
 
     public static List<ProductResponse> from(List<Product> products) {
         return products.stream()
-                .map(product -> ProductResponse.from(product))
+                .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
