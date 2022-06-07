@@ -74,16 +74,6 @@ class CustomerServiceTest {
         }
 
         @Test
-        void 존재하지_않는_회원일_경우_예외발생() {
-            CustomerUpdateRequest updateCustomerRequest = new CustomerUpdateRequest("angel", "12345678aA!");
-
-            LoginCustomer loginCustomer = new LoginCustomer("angel@gmail.com", "angel", HashTool.hashing("12345678aA!"));
-
-            assertThatThrownBy(() -> customerService.updateCustomer(updateCustomerRequest, loginCustomer))
-                .isInstanceOf(InvalidCustomerException.class);
-        }
-
-        @Test
         void 이미_존재하는_유저네임인_경우_예외발생() {
             CustomerRequest customerRequest = new CustomerRequest("angie@gmail.com", "angel", "12345678aA!");
             customerService.addCustomer(customerRequest);

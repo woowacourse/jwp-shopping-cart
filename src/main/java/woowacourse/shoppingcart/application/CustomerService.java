@@ -41,10 +41,6 @@ public class CustomerService {
     @Transactional
     public CustomerResponse updateCustomer(CustomerUpdateRequest customerUpdateRequest,
         LoginCustomer loginCustomer) {
-        if (!customerDao.existByLoginId(loginCustomer.getLoginId())) {
-            throw new InvalidCustomerException();
-        }
-
         authService.checkPassword(loginCustomer.toCustomer(), customerUpdateRequest.getPassword());
         Customer customer = customerUpdateRequest.toCustomer(loginCustomer.getLoginId());
         customerDao.update(customer);
