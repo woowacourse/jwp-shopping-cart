@@ -38,8 +38,8 @@ public class AuthService {
     }
 
     private void verifyPassword(final String password, final String hashedPassword) {
-        final Password newPassword = new Password(password);
-        if (!newPassword.isSamePassword(hashedPassword)) {
+        final Password targetPassword = new Password(password);
+        if (!targetPassword.isSamePassword(hashedPassword)) {
             throw new BadRequestException("올바르지 않은 비밀번호입니다.");
         }
     }
