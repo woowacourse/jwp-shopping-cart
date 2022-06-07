@@ -4,13 +4,13 @@ import java.util.List;
 
 public class CartsResponse {
 
-    private final List<CartResponse> products;
+    private final List<CartResponse> cartList;
 
-    public CartsResponse(List<CartResponse> products) {
-        this.products = products;
+    public CartsResponse(List<CartResponse> cartList) {
+        this.cartList = cartList;
     }
 
-    public List<CartResponse> getProducts() {
-        return products;
+    public List<CartResponse> getCartList() {
+        return cartList;
     }
 }
