@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.integration.cart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemExcep
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
+import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 
 @SpringBootTest
@@ -109,6 +112,37 @@ class CartServiceIntegrationTest {
 
         // when, then
         assertThatThrownBy(() -> cartService.changeQuantity(customer, productId, request))
+                .isInstanceOf(NoExistCartItemException.class);
+    }
+
+    @Test
+    @DisplayName("Product 아이디에 해당하는 Cart를 삭제한다.")
+    void deleteCart() {
+        // given
+        final Long productId = 4L;
+
+        cartItemDao.addCartItem(customer.getId(), 3L);
+        cartItemDao.addCartItem(customer.getId(), productId);
+        cartItemDao.addCartItem(customer.getId(), 2L);
+
+        // when
+        cartService.deleteCartBy(customer, productId);
+
+        final List<Long> actualProductIds = cartService.findCartsBy(customer)
+                .stream()
+                .map(Cart::getProduct)
+                .map(Product::getId)
+                .collect(Collectors.toList());
+
+        // then
+        assertThat(actualProductIds).containsExactly(3L, 2L);
+    }
+
+    @Test
+    @DisplayName("장바구니에 존재하지 않는 상품을 삭제하면 예외를 던진다.")
+    void deleteCart_notExistProductInCart_exceptionThrown() {
+        // when, then
+        assertThatThrownBy(() -> cartService.deleteCartBy(customer, 1L))
                 .isInstanceOf(NoExistCartItemException.class);
     }
 }
