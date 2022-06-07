@@ -27,6 +27,11 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public CartItemEntity findCartItemById(Long cartItemId) {
+        final String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, CART_ITEM_ENTITY_MAPPER, cartItemId);
+    }
+
     public List<CartItemEntity> findCartItemsByCustomerId(Long customerId) {
         final String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE customer_id = ?";
         return jdbcTemplate.query(sql, CART_ITEM_ENTITY_MAPPER, customerId);
@@ -53,6 +58,11 @@ public class CartItemDao {
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    public void updateCartItem(Long cartItemId, CartItem newCartItem) {
+        String sql = "UPDATE cart_item SET product_id = ?, quantity = ? WHERE id = ?";
+        jdbcTemplate.update(sql, newCartItem.getProduct().getId(), newCartItem.getQuantity(), cartItemId);
     }
 
     public void deleteCartItem(final Long id) {

@@ -63,6 +63,18 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 장바구니_아이템_수정_요청(String accessToken, Long cartItemId,
+                                                               CartItemRequest cartItemRequest) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(cartItemRequest)
+                .when().put("/api/customers/cart/{cartItemId}", cartItemId)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> 장바구니에_상품_존재여부_조회(String accessToken, Long productId) {
         return RestAssured
                 .given().log().all()
@@ -95,6 +107,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    public static void 장바구니_수정됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
@@ -236,4 +252,40 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
         AuthAcceptanceTest.토큰이_만료됨(response);
     }
+
+    @DisplayName("장바구니 상품 수정")
+    @Test
+    void updateCartItem() {
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        CartItemRequest newCartItemRequest = new CartItemRequest(productId1, 500);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(accessToken, cartItemId, newCartItemRequest);
+
+        장바구니_수정됨(response);
+    }
+
+    @DisplayName("장바구니에 특정 상품이 존재하는지 확인 실패 - 유효하지 않은 토큰")
+    @ValueSource(strings = {"", "abcd"})
+    @ParameterizedTest
+    void updateCartItem_failWithInvalidToken(String invalidToken) {
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        CartItemRequest newCartItemRequest = new CartItemRequest(productId1, 500);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(invalidToken, cartItemId, newCartItemRequest);
+
+        AuthAcceptanceTest.토큰이_유효하지_않음(response);
+    }
+
+    @DisplayName("장바구니에 특정 상품이 존재하는지 확인 실패 - 만료된 토큰")
+    @Test
+    void updateCartItem_failWithExpiredToken() {
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        CartItemRequest newCartItemRequest = new CartItemRequest(productId1, 500);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(EXPIRED_TOKEN, cartItemId, newCartItemRequest);
+
+        AuthAcceptanceTest.토큰이_만료됨(response);
+    }
+
+
 }

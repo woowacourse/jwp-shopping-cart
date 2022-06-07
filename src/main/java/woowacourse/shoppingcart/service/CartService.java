@@ -60,6 +60,15 @@ public class CartService {
         cartItemDao.deleteCartItem(cartId);
     }
 
+    public void updateCartItem(Long cartItemId, CartItemRequest cartItemRequest) {
+        Long customerId = cartItemDao.findCartItemById(cartItemId).getCustomerId();
+        Product newProduct = productDao.findProductById(cartItemRequest.getProductId());
+        Integer newQuantity = cartItemRequest.getQuantity();
+        CartItem newCartItem = new CartItem(cartItemId, customerId, newProduct, newQuantity);
+
+        cartItemDao.updateCartItem(cartItemId, newCartItem);
+    }
+
     private void validateCustomerCart(final Long cartId, final Long customerId) {
         final List<Long> cartIds = findCartItemIdsByCustomerId(customerId);
         if (cartIds.contains(cartId)) {

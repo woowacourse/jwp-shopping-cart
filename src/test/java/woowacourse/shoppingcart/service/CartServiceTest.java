@@ -29,6 +29,7 @@ import woowacourse.shoppingcart.entity.CustomerEntity;
 @JdbcTest
 class CartServiceTest {
     private final CartService cartService;
+    private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final CustomerDao customerDao;
 
@@ -37,10 +38,11 @@ class CartServiceTest {
 
     @Autowired
     public CartServiceTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
 
-        cartService = new CartService(new CartItemDao(jdbcTemplate), productDao);
+        cartService = new CartService(cartItemDao, productDao);
     }
 
     @BeforeEach
@@ -51,6 +53,20 @@ class CartServiceTest {
         productId = productDao.save(
                 new Product(PRODUCT_NAME_VALUE_1, PRODUCT_DESCRIPTION_VALUE_1, PRODUCT_PRICE_VALUE_1,
                         PRODUCT_STOCK_VALUE_1, PROFILE_IMAGE_URL_VALUE_1));
+    }
+
+    @DisplayName("유저의 특정 카트 아이템 수정")
+    @Test
+    void updateCartItem() {
+        // given
+        Long cartItemId = cartService.addCart(new CartItemRequest(productId, 10), customerId);
+
+        // when
+        cartService.updateCartItem(cartItemId, new CartItemRequest(productId, 100));
+        Integer actual = cartItemDao.findCartItemById(cartItemId).getQuantity();
+
+        // then
+        assertThat(actual).isEqualTo(100);
     }
 
     @DisplayName("특정 유저가 특정 품목을 장바구니에 담았는지 확인")

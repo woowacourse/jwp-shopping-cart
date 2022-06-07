@@ -66,6 +66,23 @@ public class CartItemDaoTest {
         assertThat(cartId).isNotNull();
     }
 
+    @DisplayName("저장된 카트 아이템을 수정한다.")
+    @Test
+    void updateCartItem() {
+        // given
+        Product product = productDao.findProductById(productId);
+        Long cartItemId = cartItemDao.addCartItem(customerId, new CartItem(customerId, product, 10));
+
+        CartItem newCartItem = new CartItem(cartItemId, product, 100);
+
+        // when
+        cartItemDao.updateCartItem(cartItemId, newCartItem);
+        Integer actual = cartItemDao.findCartItemById(customerId).getQuantity();
+
+        // then
+        assertThat(actual).isEqualTo(100);
+    }
+
     @DisplayName("카트에 특정 상품이 존재하면 true를 반환한다.")
     @Test
     void isProductExisting_existing() {
