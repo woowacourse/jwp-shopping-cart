@@ -239,18 +239,6 @@ class CartAcceptanceTest extends AcceptanceTest {
 
             assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
         }
-
-        private ExtractableResponse<Response> 장바구니_상품_수정(String accessToken, CartItem cartItem) {
-            Long productId = cartItem.getProductId();
-            UpdateCartItemQuantityRequest requestBody = new UpdateCartItemQuantityRequest(cartItem.getQuantity());
-            return RestAssured.given().log().all()
-                    .auth().oauth2(accessToken)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(requestBody)
-                    .when().put("/cart/" + productId + "/quantity")
-                    .then().log().all()
-                    .extract();
-        }
     }
 
     @DisplayName("DELETE /cart/products - 장바구니 상품 부분 제거")
@@ -346,6 +334,18 @@ class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when().post("/cart/" + product.getId())
+                .then().log().all()
+                .extract();
+    }
+
+    static ExtractableResponse<Response> 장바구니_상품_수정(String accessToken, CartItem cartItem) {
+        Long productId = cartItem.getProductId();
+        UpdateCartItemQuantityRequest requestBody = new UpdateCartItemQuantityRequest(cartItem.getQuantity());
+        return RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().put("/cart/" + productId + "/quantity")
                 .then().log().all()
                 .extract();
     }
