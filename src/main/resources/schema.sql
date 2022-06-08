@@ -1,6 +1,6 @@
-drop table if exists orders_detail;
+drop table if exists order_product;
 
-drop table if exists orders;
+drop table if exists single_order;
 
 drop table if exists cart_item;
 
@@ -19,7 +19,7 @@ create table customer
     password          varchar(255) not null,
     profile_image_url varchar(255) not null,
     created_at        timestamp default current_timestamp,
-    terms             tinyint(1) not null,
+    terms             tinyint(1)   not null,
     primary key (id)
 );
 
@@ -78,30 +78,21 @@ alter table cart_item
     add constraint fk_cart_item_to_product
         foreign key (product_id) references product (id);
 
-create table orders
+create table single_order
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
+    foreign key (customer_id) references customer (id),
     primary key (id)
 );
 
-alter table orders
-    add constraint fk_orders_to_customer
-        foreign key (customer_id) references customer (id);
-
-create table orders_detail
+create table order_product
 (
     id         bigint  not null auto_increment,
-    orders_id  bigint  not null,
+    order_id   bigint  not null,
     product_id bigint  not null,
     quantity   integer not null,
+    foreign key (order_id) references single_order (id),
+    foreign key (product_id) references product (id),
     primary key (id)
-);
-
-alter table orders_detail
-    add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id);
-
-alter table orders_detail
-    add constraint fk_orders_detail_to_product
-        foreign key (product_id) references product (id);
+)

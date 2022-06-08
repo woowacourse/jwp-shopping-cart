@@ -5,21 +5,21 @@ import java.util.List;
 public class Orders {
 
     private Long id;
-    private List<OrderDetail> orderDetails;
+    private List<Order> orders;
 
     public Orders() {
     }
 
-    public Orders(final Long id, final List<OrderDetail> orderDetails) {
+    public Orders(final Long id, final List<Order> orders) {
         this.id = id;
-        this.orderDetails = orderDetails;
+        this.orders = orders;
     }
 
     public Long getId() {
         return id;
     }
 
-    public List<OrderDetail> getOrderDetails() {
-        return orderDetails;
+    public List<Order> getOrderDetails() {
+        return orders;
     }
 }
