@@ -77,9 +77,23 @@ class CartItemControllerTest extends ControllerTest{
     }
 
     @Test
-    @DisplayName("장바구니에 담긴 물건들을 가져온다.")
-    void addCartItem() {
+    @DisplayName("장바구니에 물건을 담는다.")
+    void addCartItem() throws Exception {
+        doNothing().when(authService).checkAuthorization(any(), any());
+        when(cartService.addCart(any(), any())).thenReturn(1L);
 
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
+
+        final MockHttpServletResponse response = mockMvc.perform(post("/api/customers/1/carts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+                .content(objectMapper.writeValueAsString(addCartItemRequestDto)))
+                .andDo(print())
+                .andReturn()
+                .getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
