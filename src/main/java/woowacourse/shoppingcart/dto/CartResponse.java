@@ -1,7 +1,9 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.dto;
 
-public class Cart {
+import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
 
+public class CartResponse {
     private Long id;
     private Long productId;
     private String name;
@@ -9,20 +11,20 @@ public class Cart {
     private String imageUrl;
     private int quantity;
 
-    public Cart() {
+    private CartResponse(){}
+
+    public CartResponse(final Cart cart) {
+        this(cart.getId(), cart.getProductId(), cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getQuantity());
     }
 
-    public Cart( final Long productId, final String name, final int price, final String imageUrl, final int quantity) {
-        this(null, productId, name, price, imageUrl, quantity);
-    }
-
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl, final int quantiy) {
+    public CartResponse(final Long id, final Long productId, final String name, final int price,
+                         final String imageUrl, final int quantity) {
         this.id = id;
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.quantity = quantiy;
+        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -47,9 +49,5 @@ public class Cart {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public boolean isSameId(final Long cartId) {
-        return this.id.equals(cartId);
     }
 }

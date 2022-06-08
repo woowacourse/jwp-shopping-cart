@@ -7,6 +7,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductRequest;
 
 import javax.validation.Valid;
@@ -23,7 +24,7 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal final Customer customer) {
+    public ResponseEntity<List<CartResponse>> getCartItems(@AuthenticationPrincipal final Customer customer) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customer.getUserName()));
     }
 
