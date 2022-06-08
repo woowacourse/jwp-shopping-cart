@@ -1,7 +1,3 @@
-drop table if exists orders_detail;
-
-drop table if exists orders;
-
 drop table if exists cart_item;
 
 drop table if exists product;

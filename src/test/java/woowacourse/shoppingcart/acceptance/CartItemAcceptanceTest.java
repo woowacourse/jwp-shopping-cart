@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+public class CartItemAcceptanceTest extends AcceptanceTest {
     private Long productId1;
     private Long productId2;
     private String token;
@@ -54,7 +54,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestBody)
-                .when().post("/users/me/carts")
+                .when().post("/users/me/cartItems")
                 .then().log().all()
                 .extract();
 
@@ -106,7 +106,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/me/carts")
+                .when().get("/users/me/cartItems")
                 .then().log().all()
                 .extract();
 
@@ -224,7 +224,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .when().log().all()
-                .delete("users/me/carts/" + productId1)
+                .delete("users/me/cartItems/" + productId1)
                 .then().log().all()
                 .extract();
     }
@@ -246,7 +246,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .body(Map.of("quantity", quantity))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().log().all()
-                .put("users/me/carts/" + productId)
+                .put("users/me/cartItems/" + productId)
                 .then().log().all()
                 .extract();
         return response;

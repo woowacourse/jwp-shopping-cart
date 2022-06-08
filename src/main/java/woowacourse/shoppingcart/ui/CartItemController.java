@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.cart.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.cart.CartItemResponse;
@@ -14,7 +14,7 @@ import woowacourse.shoppingcart.dto.cart.CartItemsResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/me/carts")
+@RequestMapping("/users/me/cartItems")
 public class CartItemController {
     private final CartService cartService;
 
@@ -24,8 +24,8 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<CartItemsResponse> getCartItems(@AuthenticationPrincipal Customer customer) {
-        List<Cart> carts = cartService.findCartsByCustomer(customer);
-        return ResponseEntity.ok(CartItemsResponse.from(carts));
+        List<CartItem> cartItems = cartService.findCartsByCustomer(customer);
+        return ResponseEntity.ok(CartItemsResponse.from(cartItems));
     }
 
     @PostMapping
@@ -44,7 +44,7 @@ public class CartItemController {
     public ResponseEntity<CartItemResponse> updateCartItemQuantity(@PathVariable Long productId,
                                                                    @RequestBody CartItemUpdateRequest request,
                                                                    @AuthenticationPrincipal Customer customer) {
-        Cart cartItem = cartService.updateQuantity(request, customer, productId);
+        CartItem cartItem = cartService.updateQuantity(request, customer, productId);
         return ResponseEntity.ok(CartItemResponse.from(cartItem));
     }
 }

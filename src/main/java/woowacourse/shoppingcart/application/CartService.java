@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.cart.CartItemUpdateRequest;
@@ -25,17 +25,17 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomer(final Customer customer) {
+    public List<CartItem> findCartsByCustomer(final Customer customer) {
         final List<Long> cartIds = findCartIdsByCustomerId(customer.getId());
 
-        final List<Cart> carts = new ArrayList<>();
+        final List<CartItem> cartItems = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productDao.findProductById(productId)
                     .orElseThrow(InvalidProductException::new);
-            carts.add(new Cart(cartId, product));
+            cartItems.add(new CartItem(cartId, product));
         }
-        return carts;
+        return cartItems;
     }
 
     private List<Long> findCartIdsByCustomerId(final Long customerId) {
@@ -66,14 +66,14 @@ public class CartService {
         cartItemDao.deleteByProductIdAndCustomerId(customer.getId(), productId);
     }
 
-    public Cart updateQuantity(CartItemUpdateRequest request, final Customer customer, final Long productId) {
+    public CartItem updateQuantity(CartItemUpdateRequest request, final Customer customer, final Long productId) {
         validateQuantity(request.getQuantity());
         Product product = productDao.findProductById(productId)
                 .orElseThrow(NotFoundProductException::new);
 
         cartItemDao.updateQuantity(customer.getId(), productId, request.getQuantity());
 
-        return new Cart(product, request.getQuantity());
+        return new CartItem(product, request.getQuantity());
 
     }
 

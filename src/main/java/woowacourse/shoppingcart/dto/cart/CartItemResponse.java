@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto.cart;
 
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 
 public class CartItemResponse {
     private Long id;
@@ -20,7 +20,7 @@ public class CartItemResponse {
         this.quantity = quantity;
     }
 
-    public static CartItemResponse from(Cart item) {
+    public static CartItemResponse from(CartItem item) {
         return new CartItemResponse(item.getProductId(), item.getName(), item.getPrice(), item.getImageUrl(), item.getQuantity());
     }
 
