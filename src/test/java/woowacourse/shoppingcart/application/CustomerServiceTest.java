@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
@@ -20,6 +21,7 @@ import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @JdbcTest
+@Sql({"/datadelete.sql"})
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class CustomerServiceTest {
 

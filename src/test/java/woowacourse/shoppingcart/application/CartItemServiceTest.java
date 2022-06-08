@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -22,6 +24,8 @@ import woowacourse.shoppingcart.dto.ChangeCartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @JdbcTest
+@Sql({"/datadelete.sql"})
+@Transactional
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class CartItemServiceTest {
 

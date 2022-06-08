@@ -13,15 +13,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.ChangeCartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.ChangeCartItemQuantityRequest;
+import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
     private Long productId1;
     private Long productId2;
+    private final String email = "beomWhale@naver.com";
+    private final String nickname = "beomWhale";
+    private final String password = "Password1234!";
 
     @Override
     @BeforeEach
@@ -35,7 +37,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        String token = createToken("test1@email.com", "Password123!");
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
+        createCustomer(customerCreateRequest);
+        String token = login(customerCreateRequest);
 
         RestAssured.given().log().all()
           .auth().oauth2(token)
@@ -48,7 +52,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        String token = createToken("test1@email.com", "Password123!");
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
+        createCustomer(customerCreateRequest);
+        String token = login(customerCreateRequest);
         insertCartItem(productId1, token);
         insertCartItem(productId2, token);
 
@@ -61,7 +67,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        String token = createToken("test1@email.com", "Password123!");
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
+        createCustomer(customerCreateRequest);
+        String token = login(customerCreateRequest);
         insertCartItem(productId1, token);
 
         RestAssured.given().log().all()
@@ -75,7 +83,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 상품 수량 변경")
     @Test
     void updateCartItemQuantity() {
-        String token = createToken("test1@email.com", "Password123!");
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
+        createCustomer(customerCreateRequest);
+        String token = login(customerCreateRequest);
         insertCartItem(productId1, token);
         ChangeCartItemQuantityRequest changeCartItemQuantityRequest = new ChangeCartItemQuantityRequest(2);
 
@@ -90,7 +100,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     private void insertCartItem(Long productId, String token) {
-
         RestAssured.given().log().all()
           .auth().oauth2(token)
           .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -118,18 +127,5 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .map(CartItemResponse::getName)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
-    }
-
-
-    private String createToken(String email, String password) {
-        TokenRequest tokenRequest = new TokenRequest(email, password);
-        TokenResponse tokenResponse = RestAssured.given()
-          .contentType(MediaType.APPLICATION_JSON_VALUE)
-          .body(tokenRequest)
-          .post("/api/login")
-          .then()
-          .statusCode(HttpStatus.OK.value())
-          .extract().as(TokenResponse.class);
-        return tokenResponse.getAccessToken();
     }
 }

@@ -51,11 +51,11 @@ public class CartService {
     }
 
     private CartItemResponse toCartItemResponse(CartItem cartItem, Product product) {
-        return new CartItemResponse(cartItem.getId(), product.getName(), product.getPrice(),
+        return new CartItemResponse(cartItem.getId(), product.getId(), product.getName(), product.getPrice(),
           cartItem.getQuantity(), product.getImageUrl());
     }
 
-    public Long addCart(Customer customer, final Long productId) {
+    public Long addCart(Customer customer, Long productId) {
         final Long customerId = customerDao.findIdByNickname(customer.getNickname());
         try {
             return cartItemDao.addCartItem(customerId, productId);
