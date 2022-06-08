@@ -18,12 +18,12 @@ public class Password {
     }
 
     private void validatePassword(final String value) {
-        if (isPasswordOutOfForm(value)) {
+        if (isPasswordOutOfFormat(value)) {
             throw new CustomerException(CustomerExceptionCode.INVALID_FORMAT_PASSWORD);
         }
     }
 
-    private boolean isPasswordOutOfForm(final String value) {
+    private boolean isPasswordOutOfFormat(final String value) {
         return !PASSWORD_PATTERN.matcher(value).matches();
     }
 
