@@ -36,7 +36,7 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Product getProductById(final Long productId) {
         try {
             final String query = "SELECT name, price, image_url, quantity FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->

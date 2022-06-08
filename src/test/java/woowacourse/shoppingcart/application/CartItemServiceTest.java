@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import javax.sql.DataSource;
@@ -67,8 +68,6 @@ public class CartItemServiceTest {
     void addCartItem_throwNoProductId() {
         // given
         Long customerId = 손님_추가한다("손1@naver.com", "손님1", "1234");
-        Long productId1 = 상품_추가한다("아이템1", 10000, "주소1", 100);
-        Long productId2 = 상품_추가한다("아이템2", 20000, "주소2", 200);
 
         // when then
         assertThatThrownBy(() -> 장바구니에_추가한다(customerId, 100L, 10))
@@ -98,6 +97,70 @@ public class CartItemServiceTest {
         // when then
         assertThatThrownBy(() -> 장바구니에_추가한다(customerId, productId, 100))
                 .isInstanceOf(OutOfStockException.class);
+    }
+
+    @DisplayName("Customer Id로 장바구니를 조회한다.")
+    @Test
+    void findCartsByCustomerId() {
+        // given
+        Long customerId = 손님_추가한다("손1@naver.com", "손님1", "1234");
+        Long productId1 = 상품_추가한다("아이템1", 10000, "주소1", 100);
+        Long productId2 = 상품_추가한다("아이템2", 20000, "주소2", 200);
+        장바구니에_추가한다(customerId, productId1, 10);
+        장바구니에_추가한다(customerId, productId2, 10);
+
+        // when
+        List<CartItemDto> carts = cartItemService.findCartsByCustomerId(customerId);
+
+        // then
+        assertAll(
+                () -> assertThat(carts).hasSize(2),
+                () -> assertThat(carts.get(0).getProductId()).isEqualTo(productId1),
+                () -> assertThat(carts.get(1).getProductId()).isEqualTo(productId2)
+        );
+    }
+
+    @DisplayName("장바구니의 특정 ProductId의 Count를 업데이트 한다.")
+    @Test
+    void updateCount() {
+        // given
+        Long customerId = 손님_추가한다("손1@naver.com", "손님1", "1234");
+        Long productId1 = 상품_추가한다("아이템1", 10000, "주소1", 100);
+        장바구니에_추가한다(customerId, productId1, 10);
+
+        // when
+        cartItemService.updateCount(customerId, productId1, 3);
+        CartItemDto cartItemDto = cartItemService.findCartsByCustomerId(customerId)
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        // then
+        assertThat(cartItemDto.getCount()).isEqualTo(3);
+    }
+
+    @DisplayName("장바구니의 특정 ProductId의 Count를 업데이트 시 재고를 넘으면 예외를 발생시킨다.")
+    @Test
+    void updateCount_throwOutOfStock() {
+        // given
+        Long customerId = 손님_추가한다("손1@naver.com", "손님1", "1234");
+        Long productId1 = 상품_추가한다("아이템1", 10000, "주소1", 20);
+
+        // when then
+        assertThatThrownBy(() -> cartItemService.updateCount(customerId, productId1, 30))
+                .isInstanceOf(OutOfStockException.class);
+    }
+
+    @DisplayName("장바구니의 특정 ProductId의 Count를 업데이트 시 재고를 넘으면 예외를 발생시킨다.")
+    @Test
+    void updateCount_throwNoSuchProduct() {
+        // given
+        Long customerId = 손님_추가한다("손1@naver.com", "손님1", "1234");
+        Long productId1 = 상품_추가한다("아이템1", 10000, "주소1", 20);
+
+        // when then
+        assertThatThrownBy(() -> cartItemService.updateCount(customerId, 10L, 30))
+                .isInstanceOf(NoSuchProductException.class);
     }
 
     private List<CartItemDto> 장바구니_목록을_조회한다(Long customerId) {

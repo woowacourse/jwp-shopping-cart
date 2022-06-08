@@ -32,7 +32,7 @@ public class ProductService {
     }
 
     public ProductResponse findProductById(final Long productId) {
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.getProductById(productId);
 
         return new ProductResponse(product);
     }

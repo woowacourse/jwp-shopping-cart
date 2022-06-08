@@ -34,7 +34,7 @@ public class CartItemService {
         final List<CartItemDto> cartItemDtos = new ArrayList<>();
 
         for (final CartItem cartItem : cartItems) {
-            final Product product = productDao.findProductById(cartItem.getProductId());
+            final Product product = productDao.getProductById(cartItem.getProductId());
             cartItemDtos.add(new CartItemDto(product, cartItem.getCount()));
         }
 
@@ -46,16 +46,26 @@ public class CartItemService {
             throw new ExistSameProductIdException();
         }
 
-        Integer quantity = productDao.findProductById(request.getProductId()).getQuantity();
-        if (quantity < request.getCount()) {
-            throw new OutOfStockException();
-        }
+        validateCount(request.getProductId(), request.getCount());
 
         try {
             return cartItemDao.addCartItem(customerId, request);
         } catch (Exception e) {
             throw new NoSuchProductException();
         }
+    }
+
+    private void validateCount(Long productId, int count) {
+        Integer quantity = productDao.getProductById(productId).getQuantity();
+
+        if (quantity < count) {
+            throw new OutOfStockException();
+        }
+    }
+
+    public void updateCount(final Long customerId, final Long productId, final int newCount) {
+        validateCount(productId, newCount);
+        cartItemDao.updateCount(customerId, productId, newCount);
     }
 
     public void deleteCart(final Long customerId, final Long cartId) {
