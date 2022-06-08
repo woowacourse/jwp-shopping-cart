@@ -18,7 +18,7 @@ public class Orders {
                 .sum();
     }
 
-    public List<OrderDetail> getOrderProducts() {
+    public List<OrderDetail> getOrderDetails() {
         return orderDetails;
     }
 
@@ -32,8 +32,8 @@ public class Orders {
 
     @Override
     public String toString() {
-        return "Order{" +
-                "orderProducts=" + orderDetails +
+        return "Orders{" +
+                "orderDetails=" + orderDetails +
                 ", customerId=" + customerId +
                 ", totalPrice=" + totalPrice +
                 '}';

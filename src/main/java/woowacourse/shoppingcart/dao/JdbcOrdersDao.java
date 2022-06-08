@@ -9,29 +9,31 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
 
 @Repository
-public class JdbcOrderDao implements OrderDao {
+public class JdbcOrdersDao implements OrdersDao {
+    private static final String TABLE_NAME = "orders";
+    private static final String KEY_COLUMN = "id";
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final ProductDao productDao;
+    private final OrderDetailDao orderDetailDao;
 
-    public JdbcOrderDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource, final ProductDao productDao) {
+    public JdbcOrdersDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource, final ProductDao productDao,
+                         OrderDetailDao orderDetailDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("orders")
-                .usingGeneratedKeyColumns("id");
-        this.productDao = productDao;
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(KEY_COLUMN);
+        this.orderDetailDao = orderDetailDao;
     }
 
     public Long save(Orders orders) {
         Map<String, Long> params = Map.of("customer_id", orders.getCustomerId());
-        Long orderId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        long orderId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        for (OrderDetail orderDetail : orders.getOrderProducts()) {
-            String sql = "INSERT INTO order_detail(order_id, product_id, quantity) VALUES(?, ?, ?)";
-            jdbcTemplate.update(sql, orderId, orderDetail.getProduct().getId(), orderDetail.getQuantity());
+        for (OrderDetail orderDetail : orders.getOrderDetails()) {
+            orderDetailDao.save(orderId, orderDetail.getProduct().getId(), orderDetail.getQuantity());
         }
 
         return orderId;
@@ -41,7 +43,7 @@ public class JdbcOrderDao implements OrderDao {
         String sql = "SELECT customer_id FROM orders WHERE id = ?";
         Long customerId = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("customer_id"), id);
 
-        List<OrderDetail> orderDetails = findOrderProductsById(id);
+        List<OrderDetail> orderDetails = findOrderDetailsById(id);
         return new Orders(orderDetails, customerId);
     }
 
@@ -50,18 +52,13 @@ public class JdbcOrderDao implements OrderDao {
         List<Long> orderIds = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
 
         return orderIds.stream()
-                .map(this::findOrderProductsById)
+                .map(this::findOrderDetailsById)
                 .map(orderProduct -> new Orders(orderProduct, customerId))
                 .collect(Collectors.toList());
     }
 
-    private List<OrderDetail> findOrderProductsById(Long id) {
-        final String sql = "SELECT product_id, quantity FROM order_detail WHERE order_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Product product = productDao.findById(rs.getLong("product_id"));
-            int quantity = rs.getInt("quantity");
-            return new OrderDetail(product, quantity);
-        }, id);
+    private List<OrderDetail> findOrderDetailsById(Long id) {
+        return orderDetailDao.findAllByOrderId(id);
     }
 
     public boolean isValidOrderId(Long customerId, Long orderId) {

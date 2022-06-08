@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.dao;
 import java.util.List;
 import woowacourse.shoppingcart.domain.Orders;
 
-public interface OrderDao {
+public interface OrdersDao {
     Long save(Orders orders);
 
     Orders findById(Long id);
