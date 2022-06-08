@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
+    public ResponseEntity<Object> products() {
+        return ResponseEntity.ok(Map.of("productList", productService.findProducts()));
     }
 
     @PostMapping

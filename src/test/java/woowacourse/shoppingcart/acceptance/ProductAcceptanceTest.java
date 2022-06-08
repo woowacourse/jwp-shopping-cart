@@ -39,7 +39,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
         ExtractableResponse<Response> response = 상품_목록_조회_요청();
-        List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
+        List<Long> resultProductIds = response.jsonPath().getList("productList", Product.class).stream()
                 .map(Product::getId)
                 .collect(Collectors.toList());
 
