@@ -58,6 +58,15 @@ public class CustomerDao {
         }
     }
 
+    public Customer findByEmail(String email) {
+        try {
+            final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
+            return jdbcTemplate.queryForObject(query, customerRowMapper, email);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
     public boolean existByUserName(String username) {
         try {
             String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
@@ -102,14 +111,5 @@ public class CustomerDao {
     public void deleteByUserName(String username) {
         final String query = "DELETE FROM customer WHERE username = ?";
         jdbcTemplate.update(query, username);
-    }
-
-    public Customer findByEmail(String email) {
-        try {
-            final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
-            return jdbcTemplate.queryForObject(query, customerRowMapper, email);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
     }
 }

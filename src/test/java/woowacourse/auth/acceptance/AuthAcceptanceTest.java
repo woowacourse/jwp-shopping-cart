@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredFixture;
 import woowacourse.auth.dto.LogInRequest;
+import woowacourse.auth.dto.LogInResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @DisplayName("인증 관련 기능")
@@ -25,8 +26,26 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
+        LogInResponse logInResponse = RestAssuredFixture.postAutoSignIn(token, "/login/auto", HttpStatus.OK.value());
+
         // then
-        assertThat(token).isNotBlank();
+        assertThat(logInResponse.getToken()).isNotNull();
+    }
+
+    @DisplayName("Bearer Auth 자동 로그인 성공")
+    @Test
+    void autoSignIn() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
+
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
+
+        LogInResponse logInResponse = RestAssuredFixture.postAutoSignIn(token, "/login/auto", HttpStatus.OK.value());
+
+        //when & then
+        assertThat(logInResponse.getToken()).isNotNull();
     }
 
     @DisplayName("Bearer Auth 로그인 성공")
