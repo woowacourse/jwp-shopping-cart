@@ -31,11 +31,11 @@ public class Customer {
     }
 
     public boolean equalsPassword(final Password other) {
-        return other.equals(this.password);
+        return password.equals(other);
     }
 
     public boolean equalsPassword(final String other) {
-        return other.equals(password.get());
+        return password.equalsPassword(other);
     }
 
     public Long getId() {

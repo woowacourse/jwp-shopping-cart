@@ -27,6 +27,10 @@ public class Password {
         return !PASSWORD_PATTERN.matcher(value).matches();
     }
 
+    public boolean equalsPassword(final String password) {
+        return value.equals(password);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
