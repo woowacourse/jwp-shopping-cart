@@ -59,20 +59,20 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 responseFields(
-                    fieldWithPath("products[]").description("상품 목록"),
-                    fieldWithPath("products[].id").description("상품 식별 번호"),
-                    fieldWithPath("products[].name").description("상품 이름"),
-                    fieldWithPath("products[].price").description("상품 가격"),
-                    fieldWithPath("products[].imageUrl").description("상품 이미지 URL")
+                    fieldWithPath("productList[]").description("상품 목록"),
+                    fieldWithPath("productList[].id").description("상품 식별 번호"),
+                    fieldWithPath("productList[].name").description("상품 이름"),
+                    fieldWithPath("productList[].price").description("상품 가격"),
+                    fieldWithPath("productList[].imageUrl").description("상품 이미지 URL")
                 )
             ))
             .when().log().all()
             .get("/products")
             .then().log().all()
             .assertThat().statusCode(HttpStatus.OK.value())
-            .assertThat().body("products.name", hasItems(NAMES))
-            .assertThat().body("products.price", hasItems(PRICES))
-            .assertThat().body("products.imageUrl", hasItems(IMAGE_URLS));
+            .assertThat().body("productList.name", hasItems(NAMES))
+            .assertThat().body("productList.price", hasItems(PRICES))
+            .assertThat().body("productList.imageUrl", hasItems(IMAGE_URLS));
     }
 
     @DisplayName("상품을 조회한다")
