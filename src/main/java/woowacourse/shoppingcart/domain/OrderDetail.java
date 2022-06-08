@@ -14,17 +14,17 @@ public class OrderDetail {
 
     public OrderDetail(final int quantity, final Long productId, final int price, final String name,
                        final String imageUrl) {
+        this(null, quantity, productId, price, name, imageUrl);
+    }
+
+    public OrderDetail(final Long id, final int quantity, final Long productId, final int price, final String name,
+                       final String imageUrl) {
+        this.id = id;
         this.quantity = new Quantity(quantity);
         this.productId = productId;
         this.price = price;
         this.name = name;
         this.imageUrl = imageUrl;
-    }
-
-    public OrderDetail(final Long id, final int quantity, final Long productId, final int price, final String name,
-                       final String imageUrl) {
-        this(quantity, productId, price, name, imageUrl);
-        this.id = id;
     }
 
     public static OrderDetail from(final CartItem cartItem) {

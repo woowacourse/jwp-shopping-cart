@@ -12,14 +12,14 @@ public class CartItem {
     }
 
     public CartItem(final Product product, final int quantity) {
-        validateProductIsAvailable(product, quantity);
-        this.product = product;
-        this.quantity = new Quantity(quantity);
+        this(null, product, quantity);
     }
 
     public CartItem(final Long id, final Product product, final int quantity) {
-        this(product, quantity);
+        validateProductIsAvailable(product, quantity);
         this.id = id;
+        this.product = product;
+        this.quantity = new Quantity(quantity);
     }
 
     private void validateProductIsAvailable(Product product, int quantity) {

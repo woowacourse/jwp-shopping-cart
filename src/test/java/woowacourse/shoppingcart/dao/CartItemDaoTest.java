@@ -36,8 +36,8 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product(null, new ProductName("banana"), new Price(1_000), new Stock(100), "woowa1.com"));
-        productDao.save(new Product(null, new ProductName("apple"), new Price(2_000), new Stock(100), "woowa2.com"));
+        productDao.save(new Product(new ProductName("banana"), new Price(1_000), new Stock(100), "woowa1.com"));
+        productDao.save(new Product(new ProductName("apple"), new Price(2_000), new Stock(100), "woowa2.com"));
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 1);
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 1);
     }
@@ -88,8 +88,8 @@ public class CartItemDaoTest {
     @Test
     void findAllByCustomerId() {
         final Long customerId = 2L;
-        Product product1 = new Product(null, new ProductName("coffee"), new Price(2_000), new Stock(10), "coffee.png");
-        Product product2 = new Product(null, new ProductName("tea"), new Price(3_000), new Stock(10), "tea.png");
+        Product product1 = new Product(new ProductName("coffee"), new Price(2_000), new Stock(10), "coffee.png");
+        Product product2 = new Product(new ProductName("tea"), new Price(3_000), new Stock(10), "tea.png");
 
         Long productId1 = productDao.save(product1);
         Long productId2 = productDao.save(product2);
