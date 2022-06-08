@@ -9,7 +9,7 @@ public class CartItemResponse {
     private Integer price;
     private String name;
     private Integer quantity;
-    private ThumbnailImageDto thumbnailImageDto;
+    private ThumbnailImageDto thumbnailImage;
 
     public CartItemResponse(Long id, Long productId, Integer price, String name, Integer quantity,
                             ThumbnailImageDto thumbnailImageDto) {
@@ -18,7 +18,7 @@ public class CartItemResponse {
         this.price = price;
         this.name = name;
         this.quantity = quantity;
-        this.thumbnailImageDto = thumbnailImageDto;
+        this.thumbnailImage = thumbnailImageDto;
     }
 
     public static CartItemResponse of(Long id, Integer quantity, Product product) {
@@ -46,7 +46,7 @@ public class CartItemResponse {
         return quantity;
     }
 
-    public ThumbnailImageDto getThumbnailImageDto() {
-        return thumbnailImageDto;
+    public ThumbnailImageDto getThumbnailImage() {
+        return thumbnailImage;
     }
 }
