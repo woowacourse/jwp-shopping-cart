@@ -12,10 +12,6 @@ public class Products {
         this.value = value;
     }
 
-    public List<Product> getValue() {
-        return Collections.unmodifiableList(value);
-    }
-
     public Products getProductsOfPage(int size, int page) {
         int countOfPage = value.size() / size + 1;
         int sizeOfLastPage = value.size() % size;
@@ -27,5 +23,9 @@ public class Products {
             return new Products(value.subList(value.size() - sizeOfLastPage, value.size()));
         }
         throw new InvalidPageException();
+    }
+
+    public List<Product> getValue() {
+        return Collections.unmodifiableList(value);
     }
 }

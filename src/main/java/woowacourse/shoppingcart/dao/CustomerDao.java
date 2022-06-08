@@ -53,7 +53,7 @@ public class CustomerDao {
         try {
             final String query = "SELECT id, username, email, password FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, customerRowMapper, username.getValue().toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }
@@ -62,7 +62,7 @@ public class CustomerDao {
         try {
             final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
             return jdbcTemplate.queryForObject(query, customerRowMapper, email.getValue());
-        } catch (final EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }
@@ -71,7 +71,7 @@ public class CustomerDao {
         try {
             String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
             return jdbcTemplate.queryForObject(query, Boolean.class, username.getValue());
-        } catch (final EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }
@@ -80,7 +80,7 @@ public class CustomerDao {
         try {
             String query = "SELECT EXISTS (SELECT * FROM customer WHERE email = ?)";
             return jdbcTemplate.queryForObject(query, Boolean.class, email.getValue());
-        } catch (final EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }
@@ -89,7 +89,7 @@ public class CustomerDao {
         try {
             final String query = "UPDATE CUSTOMER SET password = ? WHERE id = ?";
             jdbcTemplate.update(query, password.getValue(), id);
-        } catch (final EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }
@@ -98,7 +98,7 @@ public class CustomerDao {
         try {
             final String query = "DELETE FROM customer WHERE username = ?";
             jdbcTemplate.update(query, username.getValue());
-        } catch (final EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
     }

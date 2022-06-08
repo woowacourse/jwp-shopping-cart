@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.dto;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import woowacourse.shoppingcart.domain.Cart;
 
 public class UpdateCartRequests {
 
@@ -15,5 +17,17 @@ public class UpdateCartRequests {
 
     public List<UpdateCartRequest> getProducts() {
         return products;
+    }
+
+    public List<Cart> getCarts() {
+        return products.stream()
+                .map(UpdateCartRequest::toCart)
+                .collect(Collectors.toList());
+    }
+
+    public List<Long> getCartIds() {
+        return products.stream()
+                .map(updateCartRequest -> updateCartRequest.getId())
+                .collect(Collectors.toList());
     }
 }

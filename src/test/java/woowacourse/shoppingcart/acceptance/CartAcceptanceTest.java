@@ -11,6 +11,7 @@ import io.restassured.response.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -63,9 +64,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token);
 
         장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, productId1, productId2);
+        장바구니_아이템_목록_포함됨(response, "치킨", "맥주");
     }
 
+    @Disabled
     @Test
     @DisplayName("장바구니 아이템 정보 수정")
     void updateCartItems() {
@@ -113,6 +115,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .when().post("/cart")
                 .then().log().all()
                 .extract();
+
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_수정_요청(String token, UpdateCartRequests updateCartRequests) {
@@ -171,14 +174,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response
+    public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, String... productNames) {
+        List<String> resultProductIds = response
                 .as(CartResponses.class)
                 .getProducts()
                 .stream()
-                .map(CartResponse::getId)
+                .map(CartResponse::getName)
                 .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productIds);
+        assertThat(resultProductIds).contains(productNames);
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {

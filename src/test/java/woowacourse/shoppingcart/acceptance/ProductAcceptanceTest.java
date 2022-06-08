@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.dto.ProductsPerPageRequest;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
@@ -29,18 +30,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-        Long productId3 = 상품_등록되어_있음("피자", 20_000, "http://example.com/pizza.jpg");
-        Long productId4 = 상품_등록되어_있음("떡볶이", 20_000, "http://example.com/ddukbokki.jpg");
-        Long productId5 = 상품_등록되어_있음("보쌈", 20_000, "http://example.com/bossam.jpg");
-        Long productId6 = 상품_등록되어_있음("족발", 20_000, "http://example.com/jokbal.jpg");
-        Long productId7 = 상품_등록되어_있음("김치", 20_000, "http://example.com/kimchi.jpg");
-
-        ExtractableResponse<Response> response = 상품_목록_조회_요청(new ProductsPerPageRequest(3, 2));
+        ExtractableResponse<Response> response = 상품_목록_조회_요청(new ProductsPerPageRequest(12, 3));
 
         조회_응답됨(response);
-        상품_목록_포함됨(List.of(productId4, productId5, productId6), response);
+        상품_목록_포함됨(List.of(25L, 26L, 27L, 28L, 29L, 30L, 31L, 32L, 33L, 34L, 35L, 36L), response);
     }
 
     @DisplayName("상품을 조회한다")

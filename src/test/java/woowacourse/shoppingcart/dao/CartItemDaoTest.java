@@ -47,7 +47,7 @@ public class CartItemDaoTest {
                 3L, 1, true);
     }
 
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")
     @Test
     void addCartItem() {
         // given
@@ -55,12 +55,13 @@ public class CartItemDaoTest {
         Long productId = 1L;
         Integer quantity = 1;
         Boolean checked = true;
+        Product product = productDao.findProductById(productId);
 
         // when
-        Long cartId = cartItemDao.addCartItem(customerId, productId, quantity, checked);
+        Cart cart = cartItemDao.addCartItem(customerId, new Cart(product, quantity, checked));
 
         // then
-        assertThat(cartId).isEqualTo(4L);
+        assertThat(cart.getId()).isEqualTo(4L);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니를 가져온다.")
@@ -72,8 +73,9 @@ public class CartItemDaoTest {
         // when
         List<Cart> carts = cartItemDao.findByCustomerId(customerId);
         List<Long> cartIds = carts.stream()
-                .map(cart -> cart.getId())
+                .map(Cart::getId)
                 .collect(Collectors.toList());
+
         // then
         assertThat(cartIds).containsExactly(1L, 2L, 3L);
     }

@@ -24,8 +24,14 @@ public class CartResponse {
     }
 
     public static CartResponse from(Cart cart) {
-        return new CartResponse(cart.getId(), cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getQuantity(),
-                cart.isChecked());
+        return new CartResponse(
+                cart.getId(),
+                cart.getProduct().getName(),
+                cart.getProduct().getPrice(),
+                cart.getProduct().getImageUrl(),
+                cart.getQuantity(),
+                cart.isChecked()
+        );
     }
 
     public Long getId() {
