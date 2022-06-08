@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.domain.Cart;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private String user;
+
     private Long productId1;
     private Long productId2;
 
@@ -29,7 +29,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
         super.setUp();
         MARU.register();
         MARU.login();
-        user = MARU.getName();
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }
@@ -37,7 +36,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(user, productId1);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(productId1);
 
         장바구니_아이템_추가됨(response);
     }
@@ -45,10 +44,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(user, productId1);
-        장바구니_아이템_추가되어_있음(user, productId2);
+        장바구니_아이템_추가되어_있음(productId1);
+        장바구니_아이템_추가되어_있음(productId2);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(user);
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청();
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
@@ -57,25 +56,25 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(user, productId1);
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(user, cartId);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(cartId);
 
         장바구니_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("product_id", productId);
 
         return Request.postWithToken(requestBody, "/api/members/me/carts", MARU.getToken());
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청() {
         return Request.getWithToken("/api/members/me/carts", MARU.getToken());
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(Long cartId) {
         return Request.deleteWithTokenAndPathValue(cartId, "/api/members/me/carts/{cartId}", MARU.getToken());
     }
 
@@ -84,8 +83,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
+    public static Long 장바구니_아이템_추가되어_있음(Long productId) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(productId);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 

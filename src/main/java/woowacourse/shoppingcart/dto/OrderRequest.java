@@ -5,20 +5,20 @@ import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
     @NotNull
-    private Long cartId;
+    private Long cart_id;
     @Min(0)
     private int quantity;
 
     private OrderRequest() {
     }
 
-    public OrderRequest(final Long cartId, final int quantity) {
-        this.cartId = cartId;
+    public OrderRequest(Long cart_id, int quantity) {
+        this.cart_id = cart_id;
         this.quantity = quantity;
     }
 
-    public Long getCartId() {
-        return cartId;
+    public Long getCart_id() {
+        return cart_id;
     }
 
     public int getQuantity() {

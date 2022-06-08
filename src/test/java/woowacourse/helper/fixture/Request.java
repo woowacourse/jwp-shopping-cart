@@ -66,6 +66,15 @@ public class Request {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> getWithTokenAndPathValue(Object value, String url, String token) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .when()
+                .get(url, value)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> delete(Object params, String url) {
         return RestAssured.given().log().all()
                 .body(params)
