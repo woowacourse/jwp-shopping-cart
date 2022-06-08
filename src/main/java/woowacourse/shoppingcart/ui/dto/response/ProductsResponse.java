@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ProductsResponse {
     private final long totalCount;
-    private List<ProductResponse> products;
+    private final List<ProductResponse> products;
 
     public ProductsResponse(final long totalCount, final List<ProductResponse> products) {
         this.totalCount = totalCount;
