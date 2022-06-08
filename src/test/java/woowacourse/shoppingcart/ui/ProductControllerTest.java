@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponses;
 
 @WebAppConfiguration
 @WebMvcTest(controllers = {ProductController.class})
@@ -51,15 +52,16 @@ class ProductControllerTest {
         int size = 10;
         int page = 3;
         int from = page * size;
-        given(productService.findProducts(size, page)).willReturn(productResponses.subList(from, from + size));
+        given(productService.findProducts(size, page))
+                .willReturn(new ProductResponses(productResponses.subList(from, from + size)));
 
         mockMvc.perform(get("/products?size=" + size + "&page=" + page))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(size)))
-                .andExpect(jsonPath("[0].name").value("name31"))
-                .andExpect(jsonPath("[0].price").value(31000))
-                .andExpect(jsonPath("[0].imageUrl").value("imageUrl31"))
+                .andExpect(jsonPath("['products']", hasSize(size)))
+                .andExpect(jsonPath("['products'][0].name").value("name31"))
+                .andExpect(jsonPath("['products'][0].price").value(31000))
+                .andExpect(jsonPath("['products'][0].imageUrl").value("imageUrl31"))
                 .andDo(print());
     }
 }
