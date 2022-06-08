@@ -31,7 +31,7 @@ public class CartItemDao {
     }
 
     public void addCartItem(long memberId, long productId, int quantity) {
-        String sql = "INSERT INTO cart_item (member_id, product_id, quantity)"
+        String sql = "INSERT INTO CART_ITEM (member_id, product_id, quantity)"
                 + "VALUES (:member_id, :product_id, :quantity)";
         SqlParameterSource params = new MapSqlParameterSource("member_id", memberId)
                 .addValue("product_id", productId)

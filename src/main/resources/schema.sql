@@ -2,7 +2,7 @@ drop table if exists cart_item;
 drop table if exists product;
 drop table if exists member;
 
-create table member
+create table MEMBER
 (
     id       bigint       not null auto_increment,
     email    varchar(255) not null unique,
@@ -11,7 +11,7 @@ create table member
     primary key (id)
 );
 
-create table product
+create table PRODUCT
 (
     id        bigint       not null auto_increment,
     name      varchar(255) not null,
@@ -21,13 +21,13 @@ create table product
     primary key (id)
 );
 
-create table cart_item
+create table CART_ITEM
 (
     id         bigint  not null auto_increment,
     member_id  bigint  not null,
     product_id bigint  not null,
     quantity   integer not null,
     primary key (id),
-    foreign key (member_id) references member (id) ON DELETE CASCADE,
-    foreign key (product_id) references product (id) ON DELETE CASCADE
+    foreign key (member_id) references MEMBER (id) ON DELETE CASCADE,
+    foreign key (product_id) references PRODUCT (id) ON DELETE CASCADE
 );

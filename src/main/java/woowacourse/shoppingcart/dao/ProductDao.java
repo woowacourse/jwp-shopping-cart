@@ -28,7 +28,7 @@ public class ProductDao {
     }
 
     public List<Product> findProducts(int offset, int limit) {
-        String sql = "SELECT id, name, price, stock, image_url FROM product LIMIT :limit OFFSET :offset";
+        String sql = "SELECT id, name, price, stock, image_url FROM PRODUCT LIMIT :limit OFFSET :offset";
         SqlParameterSource params = new MapSqlParameterSource("offset", offset)
                 .addValue("limit", limit);
         return jdbcTemplate.query(sql, params, PRODUCT_MAPPER);
