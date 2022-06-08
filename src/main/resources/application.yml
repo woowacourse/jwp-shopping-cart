@@ -1,6 +1,8 @@
 spring:
   profiles.active: dev
-  sql.init.mode: always
+  sql:
+    init:
+      mode: always
   mvc.pathmatch.matching-strategy: ANT_PATH_MATCHER
 
 ---
