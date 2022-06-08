@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.SignInResponse;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -139,5 +140,17 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertThat(extract.body().jsonPath().getString("message"))
                 .isEqualTo("[ERROR] 비밀번호가 일치하지 않습니다.");
+    }
+
+    @Test
+    void 자동로그인() {
+        var signInRequest = new SignInRequest(VALID_EMAIL, VALID_PASSWORD);
+        String accessToken = createSignInResult(signInRequest, HttpStatus.OK).as(SignInResponse.class).getToken();
+
+        SignInResponse extract = autoLogin(accessToken, HttpStatus.OK).as(SignInResponse.class);
+
+        assertAll(() -> assertThat(extract.getUsername()).isEqualTo("puterism"),
+                () -> assertThat(extract.getEmail()).isEqualTo(VALID_EMAIL),
+                () -> assertThat(extract.getToken()).isNotNull());
     }
 }

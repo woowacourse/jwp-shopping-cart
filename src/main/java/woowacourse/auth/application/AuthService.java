@@ -45,4 +45,11 @@ public class AuthService {
     public boolean isValidToken(String token) {
         return jwtTokenProvider.validateToken(token);
     }
+
+    public SignInResponse autoSignIn(String username) {
+        Customer customer = customerDao.findCustomerByUserName(username);
+        String email = customer.getEmail();
+        String token = jwtTokenProvider.createToken(username);
+        return new SignInResponse(username, email, token);
+    }
 }

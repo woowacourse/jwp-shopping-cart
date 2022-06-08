@@ -168,4 +168,16 @@ public class AcceptanceTest {
                 .then().log().all()
                 .statusCode(httpStatus.value()).extract();
     }
+
+    protected ExtractableResponse autoLogin(String accessToken, HttpStatus httpStatus) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/login/auto")
+                .then().log().all()
+                .statusCode(httpStatus.value())
+                .extract();
+    }
 }
