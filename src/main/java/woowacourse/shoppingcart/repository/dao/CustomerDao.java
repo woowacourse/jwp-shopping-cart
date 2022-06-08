@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.exception.ResourceNotFoundException;
 @Repository
 public class CustomerDao {
 
-    private static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname from customer where withdrawal = false) ";
+    private static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname from customer where withdrawal = false) rcq ";
     private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) -> new Customer(
             resultSet.getLong("id"),
             resultSet.getString("username"),
