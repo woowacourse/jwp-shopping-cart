@@ -12,7 +12,7 @@ public class Products {
         this.value = value;
     }
 
-    public Products getProductsOfPage(int size, int page) {
+    public Products getProductsOfPage(Integer size, Integer page) {
         int countOfPage = value.size() / size + 1;
         int sizeOfLastPage = value.size() % size;
 

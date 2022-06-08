@@ -25,10 +25,9 @@ public class ProductService {
         return product.getId();
     }
 
-    public ProductResponses findProducts(ProductsPerPageRequest productsPerPageRequest) {
+    public ProductResponses findProducts(int size, int page) {
         Products products = productDao.findProducts();
-        Products productsOfPage = products.getProductsOfPage(productsPerPageRequest.getSize(),
-                productsPerPageRequest.getPage());
+        Products productsOfPage = products.getProductsOfPage(size, page);
         return ProductResponses.from(productsOfPage);
     }
 

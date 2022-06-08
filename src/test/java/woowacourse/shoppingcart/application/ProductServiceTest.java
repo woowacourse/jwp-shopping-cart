@@ -28,10 +28,9 @@ public class ProductServiceTest {
         productService.addProduct(new ProductRequest("보쌈", 20_000, "http://example.com/bossam.jpg"));
         productService.addProduct(new ProductRequest("족발", 20_000, "http://example.com/jokbal.jpg"));
         productService.addProduct(new ProductRequest("김치", 20_000, "http://example.com/kimchi.jpg"));
-        ProductsPerPageRequest productsPerPageRequest = new ProductsPerPageRequest(3, 2);
 
         // when
-        ProductResponses productResponses = productService.findProducts(productsPerPageRequest);
+        ProductResponses productResponses = productService.findProducts(3, 2);
 
         // then
         assertThat(productResponses.getProducts()).size().isEqualTo(3);

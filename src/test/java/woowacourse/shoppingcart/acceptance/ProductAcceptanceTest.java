@@ -30,10 +30,18 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
-        ExtractableResponse<Response> response = 상품_목록_조회_요청(new ProductsPerPageRequest(12, 3));
+        ExtractableResponse<Response> response = 상품_목록_조회_요청(12, 3);
 
         조회_응답됨(response);
         상품_목록_포함됨(List.of(25L, 26L, 27L, 28L, 29L, 30L, 31L, 32L, 33L, 34L, 35L, 36L), response);
+    }
+
+    @DisplayName("빈 상품 목록을 조회한다")
+    @Test
+    void getProducts1() {
+        ExtractableResponse<Response> response = 빈_상품_목록_조회_요청();
+
+        조회_응답됨(response);
     }
 
     @DisplayName("상품을 조회한다")
@@ -69,12 +77,21 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_목록_조회_요청(ProductsPerPageRequest productsPerPageRequest) {
+    public static ExtractableResponse<Response> 상품_목록_조회_요청(int size, int page) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .param("size", productsPerPageRequest.getSize())
-                .param("page", productsPerPageRequest.getPage())
+                .param("size", size)
+                .param("page", page)
+                .when().get("/products")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 빈_상품_목록_조회_요청() {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/products")
                 .then().log().all()
                 .extract();

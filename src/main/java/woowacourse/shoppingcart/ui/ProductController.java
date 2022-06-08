@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
@@ -22,6 +23,9 @@ import woowacourse.shoppingcart.dto.Request;
 @RequestMapping("/products")
 public class ProductController {
 
+    private static final int DEFAULT_SIZE = 1000;
+    private static final int DEFAULT_PAGE = 1;
+
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
@@ -30,7 +34,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> addProduct(
-            @Validated(Request.allProperties.class) @RequestBody final ProductRequest productRequest) {
+            @Validated(Request.allProperties.class) @RequestBody ProductRequest productRequest) {
         final Long productId = productService.addProduct(productRequest);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -40,8 +44,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductResponses> getProducts(ProductsPerPageRequest productsPerPageRequest) {
-        return ResponseEntity.ok(productService.findProducts(productsPerPageRequest));
+    public ResponseEntity<ProductResponses> getProducts(
+            @RequestParam(required = false, defaultValue = "1000") int size,
+            @RequestParam(required = false, defaultValue = "1") int page) {
+        return ResponseEntity.ok(productService.findProducts(size, page));
     }
 
     @GetMapping("/{productId}")
