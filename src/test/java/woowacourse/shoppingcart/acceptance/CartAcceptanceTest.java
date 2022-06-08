@@ -203,5 +203,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(cartItemResponse.getImageUrl()).isEqualTo("image.url"),
                 () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(2)
         );
+
+        ExtractableResponse<Response> response1 = 장바구니_상품_조회(로그인된_토큰);
+        List<CartItemResponse> cartList = response1.jsonPath().getList("cartList", CartItemResponse.class);
+        assertThat(cartList.get(0).getQuantity()).isEqualTo(2);
     }
 }

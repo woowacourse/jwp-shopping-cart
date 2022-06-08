@@ -94,7 +94,7 @@ public class CartService {
         List<CartItem> cartItems = cartItemDao.findByCustomerId(customer.getId());
         CartItem cartItem = findCartItemByProductId(product.getId(), cartItems);
         CartItem updateCartItem = cartItem.updateQuantity(quantityRequest.getQuantity());
-        cartItemDao.update(cartItem);
+        cartItemDao.update(updateCartItem);
         return new CartItemResponse(updateCartItem.getId(), updateCartItem.getName(), updateCartItem.getPrice(),
                 updateCartItem.getImageUrl(), updateCartItem.getQuantity());
     }
