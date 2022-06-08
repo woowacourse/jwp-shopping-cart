@@ -1,11 +1,16 @@
 package woowacourse.shoppingcart.exception;
 
+import woowacourse.exception.dto.ErrorResponse;
+
 public class InvalidCartItemException extends RuntimeException {
-    public InvalidCartItemException() {
-        this("유효하지 않은 장바구니입니다.");
+    private ErrorResponse errorResponse;
+
+    public InvalidCartItemException(String message, ErrorResponse errorResponse) {
+        super(message);
+        this.errorResponse = errorResponse;
     }
 
-    public InvalidCartItemException(final String msg) {
-        super(msg);
+    public ErrorResponse getErrorResponse() {
+        return errorResponse;
     }
 }

@@ -15,8 +15,8 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.exception.AlreadyExistException;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotExistException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(readOnly = true)
@@ -83,7 +83,7 @@ public class CartService {
         if (containsAllIds(cartItemIds, savedCartItemIds)) {
             return;
         }
-        throw new NotInCustomerCartItemException();
+        throw new InvalidCartItemException("유효하지 않는 장바구니 아이템입니다.", ErrorResponse.INVALID_CART_ITEM);
     }
 
     private boolean containsAllIds(List<Long> cartItemIds, Set<Long> savedCartItemIds) {

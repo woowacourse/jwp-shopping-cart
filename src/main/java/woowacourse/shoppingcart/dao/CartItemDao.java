@@ -8,10 +8,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ThumbnailImage;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @Repository
 public class CartItemDao {
@@ -40,7 +41,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new NotExistException("존재하지 않는 장바구니 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
         }
     }
 
