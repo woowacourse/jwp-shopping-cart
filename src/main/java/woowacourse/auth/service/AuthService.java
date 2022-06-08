@@ -23,6 +23,6 @@ public class AuthService {
         customer.checkPasswordWithEncryption(tokenRequest.getPassword());
 
         String token = tokenProvider.createToken(tokenRequest.getLoginId());
-        return new TokenResponse(token);
+        return new TokenResponse(token, customer.getName());
     }
 }

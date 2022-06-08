@@ -68,6 +68,11 @@ public class CartService {
         cartItemDao.deleteCartItem(cartId);
     }
 
+    public void deleteAllCart(LoginCustomer loginCustomer) {
+        Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
+        cartItemDao.deleteAllCart(customer.getId());
+    }
+
     public Cart updateQuantity(LoginCustomer loginCustomer, CartUpdateRequest request, Long cartId) {
         Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         Long productId = cartItemDao.findProductIdById(cartId);
