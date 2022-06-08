@@ -6,27 +6,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
+import woowacourse.shoppingcart.unit.DaoTest;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql({"classpath:schema.sql", "classpath:data.sql"})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class ProductDaoTest {
-
-    private final ProductDao productDao;
-
-    public ProductDaoTest(final JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
-    }
+class ProductDaoTest extends DaoTest {
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
     @Test

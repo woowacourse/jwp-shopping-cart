@@ -8,33 +8,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
-import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
+import woowacourse.shoppingcart.unit.DaoTest;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class CartItemDaoTest {
-
-    private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
-
-    public CartItemDaoTest(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
-    }
+class CartItemDaoTest extends DaoTest {
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
