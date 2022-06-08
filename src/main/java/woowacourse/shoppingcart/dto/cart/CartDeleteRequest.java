@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.cart;
 
 import java.util.ArrayList;
 import java.util.List;

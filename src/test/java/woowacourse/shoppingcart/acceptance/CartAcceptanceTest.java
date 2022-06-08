@@ -19,9 +19,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.CartDeleteRequest;
-import woowacourse.shoppingcart.dto.CartProduct;
-import woowacourse.shoppingcart.dto.CartSetRequest;
+import woowacourse.shoppingcart.dto.cart.CartDeleteRequest;
+import woowacourse.shoppingcart.dto.cart.CartProduct;
+import woowacourse.shoppingcart.dto.cart.CartSetRequest;
 import woowacourse.utils.AcceptanceTest;
 
 @DisplayName("장바구니 관련 기능 인수 테스트")

@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.dto.ProductFindResponse;
-import woowacourse.shoppingcart.dto.ProductSaveRequest;
+import woowacourse.shoppingcart.dto.product.ProductFindResponse;
+import woowacourse.shoppingcart.dto.product.ProductSaveRequest;
 import woowacourse.utils.AcceptanceTest;
 
 @DisplayName("상품 관련 기능")

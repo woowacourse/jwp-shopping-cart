@@ -3,5 +3,5 @@ TRUNCATE TABLE customer;
 TRUNCATE TABLE product;
 TRUNCATE TABLE cart;
 TRUNCATE TABLE orders;
-TRUNCATE TABLE order_detail;
+TRUNCATE TABLE orders_detail;
 set FOREIGN_KEY_CHECKS = 1;

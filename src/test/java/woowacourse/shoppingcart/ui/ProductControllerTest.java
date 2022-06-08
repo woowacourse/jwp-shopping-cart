@@ -15,8 +15,8 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.dto.ProductFindResponse;
-import woowacourse.shoppingcart.dto.ProductSaveRequest;
+import woowacourse.shoppingcart.dto.product.ProductFindResponse;
+import woowacourse.shoppingcart.dto.product.ProductSaveRequest;
 import woowacourse.utils.AcceptanceTest;
 
 class ProductControllerTest extends AcceptanceTest {
