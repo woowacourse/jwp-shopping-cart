@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.fixture.ProductFixtures;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -23,16 +24,16 @@ public class CartItemDaoTest {
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+        productDao = new ProductDao(dataSource);
     }
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        productDao.save(ProductFixtures.PRODUCT_1);
+        productDao.save(ProductFixtures.PRODUCT_2);
 
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
