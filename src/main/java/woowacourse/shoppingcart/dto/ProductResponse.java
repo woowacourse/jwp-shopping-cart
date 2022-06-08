@@ -7,7 +7,7 @@ public class ProductResponse {
     private long id;
     private String name;
     private int price;
-    private String imageURL;
+    private String imageUrl;
     private int stock;
 
     public ProductResponse() {
@@ -17,7 +17,7 @@ public class ProductResponse {
         this.id = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
-        this.imageURL = product.getImageUrl();
+        this.imageUrl = product.getImageUrl();
         this.stock = product.getStock();
     }
 
@@ -33,8 +33,8 @@ public class ProductResponse {
         return price;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public int getStock() {
