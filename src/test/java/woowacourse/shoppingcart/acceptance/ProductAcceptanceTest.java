@@ -81,7 +81,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+        Product productRequest = new Product(name, imageUrl, price);
         return requestHttpPost("", productRequest, "/products").extract();
     }
 
@@ -103,7 +103,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static void 상품_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
     }
 
     public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {

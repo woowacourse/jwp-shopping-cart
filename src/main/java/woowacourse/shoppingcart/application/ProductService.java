@@ -9,8 +9,10 @@ import woowacourse.auth.support.User;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductsResponse;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -43,15 +45,24 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public Long addProduct(final Product product) {
+    public Long addProduct(ProductRequest productRequest) {
+        Product product = productRequest.createProduct();
         return productDao.save(product);
     }
 
     public Product findProductById(final Long productId) {
+        checkExistProduct(productId);
         return productDao.findProductById(productId);
     }
 
     public void deleteProductById(final Long productId) {
+        checkExistProduct(productId);
         productDao.delete(productId);
+    }
+
+    private void checkExistProduct(Long productId) {
+        if (!productDao.existById(productId)) {
+            throw new InvalidProductException("존재하지 않는 상품입니다.");
+        }
     }
 }

@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
@@ -23,8 +24,15 @@ public class CartService {
     }
 
     public CartResponse addCartItem(Long customerId, CartRequest cartRequest) {
+        checkCartItemDuplication(customerId, cartRequest);
         cartItemDao.save(customerId, cartRequest.getId(), cartRequest.getQuantity());
         return new CartResponse(cartRequest.getId(), cartRequest.getQuantity());
+    }
+
+    private void checkCartItemDuplication(Long customerId, CartRequest cartRequest) {
+        if (cartItemDao.existByCustomerIdAndProductId(customerId, cartRequest.getId())) {
+            throw new InvalidCartItemException("장바구니에 이미 존재하는 상품입니다.");
+        }
     }
 
     public CartItemsResponse findCartItems(Long customerId) {

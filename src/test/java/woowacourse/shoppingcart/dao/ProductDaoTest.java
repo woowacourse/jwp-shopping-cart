@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
@@ -31,10 +32,10 @@ public class ProductDaoTest {
     @Test
     void save() {
         // given
-        Product product = new Product("초콜렛", 1_000, "www.test.com");
+        Product product = new Product("초콜렛", "www.test.com", 1_000);
 
         // when
-        final Long productId = productDao.save(product);
+        Long productId = productDao.save(product);
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -44,14 +45,14 @@ public class ProductDaoTest {
     @Test
     void findProductById() {
         // given
-        Product product = new Product("초콜렛", 1_000, "www.test.com");
-        final Long productId = productDao.save(product);
+        Product product = new Product("초콜렛", "www.test.com", 1_000);
+        Long productId = productDao.save(product);
 
-        final Product expectedProduct =
-                new Product(productId, product.getName(), product.getPrice(), product.getImageUrl());
+        Product expectedProduct =
+                new Product(productId, product.getName(), product.getImageUrl(),product.getPrice());
 
         // when
-        final Product actualProduct = productDao.findProductById(productId);
+        Product actualProduct = productDao.findProductById(productId);
 
         // then
         assertThat(actualProduct).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -61,10 +62,10 @@ public class ProductDaoTest {
     @Test
     void getProducts() {
         // given
-        productDao.save(new Product("초콜렛", 1_000, "www.test.com"));
+        productDao.save(new Product("초콜렛", "www.test.com", 1_000));
 
         // when
-        final List<Product> products = productDao.findProducts();
+        List<Product> products = productDao.findProducts();
 
         // then
         assertThat(products).hasSize(1)
@@ -76,16 +77,30 @@ public class ProductDaoTest {
     @Test
     void deleteProduct() {
         // given
-        Product product = new Product("초콜렛", 1_000, "www.test.com");
-        final Long productId = productDao.save(product);
+        Product product = new Product("초콜렛", "www.test.com", 1_000);
+        Long productId = productDao.save(product);
 
-        final int beforeSize = productDao.findProducts().size();
+        int beforeSize = productDao.findProducts().size();
 
         // when
         productDao.delete(productId);
 
         // then
-        final int afterSize = productDao.findProducts().size();
+        int afterSize = productDao.findProducts().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
+    }
+
+    @DisplayName("상품 존재 여부 확인")
+    @Test
+    void existById() {
+        // given
+        Product product = new Product("초콜렛", "www.test.com", 1_000);
+        final Long productId = productDao.save(product);
+
+        // when
+        boolean result = productDao.existById(productId);
+
+        // then
+        assertThat(result).isTrue();
     }
 }

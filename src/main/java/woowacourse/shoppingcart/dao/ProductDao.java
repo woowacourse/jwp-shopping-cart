@@ -22,8 +22,8 @@ public class ProductDao {
             new Product(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
-                    resultSet.getInt("price"),
-                    resultSet.getString("image_url")
+                    resultSet.getString("image_url"),
+                    resultSet.getInt("price")
             );
 
     public ProductDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
@@ -55,5 +55,10 @@ public class ProductDao {
     public void delete(Long productId) {
         final String query = "DELETE FROM PRODUCT WHERE id = ?";
         jdbcTemplate.update(query, productId);
+    }
+
+    public boolean existById(Long productId) {
+        String query = "SELECT EXISTS (SELECT id FROM PRODUCT WHERE id = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, productId);
     }
 }

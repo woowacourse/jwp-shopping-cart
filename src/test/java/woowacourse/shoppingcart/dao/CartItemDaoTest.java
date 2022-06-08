@@ -30,8 +30,8 @@ public class CartItemDaoTest {
     public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         cartItemDao = new CartItemDao(jdbcTemplate, dataSource);
 
-        product1 = new Product(1L, "banana", 1_000, "woowa1.com");
-        product2 = new Product(2L, "apple", 2_000, "woowa2.com");
+        product1 = new Product(1L, "banana", "woowa1.com", 1_000);
+        product2 = new Product(2L, "apple", "woowa2.com", 2_000);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")

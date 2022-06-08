@@ -26,8 +26,8 @@ public class CartItemDao {
                     new Product(
                             resultSet.getLong("product_id"),
                             resultSet.getString("name"),
-                            resultSet.getInt("price"),
-                            resultSet.getString("image_url")
+                            resultSet.getString("image_url"),
+                            resultSet.getInt("price")
                     ),
                     resultSet.getInt("quantity")
             );
