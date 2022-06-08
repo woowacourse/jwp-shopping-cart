@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.List;
@@ -42,17 +43,24 @@ public class CartItemDaoTest {
         assertThat(productsIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("Customer Id로 장바구니 목록을 조회한다.")
     @Test
-    void findIdsByCustomerId() {
+    void findAllByCustomerId() {
         // given
         final Long customerId = 1L;
 
         // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByCustomerId(customerId);
 
         // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        assertThat(cartItemEntities)
+                .hasSize(2)
+                .extracting(CartItemEntity::getId, CartItemEntity::getCustomerId, CartItemEntity::getProductId,
+                        CartItemEntity::getQuantity)
+                .contains(
+                        tuple(1L, 1L, 1L, 1),
+                        tuple(2L, 1L, 2L, 1)
+                );
     }
 
     @DisplayName("cartId로 장바구니를 조회한다.")

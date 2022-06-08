@@ -30,24 +30,18 @@ public class CartService {
     }
 
     public List<Cart> findCartsByEmail(final String email) {
-        final List<Long> cartIds = findCartIdsByCustomerName(email);
+        final List<CartItemEntity> cartItemEntities = findCartItemEntitiesByEmail(email);
 
         final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final CartItemEntity cartItemEntity = cartItemDao.findById(cartId);
-            final Product product = productDao.findProductById(cartItemEntity.getProductId());
-            carts.add(new Cart(product, cartItemEntity.getQuantity()));
+        for (final CartItemEntity entity : cartItemEntities) {
+            final Product product = productDao.findProductById(entity.getProductId());
+            carts.add(new Cart(product, entity.getQuantity()));
         }
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String email) {
-        final Long customerId = customerDao.findIdByEmail(new Email(email));
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
     @Transactional
-    public void addCart(final CartAdditionRequest cartAdditionRequest, final String email) {
+    public void addCartItem(final CartAdditionRequest cartAdditionRequest, final String email) {
         final Long customerId = customerDao.findIdByEmail(new Email(email));
         try {
             cartItemDao.addCartItem(customerId, cartAdditionRequest.getProductId(), cartAdditionRequest.getQuantity());
@@ -57,16 +51,21 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCartItem(final String email, final Long productId) {
+        List<CartItemEntity> cartItemEntities = findCartItemEntitiesByEmail(email);
+        cartItemDao.deleteCartItem(findCartId(cartItemEntities, productId));
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
+    private List<CartItemEntity> findCartItemEntitiesByEmail(final String email) {
+        final Long customerId = customerDao.findIdByEmail(new Email(email));
+        return cartItemDao.findAllByCustomerId(customerId);
+    }
+
+    private Long findCartId(List<CartItemEntity> cartItemEntities, Long productId) {
+        CartItemEntity cartItemEntity = cartItemEntities.stream()
+                .filter(it -> it.getProductId().equals(productId))
+                .findFirst()
+                .orElseThrow(NotInCustomerCartItemException::new);
+        return cartItemEntity.getId();
     }
 }
