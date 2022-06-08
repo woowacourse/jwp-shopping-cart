@@ -19,6 +19,7 @@ import woowacourse.auth.dto.LoginTokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.ErrorResponseWithField;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 
 public class CustomerControllerTest extends AcceptanceTest {
@@ -174,14 +175,23 @@ public class CustomerControllerTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
-    @DisplayName("다른 사람의 정보를 수정하면 403을 반환한다")
+    @DisplayName("다른 사람의 정보를 삭제하면 403을 반환한다")
     @Test
     void delete_otherId() {
         String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
         long 다른사람의_ID = 2L;
-        ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID);
+        ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID, "12349053145");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
+    @DisplayName("잘못된 비밀번호로 회원 탈퇴를 요청하면 400을 반환한다")
+    @Test
+    void delete_invalidPassword() {
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
+        ExtractableResponse<Response> response = 회원탈퇴_요청(token, 1L, "98765432");
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     private String 로그인_요청_및_토큰발급(LoginRequest request) {
@@ -231,12 +241,14 @@ public class CustomerControllerTest extends AcceptanceTest {
             .extract();
     }
 
-    private ExtractableResponse<Response> 회원탈퇴_요청(String token, long id) {
+    private ExtractableResponse<Response> 회원탈퇴_요청(String token, long id, String password) {
+        CustomerDeleteRequest request = new CustomerDeleteRequest(password);
         return RestAssured
             .given().log().all()
             .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().delete("/api/customers/" + id)
+            .body(request)
+            .when().post("/api/customers/{id}", id)
             .then().log().all()
             .extract();
     }

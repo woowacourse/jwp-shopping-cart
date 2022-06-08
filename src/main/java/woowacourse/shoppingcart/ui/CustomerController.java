@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +19,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.ForbiddenAccessException;
@@ -48,7 +48,7 @@ public class CustomerController {
     }
 
     private void validateAuthorizedUser(long id, Customer customer) {
-        if (!customer.getId().equals(id)) {
+        if (!customer.isSameId(id)) {
             throw new ForbiddenAccessException();
         }
     }
@@ -64,10 +64,11 @@ public class CustomerController {
         return new CustomerResponse(updatedCustomer);
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id, @AuthenticationPrincipal Customer customer) {
+    public void delete(@PathVariable long id, @AuthenticationPrincipal Customer customer,
+        @RequestBody CustomerDeleteRequest request) {
         validateAuthorizedUser(id, customer);
-        customerService.delete(id);
+        customerService.delete(id, request.getPassword());
     }
 }

@@ -70,12 +70,15 @@ public class CustomerService {
         return foundCustomer.isSameUsername(request.getUsername());
     }
 
-    public void delete(Long id) {
-        validateCustomerExists(id);
+    public void delete(long id, String password) {
+        validateDeletable(id, password);
         customerDao.delete(id);
     }
 
-    private void validateCustomerExists(Long id) {
-        findById(id);
+    private void validateDeletable(long id, String password) {
+        Customer customer = findById(id);
+        if (!customer.isSamePassword(password)) {
+            throw new InvalidCustomerException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }
