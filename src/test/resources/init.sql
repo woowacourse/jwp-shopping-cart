@@ -58,8 +58,7 @@ values (
            '생칵테일새우 두절탈각 31/40 IQF 900g 2개',
            32000,
            'https://cdn-mart.baemin.com/sellergoods/main/59d3d65a-f526-4f6c-909c-fe6c61457ee2.jpg'
-       )
-        ,
+       ),
        (
            '생칵테일새우 두절탈각 26/30 IQF 900g 2개',
            34400,

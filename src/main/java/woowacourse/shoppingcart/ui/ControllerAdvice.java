@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ExceptionRequest;
 import woowacourse.shoppingcart.exception.AuthorizationException;
+import woowacourse.shoppingcart.exception.DuplicateNicknameException;
+import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidInputException;
 import woowacourse.shoppingcart.exception.InvalidLoginException;
@@ -20,6 +22,18 @@ public class ControllerAdvice {
     public ResponseEntity duplicateKeyException() {
         ExceptionRequest exceptionRequest = new ExceptionRequest("중복된 값이 존재합니다.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionRequest);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity duplicateUsernameException(final DuplicateUsernameException exception) {
+        ExceptionRequest exceptionRequest = new ExceptionRequest(exception.getMessage());
+        return ResponseEntity.status(DuplicateUsernameException.STATUS_CODE).body(exceptionRequest);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity duplicateNicknameException(final DuplicateNicknameException exception) {
+        ExceptionRequest exceptionRequest = new ExceptionRequest(exception.getMessage());
+        return ResponseEntity.status(DuplicateNicknameException.STATUS_CODE).body(exceptionRequest);
     }
 
     @ExceptionHandler

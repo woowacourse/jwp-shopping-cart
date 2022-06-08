@@ -110,7 +110,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // 예외를 발생시킨다.
         assertAll(
                 () -> UNAUTHORIZED(response),
-                () -> 예외메세지_검증(response, "로그인 할 수 없습니다.")
+                () -> 예외메세지_검증(response, "아이디 또는 비밀번호를 확인하여주세요.")
         );
     }
 
@@ -128,7 +128,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // 가입된 회원 정보를 조회된다.
         assertAll(
                 () -> UNAUTHORIZED(response),
-                () -> 예외메세지_검증(response, "로그인 할 수 없습니다.")
+                () -> 예외메세지_검증(response, "아이디 또는 비밀번호를 확인하여주세요.")
         );
     }
 

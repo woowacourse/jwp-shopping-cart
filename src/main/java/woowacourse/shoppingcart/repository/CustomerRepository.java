@@ -4,6 +4,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.exception.DuplicateNicknameException;
+import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.repository.dao.CartItemDao;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
@@ -47,13 +49,13 @@ public class CustomerRepository {
 
     public void validateDuplicateUsername(final String username) {
         if (customerDao.checkDuplicatedUsername(username)) {
-            throw new DuplicateKeyException("중복된 값이 존재합니다.");
+            throw new DuplicateUsernameException("이미 가입된 이메일입니다.");
         }
     }
 
     public void validateDuplicateNickname(final String nickname) {
         if (customerDao.checkDuplicatedNickname(nickname)) {
-            throw new DuplicateKeyException("중복된 값이 존재합니다.");
+            throw new DuplicateNicknameException("이미 존재하는 닉네임입니다.");
         }
     }
 

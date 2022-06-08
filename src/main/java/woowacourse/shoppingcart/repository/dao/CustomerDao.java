@@ -65,7 +65,7 @@ public class CustomerDao {
         try {
             return namedParameterJdbcTemplate.queryForObject(query, params, ROW_MAPPER);
         } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidLoginException("로그인 할 수 없습니다.");
+            throw new InvalidLoginException("아이디 또는 비밀번호를 확인하여주세요.");
         }
     }
 
