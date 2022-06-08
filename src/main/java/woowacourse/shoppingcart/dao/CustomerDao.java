@@ -30,7 +30,7 @@ public class CustomerDao {
 
     public CustomerDao(final DataSource dataSource) {
         this.simpleJdbc = new SimpleJdbcInsert(dataSource)
-                .withTableName("CUSTOMER")
+                .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
