@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.CartItemQuantityUpdateRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
@@ -81,8 +82,9 @@ public class CartItemService {
         throw new NotInCustomerCartItemException();
     }
 
-    public void updateQuantity(LoginCustomer loginCustomer, Long cartItemId, int quantity) {
+    public void updateQuantity(LoginCustomer loginCustomer, Long cartItemId,
+            CartItemQuantityUpdateRequest cartItemQuantityUpdateRequest) {
         customerDao.findIdByUsername(loginCustomer.getUsername());
-        cartItemDao.updateQuantity(cartItemId, quantity);
+        cartItemDao.updateQuantity(cartItemId, cartItemQuantityUpdateRequest.getQuantity());
     }
 }

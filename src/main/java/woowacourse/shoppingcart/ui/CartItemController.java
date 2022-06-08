@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartItemService;
+import woowacourse.shoppingcart.dto.CartItemQuantityUpdateRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
@@ -58,9 +59,10 @@ public class CartItemController {
     }
 
     @PatchMapping("/{cartItemId}")
-    public ResponseEntity<Void> updateQuantity(@PathVariable Long cartItemId, @RequestBody int quantity,
+    public ResponseEntity<Void> updateQuantity(@PathVariable Long cartItemId,
+            @Valid @RequestBody CartItemQuantityUpdateRequest cartItemQuantityUpdateRequest,
             @AuthenticationPrincipal LoginCustomer loginCustomer) {
-        cartItemService.updateQuantity(loginCustomer, cartItemId, quantity);
+        cartItemService.updateQuantity(loginCustomer, cartItemId, cartItemQuantityUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 }
