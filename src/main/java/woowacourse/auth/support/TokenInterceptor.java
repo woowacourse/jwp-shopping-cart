@@ -21,7 +21,7 @@ public class TokenInterceptor implements AsyncHandlerInterceptor {
             return true;
         }
         String accessToken = AuthorizationExtractor.extract(request);
-        if (!jwtTokenProvider.validateToken(accessToken)) {
+        if (!jwtTokenProvider.validateToken(accessToken) || accessToken == null) {
             throw new AuthorizationException("토큰이 유효하지 않습니다.");
         }
         return true;
