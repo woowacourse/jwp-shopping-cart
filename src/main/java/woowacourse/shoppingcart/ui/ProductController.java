@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
+import woowacourse.shoppingcart.application.dto.ProductsDto;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
 
@@ -28,8 +29,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products(@RequestParam(required = false, defaultValue = "1") Integer page,
-                                                  @RequestParam(required = false, defaultValue = "10") Integer size) {
+    public ResponseEntity<ProductsDto> products(@RequestParam(required = false, defaultValue = "1") Integer page,
+                                                @RequestParam(required = false, defaultValue = "10") Integer size) {
         return ResponseEntity.ok(productService.findProducts(size, page));
     }
 
