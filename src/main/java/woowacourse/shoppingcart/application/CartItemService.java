@@ -11,8 +11,10 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.cart.CartItemCreateRequest;
 import woowacourse.shoppingcart.dto.cart.CartItemDto;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.ExistSameProductIdException;
+import woowacourse.shoppingcart.exception.NoSuchProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.OutOfStockException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -40,10 +42,19 @@ public class CartItemService {
     }
 
     public Long addCartItem(final Long customerId, final CartItemCreateRequest request) {
+        if (cartItemDao.existIdByCustomerIdAndProductId(customerId, request.getProductId())) {
+            throw new ExistSameProductIdException();
+        }
+
+        Integer quantity = productDao.findProductById(request.getProductId()).getQuantity();
+        if (quantity < request.getCount()) {
+            throw new OutOfStockException();
+        }
+
         try {
             return cartItemDao.addCartItem(customerId, request);
         } catch (Exception e) {
-            throw new InvalidProductException();
+            throw new NoSuchProductException();
         }
     }
 

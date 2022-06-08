@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,7 +66,7 @@ public class CartItemDaoTest {
         List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
 
         // then
-        Assertions.assertAll(
+        assertAll(
                 () -> assertThat(cartItems).hasSize(2),
                 () -> assertThat(cartItems.get(0).getCount()).isEqualTo(3),
                 () -> assertThat(cartItems.get(0).getProductId()).isEqualTo(1L),
@@ -110,5 +110,17 @@ public class CartItemDaoTest {
         assertThat(cartItems).hasSize(1);
     }
 
+    @DisplayName("해당 CustomerId와 ProductId로 담겨있는 장바구니 아이템이 존재하는지 확인한다.")
+    @Test
+    void existsIdByCustomerIdAndProductId() {
+        // given
+        final Long customerId = 1L;
+        final Long productId = 1L;
 
+        // when then
+        assertAll(
+                () -> assertThat(cartItemDao.existIdByCustomerIdAndProductId(customerId, productId)).isTrue(),
+                () -> assertThat(cartItemDao.existIdByCustomerIdAndProductId(customerId, 300L)).isFalse()
+        );
+    }
 }

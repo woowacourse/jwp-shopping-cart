@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.product.ProductCreateRequest;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NoSuchProductException;
 
 @Repository
 public class ProductDao {
@@ -47,7 +47,7 @@ public class ProductDao {
                     ), productId
             );
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            throw new NoSuchProductException();
         }
     }
 

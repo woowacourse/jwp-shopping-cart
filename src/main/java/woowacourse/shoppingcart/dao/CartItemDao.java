@@ -63,6 +63,12 @@ public class CartItemDao {
         }
     }
 
+    public boolean existIdByCustomerIdAndProductId(Long customerId, Long productId) {
+        final String sql = "SELECT EXISTS (SELECT id FROM cart_item WHERE customer_id = ? AND product_id = ?)";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId));
+    }
+
     private RowMapper<CartItem> rowMapper() {
         return ((rs, rowNum) -> new CartItem(
                 rs.getLong("id"),

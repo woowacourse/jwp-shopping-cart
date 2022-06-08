@@ -23,9 +23,10 @@ import woowacourse.shoppingcart.exception.ForbiddenAccessException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NoSuchProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.NotMatchPasswordException;
+import woowacourse.shoppingcart.exception.OutOfStockException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -82,13 +83,19 @@ public class ControllerAdvice {
     @ExceptionHandler({
             InvalidCustomerException.class,
             InvalidCartItemException.class,
-            InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
-            NotMatchPasswordException.class
+            NotMatchPasswordException.class,
+            OutOfStockException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidAccess(final RuntimeException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(NoSuchProductException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNoSuchAccess(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
     }
 }
