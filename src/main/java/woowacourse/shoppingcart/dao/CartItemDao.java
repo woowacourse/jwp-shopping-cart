@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -100,7 +101,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, customerId, productId);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new NotFoundProductException();
         }
     }
 
