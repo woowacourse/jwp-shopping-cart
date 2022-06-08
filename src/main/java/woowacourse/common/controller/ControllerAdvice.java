@@ -54,7 +54,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity handleInvalidRequest(final BindingResult bindingResult) {
+    public ResponseEntity<String> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
@@ -65,7 +65,7 @@ public class ControllerAdvice {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    public ResponseEntity handleInvalidRequest(final RuntimeException e) {
+    public ResponseEntity<String> handleInvalidRequest(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
@@ -76,13 +76,12 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
+    public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException(RuntimeException e) {
-        e.printStackTrace();
+    public ResponseEntity<String> handleUnhandledException(RuntimeException e) {
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 }
