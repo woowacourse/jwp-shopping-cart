@@ -49,7 +49,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> registerCustomerResponse = postWithBody("/customers", customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        accessToken = postWithBody("/customers/login", tokenRequest)
+        accessToken = postWithBody("/auth/login", tokenRequest)
                 .as(TokenResponse.class)
                 .getAccessToken();
     }

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -117,11 +118,13 @@ public class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("중복된 이메일을 입력했다면 True를 반환한다.")
+    @DisplayName("중복된 이메일을 입력했다면 예외가 발생한다..")
     void validateEmail() {
         customerService.register(firstCustomerRequest);
 
-        assertThat(customerService.validateEmail(firstCustomerEmail)).isTrue();
+        assertThatThrownBy(() -> customerService.validateEmail(firstCustomerEmail))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("중복된 email 입니다.");
     }
 
     private Long getIdByTokenResponse(TokenResponse tokenResponse) {

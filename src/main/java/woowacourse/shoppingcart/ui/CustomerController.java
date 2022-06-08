@@ -14,6 +14,7 @@ import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerNameResponse;
+import woowacourse.shoppingcart.dto.EmailValidationRequest;
 
 @RestController
 @RequestMapping("/customers")
@@ -56,9 +57,9 @@ public class CustomerController {
         return ResponseEntity.ok().body(customerNameResponse);
     }
 
-    @PostMapping("/email")
-    public ResponseEntity<Boolean> checkEmail(String email) {
-        boolean isValidEmail = customerService.validateEmail(email);
-        return ResponseEntity.ok().body(isValidEmail);
+    @PostMapping("/email/validate")
+    public ResponseEntity<Void> checkEmail(@RequestBody EmailValidationRequest emailValidationRequest) {
+        customerService.validateEmail(emailValidationRequest.getEmail());
+        return ResponseEntity.ok().build();
     }
 }

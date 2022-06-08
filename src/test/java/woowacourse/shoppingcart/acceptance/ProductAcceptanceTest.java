@@ -74,7 +74,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         postWithBody("/customers", customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        String accessToken = postWithBody("/customers/login", tokenRequest)
+        String accessToken = postWithBody("/auth/login", tokenRequest)
                 .as(TokenResponse.class)
                 .getAccessToken();
 

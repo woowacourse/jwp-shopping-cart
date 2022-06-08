@@ -44,7 +44,7 @@ public class AuthControllerTest {
         when(authService.login(any(TokenRequest.class)))
                 .thenReturn(new TokenResponse(token));
         // when
-        ResultActions perform = mockMvc.perform(post("/customers/login")
+        ResultActions perform = mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(tokenRequest)));
         // then
@@ -62,7 +62,7 @@ public class AuthControllerTest {
         when(authService.login(any(TokenRequest.class)))
                 .thenThrow(new InvalidCustomerException("오류"));
         // when
-        ResultActions perform = mockMvc.perform(post("/customers/login")
+        ResultActions perform = mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(tokenRequest)));
         // then

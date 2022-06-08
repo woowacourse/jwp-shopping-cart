@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,6 +31,7 @@ import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.EmailValidationRequest;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
 
 @SpringBootTest
@@ -137,10 +139,12 @@ public class CustomerControllerTest {
     @Test
     void checkEmail() throws Exception {
         // given
-        when(customerService.validateEmail(("test@test.com")))
-                .thenReturn(true);
+        doNothing().when(customerService)
+                .validateEmail("test@test.com");
         // when
-        ResultActions perform = mockMvc.perform(post("/customers/email"));
+        ResultActions perform = mockMvc.perform(post("/customers/email/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new EmailValidationRequest("test@test.com"))));
         // then
         perform.andDo(print())
                 .andExpect(status().isOk());

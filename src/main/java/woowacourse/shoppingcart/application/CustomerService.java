@@ -45,7 +45,9 @@ public class CustomerService {
         customerDao.delete(id);
     }
 
-    public boolean validateEmail(String email) {
-        return customerDao.findByEmail(email).isPresent();
+    public void validateEmail(String email) {
+        if(customerDao.findByEmail(email).isPresent()){
+            throw new IllegalArgumentException("중복된 email 입니다.");
+        }
     }
 }
