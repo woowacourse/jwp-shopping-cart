@@ -2,15 +2,13 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static woowacourse.auth.acceptance.AuthAcceptanceTest.로그인_후_토큰_획득;
 
 import io.restassured.response.ValidatableResponse;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.EmailRequest;
 
@@ -46,7 +44,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         requestHttpPost("", customer, "/customers");
 
         // when
-        ValidatableResponse response = requestHttpPost("", new EmailRequest("email@naver.com"),"/customers/email/validate");
+        ValidatableResponse response = requestHttpPost("", new EmailRequest("email@naver.com"),
+                "/customers/email/validate");
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value());
@@ -57,10 +56,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        requestHttpPost("", customer, "/customers");
-
-        String accessToken = requestHttpPost("", loginRequest, "/auth/login")
-                .extract().as(TokenResponse.class).getAccessToken();
+        회원_추가되어_있음();
+        String accessToken = 로그인_후_토큰_획득();
 
         //when
         CustomerRequest newCustomer = new CustomerRequest(
@@ -82,10 +79,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        requestHttpPost("", customer, "/customers");
-
-        String accessToken = requestHttpPost("", loginRequest, "/auth/login")
-                .extract().as(TokenResponse.class).getAccessToken();
+        회원_추가되어_있음();
+        String accessToken = 로그인_후_토큰_획득();
 
         //when
         requestHttpDelete(accessToken, "/customers").statusCode(HttpStatus.NO_CONTENT.value());
@@ -94,5 +89,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ValidatableResponse response = requestHttpGet(accessToken, "/customers");
         response.statusCode(HttpStatus.BAD_REQUEST.value());
         response.body(containsString("존재하지 않는 유저입니다."));
+    }
+
+    public static void 회원_추가되어_있음() {
+        CustomerRequest customer = new CustomerRequest(
+                "email", "Pw123456!", "user", "010-1234-5678", "address");
+        requestHttpPost("", customer, "/customers");
     }
 }

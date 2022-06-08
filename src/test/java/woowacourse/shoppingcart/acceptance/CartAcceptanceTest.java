@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.로그인_후_토큰_획득;
+import static woowacourse.auth.acceptance.AuthAcceptanceTest.로그인_후_토큰_획득;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원_추가되어_있음;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.회원_추가되어_있음;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -62,7 +62,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void updateCartItemQuantity() {
         장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 10));
 
-        ExtractableResponse<Response> response = 장바구니_아이템_수량_업데이트_요청(token, new CartRequest(productId1,5));
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_업데이트_요청(token, new CartRequest(productId1, 5));
 
         장바구니_아이템_수량이_업데이트됨(response);
     }

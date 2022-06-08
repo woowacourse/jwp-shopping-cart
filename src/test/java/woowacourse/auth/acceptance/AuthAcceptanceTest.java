@@ -2,6 +2,7 @@ package woowacourse.auth.acceptance;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원_추가되어_있음;
 
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -10,23 +11,18 @@ import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    private final CustomerRequest customer = new CustomerRequest(
-            "email", "Pw123456!", "name", "010-1234-5678", "address");
     private final LoginRequest loginRequest = new LoginRequest("email", "Pw123456!");
 
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        requestHttpPost("", customer, "/customers");
-
-        String accessToken = requestHttpPost("", loginRequest, "/auth/login")
-                .extract().as(TokenResponse.class).getAccessToken();
+        회원_추가되어_있음();
+        String accessToken = 로그인_후_토큰_획득();
 
         // when
         ValidatableResponse response = requestHttpGet(accessToken, "/customers");
@@ -35,7 +31,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value());
         response.body(
                 "email", equalTo("email"),
-                "name", equalTo("name"),
+                "name", equalTo("user"),
                 "phone", equalTo("010-1234-5678"),
                 "address", equalTo("address"));
     }
@@ -72,5 +68,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.UNAUTHORIZED.value());
         response.body(containsString("토큰 정보가 존재하지 않습니다."));
+    }
+
+    public static String 로그인_후_토큰_획득() {
+        return requestHttpPost("", new LoginRequest("email", "Pw123456!"), "/auth/login")
+                .extract().as(TokenResponse.class).getAccessToken();
     }
 }

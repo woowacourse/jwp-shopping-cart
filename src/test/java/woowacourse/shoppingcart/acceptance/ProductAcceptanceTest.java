@@ -1,23 +1,21 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.auth.acceptance.AuthAcceptanceTest.로그인_후_토큰_획득;
+import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원_추가되어_있음;
+
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-import java.util.stream.Collectors;
 import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductsResponse;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.*;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -41,23 +39,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         String accessToken = 로그인_후_토큰_획득();
         장바구니_아이템_추가되어_있음(accessToken, new CartRequest(productId1, 10));
 
-
         ExtractableResponse<Response> response = 상품_목록_조회_요청_회원(accessToken);
 
         조회_응답됨(response);
         상품_목록_포함됨(productId1, productId2, response);
         장바구니_아이템별_수량_확인됨(response);
-    }
-
-    public static void 회원_추가되어_있음() {
-        CustomerRequest customer = new CustomerRequest(
-                "email", "Pw123456!", "user", "010-1234-5678", "address");
-        requestHttpPost("", customer, "/customers");
-    }
-
-    public static String 로그인_후_토큰_획득() {
-        return requestHttpPost("", new LoginRequest("email", "Pw123456!"), "/auth/login")
-                .extract().as(TokenResponse.class).getAccessToken();
     }
 
     @DisplayName("상품 목록을 비회원이 조회한다")
@@ -139,7 +125,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템별_수량_확인됨(ExtractableResponse<Response> response) {
         ProductsResponse products = response.jsonPath().getObject(".", ProductsResponse.class);
-        List<Integer> result =  products.getProducts().stream()
+        List<Integer> result = products.getProducts().stream()
                 .map(ProductResponse::getQuantity)
                 .collect(Collectors.toList());
 
@@ -148,7 +134,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_수량이_모두_0(ExtractableResponse<Response> response) {
         ProductsResponse products = response.jsonPath().getObject(".", ProductsResponse.class);
-        List<Integer> result =  products.getProducts().stream()
+        List<Integer> result = products.getProducts().stream()
                 .map(ProductResponse::getQuantity)
                 .collect(Collectors.toList());
 
