@@ -37,7 +37,7 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public List<ProductEntity> findAllWithPage(final int page, final int size) {
-        final String sql = "SELECT id, name, price, image_url FROM Product ORDER BY id ASC LIMIT ? OFFSET ?";
+        final String sql = "SELECT id, name, price, image_url FROM product ORDER BY id ASC LIMIT ? OFFSET ?";
 
         return jdbcTemplate.query(sql, PRODUCT_ENTITY_ROW_MAPPER, size, (page - 1) * size);
     }

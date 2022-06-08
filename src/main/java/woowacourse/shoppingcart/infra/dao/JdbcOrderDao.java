@@ -66,7 +66,7 @@ public class JdbcOrderDao implements OrderDao {
     public long save(final List<CartEntity> cartEntities) {
         final long ordersId = saveOrders(cartEntities);
 
-        final String sql = "INSERT INTO Orders_detail(orders_id, product_id, quantity) VALUES(?, ?, ?)";
+        final String sql = "INSERT INTO orders_detail(orders_id, product_id, quantity) VALUES(?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, getParams(ordersId, cartEntities));
 
         return ordersId;

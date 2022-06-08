@@ -68,7 +68,7 @@ public class JdbcCartDao implements CartDao {
     public void save(final List<CartEntity> cartEntities) {
         deleteByCartIds(getCartIds(cartEntities));
 
-        final String sql = "INSERT INTO Cart_Item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, getParams(cartEntities));
     }
