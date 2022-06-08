@@ -9,7 +9,6 @@ public class ProductResponse {
     private Integer price;
     private String imageUrl;
     private int quantity;
-
     private Long cartId;
 
     public ProductResponse() {}
