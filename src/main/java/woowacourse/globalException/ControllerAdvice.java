@@ -14,6 +14,7 @@ import woowacourse.globalException.dto.ErrorResponse;
 import woowacourse.member.exception.MemberException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.cart.CartException;
+import woowacourse.shoppingcart.exception.order.OrderException;
 import woowacourse.shoppingcart.exception.product.ProductException;
 
 import javax.validation.ConstraintViolationException;
@@ -39,6 +40,7 @@ public class ControllerAdvice {
     @ExceptionHandler({
             MemberException.class,
             CartException.class,
+            OrderException.class,
             ProductException.class
     })
     public ResponseEntity<ErrorResponse> handleMemberException(Exception e) {
