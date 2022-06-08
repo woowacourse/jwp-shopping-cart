@@ -28,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products(@RequestParam Integer page,
+    public ResponseEntity<List<Product>> products(@RequestParam(required = false, defaultValue = "1") Integer page,
                                                   @RequestParam(required = false, defaultValue = "10") Integer size) {
         return ResponseEntity.ok(productService.findProducts(size, page));
     }
