@@ -18,14 +18,14 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 @Repository
 public class ProductDao {
 
-    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (resultSet, rowMapper) -> new Product(
+    static final RowMapper<Product> PRODUCT_ROW_MAPPER = (resultSet, rowMapper) -> new Product(
         resultSet.getLong("id"),
         resultSet.getString("name"),
         resultSet.getInt("price"),
         new ThumbnailImage(resultSet.getString("thumbnail_url"), resultSet.getString("thumbnail_alt"))
     );
 
-    private final RowMapper<ProductStock> productStockRowMapper = (resultSet, rowMapper) -> new ProductStock(
+    static final RowMapper<ProductStock> PRODUCT_STOCK_ROW_MAPPER = (resultSet, rowMapper) -> new ProductStock(
         new Product(
             resultSet.getLong("id"),
             resultSet.getString("name"),
@@ -78,13 +78,13 @@ public class ProductDao {
 
     public List<ProductStock> findProductStocks() {
         final String query = "SELECT id, name, price, stock_quantity, thumbnail_url, thumbnail_alt FROM product";
-        return jdbcTemplate.query(query, productStockRowMapper);
+        return jdbcTemplate.query(query, PRODUCT_STOCK_ROW_MAPPER);
     }
 
     public ProductStock findProductStockById(Long productId) {
         try {
             final String query = "SELECT id, name, price, stock_quantity, thumbnail_url, thumbnail_alt FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, productStockRowMapper, productId);
+            return jdbcTemplate.queryForObject(query, PRODUCT_STOCK_ROW_MAPPER, productId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
         }
