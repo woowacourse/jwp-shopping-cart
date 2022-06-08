@@ -78,21 +78,19 @@ Authorization : ????
 
 ---
 
-## 회원 정보 수정
+## 회원 정보 수정 (닉네임)
 
 ### Request
 
 ```
-PUT /customers
+PUT /customers/profile
 Content-Type: application/json
 Authorization : ????
 ```
 
 ```json
 {
-  "nickname": "Marco",
-  "password": "1234",
-  "newPassword": "2345"
+  "nickname": "Marco"
 }
 ```
 
@@ -101,6 +99,36 @@ Authorization : ????
 ```
 200 OK`
 ```
+
+```json
+{
+  "nickname": "Marco"
+}
+```
+
+## 회원 정보 수정 (비밀번호)
+
+### Request
+
+```
+PUT /customers/password
+Content-Type: application/json
+Authorization : ????
+```
+
+```json
+{
+  "password": "password123!@#",
+  "newPassword": "newPassword123!@#"
+}
+```
+
+### Response(정상)
+
+```
+204 no-content
+```
+
 
 ### Response (예외)
 
@@ -290,7 +318,9 @@ Authorization: `Bearer ${accessToken}`
 ```
 
 ## 장바구니에 상품 추가 및 수량 수정
+
 ### Request
+
 ```
 PUT /cartItem/products/{id}
 Authorization: `Bearer ${accessToken}`
@@ -301,13 +331,17 @@ Authorization: `Bearer ${accessToken}`
   "quantity": 2
 }
 ```
+
 ### Response
+
 장바구니에 해당 상품이 없던 경우 새로 생성
+
 ```
 201 Created
 Content-Type: application/json
 Location: /cartItem/1
 ```
+
 ```json
  {
   "productId": 1,
@@ -319,10 +353,12 @@ Location: /cartItem/1
 ```
 
 이미 장바구니에 해당 상품이 있으면 수정
+
 ```
 200 Ok
 Content-Type: application/json
 ```
+
 ```json
  {
   "productId": 1,
@@ -334,18 +370,25 @@ Content-Type: application/json
 ```
 
 ## 장바구니 내 상품 삭제
+
 ### Request
+
 ```
 DELETE /cartItem
 Authorization: `Bearer ${accessToken}`
 ```
+
 ```json
 {
-  "productIds": [3, 5]
+  "productIds": [
+    3,
+    5
+  ]
 }
 ```
 
 ### Response
+
 ```
 204 no-content
 ```
@@ -353,74 +396,87 @@ Authorization: `Bearer ${accessToken}`
 ## 주문하기
 
 ### Request
+
 ```
 POST /orders
 Authorization: `Bearer ${accessToken}
 ```
 
 ### Response
+
 ```
 201 Created
 Content-Type: application/json
 Content-length: 
 Location: /orders/5
 ```
+
 ```json
 {
   "id": 5,
   "orderDetails": [
     {
-      "productId": 4, 
-      "name": "우유", 
-      "quantity": 3, 
-      "price": 1000, 
-      "imgUrl": "http://img."},
+      "productId": 4,
+      "name": "우유",
+      "quantity": 3,
+      "price": 1000,
+      "imgUrl": "http://img."
+    },
     {
-      "productId": 4, 
-      "name": "우유", 
-      "quantity": 3, 
-      "price": 1000, 
-      "imgUrl": "http://img."}
-    ],
+      "productId": 4,
+      "name": "우유",
+      "quantity": 3,
+      "price": 1000,
+      "imgUrl": "http://img."
+    }
+  ],
   "totalPrice": 53200,
   "orderDate": "2022-03-20 12:23:33"
 }
 ```
 
 ## 주문 단건 조회
+
 ### Request
+
 ```
 GET /orders/5
 Authorization: `Bearer ${accessToken}
 ```
+
 ### Response
+
 ```
 200 Ok
 Content-Type: application/json
 ```
+
 ```json
 {
   "id": 5,
   "orderDetails": [
     {
-      "productId": 4, 
-      "name": "우유", 
-      "quantity": 3, 
-      "price": 1000, 
-      "imgUrl": "http://img."},
+      "productId": 4,
+      "name": "우유",
+      "quantity": 3,
+      "price": 1000,
+      "imgUrl": "http://img."
+    },
     {
-      "productId": 4, 
-      "name": "우유", 
-      "quantity": 3, 
-      "price": 1000, 
-      "imgUrl": "http://img."}
-    ],
+      "productId": 4,
+      "name": "우유",
+      "quantity": 3,
+      "price": 1000,
+      "imgUrl": "http://img."
+    }
+  ],
   "totalPrice": 53200,
   "orderDate": "2022-03-20 12:23:33"
 }
 ```
 
 ## 공통 에러
+
 ```
 // 수량 형식이 잘못됨(양수여야 한다)
 400 Bad Request

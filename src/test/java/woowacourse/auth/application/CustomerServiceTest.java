@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -20,7 +19,7 @@ import woowacourse.auth.domain.Customer;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.customer.CustomerDeleteRequest;
 import woowacourse.auth.dto.customer.CustomerRequest;
-import woowacourse.auth.dto.customer.CustomerUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerPasswordRequest;
 import woowacourse.exception.InvalidAuthException;
 import woowacourse.exception.InvalidCustomerException;
 import woowacourse.auth.domain.EncryptionStrategy;
@@ -117,12 +116,11 @@ class CustomerServiceTest {
 			.isInstanceOf(InvalidCustomerException.class);
 	}
 
-	@DisplayName("회원 정보를 수정한다.")
+	@DisplayName("회원 비밀번호를 수정한다.")
 	@Test
 	void updateCustomer() {
 		// given
-		CustomerUpdateRequest request = new CustomerUpdateRequest(
-			"thor", password, "b1234!");
+		CustomerPasswordRequest request = new CustomerPasswordRequest(password, "b1234!");
 		Customer customer = Customer.builder()
 			.id(1L)
 			.email(email)
@@ -132,11 +130,12 @@ class CustomerServiceTest {
 			.build();
 
 		// when
-		Customer update = customerService.update(customer, request);
+		Customer update = customerService.updatePassword(customer, request);
 
 		// then
 		assertAll(
-			() -> assertThat(update.getNickname()).isEqualTo("thor"),
+			() -> assertThat(update.getNickname()).isEqualTo(nickname),
+			() -> assertThat(update.isInvalidPassword(customer.getPassword())).isTrue(),
 			() -> verify(customerDao).update(customer)
 		);
 	}
@@ -145,8 +144,7 @@ class CustomerServiceTest {
 	@Test
 	void updateCustomerPasswordFail() {
 		// given
-		CustomerUpdateRequest request = new CustomerUpdateRequest(
-			"thor", "a1234!", "b1234!");
+		CustomerPasswordRequest request = new CustomerPasswordRequest("a1234!", "b1234!");
 		Customer customer = Customer.builder()
 			.id(1L)
 			.email(email)
@@ -157,7 +155,7 @@ class CustomerServiceTest {
 
 		// when
 		assertAll(
-			() -> assertThatThrownBy(() -> customerService.update(customer, request))
+			() -> assertThatThrownBy(() -> customerService.updatePassword(customer, request))
 				.isInstanceOf(InvalidAuthException.class),
 			() -> verify(customerDao, never()).update(any())
 		);

@@ -9,8 +9,9 @@ import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.customer.CustomerDeleteRequest;
 import woowacourse.auth.domain.EncryptionStrategy;
 import woowacourse.auth.domain.Password;
+import woowacourse.auth.dto.customer.CustomerProfileRequest;
 import woowacourse.auth.dto.customer.CustomerRequest;
-import woowacourse.auth.dto.customer.CustomerUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerPasswordRequest;
 import woowacourse.exception.InvalidAuthException;
 import woowacourse.exception.InvalidCustomerException;
 
@@ -50,12 +51,12 @@ public class CustomerService {
 		customerDao.delete(customer.getId());
 	}
 
-	public Customer update(Customer customer, CustomerUpdateRequest request) {
+	public Customer updatePassword(Customer customer, CustomerPasswordRequest request) {
 		validatePassword(customer, new Password(request.getPassword()));
 		Customer updatedCustomer = Customer.builder()
 			.id(customer.getId())
 			.email(customer.getEmail())
-			.nickname(request.getNickname())
+			.nickname(customer.getNickname())
 			.password(request.getNewPassword())
 			.encryptPassword(encryptionStrategy)
 			.build();
@@ -68,6 +69,17 @@ public class CustomerService {
 		if (customer.isInvalidPassword(encrypted)) {
 			throw new InvalidAuthException("비밀번호가 달라서 수정할 수 없습니다.");
 		}
+	}
+
+	public Customer updateProfile(Customer customer, CustomerProfileRequest request) {
+		Customer updatedCustomer = Customer.builder()
+			.id(customer.getId())
+			.email(customer.getEmail())
+			.nickname(request.getNickname())
+			.password(customer.getPassword())
+			.build();
+		customerDao.update(updatedCustomer);
+		return updatedCustomer;
 	}
 }
 
