@@ -56,7 +56,7 @@ public class CartService {
         List<CartResponse> cartResponses = new ArrayList<>();
         for (Cart cart : carts) {
             ProductResponse product = productService.findById(cart.getProductId());
-            cartResponses.add(new CartResponse(cart.getId(), product.getName(), product.getPrice(), cart.getQuantity(), product.getImageUrl()));
+            cartResponses.add(new CartResponse(product.getId(), product.getName(), product.getPrice(), cart.getQuantity(), product.getImageUrl()));
         }
 
         return cartResponses;
