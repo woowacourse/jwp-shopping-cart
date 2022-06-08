@@ -16,7 +16,6 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartDto;
 import woowacourse.shoppingcart.dto.CartUpdationRequest;
 import woowacourse.shoppingcart.exception.DuplicatedProductInCartException;
 import woowacourse.shoppingcart.exception.NotExistProductInCartException;
@@ -94,24 +93,13 @@ public class CartServiceTest {
         Product product1 = new Product(1L, "product1", 1000, "url1");
         Product product2 = new Product(2L, "product2", 2000, "url2");
         Product product3 = new Product(3L, "product3", 3000, "url3");
-        List<Product> products = List.of(product1, product2, product3);
 
-        CartDto cartDto1 = new CartDto(1L, 1L, 3);
-        CartDto cartDto2 = new CartDto(2L, 2L, 2);
-        CartDto cartDto3 = new CartDto(3L, 3L, 5);
+        Cart cart1 = new Cart(1L, product1, 5);
+        Cart cart2 = new Cart(2L, product2, 2);
+        Cart cart3 = new Cart(3L, product3, 7);
 
-        Cart cart1 = new Cart(cartDto1.getCartId(), product1, cartDto1.getQuantity());
-        Cart cart2 = new Cart(cartDto2.getCartId(), product2, cartDto2.getQuantity());
-        Cart cart3 = new Cart(cartDto3.getCartId(), product3, cartDto3.getQuantity());
-
-        given(cartItemDao.findIdsByCustomerId(customer.getId()))
-                .willReturn(productIds);
-
-        given(cartItemDao.getCartinfosByIds(productIds))
-                .willReturn(List.of(cartDto1, cartDto2, cartDto3));
-
-        given(productService.getProductsByIds(productIds))
-                .willReturn(products);
+        given(cartItemDao.getCartsByCustomerId(1L))
+                .willReturn(List.of(cart1, cart2, cart3));
 
         // when
         List<Cart> carts = cartService.getCarts(customer);
@@ -135,11 +123,11 @@ public class CartServiceTest {
         given(cartItemDao.existProduct(customer.getId(), productId))
                 .willReturn(true);
 
-        given(cartItemDao.findCartByProductCustomer(customer.getId(), productId))
-                .willReturn(new CartDto(cartId, productId, request.getQuantity()));
-
         given(productService.findProductById(productId))
                 .willReturn(product1);
+
+        given(cartItemDao.findCartByProductCustomer(customer.getId(), productId))
+                .willReturn(updatedCart);
 
         // when
         Cart cart = cartService.updateProductInCart(customer, request, productId);

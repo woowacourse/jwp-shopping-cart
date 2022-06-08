@@ -1,16 +1,12 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartDto;
 import woowacourse.shoppingcart.dto.CartUpdationRequest;
 import woowacourse.shoppingcart.exception.DuplicatedProductInCartException;
 import woowacourse.shoppingcart.exception.NotExistProductInCartException;
@@ -38,32 +34,7 @@ public class CartService {
     }
 
     public List<Cart> getCarts(Customer customer) {
-        List<Long> cartIds = cartItemDao.findIdsByCustomerId(customer.getId());
-        if (isEmptyCart(cartIds)) {
-            return Collections.emptyList();
-        }
-
-        List<CartDto> cartDtos = cartItemDao.getCartinfosByIds(cartIds);
-
-        List<Long> productIds = cartDtos.stream()
-                .map(cartDto -> cartDto.getProductId())
-                .collect(Collectors.toList());
-
-        List<Product> products = productService.getProductsByIds(productIds);
-
-        List<Integer> quantities = cartDtos.stream()
-                .map(CartDto::getQuantity)
-                .collect(Collectors.toList());
-
-        List<Cart> carts = new ArrayList<>();
-        for (int i = 0; i < cartIds.size(); i++) {
-            carts.add(new Cart(cartIds.get(i), products.get(i), quantities.get(i)));
-        }
-        return carts;
-    }
-
-    private boolean isEmptyCart(List<Long> cartIds) {
-        return cartIds.isEmpty();
+        return cartItemDao.getCartsByCustomerId(customer.getId());
     }
 
     public Cart updateProductInCart(Customer customer, CartUpdationRequest request, Long productId) {
@@ -71,10 +42,7 @@ public class CartService {
         validateExistProductInCart(customer, updatedProductId);
 
         cartItemDao.updateCartItem(customer.getId(), request.getQuantity(), updatedProductId);
-        CartDto cartDto = cartItemDao.findCartByProductCustomer(customer.getId(), updatedProductId);
-        Product product = productService.findProductById(cartDto.getProductId());
-
-        return new Cart(cartDto.getCartId(), product, cartDto.getQuantity());
+        return cartItemDao.findCartByProductCustomer(customer.getId(), updatedProductId);
     }
 
     public void deleteProductInCart(Customer customer, Long productId) {

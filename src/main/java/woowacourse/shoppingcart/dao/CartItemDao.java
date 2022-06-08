@@ -45,10 +45,16 @@ public class CartItemDao {
         return jdbcTemplate.queryForObject(query, Boolean.class, customerId, productId);
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
+    public List<Cart> getCartsByCustomerId(Long customerId) {
+        final String query = "SELECT c.id, c.customer_id, c.quantity, c.product_id, p.name, p.price, p.image_url "
+                + "FROM cart_item c JOIN product p ON c.product_id = p.id WHERE c.customer_id = ?";
+        return jdbcTemplate.query(query, rowMapper, customerId);
+    }
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+    public Cart findCartByProductCustomer(Long customerId, Long productId) {
+        final String query = "SELECT c.id, c.customer_id, c.quantity, c.product_id, p.name, p.price, p.image_url "
+                + "FROM cart_item c JOIN product p ON c.product_id = p.id WHERE c.customer_id = ? and c.product_id = ?";
+        return jdbcTemplate.queryForObject(query, rowMapper, customerId, productId);
     }
 
     public void updateCartItem(Long customerId, int quantity, Long productId) {
@@ -59,17 +65,5 @@ public class CartItemDao {
     public void deleteCartItem(Long customerId, final Long productId) {
         final String query = "DELETE FROM cart_item WHERE customer_id = ? and product_id = ?";
         jdbcTemplate.update(query, customerId, productId);
-    }
-
-    public List<Cart> findCartsByCustomerId(Long customerId) {
-        final String query = "SELECT c.id, c.customer_id, c.quantity, c.product_id, p.name, p.price, p.image_url "
-                + "FROM cart_item c JOIN product p ON c.product_id = p.id WHERE c.customer_id = ?";
-        return jdbcTemplate.query(query, rowMapper, customerId);
-    }
-
-    public Cart getCartByProductCustomer(Long customerId, Long productId) {
-        final String query = "SELECT c.id, c.customer_id, c.quantity, c.product_id, p.name, p.price, p.image_url "
-                + "FROM cart_item c JOIN product p ON c.product_id = p.id WHERE c.customer_id = ? and c.product_id = ?";
-        return jdbcTemplate.queryForObject(query, rowMapper, customerId, productId);
     }
 }

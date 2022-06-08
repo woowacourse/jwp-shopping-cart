@@ -63,19 +63,6 @@ public class CartItemDaoTest {
         assertThat(isExist).isTrue();
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    @Test
-    void findIdsByCustomerId() {
-        // given
-        final Long customerId = 1L;
-
-        // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-
-        // then
-        assertThat(cartIds).containsExactly(1L, 2L);
-    }
-
     @DisplayName("장바구니의 상품에 대한 수량을 변경한다.")
     @Test
     void updateCartItem() {
@@ -88,23 +75,8 @@ public class CartItemDaoTest {
         cartItemDao.updateCartItem(customerId, quantity, productId);
 
         // then
-        Cart cart = cartItemDao.getCartByProductCustomer(customerId, productId);
+        Cart cart = cartItemDao.findCartByProductCustomer(customerId, productId);
         assertThat(cart.getQuantity()).isEqualTo(quantity);
-    }
-
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    @Test
-    void deleteCartItem() {
-        // given
-        Long customerId = 1L;
-        Long productId = 1L;
-
-        // when
-        cartItemDao.deleteCartItem(customerId, productId);
-
-        // then
-        List<Long> cartIds = cartItemDao.findIdsByCustomerId(productId);
-        assertThat(cartIds.size()).isEqualTo(1);
     }
 
     @DisplayName("cartId를 조회하여 Cart 객체들을 반환한다.")
@@ -114,7 +86,7 @@ public class CartItemDaoTest {
         Long customerId = 1L;
 
         // when
-        List<Cart> carts = cartItemDao.findCartsByCustomerId(customerId);
+        List<Cart> carts = cartItemDao.getCartsByCustomerId(customerId);
         for (Cart cart : carts) {
             System.out.println(cart);
         }
