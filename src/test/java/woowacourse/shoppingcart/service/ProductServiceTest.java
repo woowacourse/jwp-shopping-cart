@@ -25,7 +25,7 @@ public class ProductServiceTest {
         assertAll(() -> assertThat(productResponse.getId()).isEqualTo(7L),
                 () -> assertThat(productResponse.getName()).isEqualTo("맛있는 초밥"),
                 () -> assertThat(productResponse.getPrice()).isEqualTo(700),
-                () -> assertThat(productResponse.getImage_url()).isEqualTo("https://www.naver.com"));
+                () -> assertThat(productResponse.getImageUrl()).isEqualTo("https://www.naver.com"));
     }
 
     @Test

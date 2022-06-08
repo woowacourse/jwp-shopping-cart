@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.acceptance;
 
-import groovy.lang.GString;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -22,7 +21,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(extract.getId()).isEqualTo(7L),
                 () -> assertThat(extract.getName()).isEqualTo("맛있는 초밥"),
                 () -> assertThat(extract.getPrice()).isEqualTo(700),
-                () -> assertThat(extract.getImage_url()).isEqualTo("https://www.naver.com")
+                () -> assertThat(extract.getImageUrl()).isEqualTo("https://www.naver.com")
         );
     }
 

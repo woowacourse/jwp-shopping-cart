@@ -29,7 +29,7 @@ public class ProductResponse {
         return price;
     }
 
-    public String getImage_url() {
+    public String getImageUrl() {
         return imageUrl;
     }
 }
