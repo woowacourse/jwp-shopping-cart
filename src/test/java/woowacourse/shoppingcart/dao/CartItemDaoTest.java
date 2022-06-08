@@ -128,4 +128,27 @@ public class CartItemDaoTest {
         List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
         assertThat(cartItems.size()).isEqualTo(1);
     }
+
+    @DisplayName("이미 장바구니에 추가된 아이템이라면 참을 반환한다.")
+    @Test
+    void existsByCustomerIdAndProductIdReturnTrue() {
+        Long customerId = 1L;
+        Long productId = 1L;
+
+        boolean actual = cartItemDao.existsByCustomerIdAndProductId(customerId, productId);
+
+        assertThat(actual).isTrue();
+    }
+
+    @DisplayName("장바구니에 추가되지 않은 아이템이라면 거짓을 반환한다.")
+    @Test
+    void existsByCustomerIdAndProductIdReturnFalse() {
+        Long customerId = 1L;
+        Long productId = 1L;
+        cartItemDao.deleteCartItem(customerId, productId);
+
+        boolean actual = cartItemDao.existsByCustomerIdAndProductId(customerId, productId);
+
+        assertThat(actual).isFalse();
+    }
 }

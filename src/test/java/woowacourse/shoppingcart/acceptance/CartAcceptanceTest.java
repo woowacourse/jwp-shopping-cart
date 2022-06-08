@@ -54,6 +54,23 @@ public class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("동일 아이템 중복 추가")
+    @Test
+    void addDuplicateItem() {
+        // 로그인 유저가 장바구니에 아이템을 담고
+        String accessToken = 로그인_요청(new TokenRequest(EMAIL, PASSWORD));
+        장바구니_아이템_추가_요청(accessToken, productId1);
+
+        // 동일한 아이템을 다시 담으면
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1);
+
+        // 400 응답과 에러 메시지를 반환한다.
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("이미 추가된 상품입니다.")
+        );
+    }
+
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {

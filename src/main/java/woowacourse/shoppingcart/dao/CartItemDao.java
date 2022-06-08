@@ -88,4 +88,9 @@ public class CartItemDao {
         final String sql = "DELETE FROM cart_item WHERE customer_id = ? and product_id = ?";
         jdbcTemplate.update(sql, customerId, productId);
     }
+
+    public boolean existsByCustomerIdAndProductId(Long customerId, Long productId) {
+        final String sql = "SELECT EXISTS (SELECT * FROM cart_item WHERE customer_id = ? and product_id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId));
+    }
 }
