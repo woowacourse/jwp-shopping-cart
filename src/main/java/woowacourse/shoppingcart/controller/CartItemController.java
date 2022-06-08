@@ -7,10 +7,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.LoginCustomer;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
-import woowacourse.shoppingcart.dto.response.ProductResponseDto;
+import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
+import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
 import woowacourse.shoppingcart.service.CartService;
 
 import java.net.URI;
@@ -28,8 +28,8 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getCartItems(@PathVariable final Long customerId,
-                                                                 @AuthenticationPrincipal LoginCustomer loginCustomer) {
+    public ResponseEntity<List<CartItemResponseDto>> getCartItems(@PathVariable final Long customerId,
+                                                                  @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
         return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
     }
@@ -46,7 +46,7 @@ public class CartItemController {
                 .path("/{cartId}")
                 .buildAndExpand(cartId)
                 .toUri();
-        return ResponseEntity.created(responseLocation).build();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
@@ -57,5 +57,16 @@ public class CartItemController {
 
         cartService.deleteCart(customerId, productId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateCartItem(@PathVariable final Long customerId,
+                                               @RequestParam final Long productId,
+                                               @RequestBody final UpdateCartItemCountItemRequest updateCartItemCountItemRequest,
+                                               @AuthenticationPrincipal LoginCustomer loginCustomer) {
+        authService.checkAuthorization(customerId, loginCustomer.getEmail());
+
+        cartService.updateCart(customerId, productId,updateCartItemCountItemRequest);
+        return ResponseEntity.ok().build();
     }
 }

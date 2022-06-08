@@ -34,7 +34,6 @@ class CartItemItemControllerTest {
     @Test
     @DisplayName("장바구니에 담긴 물건들을 가져온다.")
     void getCartItems() {
-        //
     }
 
     @Test

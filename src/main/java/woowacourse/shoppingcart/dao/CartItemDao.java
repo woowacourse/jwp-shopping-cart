@@ -20,19 +20,13 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
-    }
-
     public List<Long> findIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public CartItem findCartItemByCustomerId(final Long customerId, final Long productId){
+    public CartItem findCartItemByCustomerIdAndProductId(final Long customerId, final Long productId){
         final String sql = "SELECT " +
                 "product.id as product_id, " +
                 "product.name as product_name, " +
