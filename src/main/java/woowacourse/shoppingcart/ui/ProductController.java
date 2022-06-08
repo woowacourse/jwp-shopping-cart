@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.application.dto.ProductServiceResponse;
 import woowacourse.shoppingcart.dto.PageRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductSaveRequest;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllByPage(
+    public ResponseEntity<ProductsResponse> getAllByPage(
             @RequestParam(value = "page", defaultValue = "1") final Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") final Integer size) {
         final PageRequest pageRequest = new PageRequest(page, size);
@@ -51,7 +52,7 @@ public class ProductController {
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(ProductsResponse.from(responses));
     }
 
     @DeleteMapping("/{id}")
