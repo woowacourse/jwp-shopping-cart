@@ -5,13 +5,15 @@ import woowacourse.shoppingcart.domain.Product;
 
 public class CartResponse {
 
+    private Long cartItemId;
     private ProductResponse product;
     private int quantity;
 
     public CartResponse() {
     }
 
-    private CartResponse(final ProductResponse productResponse, final int quantity) {
+    private CartResponse(final Long cartItemId, final ProductResponse productResponse, final int quantity) {
+        this.cartItemId = cartItemId;
         this.product = productResponse;
         this.quantity = quantity;
     }
@@ -69,7 +71,12 @@ public class CartResponse {
     }
 
     public static CartResponse from(final Cart cart) {
-        return new CartResponse(ProductResponse.from(cart.getProduct()), cart.getQuantity());
+        return new CartResponse(cart.getId(), ProductResponse.from(cart.getProduct()), cart.getQuantity());
+    }
+
+
+    public Long getCartItemId() {
+        return cartItemId;
     }
 
     public int getQuantity() {
