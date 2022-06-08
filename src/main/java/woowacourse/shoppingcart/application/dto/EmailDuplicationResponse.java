@@ -5,6 +5,10 @@ public class EmailDuplicationResponse {
     private final String email;
     private final Boolean duplicated;
 
+    public EmailDuplicationResponse() {
+        this(null, null);
+    }
+
     public EmailDuplicationResponse(String email, Boolean duplicated) {
         this.email = email;
         this.duplicated = duplicated;

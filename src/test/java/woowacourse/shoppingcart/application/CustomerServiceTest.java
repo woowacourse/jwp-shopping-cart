@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.EmailDuplicationResponse;
 import woowacourse.shoppingcart.application.dto.UserNameDuplicationResponse;
 import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
+import woowacourse.shoppingcart.exception.domain.DuplicateCustomerException;
 import woowacourse.shoppingcart.ui.dto.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.FindCustomerRequest;
 import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
@@ -47,6 +48,21 @@ class CustomerServiceTest {
 
         // then
         assertThat(id).isNotNull();
+    }
+
+    @DisplayName("중복된 정보로 저장하면 예외가 발생한다")
+    @Test
+    void throwsExceptionWithDuplicationOnSave() {
+        // given
+        CustomerRequest request = new CustomerRequest(
+            "createname", "password12!@", "creation@email.com", "address", "010-1234-1234"
+        );
+        // when
+        customerService.createCustomer(request);
+
+        // then
+        assertThatExceptionOfType(DuplicateCustomerException.class)
+            .isThrownBy(() -> customerService.createCustomer(request));
     }
 
     @DisplayName("id가 들어있는 요청으로 사용자를 찾는다.")
