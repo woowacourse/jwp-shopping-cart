@@ -5,14 +5,14 @@ import woowacourse.shoppingcart.domain.customer.CustomerToken;
 public class TokenResponse {
 
     private String nickname;
-    private String accessToken;
+    private String token;
 
     private TokenResponse() {
     }
 
-    private TokenResponse(String nickname, String accessToken) {
+    private TokenResponse(String nickname, String token) {
         this.nickname = nickname;
-        this.accessToken = accessToken;
+        this.token = token;
     }
 
     public TokenResponse(CustomerToken customerToken) {
@@ -23,7 +23,7 @@ public class TokenResponse {
         return nickname;
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public String getToken() {
+        return token;
     }
 }

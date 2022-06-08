@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.dto.customer.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.EmailUniqueCheckResponse;
+import woowacourse.shoppingcart.dto.customer.PasswordCheckResponse;
 import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -87,7 +88,7 @@ class CustomerControllerTest {
     void checkPassword() {
         final PasswordRequest passwordRequest = new PasswordRequest("password123!");
 
-        final ResponseEntity<Void> response = customerController.checkPassword("email@email.com", passwordRequest);
+        final ResponseEntity<PasswordCheckResponse> response = customerController.checkPassword("email@email.com", passwordRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }

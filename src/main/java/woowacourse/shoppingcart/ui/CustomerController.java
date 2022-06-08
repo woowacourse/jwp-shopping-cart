@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.dto.customer.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.EmailUniqueCheckResponse;
+import woowacourse.shoppingcart.dto.customer.PasswordCheckResponse;
 import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 
 @Controller
@@ -45,10 +46,10 @@ public class CustomerController {
     }
 
     @PostMapping("/password-check")
-    public ResponseEntity<Void> checkPassword(@AuthenticationPrincipal final String email,
+    public ResponseEntity<PasswordCheckResponse> checkPassword(@AuthenticationPrincipal final String email,
                                               @RequestBody @Valid final PasswordRequest passwordRequest) {
-        customerService.checkPassword(email, passwordRequest);
-        return ResponseEntity.noContent().build();
+        boolean checkPassword = customerService.checkPassword(email, passwordRequest);
+        return ResponseEntity.ok().body(new PasswordCheckResponse(String.valueOf(checkPassword)));
     }
 
     @GetMapping("/me")

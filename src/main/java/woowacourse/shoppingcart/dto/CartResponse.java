@@ -5,14 +5,14 @@ import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 public class CartResponse {
 
-    private ProductResponse productResponse;
+    private ProductResponse product;
     private int quantity;
 
     private CartResponse() {
     }
 
-    public CartResponse(ProductResponse productResponse, int quantity) {
-        this.productResponse = productResponse;
+    public CartResponse(ProductResponse product, int quantity) {
+        this.product = product;
         this.quantity = quantity;
     }
 
@@ -20,8 +20,8 @@ public class CartResponse {
         this(new ProductResponse(cart.getProduct()), cart.getQuantity());
     }
 
-    public ProductResponse getProductResponse() {
-        return productResponse;
+    public ProductResponse getProduct() {
+        return product;
     }
 
     public int getQuantity() {

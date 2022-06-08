@@ -34,11 +34,12 @@ public class CustomerService {
         return customer;
     }
 
-    public void checkPassword(final String emailValue, final PasswordRequest passwordRequest) {
+    public boolean checkPassword(final String emailValue, final PasswordRequest passwordRequest) {
         Email email = new Email(emailValue);
         validateExists(email);
         customerDao.findByEmailAndPassword(email, passwordRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("비밀번호가 일치하지 않습니다."));
+        return true;
     }
 
     public Customer findByEmail(final String emailValue) {
