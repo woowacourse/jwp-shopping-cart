@@ -50,7 +50,13 @@ public class CartRepository {
         final Customer customer = customerDao.findByUserEmail(email);
         final Long customerId = customer.getId();
         try {
+            final boolean hasProduct = hasProduct(email, productId);
+            if (hasProduct) {
+                throw new IllegalArgumentException("카트에 상품이 이미 존재합니다.");
+            }
             return cartItemDao.addCartItem(customerId, productId, quantity);
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             throw new InvalidProductException();
         }
