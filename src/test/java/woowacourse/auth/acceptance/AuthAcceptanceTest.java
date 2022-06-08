@@ -23,6 +23,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
@@ -30,6 +31,7 @@ import woowacourse.shoppingcart.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
 
 @DisplayName("인증 기능 인수테스트")
+@Sql("classpath:schema.sql")
 public class AuthAcceptanceTest extends AcceptanceTest {
     private int 생성된_사용자_ID;
 

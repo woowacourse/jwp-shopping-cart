@@ -11,10 +11,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.AcceptanceTest;
 import woowacourse.shoppingcart.domain.Product;
 
 @DisplayName("상품 관련 기능")
+@Sql("classpath:schema.sql")
 public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, String description, int price, int stock,

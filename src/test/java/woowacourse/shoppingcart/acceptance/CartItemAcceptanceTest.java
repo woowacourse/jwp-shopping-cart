@@ -17,6 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.acceptance.AuthAcceptanceTest;
 import woowacourse.auth.dto.TokenResponse;
@@ -24,6 +25,7 @@ import woowacourse.shoppingcart.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponse;
 
 @DisplayName("장바구니 관련 기능")
+@Sql("classpath:schema.sql")
 public class CartItemAcceptanceTest extends AcceptanceTest {
     private String accessToken;
 

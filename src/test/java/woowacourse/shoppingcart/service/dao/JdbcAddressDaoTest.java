@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dao;
+package woowacourse.shoppingcart.service.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import woowacourse.shoppingcart.dao.AddressDao;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.JdbcAddressDao;
+import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.entity.AddressEntity;
 
 @JdbcTest

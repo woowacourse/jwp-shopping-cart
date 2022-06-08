@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dao;
+package woowacourse.shoppingcart.service.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.Fixtures.EMAIL_VALUE_1;
@@ -20,6 +20,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.JdbcCartItemDao;
+import woowacourse.shoppingcart.dao.JdbcCustomerDao;
+import woowacourse.shoppingcart.dao.JdbcProductDao;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.entity.CustomerEntity;

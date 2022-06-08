@@ -26,6 +26,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
@@ -33,6 +34,7 @@ import woowacourse.shoppingcart.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
 
 @DisplayName("회원 기능 인수 테스트")
+@Sql("classpath:schema.sql")
 public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("이메일 중복 검사")
