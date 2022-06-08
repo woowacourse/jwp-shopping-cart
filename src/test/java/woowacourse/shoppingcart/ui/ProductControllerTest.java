@@ -19,8 +19,7 @@ import woowacourse.shoppingcart.ui.dto.ProductAddRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
@@ -66,17 +65,17 @@ class ProductControllerTest {
         // then
         assertAll(
                 () -> 이름_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 상품명은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 상품명은 공백일 수 없습니다.")),
                 () -> 이름_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 상품명은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 상품명은 공백일 수 없습니다.")),
                 () -> 가격_제로.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 가격은 양수입니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 가격은 양수입니다.")),
                 () -> 가격_음수.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 가격은 양수입니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 가격은 양수입니다.")),
                 () -> url_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이미지 url은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이미지 url은 공백일 수 없습니다.")),
                 () -> url_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이미지 url은 공백일 수 없습니다."))
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이미지 url은 공백일 수 없습니다."))
         );
     }
 

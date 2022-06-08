@@ -12,13 +12,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.config.AuthenticationPrincipalConfig;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.global.exception.ErrorResponse;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.ui.dto.ProductChangeRequest;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CartItemController.class)
 class CartItemControllerTest {
@@ -48,12 +48,13 @@ class CartItemControllerTest {
         // given & when
         ResultActions 수량_체크1 = patchCustomers(0);
         ResultActions 수량_체크2 = patchCustomers(-500);
+
         // then
         assertAll(
                 () -> 수량_체크1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 수량은 양수입니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 수량은 양수입니다.")),
                 () -> 수량_체크2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 수량은 양수입니다."))
+                        .andExpect(jsonPath("$.message").value("[ERROR] 수량은 양수입니다."))
         );
     }
 
