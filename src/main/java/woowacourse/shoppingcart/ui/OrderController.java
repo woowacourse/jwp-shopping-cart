@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrdersResponse;
 
 @Validated
 @RestController
@@ -35,15 +35,15 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal Long memberId,
-                                            @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(memberId, orderId);
+    public ResponseEntity<OrdersResponse> findOrder(@AuthenticationPrincipal Long memberId,
+                                                    @PathVariable final Long orderId) {
+        final OrdersResponse order = orderService.findOrderById(memberId, orderId);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal Long memberId) {
-        final List<Orders> orders = orderService.findOrdersByMemberId(memberId);
+    public ResponseEntity<List<OrdersResponse>> findOrders(@AuthenticationPrincipal Long memberId) {
+        final List<OrdersResponse> orders = orderService.findOrdersByMemberId(memberId);
         return ResponseEntity.ok(orders);
     }
 }

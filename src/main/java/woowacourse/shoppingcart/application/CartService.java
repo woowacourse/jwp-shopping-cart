@@ -2,12 +2,14 @@ package woowacourse.shoppingcart.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -24,7 +26,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByMemberId(final Long memberId) {
+    public List<CartItemResponse> findCartsByMemberId(final Long memberId) {
         final List<Long> cartIds = findCartIdsByMemberId(memberId);
 
         final List<Cart> carts = new ArrayList<>();
@@ -34,7 +36,9 @@ public class CartService {
             final int cartItemQuantity = cartItemDao.findProductQuantityIdById(cartId);
             carts.add(new Cart(cartId, product, cartItemQuantity));
         }
-        return carts;
+        return carts.stream()
+                .map(CartItemResponse::from)
+                .collect(Collectors.toList());
     }
 
     private List<Long> findCartIdsByMemberId(final Long memberId) {
@@ -43,14 +47,18 @@ public class CartService {
 
     public Long addCart(final Long productId, final Long memberId) {
         try {
-            if (cartItemDao.isExistCartItem(memberId, productId)) {
-                cartItemDao.addOneQuantityCartItem(memberId, productId);
-                return cartItemDao.findIdByMemberIdAndProductId(memberId, productId);
-            }
-            return cartItemDao.addCartItem(memberId, productId);
+            return addCartItemAndReturnId(productId, memberId);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
+    }
+
+    private Long addCartItemAndReturnId(Long productId, Long memberId) {
+        if (cartItemDao.isValidCartItem(memberId, productId)) {
+            cartItemDao.addQuantityCartItem(memberId, productId);
+            return cartItemDao.findIdByMemberIdAndProductId(memberId, productId);
+        }
+        return cartItemDao.addCartItem(memberId, productId);
     }
 
     public void updateCartItemQuantity(final Long cartId, final UpdateQuantityRequest updateQuantityRequest) {

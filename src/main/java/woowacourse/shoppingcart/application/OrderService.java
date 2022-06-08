@@ -10,9 +10,10 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -47,7 +48,7 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final Long memberId, final Long orderId) {
+    public OrdersResponse findOrderById(final Long memberId, final Long orderId) {
         validateOrderIdByMemberId(memberId, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
@@ -58,7 +59,7 @@ public class OrderService {
         }
     }
 
-    public List<Orders> findOrdersByMemberId(final Long memberId) {
+    public List<OrdersResponse> findOrdersByMemberId(final Long memberId) {
         final List<Long> orderIds = orderDao.findOrderIdsByMemberId(memberId);
 
         return orderIds.stream()
@@ -66,14 +67,17 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
+    private OrdersResponse findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
-            final int quantity = productQuantity.getQuantity();
+        for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
+            final Product product = productDao.findProductById(orderDetail.getProductId());
+            final int quantity = orderDetail.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }
 
-        return new Orders(orderId, ordersDetails);
+        List<OrderDetailResponse> orderDetailResponses = ordersDetails.stream()
+                .map(OrderDetailResponse::from)
+                .collect(Collectors.toList());
+        return new OrdersResponse(orderId, orderDetailResponses);
     }
 }
