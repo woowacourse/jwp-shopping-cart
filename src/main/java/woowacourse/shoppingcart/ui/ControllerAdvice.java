@@ -21,13 +21,11 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException e) {
-        e.printStackTrace();
         return ResponseEntity.internalServerError().body(new ErrorResponse(0, e.getMessage()));
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(final BadRequestException e) {
-        e.printStackTrace();
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 
@@ -42,7 +40,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(final NotFoundException e) {
-        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
     }
 
