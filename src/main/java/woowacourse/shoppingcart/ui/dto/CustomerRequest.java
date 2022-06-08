@@ -4,8 +4,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-
 public class CustomerRequest {
 
     @NotEmpty(message = "이름은 비어있을 수 없습니다.")

@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.DistinctAttribute;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
 
 @Repository
 public class CustomerDao {

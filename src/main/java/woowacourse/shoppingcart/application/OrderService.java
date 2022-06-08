@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderDetailDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.order.Order;
 import woowacourse.shoppingcart.domain.order.OrderDetail;

@@ -102,7 +102,8 @@ public class CustomerDaoTest {
     @Test
     void isDuplicated() {
         // given
-        customerDao.save(Customer.fromInput("somename", "Password123!", "exmaple@email.com", "some-address", "010-1234-1234"));
+        customerDao.save(
+            Customer.fromInput("somename", "Password123!", "exmaple@email.com", "some-address", "010-1234-1234"));
         // when
         final boolean duplicated = customerDao.isDuplicated(CustomerDao.COLUMN_USERNAME, new UserName("somename"));
         // then

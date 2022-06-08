@@ -10,7 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import woowacourse.shoppingcart.domain.customer.PhoneNumber;
 import woowacourse.shoppingcart.exception.attribute.InvalidFormException;
 
 class PhoneNumberTest {

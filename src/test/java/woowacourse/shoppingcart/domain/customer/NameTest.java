@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.attribute.InvalidFormException;
 import woowacourse.shoppingcart.exception.attribute.InvalidLengthException;
 

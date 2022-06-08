@@ -6,9 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import woowacourse.shoppingcart.domain.customer.BcryptPasswordEncryptor;
-import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
-
 class PasswordEncryptorTest {
 
     private static final int ENCRYPTED_SIZE = 60;

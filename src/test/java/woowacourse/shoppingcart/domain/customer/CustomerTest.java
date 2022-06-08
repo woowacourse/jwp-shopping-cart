@@ -7,8 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import woowacourse.auth.domain.BcryptPasswordMatcher;
-import woowacourse.shoppingcart.domain.customer.BcryptPasswordEncryptor;
-import woowacourse.shoppingcart.domain.customer.Customer;
 
 class CustomerTest {
 
