@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.request.ProductIdRequest;
 import woowacourse.shoppingcart.application.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.application.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.application.dto.response.CartResponse;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
 
@@ -96,5 +98,30 @@ class CartServiceTest {
         assertThatThrownBy(() -> cartService.addCartItems(customerIdentificationRequest, List.of(productIdRequest)))
                 .isInstanceOf(ProductDataNotFoundException.class)
                 .hasMessage("존재하지 않는 상품입니다.");
+    }
+
+    @DisplayName("장바구니에 담긴 상품 개수를 수정한다.")
+    @Test
+    void updateQuantity() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+
+        Long productId = productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
+        ProductIdRequest productIdRequest = new ProductIdRequest(productId);
+
+        List<CartItemResponse> cartItemResponses = cartService.addCartItems(customerIdentificationRequest, List.of(productIdRequest));
+
+        // when
+        CartItemResponse cartItemResponse = cartService.updateQuantity(
+                customerIdentificationRequest, new CartItemRequest(cartItemResponses.get(0).getId(), 1)
+        );
+
+        // then
+        assertAll(
+                () -> assertThat(cartItemResponse.getId()).isEqualTo(cartItemResponses.get(0).getId()),
+                () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(1)
+        );
     }
 }

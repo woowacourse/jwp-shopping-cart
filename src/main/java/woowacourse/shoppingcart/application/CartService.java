@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.request.ProductIdRequest;
 import woowacourse.shoppingcart.application.dto.response.CartItemResponse;
@@ -50,13 +51,9 @@ public class CartService {
         return CartResponse.from(carts);
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
     @Transactional
-    public List<CartItemResponse> addCartItems(final CustomerIdentificationRequest customerIdentificationRequest, final List<ProductIdRequest> productIdRequests) {
+    public List<CartItemResponse> addCartItems(final CustomerIdentificationRequest customerIdentificationRequest,
+                                               final List<ProductIdRequest> productIdRequests) {
         Customer customer = findCustomerById(customerIdentificationRequest.getId());
 
         List<CartItem> cartItems = new ArrayList<>();
@@ -65,6 +62,13 @@ public class CartService {
             cartItems.add(addCartItem(customer, productId));
         }
         return CartItemResponse.from(cartItems);
+    }
+
+    @Transactional
+    public CartItemResponse updateQuantity(final CustomerIdentificationRequest customerIdentificationRequest,
+                                                 final CartItemRequest cartItemRequest) {
+        cartItemDao.updateQuantity(cartItemRequest.getId(), customerIdentificationRequest.getId(), cartItemRequest.getQuantity());
+        return CartItemResponse.from(findCartItemById(cartItemRequest.getId()));
     }
 
     @Transactional
@@ -103,5 +107,10 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    private List<Long> findCartIdsByCustomerName(final String customerName) {
+        final Long customerId = customerDao.findIdByUserName(customerName);
+        return cartItemDao.findIdsByCustomerId(customerId);
     }
 }
