@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import javax.sql.DataSource;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,21 +21,6 @@ public class CartItemDao {
     public CartItemDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-    }
-
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    }
-
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
     }
 
     public Long addCartItem(final Long customerId, final Long productId, final Integer quantity) {
@@ -129,7 +113,7 @@ public class CartItemDao {
 
     public boolean notExistByIdAndCustomerId(Long id, Long customerId) {
         final String sql = "select exists(select * from cart_item where id = ? and customer_id = ?)";
-        return jdbcTemplate.queryForObject(sql,Boolean.class, id, customerId);
+        return !jdbcTemplate.queryForObject(sql,Boolean.class, id, customerId);
     }
 
     public boolean existsByProductIdAndCustomerId(Long productId, Long customerId) {
