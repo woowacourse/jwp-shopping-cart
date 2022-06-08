@@ -39,7 +39,7 @@ public class CartItemController {
     public ResponseEntity<Void> addCartItem(
             @Validated(Request.id.class) @RequestBody final AddProductRequest addProductRequest,
             @AuthenticationPrincipal Long memberId) {
-        final Long cartId = cartService.addCart2(addProductRequest.getProductId(), memberId);
+        final Long cartId = cartService.addCart(addProductRequest.getProductId(), memberId);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
@@ -58,7 +58,7 @@ public class CartItemController {
     @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal Long memberId,
                                                @PathVariable final Long cartId) {
-        cartService.deleteCart2(memberId, cartId);
+        cartService.deleteCart(memberId, cartId);
         return ResponseEntity.noContent().build();
     }
 }
