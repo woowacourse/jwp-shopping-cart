@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain.product;
+package woowacourse.shoppingcart.domain.product.vo;
 
 public class ThumbnailImage {
     private String url;

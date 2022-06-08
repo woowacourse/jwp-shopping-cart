@@ -24,6 +24,7 @@ import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidPriceException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.InvalidQuantityException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -87,6 +88,11 @@ public class ControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(final InvalidQuantityException e) {
         return ResponseEntity.badRequest().body(ErrorResponse.INVALID_QUANTITY);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final InvalidPriceException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.INVALID_PRICE);
     }
 
     @ExceptionHandler

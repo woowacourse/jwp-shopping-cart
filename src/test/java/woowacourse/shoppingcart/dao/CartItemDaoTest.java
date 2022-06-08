@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.domain.product.ProductStock;
-import woowacourse.shoppingcart.domain.product.ThumbnailImage;
+import woowacourse.shoppingcart.domain.product.vo.ThumbnailImage;
 import woowacourse.shoppingcart.entity.CartItemEntity;
 
 @JdbcTest

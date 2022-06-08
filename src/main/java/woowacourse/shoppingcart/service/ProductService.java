@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.domain.product.ProductStock;
-import woowacourse.shoppingcart.domain.product.ThumbnailImage;
+import woowacourse.shoppingcart.domain.product.vo.ThumbnailImage;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ThumbnailImageDto;
@@ -38,7 +38,7 @@ public class ProductService {
         ProductStock addedProductStock = productDao.save(product, productRequest.getStockQuantity());
         return ProductResponse.from(addedProductStock);
     }
-    
+
     @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         ProductStock product = productDao.findProductStockById(productId);

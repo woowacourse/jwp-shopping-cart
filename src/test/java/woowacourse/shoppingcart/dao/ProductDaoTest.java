@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.domain.product.ProductStock;
-import woowacourse.shoppingcart.domain.product.ThumbnailImage;
+import woowacourse.shoppingcart.domain.product.vo.ThumbnailImage;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.domain.product.ThumbnailImage;
+import woowacourse.shoppingcart.domain.product.vo.ThumbnailImage;
 import woowacourse.shoppingcart.exception.DuplicateProductInCartException;
 
 public class CartItemsTest {

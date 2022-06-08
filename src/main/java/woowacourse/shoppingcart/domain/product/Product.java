@@ -2,10 +2,13 @@ package woowacourse.shoppingcart.domain.product;
 
 import java.util.Objects;
 
+import woowacourse.shoppingcart.domain.product.vo.Price;
+import woowacourse.shoppingcart.domain.product.vo.ThumbnailImage;
+
 public class Product {
     private Long id;
     private String name;
-    private Integer price;
+    private Price price;
     private ThumbnailImage thumbnailImage;
 
     public Product() {
@@ -14,7 +17,7 @@ public class Product {
     public Product(final Long id, final String name, final int price, final ThumbnailImage thumbnailImage) {
         this.id = id;
         this.name = name;
-        this.price = price;
+        this.price = new Price(price);
         this.thumbnailImage = thumbnailImage;
 
     }
@@ -28,7 +31,7 @@ public class Product {
     }
 
     public int getPrice() {
-        return price;
+        return price.getPrice();
     }
 
     public String getThumbnailImageUrl() {
