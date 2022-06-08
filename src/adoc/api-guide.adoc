@@ -53,3 +53,28 @@ include::{snippets}/member-delete/http-request.adoc[]
 === response
 include::{snippets}/member-delete/http-response.adoc[]
 
+= Product api
+
+== product register
+=== request
+include::{snippets}/product-register/http-request.adoc[]
+=== response
+include::{snippets}/product-register/http-response.adoc[]
+
+== product get
+=== request
+include::{snippets}/product-get/http-request.adoc[]
+=== response
+include::{snippets}/product-get/http-response.adoc[]
+
+== product list get
+=== request
+include::{snippets}/product-list-get/http-request.adoc[]
+=== response
+include::{snippets}/product-list-get/http-response.adoc[]
+
+== product delete
+=== request
+include::{snippets}/product-delete/http-request.adoc[]
+=== response
+include::{snippets}/product-delete/http-response.adoc[]

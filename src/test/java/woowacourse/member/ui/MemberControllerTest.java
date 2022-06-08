@@ -41,7 +41,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.helper.restdocs.RestDocsTest;
-import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
@@ -311,16 +310,12 @@ public class MemberControllerTest extends RestDocsTest {
     @DisplayName("회원을 탈퇴한다.")
     @Test
     void deleteMember() throws Exception {
-        MemberDeleteRequest memberDeleteRequest = new MemberDeleteRequest(PASSWORD);
         doNothing().when(memberService).deleteById(anyLong());
         given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
         given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
 
         ResultActions resultActions = mockMvc.perform(delete("/api/members/me")
-                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(memberDeleteRequest)))
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN))
                 .andExpect(status().isNoContent());
 
         resultActions.andDo(document("member-delete",
@@ -328,24 +323,17 @@ public class MemberControllerTest extends RestDocsTest {
                 getResponsePreprocessor(),
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
-                ),
-                requestFields(
-                        fieldWithPath("password").description("비밀번호")
                 )));
     }
 
     @DisplayName("회원 탈퇴에 실패한다.")
     @Test
     void failedDeleteMember() throws Exception {
-        MemberDeleteRequest memberDeleteRequest = new MemberDeleteRequest(PASSWORD);
         given(jwtTokenProvider.validateToken(anyString())).willReturn(false);
         ErrorResponse errorResponse = new ErrorResponse("[ERROR] 토큰이 올바르지 않습니다.");
 
         mockMvc.perform(delete("/api/members/me")
-                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(memberDeleteRequest)))
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
     }
