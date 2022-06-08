@@ -28,7 +28,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new UserNameResolver(authService));
+        resolvers.add(new UserNameResolver());
         resolvers.add(new OptionalUserNameResolver(authService));
     }
 }

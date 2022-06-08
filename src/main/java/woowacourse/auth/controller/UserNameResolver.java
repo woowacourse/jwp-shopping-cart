@@ -13,12 +13,6 @@ import woowacourse.shoppingcart.domain.customer.UserName;
 
 public class UserNameResolver implements HandlerMethodArgumentResolver {
 
-    private AuthService authService;
-
-    public UserNameResolver(final AuthService authService) {
-        this.authService = authService;
-    }
-
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(woowacourse.auth.support.UserNameResolver.class);
@@ -28,7 +22,6 @@ public class UserNameResolver implements HandlerMethodArgumentResolver {
     public UserName resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
                                     final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        final String token = AuthorizationExtractor.extract(request);
-        return authService.getUserNameFormToken(token);
+        return (UserName) request.getAttribute("userName");
     }
 }
