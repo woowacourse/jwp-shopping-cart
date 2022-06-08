@@ -35,7 +35,7 @@ class CartServiceTest {
     @DisplayName("올바른 데이터로 장바구니를 동록하면 장바구니 등록 ID를 반환한다.")
     @Test
     void add() {
-        Long cartId = cartService.add(2L, 1L);
+        Long cartId = cartService.add(3L, 1L);
         assertThat(cartId).isEqualTo(6L);
     }
 
