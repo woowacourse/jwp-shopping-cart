@@ -4,17 +4,17 @@ import java.util.List;
 
 public class ProductIdsRequest {
 
-    private List<Long> ids;
+    private List<Long> productIds;
 
     private ProductIdsRequest() {
 
     }
 
-    public ProductIdsRequest(List<Long> ids) {
-        this.ids = ids;
+    public ProductIdsRequest(List<Long> productIds) {
+        this.productIds = productIds;
     }
 
-    public List<Long> getIds() {
-        return ids;
+    public List<Long> getProductIds() {
+        return productIds;
     }
 }
