@@ -239,9 +239,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
                 response.statusCode(HttpStatus.OK.value())
                         .body("id", equalTo(1))
-                        .body("name", equalTo("product1"))
-                        .body("price", equalTo(1000))
-                        .body("imageUrl", equalTo("url1"))
+                        .body("name", equalTo("붙이는 치약 홀더 / 걸이"))
+                        .body("price", equalTo(1600))
+                        .body("imageUrl", equalTo("https://image.ohou.se/i/bucketplace-v2-development/uploads/productions/163178721379405896.jpg?gif=1&w=512&h=512&c=c"))
                         .body("quantity", equalTo(3));
             }
         }

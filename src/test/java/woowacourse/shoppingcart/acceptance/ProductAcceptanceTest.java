@@ -57,7 +57,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             void it_return_notFound() {
                 ValidatableResponse response = RestAssured
                         .given().log().all()
-                        .when().get("/products/20")
+                        .when().get("/products/30")
                         .then().log().all();
 
                 response.statusCode(HttpStatus.NOT_FOUND.value());
