@@ -30,6 +30,7 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NonExistProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.InValidPassword;
+import woowacourse.shoppingcart.exception.OverQuantityException;
 
 @RestControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
@@ -86,7 +87,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
             AlreadyCartItemExistException.class,
-            InValidPassword.class
+            InValidPassword.class,
+            OverQuantityException.class
     })
     public ErrorResponse handleInvalidAccess(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());

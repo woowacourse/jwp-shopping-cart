@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.exception.AlreadyCartItemExistException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NonExistProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.OverQuantityException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -40,6 +41,7 @@ public class CartService {
         customerSpec.validateCustomerExists(customerId);
         validateExistProduct(productId);
         validateExistCartItem(customerId, productId);
+        validateIsOverQuantity(productId, count);
         try {
             return cartItemDao.addCartItem(customerId, productId, count);
         } catch (Exception e) {
@@ -47,8 +49,15 @@ public class CartService {
         }
     }
 
-    private void validateExistProduct(long productId) {
+    private void validateIsOverQuantity(long productId, long count) {
+        Product findProduct = productDao.findProductById(productId);
+        Long quantity = findProduct.getQuantity();
+        if (quantity < count) {
+            throw new OverQuantityException();
+        }
+    }
 
+    private void validateExistProduct(long productId) {
         try {
             productDao.findProductById(productId);
         } catch (Exception e) {

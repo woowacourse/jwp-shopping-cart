@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.CartFixture.장바구니_삭제_검증;
 import static woowacourse.fixture.CartFixture.장바구니_상품_삭제_요청;
 import static woowacourse.fixture.CartFixture.장바구니_상품_목록_조회_요청;
@@ -17,6 +18,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -64,7 +66,18 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(errorResponse.getMessage()).isEqualTo("존재하지 않는 상품 ID입니다.");
+    }
 
+    @DisplayName("장바구니 상품 추가 : 비정상 - 재고 수량 부족")
+    @Test
+    void addCartItem_ex_non_exist_over_quantity() {
+        ExtractableResponse<Response> response = 장바구니_상품_추가_요청(token, customerId, productId1, 20_001);
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("재고가 부족합니다.")
+        );
     }
 
     @DisplayName("장바구니 상품을 중복하여 담을 경우 예외를 반환한다")
