@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CartDeleteRequest;
+import woowacourse.shoppingcart.application.dto.CartServiceResponse;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartSaveRequest;
 import woowacourse.shoppingcart.dto.CartUpdateRequest;
@@ -69,7 +70,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getList(".", CartResponse.class)).usingRecursiveComparison()
+                () -> assertThat(response.jsonPath().getList(".", CartServiceResponse.class)).usingRecursiveComparison()
                         .ignoringFields("id")
                         .isEqualTo(List.of(
                                 new CartResponse(null, productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 1),

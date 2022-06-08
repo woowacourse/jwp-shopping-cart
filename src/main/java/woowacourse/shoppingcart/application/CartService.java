@@ -12,7 +12,7 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.AlreadyInCartException;
-import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.application.dto.CartServiceResponse;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
@@ -42,9 +42,9 @@ public class CartService {
         return cartItemDao.addCartItem(customer.getId(), product.getId(), request.getQuantity());
     }
 
-    public List<CartResponse> findAllByCustomerId(final Long id) {
+    public List<CartServiceResponse> findAllByCustomerId(final Long id) {
         return cartItemDao.findAllByCustomerId(id).stream()
-                .map(CartResponse::from)
+                .map(CartServiceResponse::from)
                 .collect(Collectors.toList());
     }
 

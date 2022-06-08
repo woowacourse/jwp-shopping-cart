@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.*;
-import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.application.dto.CartServiceResponse;
 import woowacourse.shoppingcart.exception.AlreadyInCartException;
 import woowacourse.shoppingcart.util.PasswordEncryptor;
 import java.util.List;
@@ -94,8 +94,8 @@ class CartServiceTest {
         // then
         assertThat(cartService.findAllByCustomerId(1L)).usingRecursiveComparison()
                 .isEqualTo(List.of(
-                        new CartResponse(1L, 1L, "치킨", 3000, "www.chicken.com", 5),
-                        new CartResponse(2L, 2L, "피자", 4000, "www.pizza.com", 5)
+                        new CartServiceResponse(1L, 1L, "치킨", 3000, "www.chicken.com", 5),
+                        new CartServiceResponse(2L, 2L, "피자", 4000, "www.pizza.com", 5)
                 ));
     }
 

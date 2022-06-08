@@ -1,6 +1,8 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.application.dto;
 
-public class CartResponse {
+import woowacourse.shoppingcart.domain.Cart;
+
+public class CartServiceResponse {
 
     private final Long id;
     private final Long productId;
@@ -9,7 +11,7 @@ public class CartResponse {
     private final String imageUrl;
     private final int quantity;
 
-    public CartResponse(final Long id, final Long productId, final String name,
+    public CartServiceResponse(final Long id, final Long productId, final String name,
                                final int price, final String imageUrl, final int quantity) {
         this.id = id;
         this.productId = productId;
@@ -17,6 +19,10 @@ public class CartResponse {
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
+    }
+
+    public static CartServiceResponse from(final Cart cart) {
+        return new CartServiceResponse(cart.getId(), cart.getProductId(), cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getQuantity());
     }
 
     public Long getId() {
