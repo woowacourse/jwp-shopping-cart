@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static woowacourse.fixture.Fixture.BEARER;
@@ -31,6 +32,7 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.CartItemResponseDto;
+import woowacourse.shoppingcart.dto.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.service.CartService;
 
 class CartItemControllerTest extends ControllerTest {
@@ -121,5 +123,34 @@ class CartItemControllerTest extends ControllerTest {
                 .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("장바구니에 담긴 물건의 수량을 수정한다.")
+    void updateCartItem() throws Exception{
+        doNothing().when(authService).checkAuthorization(any(), any());
+        when(cartService.addCart(any(), any())).thenReturn(1L);
+
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
+        mockMvc.perform(post("/api/customers/1/carts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+                        .content(objectMapper.writeValueAsString(addCartItemRequestDto)))
+                .andDo(print())
+                .andReturn()
+                .getResponse();
+
+        final UpdateCartItemCountItemRequest updateCartItemCountItemRequest = new UpdateCartItemCountItemRequest(2);
+        final MockHttpServletResponse response = mockMvc.perform(patch("/api/customers/1/carts?productId=1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+                        .content(objectMapper.writeValueAsString(updateCartItemCountItemRequest)))
+                .andDo(print())
+                .andReturn()
+                .getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 }
