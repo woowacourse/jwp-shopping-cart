@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.cart.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.cart.CartItemResponse;
 import woowacourse.shoppingcart.dto.cart.CartItemUpdateRequest;

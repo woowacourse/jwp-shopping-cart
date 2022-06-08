@@ -1,12 +1,23 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.regex.Pattern;
+
+/*
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
+
+^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{8,20}$", message = "잘못된 비밀번호 형식입니다.")
+    private String password;
+
+    @Pattern(regexp = "^[가-힣A-Za-z0-9]{2,8}$
+ */
 
 public class Customer {
 
     private final Long id;
     private final String email;
-    private final String password;
+    private final Password password;
     private final String nickname;
 
     public Customer(String email, String password, String nickname) {
@@ -16,7 +27,7 @@ public class Customer {
     public Customer(Long id, String email, String password, String nickname) {
         this.id = id;
         this.email = email;
-        this.password = password;
+        this.password = new Password(password);
         this.nickname = nickname;
     }
 
@@ -25,7 +36,7 @@ public class Customer {
     }
 
     public String getPassword() {
-        return password;
+        return password.getValue();
     }
 
     public String getNickname() {
@@ -37,6 +48,6 @@ public class Customer {
     }
 
     public boolean isValidPassword(String password) {
-        return this.password.equals(password);
+        return this.password.isValidPassword(password);
     }
 }

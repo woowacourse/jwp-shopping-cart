@@ -6,7 +6,7 @@ import woowacourse.auth.exception.InvalidLoginFormException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.customer.InvalidCustomerBadRequestException;
 
 @Service
