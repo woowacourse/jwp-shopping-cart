@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.order.Orders;
 
 public class OrderResponse {
     private final long id;

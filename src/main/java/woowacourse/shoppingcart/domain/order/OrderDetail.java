@@ -1,5 +1,6 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.order;
 
+import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.product.Product;
 
 public class OrderDetail {

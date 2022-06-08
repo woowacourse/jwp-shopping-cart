@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.OrderRepository;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Quantity;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.order.OrderRepository;
+import woowacourse.shoppingcart.domain.order.Orders;
 import woowacourse.shoppingcart.entity.OrderDetailEntity;
 
 @Repository
