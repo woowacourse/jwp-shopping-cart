@@ -19,7 +19,6 @@ import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.IllegalCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -46,7 +45,6 @@ public class ControllerAdvice {
             IllegalArgumentException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
-            InvalidOrderException.class,
             NotInCustomerCartItemException.class,
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,

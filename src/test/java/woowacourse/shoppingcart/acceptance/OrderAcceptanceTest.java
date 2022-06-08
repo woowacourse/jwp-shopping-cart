@@ -51,70 +51,12 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         주문하기_성공함(response);
     }
 
-    @DisplayName("주문 내역 조회")
-    @Test
-    void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(new CartItemsRequest(List.of(productId1)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(new CartItemsRequest(List.of(productId2)));
-
-        SimpleResponse response = 주문_내역_조회_요청();
-
-        //주문_조회_응답됨(response);
-        //주문_내역_포함됨(response, orderId1, orderId2);
-    }
-
-    @DisplayName("주문 단일 조회")
-    @Test
-    void getOrder() {
-        Long orderId = 주문하기_요청_성공되어_있음(new CartItemsRequest(List.of(productId1, productId2)));
-
-//        ExtractableResponse<Response> response = 주문_단일_조회_요청(orderId);
-
-//        주문_조회_응답됨(response);
-//        주문_조회됨(response, orderId);
-    }
-
     public static SimpleResponse 주문하기_요청(CartItemsRequest cartItemsRequest) {
         return SimpleRestAssured.postWithToken("/orders", getTokenByLogin(), cartItemsRequest);
     }
-
-    public static SimpleResponse 주문_내역_조회_요청() {
-        return SimpleRestAssured.getWithToken("/orders", getTokenByLogin());
-    }
-
-    public static ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
-                .then().log().all()
-                .extract();
-    }
-
     public static void 주문하기_성공함(SimpleResponse response) {
         response.assertStatus(HttpStatus.CREATED);
         response.assertHeader("Location", "/orders/1");
-    }
-
-    public static Long 주문하기_요청_성공되어_있음(CartItemsRequest cartItemsRequest) {
-        SimpleResponse response = 주문하기_요청(cartItemsRequest);
-        return response.getIdFromLocation("/orders/");
-    }
-
-    public static void 주문_조회_응답됨(SimpleResponse response) {
-        response.assertStatus(HttpStatus.OK);
-    }
-//
-//    public static void 주문_내역_포함됨(SimpleResponse response, Long... orderIds) {
-//        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-//                .map(Orders::getId)
-//                .collect(Collectors.toList());
-//        assertThat(resultOrderIds).contains(orderIds);
-//    }
-
-    private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-        Orders resultOrder = response.as(Orders.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
     }
 
     private static String getTokenByLogin() {
