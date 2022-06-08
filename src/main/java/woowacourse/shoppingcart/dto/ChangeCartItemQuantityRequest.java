@@ -1,12 +1,12 @@
 package woowacourse.shoppingcart.dto;
 
-public class CartItemChangeQuantityRequest {
+public class ChangeCartItemQuantityRequest {
     private int quantity;
 
-    public CartItemChangeQuantityRequest() {
+    public ChangeCartItemQuantityRequest() {
     }
 
-    public CartItemChangeQuantityRequest(int quantity) {
+    public ChangeCartItemQuantityRequest(int quantity) {
         this.quantity = quantity;
     }
 

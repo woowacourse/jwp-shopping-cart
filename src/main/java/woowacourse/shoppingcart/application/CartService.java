@@ -6,10 +6,10 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartItemChangeQuantityRequest;
+import woowacourse.shoppingcart.dto.ChangeCartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -31,7 +31,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<CartItemResponse> showCartItems(final LoginCustomer customer) {
+    public List<CartItemResponse> showCartItems(final Customer customer) {
         final List<CartItem> cartIds = findCartIdsByCustomerName(customer.getNickname());
         return findCartItems(cartIds);
     }
@@ -55,8 +55,8 @@ public class CartService {
           cartItem.getQuantity(), product.getImageUrl());
     }
 
-    public Long addCart(LoginCustomer loginCustomer, final Long productId) {
-        final Long customerId = customerDao.findIdByNickname(loginCustomer.getNickname());
+    public Long addCart(Customer customer, final Long productId) {
+        final Long customerId = customerDao.findIdByNickname(customer.getNickname());
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
@@ -64,7 +64,7 @@ public class CartService {
         }
     }
 
-    public void deleteCart(LoginCustomer customer, Long productId) {
+    public void deleteCart(Customer customer, Long productId) {
         validateCustomerCart(customer.getNickname(), productId);
         cartItemDao.deleteCartItem(customer.getId(), productId);
     }
@@ -77,9 +77,9 @@ public class CartService {
           .orElseThrow(NotInCustomerCartItemException::new);
     }
 
-    public void changeQuantity(LoginCustomer loginCustomer, CartItemChangeQuantityRequest request, Long productId) {
+    public void changeQuantity(Customer customer, ChangeCartItemQuantityRequest request, Long productId) {
         validateQuantityNegativeNumber(request.getQuantity());
-        cartItemDao.updateQuantityById(loginCustomer.getId(), request.getQuantity(), productId);
+        cartItemDao.updateQuantityById(customer.getId(), request.getQuantity(), productId);
     }
 
     private void validateQuantityNegativeNumber(int quantity) {

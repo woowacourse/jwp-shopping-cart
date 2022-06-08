@@ -18,9 +18,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartItemChangeQuantityRequest;
+import woowacourse.shoppingcart.dto.ChangeCartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.dto.LoginCustomer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -51,12 +50,13 @@ public class CartItemServiceTest {
         // given
         String email = "beomWhale@naver.com";
         String nickname = "beomWhale";
-        Long customerId = createCustomer(email, nickname, "Password1234!");
+        String password = "Password1234!";
+        Long customerId = createCustomer(email, nickname, password);
         Long productId = createProduct("치킨", 10000, "imageUrl");
-        LoginCustomer loginCustomer = new LoginCustomer(customerId, email, nickname);
+        Customer customer = new Customer(customerId, email, nickname, password);
 
         // when
-        Long cartItemId = cartService.addCart(loginCustomer, productId);
+        Long cartItemId = cartService.addCart(customer, productId);
 
         // then
         assertThat(cartItemId).isNotNull();
@@ -68,13 +68,14 @@ public class CartItemServiceTest {
         // given
         String email = "beomWhale@naver.com";
         String nickname = "beomWhale";
-        Long customerId = createCustomer(email, nickname, "Password1234!");
+        String password = "Password1234!";
+        Long customerId = createCustomer(email, nickname, password);
         Long productId = createProduct("치킨", 10000, "imageUrl");
-        LoginCustomer loginCustomer = new LoginCustomer(customerId, email, nickname);
-        Long cartItemId = cartService.addCart(loginCustomer, productId);
+        Customer customer = new Customer(customerId, email, nickname, password);
+        Long cartItemId = cartService.addCart(customer, productId);
 
         // when
-        List<CartItemResponse> cartItemResponses = cartService.showCartItems(loginCustomer);
+        List<CartItemResponse> cartItemResponses = cartService.showCartItems(customer);
 
         // then
         CartItemResponse cartItemResponse = cartItemResponses.get(0);
@@ -87,15 +88,16 @@ public class CartItemServiceTest {
         // given
         String email = "beomWhale@naver.com";
         String nickname = "beomWhale";
-        Long customerId = createCustomer(email, nickname, "Password1234!");
+        String password = "Password1234!";
+        Long customerId = createCustomer(email, nickname, password);
         Long productId = createProduct("치킨", 10000, "imageUrl");
-        LoginCustomer loginCustomer = new LoginCustomer(customerId, email, nickname);
-        cartService.addCart(loginCustomer, productId);
+        Customer customer = new Customer(customerId, email, nickname, password);
+        Long cartItemId = cartService.addCart(customer, productId);
 
         // when
         int changeQuantity = 10;
-        cartService.changeQuantity(loginCustomer, new CartItemChangeQuantityRequest(changeQuantity), productId);
-        List<CartItemResponse> cartItemResponses = cartService.showCartItems(loginCustomer);
+        cartService.changeQuantity(customer, new ChangeCartItemQuantityRequest(changeQuantity), productId);
+        List<CartItemResponse> cartItemResponses = cartService.showCartItems(customer);
 
         // then
         CartItemResponse cartItemResponse = cartItemResponses.get(0);
@@ -108,14 +110,16 @@ public class CartItemServiceTest {
         // given
         String email = "beomWhale@naver.com";
         String nickname = "beomWhale";
-        Long customerId = createCustomer(email, nickname, "Password1234!");
+        String password = "Password1234!";
+        Long customerId = createCustomer(email, nickname, password);
         Long productId = createProduct("치킨", 10000, "imageUrl");
-        LoginCustomer loginCustomer = new LoginCustomer(customerId, email, nickname);
+        Customer customer = new Customer(customerId, email, nickname, password);
+        Long cartItemId = cartService.addCart(customer, productId);
 
         // when && then
         int changeQuantity = -1;
         assertThatThrownBy(() ->
-          cartService.changeQuantity(loginCustomer, new CartItemChangeQuantityRequest(changeQuantity), productId))
+          cartService.changeQuantity(customer, new ChangeCartItemQuantityRequest(changeQuantity), productId))
           .isInstanceOf(IllegalArgumentException.class)
           .hasMessage("장바구니 상품 수량을 음수로 수정할 수 없습니다.");
     }
