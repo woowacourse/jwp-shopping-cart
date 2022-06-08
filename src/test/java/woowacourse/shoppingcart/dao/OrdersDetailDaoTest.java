@@ -101,7 +101,7 @@ class OrdersDetailDaoTest {
         orderRequests.add(new OrderRequest(productId2, 5));
         //when
 
-        int affectedQuery = ordersDetailDao.addAllOrdersDetails(ordersId, orderRequests);
+        int affectedQuery = ordersDetailDao.addAllOrdersDetails(ordersId, List.of(1L, 2L), List.of(3, 5));
         //then
         assertThat(affectedQuery).isEqualTo(2);
     }

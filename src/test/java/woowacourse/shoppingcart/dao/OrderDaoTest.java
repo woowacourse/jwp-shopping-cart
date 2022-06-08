@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
@@ -50,8 +49,10 @@ class OrderDaoTest {
         final Long customerId = 1L;
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("customerId", customerId);
-        namedParameterJdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (:customerId)", new MapSqlParameterSource(parameters));
-        namedParameterJdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (:customerId)", new MapSqlParameterSource(parameters));
+        namedParameterJdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (:customerId)",
+                new MapSqlParameterSource(parameters));
+        namedParameterJdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (:customerId)",
+                new MapSqlParameterSource(parameters));
 
         //when
         final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
@@ -67,7 +68,8 @@ class OrderDaoTest {
         final Long customerId = 1L;
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("customerId", customerId);
-        namedParameterJdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (:customerId)", new MapSqlParameterSource(parameters));
+        namedParameterJdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (:customerId)",
+                new MapSqlParameterSource(parameters));
         //when
 
         //then

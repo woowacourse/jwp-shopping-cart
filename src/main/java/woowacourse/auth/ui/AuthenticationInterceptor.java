@@ -9,7 +9,6 @@ import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.RequestTokenContext;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
-import woowacourse.shoppingcart.exception.TokenExpiredException;
 
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor {

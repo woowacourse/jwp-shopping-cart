@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
 
 @Repository
 public class OrdersDetailDao {
@@ -54,20 +53,19 @@ public class OrdersDetailDao {
         return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), orderDetailRowMapper);
     }
 
-    public int addAllOrdersDetails(Long ordersId, List<OrderRequest> orderDetailRequests) {
+    public int addAllOrdersDetails(Long ordersId, List<Long> productIds, List<Integer> quantities) {
         String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) " +
                 "values (:ordersId, :productId, :quantity)";
-        Map<String, Object>[] batchValues = toBatchValues(ordersId, orderDetailRequests);
+        Map<String, Object>[] batchValues = toBatchValues(ordersId, productIds, quantities);
         return namedParameterJdbcTemplate.batchUpdate(sql, batchValues).length;
     }
 
-    private Map<String, Object>[] toBatchValues(Long createdOrdersId, List<OrderRequest> orderDetailRequests) {
-        Map<String, Object>[] batchValues = new Map[orderDetailRequests.size()];
-        for (int i = 0; i < orderDetailRequests.size(); i++) {
-            OrderRequest orderRequest = orderDetailRequests.get(i);
-            Map<String, Object> parameters = new MapSqlParameterSource("ordersId", createdOrdersId)
-                    .addValue("productId", orderRequest.getProductId())
-                    .addValue("quantity", orderRequest.getQuantity())
+    private Map<String, Object>[] toBatchValues(Long ordersId, List<Long> productIds, List<Integer> quantities) {
+        Map<String, Object>[] batchValues = new Map[productIds.size()];
+        for (int i = 0; i < batchValues.length; i++) {
+            Map<String, Object> parameters = new MapSqlParameterSource("ordersId", ordersId)
+                    .addValue("productId", productIds.get(i))
+                    .addValue("quantity", quantities.get(i))
                     .getValues();
             batchValues[i] = parameters;
         }

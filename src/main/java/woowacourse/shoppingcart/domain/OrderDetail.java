@@ -8,10 +8,6 @@ public class OrderDetail {
     private final String name;
     private final String imageUrl;
 
-    public OrderDetail(final Product product, final int quantity) {
-        this(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
-    }
-
     public OrderDetail(final Long productId, final int price, final String name,
                        final String imageUrl, final int quantity) {
         this.productId = productId;
@@ -39,5 +35,9 @@ public class OrderDetail {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public int calculateCost() {
+        return price * quantity;
     }
 }
