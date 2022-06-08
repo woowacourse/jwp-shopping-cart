@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.MemberUpdateRequest;
@@ -22,6 +21,8 @@ import woowacourse.auth.dto.request.PasswordRequest;
 import woowacourse.auth.dto.response.CheckResponse;
 import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.dto.response.MemberResponse;
+import woowacourse.auth.dto.response.PasswordCheckResponse;
+import woowacourse.auth.support.AuthenticationPrincipal;
 
 @RestController
 @Validated
@@ -53,10 +54,10 @@ public class AuthController {
     }
 
     @PostMapping("/members/password-check")
-    public ResponseEntity<CheckResponse> confirmPassword(@AuthenticationPrincipal long memberId,
-                                                         @RequestBody PasswordRequest passwordRequest) {
+    public ResponseEntity<PasswordCheckResponse> confirmPassword(@AuthenticationPrincipal long memberId,
+                                                                 @RequestBody PasswordRequest passwordRequest) {
         boolean actual = authService.checkPassword(memberId, passwordRequest.getPassword());
-        return ResponseEntity.ok(new CheckResponse(actual));
+        return ResponseEntity.ok(new PasswordCheckResponse(actual));
     }
 
     @GetMapping("/members/me")

@@ -40,6 +40,7 @@ import woowacourse.auth.dto.response.CheckResponse;
 import woowacourse.auth.dto.response.ErrorResponse;
 import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.dto.response.MemberResponse;
+import woowacourse.auth.dto.response.PasswordCheckResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
@@ -176,8 +177,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response =
                 postWithAuthorization(PASSWORD_CHECK_URI, token, new PasswordRequest(password));
-        boolean success = response.as(CheckResponse.class)
-                .isUnique();
+        boolean success = response.as(PasswordCheckResponse.class)
+                .isSuccess();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
