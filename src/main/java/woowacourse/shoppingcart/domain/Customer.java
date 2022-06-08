@@ -6,7 +6,7 @@ public class Customer {
 
     private static final String EMAIL_REGEX = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
     private static final String PASSWORD_REGEX = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,20}$";
-    private static final String NICKNAME_REGEX = "^*[a-zA-Z0-9]{1,10}$";
+    private static final String NICKNAME_REGEX = "^[A-Za-z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{1,10}$";
 
     private Long id;
     private final String email;
