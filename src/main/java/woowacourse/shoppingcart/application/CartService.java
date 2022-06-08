@@ -20,12 +20,10 @@ public class CartService {
     private static final int INITIAL_QUANTITY = 1;
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
@@ -47,17 +45,6 @@ public class CartService {
             carts.add(new Cart(cartId, product));
         }
         return carts;
-    }
-
-    public Long addCart(final Long productId, final String customerName) {
-        // TODO : 레거시
-        final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(CustomerNotFoundException::new);
-        try {
-            return cartItemDao.addCartItem(customerId, productId, 0);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
     }
 
     public void deleteCart(final Long customerId, final List<Long> cartIds) {

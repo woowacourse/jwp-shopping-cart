@@ -62,17 +62,4 @@ public class CartItemController {
         cartService.update(customerId, request.getProductId(), request.getQuantity());
         return ResponseEntity.noContent().build();
     }
-
-    @PostMapping("/customers/{customerName}/carts")
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                            @PathVariable final String customerName) {
-        //TODO: 레거시
-        final Long cartId = cartService.addCart(product.getId(), customerName);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
-        return ResponseEntity.created(responseLocation).build();
-    }
 }
