@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.dto.request.AddressRequest;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.entity.AddressEntity;
 import woowacourse.shoppingcart.entity.CustomerEntity;
@@ -46,16 +45,12 @@ public class Fixtures {
     public static final boolean TERMS_2 = true;
 
     // requests
-    public static final AddressRequest ADDRESS_REQUEST_1 = new AddressRequest(ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
-            ZONE_CODE_VALUE_1);
     public static final CustomerRequest CUSTOMER_REQUEST_1 = new CustomerRequest(EMAIL_VALUE_1, PASSWORD_VALUE_1,
             PROFILE_IMAGE_URL_VALUE_1, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_FORMATTED_VALUE_1, CONTACT_VALUE_1,
-            ADDRESS_REQUEST_1, true);
-    public static final AddressRequest ADDRESS_REQUEST_2 = new AddressRequest(ADDRESS_VALUE_2, DETAIL_ADDRESS_VALUE_2,
-            ZONE_CODE_VALUE_2);
+            ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1, ZONE_CODE_VALUE_1, true);
     public static final CustomerRequest CUSTOMER_REQUEST_2 = new CustomerRequest(EMAIL_VALUE_2, PASSWORD_VALUE_2,
             PROFILE_IMAGE_URL_VALUE_2, NAME_VALUE_2, GENDER_MALE, BIRTHDAY_FORMATTED_VALUE_2, CONTACT_VALUE_2,
-            ADDRESS_REQUEST_2, true);
+            ADDRESS_VALUE_2, DETAIL_ADDRESS_VALUE_2, ZONE_CODE_VALUE_2, true);
     public static final TokenRequest TOKEN_REQUEST_1 = new TokenRequest(EMAIL_VALUE_1, PASSWORD_VALUE_1);
     public static final TokenRequest TOKEN_REQUEST_2 = new TokenRequest(EMAIL_VALUE_2, PASSWORD_VALUE_2);
 
@@ -78,5 +73,5 @@ public class Fixtures {
     // invalid fixtures
     public static CustomerRequest CUSTOMER_INVALID_REQUEST_1 = new CustomerRequest("seongwoo0513", "string&123",
             "http://gravatar.com/avatar/1?d=identicon",
-            "조동현", "male", "1999-03-23", "01012345678", new AddressRequest("서울특별시 성동구 왕십리역", "길바닥", "54321"), true);
+            "조동현", "male", "1999-03-23", "01012345678", "서울특별시 성동구 왕십리역", "길바닥", "54321", true);
 }

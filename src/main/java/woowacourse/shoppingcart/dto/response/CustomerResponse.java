@@ -7,21 +7,25 @@ public class CustomerResponse {
     private String gender;
     private String birthday;
     private String contact;
-    private AddressResponse fullAddress;
+    private String address;
+    private String detailAddress;
+    private String zoneCode;
     private boolean terms;
 
     public CustomerResponse() {
     }
 
     public CustomerResponse(String email, String profileImageUrl, String name, String gender, String birthday,
-                            String contact, AddressResponse fullAddress, boolean terms) {
+                            String contact, String address, String detailAddress, String zoneCode, boolean terms) {
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
         this.contact = contact;
-        this.fullAddress = fullAddress;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.zoneCode = zoneCode;
         this.terms = terms;
     }
 
@@ -49,8 +53,16 @@ public class CustomerResponse {
         return contact;
     }
 
-    public AddressResponse getFullAddress() {
-        return fullAddress;
+    public String getAddress() {
+        return address;
+    }
+
+    public String getDetailAddress() {
+        return detailAddress;
+    }
+
+    public String getZoneCode() {
+        return zoneCode;
     }
 
     public boolean isTerms() {
@@ -66,7 +78,9 @@ public class CustomerResponse {
                 ", gender='" + gender + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", contact='" + contact + '\'' +
-                ", fullAddress=" + fullAddress +
+                ", address='" + address + '\'' +
+                ", detailAddress='" + detailAddress + '\'' +
+                ", zoneCode='" + zoneCode + '\'' +
                 ", terms=" + terms +
                 '}';
     }
