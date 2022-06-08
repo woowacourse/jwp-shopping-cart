@@ -34,8 +34,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {
-        final Long productId = productService.addProduct(product);
+    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final ProductRequestDto productRequestDto) {
+        final Long productId = productService.addProduct(productRequestDto);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/" + productId)
@@ -52,5 +52,11 @@ public class ProductController {
     public ResponseEntity<Void> delete(@PathVariable final Long productId) {
         productService.deleteProductById(productId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/many")
+    public ResponseEntity<Void> addProducts(@RequestBody final List<ProductRequestDto> products){
+        productService.addProducts(products);
+        return ResponseEntity.ok().build();
     }
 }
