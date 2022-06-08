@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.ProductIdsRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
@@ -28,11 +29,18 @@ public class CartService {
     }
 
     public List<ProductResponse> findCartProductByCustomerId(final Long customerId) {
+        checkExistById(customerId);
         final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
 
         return cartIds.stream()
                 .map(this::findProductRequestByCartId)
                 .collect(Collectors.toList());
+    }
+
+    private void checkExistById(Long customerId) {
+        if (!customerDao.existById(customerId)) {
+            throw new InvalidCustomerException();
+        }
     }
 
     private ProductResponse findProductRequestByCartId(Long cartId) {
@@ -43,6 +51,7 @@ public class CartService {
     }
 
     public Long addCart(final Long customerId, final CartRequest cartRequest) {
+        checkExistById(customerId);
         try {
             validateQuantity(cartRequest.getQuantity());
             return cartItemDao.addCartItem(customerId, cartRequest.getId(), cartRequest.getQuantity());
@@ -58,12 +67,14 @@ public class CartService {
     }
 
     public void deleteCart(final Long customerId, final ProductIdsRequest productIds) {
+        checkExistById(customerId);
         for (Long productId : productIds.getProductIds()) {
             cartItemDao.deleteCartItem(customerId, productId);
         }
     }
 
     public void updateCartQuantity(Long customerId, CartRequest cartRequest) {
+        checkExistById(customerId);
         cartItemDao.updateQuantity(customerId, cartRequest.getId(), cartRequest.getQuantity());
     }
 }
