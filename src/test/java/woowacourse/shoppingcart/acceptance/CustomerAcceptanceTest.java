@@ -56,7 +56,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.getAccessToken()).isNotNull(),
-                () -> assertThat(response.getCustomerId()).isNotNull()
+                () -> assertThat(response.getUserId()).isNotNull()
         );
 
     }
@@ -76,7 +76,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                     로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
 
             ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(),
-                    signInResponse.getCustomerId());
+                    signInResponse.getUserId());
             final CustomerResponse customerResponse = response.body()
                     .jsonPath()
                     .getObject("", CustomerResponse.class);
@@ -118,13 +118,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .put("/api/customers/" + signInResponse.getCustomerId())
+                .put("/api/customers/" + signInResponse.getUserId())
                 .then()
                 .log().all()
                 .extract();
 
         ExtractableResponse<Response> updatedCustomerInformation = 회원_조회(signInResponse.getAccessToken(),
-                signInResponse.getCustomerId());
+                signInResponse.getUserId());
         final CustomerResponse customerResponse = updatedCustomerInformation.body()
                 .jsonPath()
                 .getObject("", CustomerResponse.class);
@@ -142,8 +142,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         TokenResponse signInResponse =
                 로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
-        회원_탈퇴(signInResponse.getAccessToken(), signInResponse.getCustomerId());
-        ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(), signInResponse.getCustomerId());
+        회원_탈퇴(signInResponse.getAccessToken(), signInResponse.getUserId());
+        ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(), signInResponse.getUserId());
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 

@@ -78,7 +78,7 @@ class CustomerServiceTest {
         AddressResponse tokenPayloadDto = mapper.readValue(tokenProvider.getPayload(response.getAccessToken()),
                 AddressResponse.class);
         assertThat(tokenPayloadDto.getEmail()).isEqualTo(email);
-        assertThat(response.getCustomerId()).isNotNull();
+        assertThat(response.getUserId()).isNotNull();
     }
 
     private Long signUpCustomer() {
