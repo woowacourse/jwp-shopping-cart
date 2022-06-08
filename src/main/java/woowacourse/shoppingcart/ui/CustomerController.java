@@ -28,7 +28,7 @@ public class CustomerController {
     public ResponseEntity<Void> signUp(@RequestBody @Valid CustomerRequest customerRequest) {
         customerService.addCustomer(customerRequest);
         return ResponseEntity.created(
-                URI.create("/api/customers/" + customerRequest.getName())).build();
+                URI.create("/api/customers/" + customerRequest.getUserName())).build();
     }
 
     @PutMapping("/me")

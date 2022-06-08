@@ -26,7 +26,7 @@ public class CustomerService {
     }
 
     public void addCustomer(final CustomerRequest customerRequest) {
-        Customer customer = new Customer(customerRequest.getName(), customerRequest.getPassword(), encryptor);
+        Customer customer = new Customer(customerRequest.getUserName(), customerRequest.getPassword(), encryptor);
         if (customerDao.existsByName(customer.getName())) {
             throw new DuplicateNameException();
         }
