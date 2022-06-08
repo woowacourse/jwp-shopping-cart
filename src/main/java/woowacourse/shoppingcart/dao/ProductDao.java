@@ -31,7 +31,7 @@ public class ProductDao {
 
 	public Product findById(final Long id) {
 		try {
-			final String sql = "SELECT id, name, price, image_url FROM product WHERE id = :id";
+			final String sql = "select id, name, price, image_url from product where id = :id";
 			return jdbcTemplate.queryForObject(sql, Map.of("id", id), getProductMapper());
 		} catch (EmptyResultDataAccessException exception) {
 			throw new InvalidProductException(ErrorCode.PRODUCT_NOT_FOUND, "해당 id의 상품이 존재하지 않습니다.");
@@ -39,7 +39,7 @@ public class ProductDao {
 	}
 
 	public List<Product> findAll() {
-		final String query = "SELECT id, name, price, image_url FROM product";
+		final String query = "select id, name, price, image_url from product";
 		return jdbcTemplate.query(query, getProductMapper());
 	}
 

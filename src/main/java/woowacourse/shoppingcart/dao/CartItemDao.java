@@ -46,7 +46,7 @@ public class CartItemDao {
 	}
 
 	public List<CartItem> findByCustomerId(Long customerId) {
-		String sql = "SELECT * FROM cart_item WHERE customer_id = :customerId";
+		String sql = "select * from cart_item where customer_id = :customerId";
 		return jdbcTemplate.query(sql,
 			Map.of("customerId", customerId),
 			getCartItemMapper()
@@ -70,7 +70,7 @@ public class CartItemDao {
 	}
 
 	public void deleteAll(List<Long> cartItemIds) {
-		String sql = "DELETE FROM cart_item WHERE id = :id";
+		String sql = "delete from cart_item where id = :id";
 		jdbcTemplate.batchUpdate(sql, createBatch(cartItemIds.stream()
 			.map(id -> Map.of("id", id))
 			.collect(Collectors.toList()))

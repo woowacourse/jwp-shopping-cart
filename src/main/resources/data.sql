@@ -1,4 +1,4 @@
-insert into PRODUCT (image_url, name, price) values
+insert into product (image_url, name, price) values
 (
     'https://cdn-mart.baemin.com/sellergoods/bulk/20200831-203011/14867-main-01.jpg',
     '우유(300ml)',

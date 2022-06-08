@@ -66,7 +66,7 @@ public class CustomerDao {
 	}
 
 	public void delete(Long id) {
-		String sql = "DELETE FROM customer WHERE id = :id";
+		String sql = "delete from customer where id = :id";
 		jdbcTemplate.update(sql, Map.of("id", id));
 	}
 

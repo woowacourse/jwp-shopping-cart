@@ -33,16 +33,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
 }
 
-ext.profile = (!project.hasProperty('profile') || !profile) ? 'dev' : profile
-
-sourceSets {
-    main {
-        resources {
-            srcDirs "src/main/resources", "src/main/resources-${profile}"
-        }
-    }
-}
-
 test {
     useJUnitPlatform()
 }
