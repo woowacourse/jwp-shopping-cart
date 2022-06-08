@@ -4,10 +4,12 @@ import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -25,9 +27,12 @@ public class ProductDao {
         );
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ProductDao(final JdbcTemplate jdbcTemplate) {
+    public ProductDao(final JdbcTemplate jdbcTemplate,
+                      NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public Product save(final Product product) {
@@ -65,5 +70,11 @@ public class ProductDao {
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
+    }
+
+    public List<Product> findInIds(List<Long> productIds) {
+        String sql = "select id, name, price, image_url from product where id in (:productIds)";
+        SqlParameterSource source = new MapSqlParameterSource("productIds", productIds);
+        return namedParameterJdbcTemplate.query(sql, source, ROW_MAPPER);
     }
 }

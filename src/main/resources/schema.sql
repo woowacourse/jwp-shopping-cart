@@ -34,14 +34,15 @@ create table product
 create table cart_item
 (
     id          bigint not null auto_increment,
-    customer_id bigint not null,
+    account_id bigint not null,
     product_id  bigint not null,
+    quantity int,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table cart_item
     add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references accounts (id);
+        foreign key (account_id) references accounts (id);
 
 alter table cart_item
     add constraint fk_cart_item_to_product

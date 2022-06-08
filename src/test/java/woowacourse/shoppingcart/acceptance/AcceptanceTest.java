@@ -141,4 +141,16 @@ public class AcceptanceTest {
             .then().log().all()
             .extract();
     }
+
+    protected ExtractableResponse<Response> 장바구니_추가_요청(String token, Long productId) {
+        return RestAssured
+            .given().log().all()
+            .header(org.apache.http.HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(Map.of("productId", productId))
+            .when().log().all()
+            .post("/users/me/carts")
+            .then().log().all()
+            .extract();
+    }
 }

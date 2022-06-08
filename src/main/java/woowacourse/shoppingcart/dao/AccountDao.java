@@ -80,4 +80,5 @@ public class AccountDao {
         final String query = "UPDATE accounts SET password = ?, nickname = ? WHERE id = ?";
         jdbcTemplate.update(query, account.getPassword(), account.getNickname(), account.getId());
     }
+
 }

@@ -33,7 +33,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor)
-            .addPathPatterns("/users/me");
+            .addPathPatterns("/users/me/**");
 
         registry.addInterceptor(adminAuthenticationInterceptor)
             .addPathPatterns("/products/**");
