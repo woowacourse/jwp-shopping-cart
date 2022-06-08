@@ -1,12 +1,10 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -22,6 +20,7 @@ public class ProductDao {
                     resultSet.getString("image_url"),
                     resultSet.getInt("stock")
             );
+
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
