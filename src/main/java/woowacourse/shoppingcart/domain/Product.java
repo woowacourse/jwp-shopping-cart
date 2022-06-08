@@ -19,5 +19,4 @@ public class Product {
     public Product(final String name, final int price, final String imageUrl, final long quantity) {
         this(null, name, price, imageUrl, quantity);
     }
-
 }

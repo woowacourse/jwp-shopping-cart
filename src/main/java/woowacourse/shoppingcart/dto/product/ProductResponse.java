@@ -6,14 +6,14 @@ import woowacourse.shoppingcart.domain.Product;
 @Getter
 public class ProductResponse {
 
-    private final long id;
+    private final long productId;
     private final String thumbnailUrl;
     private final String name;
     private final long price;
     private final long quantity;
 
     public ProductResponse(Product product) {
-        this.id = product.getId();
+        this.productId = product.getId();
         this.thumbnailUrl = product.getImageUrl();
         this.name = product.getName();
         this.price = product.getPrice();
