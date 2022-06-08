@@ -1,66 +1,70 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
-@RequiredArgsConstructor
 public class ProductDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertActor;
+
+    public ProductDao(DataSource dataSource,
+                      NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(dataSource)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
+    }
 
     public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
-            return preparedStatement;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return insertActor.executeAndReturnKey(new MapSqlParameterSource()
+                .addValue("name", product.getName())
+                .addValue("price", product.getPrice())
+                .addValue("imageUrl", product.getImageUrl())
+                .addValue("quantity", product.getQuantity())
+        ).longValue();
     }
 
     public Product findProductById(final Long productId) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            final String query = "SELECT * FROM product WHERE id = :id";
+            // 주의
+            Map<String, Long> params = Map.of("id", productId);
+
+            return jdbcTemplate.queryForObject(query, params, rowMapper());
+        } catch (final EmptyResultDataAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
-                        ));
+        final String query = "SELECT * FROM product";
+        return jdbcTemplate.query(query, rowMapper());
     }
+    public void deleteById(final Long productId) {
+        final String query = "DELETE FROM product WHERE id = :id";
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", productId);
 
-    public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+        jdbcTemplate.update(query, namedParameters);
+    }
+    private RowMapper<Product> rowMapper() {
+        return (rs, rowNum) ->
+                new Product(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        rs.getString("image_url"),
+                        rs.getLong("quantity")
+                );
     }
 }

@@ -15,8 +15,8 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
-
     private final NamedParameterJdbcTemplate jdbcTemplate;
+
     private final SimpleJdbcInsert insertActor;
 
     public CustomerDao(DataSource dataSource,
@@ -25,6 +25,14 @@ public class CustomerDao {
         this.insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    public Long save(final Customer customer) {
+        return insertActor.executeAndReturnKey(new MapSqlParameterSource()
+                .addValue("email", customer.getEmail())
+                .addValue("username", customer.getUsername())
+                .addValue("password", customer.getPassword())
+        ).longValue();
     }
 
     public Long findIdByUserName(final String userName) {
@@ -87,14 +95,6 @@ public class CustomerDao {
         }
     }
 
-    public Long save(final Customer customer) {
-        return insertActor.executeAndReturnKey(new MapSqlParameterSource()
-                .addValue("email", customer.getEmail())
-                .addValue("username", customer.getUsername())
-                .addValue("password", customer.getPassword())
-        ).longValue();
-    }
-
     public void update(Long id, String username) {
         String sql = "update customer set username = :username "
                 + "where id = :id";
@@ -104,19 +104,19 @@ public class CustomerDao {
         );
     }
 
-    private RowMapper<Customer> rowMapper() {
-        return ((rs, rowNum) -> new Customer(
-                rs.getLong("id"),
-                rs.getString("email"),
-                rs.getString("username"),
-                rs.getString("password")
-        ));
-    }
-
     public void deleteById(Long id) {
         String sql = "delete from customer where id = :id";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
 
         jdbcTemplate.update(sql, namedParameters);
+    }
+
+    private RowMapper<Customer> rowMapper() {
+        return (rs, rowNum) -> new Customer(
+                rs.getLong("id"),
+                rs.getString("email"),
+                rs.getString("username"),
+                rs.getString("password")
+        );
     }
 }

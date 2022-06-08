@@ -11,7 +11,7 @@ import static woowacourse.fixture.OrderFixture.주문_조회_검증;
 import static woowacourse.fixture.OrderFixture.주문하기_성공함;
 import static woowacourse.fixture.OrderFixture.주문하기_요청;
 import static woowacourse.fixture.OrderFixture.주문하기_요청_성공_검증;
-import static woowacourse.fixture.ProductFixture.상품_등록되어_있음2;
+import static woowacourse.fixture.ProductFixture.상품_등록되어_있음;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -42,8 +42,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         String token = getToken();
 
-        Long productId1 = 상품_등록되어_있음2(token, "치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음2(token, "맥주", 20_000, "http://example.com/beer.jpg");
+        Long productId1 = 상품_등록되어_있음(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
+        Long productId2 = 상품_등록되어_있음(token, "맥주", 20_000, "http://example.com/beer.jpg", 30_000);
 
         cartId1 = 장바구니_아이템_추가_ID_반환(token, USER_NAME, productId1);
         cartId2 = 장바구니_아이템_추가_ID_반환(token, USER_NAME, productId2);

@@ -1,16 +1,16 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static woowacourse.fixture.CartFixture.장바구니_삭제_요청;
 import static woowacourse.fixture.CartFixture.장바구니_삭제_검증;
+import static woowacourse.fixture.CartFixture.장바구니_삭제_요청;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_응답_검증;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_조회_요청;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_포함_검증;
-import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_요청;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_ID_반환;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_검증;
+import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_요청;
 import static woowacourse.fixture.CustomFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.CustomFixture.회원가입_요청;
-import static woowacourse.fixture.ProductFixture.상품_등록되어_있음2;
+import static woowacourse.fixture.ProductFixture.상품_등록되어_있음;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -22,7 +22,7 @@ import woowacourse.global.AcceptanceTest;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+public class CartItemAcceptanceTest extends AcceptanceTest {
 
     private static final String USER = "puterism";
     private Long productId1;
@@ -34,8 +34,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         super.setUp();
         String token = getToken();
 
-        productId1 = 상품_등록되어_있음2(token, "치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음2(token, "맥주", 20_000, "http://example.com/beer.jpg");
+        productId1 = 상품_등록되어_있음(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
+        productId2 = 상품_등록되어_있음(token, "맥주", 20_000, "http://example.com/beer.jpg", 30_000);
     }
 
     @DisplayName("장바구니 아이템 추가")
@@ -77,7 +77,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private String getToken() {
         회원가입_요청(
                 new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
-        return token;
+        return 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
     }
 }

@@ -2,11 +2,11 @@ package woowacourse.shoppingcart.acceptance;
 
 import static woowacourse.fixture.CustomFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.CustomFixture.회원가입_요청;
-import static woowacourse.fixture.ProductFixture.상품_등록_요청2;
-import static woowacourse.fixture.ProductFixture.상품_등록되어_있음2;
+import static woowacourse.fixture.ProductFixture.상품_등록_요청;
+import static woowacourse.fixture.ProductFixture.상품_등록되어_있음;
 import static woowacourse.fixture.ProductFixture.상품_목록_조회_요청;
 import static woowacourse.fixture.ProductFixture.상품_목록_검증;
-import static woowacourse.fixture.ProductFixture.상품_삭제_요청2;
+import static woowacourse.fixture.ProductFixture.상품_삭제_요청;
 import static woowacourse.fixture.ProductFixture.상품_삭제_검증;
 import static woowacourse.fixture.ProductFixture.상품_조회_요청;
 import static woowacourse.fixture.ProductFixture.상품_조회_검증;
@@ -29,7 +29,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     void addProduct() {
         String token = getToken();
 
-        ExtractableResponse<Response> response = 상품_등록_요청2(token, "치킨", 10_000, "http://example.com/chicken.jpg");
+        ExtractableResponse<Response> response = 상품_등록_요청(token, "치킨", 10_000, "http://example.com/chicken.jpg",
+                20_000);
 
         상품_추가_검증(response);
     }
@@ -39,8 +40,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     void getProducts() {
         String token = getToken();
 
-        Long productId1 = 상품_등록되어_있음2(token, "치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음2(token, "맥주", 20_000, "http://example.com/beer.jpg");
+        Long productId1 = 상품_등록되어_있음(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
+        Long productId2 = 상품_등록되어_있음(token, "맥주", 20_000, "http://example.com/beer.jpg", 30_000);
 
         ExtractableResponse<Response> response = 상품_목록_조회_요청();
 
@@ -53,7 +54,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     void getProduct() {
         String token = getToken();
 
-        Long productId = 상품_등록되어_있음2(token, "치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId = 상품_등록되어_있음(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
 
         ExtractableResponse<Response> response = 상품_조회_요청(productId);
 
@@ -66,9 +67,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     void deleteProduct() {
         String token = getToken();
 
-        Long productId = 상품_등록되어_있음2(token, "치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId = 상품_등록되어_있음(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
 
-        ExtractableResponse<Response> response = 상품_삭제_요청2(token, productId);
+        ExtractableResponse<Response> response = 상품_삭제_요청(token, productId);
 
         상품_삭제_검증(response);
     }

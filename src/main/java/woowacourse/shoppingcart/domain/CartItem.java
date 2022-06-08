@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Cart {
+public class CartItem {
 
     private Long id;
     private Long productId;
@@ -15,7 +15,7 @@ public class Cart {
     private int price;
     private String imageUrl;
 
-    public Cart(final Long id, final Product product) {
+    public CartItem(final Long id, final Product product) {
         this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 }

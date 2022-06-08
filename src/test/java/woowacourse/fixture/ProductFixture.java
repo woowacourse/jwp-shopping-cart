@@ -18,20 +18,14 @@ public class ProductFixture {
     private ProductFixture() {
     }
 
-    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when().post("/api/products")
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 상품_등록_요청2(String token, String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+    public static ExtractableResponse<Response> 상품_등록_요청(
+            String token,
+            String name,
+            int price,
+            String imageUrl,
+            long quantity
+    ) {
+        Product productRequest = new Product(name, price, imageUrl, quantity);
         String path = "/api/products";
         return post(path, token, productRequest);
     }
@@ -55,16 +49,7 @@ public class ProductFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 상품_삭제_요청2(String token, Long productId) {
+    public static ExtractableResponse<Response> 상품_삭제_요청(String token, Long productId) {
         return delete("/api/products/{productId}", token, productId);
     }
 
@@ -74,8 +59,8 @@ public class ProductFixture {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 상품_등록되어_있음2(String token, String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+    public static Long 상품_등록되어_있음(String token, String name, int price, String imageUrl, long quantity) {
+        Product productRequest = new Product(name, price, imageUrl, quantity);
         String path = "/api/products";
         ExtractableResponse<Response> response = post(path, token, productRequest);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
