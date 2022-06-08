@@ -1,15 +1,13 @@
 package woowacourse.shoppingcart.service;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.response.CustomerDto;
 import woowacourse.shoppingcart.dto.request.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.request.SignUpDto;
 import woowacourse.shoppingcart.dto.request.UpdateCustomerDto;
-import woowacourse.shoppingcart.exception.DuplicateNameException;
+import woowacourse.shoppingcart.dto.response.CustomerDto;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.PasswordMismatchException;
 
@@ -31,12 +29,7 @@ public class CustomerService {
                 passwordEncoder.encrypt(signUpDto.getPassword()),
                 signUpDto.getUsername()
         );
-        try{
-            return customerDao.save(newCustomer);
-        }catch (DataIntegrityViolationException e){
-            throw new DuplicateNameException("이미 가입된 닉네임 입니다.");
-        }
-
+        return customerDao.save(newCustomer);
     }
 
     public CustomerDto findCustomerById(final Long id) {
@@ -49,12 +42,8 @@ public class CustomerService {
         final Customer updateCustomer = Customer.createWithoutEmailAndPassword(
                 id,
                 updateCustomerDto.getUsername());
-        try {
-            customerDao.update(updateCustomer);
-            return findCustomerById(updateCustomer.getId());
-        } catch (DataIntegrityViolationException e) {
-            throw new DuplicateNameException("수정하려는 이름이 이미 존재합니다.");
-        }
+        customerDao.update(updateCustomer);
+        return findCustomerById(updateCustomer.getId());
     }
 
     public void deleteCustomer(final Long id, final DeleteCustomerDto deleteCustomerDto) {

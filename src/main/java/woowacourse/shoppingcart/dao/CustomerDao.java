@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,9 +10,12 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.Username;
+import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
+import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -31,18 +35,20 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public Long save(final Customer customer) {
         final String query = "INSERT INTO customer(email, password, username) values(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, customer.getEmail());
-            preparedStatement.setString(2, customer.getPassword());
-            preparedStatement.setString(3, customer.getUsername());
-            return preparedStatement;
-        }, keyHolder);
+        try{
+            jdbcTemplate.update(connection -> {
+                final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
+                preparedStatement.setString(1, customer.getEmail());
+                preparedStatement.setString(2, customer.getPassword());
+                preparedStatement.setString(3, customer.getUsername());
+                return preparedStatement;
+            }, keyHolder);
+        } catch (DataIntegrityViolationException e){
+            throw new DuplicateNameException("이미 가입된 닉네임입니다.");
+        }
 
         return keyHolder.getKey().longValue();
     }
