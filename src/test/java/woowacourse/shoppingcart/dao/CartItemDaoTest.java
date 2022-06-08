@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.domain.Product;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -117,20 +118,14 @@ public class CartItemDaoTest {
 //        assertThat(cartIds).containsExactly(1L, 2L);
 //    }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("회원 id와 상품 id를 통해서 장바구니의 상품을 삭제할 수 있다.")
     @Test
     void deleteCartItem() {
-
         // given
-        final Long cartId = 1L;
+        Long customerId = 1L;
+        Long productId = 1L;
 
-        // when
-        cartItemDao.deleteCartItem(cartId);
-
-        // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        assertThat(productIds).containsExactly(2L);
+        // when & then
+        assertDoesNotThrow(() -> cartItemDao.deleteCartItem(customerId, productId));
     }
 }

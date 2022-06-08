@@ -85,12 +85,11 @@ public class CartItemDao {
         template.update(query, nameParameters);
     }
 
-    public void deleteCartItem(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
+    public void deleteCartItem(Long customerId, Long productId) {
+        String query = "DELETE FROM cart_item WHERE customer_id = :customer_id AND product_id = :product_id";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource("customer_id", customerId)
+                .addValue("product_id", productId);
 
-        final int rowCount = jdbcTemplate.update(sql, id);
-        if (rowCount == 0) {
-            throw new InvalidCartItemException();
-        }
+        template.update(query, nameParameters);
     }
 }

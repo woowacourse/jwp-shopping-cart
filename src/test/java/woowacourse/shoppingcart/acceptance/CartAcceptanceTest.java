@@ -74,15 +74,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
 
-//    @DisplayName("장바구니 삭제")
-//    @Test
-//    void deleteCartItem() {
-//        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
-//
-//        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-//
-//        장바구니_삭제됨(response);
-//    }
+    @DisplayName("장바구니의 아이템 단일 삭제")
+    @Test
+    void deleteCartItem() {
+        장바구니_아이템_추가되어_있음(accessToken, productId1);
+
+        ExtractableResponse<Response> response = 장바구니_단일_삭제_요청(accessToken, productId1);
+
+        장바구니_삭제됨(response);
+    }
+
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
         return RestAssured
                 .given().log().all()
@@ -103,11 +104,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_단일_삭제_요청(String accessToken, Long productId) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
+                .header("Authorization", "Bearer " + accessToken)
+                .when().delete("/api/carts/products/{id}", productId)
                 .then().log().all()
                 .extract();
     }

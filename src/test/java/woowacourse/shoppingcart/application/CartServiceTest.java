@@ -68,4 +68,16 @@ class CartServiceTest {
         List<CartItemResponse> cartItems = cartService.findAllByCustomerId(1L);
         assertThat(cartItems.get(0).getQuantity()).isEqualTo(2);
     }
+
+    @Test
+    @DisplayName("회원 id와 상품 id를 통해서 장바구니의 상품을 삭제할 수 있다.")
+    void deleteCartItem() {
+        // given
+        customerService.save(new CustomerSaveRequest("email@email.com", "password1234A!", "rookie"));
+        productService.save(new ProductSaveRequest("상품1", 1000, "https://www.test.com"));
+        cartService.saveCartItem(1L, 1L);
+
+        // when & then
+        assertDoesNotThrow(() -> cartService.deleteCartItem(1L, 1L));
+    }
 }

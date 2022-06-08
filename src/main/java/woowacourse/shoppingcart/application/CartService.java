@@ -76,9 +76,8 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCartItem(Long customerId, Long productId) {
+        cartItemDao.deleteCartItem(customerId, productId);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
