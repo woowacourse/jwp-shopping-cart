@@ -37,20 +37,20 @@ public class CustomerController {
     @PostMapping("/customers/signUp")
     public ResponseEntity<Void> signUp(final @RequestBody CustomerRequest request) {
         Long id = customerService.signUp(request);
-        return ResponseEntity.created(URI.create("/customers/" + id)).header("Access-Control-Allow-Origin", "*").build();
+        return ResponseEntity.created(URI.create("/customers/" + id)).build();
     }
 
     @PostMapping("/customers/login")
     public ResponseEntity<CustomerLoginResponse> login(final @RequestBody CustomerLoginRequest request) {
         CustomerLoginResponse response = customerService.login(request);
         String accessToken = jwtTokenProvider.createToken(String.valueOf(response.getId()));
-        return ResponseEntity.ok().header("Access-Control-Allow-Origin", "*").body(response.setToken(accessToken));
+        return ResponseEntity.ok().body(response.setToken(accessToken));
     }
 
     @GetMapping("/auth/customers/profile")
     public ResponseEntity<CustomerResponse> getProfile(final @AuthenticationPrincipal TokenRequest request) {
         CustomerResponse response = customerService.findById(request);
-        return ResponseEntity.ok().header("Access-Control-Allow-Origin", "*").body(response);
+        return ResponseEntity.ok().body(response);
     }
 
     @PatchMapping("/auth/customers/profile")
@@ -64,31 +64,31 @@ public class CustomerController {
     public ResponseEntity<Void> updatePassword(final @AuthenticationPrincipal TokenRequest tokenRequest,
                                                final @RequestBody PasswordChangeRequest passwordChangeRequest) {
         customerService.updatePassword(tokenRequest, passwordChangeRequest);
-        return ResponseEntity.ok().header("Access-Control-Allow-Origin", "*").build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/auth/customers/profile")
     public ResponseEntity<Void> withdraw(final @AuthenticationPrincipal TokenRequest request) {
         customerService.withdraw(request);
-        return ResponseEntity.noContent().header("Access-Control-Allow-Origin", "*").build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/customers/check", params = "userId")
     public ResponseEntity<Void> checkDuplicateUsername(final @RequestParam(name = "userId") String username) {
         customerService.checkDuplicateUsername(username);
-        return ResponseEntity.ok().header("Access-Control-Allow-Origin", "*").build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/customers/check", params = "nickname")
     public ResponseEntity<Void> checkDuplicateNickname(final @RequestParam String nickname) {
         customerService.checkDuplicateNickname(nickname);
-        return ResponseEntity.ok().header("Access-Control-Allow-Origin", "*").build();
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/auth/customers/match/password")
     public ResponseEntity<Void> matchPassword(final @AuthenticationPrincipal TokenRequest tokenRequest,
                                               final @RequestBody PasswordRequest passwordRequest) {
         customerService.matchPassword(tokenRequest, passwordRequest);
-        return ResponseEntity.ok().header("Access-Control-Allow-Origin", "*").build();
+        return ResponseEntity.ok().build();
     }
 }
