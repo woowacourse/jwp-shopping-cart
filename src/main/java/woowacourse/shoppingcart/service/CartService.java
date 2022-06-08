@@ -68,7 +68,7 @@ public class CartService {
 
     public void update(Long customerId, UpdateCartItemRequests updateCartItemRequests) {
         var cartIds = updateCartItemRequests.getCartItems().stream()
-                .map(UpdateCartItemRequest::getCartId)
+                .map(UpdateCartItemRequest::getId)
                 .collect(Collectors.toList());
 
         validateCustomerCart(customerId, cartIds);

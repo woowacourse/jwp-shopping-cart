@@ -12,7 +12,7 @@ public class UpdateCartItemRequest {
         this.checked = checked;
     }
 
-    public Long getCartId() {
+    public Long getId() {
         return id;
     }
 

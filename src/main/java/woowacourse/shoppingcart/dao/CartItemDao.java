@@ -86,7 +86,7 @@ public class CartItemDao {
         final String sql = "UPDATE cart_item SET quantity = (:quantity), checked = (:checked) WHERE customer_id = (:customer_id) AND id = (:id)";
 
         var paramSource = Map.of(
-                "id", updateCartItemRequest.getCartId(),
+                "id", updateCartItemRequest.getId(),
                 "customer_id", customerId,
                 "quantity", updateCartItemRequest.getQuantity(),
                 "checked", updateCartItemRequest.getChecked()
