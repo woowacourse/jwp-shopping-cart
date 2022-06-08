@@ -10,6 +10,9 @@ public class CartAdditionRequest {
     @Min(value = 1, message = "양수여야 합니다.")
     private int quantity;
 
+    private CartAdditionRequest() {
+    }
+
     public CartAdditionRequest(Long productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
