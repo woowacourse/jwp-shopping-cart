@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.domain.user.Customer;
+import woowacourse.common.exception.RedirectException;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
@@ -25,14 +26,12 @@ public class CartService {
     }
 
     @Transactional
-    public boolean registerNewCartItem(Customer customer, Long productId) {
-        boolean hasRegistered = false;
+    public void registerNewCartItem(Customer customer, Long productId) {
         Product product = productService.findProduct(productId);
-        if (!isRegisteredProduct(customer, product)) {
-            cartItemRepository.save(customer, new CartItem(product));
-            hasRegistered = true;
+        if (isRegisteredProduct(customer, product)) {
+            throw new RedirectException("이미 장바구니에 담긴 상품입니다.");
         }
-        return hasRegistered;
+        cartItemRepository.save(customer, new CartItem(product));
     }
 
     @Transactional

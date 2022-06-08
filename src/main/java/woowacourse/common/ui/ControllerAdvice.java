@@ -8,10 +8,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.common.dto.ErrorResponse;
+import woowacourse.common.dto.RedirectErrorResponse;
 import woowacourse.common.exception.AuthenticationException;
 import woowacourse.common.exception.ForbiddenException;
 import woowacourse.common.exception.InvalidRequestException;
 import woowacourse.common.exception.NotFoundException;
+import woowacourse.common.exception.RedirectException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -50,6 +52,11 @@ public class ControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(toErrorResponse(e));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<RedirectErrorResponse> handle(RedirectException e) {
+        return ResponseEntity.status(e.getStatus()).body(new RedirectErrorResponse(e));
     }
 
     private ErrorResponse toErrorResponse(Exception e) {

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import woowacourse.auth.domain.user.Customer;
 import woowacourse.auth.domain.user.EncryptedPassword;
 import woowacourse.common.exception.NotFoundException;
+import woowacourse.common.exception.RedirectException;
 import woowacourse.setup.SpringBeanTest;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
@@ -46,44 +47,41 @@ class CartServiceTest extends SpringBeanTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("registerNewCartItem 메서드는 새로운 상품을 장바구니에 등록하고, 신규 등록 여부를 반환한다.")
+    @DisplayName("registerNewCartItem 메서드는 새로운 상품을 장바구니에 등록한다.")
     @Nested
     class RegisterNewCartItemTest {
 
         @Test
-        void 등록되지_않은_상품인_경우_1개를_등록하고_참_반환() {
+        void 등록되지_않은_상품인_경우_1개를_등록하고_성공() {
             Long productId = 호박.getId();
             databaseFixture.save(호박);
 
-            boolean 등록_완료 = cartService.registerNewCartItem(고객, productId);
+            cartService.registerNewCartItem(고객, productId);
             Cart actualCart = cartService.findCart(고객);
             Cart expectedCart = new Cart(new CartItem(호박, 1));
 
-            assertThat(등록_완료).isTrue();
             assertThat(actualCart).isEqualTo(expectedCart);
         }
 
         @Test
-        void 이미_등록된_상품인_경우_거짓_반환() {
+        void 이미_등록된_상품인_경우_redirect_관련_예외발생() {
             Long 호박_ID = 호박.getId();
             databaseFixture.save(호박);
             cartService.registerNewCartItem(고객, 호박_ID);
 
-            boolean 등록_완료 = cartService.registerNewCartItem(고객, 호박_ID);
-
-            assertThat(등록_완료).isFalse();
+            assertThatThrownBy(() -> cartService.registerNewCartItem(고객, 호박_ID))
+                    .isInstanceOf(RedirectException.class);
         }
 
         @Test
-        void 수량이_0개여도_이미_등록된_상품인_경우_거짓_반환() {
+        void 수량이_0개여도_이미_등록된_상품인_경우_redirect_관련_예외발생() {
             Long 호박_ID = 호박.getId();
             CartItem 호박_3개 = new CartItem(호박, 3);
             databaseFixture.save(호박);
             databaseFixture.save(고객, 호박_3개);
 
-            boolean 등록_완료 = cartService.registerNewCartItem(고객, 호박_ID);
-
-            assertThat(등록_완료).isFalse();
+            assertThatThrownBy(() -> cartService.registerNewCartItem(고객, 호박_ID))
+                    .isInstanceOf(RedirectException.class);
         }
 
         @Test

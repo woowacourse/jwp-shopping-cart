@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.common.dto.RedirectErrorResponse;
 import woowacourse.setup.AcceptanceTest;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
@@ -146,15 +147,18 @@ class CartAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 이미_장바구니에_등록된_상품을_등록하려는_경우_정보는_수량은_수정되지_않으며_200() {
+        void 이미_장바구니에_등록된_상품을_등록하려는_경우_실패하며_400() {
             String 토큰 = 회원가입_후_토큰_생성();
             장바구니_상품_등록(토큰, 호박);
 
             ExtractableResponse<Response> response = 장바구니_상품_등록(토큰, 호박);
+            RedirectErrorResponse actualResponse = response.as(RedirectErrorResponse.class);
+            RedirectErrorResponse expectedResponse = new RedirectErrorResponse("이미 장바구니에 담긴 상품입니다.");
             CartDto actualCart = 장바구니_전체_조회_요청(토큰).as(CartDto.class);
             CartDto expectedCart = new CartDto(new Cart(new CartItem(호박, 1)));
 
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(actualResponse).isEqualTo(expectedResponse);
             assertThat(actualCart).isEqualTo(expectedCart);
         }
 
@@ -330,7 +334,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         return 유효한_로그인_요청();
     }
 
-    private ExtractableResponse<Response> 장바구니_전체_조회_요청(String accessToken) {
+    static ExtractableResponse<Response> 장바구니_전체_조회_요청(String accessToken) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when().get("/cart")
@@ -338,7 +342,7 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> 장바구니_상품_등록(String accessToken, Product product) {
+    static ExtractableResponse<Response> 장바구니_상품_등록(String accessToken, Product product) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when().post("/cart/" + product.getId())

@@ -41,11 +41,8 @@ public class CartController {
     @PostMapping("/{productId}")
     public ResponseEntity<Void> registerCartItem(Customer authCustomer,
                                                  @PathVariable Long productId) {
-        boolean hasRegistered = cartService.registerNewCartItem(authCustomer, productId);
-        if (hasRegistered) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-        return ResponseEntity.status(HttpStatus.OK).build();
+        cartService.registerNewCartItem(authCustomer, productId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{productId}/quantity")
