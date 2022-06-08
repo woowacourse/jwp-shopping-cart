@@ -28,8 +28,8 @@ public class CartService {
         this.productService = productService;
     }
 
-    public CartItemResponse addCartItem(String token, CartItemRequest cartItemRequest) {
-        final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
+    public CartItemResponse addCartItem(Long id, CartItemRequest cartItemRequest) {
+        CustomerId customerId = new CustomerId(id);
         ProductId productId = new ProductId(cartItemRequest.getProductId());
         checkExistenceInAllProducts(productId);
         checkExistenceInCart(customerId, productId);
@@ -37,9 +37,8 @@ public class CartService {
         return new CartItemResponse(customerId.getValue(), cartItemRequest.getQuantity());
     }
 
-    public CartsResponse findCartItems(String token) {
-        final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
-        Carts carts = new Carts(cartItemDao.getAllCartsBy(customerId));
+    public CartsResponse findCartItems(Long customerId) {
+        Carts carts = new Carts(cartItemDao.getAllCartsBy(new CustomerId(customerId)));
         return new CartsResponse(
                 carts.getCarts().stream()
                 .map(cart -> new CartResponse(
@@ -51,8 +50,8 @@ public class CartService {
                 .collect(Collectors.toList()));
     }
 
-    public void removeCartItems(String token, RemovedCartItemsRequest removedCartItemsRequest) {
-        final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
+    public void removeCartItems(Long id, RemovedCartItemsRequest removedCartItemsRequest) {
+        CustomerId customerId = new CustomerId(id);
         List<ProductId> productIds = removedCartItemsRequest.getProductIds().stream()
                 .map(ProductId::new)
                 .collect(Collectors.toList());
@@ -63,8 +62,8 @@ public class CartService {
         cartItemDao.deleteCartItems(customerId, productIds);
     }
 
-    public void editCartItem(String token, CartItemRequest cartItemRequest) {
-        final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
+    public void editCartItem(Long id, CartItemRequest cartItemRequest) {
+        final CustomerId customerId = new CustomerId(id);
         final ProductId productId = new ProductId(cartItemRequest.getProductId());
         checkExistenceInAllProducts(productId);
         checkNoneExistenceInCart(customerId, productId);

@@ -3,6 +3,7 @@ package woowacourse.auth.support;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import woowacourse.shoppingcart.exception.InvalidTokenException;
 
 import java.util.Date;
 
@@ -31,7 +32,7 @@ public class JwtTokenProvider {
 
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            return false;
+            throw new InvalidTokenException();
         }
     }
 }

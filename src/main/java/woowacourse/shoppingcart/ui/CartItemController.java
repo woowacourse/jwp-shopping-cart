@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.dto.cart.CartItemRequest;
 import woowacourse.shoppingcart.dto.cart.CartItemResponse;
@@ -22,32 +23,28 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<CartsResponse> findCartItems(HttpServletRequest request) {
-        String token = AuthorizationExtractor.extract(request);
-        CartsResponse cartsResponse = cartService.findCartItems(token);
+    public ResponseEntity<CartsResponse> findCartItems(@AuthenticationPrincipal Long customerId) {
+        CartsResponse cartsResponse = cartService.findCartItems(customerId);
         return ResponseEntity.ok().body(cartsResponse);
     }
 
 
 
     @PostMapping
-    public ResponseEntity<CartItemResponse> addCartItem(HttpServletRequest request, @RequestBody CartItemRequest cartItemRequest) {
-        String token = AuthorizationExtractor.extract(request);
-        CartItemResponse cartResponse = cartService.addCartItem(token, cartItemRequest);
+    public ResponseEntity<CartItemResponse> addCartItem(@AuthenticationPrincipal Long customerId, @RequestBody CartItemRequest cartItemRequest) {
+        CartItemResponse cartResponse = cartService.addCartItem(customerId, cartItemRequest);
         return ResponseEntity.created(URI.create("/customers/carts")).body(cartResponse);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> removeCartItems(HttpServletRequest request, @RequestBody RemovedCartItemsRequest removedCartItemsRequest) {
-        String token = AuthorizationExtractor.extract(request);
-        cartService.removeCartItems(token, removedCartItemsRequest);
+    public ResponseEntity<Void> removeCartItems(@AuthenticationPrincipal Long customerId, @RequestBody RemovedCartItemsRequest removedCartItemsRequest) {
+        cartService.removeCartItems(customerId, removedCartItemsRequest);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping
-    public ResponseEntity<Void> editCartItem(HttpServletRequest request, @RequestBody CartItemRequest cartItemRequest) {
-        String token = AuthorizationExtractor.extract(request);
-        cartService.editCartItem(token, cartItemRequest);
+    public ResponseEntity<Void> editCartItem(@AuthenticationPrincipal Long customerId, @RequestBody CartItemRequest cartItemRequest) {
+        cartService.editCartItem(customerId, cartItemRequest);
         return ResponseEntity.ok().build();
     }
 }

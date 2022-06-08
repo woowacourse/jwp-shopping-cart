@@ -5,29 +5,36 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.MemberArgument;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.exception.InvalidTokenException;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
+public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
+
     private JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalArgumentResolver(JwtTokenProvider jwtTokenProvider) {
+    public MemberArgumentResolver(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
+        return parameter.hasParameterAnnotation(MemberArgument.class);
     }
 
-    // parameter에 @AuthenticationPrincipal이 붙어있는 경우 동작
+    // parameter에 @MemberArgument이 붙어있는 경우 동작
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String token = AuthorizationExtractor.extract(webRequest.getNativeRequest(HttpServletRequest.class));
-        jwtTokenProvider.validateToken(token);
+        try {
+            jwtTokenProvider.validateToken(token);
+        } catch (InvalidTokenException e) {
+            return Customer.GUEST;
+        }
         return Long.valueOf(jwtTokenProvider.getPayload(token));
     }
 }

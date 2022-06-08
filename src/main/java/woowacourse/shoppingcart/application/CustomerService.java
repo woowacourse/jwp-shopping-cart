@@ -28,9 +28,8 @@ public class CustomerService {
         return new CustomerResponse(savedCustomer.getId().getValue(), savedCustomer.getEmail().getValue(), savedCustomer.getName().getValue(), savedCustomer.getPhone().getValue(), savedCustomer.getAddress().getValue());
     }
 
-    public CustomerResponse findCustomerByToken(String token) {
-        final CustomerId customerId = new CustomerId(getCustomerId(token));
-        final Customer customer = customerDao.findById(customerId);
+    public CustomerResponse findCustomerByToken(Long id) {
+        final Customer customer = customerDao.findById(new CustomerId(id));
         return new CustomerResponse(customer.getId().getValue(), customer.getEmail().getValue(), customer.getName().getValue(), customer.getPhone().getValue(), customer.getAddress().getValue());
     }
 
@@ -38,25 +37,12 @@ public class CustomerService {
         return new EmailResponse(!customerDao.isDuplication(new Email(emailRequest.getEmail())));
     }
 
-    public void edit(String token, CustomerRequest customerRequest) {
-        final CustomerId customerId = new CustomerId(getCustomerId(token));
-        final Customer customer = new Customer(customerId, new Email(customerRequest.getEmail()), new Name(customerRequest.getName()), new Phone(customerRequest.getPhone()), new Address(customerRequest.getAddress()), Password.of(customerRequest.getPassword()));
+    public void edit(Long id, CustomerRequest customerRequest) {
+        final Customer customer = new Customer(new CustomerId(id), new Email(customerRequest.getEmail()), new Name(customerRequest.getName()), new Phone(customerRequest.getPhone()), new Address(customerRequest.getAddress()), Password.of(customerRequest.getPassword()));
         customerDao.save(customer);
     }
 
-    public void delete(String token) {
-        final CustomerId customerId = new CustomerId(getCustomerId(token));
-        customerDao.delete(customerId);
-    }
-
-    public Long getCustomerId(String token) {
-        validateToken(token);
-        return Long.parseLong(jwtTokenProvider.getPayload(token));
-    }
-
-    private void validateToken(String token) {
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException();
-        }
+    public void delete(Long id) {
+        customerDao.delete(new CustomerId(id));
     }
 }

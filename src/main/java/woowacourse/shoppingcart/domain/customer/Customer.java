@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
 public class Customer {
+    public static final Long GUEST = -1L;
     private final CustomerId id;
     private final Email email;
     private final Name name;
