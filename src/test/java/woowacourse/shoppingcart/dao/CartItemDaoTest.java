@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -119,6 +120,36 @@ public class CartItemDaoTest {
         // when
         assertThatThrownBy(() -> cartItemDao.findProductQuantityById(cartId))
                 .isInstanceOf(InvalidCartItemException.class);
+    }
+
+    @DisplayName("Customer Id 와 Product Id 를 통해 수량을 찾아낸다.")
+    @Test
+    void findQuantityByCustomerIdAndProductId() {
+
+        // given
+        final Long customerId = 1L;
+        final Long productId = 1L;
+
+        // when
+        final int quantity = cartItemDao.findQuantityByCustomerIdAndProductId(customerId, productId).get();
+
+        // then
+        assertThat(quantity).isEqualTo(1);
+    }
+
+    @DisplayName("Customer Id 와 Product Id 를 통해 수량을 찾을 수 없을 경우 빈 값을 반환한다.")
+    @Test
+    void findQuantityByCustomerIdAndProductIdEmpty() {
+
+        // given
+        final Long customerId = 1L;
+        final Long productId = 3L;
+
+        // when
+        Optional<Integer> quantity = cartItemDao.findQuantityByCustomerIdAndProductId(customerId, productId);
+
+        // then
+        assertThat(quantity).isEmpty();
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
