@@ -28,7 +28,6 @@ public class UserNameResolver implements HandlerMethodArgumentResolver {
     public UserName resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
                                     final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        final String token = AuthorizationExtractor.extract(request);
-        return authService.getUserNameFormToken(token);
+        return (UserName) request.getAttribute("userName");
     }
 }

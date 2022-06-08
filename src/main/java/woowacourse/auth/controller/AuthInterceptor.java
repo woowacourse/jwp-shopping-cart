@@ -22,16 +22,13 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (isPreflight(request)) {
             return true;
         }
-        validateToken(request);
+        final String token = AuthorizationExtractor.extract(request);
+        authService.validateToken(token);
+        request.setAttribute("userName", authService.getUserNameFormToken(token));
         return true;
     }
 
-    public boolean isPreflight(final HttpServletRequest request) {
+    private boolean isPreflight(final HttpServletRequest request) {
         return request.getMethod().equals(HttpMethod.OPTIONS.toString());
-    }
-
-    public void validateToken(final HttpServletRequest request) {
-        final String token = AuthorizationExtractor.extract(request);
-        authService.validateToken(token);
     }
 }

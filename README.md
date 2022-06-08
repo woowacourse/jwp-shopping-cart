@@ -35,6 +35,7 @@
 - [X] Product 단거 조회 시에도 cartId, quantity도 보내도록 변경
   - 마찬가지로 토큰의 존재 여부에 따라 다르게 동작하게 해야한다. 
 - [X] auth/controller 레이어에서 AuthService를 사용하도록 변경
+- [X] Interceptor에서 Resolver로 UserName을 넘겨주도록 변경
 - [ ] 장바구니, 주문 DAO에서 SimpleInsert, NamedParameterJdbc 사용하도록 변경
 
 <br>
