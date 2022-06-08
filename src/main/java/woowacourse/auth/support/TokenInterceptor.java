@@ -5,9 +5,10 @@ import static org.springframework.http.HttpMethod.OPTIONS;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 
-public class TokenInterceptor implements AsyncHandlerInterceptor {
+public class TokenInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
 
