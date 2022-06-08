@@ -30,7 +30,7 @@ public class Customer {
     }
 
     public boolean checkPassword(String password) {
-        return password.equals(this.password);
+        return this.password.equals(password);
     }
 
     public Long getId() {
