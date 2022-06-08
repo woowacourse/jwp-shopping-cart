@@ -6,21 +6,21 @@ import woowacourse.shoppingcart.domain.Cart;
 
 public class UpdateCartRequests {
 
-    private List<UpdateCartRequest> products;
+    private List<UpdateCartRequest> cartItems;
 
     public UpdateCartRequests() {
     }
 
-    public UpdateCartRequests(List<UpdateCartRequest> products) {
-        this.products = products;
+    public UpdateCartRequests(List<UpdateCartRequest> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public List<UpdateCartRequest> getProducts() {
-        return products;
+    public List<UpdateCartRequest> getCartItems() {
+        return cartItems;
     }
 
     public List<Cart> carts() {
-        return products.stream()
+        return cartItems.stream()
                 .map(UpdateCartRequest::toCart)
                 .collect(Collectors.toList());
     }
