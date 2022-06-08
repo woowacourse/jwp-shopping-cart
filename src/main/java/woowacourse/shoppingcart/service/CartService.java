@@ -70,20 +70,11 @@ public class CartService {
     }
 
     public void deleteCart(final Long customerId, final Long productId) {
-        validateCustomerCart(productId, customerId);
         cartItemDao.deleteCartItem(customerId, productId);
     }
 
     public void updateCart(final Long customerId, final Long productId ,final UpdateCartItemCountItemRequest updateCartItemCountItemRequest){
         compareCountAndQuantity(updateCartItemCountItemRequest.getCount(), productId);
         cartItemDao.updateCartItem(customerId, productId, updateCartItemCountItemRequest.getCount());
-    }
-
-    private void validateCustomerCart(final Long cartId, final Long customerId) {
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
     }
 }
