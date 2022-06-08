@@ -9,6 +9,7 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.ui.AuthenticationInterceptor;
 import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
+import woowacourse.auth.ui.AuthenticationProductInterceptor;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
@@ -25,6 +26,8 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(new AuthenticationInterceptor(jwtTokenProvider))
                 .addPathPatterns("/api/customers/me");
+        registry.addInterceptor(new AuthenticationProductInterceptor(jwtTokenProvider))
+                .addPathPatterns("/api/products");
     }
 
     @Override
