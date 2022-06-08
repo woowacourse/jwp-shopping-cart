@@ -7,6 +7,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.ExistCustomerResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -24,13 +25,13 @@ public class CustomerController {
     public ResponseEntity<Void> signUp(@RequestBody @Valid CustomerRequest customerRequest) {
         customerService.addCustomer(customerRequest);
         return ResponseEntity.created(
-                URI.create("/api/customers/" + customerRequest.getName())).build();
+                URI.create("/api/customers/" + customerRequest.getUserName())).build();
     }
 
-    @GetMapping("/exist")
-    public ResponseEntity<Boolean> checkDuplicatedName(@RequestParam String userName) {
+    @GetMapping("/exists")
+    public ResponseEntity<ExistCustomerResponse> checkDuplicatedName(@RequestParam String userName) {
         boolean isExistCustomer = customerService.existsCustomer(userName);
-        return ResponseEntity.ok(isExistCustomer);
+        return ResponseEntity.ok(new ExistCustomerResponse(isExistCustomer));
     }
 
     @PutMapping("/me")

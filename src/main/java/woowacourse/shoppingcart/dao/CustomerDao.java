@@ -20,14 +20,14 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(String customerName, String password) {
+    public void save(Customer customer) {
         final String query = "INSERT INTO customer (username, password) VALUES (?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, customerName);
-            preparedStatement.setString(2, password);
+            preparedStatement.setString(1, customer.getName());
+            preparedStatement.setString(2, customer.getEncryptedPassword());
             return preparedStatement;
         }, keyHolder);
     }
@@ -41,29 +41,29 @@ public class CustomerDao {
         }
     }
 
-    public void deleteByName(String customerName) {
+    public void deleteByName(String userName) {
         final String query = "DELETE FROM customer WHERE username = ?";
-        jdbcTemplate.update(query, customerName);
+        jdbcTemplate.update(query, userName);
     }
 
-    public Customer findCustomerByName(String customerName) {
+    public Customer findCustomerByName(String userName) {
         try {
             final String query = "SELECT id, password FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Customer(
+                    Customer.of(
                             resultSet.getLong("id"),
-                            customerName,
+                            userName,
                             resultSet.getString("password")
-                    ), customerName
+                    ), userName
             );
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
         }
     }
 
-    public void updateByName(String customerName, String newPassword) {
+    public void updateCustomer(Customer customer) {
         final String query = "UPDATE customer SET password = ? WHERE username = ?";
-        jdbcTemplate.update(query, newPassword, customerName);
+        jdbcTemplate.update(query, customer.getEncryptedPassword(), customer.getName());
     }
 
     public boolean existsByName(String name) {
@@ -71,8 +71,8 @@ public class CustomerDao {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name));
     }
 
-    public boolean existsIdByNameAndPassword(String name, String password) {
+    public boolean existsCustomer(Customer customer) {
         final String query = "SELECT EXISTS (SELECT id FROM customer where username = ? and password = ?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, name, password));
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, customer.getName(), customer.getEncryptedPassword()));
     }
 }

@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 
 public class ProductResponse {
@@ -9,18 +8,18 @@ public class ProductResponse {
     private Integer price;
     private String imageUrl;
     private Long cartId;
-    private int productQuantity;
+    private int quantity;
 
     private ProductResponse() {
     }
 
-    public ProductResponse(Long id, String name, Integer price, String imageUrl, Long cartId, int productQuantity) {
+    public ProductResponse(Long id, String name, Integer price, String imageUrl, Long cartId, int quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.cartId = cartId;
-        this.productQuantity = productQuantity;
+        this.quantity = quantity;
     }
 
     public static ProductResponse of(Product product){
@@ -51,7 +50,7 @@ public class ProductResponse {
         return cartId;
     }
 
-    public int getProductQuantity() {
-        return productQuantity;
+    public int getQuantity() {
+        return quantity;
     }
 }
