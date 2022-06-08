@@ -68,6 +68,17 @@ public class CartItemDao {
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
 
+    public Long findIdByProductIdAndCustomerId(final Long customerId, final Long productId) {
+        try {
+            final String sql = "SELECT id FROM cart_item WHERE customer_id=:customerId AND product_id=:productId";
+            final SqlParameterSource parameter = new MapSqlParameterSource(Map.of("customerId", customerId,
+                    "productId", productId));
+            return namedJdbcTemplate.queryForObject(sql, parameter, Long.class);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
     public void deleteCartItem(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = :id";
         final int rowCount = namedJdbcTemplate.update(sql, Map.of("id", id));

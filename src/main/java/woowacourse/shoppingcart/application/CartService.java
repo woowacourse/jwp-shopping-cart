@@ -39,6 +39,10 @@ public class CartService {
         cartRepository.deleteCart(cartId);
     }
 
+    public boolean hasProduct(final EmailDto emailDto, final Long productId) {
+        return cartRepository.hasProduct(new Email(emailDto.getEmail()), productId);
+    }
+
     private void validateCustomerCart(final Long cartId, final EmailDto emailDto) {
         final List<Long> cartIds = cartRepository.findCartIdsByCustomerEmail(new Email(emailDto.getEmail()));
         if (cartIds.contains(cartId)) {

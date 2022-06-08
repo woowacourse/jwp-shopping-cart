@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
@@ -52,6 +53,16 @@ public class CartRepository {
             return cartItemDao.addCartItem(customerId, productId, quantity);
         } catch (Exception e) {
             throw new InvalidProductException();
+        }
+    }
+
+    public boolean hasProduct(final Email email, final Long productId) {
+        try {
+            final Long customerId = customerDao.findIdByUserEmail(email);
+            cartItemDao.findIdByProductIdAndCustomerId(customerId, productId);
+            return true;
+        } catch (InvalidCartItemException e) {
+            return false;
         }
     }
 

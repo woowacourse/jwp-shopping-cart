@@ -20,6 +20,7 @@ import woowacourse.shoppingcart.application.dto.EmailDto;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.request.CartRequest;
 import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.response.ExistedProductResponse;
 
 @RestController
 @RequestMapping("/api/customers/cart")
@@ -46,6 +47,14 @@ public class CartItemController {
                 .buildAndExpand(cartId)
                 .toUri();
         return ResponseEntity.created(responseLocation).build();
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ExistedProductResponse> hasProduct(@AuthenticationPrincipal
+                                                                 final EmailAuthentication emailAuthentication,
+                                                             @PathVariable final Long productId) {
+        final boolean hasProduct = cartService.hasProduct(EmailDto.from(emailAuthentication), productId);
+        return ResponseEntity.ok().body(new ExistedProductResponse(hasProduct));
     }
 
     @DeleteMapping("/{cartId}")
