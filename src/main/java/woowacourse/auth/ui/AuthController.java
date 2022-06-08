@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.domain.customer.CustomerToken;
 
 @Controller
 public class AuthController {
@@ -19,9 +20,8 @@ public class AuthController {
 
     @PostMapping("/api/login")
     public ResponseEntity<TokenResponse> login(@RequestBody final TokenRequest tokenRequest) {
-        final String nickname = authService.getNickname(tokenRequest);
-        final String accessToken = authService.createToken(tokenRequest);
-        final TokenResponse tokenResponse = new TokenResponse(nickname, accessToken);
+        final CustomerToken customerToken = authService.createToken(tokenRequest);
+        final TokenResponse tokenResponse = new TokenResponse(customerToken);
 
         return ResponseEntity.ok().body(tokenResponse);
     }

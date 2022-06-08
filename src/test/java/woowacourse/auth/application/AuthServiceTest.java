@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.domain.customer.CustomerToken;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
@@ -30,7 +31,8 @@ class AuthServiceTest {
     void createToken() {
         final TokenRequest tokenRequest = new TokenRequest("email@email.com", "password123!");
 
-        final String accessToken = authService.createToken(tokenRequest);
+        final CustomerToken customerToken = authService.createToken(tokenRequest);
+        String accessToken = customerToken.getAccessToken();
 
         assertThat(jwtTokenProvider.getPayload(accessToken)).isEqualTo("email@email.com");
     }

@@ -6,6 +6,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.entity.CustomerEntity;
+import woowacourse.shoppingcart.domain.customer.CustomerToken;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -20,22 +21,13 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public String createToken(final TokenRequest tokenRequest) {
-        customerDao.findByEmailAndPassword(
-                        tokenRequest.toEmail(),
-                        tokenRequest.toPassword())
-                .orElseThrow(() -> new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다."));
-
-        return jwtTokenProvider.createToken(tokenRequest.getEmail());
-    }
-
-    public String getNickname(final TokenRequest tokenRequest) {
+    public CustomerToken createToken(final TokenRequest tokenRequest) {
         final CustomerEntity customerEntity = customerDao.findByEmailAndPassword(
                         tokenRequest.toEmail(),
                         tokenRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("아이디나 비밀번호를 잘못 입력했습니다."));
 
-        return customerEntity.getCustomer()
-                .getNickname();
+        final String accessToken = jwtTokenProvider.createToken(tokenRequest.getEmail());
+        return new CustomerToken(customerEntity.getCustomer().getNickname(), accessToken);
     }
 }
