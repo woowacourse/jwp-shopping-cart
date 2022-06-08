@@ -43,23 +43,4 @@ public class LoginConfig implements WebMvcConfigurer {
     public LoginArgumentResolver authenticationPrincipalArgumentResolver() {
         return new LoginArgumentResolver(jwtTokenProvider);
     }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/customers/**")
-                .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
-                .exposedHeaders(HttpHeaders.LOCATION);
-
-        registry.addMapping("/auth/**")
-                .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
-                .exposedHeaders(HttpHeaders.LOCATION);
-
-        registry.addMapping("/cart/**")
-                .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
-                .exposedHeaders(HttpHeaders.LOCATION);
-
-        registry.addMapping("/products/**")
-                .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
-                .exposedHeaders(HttpHeaders.LOCATION);
-    }
 }
