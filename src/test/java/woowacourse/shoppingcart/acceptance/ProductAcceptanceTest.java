@@ -45,10 +45,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(productResponses.get(0).getId()).isEqualTo(productId1),
-                () -> assertThat(productResponses.get(0).getCartId()).isEqualTo(0L),
+                () -> assertThat(productResponses.get(0).getCartId()).isNull(),
                 () -> assertThat(productResponses.get(0).getQuantity()).isEqualTo(0),
                 () -> assertThat(productResponses.get(1).getId()).isEqualTo(productId2),
-                () -> assertThat(productResponses.get(1).getCartId()).isEqualTo(0L),
+                () -> assertThat(productResponses.get(1).getCartId()).isNull(),
                 () -> assertThat(productResponses.get(1).getQuantity()).isEqualTo(0)
         );
     }
@@ -73,10 +73,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(productResponses.get(0).getId()).isEqualTo(productId1),
-                () -> assertThat(productResponses.get(0).getCartId()).isNotEqualTo(0L),
-                () -> assertThat(productResponses.get(0).getQuantity()).isEqualTo(10),
+                () -> assertThat(productResponses.get(0).getCartId()).isNotNull(),
+                () -> assertThat(productResponses.get(0).getQuantity()).isEqualTo(1),
                 () -> assertThat(productResponses.get(1).getId()).isEqualTo(productId2),
-                () -> assertThat(productResponses.get(1).getCartId()).isEqualTo(0L),
+                () -> assertThat(productResponses.get(1).getCartId()).isNull(),
                 () -> assertThat(productResponses.get(1).getQuantity()).isEqualTo(0)
         );
     }
@@ -95,7 +95,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(productResponse.getId()).isEqualTo(productId),
-                () -> assertThat(productResponse.getCartId()).isEqualTo(0L),
+                () -> assertThat(productResponse.getCartId()).isNull(),
                 () -> assertThat(productResponse.getQuantity()).isEqualTo(0)
         );
     }
@@ -119,7 +119,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(productResponse.getId()).isEqualTo(productId),
                 () -> assertThat(productResponse.getCartId()).isNotEqualTo(0L),
-                () -> assertThat(productResponse.getQuantity()).isEqualTo(10)
+                () -> assertThat(productResponse.getQuantity()).isEqualTo(1)
         );
     }
 

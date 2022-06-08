@@ -191,7 +191,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(checkDuplicationResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(checkDuplicationResponse.body().jsonPath().getBoolean("duplicated")).isTrue()
+                () -> assertThat(checkDuplicationResponse.body().jsonPath().getBoolean("isDuplicate")).isTrue()
         );
     }
 
@@ -208,7 +208,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(checkDuplicationResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(checkDuplicationResponse.body().jsonPath().getBoolean("duplicated")).isFalse()
+                () -> assertThat(checkDuplicationResponse.body().jsonPath().getBoolean("isDuplicate")).isFalse()
         );
     }
 
@@ -270,7 +270,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     private ExtractableResponse<Response> 회원_이름_중복_검사(String userName) {
         return RestAssured
                 .given().log().all()
-                .when().get("/api/customers/exist?userName=" + userName)
+                .when().get("/api/customers/exists?userName=" + userName)
                 .then().log().all()
                 .extract();
     }

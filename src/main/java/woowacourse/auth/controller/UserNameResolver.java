@@ -6,9 +6,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import woowacourse.auth.service.AuthService;
-import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.domain.customer.UserName;
 
 public class UserNameResolver implements HandlerMethodArgumentResolver {

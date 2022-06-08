@@ -2,16 +2,16 @@ package woowacourse.shoppingcart.dto.response;
 
 public class ExistsCustomerResponse {
 
-    private Boolean duplicated;
+    private Boolean isDuplicate;
 
     public ExistsCustomerResponse() {
     }
 
     public ExistsCustomerResponse(final boolean duplicated) {
-        this.duplicated = duplicated;
+        this.isDuplicate = duplicated;
     }
 
-    public Boolean getDuplicated() {
-        return duplicated;
+    public Boolean getIsDuplicate() {
+        return isDuplicate;
     }
 }

@@ -47,7 +47,7 @@ public class CartItemDaoTest {
     @Test
     void addCartItem() {
         // when
-        final Long cartId = cartItemDao.addCartItem(1L, bananaId, 5);
+        final Long cartId = cartItemDao.addCartItem(1L, bananaId);
 
         // then
         assertThat(cartId).isEqualTo(3L);

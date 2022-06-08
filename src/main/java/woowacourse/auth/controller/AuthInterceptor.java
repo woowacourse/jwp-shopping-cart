@@ -4,10 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.auth.support.JwtTokenProvider;
 
 public class AuthInterceptor implements HandlerInterceptor {
 

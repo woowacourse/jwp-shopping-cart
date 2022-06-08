@@ -18,15 +18,15 @@ import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.CreateCartItemRequest;
 import woowacourse.shoppingcart.dto.request.EditCartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponse;
-import woowacourse.shoppingcart.service.CartService;
+import woowacourse.shoppingcart.service.CartItemService;
 
 @RestController
 @RequestMapping("/api/customers/me/carts")
 public class CartItemController {
 
-    private final CartService cartService;
+    private final CartItemService cartService;
 
-    public CartItemController(final CartService cartService) {
+    public CartItemController(final CartItemService cartService) {
         this.cartService = cartService;
     }
 

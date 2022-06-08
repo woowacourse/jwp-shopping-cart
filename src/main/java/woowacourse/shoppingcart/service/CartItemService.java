@@ -19,13 +19,13 @@ import woowacourse.shoppingcart.exception.notfound.NotFoundProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class CartService {
+public class CartItemService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartItemService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
@@ -46,20 +46,20 @@ public class CartService {
         final Cart cart = new Cart(cartItemDao.findAllByCustomerId(customerId));
         final Optional<CartItem> cartItem = cart.findByProductId(request.getId());
         if (cartItem.isPresent()) {
-            return updateExistingCart(cartItem.get(), request.getQuantity());
+            return updateExistingCart(cartItem.get());
         }
         return addNewCart(request, customerId);
     }
 
-    private Long updateExistingCart(final CartItem cartItem, final int quantity) {
-        cartItem.plusQuantity(quantity);
+    private Long updateExistingCart(final CartItem cartItem) {
+        cartItem.plusQuantity();
         cartItemDao.updateQuantity(cartItem.getId(), cartItem.getQuantity());
         return cartItem.getId();
     }
 
     private Long addNewCart(final CreateCartItemRequest request, final Long customerId) {
         try {
-            return cartItemDao.addCartItem(customerId, request.getId(), request.getQuantity());
+            return cartItemDao.addCartItem(customerId, request.getId());
         } catch (Exception e) {
             throw new NotFoundProductException();
         }

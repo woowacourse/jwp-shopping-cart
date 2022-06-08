@@ -18,7 +18,7 @@ public class ProductResponse {
     }
 
     public ProductResponse(final Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), 0L, 0);
+        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), null, 0);
     }
 
     public ProductResponse(final Product product, final CartItem cartItem) {

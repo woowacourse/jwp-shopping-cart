@@ -6,11 +6,11 @@ import woowacourse.shoppingcart.domain.Product;
 
 public class CreateProductRequest {
 
-    @NotBlank
+    @NotBlank(message = "상품 이름을 입력해주세요😉")
     private String name;
-    @NotNull
+    @NotNull(message = "상품 가격을 입력해주세요😉")
     private Integer price;
-    @NotBlank
+    @NotBlank(message = "상품 이미지를 입력해주세요😉")
     private String imageUrl;
 
     public CreateProductRequest() {

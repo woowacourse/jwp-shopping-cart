@@ -16,8 +16,8 @@ public class CartItem {
         return this.productId.equals(productId);
     }
 
-    public void plusQuantity(final int quantity) {
-        this.quantity += quantity;
+    public void plusQuantity() {
+        this.quantity++;
     }
 
     public Long getId() {
