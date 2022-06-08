@@ -40,7 +40,7 @@ public class ProductService {
     }
 
     private Product validateExistProduct(Optional<Product> product) {
-        return product.orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+        return product.orElseThrow(ProductNotFoundException::new);
     }
 
     @Transactional

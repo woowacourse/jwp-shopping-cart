@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.dto.EnrollCartDto;
 import woowacourse.shoppingcart.domain.Cart;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,24 +36,29 @@ public class CartItemDao {
         String SQL = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
                 "FROM cart_item as c JOIN product as p ON c.product_id = p.id WHERE c.member_id = ?";
 
-        return jdbcTemplate.query(SQL, (rs, rowNum) ->
+        return jdbcTemplate.query(SQL, cartMapper(), memberId);
+    }
+
+    public Optional<Cart> findCartById(Long cartId) {
+        try {
+            String SQL = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
+                    "FROM cart_item as c JOIN product as p ON c.product_id = p.id WHERE c.id = ?";
+            Cart cart = jdbcTemplate.queryForObject(SQL, cartMapper(), cartId);
+            return Optional.ofNullable(cart);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    private RowMapper<Cart> cartMapper() {
+        return (rs, rowNum) ->
                 new Cart(
                         rs.getLong("id"),
                         rs.getLong("product_id"),
                         rs.getString("name"),
                         rs.getInt("price"),
                         rs.getString("image_url"),
-                        rs.getInt("quantity")), memberId);
-    }
-
-    public Optional<Long> findProductIdById(Long cartId) {
-        try {
-            String SQL = "SELECT product_id FROM cart_item WHERE id = ?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(SQL,
-                    (rs, rowNum) -> rs.getLong("product_id"), cartId));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+                        rs.getInt("quantity"));
     }
 
     public void updateQuantity(Long cartId, int quantity) {

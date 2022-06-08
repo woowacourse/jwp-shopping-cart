@@ -5,13 +5,16 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderDetailDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrdersResponse;
+import woowacourse.shoppingcart.exception.CartNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,11 +36,9 @@ public class OrderService {
 
         for (OrderRequest orderDetail : orderDetailRequests) {
             Long cartId = orderDetail.getCartId();
-            Long productId = cartItemDao.findProductIdById(cartId)
-                    .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
-            int quantity = orderDetail.getQuantity();
-
-            orderDetailDao.save(ordersId, productId, quantity);
+            Cart cart = cartItemDao.findCartById(cartId)
+                    .orElseThrow(CartNotFoundException::new);
+            orderDetailDao.save(ordersId, cart.getProductId(), cart.getQuantity());
             cartItemDao.deleteById(cartId);
         }
         return ordersId;

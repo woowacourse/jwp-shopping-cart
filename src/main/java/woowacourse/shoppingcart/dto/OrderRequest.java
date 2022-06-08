@@ -1,23 +1,17 @@
 package woowacourse.shoppingcart.dto;
 
-import javax.validation.constraints.Min;
-
 public class OrderRequest {
 
-    private final Long cartId;
-    @Min(0)
-    private final int quantity;
+    private Long cartId;
 
-    public OrderRequest(final Long cartId, final int quantity) {
+    public OrderRequest() {
+    }
+
+    public OrderRequest(Long cartId) {
         this.cartId = cartId;
-        this.quantity = quantity;
     }
 
     public Long getCartId() {
         return cartId;
-    }
-
-    public int getQuantity() {
-        return quantity;
     }
 }

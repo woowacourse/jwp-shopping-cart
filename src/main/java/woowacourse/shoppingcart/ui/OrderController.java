@@ -26,7 +26,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal Long memberId,
-                                         @RequestBody @Valid List<OrderRequest> orderDetails) {
+                                         @RequestBody List<OrderRequest> orderDetails) {
         Long orderId = orderService.addOrder(orderDetails, memberId);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()

@@ -7,6 +7,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.exception.MemberNotFoundException;
 import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.InvalidCartQuantityException;
@@ -112,7 +113,7 @@ class CartServiceTest {
     void deleteCart() {
         Long cartId = 1L;
         cartService.deleteCart(1L, cartId);
-        Optional<Long> result = cartItemDao.findProductIdById(cartId);
+        Optional<Cart> result = cartItemDao.findCartById(cartId);
 
         assertThat(result.isEmpty()).isTrue();
     }

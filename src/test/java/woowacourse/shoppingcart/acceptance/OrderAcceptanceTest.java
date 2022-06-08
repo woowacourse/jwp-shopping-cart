@@ -53,7 +53,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void addOrder() {
         List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
-                .map(cartId -> new OrderRequest(cartId, 10))
+                .map(OrderRequest::new)
                 .collect(Collectors.toList());
 
         ExtractableResponse<Response> response = 주문하기_요청(accessToken, orderRequests);
@@ -64,8 +64,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역을 조회한다.")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(cartId2, 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(cartId1)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(cartId2)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(accessToken);
 
@@ -77,8 +77,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void getOrder() {
         Long orderId = 주문하기_요청_성공되어_있음(accessToken, Arrays.asList(
-                new OrderRequest(cartId1, 2),
-                new OrderRequest(cartId2, 4)
+                new OrderRequest(cartId1),
+                new OrderRequest(cartId2)
         ));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(accessToken, orderId);

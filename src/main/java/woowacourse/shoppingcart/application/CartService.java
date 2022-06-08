@@ -102,7 +102,7 @@ public class CartService {
     private void validateExistProduct(Long productId) {
         Optional<Product> product = productDao.findProductById(productId);
         if (product.isEmpty()) {
-            throw new ProductNotFoundException("존재하지 않는 상품입니다.");
+            throw new ProductNotFoundException();
         }
     }
 }

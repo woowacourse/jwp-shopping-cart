@@ -7,6 +7,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrdersResponse;
+import woowacourse.shoppingcart.exception.CartNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
@@ -31,7 +32,7 @@ class OrderServiceTest {
     @Test
     void addOrder() {
         Long memberId = 2L;
-        List<OrderRequest> orderRequests = List.of(new OrderRequest(3L, 3));
+        List<OrderRequest> orderRequests = List.of(new OrderRequest(3L));
 
         Long id = orderService.addOrder(orderRequests, memberId);
         assertThat(id).isNotNull();
@@ -41,11 +42,11 @@ class OrderServiceTest {
     @Test
     void addOrderWithWrongProductId() {
         Long memberId = 2L;
-        List<OrderRequest> orderRequests = List.of(new OrderRequest(7L, 3));
+        List<OrderRequest> orderRequests = List.of(new OrderRequest(7L));
 
         assertThatThrownBy(() -> orderService.addOrder(orderRequests, memberId))
-                .isInstanceOf(ProductNotFoundException.class)
-                .hasMessageContaining("존재하지 않는 상품입니다.");
+                .isInstanceOf(CartNotFoundException.class)
+                .hasMessageContaining("존재하지 않는 장바구니 정보입니다.");
     }
 
     @DisplayName("단일 주문 정보를 조회한다.")
