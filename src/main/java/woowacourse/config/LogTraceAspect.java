@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LogTraceAspect {
 
-    @Before("execution(* woowacourse.config.ControllerExceptionHandler.*(..)) &&  args(ex,..)")
+    @Before("execution(* woowacourse.config.ApplicationExceptionHandler.*(..)) &&  args(ex,..)")
     public void logHandlerError(JoinPoint joinPoint, Exception ex) {
         log.error("[error log] signature = {}", joinPoint.getSignature(), ex);
     }

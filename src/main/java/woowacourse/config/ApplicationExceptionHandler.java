@@ -1,4 +1,4 @@
-package woowacourse.global.ui;
+package woowacourse.config;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
@@ -43,30 +43,36 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return new ErrorResponse("존재하지 않는 데이터 요청입니다.");
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers, HttpStatus status,
-                                                                  WebRequest request) {
-        BindingResult bindingResult = ex.getBindingResult();
-        final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        final FieldError mainError = fieldErrors.get(0);
-        FieldErrorResponse response = new FieldErrorResponse(mainError.getField(), mainError.getDefaultMessage());
-
-        return ResponseEntity
-                .status(status)
-                .body(response);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateEmailException.class)
+    public FieldErrorResponse handleDuplicateEmailException(DuplicateDomainException exception) {
+        String message = String.format("이미 가입된 이메일입니다.", exception.getField());
+        return new FieldErrorResponse(exception.getField(), message);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({DuplicateEmailException.class, DuplicateUsernameException.class})
-    public FieldErrorResponse handleDuplicatedRequest(DuplicateDomainException exception) {
-        return new FieldErrorResponse(exception.getField(), exception.getMessage());
+    @ExceptionHandler(DuplicateUsernameException.class)
+    public FieldErrorResponse handleDuplicateUsernameException(DuplicateDomainException exception) {
+        String message = String.format("이미 가입된 닉네임입니다.", exception.getField());
+        return new FieldErrorResponse(exception.getField(), message);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ErrorResponse handleInvalidRequest(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(LoginFailException.class)
+    public ErrorResponse handleLoginFailException(Exception ex) {
+        return new ErrorResponse("id 또는 비밀번호가 틀렸습니다.");
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidTokenException.class)
+    public ErrorResponse handleInvalidTokenException(Exception ex) {
+        return new ErrorResponse("유효하지 않은 토큰입니다.");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -81,22 +87,29 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return new ErrorResponse(e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
-    public ErrorResponse handleLoginFailException(Exception exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(ForbiddenAccessException.class)
-    public ErrorResponse handleForbiddenAccessException(Exception exception) {
-        return new ErrorResponse(exception.getMessage());
+    public ErrorResponse handleForbiddenAccessException(Exception ex) {
+        return new ErrorResponse("권한이 없는 요청입니다.");
     }
-
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleAllOtherErrors(final Exception e) {
         return new ErrorResponse(e.getMessage());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatus status,
+                                                                  WebRequest request) {
+        BindingResult bindingResult = ex.getBindingResult();
+        final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        final FieldError mainError = fieldErrors.get(0);
+        FieldErrorResponse response = new FieldErrorResponse(mainError.getField(), mainError.getDefaultMessage());
+
+        return ResponseEntity
+                .status(status)
+                .body(response);
     }
 
     @Override
