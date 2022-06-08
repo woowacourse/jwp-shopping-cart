@@ -38,7 +38,8 @@ public class CartService {
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            final int cartItemQuantity = cartItemDao.findProductQuantityIdById(cartId);
+            carts.add(new Cart(cartId, product, cartItemQuantity));
         }
         return carts;
     }
@@ -50,7 +51,8 @@ public class CartService {
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            final int cartItemQuantity = cartItemDao.findProductQuantityIdById(cartId);
+            carts.add(new Cart(cartId, product, cartItemQuantity));
         }
         return carts;
     }
