@@ -44,7 +44,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     void findProductByInvalidId() {
         ExtractableResponse<Response> response = RequestHandler.getRequest("/products/3");
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(response.jsonPath().getObject(".", ExceptionResponse.class).getMessage())
                 .isEqualTo(new InvalidProductException().getMessage());
     }

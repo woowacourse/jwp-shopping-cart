@@ -53,8 +53,8 @@ public class CartItemServiceTest {
     @Test
     void addCartItem() {
         CartItemUpdateRequest cartItemUpdateRequest = new CartItemUpdateRequest(3);
-        Long id = cartItemService.addCartItem(1L, 1L, cartItemUpdateRequest);
-        assertThat(id).isEqualTo(1L);
+        CartItemResponse cartItemResponse = cartItemService.addCartItem(1L, 1L, cartItemUpdateRequest);
+        assertThat(cartItemResponse.getQuantity()).isEqualTo(3);
     }
 
     @DisplayName("해당 고객의 장바구니에 담긴 CartItem 목록을 조회한다.")

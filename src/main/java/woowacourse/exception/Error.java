@@ -12,7 +12,7 @@ public enum Error {
     INVALID_NICKNAME_FORMAT(2102, "닉네임 형식이 맞지 않습니다", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD_FORMAT(2103, "비밀번호 형식이 맞지 않습니다", HttpStatus.BAD_REQUEST),
     DUPLICATED_CUSTOMER_EMAIL(2001, "이미 존재하는 이메일입니다", HttpStatus.BAD_REQUEST),
-    LOGIN_FAILED(2201, "이메일 혹은 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
+    LOGIN_FAILED(2201, "이메일 혹은 비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
     WRONG_PASSWORD(2202, "입력된 비밀번호가 현재 비밀번호와 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
     INVALID_PRODUCT(3001, "해당 상품이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     INVALID_QUANTITY(4101, "수량 형식이 맞지 않습니다.", HttpStatus.BAD_REQUEST),

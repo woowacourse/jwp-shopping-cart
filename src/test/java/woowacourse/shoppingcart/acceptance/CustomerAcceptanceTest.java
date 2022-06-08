@@ -99,7 +99,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         final CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
                 "newGuest", CUSTOMER_PASSWORD, "qwer1234!@#$");
-        RequestHandler.patchRequest("/customers", customerUpdateRequest, tokenResponse.getAccessToken());
+        RequestHandler.patchRequest("/customers/profile", customerUpdateRequest, tokenResponse.getAccessToken());
         ExtractableResponse<Response> getResponse = RequestHandler.getRequest("/customers",
                 tokenResponse.getAccessToken());
         // then
@@ -124,7 +124,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
                 "newGuest", "wrongqwe123!@#", "qwer1234!@#$");
         final ExtractableResponse<Response> patchResponse = RequestHandler.patchRequest(
-                "/customers", customerUpdateRequest, tokenResponse.getAccessToken());
+                "/customers/password", customerUpdateRequest, tokenResponse.getAccessToken());
 
         assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         final ExceptionResponse exceptionResponse = patchResponse.jsonPath().getObject(".", ExceptionResponse.class);

@@ -54,7 +54,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 
         final ExceptionResponse exceptionResponse = response.jsonPath().getObject(".", ExceptionResponse.class);
-        assertThat(exceptionResponse.getMessage()).isEqualTo("이메일에 해당하는 회원이 존재하지 않거나 비밀번호가 일치하지 않습니다.");
+        assertThat(exceptionResponse.getMessage()).isEqualTo("이메일 혹은 비밀번호가 일치하지 않습니다.");
     }
 
     @DisplayName("로그인 실패 - 비밀번호가 일치하지 않는 경우")
@@ -72,7 +72,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 
         final ExceptionResponse exceptionResponse = response.jsonPath().getObject(".", ExceptionResponse.class);
-        assertThat(exceptionResponse.getMessage()).isEqualTo("이메일에 해당하는 회원이 존재하지 않거나 비밀번호가 일치하지 않습니다.");
+        assertThat(exceptionResponse.getMessage()).isEqualTo("이메일 혹은 비밀번호가 일치하지 않습니다.");
     }
 
     @DisplayName("인증 실패 - 토큰의 기간이 만료된 경우")

@@ -61,7 +61,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         CartItemResponse cartItemResponses = response.jsonPath().getObject(".", CartItemResponse.class);
         assertThat(cartItemResponses)
                 .extracting("productId", "name", "price", "quantity")
-                .containsExactly(tuple(1, "우유", 3000, 3));
+                .containsExactly(1L, "우유", 3000, 3);
     }
 
     @DisplayName("해당 고객의 장바구니에 속한 CartItem을 삭제한다.")

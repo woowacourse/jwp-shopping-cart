@@ -14,7 +14,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.exception.WrongPasswordException;
+import woowacourse.exception.LoginFailedException;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 
@@ -55,14 +55,14 @@ class AuthServiceTest {
         @Test
         void loginWithWrongEmail() {
             assertThatThrownBy(() -> authService.login(new TokenRequest("admin@woowa.com", "qwer1234!@#$")))
-                    .isInstanceOf(NoSuchEmailException.class);
+                    .isInstanceOf(LoginFailedException.class);
         }
 
         @DisplayName("비밀번호가 일치하지 않을 경우, 로그인에 실패한다.")
         @Test
         void loginWithWrongPassword() {
             assertThatThrownBy(() -> authService.login(new TokenRequest("guest@woowa.com", "wrongqwe123!@#")))
-                    .isInstanceOf(WrongPasswordException.class);
+                    .isInstanceOf(LoginFailedException.class);
         }
     }
 }
