@@ -31,4 +31,8 @@ public class ProductService {
     public void deleteProductById(final Long productId) {
         productDao.delete(productId);
     }
+
+    public int findTotalCount() {
+        return productDao.findTotalCount();
+    }
 }

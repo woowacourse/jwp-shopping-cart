@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,15 +41,20 @@ public class ProductControllerTest {
                 new Product(3L, "아이스박스", 10000,
                         "https://thawing-fortress-83192.herokuapp.com/static/images/icebox.jpg", 10)
         );
+        final int expectedCount = expected.size();
 
         when(productService.findProducts(any()))
                 .thenReturn(expected);
+        when(productService.findTotalCount())
+                .thenReturn(expectedCount);
 
         mockMvc.perform(get("/api/products")
                         .param("page", "1")
                         .param("limit", "2"))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(header().string("x-total-count", String.valueOf(expectedCount)))
+
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("캠핑 의자"))
                 .andExpect(jsonPath("$[0].price").value(10000))

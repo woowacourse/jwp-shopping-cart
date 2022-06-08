@@ -31,7 +31,9 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<Product>> products(@ModelAttribute @Valid PageRequest pageRequest) {
-        return ResponseEntity.ok(productService.findProducts(pageRequest));
+        return ResponseEntity.ok()
+                .header("x-total-count", String.valueOf(productService.findTotalCount()))
+                .body(productService.findProducts(pageRequest));
     }
 
     @PostMapping
