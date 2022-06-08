@@ -6,12 +6,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -39,19 +39,19 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Optional<Product> findProductById(final Long productId) {
+        final String query = "SELECT id, name, price, thumbnail_url, quantity FROM product WHERE id = ?";
         try {
-            final String query = "SELECT id, name, price, thumbnail_url, quantity FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                     new Product(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getInt("price"),
                             resultSet.getString("thumbnail_url"),
                             resultSet.getInt("quantity")), productId
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            ));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 

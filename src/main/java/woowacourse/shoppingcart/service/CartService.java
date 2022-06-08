@@ -55,7 +55,8 @@ public class CartService {
     }
 
     private void compareCountAndQuantity(final Integer count, final Long productId) {
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.findProductById(productId)
+                .orElseThrow(NotFoundProductException::new);
         if(product.getQuantity() < count){
             throw new OverQuantityException();
         }
@@ -74,6 +75,7 @@ public class CartService {
     }
 
     public void updateCart(final Long customerId, final Long productId ,final UpdateCartItemCountItemRequest updateCartItemCountItemRequest){
+        compareCountAndQuantity(updateCartItemCountItemRequest.getCount(), productId);
         cartItemDao.updateCartItem(customerId, productId, updateCartItemCountItemRequest.getCount());
     }
 

@@ -110,7 +110,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, count, customerId, productId);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new NotFoundProductException();
         }
     }
 }

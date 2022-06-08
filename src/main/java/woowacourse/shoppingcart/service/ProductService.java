@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.ProductRequestDto;
 import woowacourse.shoppingcart.dto.response.ProductResponseDto;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +35,8 @@ public class ProductService {
     }
 
     public ProductResponseDto findProductById(final Long productId) {
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.findProductById(productId)
+                .orElseThrow(NotFoundProductException::new);
         return new ProductResponseDto(
                 product.getId(),
                 product.getThumbnailUrl(),
