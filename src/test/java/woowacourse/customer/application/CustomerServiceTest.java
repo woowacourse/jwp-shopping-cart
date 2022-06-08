@@ -34,7 +34,7 @@ class CustomerServiceTest {
 
     @BeforeEach
     void setUp() {
-        customerService.deleteByUsername(username);
+        customerService.deleteCustomerByUsername(username);
     }
 
     @DisplayName("회원을 저장한다.")
@@ -62,7 +62,7 @@ class CustomerServiceTest {
         customerService.save(signupRequest);
 
         // when
-        final CustomerResponse findCustomerResponse = customerService.findByUsername(username);
+        final CustomerResponse findCustomerResponse = customerService.findCustomerByUsername(username);
 
         // given
         assertAll(
@@ -76,7 +76,7 @@ class CustomerServiceTest {
     @Test
     void confirmPassword() {
         customerService.save(signupRequest);
-        final CustomerResponse customerResponse = customerService.findByUsername(username);
+        final CustomerResponse customerResponse = customerService.findCustomerByUsername(username);
 
         assertDoesNotThrow(() -> customerService.confirmPassword(customerResponse.getUsername(), password));
     }
@@ -90,7 +90,7 @@ class CustomerServiceTest {
         final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01012123434", "서울시 여러분");
         customerService.updateInfo(username, updateCustomerRequest);
 
-        final CustomerResponse customerResponse = customerService.findByUsername(username);
+        final CustomerResponse customerResponse = customerService.findCustomerByUsername(username);
 
         assertAll(
             () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
@@ -116,10 +116,10 @@ class CustomerServiceTest {
         customerService.save(signupRequest);
 
         // when
-        customerService.deleteByUsername(username);
+        customerService.deleteCustomerByUsername(username);
 
         // then
-        assertThatThrownBy(() -> customerService.findByUsername(username))
+        assertThatThrownBy(() -> customerService.findCustomerByUsername(username))
             .isInstanceOf(InvalidLoginException.class);
     }
 }

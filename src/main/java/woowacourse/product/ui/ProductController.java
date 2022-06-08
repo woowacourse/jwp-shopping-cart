@@ -29,23 +29,23 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Valid @RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<Void> addProduct(@Valid @RequestBody final ProductRequest productRequest) {
         final Long id = productService.addProduct(productRequest);
         return ResponseEntity.created(URI.create("/api/products/" + id)).build();
     }
 
     @GetMapping
-    public ResponseEntity<ProductResponses> products() {
+    public ResponseEntity<ProductResponses> findProducts() {
         return ResponseEntity.ok(productService.findProducts());
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
+    public ResponseEntity<ProductResponse> findProduct(@PathVariable final Long productId) {
         return ResponseEntity.ok(productService.findProductById(productId));
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long productId) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId) {
         productService.deleteProductById(productId);
         return ResponseEntity.noContent().build();
     }

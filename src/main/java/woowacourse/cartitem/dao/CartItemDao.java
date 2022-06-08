@@ -30,7 +30,7 @@ public class CartItemDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Long addCartItem(final Long customerId, final Long productId, final int quantity) {
+    public Long save(final Long customerId, final Long productId, final int quantity) {
         final SqlParameterSource params = new MapSqlParameterSource()
             .addValue("customer_id", customerId)
             .addValue("product_id", productId)
@@ -39,7 +39,7 @@ public class CartItemDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<CartItem> findByCustomerId(final Long customerId) {
+    public List<CartItem> findAllByCustomerId(final Long customerId) {
         final String sql = "SELECT c.id, c.product_id, p.name, p.price, c.quantity, p.imageURL "
             + "FROM cart_item c "
             + "LEFT JOIN product p ON c.product_id = p.id "
@@ -49,7 +49,7 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, params, rowMapper());
     }
 
-    public Optional<CartItem> findCartItemById(final Long id) {
+    public Optional<CartItem> findById(final Long id) {
         final String sql = "SELECT c.id, c.product_id, p.name, p.price, c.quantity, p.imageURL "
             + "FROM cart_item c "
             + "LEFT JOIN product p ON c.product_id = p.id "
@@ -63,7 +63,7 @@ public class CartItemDao {
         }
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
+    public List<Long> findAllIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = :customer_id";
         final SqlParameterSource params = new MapSqlParameterSource("customer_id", customerId);
 
@@ -89,7 +89,7 @@ public class CartItemDao {
         jdbcTemplate.update(sql, params);
     }
 
-    public void deleteCartItem(final Long id, final Long customerId) {
+    public void deleteByIdAndCustomerId(final Long id, final Long customerId) {
         final String sql = "DELETE FROM cart_item WHERE id = :id AND customer_id = :customer_id";
         final SqlParameterSource params = new MapSqlParameterSource("id", id)
             .addValue("customer_id", customerId);

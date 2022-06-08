@@ -42,7 +42,7 @@ class OrdersDetailDaoTest {
     @BeforeEach
     void setUp() {
         customerId = 1L;
-        orderId = orderDao.addOrders(customerId);
+        orderId = orderDao.save(customerId);
         productId = productDao.save(new Product("name", new Price(10000), new Stock(10), "test.jpg"));
     }
 
@@ -53,7 +53,7 @@ class OrdersDetailDaoTest {
         final int quantity = 5;
 
         //when
-        final Long orderDetailId = ordersDetailDao.addOrdersDetail(orderId, productId, quantity);
+        final Long orderDetailId = ordersDetailDao.save(orderId, productId, quantity);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);

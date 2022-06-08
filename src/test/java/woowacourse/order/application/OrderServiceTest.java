@@ -48,7 +48,7 @@ public class OrderServiceTest {
     @BeforeEach
     void setUp() {
         customerService.save(new SignupRequest("username", "password", "01000001111", "서울시"));
-        username = customerService.findByUsername("username").getUsername();
+        username = customerService.findCustomerByUsername("username").getUsername();
         productId1 = productService.addProduct(new ProductRequest("짱구", 100_000_000, 10, "jjanggu.jpg"));
         productId2 = productService.addProduct(new ProductRequest("짱아", 10_000_000, 10, "jjanga.jpg"));
         cartItemId2 = cartItemService.addCartItem(username, new CartItemAddRequest(productId2, 5));

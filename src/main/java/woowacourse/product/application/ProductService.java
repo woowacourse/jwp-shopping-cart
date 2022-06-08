@@ -25,17 +25,17 @@ public class ProductService {
     }
 
     public ProductResponses findProducts() {
-        return ProductResponses.from(productDao.findProducts());
+        return ProductResponses.from(productDao.findAll());
     }
 
     public ProductResponse findProductById(final Long id) {
-        final Product product = productDao.findProductById(id)
+        final Product product = productDao.findById(id)
             .orElseThrow(() -> new InvalidProductException("해당 id에 따른 상품을 찾을 수 없습니다."));
 
         return ProductResponse.from(product);
     }
 
     public void deleteProductById(final Long id) {
-        productDao.delete(id);
+        productDao.deleteById(id);
     }
 }

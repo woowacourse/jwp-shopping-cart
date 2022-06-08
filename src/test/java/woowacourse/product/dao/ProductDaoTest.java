@@ -62,7 +62,7 @@ public class ProductDaoTest {
         final int size = 0;
 
         // when
-        final List<Product> products = productDao.findProducts();
+        final List<Product> products = productDao.findAll();
 
         // then
         assertThat(products).size().isEqualTo(size);
@@ -76,7 +76,7 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, stock, imageURL);
 
         // when
-        final Product product = productDao.findProductById(productId).get();
+        final Product product = productDao.findById(productId).get();
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -87,13 +87,13 @@ public class ProductDaoTest {
     void deleteProduct() {
         // given
         final Long id = productDao.save(product);
-        final int beforeSize = productDao.findProducts().size();
+        final int beforeSize = productDao.findAll().size();
 
         // when
-        productDao.delete(id);
+        productDao.deleteById(id);
 
         // then
-        final int afterSize = productDao.findProducts().size();
+        final int afterSize = productDao.findAll().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
     }
 }

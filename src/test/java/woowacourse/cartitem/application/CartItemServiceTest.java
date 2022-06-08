@@ -42,7 +42,7 @@ public class CartItemServiceTest {
     @BeforeEach
     void setUp() {
         customerService.save(new SignupRequest("username", "password", "01000001111", "서울시"));
-        username = customerService.findByUsername("username").getUsername();
+        username = customerService.findCustomerByUsername("username").getUsername();
         productId1 = productService.addProduct(new ProductRequest("짱구", 100_000_000, 10, "jjanggu.jpg"));
         productId2 = productService.addProduct(new ProductRequest("짱아", 10_000_000, 10, "jjanga.jpg"));
     }
@@ -63,7 +63,7 @@ public class CartItemServiceTest {
         cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1));
         cartItemService.addCartItem(username, new CartItemAddRequest(productId2, 1));
 
-        final List<Long> productIds = cartItemService.findCartsByCustomerName(username).getCartItems()
+        final List<Long> productIds = cartItemService.findCartItemsByCustomerName(username).getCartItems()
             .stream()
             .map(CartItemResponses.CartItemDetailResponse::getProductId)
             .collect(Collectors.toList());
@@ -82,9 +82,9 @@ public class CartItemServiceTest {
     @Test
     void deleteCartItem() {
         final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1));
-        cartItemService.deleteCart(username, cartItemId);
+        cartItemService.deleteCartItem(username, cartItemId);
 
-        assertThatThrownBy(() -> cartItemService.findCartById(cartItemId))
+        assertThatThrownBy(() -> cartItemService.findCartItemById(cartItemId))
             .isInstanceOf(InvalidCartItemException.class);
     }
 }

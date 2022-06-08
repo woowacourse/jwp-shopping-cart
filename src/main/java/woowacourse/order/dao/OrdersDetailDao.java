@@ -28,14 +28,14 @@ public class OrdersDetailDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Long addOrdersDetail(final Long ordersId, final Long productId, final int quantity) {
+    public Long save(final Long ordersId, final Long productId, final int quantity) {
         final SqlParameterSource params = new MapSqlParameterSource("orders_id", ordersId)
             .addValue("product_id", productId)
             .addValue("quantity", quantity);
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
+    public List<OrderDetail> findAllByOrderId(final Long orderId) {
         final String sql = "SELECT o.id, o.product_id, p.name, p.price, o.quantity, p.imageURL "
             + "FROM orders_detail o "
             + "LEFT JOIN product p ON o.product_id = p.id "

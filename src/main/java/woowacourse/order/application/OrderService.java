@@ -37,15 +37,15 @@ public class OrderService {
     }
 
     public Long addOrder(final String customerName, final List<OrderAddRequest> orderAddRequests) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
+        final Long customerId = customerDao.findIdByUsername(customerName);
+        final Long ordersId = orderDao.save(customerId);
 
         for (final OrderAddRequest orderAddRequest : orderAddRequests) {
-            final CartItem cartItem = cartItemDao.findCartItemById(orderAddRequest.getCartItemId())
+            final CartItem cartItem = cartItemDao.findById(orderAddRequest.getCartItemId())
                 .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
 
-            ordersDetailDao.addOrdersDetail(ordersId, cartItem.getProductId(), cartItem.getQuantity().getValue());
-            cartItemDao.deleteCartItem(cartItem.getId(), customerId);
+            ordersDetailDao.save(ordersId, cartItem.getProductId(), cartItem.getQuantity().getValue());
+            cartItemDao.deleteByIdAndCustomerId(cartItem.getId(), customerId);
         }
 
         return ordersId;
@@ -57,16 +57,16 @@ public class OrderService {
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+        final Long customerId = customerDao.findIdByUsername(customerName);
 
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
+        if (!orderDao.existsByIdAndCustomerId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
     public OrderResponses findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+        final Long customerId = customerDao.findIdByUsername(customerName);
+        final List<Long> orderIds = orderDao.findIdsByCustomerId(customerId);
 
         return OrderResponses.from(orderIds.stream()
             .map(this::findOrderResponseByOrderId)
@@ -74,6 +74,6 @@ public class OrderService {
     }
 
     private OrderResponse findOrderResponseByOrderId(final Long orderId) {
-        return OrderResponse.from(orderId, ordersDetailDao.findOrdersDetailsByOrderId(orderId));
+        return OrderResponse.from(orderId, ordersDetailDao.findAllByOrderId(orderId));
     }
 }

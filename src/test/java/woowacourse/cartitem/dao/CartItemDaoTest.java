@@ -57,7 +57,7 @@ public class CartItemDaoTest {
     @Test
     void addCartItem() {
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId1, 5);
+        final Long cartId = cartItemDao.save(customerId, productId1, 5);
 
         // then
         assertThat(cartId).isNotNull();
@@ -67,11 +67,11 @@ public class CartItemDaoTest {
     @Test
     void findProductIdsByCustomerId() {
         // given
-        cartItemDao.addCartItem(customerId, productId1, 5);
-        cartItemDao.addCartItem(customerId, productId2, 5);
+        cartItemDao.save(customerId, productId1, 5);
+        cartItemDao.save(customerId, productId2, 5);
 
         // when
-        final List<Long> productsIds = cartItemDao.findByCustomerId(customerId)
+        final List<Long> productsIds = cartItemDao.findAllByCustomerId(customerId)
             .stream()
             .map(CartItem::getProductId)
             .collect(Collectors.toList());
@@ -84,27 +84,27 @@ public class CartItemDaoTest {
     @Test
     void updateQuantity() {
         // given
-        final Long cartItemId = cartItemDao.addCartItem(customerId, productId1, 5);
+        final Long cartItemId = cartItemDao.save(customerId, productId1, 5);
 
         // when
-        final CartItem cartItem = cartItemDao.findCartItemById(cartItemId).get();
+        final CartItem cartItem = cartItemDao.findById(cartItemId).get();
         cartItem.updateQuantity(10);
         cartItemDao.update(cartItemId, cartItem);
 
         // then
-        assertThat(cartItemDao.findCartItemById(cartItemId).get().getQuantity().getValue()).isEqualTo(10);
+        assertThat(cartItemDao.findById(cartItemId).get().getQuantity().getValue()).isEqualTo(10);
     }
 
     @DisplayName("특정 아이템을 삭제한다.")
     @Test
     void deleteCartItem() {
         // given
-        final Long cartItemId = cartItemDao.addCartItem(customerId, productId1, 5);
+        final Long cartItemId = cartItemDao.save(customerId, productId1, 5);
 
         // when
-        cartItemDao.deleteCartItem(cartItemId, customerId);
+        cartItemDao.deleteByIdAndCustomerId(cartItemId, customerId);
 
         // then
-        assertThat(cartItemDao.findCartItemById(cartItemId)).isEmpty();
+        assertThat(cartItemDao.findById(cartItemId)).isEmpty();
     }
 }

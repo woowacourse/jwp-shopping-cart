@@ -27,9 +27,9 @@ public class CustomerDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByUsername(final String username) {
         final String sql = "SELECT id FROM customer WHERE username = :username";
-        final SqlParameterSource params = new MapSqlParameterSource("username", userName);
+        final SqlParameterSource params = new MapSqlParameterSource("username", username);
 
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }

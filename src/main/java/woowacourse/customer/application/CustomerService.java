@@ -45,7 +45,7 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
-    public CustomerResponse findByUsername(final String username) {
+    public CustomerResponse findCustomerByUsername(final String username) {
         final Customer customer = customerDao.findByUsername(username)
             .orElseThrow(() -> new InvalidLoginException("해당하는 사용자 이름이 없습니다."));
 
@@ -53,8 +53,8 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
-    public Long findIdByUsername(final String username) {
-        return customerDao.findIdByUserName(username);
+    public Long findCustomerIdByUsername(final String username) {
+        return customerDao.findIdByUsername(username);
     }
 
     public void updateInfo(final String username, final UpdateCustomerRequest updateCustomerRequest) {
@@ -79,7 +79,7 @@ public class CustomerService {
         customerDao.update(customer);
     }
 
-    public void deleteByUsername(final String username) {
+    public void deleteCustomerByUsername(final String username) {
         customerDao.deleteByUsername(username);
     }
 }

@@ -40,12 +40,12 @@ public class ProductDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<Product> findProducts() {
+    public List<Product> findAll() {
         final String sql = "SELECT id, name, price, stock, imageURL FROM product";
         return jdbcTemplate.query(sql, rowMapper());
     }
 
-    public Optional<Product> findProductById(final Long id) {
+    public Optional<Product> findById(final Long id) {
         final String sql = "SELECT id, name, price, stock, imageURL FROM product WHERE id = :id";
         final SqlParameterSource params = new MapSqlParameterSource("id", id);
 
@@ -66,7 +66,7 @@ public class ProductDao {
         );
     }
 
-    public void delete(final Long id) {
+    public void deleteById(final Long id) {
         final String sql = "DELETE FROM product WHERE id = :id";
         final SqlParameterSource params = new MapSqlParameterSource("id", id);
 

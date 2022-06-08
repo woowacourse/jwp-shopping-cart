@@ -43,7 +43,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByUsername(userName);
 
         // then
         assertThat(customerId).isEqualTo(1L);

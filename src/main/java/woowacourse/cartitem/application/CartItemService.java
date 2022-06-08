@@ -36,28 +36,28 @@ public class CartItemService {
     }
 
     public Long addCartItem(final String username, final CartItemAddRequest cartItemAddRequest) {
-        final Long customerId = customerService.findIdByUsername(username);
+        final Long customerId = customerService.findCustomerIdByUsername(username);
         validateProductStock(cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity());
         final Quantity quantity = new Quantity(cartItemAddRequest.getQuantity());
 
-        return cartItemDao.addCartItem(customerId, cartItemAddRequest.getProductId(), quantity.getValue());
+        return cartItemDao.save(customerId, cartItemAddRequest.getProductId(), quantity.getValue());
     }
 
     private void validateProductStock(final Long productId, final Integer quantity) {
-        final Product product = productDao.findProductById(productId)
+        final Product product = productDao.findById(productId)
             .orElseThrow(() -> new InvalidProductException("해당 id에 따른 상품을 찾을 수 없습니다."));
         product.checkProductAvailableForPurchase(quantity);
     }
 
-    public CartItemResponses findCartsByCustomerName(final String customerName) {
-        final Long customerId = customerService.findIdByUsername(customerName);
-        final List<CartItem> cartItems = cartItemDao.findByCustomerId(customerId);
+    public CartItemResponses findCartItemsByCustomerName(final String customerName) {
+        final Long customerId = customerService.findCustomerIdByUsername(customerName);
+        final List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customerId);
 
         return CartItemResponses.from(cartItems);
     }
 
-    public CartItemResponse findCartById(final Long cartItemId) {
-        final CartItem cartItem = cartItemDao.findCartItemById(cartItemId)
+    public CartItemResponse findCartItemById(final Long cartItemId) {
+        final CartItem cartItem = cartItemDao.findById(cartItemId)
             .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
 
         return CartItemResponse.from(cartItem);
@@ -65,7 +65,7 @@ public class CartItemService {
 
     public void updateQuantity(final String customerName, final Long cartItemId, final int quantity) {
         validateCustomerCart(cartItemId, customerName);
-        final CartItem cartItem = cartItemDao.findCartItemById(cartItemId)
+        final CartItem cartItem = cartItemDao.findById(cartItemId)
             .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
         cartItem.updateQuantity(quantity);
 
@@ -73,16 +73,16 @@ public class CartItemService {
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
-        final Long customerId = customerService.findIdByUsername(customerName);
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        final Long customerId = customerService.findCustomerIdByUsername(customerName);
+        final List<Long> cartIds = cartItemDao.findAllIdsByCustomerId(customerId);
         if (cartIds.contains(cartId)) {
             return;
         }
         throw new InvalidCartItemException();
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        final Long customerId = customerService.findIdByUsername(customerName);
-        cartItemDao.deleteCartItem(cartId, customerId);
+    public void deleteCartItem(final String customerName, final Long cartId) {
+        final Long customerId = customerService.findCustomerIdByUsername(customerName);
+        cartItemDao.deleteByIdAndCustomerId(cartId, customerId);
     }
 }

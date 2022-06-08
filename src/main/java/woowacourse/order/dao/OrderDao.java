@@ -23,18 +23,18 @@ public class OrderDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Long addOrders(final Long customerId) {
+    public Long save(final Long customerId) {
         final SqlParameterSource params = new MapSqlParameterSource("customer_id", customerId);
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<Long> findOrderIdsByCustomerId(final Long customerId) {
+    public List<Long> findIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT id FROM orders WHERE customer_id = :customer_id";
         final SqlParameterSource params = new MapSqlParameterSource("customer_id", customerId);
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
     }
 
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
+    public boolean existsByIdAndCustomerId(final Long customerId, final Long orderId) {
         final String sql = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = :customer_id AND id = :id)";
         final SqlParameterSource params = new MapSqlParameterSource("customer_id", customerId)
             .addValue("id", orderId);

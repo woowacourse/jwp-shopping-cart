@@ -39,7 +39,7 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<CustomerResponse> findCustomerInfo(@AuthenticationPrincipal final String username) {
-        return ResponseEntity.ok().body(customerService.findByUsername(username));
+        return ResponseEntity.ok().body(customerService.findCustomerByUsername(username));
     }
 
     @PutMapping
@@ -71,7 +71,7 @@ public class CustomerController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal final String username) {
-        customerService.deleteByUsername(username);
+        customerService.deleteCustomerByUsername(username);
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).build();
     }
 }

@@ -30,8 +30,8 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<CartItemResponses> getCartItems(@AuthenticationPrincipal final String customerName) {
-        return ResponseEntity.ok().body(cartItemService.findCartsByCustomerName(customerName));
+    public ResponseEntity<CartItemResponses> findCartItems(@AuthenticationPrincipal final String customerName) {
+        return ResponseEntity.ok().body(cartItemService.findCartItemsByCustomerName(customerName));
     }
 
     @PostMapping
@@ -40,7 +40,7 @@ public class CartItemController {
         @Valid @RequestBody final CartItemAddRequest cartItemAddRequest
     ) {
         final Long id = cartItemService.addCartItem(username, cartItemAddRequest);
-        return ResponseEntity.ok(cartItemService.findCartById(id));
+        return ResponseEntity.ok(cartItemService.findCartItemById(id));
     }
 
     @PatchMapping("/{cartItemId}")
@@ -58,7 +58,7 @@ public class CartItemController {
         @AuthenticationPrincipal final String username,
         @PathVariable final Long cartItemId
     ) {
-        cartItemService.deleteCart(username, cartItemId);
+        cartItemService.deleteCartItem(username, cartItemId);
         return ResponseEntity.noContent().build();
     }
 }
