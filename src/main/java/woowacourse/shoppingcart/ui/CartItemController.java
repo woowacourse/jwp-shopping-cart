@@ -14,7 +14,7 @@ import woowacourse.shoppingcart.dto.cart.CartItemsResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/me/cartItems")
+@RequestMapping("/users/me/carts")
 public class CartItemController {
     private final CartService cartService;
 

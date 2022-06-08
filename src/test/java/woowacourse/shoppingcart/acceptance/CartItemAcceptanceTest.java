@@ -54,7 +54,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         ExtractableResponse response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestBody)
-                .when().post("/users/me/cartItems")
+                .when().post("/users/me/carts")
                 .then().log().all()
                 .extract();
 
@@ -106,7 +106,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/users/me/cartItems")
+                .when().get("/users/me/carts")
                 .then().log().all()
                 .extract();
 
@@ -224,7 +224,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         return RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .when().log().all()
-                .delete("users/me/cartItems/" + productId1)
+                .delete("users/me/carts/" + productId1)
                 .then().log().all()
                 .extract();
     }
@@ -246,7 +246,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .body(Map.of("quantity", quantity))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().log().all()
-                .put("users/me/cartItems/" + productId)
+                .put("users/me/carts/" + productId)
                 .then().log().all()
                 .extract();
         return response;

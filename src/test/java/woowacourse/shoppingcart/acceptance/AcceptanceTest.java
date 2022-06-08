@@ -101,7 +101,7 @@ public class AcceptanceTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                     .body(requestBody)
-                    .when().post("/users/me/cartItems")
+                    .when().post("/users/me/carts")
                     .then().log().all()
                     .extract();
     }
@@ -115,7 +115,7 @@ public class AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .when().get("/users/me/cartItems")
+                .when().get("/users/me/carts")
                 .then().log().all()
                 .extract();
         return response;
