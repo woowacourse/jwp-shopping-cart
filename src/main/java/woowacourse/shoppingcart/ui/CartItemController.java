@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
+import woowacourse.shoppingcart.dto.CartItemsResponse;
 
 import java.util.List;
 
@@ -22,8 +23,9 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal Customer customer) {
-        return ResponseEntity.ok(cartService.findCartsByCustomer(customer));
+    public ResponseEntity<CartItemsResponse> getCartItems(@AuthenticationPrincipal Customer customer) {
+        List<Cart> carts = cartService.findCartsByCustomer(customer);
+        return ResponseEntity.ok(CartItemsResponse.from(carts));
     }
 
     @PostMapping
