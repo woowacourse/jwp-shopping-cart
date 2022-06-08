@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.exception.notfound.OrdersNotFoundException;
 
 @Repository
 public class JdbcOrdersDao implements OrdersDao {
@@ -29,22 +31,37 @@ public class JdbcOrdersDao implements OrdersDao {
     }
 
     public Long save(Orders orders) {
-        Map<String, Long> params = Map.of("customer_id", orders.getCustomerId());
-        long orderId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-
-        for (OrderDetail orderDetail : orders.getOrderDetails()) {
-            orderDetailDao.save(orderId, orderDetail.getProduct().getId(), orderDetail.getQuantity());
-        }
-
+        long orderId = saveOrders(orders);
+        saveOrderDetails(orders.getOrderDetails(), orderId);
         return orderId;
     }
 
-    public Orders findById(Long id) {
-        String sql = "SELECT customer_id FROM orders WHERE id = ?";
-        Long customerId = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("customer_id"), id);
+    private long saveOrders(Orders orders) {
+        Map<String, Long> params = Map.of("customer_id", orders.getCustomerId());
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+    }
 
+    private void saveOrderDetails(List<OrderDetail> orderDetails, long orderId) {
+        for (OrderDetail orderDetail : orderDetails) {
+            long productId = orderDetail.getProduct().getId();
+            int quantity = orderDetail.getQuantity();
+            orderDetailDao.save(orderId, productId, quantity);
+        }
+    }
+
+    public Orders findById(Long id) {
+        long customerId = findCustomerIdByOrdersId(id);
         List<OrderDetail> orderDetails = findOrderDetailsById(id);
         return new Orders(orderDetails, customerId);
+    }
+
+    private Long findCustomerIdByOrdersId(Long id) {
+        String sql = "SELECT customer_id FROM orders WHERE id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("customer_id"), id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new OrdersNotFoundException();
+        }
     }
 
     public List<Orders> findAllByCustomerId(Long customerId) {

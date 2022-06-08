@@ -12,7 +12,6 @@ import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
-
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcProductDao(final JdbcTemplate jdbcTemplate) {
