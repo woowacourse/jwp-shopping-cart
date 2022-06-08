@@ -13,8 +13,8 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.product.ProductRequest;
+import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {

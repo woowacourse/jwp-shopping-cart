@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.product.ProductRequest;
 
 @Service
 @Transactional(rollbackFor = Exception.class)

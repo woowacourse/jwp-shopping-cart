@@ -13,8 +13,8 @@ import io.restassured.response.Response;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginTokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CartItemRequest;
-import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
+import woowacourse.shoppingcart.dto.cartitem.CartItemRequest;
+import woowacourse.shoppingcart.dto.cartitem.CartItemUpdateRequest;
 
 public class CartControllerTest extends AcceptanceTest {
 

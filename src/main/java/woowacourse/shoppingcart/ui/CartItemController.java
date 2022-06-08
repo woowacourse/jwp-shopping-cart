@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.dto.CartItemRequest;
-import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.cartitem.CartItemRequest;
+import woowacourse.shoppingcart.dto.cartitem.CartItemResponse;
+import woowacourse.shoppingcart.dto.cartitem.CartItemUpdateRequest;
 
 @RestController
 @RequestMapping("/api/customers/{customerId}/carts")
