@@ -1,26 +1,35 @@
 package woowacourse.shoppingcart.order.application;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import woowacourse.shoppingcart.auth.support.exception.AuthException;
+import woowacourse.shoppingcart.auth.support.exception.AuthExceptionCode;
+import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.support.exception.CartException;
+import woowacourse.shoppingcart.cart.support.exception.CartExceptionCode;
 import woowacourse.shoppingcart.cart.support.jdbc.dao.CartItemDao;
+import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.customer.support.jdbc.dao.CustomerDao;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.order.application.dto.request.OrderRequest;
+import woowacourse.shoppingcart.order.application.dto.response.OrderDetailResponse;
+import woowacourse.shoppingcart.order.application.dto.response.OrderResponse;
 import woowacourse.shoppingcart.order.domain.OrderDetail;
-import woowacourse.shoppingcart.order.domain.Orders;
-import woowacourse.shoppingcart.order.dto.OrderRequest;
+import woowacourse.shoppingcart.order.support.exception.OrderException;
+import woowacourse.shoppingcart.order.support.exception.OrderExceptionCode;
 import woowacourse.shoppingcart.order.support.jdbc.dao.OrderDao;
 import woowacourse.shoppingcart.order.support.jdbc.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.product.domain.Product;
+import woowacourse.shoppingcart.product.support.exception.ProductException;
+import woowacourse.shoppingcart.product.support.exception.ProductExceptionCode;
 import woowacourse.shoppingcart.product.support.jdbc.dao.ProductDao;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true, rollbackFor = Exception.class)
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -38,53 +47,60 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
+    @Transactional
+    public Long addOrder(final Long customerId, final OrderRequest orderRequest) {
+        final Customer customer = customerDao.findById(customerId)
+                .orElseThrow(() -> new AuthException(AuthExceptionCode.REQUIRED_AUTHORIZATION));
+        final Long orderId = orderDao.addOrders(customer.getId(), LocalDateTime.now());
 
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
+        final List<Cart> cartItems = cartItemDao.findAllByCustomerId(customer.getId());
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+        for (final Long productId : orderRequest.getProductIds()) {
+            final Product product = productDao.findById(productId)
+                    .orElseThrow(() -> new ProductException(ProductExceptionCode.NO_SUCH_PRODUCT_EXIST));
+
+            final Cart cart = cartItems.stream()
+                    .filter(it -> it.getProductId().equals(productId))
+                    .findAny()
+                    .orElseThrow(() -> new CartException(CartExceptionCode.NO_SUCH_PRODUCT_EXIST));
+
+            ordersDetailDao.addOrdersDetail(new OrderDetail(orderId, product.getId(), cart.getQuantity()));
+            cartItemDao.deleteCartItem(cart.getId());
         }
 
-        return ordersId;
+        return orderId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+    public OrderResponse findOrderById(final Long customerId, final Long orderId) {
+        validateOrderAccessable(customerId, orderId);
+
+        final Customer customer = customerDao.findById(customerId)
+                .orElseThrow(() -> new AuthException(AuthExceptionCode.REQUIRED_AUTHORIZATION));
+
+        final List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
+        for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
+            final Product product = productDao.findById(orderDetail.getProductId())
+                    .orElseThrow(() -> new ProductException(ProductExceptionCode.NO_SUCH_PRODUCT_EXIST));
+            orderDetailResponses.add(OrderDetailResponse.of(product, orderDetail));
+        }
+
+        return new OrderResponse(orderId, orderDetailResponses, calculateTotalPrice(orderDetailResponses),
+                orderDao.getOrderDateById(orderId));
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
+    private void validateOrderAccessable(final Long customerId, final Long orderId) {
+        if (!orderDao.existsById(orderId)) {
+            throw new OrderException(OrderExceptionCode.NO_SUCH_ORDER_EXIST);
+        }
+        if (!orderDao.existsByIdAndCustomerId(orderId, customerId)) {
+            throw new AuthException(AuthExceptionCode.REQUIRED_AUTHORIZATION);
 
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
-
-        return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
-                .collect(Collectors.toList());
-    }
-
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findById(productQuantity.getProductId())
-                    .orElseThrow(InvalidProductException::new);
-            final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
-        }
-
-        return new Orders(orderId, ordersDetails);
+    private long calculateTotalPrice(final List<OrderDetailResponse> orderDetailResponses) {
+        return orderDetailResponses.stream()
+                .mapToLong(orderDetailResponse -> orderDetailResponse.getPrice() * orderDetailResponse.getQuantity())
+                .sum();
     }
 }

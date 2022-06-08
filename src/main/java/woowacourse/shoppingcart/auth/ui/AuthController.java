@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.shoppingcart.auth.application.AuthService;
-import woowacourse.shoppingcart.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.auth.support.AuthenticationPrincipal;
+import woowacourse.shoppingcart.auth.application.dto.request.TokenRequest;
+import woowacourse.shoppingcart.auth.application.dto.response.TokenResponse;
+import woowacourse.shoppingcart.auth.support.jwt.AuthenticationPrincipal;
 
 @RestController
 @RequestMapping("/auth")

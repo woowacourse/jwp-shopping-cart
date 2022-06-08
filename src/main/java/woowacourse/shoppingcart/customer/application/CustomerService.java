@@ -3,16 +3,19 @@ package woowacourse.shoppingcart.customer.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import woowacourse.shoppingcart.auth.support.exception.AuthException;
+import woowacourse.shoppingcart.auth.support.exception.AuthExceptionCode;
+import woowacourse.shoppingcart.customer.application.dto.request.CustomerPasswordUpdateRequest;
+import woowacourse.shoppingcart.customer.application.dto.request.CustomerProfileUpdateRequest;
+import woowacourse.shoppingcart.customer.application.dto.request.CustomerRegisterRequest;
+import woowacourse.shoppingcart.customer.application.dto.request.CustomerRemoveRequest;
+import woowacourse.shoppingcart.customer.application.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.customer.application.dto.response.CustomerUpdateResponse;
 import woowacourse.shoppingcart.customer.domain.Customer;
-import woowacourse.shoppingcart.customer.dto.CustomerRegisterRequest;
-import woowacourse.shoppingcart.customer.dto.CustomerRemoveRequest;
-import woowacourse.shoppingcart.customer.dto.CustomerResponse;
-import woowacourse.shoppingcart.customer.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.customer.dto.CustomerUpdateResponse;
+import woowacourse.shoppingcart.customer.domain.Password;
+import woowacourse.shoppingcart.customer.support.exception.CustomerException;
+import woowacourse.shoppingcart.customer.support.exception.CustomerExceptionCode;
 import woowacourse.shoppingcart.customer.support.jdbc.dao.CustomerDao;
-import woowacourse.shoppingcart.exception.DuplicatedCustomerEmailException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.WrongPasswordException;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,7 +30,7 @@ public class CustomerService {
     @Transactional
     public Long registerCustomer(final CustomerRegisterRequest customerRegisterRequest) {
         if (customerDao.existsByEmail(customerRegisterRequest.getEmail())) {
-            throw new DuplicatedCustomerEmailException();
+            throw new CustomerException(CustomerExceptionCode.ALREADY_EMAIL_EXIST);
         }
 
         final Customer customer = new Customer(customerRegisterRequest.getEmail(),
@@ -43,16 +46,25 @@ public class CustomerService {
 
     private Customer getById(final Long customerId) {
         return customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(() -> new AuthException(AuthExceptionCode.REQUIRED_AUTHORIZATION));
     }
 
     @Transactional
-    public CustomerUpdateResponse updateCustomer(final Long customerId,
-                                                 final CustomerUpdateRequest customerUpdateRequest) {
+    public CustomerUpdateResponse updateCustomerProfile(final Long customerId,
+                                                        final CustomerProfileUpdateRequest customerUpdateRequest) {
         final Customer customer = getById(customerId);
-        validatePassword(customer, customerUpdateRequest.getPassword());
-        customer.update(customerUpdateRequest.getNickname(), customerUpdateRequest.getNewPassword());
+        customer.updateProfile(customerUpdateRequest.getNickname());
+        customerDao.update(customer);
         return new CustomerUpdateResponse(customer.getNickname());
+    }
+
+    @Transactional
+    public void updateCustomerPassword(final Long customerId,
+                                       final CustomerPasswordUpdateRequest customerPasswordUpdateRequest) {
+        final Customer customer = getById(customerId);
+        validatePassword(customer, new Password(customerPasswordUpdateRequest.getPassword()));
+        customer.updatePassword(customerPasswordUpdateRequest.getNewPassword());
+        customerDao.update(customer);
     }
 
     @Transactional
@@ -63,9 +75,15 @@ public class CustomerService {
         customerDao.deleteById(customerId);
     }
 
+    private void validatePassword(final Customer customer, final Password password) {
+        if (!customer.equalsPassword(password)) {
+            throw new CustomerException(CustomerExceptionCode.MISMATCH_PASSWORD);
+        }
+    }
+
     private void validatePassword(final Customer customer, final String password) {
         if (!customer.equalsPassword(password)) {
-            throw new WrongPasswordException();
+            throw new CustomerException(CustomerExceptionCode.MISMATCH_PASSWORD);
         }
     }
 }

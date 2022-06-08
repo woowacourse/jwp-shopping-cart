@@ -7,10 +7,11 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
-import woowacourse.shoppingcart.auth.exception.InvalidTokenException;
-import woowacourse.shoppingcart.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.auth.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.auth.support.exception.AuthException;
+import woowacourse.shoppingcart.auth.support.exception.AuthExceptionCode;
+import woowacourse.shoppingcart.auth.support.jwt.AuthenticationPrincipal;
+import woowacourse.shoppingcart.auth.support.jwt.AuthorizationExtractor;
+import woowacourse.shoppingcart.auth.support.jwt.JwtTokenProvider;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -30,13 +31,13 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
                                 final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String token = AuthorizationExtractor.extract(request)
-                .orElseThrow(InvalidTokenException::new);
+                .orElseThrow(() -> new AuthException(AuthExceptionCode.REQUIRED_AUTHORIZATION));
         return extractIdFromToken(token);
     }
 
     private Long extractIdFromToken(final String token) {
         if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException();
+            throw new AuthException(AuthExceptionCode.EXPIRED_TOKEN);
         }
         return Long.parseLong(jwtTokenProvider.getPayload(token));
     }

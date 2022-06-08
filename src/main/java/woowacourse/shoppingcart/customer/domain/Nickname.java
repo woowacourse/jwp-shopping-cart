@@ -1,34 +1,32 @@
 package woowacourse.shoppingcart.customer.domain;
 
-import woowacourse.shoppingcart.exception.InvalidNicknameFormatException;
+import woowacourse.shoppingcart.customer.support.exception.CustomerException;
+import woowacourse.shoppingcart.customer.support.exception.CustomerExceptionCode;
 
 public class Nickname {
 
     private static final int MIN_LENGTH = 2;
     private static final int MAX_LENGTH = 10;
 
-    private final String nickname;
+    private final String value;
 
-    public Nickname(final String nickname) {
-        validateLength(nickname);
-        validateNotBlank(nickname);
-        this.nickname = nickname;
+    public Nickname(final String value) {
+        validateNickname(value);
+        this.value = value;
     }
 
-    private void validateLength(final String nickname) {
-        int length = nickname.length();
-        if (length < MIN_LENGTH || length > MAX_LENGTH) {
-            throw new InvalidNicknameFormatException();
+    private void validateNickname(final String value) {
+        if (value.isBlank() || isLengthOutOfSize(value)) {
+            throw new CustomerException(CustomerExceptionCode.INVALID_FORMAT_NICKNAME);
         }
     }
 
-    private void validateNotBlank(final String nickname) {
-        if (nickname.isBlank()) {
-            throw new InvalidNicknameFormatException();
-        }
+    private boolean isLengthOutOfSize(final String value) {
+        final int length = value.length();
+        return length < MIN_LENGTH || length > MAX_LENGTH;
     }
 
     public String get() {
-        return nickname;
+        return value;
     }
 }

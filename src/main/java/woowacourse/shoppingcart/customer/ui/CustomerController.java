@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import woowacourse.shoppingcart.auth.support.AuthenticationPrincipal;
+import woowacourse.shoppingcart.auth.support.jwt.AuthenticationPrincipal;
 import woowacourse.shoppingcart.customer.application.CustomerService;
-import woowacourse.shoppingcart.customer.dto.CustomerRegisterRequest;
-import woowacourse.shoppingcart.customer.dto.CustomerRemoveRequest;
-import woowacourse.shoppingcart.customer.dto.CustomerResponse;
-import woowacourse.shoppingcart.customer.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.customer.dto.CustomerUpdateResponse;
+import woowacourse.shoppingcart.customer.application.dto.request.CustomerPasswordUpdateRequest;
+import woowacourse.shoppingcart.customer.application.dto.request.CustomerProfileUpdateRequest;
+import woowacourse.shoppingcart.customer.application.dto.request.CustomerRegisterRequest;
+import woowacourse.shoppingcart.customer.application.dto.request.CustomerRemoveRequest;
+import woowacourse.shoppingcart.customer.application.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.customer.application.dto.response.CustomerUpdateResponse;
 
 @RestController
 @RequestMapping("/customers")
@@ -44,12 +45,21 @@ public class CustomerController {
         return ResponseEntity.ok(customerResponse);
     }
 
-    @PatchMapping
-    public ResponseEntity<CustomerUpdateResponse> updateCustomer(
+    @PatchMapping("/profile")
+    public ResponseEntity<CustomerUpdateResponse> updateCustomerProfile(
             @AuthenticationPrincipal final Long id,
-            @RequestBody final CustomerUpdateRequest customerUpdateRequest) {
-        final CustomerUpdateResponse customerUpdateResponse = customerService.updateCustomer(id, customerUpdateRequest);
+            @RequestBody final CustomerProfileUpdateRequest customerUpdateRequest) {
+        final CustomerUpdateResponse customerUpdateResponse = customerService.updateCustomerProfile(id,
+                customerUpdateRequest);
         return ResponseEntity.ok(customerUpdateResponse);
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updateCustomer(
+            @AuthenticationPrincipal final Long id,
+            @RequestBody final CustomerPasswordUpdateRequest customerPasswordUpdateRequest) {
+        customerService.updateCustomerPassword(id, customerPasswordUpdateRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping

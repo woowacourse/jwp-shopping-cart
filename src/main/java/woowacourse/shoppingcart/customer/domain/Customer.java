@@ -22,14 +22,20 @@ public class Customer {
         this(null, email, nickname, password);
     }
 
-    public void update(final String nickname, final String password) {
+    public void updateProfile(final String nickname) {
         this.nickname = new Nickname(nickname);
+    }
+
+    public void updatePassword(final String password) {
         this.password = new Password(password);
     }
 
-    public boolean equalsPassword(final String password) {
-        final Password other = new Password(password);
+    public boolean equalsPassword(final Password other) {
         return other.equals(this.password);
+    }
+
+    public boolean equalsPassword(final String other) {
+        return other.equals(password.get());
     }
 
     public Long getId() {

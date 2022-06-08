@@ -6,9 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.product.application.dto.response.ProductResponse;
 import woowacourse.shoppingcart.product.domain.Product;
+import woowacourse.shoppingcart.product.support.exception.ProductException;
+import woowacourse.shoppingcart.product.support.exception.ProductExceptionCode;
 import woowacourse.shoppingcart.product.support.jdbc.dao.ProductDao;
 
 @Service
@@ -29,7 +30,7 @@ public class ProductService {
 
     public ProductResponse findProductById(final Long productId) {
         final Product product = productDao.findById(productId)
-                .orElseThrow(InvalidProductException::new);
+                .orElseThrow(() -> new ProductException(ProductExceptionCode.NO_SUCH_PRODUCT_EXIST));
         return ProductResponse.of(product);
     }
 }

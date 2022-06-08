@@ -2,13 +2,13 @@ package woowacourse.shoppingcart.auth.application;
 
 import org.springframework.stereotype.Service;
 
-import woowacourse.shoppingcart.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.auth.exception.NoSuchEmailException;
-import woowacourse.shoppingcart.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.auth.application.dto.request.TokenRequest;
+import woowacourse.shoppingcart.auth.application.dto.response.TokenResponse;
+import woowacourse.shoppingcart.auth.support.jwt.JwtTokenProvider;
 import woowacourse.shoppingcart.customer.domain.Customer;
+import woowacourse.shoppingcart.customer.support.exception.CustomerException;
+import woowacourse.shoppingcart.customer.support.exception.CustomerExceptionCode;
 import woowacourse.shoppingcart.customer.support.jdbc.dao.CustomerDao;
-import woowacourse.shoppingcart.exception.WrongPasswordException;
 
 @Service
 public class AuthService {
@@ -25,7 +25,7 @@ public class AuthService {
         final Customer customer = getCustomer(tokenRequest.getEmail());
 
         if (!customer.equalsPassword(tokenRequest.getPassword())) {
-            throw new WrongPasswordException();
+                throw new CustomerException(CustomerExceptionCode.MISMATCH_EMAIL_OR_PASSWORD);
         }
 
         final String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
@@ -34,6 +34,6 @@ public class AuthService {
 
     private Customer getCustomer(final String email) {
         return customerDao.findByEmail(email)
-                .orElseThrow(NoSuchEmailException::new);
+                .orElseThrow(() -> new CustomerException(CustomerExceptionCode.MISMATCH_EMAIL_OR_PASSWORD));
     }
 }

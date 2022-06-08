@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.customer.support.jdbc.dao;
 
-import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import woowacourse.shoppingcart.customer.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
@@ -60,18 +58,6 @@ public class CustomerDao {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, parameters, ROW_MAPPER));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
-        }
-    }
-
-    public Long findIdByNickname(final String nickname) {
-        try {
-            final String query = "SELECT id FROM customer WHERE username = (:nickname)";
-            final SqlParameterSource parameters = new MapSqlParameterSource("nickname",
-                    nickname.toLowerCase(Locale.ROOT));
-            return jdbcTemplate.queryForObject(query, parameters,
-                    (resultSet, rowNum) -> resultSet.getLong("id"));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
         }
     }
 
