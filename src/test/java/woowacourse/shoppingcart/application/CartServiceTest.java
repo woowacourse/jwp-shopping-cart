@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.CartItemQuantityUpdateRequest;
 import woowacourse.shoppingcart.application.dto.CartItemResponse;
 import woowacourse.shoppingcart.application.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.application.dto.ProductSaveRequest;
@@ -50,5 +51,21 @@ class CartServiceTest {
 
         // then
         assertThat(cartItemResponses).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("고객 id와 상품 id를 통해서 카트의 상품 수량을 변경할 수 있다.")
+    void updateQuantity() {
+        // given
+        customerService.save(new CustomerSaveRequest("email@email.com", "password1234A!", "rookie"));
+        productService.save(new ProductSaveRequest("상품1", 1000, "https://www.test.com"));
+        cartService.saveCartItem(1L, 1L);
+
+        // when
+        cartService.updateQuantity(new CartItemQuantityUpdateRequest(1L, 1L, 2));
+
+        // then
+        List<CartItemResponse> cartItems = cartService.findAllByCustomerId(1L);
+        assertThat(cartItems.get(0).getQuantity()).isEqualTo(2);
     }
 }

@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.application.dto.CartItemResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import woowacourse.shoppingcart.ui.dto.CartItemQuantityRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.fixture.RestAssuredFixture.postCustomers;
@@ -57,6 +58,22 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
+    @Test
+    @DisplayName("장바구니에 등록된 상품의 수량 변경")
+    void updateQuantityCartItem() {
+        // given
+        장바구니_아이템_추가되어_있음(accessToken, productId1);
+        장바구니_아이템_추가되어_있음(accessToken, productId2);
+
+        // when
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_변경_요청(accessToken, productId1, 2);
+
+        // then
+        장바구니_아이템_수량_변경_응답됨(response);
+//        장바구니_아이템_수량_변경_확인됨(accessToken);
+    }
+
+
 //    @DisplayName("장바구니 삭제")
 //    @Test
 //    void deleteCartItem() {
@@ -66,7 +83,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
 //
 //        장바구니_삭제됨(response);
 //    }
-
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
         return RestAssured
                 .given().log().all()
@@ -113,6 +129,21 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .map(it -> it.getId())
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
+    }
+
+    private ExtractableResponse<Response> 장바구니_아이템_수량_변경_요청(String accessToken, Long productId, int quantity) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken)
+                .body(new CartItemQuantityRequest(quantity))
+                .when().patch("/api/carts/products/{id}", productId)
+                .then().log().all()
+                .extract();
+    }
+
+    private void 장바구니_아이템_수량_변경_응답됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {

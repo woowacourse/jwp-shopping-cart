@@ -76,6 +76,15 @@ public class CartItemDao {
         return template.query(query, nameParameters, CART_ROW_MAPPER);
     }
 
+    public void updateQuantity(Long customerId, Long productId, int quantity) {
+        String query = "UPDATE cart_item SET quantity = :quantity WHERE customer_id = :customer_id AND product_id = :product_id";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource("quantity", quantity)
+                .addValue("customer_id", customerId)
+                .addValue("product_id", productId);
+
+        template.update(query, nameParameters);
+    }
+
     public void deleteCartItem(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
