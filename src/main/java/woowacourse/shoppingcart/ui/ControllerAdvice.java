@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.ExistCartErrorResponse;
 import woowacourse.shoppingcart.exception.*;
 
 import javax.validation.ConstraintViolationException;
@@ -36,6 +37,14 @@ public class ControllerAdvice {
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler({
+            ExistCartItemException.class
+    })
+    public ResponseEntity<ExistCartErrorResponse> handleAddDuplicateCartItem(final RuntimeException e) {
+        ExistCartErrorResponse errorResponse = new ExistCartErrorResponse(e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
 

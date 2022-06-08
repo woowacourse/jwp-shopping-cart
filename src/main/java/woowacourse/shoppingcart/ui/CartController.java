@@ -29,11 +29,8 @@ public class CartController {
     @PostMapping("/{productId}")
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal Customer customer,
                                             @PathVariable final Long productId) {
-        if (cartService.hasProductInCart(productId, customer.getUsername())) {
-            return ResponseEntity.created(URI.create("/cart")).build();
-        }
         cartService.addCart(productId, customer.getUsername());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create("/cart")).build();
     }
 
     @PutMapping("/{productId}/quantity")

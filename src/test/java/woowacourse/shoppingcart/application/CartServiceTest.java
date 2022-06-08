@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dto.*;
+import woowacourse.shoppingcart.exception.ExistCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.List;
@@ -63,21 +64,12 @@ class CartServiceTest {
                 .isEqualTo(List.of(cartResponse1, cartResponse2));
     }
 
-    @DisplayName("장바구니에 해당 상품이 존재하는지 확인한다 - true인 경우")
+    @DisplayName("장바구니에 담긴 상품을 다시 장바구니에 넣을 경우 예외를 발생시킨다.")
     @Test
-    void hasProductInCart_true() {
-        boolean actual = cartService.hasProductInCart(productResponse1.getId(), "kth990303");
-
-        assertThat(actual).isTrue();
-    }
-
-    @DisplayName("장바구니에 해당 상품이 존재하는지 확인한다 - false인 경우")
-    @Test
-    void hasProductInCart_false() {
-        boolean actual =
-                cartService.hasProductInCart(productResponse2.getId() + 9999, "kth990303");
-
-        assertThat(actual).isFalse();
+    void addDuplicateCartItem() {
+        assertThatExceptionOfType(ExistCartItemException.class)
+                .isThrownBy(()->cartService.addCart(productResponse2.getId(), "kth990303"))
+                .withMessageContaining("이미");
     }
 
     @DisplayName("장바구니에 존재하는 상품의 수량을 변경한다.")

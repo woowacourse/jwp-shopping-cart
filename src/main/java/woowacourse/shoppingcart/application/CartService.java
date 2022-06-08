@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartsResponse;
+import woowacourse.shoppingcart.exception.ExistCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -36,15 +37,18 @@ public class CartService {
         return new CartsResponse(cartResponses);
     }
 
-    public boolean hasProductInCart(final Long productId, final String customerUsername) {
-        final Long customerId = customerDao.findIdByUsername(customerUsername);
-        return cartDao.findProductIdsByCustomerId(customerId).contains(productId);
-    }
-
     public void addCart(final Long productId, final String customerUsername) {
+        if (hasProductInCart(productId, customerUsername)) {
+            throw new ExistCartItemException();
+        }
         final Long customerId = customerDao.findIdByUsername(customerUsername);
         validateProductId(productId);
         cartDao.addCartItem(customerId, productId);
+    }
+
+    private boolean hasProductInCart(final Long productId, final String customerUsername) {
+        final Long customerId = customerDao.findIdByUsername(customerUsername);
+        return cartDao.findProductIdsByCustomerId(customerId).contains(productId);
     }
 
     public void updateCartItemQuantity(final int quantity, final Long productId, final String customerUsername) {

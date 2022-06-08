@@ -43,10 +43,6 @@ create table orders
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-alter table orders
-    add constraint fk_orders_to_customer
-        foreign key (customer_id) references customer (id);
-
 create table orders_detail
 (
     id         bigint  not null auto_increment,
@@ -55,14 +51,6 @@ create table orders_detail
     quantity   integer not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
-
-alter table orders_detail
-    add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id);
-
-alter table orders_detail
-    add constraint fk_orders_detail_to_product
-        foreign key (product_id) references product (id);
 
 insert into product (name, price, thumbnail)
 values ('싱싱한감자', 5000, 'https://storybook.takealook.kr/image/potato.jpg'),

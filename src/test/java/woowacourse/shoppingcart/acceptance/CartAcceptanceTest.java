@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 @DisplayName("장바구니 관련 기능")
@@ -58,7 +59,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_조회(List.of(cartResponse1));
     }
 
-    @DisplayName("장바구니에 이미 존재하는 아이템을 추가할 경우 Location의 헤더로 리다이렉션한다.")
+    @DisplayName("장바구니에 이미 존재하는 아이템을 추가할 경우 예외를 발생시킨다..")
     @Test
     void addCartItem_duplicateItem() {
         장바구니_아이템_중복_추가_요청(productId1);
@@ -161,8 +162,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .body(requestBody)
                 .when().post("/cart/{productId}", productId)
                 .then().log().all()
-                .header("Location", "/cart")
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("redirect", equalTo(true));
     }
 
     private static void 장바구니_잘못된_아이템_추가_요청(Long productId) {
