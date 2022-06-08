@@ -59,7 +59,7 @@ public class CartItemController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Void> updateCartItem(@PathVariable final Long customerId,
                                                @RequestParam final Long productId,
                                                @RequestBody final UpdateCartItemCountItemRequest updateCartItemCountItemRequest,
