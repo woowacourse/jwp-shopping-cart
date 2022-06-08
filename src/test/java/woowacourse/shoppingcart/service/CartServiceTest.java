@@ -5,23 +5,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
-import woowacourse.fixture.Fixture;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 import static woowacourse.fixture.Fixture.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -61,7 +55,7 @@ class CartServiceTest {
 
         cartService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(2));
 
-        CartItem cartItem = cartItemDao.findCartItemByCustomerId(customerId, productId);
+        CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId);
         assertThat(cartItem.getCount()).isEqualTo(2);
     }
 
