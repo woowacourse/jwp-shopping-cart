@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/users")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -20,25 +21,25 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public ResponseEntity<Void> addCustomer(@RequestBody @Valid SignUpRequest signUpRequest) {
         customerService.registerCustomer(signUpRequest);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/users/me")
+    @GetMapping("/me")
     public ResponseEntity<CustomerResponse> getCustomer(@AuthenticationPrincipal Customer customer) {
         CustomerResponse customerResponse = new CustomerResponse(customer.getEmail(), customer.getNickname());
         return ResponseEntity.ok(customerResponse);
     }
 
-    @DeleteMapping("/users/me")
+    @DeleteMapping("/me")
     public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal Customer customer) {
         customerService.deleteByEmail(customer.getEmail());
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/users/me")
+    @PutMapping("/me")
     public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal Customer customer,
                                                @RequestBody @Valid CustomerUpdateRequest customerUpdateRequest) {
         customerService.updateCustomer(customer.getEmail(), customerUpdateRequest);

@@ -31,5 +31,4 @@ public class AuthService {
 
         return jwtTokenProvider.createToken(customer.getId());
     }
-
 }
