@@ -59,6 +59,18 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
+    @DisplayName("장바구니 모두 삭제")
+    @Test
+    void deleteAllCartItem() {
+        String accessToken = 인증토큰_생성();
+        장바구니_아이템_추가되어_있음(accessToken, productId1);
+        장바구니_아이템_추가되어_있음(accessToken, productId2);
+
+        ExtractableResponse<Response> response = 장바구니_전체_삭제_요청(accessToken);
+
+        장바구니_삭제됨(response);
+    }
+
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
@@ -99,6 +111,16 @@ class CartItemAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/customers/carts")
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 장바구니_전체_삭제_요청(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/customers/carts")
                 .then().log().all()
                 .extract();
     }

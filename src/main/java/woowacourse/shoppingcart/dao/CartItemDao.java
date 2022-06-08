@@ -57,6 +57,15 @@ public class CartItemDao {
         }
     }
 
+    public void deleteAllByCustomerId(Long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
+
+        final int rowCount = jdbcTemplate.update(sql, customerId);
+        if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
     public void deleteCartItem(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
