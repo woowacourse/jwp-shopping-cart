@@ -9,19 +9,22 @@
 ## 요구사항
 
 ### 프론트 요청사항
+
 - [ ] 회원가입, 사용자 조회, 사용자 수정에 body 값 fullAddress Indent 지우기
 - [ ] zoneCode -> zonecode 로 변경
 
 ### 리팩터링 할 부분
-- [ ] 서비스 계층에서 에러처리를 
-- [ ] DataAccessUtils.singleResult 로 변경하기 
-- [x] ResponseEntity 반환값 DTO 로 변환하기 
-- [ ] Repository 계층 
-- 
 
-### 2단계 요구사항 
-- [ ] 제품 단건 조회 
-- [ ] 제품 전체 조회
+- [ ] 서비스 계층에서 에러처리를
+- [ ] DataAccessUtils.singleResult 로 변경하기
+- [x] ResponseEntity 반환값 DTO 로 변환하기
+- [ ] Repository 계층
+-
+
+### 2단계 요구사항
+
+- [x] 제품 단건 조회
+- [x] 제품 전체 조회
 - [ ] 장바구니 제품 추가
 - [ ] 장바구니 제품 조회
 - [ ] 장바구니 제품 수정
