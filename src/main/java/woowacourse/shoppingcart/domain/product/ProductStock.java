@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.domain.product;
 
 import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.exception.InvalidQuantityException;
+import woowacourse.shoppingcart.exception.OutOfStockException;
 
 public class ProductStock {
     private final Product product;
@@ -13,7 +15,11 @@ public class ProductStock {
     }
 
     public ProductStock reduce(CartItem cartItem) {
-        return new ProductStock(cartItem.getProduct(), stockQuantity.reduce(cartItem.getQuantity()));
+        try {
+            return new ProductStock(cartItem.getProduct(), stockQuantity.reduce(cartItem.getQuantity()));
+        } catch (InvalidQuantityException e) {
+            throw new OutOfStockException();
+        }
     }
 
     public Long getId() {
