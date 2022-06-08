@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -40,7 +41,8 @@ public class OrderService {
     }
 
     public Long addOrder(List<OrderRequest> orderDetailRequests, LoginCustomer loginCustomer) {
-        Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername());
+        Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername())
+                .orElseThrow(InvalidCustomerException::new);
         Long ordersId = orderDao.addOrders(customerId);
 
         for (OrderRequest orderDetail : orderDetailRequests) {
@@ -62,7 +64,8 @@ public class OrderService {
     }
 
     private void validateOrderIdByCustomerName(String customerName, Long orderId) {
-        Long customerId = customerDao.findIdByUsername(customerName);
+        Long customerId = customerDao.findIdByUsername(customerName)
+                .orElseThrow(InvalidCustomerException::new);
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
@@ -70,7 +73,8 @@ public class OrderService {
     }
 
     public List<Orders> findOrdersByCustomerName(LoginCustomer loginCustomer) {
-        Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername());
+        Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername())
+                .orElseThrow(InvalidCustomerException::new);
         List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()

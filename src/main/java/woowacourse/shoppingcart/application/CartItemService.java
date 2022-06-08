@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.NoSuchCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -53,12 +54,14 @@ public class CartItemService {
     }
 
     private List<Long> findCartIdsByCustomerName(String customerName) {
-        Long customerId = customerDao.findIdByUsername(customerName);
+        Long customerId = customerDao.findIdByUsername(customerName)
+                .orElseThrow(InvalidCustomerException::new);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
     public Long addCart(CartItemSaveRequest cartItemSaveRequest, LoginCustomer loginCustomer) {
-        Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername());
+        Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername())
+                .orElseThrow(InvalidCustomerException::new);
         Optional<Long> OptionalCartItemId = cartItemDao.findIdByProductId(cartItemSaveRequest.getProductId());
         if (OptionalCartItemId.isPresent()) {
             Long cartItemId = OptionalCartItemId.get();

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.dto.CustomerDto;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.password.EncodedPassword;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
@@ -40,13 +39,13 @@ public class CustomerDao {
         return new Customer(id, customer);
     }
 
-    public Long findIdByUsername(String username) {
+    public Optional<Long> findIdByUsername(String username) {
         try {
             String sql = "SELECT id FROM customer WHERE username = :username";
             SqlParameterSource parameterSource = new MapSqlParameterSource("username", username);
-            return jdbcTemplate.queryForObject(sql, parameterSource, Long.class);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, Long.class));
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            return Optional.empty();
         }
     }
 
@@ -55,8 +54,7 @@ public class CustomerDao {
             String sql = "SELECT id, username, email, password, address, phone_number "
                     + "FROM customer WHERE username = :username";
             SqlParameterSource parameterSource = new MapSqlParameterSource("username", username);
-            return Optional.ofNullable(
-                    jdbcTemplate.queryForObject(sql, parameterSource, generateCustomerMapper()));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, generateCustomerMapper()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

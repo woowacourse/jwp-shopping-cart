@@ -75,7 +75,7 @@ public class CustomerDaoTest {
     void findIdByUserNameTest() {
         Customer savedCustomer = customerDao.save(MAT);
 
-        Long foundCustomerId = customerDao.findIdByUsername(MAT_USERNAME);
+        Long foundCustomerId = customerDao.findIdByUsername(MAT_USERNAME).get();
 
         assertThat(foundCustomerId).isEqualTo(savedCustomer.getId());
     }
