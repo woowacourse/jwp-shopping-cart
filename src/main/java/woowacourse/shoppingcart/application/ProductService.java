@@ -1,11 +1,11 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.ProductDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
+import woowacourse.shoppingcart.application.dto.ProductsServiceResponse;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -30,12 +30,11 @@ public class ProductService {
         return ProductDetailServiceResponse.from(product);
     }
 
-    public List<ProductDetailServiceResponse> findProducts(final int page, final int limit) {
+    public ProductsServiceResponse findProducts(final int page, final int limit) {
         final int startIndex = limit * (page - 1);
         final List<Product> products = productDao.findProducts(startIndex, limit);
-        return products.stream()
-                .map(ProductDetailServiceResponse::from)
-                .collect(Collectors.toList());
+        final int productCount = productDao.countProducts();
+        return ProductsServiceResponse.from(productCount, products);
     }
 
     public void deleteProductById(final Long productId) {

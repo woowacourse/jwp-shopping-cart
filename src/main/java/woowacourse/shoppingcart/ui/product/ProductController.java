@@ -1,8 +1,6 @@
 package woowacourse.shoppingcart.ui.product;
 
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.application.dto.ProductDetailServiceResponse;
+import woowacourse.shoppingcart.application.dto.ProductsServiceResponse;
 import woowacourse.shoppingcart.ui.dto.request.Request;
 import woowacourse.shoppingcart.ui.product.dto.request.ProductRegisterRequest;
 import woowacourse.shoppingcart.ui.product.dto.response.ProductResponse;
@@ -39,18 +38,15 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> showProduct(@PathVariable final Long productId) {
-        ProductDetailServiceResponse serviceResponse = productService.findProductById(productId);
+        final ProductDetailServiceResponse serviceResponse = productService.findProductById(productId);
         return ResponseEntity.ok(ProductResponse.from(serviceResponse));
     }
 
     @GetMapping
     public ResponseEntity<ProductsResponse> showProducts(@RequestParam final int page,
                                                          @RequestParam(required = false, defaultValue = "10") final int limit) {
-        final List<ProductDetailServiceResponse> products = productService.findProducts(page, limit);
-        final List<ProductResponse> productResponses = products.stream()
-                .map(ProductResponse::from)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(ProductsResponse.from(productResponses));
+        final ProductsServiceResponse serviceResponse = productService.findProducts(page, limit);
+        return ResponseEntity.ok(ProductsResponse.from(serviceResponse));
     }
 
     @DeleteMapping("/{productId}")

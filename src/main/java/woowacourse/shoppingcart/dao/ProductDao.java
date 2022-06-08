@@ -56,6 +56,11 @@ public class ProductDao {
         }
     }
 
+    public int countProducts() {
+        final String query = "SELECT count (*) FROM product";
+        return jdbcTemplate.queryForObject(query, Integer.class);
+    }
+
     public List<Product> findProducts(final int startIndex, final int limit) {
         final String query = "SELECT id, name, price, image_url FROM product LIMIT ?, ?";
         return jdbcTemplate.query(query,
