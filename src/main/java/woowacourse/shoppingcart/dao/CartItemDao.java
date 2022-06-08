@@ -38,14 +38,24 @@ public class CartItemDao {
         }
     }
 
+    public Integer findProductQuantityIdById(final Long cartId) {
+        try {
+            final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), cartId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
     public Long addCartItem(final Long memberId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(member_id, product_id) VALUES(?, ?)";
+        final String sql = "INSERT INTO cart_item(member_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setLong(1, memberId);
             preparedStatement.setLong(2, productId);
+            preparedStatement.setLong(3, 1);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();

@@ -44,9 +44,9 @@ public class OrderService {
         final Long ordersId = orderDao.addOrders(memberId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCart_id();
+            final Long cartId = orderDetail.getCartId();
             final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
+            final int quantity = cartItemDao.findProductQuantityIdById(cartId);
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
             cartItemDao.deleteCartItem(cartId);
@@ -59,9 +59,9 @@ public class OrderService {
         final Long ordersId = orderDao.addOrders(memberId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCart_id();
+            final Long cartId = orderDetail.getCartId();
             final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
+            final int quantity = cartItemDao.findProductQuantityIdById(cartId);
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
             cartItemDao.deleteCartItem(cartId);

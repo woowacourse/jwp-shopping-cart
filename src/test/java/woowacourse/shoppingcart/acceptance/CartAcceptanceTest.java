@@ -65,7 +65,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("product_id", productId);
+        requestBody.put("productId", productId);
 
         return Request.postWithToken(requestBody, "/api/members/me/carts", MARU.getToken());
     }
