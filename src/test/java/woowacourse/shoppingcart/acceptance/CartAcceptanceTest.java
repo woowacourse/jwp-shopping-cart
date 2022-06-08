@@ -29,7 +29,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
 
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, new CartRequest(productId1, 1));
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, new CartRequest(productId1));
 
         장바구니_아이템_추가됨(response);
     }
@@ -44,8 +44,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 1));
-        장바구니_아이템_추가되어_있음(token, new CartRequest(productId2, 1));
+        장바구니_아이템_추가되어_있음(token, new CartRequest(productId1));
+        장바구니_아이템_추가되어_있음(token, new CartRequest(productId2));
 
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token);
 
@@ -62,7 +62,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
 
-        final Long cartId = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 1));
+        final Long cartId = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1));
         장바구니_아이템_개수_변경됨(token, cartId, new CartQuantityUpdateRequest(2));
     }
 
@@ -75,7 +75,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
 
-        Long cartId = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 1));
+        Long cartId = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1));
 
         ExtractableResponse<Response> response = 장바구니_삭제_요청(token, cartId);
 

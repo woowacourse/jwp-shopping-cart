@@ -45,7 +45,7 @@ public class CartServiceTest {
         final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
         cartDao.save(new Cart(memberId, new Product(productId, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE), 1));
 
-        final CartRequest cartRequest = new CartRequest(productId, 1);
+        final CartRequest cartRequest = new CartRequest(productId);
         cartService.addCart(memberId, cartRequest);
         assertThat(cartDao.findCartsByMemberId(memberId).get(0).getQuantity()).isEqualTo(2);
     }
@@ -56,7 +56,7 @@ public class CartServiceTest {
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
         final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
 
-        final CartRequest cartRequest = new CartRequest(productId, 1);
+        final CartRequest cartRequest = new CartRequest(productId);
         cartService.addCart(memberId, cartRequest);
         assertThat(cartDao.findCartsByMemberId(memberId)).hasSize(1);
     }

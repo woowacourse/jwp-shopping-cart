@@ -34,8 +34,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        Long cartId1 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 1));
-        Long cartId2 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId2, 1));
+        Long cartId1 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1));
+        Long cartId2 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId2));
 
         List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
                 .map(OrderRequest::new)
@@ -56,8 +56,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        Long cartId1 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 1));
-        Long cartId2 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId2, 1));
+        Long cartId1 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1));
+        Long cartId2 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId2));
 
         Long orderId1 = 주문하기_요청_성공되어_있음(token, Collections.singletonList(new OrderRequest(cartId1)));
         Long orderId2 = 주문하기_요청_성공되어_있음(token, Collections.singletonList(new OrderRequest(cartId2)));
@@ -78,8 +78,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        Long cartId1 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 1));
-        Long cartId2 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId2, 1));
+        Long cartId1 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId1));
+        Long cartId2 = 장바구니_아이템_추가되어_있음(token, new CartRequest(productId2));
 
         Long orderId = 주문하기_요청_성공되어_있음(token, Arrays.asList(
                 new OrderRequest(cartId1),

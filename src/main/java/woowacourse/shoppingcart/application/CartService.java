@@ -35,7 +35,7 @@ public class CartService {
 
     public Long addCart(final Long memberId, final CartRequest cartRequest) {
         final Product foundProduct = productDao.findProductById(cartRequest.getProductId());
-        final Cart cart = new Cart(memberId, foundProduct, cartRequest.getQuantity());
+        final Cart cart = new Cart(memberId, foundProduct, 1);
 
         final Carts carts = new Carts(cartDao.findCartsByMemberId(memberId));
         carts.addOrUpdate(cart);

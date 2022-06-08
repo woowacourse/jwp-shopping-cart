@@ -70,7 +70,7 @@ public class CartControllerTest extends RestDocsTest {
     @DisplayName("카트에 제품을 저장한다.")
     @Test
     void addCart() throws Exception {
-        final CartRequest cartRequest = new CartRequest(1L, 1);
+        final CartRequest cartRequest = new CartRequest(1L);
         given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
         given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
         given(cartService.addCart(anyLong(), any(CartRequest.class))).willReturn(1L);
@@ -89,35 +89,17 @@ public class CartControllerTest extends RestDocsTest {
                         headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
                 ),
                 requestFields(
-                        fieldWithPath("productId").type(NUMBER).description("제품 id"),
-                        fieldWithPath("quantity").type(NUMBER).description("개수")
+                        fieldWithPath("productId").type(NUMBER).description("제품 id")
                 )));
     }
 
     @DisplayName("카트에 제품 저장시 id가 존재하지 않아 예외를 발생한다.")
     @Test
     void addCartProductIdNull() throws Exception {
-        final CartRequest cartRequest = new CartRequest(null, 1);
+        final CartRequest cartRequest = new CartRequest(null);
         given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
         given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
         ErrorResponse response = new ErrorResponse("product id를 입력하세요.");
-
-        mockMvc.perform(post("/api/members/me/carts")
-                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(cartRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(objectMapper.writeValueAsString(response)));
-    }
-
-    @DisplayName("카트에 제품 저장시 개수가 1개 미만이라 예외를 발생한다.")
-    @Test
-    void addCartQuantityLowerThanMin() throws Exception {
-        final CartRequest cartRequest = new CartRequest(1L, 0);
-        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
-        ErrorResponse response = new ErrorResponse("장바구니 물품 개수를 1개 이상 입력해주세요.");
 
         mockMvc.perform(post("/api/members/me/carts")
                         .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
