@@ -1,5 +1,6 @@
 package woowacourse.auth.ui.config;
 
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -16,19 +17,18 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(
-            HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
         if (isPreflight(request) || isSignUpRequest(request)) {
             return true;
         }
 
         String token = AuthorizationExtractor.extract(request);
-        if (isUnauthorizedRequest(token)) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return false;
+        if (isAuthorizedRequest(token)) {
+            return true;
         }
-        return true;
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        return false;
     }
 
     private boolean isSignUpRequest(HttpServletRequest request) {
@@ -36,8 +36,8 @@ public class LoginInterceptor implements HandlerInterceptor {
                 && request.getMethod().equalsIgnoreCase("post");
     }
 
-    private boolean isUnauthorizedRequest(String nickname) {
-        return nickname == null || !tokenProvider.validateToken(nickname);
+    private boolean isAuthorizedRequest(String token) {
+        return tokenProvider.validateToken(token) && !Objects.isNull(token);
     }
 
     private boolean isPreflight(HttpServletRequest request) {
