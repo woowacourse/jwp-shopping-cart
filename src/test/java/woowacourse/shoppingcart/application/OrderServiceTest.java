@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import woowacourse.exception.InvalidOrderException;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,5 +57,48 @@ class OrderServiceTest {
 			() -> verify(cartService).findItemInCart(customerId, productIds),
 			() -> verify(orderDao).save(order)
 		);
+	}
+
+	@DisplayName("주문을 하나 조회한다.")
+	@Test
+	void findOrder() {
+		// given
+		List<OrderDetail> orderDetails = List.of(
+			new OrderDetail(1L, "치킨", 20000, "test.jpg", 2),
+			new OrderDetail(2L, "콜라", 1500, "test.jpg", 2),
+			new OrderDetail(3L, "피자", 15000, "test.jpg", 2)
+		);
+		long customerId = 1L;
+		long orderId = 1L;
+		given(orderDao.findById(customerId))
+			.willReturn(new Orders(orderId, customerId, orderDetails, LocalDateTime.now()));
+
+		// when
+		orderService.findOne(orderId, customerId);
+
+		// then
+		verify(orderDao).findById(orderId);
+	}
+
+	@DisplayName("회원 id와 주문의 회원 id가 다르면 조회하지 못한다.")
+	@Test
+	void findOrderException() {
+		// given
+		List<OrderDetail> orderDetails = List.of(
+			new OrderDetail(1L, "치킨", 20000, "test.jpg", 2),
+			new OrderDetail(2L, "콜라", 1500, "test.jpg", 2),
+			new OrderDetail(3L, "피자", 15000, "test.jpg", 2)
+		);
+		long customerId = 1L;
+		long orderId = 1L;
+		given(orderDao.findById(customerId))
+			.willReturn(new Orders(orderId, customerId, orderDetails, LocalDateTime.now()));
+
+		// when
+		assertThatThrownBy(() -> orderService.findOne(orderId, 2L))
+			.isInstanceOf(InvalidOrderException.class);
+
+		// then
+		verify(orderDao).findById(orderId);
 	}
 }

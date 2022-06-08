@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.Positive;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class QuantityRequest {
 
+	@Positive
 	private Integer quantity;
 }

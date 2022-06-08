@@ -64,4 +64,19 @@ public class OrderAcceptanceTest {
                 .containsOnly(productId1, productId2)
         );
     }
+
+    @DisplayName("주문을 하나 조회한다.")
+    @Test
+    void getOrder() {
+        // given
+        ExtractableResponse<Response> extracted = RestUtils.order(token, List.of(productId1, productId2));
+        OrderResponse orderResponse = extracted.as(OrderResponse.class);
+
+        // when
+        ExtractableResponse<Response> response = RestUtils.getOrder(token, orderResponse.getId());
+
+        // then
+        OrderResponse result = response.as(OrderResponse.class);
+        assertThat(orderResponse).isEqualTo(result);
+    }
 }

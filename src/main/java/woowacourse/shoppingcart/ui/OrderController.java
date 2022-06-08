@@ -40,4 +40,10 @@ public class OrderController {
             .buildAndExpand(id)
             .toUri();
     }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponse> getOrder(@Login Customer customer, @PathVariable Long orderId) {
+        Orders order = orderService.findOne(orderId, customer.getId());
+        return ResponseEntity.ok(OrderResponse.from(order));
+    }
 }

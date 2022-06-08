@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import woowacourse.shoppingcart.domain.CartItem;
@@ -8,6 +9,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Getter
 public class CartItemResponse {
 

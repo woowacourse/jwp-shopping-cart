@@ -34,10 +34,11 @@ class OrderDaoTest {
     private final CartItemDao cartItemDao;
 
     public OrderDaoTest(DataSource dataSource) {
-        this.orderDao = new OrderDao(dataSource, new OrderDetailDao(dataSource));
+        ProductDao productDao = new ProductDao(dataSource);
+        this.orderDao = new OrderDao(dataSource, new OrderDetailDao(dataSource, productDao));
         productInsertUtil = new ProductInsertUtil(dataSource);
         customerDao = new CustomerDao(dataSource);
-        cartItemDao = new CartItemDao(dataSource, new ProductDao(dataSource));
+        cartItemDao = new CartItemDao(dataSource, productDao);
     }
 
     @BeforeEach
@@ -67,5 +68,19 @@ class OrderDaoTest {
 
         // then
         assertThat(saved.getId()).isNotNull();
+    }
+
+    @DisplayName("주문을 조회한다.")
+    @Test
+    void find() {
+        // given
+        Orders orders = new Orders(customerId, List.of(cartItem1, cartItem2, cartItem3));
+        Orders saved = orderDao.save(orders);
+
+        // when
+        Orders found = orderDao.findById(saved.getId());
+
+        // then
+        assertThat(saved).usingRecursiveComparison().isEqualTo(found);
     }
 }

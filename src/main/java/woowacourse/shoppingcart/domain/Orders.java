@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Orders {
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @Include
     private Long id;
     private final Long customerId;
@@ -31,6 +33,10 @@ public class Orders {
         this.orderDate = LocalDateTime.now();
     }
 
+    public Orders(Long id, Long customerId, List<OrderDetail> orderDetails, String orderDate) {
+        this(id, customerId, orderDetails, LocalDateTime.parse(orderDate, FORMATTER));
+    }
+
     public Orders createWithId(Long id) {
         return new Orders(id, customerId, orderDetails, orderDate);
     }
@@ -41,7 +47,11 @@ public class Orders {
             .sum();
     }
 
+    public boolean isSameCustomerId(Long customerId) {
+        return this.customerId.equals(customerId);
+    }
+
     public String getOrderDate() {
-        return orderDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return orderDate.format(FORMATTER);
     }
 }
