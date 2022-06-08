@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,6 +75,17 @@ class ProductDaoTest {
 
         // then
         assertThat(상품_아이디_목록(products)).containsOnly(id1, id2);
+    }
+
+    @Test
+    void 빈_상품_id_목록으로_상품_목록_조회() {
+        // given
+
+        // when
+        List<ProductEntity> products = productDao.findByIds(new ArrayList<>());
+
+        // then
+        assertThat(products).isEmpty();
     }
 
     @Test

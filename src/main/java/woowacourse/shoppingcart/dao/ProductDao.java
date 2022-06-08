@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -46,6 +47,10 @@ public class ProductDao {
     }
 
     public List<ProductEntity> findByIds(List<Long> productIds) {
+        if (productIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         final String query = "SELECT id, name, price, image_url FROM product WHERE id IN (:productIds)";
         SqlParameterSource source = new MapSqlParameterSource("productIds", productIds);
         return jdbcTemplate.query(query, source, ROW_MAPPER);
