@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.AlreadyCartItemExistException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NonExistProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
@@ -37,11 +38,21 @@ public class CartService {
 
     public Long addCartItem(long customerId, long productId, long count) {
         customerSpec.validateCustomerExists(customerId);
+        validateExistProduct(productId);
         validateExistCartItem(customerId, productId);
         try {
             return cartItemDao.addCartItem(customerId, productId, count);
         } catch (Exception e) {
             throw new InvalidProductException();
+        }
+    }
+
+    private void validateExistProduct(long productId) {
+
+        try {
+            productDao.findProductById(productId);
+        } catch (Exception e) {
+            throw new NonExistProductException();
         }
     }
 

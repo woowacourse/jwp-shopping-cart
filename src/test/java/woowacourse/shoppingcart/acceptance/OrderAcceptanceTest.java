@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_요청후_ID_반환;
+import static woowacourse.fixture.CartFixture.장바구니_상품_추가_요청후_ID_반환;
 import static woowacourse.fixture.CustomerFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.CustomerFixture.회원가입_요청_및_ID_추출;
 import static woowacourse.fixture.OrderFixture.주문_내역_조회_요청;
@@ -47,8 +47,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
         Long productId2 = 상품_등록되어_있음(token, "맥주", 20_000, "http://example.com/beer.jpg", 30_000);
 
-        cartId1 = 장바구니_아이템_추가_요청후_ID_반환(token, customerId, productId1, 2);
-        cartId2 = 장바구니_아이템_추가_요청후_ID_반환(token, customerId, productId2, 2);
+        cartId1 = 장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
+        cartId2 = 장바구니_상품_추가_요청후_ID_반환(token, customerId, productId2, 2);
     }
 
     @DisplayName("주문하기")

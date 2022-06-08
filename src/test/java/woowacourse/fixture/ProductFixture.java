@@ -89,6 +89,7 @@ public class ProductFixture {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(find.getProductId()).isEqualTo(productId),
                 () -> assertThat(find.getName()).isEqualTo(product.getName()),
                 () -> assertThat(find.getPrice()).isEqualTo(product.getPrice()),

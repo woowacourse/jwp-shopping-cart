@@ -27,6 +27,7 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NonExistProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.InValidPassword;
 
@@ -88,6 +89,12 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
             InValidPassword.class
     })
     public ErrorResponse handleInvalidAccess(final RuntimeException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NonExistProductException.class)
+    public ErrorResponse handleNotFoundException(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
     }
 

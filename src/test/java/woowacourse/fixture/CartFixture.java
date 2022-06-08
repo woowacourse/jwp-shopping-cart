@@ -15,29 +15,29 @@ public class CartFixture {
     private CartFixture() {
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, long customerId, long productId,
-                                                               long count) {
+    public static ExtractableResponse<Response> 장바구니_상품_추가_요청(String token, long customerId, long productId,
+                                                              long count) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("productId", productId);
-        requestBody.put("count", count);
+        requestBody.put("count", count); // 구매 수량
 
         return Fixture.post("/api/customers/" + customerId + "/carts", token, requestBody);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token, long customerId) {
+    public static ExtractableResponse<Response> 장바구니_상품_목록_조회_요청(String token, long customerId) {
         return get("/api/customers/" + customerId + "/carts", token);
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, long customerId, long productId) {
+    public static ExtractableResponse<Response> 장바구니_상품_삭제_요청(String token, long customerId, long productId) {
         return delete("/api/customers/" + customerId + "/carts?productId=" + productId, token);
     }
 
-    public static Long 장바구니_아이템_추가_요청후_ID_반환(String token, long customerId, long productId, long count) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, customerId, productId, count);
+    public static Long 장바구니_상품_추가_요청후_ID_반환(String token, long customerId, long productId, long count) {
+        ExtractableResponse<Response> response = 장바구니_상품_추가_요청(token, customerId, productId, count);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 
-    public static void 장바구니_아이템_추가_검증(ExtractableResponse<Response> response) {
+    public static void 장바구니_상품_추가_검증(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
