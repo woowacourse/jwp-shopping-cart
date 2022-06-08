@@ -51,7 +51,7 @@ public class ModifiedCustomerDto {
                 new Birthday(modifiedCustomerDto.getBirthday()), new Contact(modifiedCustomerDto.getContact()),
                 new FullAddress(modifiedCustomerDto.getAddress().getAddress(),
                         modifiedCustomerDto.getAddress().getDetailAddress(),
-                        modifiedCustomerDto.getAddress().getZoneCode()));
+                        modifiedCustomerDto.getAddress().getZonecode()));
     }
 
     public String getEmail() {

@@ -16,7 +16,7 @@ public class AddressDto {
     }
 
     public static AddressDto fromAddressRequest(final AddressRequest request) {
-        return new AddressDto(request.getAddress(), request.getDetailAddress(), request.getZoneCode());
+        return new AddressDto(request.getAddress(), request.getDetailAddress(), request.getZonecode());
     }
 
     public static AddressDto fromFullAddress(final FullAddress address) {
