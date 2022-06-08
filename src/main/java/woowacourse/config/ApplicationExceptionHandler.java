@@ -36,29 +36,15 @@ import woowacourse.shoppingcart.exception.OverQuantityException;
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(RuntimeException.class)
-    public ErrorResponse handleUnhandledException() {
-        return new ErrorResponse("Unhandled Exception");
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ErrorResponse handle() {
         return new ErrorResponse("존재하지 않는 데이터 요청입니다.");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DuplicateEmailException.class)
-    public FieldErrorResponse handleDuplicateEmailException(DuplicateDomainException exception) {
-        String message = String.format("이미 가입된 이메일입니다.", exception.getField());
-        return new FieldErrorResponse(exception.getField(), message);
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DuplicateUsernameException.class)
-    public FieldErrorResponse handleDuplicateUsernameException(DuplicateDomainException exception) {
-        String message = String.format("이미 가입된 닉네임입니다.", exception.getField());
-        return new FieldErrorResponse(exception.getField(), message);
+    @ExceptionHandler({DuplicateUsernameException.class, DuplicateEmailException.class})
+    public FieldErrorResponse handleDuplicateDomainException(DuplicateDomainException exception) {
+        return new FieldErrorResponse(exception.getField(), exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -68,15 +54,9 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(LoginFailException.class)
-    public ErrorResponse handleLoginFailException(Exception ex) {
-        return new ErrorResponse("id 또는 비밀번호가 틀렸습니다.");
-    }
-
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(InvalidTokenException.class)
-    public ErrorResponse handleInvalidTokenException(Exception ex) {
-        return new ErrorResponse("유효하지 않은 토큰입니다.");
+    @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
+    public ErrorResponse handleUnAuthorizedException(RuntimeException ex) {
+        return new ErrorResponse(ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.CustomerFixture.ID_추출;
@@ -11,23 +10,17 @@ import static woowacourse.fixture.CustomerFixture.회원정보수정_요청;
 import static woowacourse.fixture.CustomerFixture.회원조회_요청;
 import static woowacourse.fixture.CustomerFixture.회원탈퇴_요청;
 
-import io.restassured.internal.RestAssuredResponseImpl;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.stream.Stream;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.NullSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.global.AcceptanceTest;
 import woowacourse.shoppingcart.dto.ErrorResponse;
@@ -112,6 +105,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             );
         }
 
+        // TODO 공백의 경우에 대해 랜덤하게 테스트 성공/실패가 나뉘는 현상이 있는데 알아낼 것 !
         @DisplayName("잘못된 형식의 email을 입력한 경우 400을 반환한다.")
         @ParameterizedTest(name = "\"{0}\" :  {1}")
         @MethodSource("invalid_emails")
@@ -137,6 +131,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             );
         }
 
+        // TODO 공백의 경우에 대해 랜덤하게 테스트 성공/실패가 나뉘는 현상이 있는데 알아낼 것 !
         @DisplayName("잘못된 형식의 password을 입력한 경우 400 응답을 반환한다.")
         @ParameterizedTest(name = "\"{0}\" :  {1}")
         @MethodSource("invalid_passwords")

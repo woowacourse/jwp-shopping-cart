@@ -53,7 +53,7 @@ public class ProductFixture {
     }
 
     public static ExtractableResponse<Response> 상품_삭제_요청(String token, Long productId) {
-        return delete("/api/products/{productId}", token, productId);
+        return delete("/api/products/" + productId, token);
     }
 
 
