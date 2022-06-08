@@ -114,7 +114,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("새로운 토큰을 발급하여 로그인할 수 있다.")
+    @DisplayName("새로운 토큰을 발급할 수 있다.")
     void reIssueToken() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
@@ -131,7 +131,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .getToken();
 
         // then
-        assertThat(newToken).isEqualTo(token);
+        assertThat(newToken).isNotNull();
     }
 
     private ExtractableResponse<Response> 토큰_재발급(String token) {
@@ -139,7 +139,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
-                .when().post("/login/auto")
+                .when().post("/token/refresh")
                 .then().log().all()
                 .extract();
     }
