@@ -25,7 +25,7 @@ public class CartService {
     public List<CartResponse> findCartsByCustomerId(final Long customerId) {
         return cartItemDao.findCartsByCustomerId(customerId)
                 .stream()
-                .map(cart -> new CartResponse(cart.getId(), cart.getQuantity(), cart.getName(), cart.getPrice(),
+                .map(cart -> new CartResponse(cart.getId(), cart.getProductId(), cart.getQuantity(), cart.getName(), cart.getPrice(),
                         cart.getImageUrl()))
                 .collect(Collectors.toList());
     }
