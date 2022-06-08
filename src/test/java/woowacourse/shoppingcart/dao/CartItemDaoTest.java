@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -7,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -76,6 +79,13 @@ public class CartItemDaoTest {
         assertThat(cartItemEntity)
                 .usingRecursiveComparison()
                 .isEqualTo(new CartItemEntity(1L, 1L, 1L, 1));
+    }
+
+    @DisplayName("이미 카트에 담긴 상품인지 확인한다.")
+    @ParameterizedTest
+    @CsvSource(value = {"1,True", "10,False"})
+    void existCartItem(final Long productId, final Boolean expected) {
+        assertThat(cartItemDao.existCartItem(1L, productId)).isEqualTo(expected);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")

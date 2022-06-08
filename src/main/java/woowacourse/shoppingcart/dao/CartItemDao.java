@@ -67,6 +67,17 @@ public class CartItemDao {
         }
     }
 
+    public boolean existCartItem(final Long customerId, final Long productId) {
+        final String query = "SELECT exists (SELECT * FROM cart_item"
+                + " where customer_id = :customer_id AND product_id = :product_id)";
+
+        final Map<String, Object> params = new HashMap<>();
+        params.put("customer_id", customerId);
+        params.put("product_id", productId);
+
+        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
+    }
+
     public Long addCartItem(final Long customerId, final Long productId, final int quantity) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
