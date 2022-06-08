@@ -1,3 +1,9 @@
+drop table if exists customer cascade;
+drop table if exists product cascade;
+drop table if exists orders cascade;
+drop table if exists cart cascade;
+drop table if exists orders_detail cascade;
+
 create table IF NOT EXISTS customer
 (
     id bigint auto_increment not null,
