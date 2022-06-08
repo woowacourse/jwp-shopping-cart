@@ -37,17 +37,34 @@ public class CartItemService {
         return CartItemResponse.from(cartItems);
     }
 
-    public Long addCartItem(final long customerId, final long productId,
-                            final CartItemUpdateRequest cartItemUpdateRequest) {
+    public CartItemResponse addCartItem(final long customerId, final long productId,
+                                        final CartItemUpdateRequest cartItemUpdateRequest) {
         Customer customer = getByCustomerId(customerId);
         Product product = getByProductId(productId);
-        return cartItemDao.save(new CartItem(customer.getId(), product, cartItemUpdateRequest.getQuantity()));
+        cartItemDao.save(new CartItem(customer.getId(), product, cartItemUpdateRequest.getQuantity()));
+        return new CartItemResponse(productId, product.getName(), product.getPrice(), product.getImage(),
+                cartItemUpdateRequest.getQuantity());
+    }
+
+    public CartItemResponse updateCartItem(Long customerId, Long productId,
+                                           CartItemUpdateRequest cartItemUpdateRequest) {
+        Customer customer = getByCustomerId(customerId);
+        Product product = getByProductId(productId);
+        cartItemDao.update(customer.getId(), product.getId(), cartItemUpdateRequest.getQuantity());
+        return new CartItemResponse(productId, product.getName(), product.getPrice(), product.getImage(),
+                cartItemUpdateRequest.getQuantity());
     }
 
     public void deleteCartItemsByCustomerId(final long customerId, final CartItemDeleteRequest cartItemDeleteRequest) {
         Customer customer = getByCustomerId(customerId);
         validateCustomerCart(customer.getId(), cartItemDeleteRequest);
         cartItemDao.deleteCartItemsByCustomerId(customer.getId(), cartItemDeleteRequest.getProductIds());
+    }
+
+    public boolean existProduct(final long customerId, final long productId) {
+        Customer customer = getByCustomerId(customerId);
+        List<CartItem> cartItems = cartItemDao.findByCustomerId(customer.getId());
+        return isContain(cartItems, productId);
     }
 
     private void validateCustomerCart(final long customerId, final CartItemDeleteRequest cartItemDeleteRequest) {
@@ -64,9 +81,9 @@ public class CartItemService {
                 .allMatch(deleteProductId -> isContain(cartItems, deleteProductId));
     }
 
-    private boolean isContain(List<CartItem> cartItems, Long deleteProductId) {
+    private boolean isContain(List<CartItem> cartItems, Long productId) {
         return cartItems.stream()
-                .anyMatch(cartItem -> cartItem.isSameId(deleteProductId));
+                .anyMatch(cartItem -> cartItem.isSameId(productId));
     }
 
     private Product getByProductId(long productId) {

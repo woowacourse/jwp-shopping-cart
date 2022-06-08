@@ -33,16 +33,22 @@ public class CartItemController {
     }
 
     @PutMapping("/products/{productId}")
-    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal Long customerId,
-                                            @PathVariable Long productId,
-                                            @RequestBody CartItemUpdateRequest cartItemUpdateRequest) {
-        final Long cartItemId = cartService.addCartItem(customerId, productId, cartItemUpdateRequest);
+    public ResponseEntity<CartItemResponse> addCartItem(@AuthenticationPrincipal Long customerId,
+                                                        @PathVariable Long productId,
+                                                        @RequestBody CartItemUpdateRequest cartItemUpdateRequest) {
+        if (cartService.existProduct(customerId, productId)) {
+            CartItemResponse cartItemResponse = cartService.updateCartItem(customerId, productId,
+                    cartItemUpdateRequest);
+            return ResponseEntity.ok(cartItemResponse);
+        }
+
+        CartItemResponse cartItemResponse = cartService.addCartItem(customerId, productId, cartItemUpdateRequest);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartItemId}")
-                .buildAndExpand(cartItemId)
+                .buildAndExpand(cartItemResponse.getProductId())
                 .toUri();
-        return ResponseEntity.created(responseLocation).build();
+        return ResponseEntity.created(responseLocation).body(cartItemResponse);
     }
 
     @DeleteMapping

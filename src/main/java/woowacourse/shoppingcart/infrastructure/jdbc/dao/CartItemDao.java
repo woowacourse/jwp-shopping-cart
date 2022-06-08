@@ -76,4 +76,14 @@ public class CartItemDao {
         }
         jdbcTemplate.batchUpdate(sql, batchInputs);
     }
+
+    public void update(Long customerId, Long productId, int quantity) {
+        final String sql = "UPDATE cart_item SET quantity=(:quantity) WHERE customer_id = (:customerId) and "
+                + "product_id = (:productId)";
+
+        final SqlParameterSource parameters = new MapSqlParameterSource("quantity", quantity)
+                .addValue("customerId", customerId)
+                .addValue("productId", productId);
+        jdbcTemplate.update(sql, parameters);
+    }
 }
