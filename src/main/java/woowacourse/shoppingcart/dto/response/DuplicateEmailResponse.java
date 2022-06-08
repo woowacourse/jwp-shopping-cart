@@ -10,7 +10,7 @@ public class DuplicateEmailResponse {
         this.isDuplicated = isDuplicated;
     }
 
-    public boolean isDuplicated() {
+    public boolean getIsDuplicated() {
         return isDuplicated;
     }
 }
