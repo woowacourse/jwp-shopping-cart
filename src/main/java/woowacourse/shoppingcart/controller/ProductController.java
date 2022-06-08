@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.OptionalUserNameResolver;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.CreateProductRequest;
-import woowacourse.shoppingcart.dto.response.FindAllProductsResponse;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.service.ProductService;
 
 @RestController
@@ -31,7 +30,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FindAllProductsResponse>> findAll(
+    public ResponseEntity<List<ProductResponse>> findAll(
             @OptionalUserNameResolver final Optional<UserName> customerName) {
         return customerName.map(userName -> ResponseEntity.ok(productService.findProductsByCustomerName(userName)))
                 .orElseGet(() -> ResponseEntity.ok(productService.findProducts()));
@@ -48,8 +47,10 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> product(@PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.findProductById(productId));
+    public ResponseEntity<ProductResponse> get(@OptionalUserNameResolver final Optional<UserName> customerName,
+                                               @PathVariable final Long productId) {
+        return customerName.map(userName -> ResponseEntity.ok(productService.findProductByIdAndCustomerName(productId, userName)))
+                .orElseGet(() -> ResponseEntity.ok(productService.findProductById(productId)));
     }
 
     @DeleteMapping("/{productId}")

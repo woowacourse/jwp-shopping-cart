@@ -12,7 +12,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.CreateProductRequest;
-import woowacourse.shoppingcart.dto.response.FindAllProductsResponse;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -30,10 +30,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<FindAllProductsResponse> findProducts() {
+    public List<ProductResponse> findProducts() {
         final List<Product> products = productDao.findProducts();
         return products.stream()
-                .map(FindAllProductsResponse::new)
+                .map(ProductResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -42,8 +42,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponse findProductById(final Long productId) {
+        final Product product = productDao.findProductById(productId);
+        return new ProductResponse(product);
     }
 
     public void deleteProductById(final Long productId) {
@@ -51,13 +52,20 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<FindAllProductsResponse> findProductsByCustomerName(final UserName customerName) {
+    public List<ProductResponse> findProductsByCustomerName(final UserName customerName) {
         final Customer customer = customerDao.getByName(customerName);
         final Cart cart = new Cart(cartItemDao.findAllByCustomerId(customer.getId()));
         final List<Product> products = productDao.findProducts();
 
         return products.stream()
-                .map(product -> FindAllProductsResponse.of(cart, product))
+                .map(product -> ProductResponse.of(cart, product))
                 .collect(Collectors.toList());
+    }
+
+    public ProductResponse findProductByIdAndCustomerName(final Long productId, final UserName customerName) {
+        final Customer customer = customerDao.getByName(customerName);
+        final Cart cart = new Cart(cartItemDao.findAllByCustomerId(customer.getId()));
+        final Product product = productDao.findProductById(productId);
+        return ProductResponse.of(cart, product);
     }
 }

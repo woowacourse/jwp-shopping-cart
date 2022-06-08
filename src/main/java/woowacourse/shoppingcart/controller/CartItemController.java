@@ -54,7 +54,7 @@ public class CartItemController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{cartId}/quantity")
+    @PatchMapping("/{cartId}")
     public ResponseEntity<Void> editQuantity(@UserNameResolver final UserName customerName,
                                              @PathVariable final Long cartId,
                                              @RequestBody final EditCartItemQuantityRequest request) {

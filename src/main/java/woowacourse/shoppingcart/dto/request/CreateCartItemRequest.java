@@ -6,11 +6,11 @@ import javax.validation.constraints.NotNull;
 
 public class CreateCartItemRequest {
 
-    @NotNull(message = "제품 ID를 입력해주세요😉")
+    @NotNull(message = "상품 ID를 입력해주세요😉")
     private Long id;
-    @Min(value = 1, message = "제품 수량은 1에서 99사이의 정수만 가능합니다😅")
-    @Max(value = 99, message = "제품 수량은 1에서 99사이의 정수만 가능합니다😅")
-    @NotNull(message = "제품 수량을 입력해주세요😉")
+    @Min(value = 1, message = "상품 수량은 1에서 99사이의 정수만 가능합니다😅")
+    @Max(value = 99, message = "상품 수량은 1에서 99사이의 정수만 가능합니다😅")
+    @NotNull(message = "상품 수량을 입력해주세요😉")
     private int quantity;
 
     public CreateCartItemRequest() {

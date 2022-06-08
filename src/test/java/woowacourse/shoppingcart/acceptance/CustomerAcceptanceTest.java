@@ -270,7 +270,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     private ExtractableResponse<Response> 회원_이름_중복_검사(String userName) {
         return RestAssured
                 .given().log().all()
-                .when().get("/api/customers/exists?userName=" + userName)
+                .when().get("/api/customers/exist?userName=" + userName)
                 .then().log().all()
                 .extract();
     }

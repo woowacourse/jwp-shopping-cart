@@ -32,6 +32,8 @@
 ### 리팩토링
 
 - [X] 이미 장바구니에 존재하는 상품을 또 장바구니에 담는 경우, 하나로 합치도록 변경
+- [X] Product 단거 조회 시에도 cartId, quantity도 보내도록 변경
+  - 마찬가지로 토큰의 존재 여부에 따라 다르게 동작하게 해야한다. 
 - [ ] 장바구니, 주문 DAO에서 SimpleInsert, NamedParameterJdbc 사용하도록 변경
 
 <br>
@@ -40,32 +42,32 @@
 
 ### 회원 기능 API 명세
 
-| Method | Url                   | Description |
-|--------|-----------------------|-------------|
-| POST   | /api/customers        | 회원 가입       |
-| GET    | /api/customers/me     | 내 정보 조회     |
-| PUT    | /api/customers/me     | 내 정보 수정     |
-| DELETE | /api/customers/me     | 회원 탈퇴       |
-| POST   | /api/login            | 로그인         |
-| GET    | /api/customers/exists | 회원 이름 중복 검사 |
+| Method | Url                  | Description |
+|--------|----------------------|-------------|
+| POST   | /api/customers       | 회원 가입       |
+| GET    | /api/customers/me    | 내 정보 조회     |
+| PUT    | /api/customers/me    | 내 정보 수정     |
+| DELETE | /api/customers/me    | 회원 탈퇴       |
+| POST   | /api/login           | 로그인         |
+| GET    | /api/customers/exist | 회원 이름 중복 검사 |
 
-### 제품 기능 API 명세
+### 상품 기능 API 명세
 
 | Method | Url                        | Description |
 |--------|----------------------------|-------------|
-| POST   | /api/products              | 제품 추가       |
-| GET    | /api/products            | 제품 목록 조회    |
-| GET    | /api/products/{productId}          | 제품 정보 조회    |
-| DELETE | /api/products/{productId}          | 제품 삭제       |
+| POST   | /api/products              | 상품 추가       |
+| GET    | /api/products            | 상품 목록 조회    |
+| GET    | /api/products/{productId}          | 상품 정보 조회    |
+| DELETE | /api/products/{productId}          | 상품 삭제       |
 
 ### 장바구니 기능 API 명세
 
-| Method | Url                                       | Description    |
-|--------|-------------------------------------------|----------------|
-| POST   | /api/customers/me/carts                   | 장바구니에 제품 추가    |
-| GET    | /api/customers/me/carts                   | 장바구니 제품 목록 조회  |
-| DELETE | /api/customers/me/carts/{cartId}          | 장바구니의 제품 삭제    |
-| PATCH  | /api/customers/me/carts/{cartId}/quantity | 장바구니의 제품 수량 변경 |
+| Method | Url                              | Description    |
+|--------|----------------------------------|----------------|
+| POST   | /api/customers/me/carts          | 장바구니에 제품 추가    |
+| GET    | /api/customers/me/carts          | 장바구니 제품 목록 조회  |
+| DELETE | /api/customers/me/carts/{cartId} | 장바구니의 제품 삭제    |
+| PATCH  | /api/customers/me/carts/{cartId} | 장바구니의 제품 수량 변경 |
 
 ### 주문 기능 API 명세
 

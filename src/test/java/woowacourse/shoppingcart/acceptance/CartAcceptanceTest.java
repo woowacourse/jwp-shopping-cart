@@ -173,7 +173,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestBody)
-                .when().patch("/api/customers/me/carts/" + cartId + "/quantity")
+                .when().patch("/api/customers/me/carts/" + cartId)
                 .then().log().all()
                 .extract();
     }

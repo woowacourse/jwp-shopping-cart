@@ -53,7 +53,7 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/exists")
+    @GetMapping("/exist")
     public ResponseEntity<ExistsCustomerResponse> exists(@RequestParam(name = "userName") final String userName) {
         return ResponseEntity.ok(customerService.existsByName(userName));
     }
