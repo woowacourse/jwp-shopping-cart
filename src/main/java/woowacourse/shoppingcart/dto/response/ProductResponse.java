@@ -10,6 +10,9 @@ public class ProductResponse {
     private Integer stock;
     private String imageUrl;
 
+    public ProductResponse() {
+    }
+
     public ProductResponse(Long id, String name, String description, Integer price, Integer stock, String imageUrl) {
         this.id = id;
         this.name = name;
