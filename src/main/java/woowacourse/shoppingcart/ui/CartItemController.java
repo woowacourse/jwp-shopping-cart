@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.dto.CartHasProductDto;
 import woowacourse.shoppingcart.dto.CartRequest;
 
 @RestController
@@ -29,6 +30,12 @@ public class CartItemController {
     @GetMapping
     public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal final Long customerId) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<CartHasProductDto> existsCartItems(@AuthenticationPrincipal final Long customerId,
+                                                             @PathVariable final Long productId) {
+        return ResponseEntity.ok().body(new CartHasProductDto(cartService.existsCartItems(customerId, productId)));
     }
 
     @PostMapping

@@ -55,6 +55,14 @@ public class CartItemDao {
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
 
+    public boolean hasCartItem(Long productId, Long customerId) {
+        final String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE product_id = :productId and customer_id = :customerId)";
+        final Map<String, Object> params = Map.ofEntries(
+                Map.entry("productId", productId),
+                Map.entry("customerId", customerId));
+        return namedJdbcTemplate.queryForObject(sql, params, boolean.class);
+    }
+
     public void deleteCartItem(final Long id) {
 
         final String query = "DELETE FROM cart_item WHERE id = :id";

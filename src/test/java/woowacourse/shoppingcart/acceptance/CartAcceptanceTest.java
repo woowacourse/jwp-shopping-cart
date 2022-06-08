@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static woowacourse.auth.support.AuthorizationExtractor.AUTHORIZATION;
 import static woowacourse.auth.support.AuthorizationExtractor.BEARER_TYPE;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
@@ -20,6 +21,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.dto.CartHasProductDto;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.fixture.ProductFixtures;
 
@@ -45,6 +47,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void addCartItem() {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, productId1);
         장바구니_아이템_추가됨(response);
+    }
+
+    @DisplayName("장바구니에 아이템이 있는지 확인")
+    @Test
+    void hasCartItem() {
+        장바구니_아이템_추가_요청(token, productId1);
+        ExtractableResponse<Response> response = 장바구니에_아이템_있는지_확인(token, productId1);
+
+        boolean exists = response.jsonPath().getObject("", CartHasProductDto.class).getExists();
+
+        assertTrue(exists);
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
@@ -80,6 +93,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestBody)
                 .when().post("/api/customers/carts")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니에_아이템_있는지_확인(String accessToken, Long productId) {
+
+        return RestAssured.given()
+                .log().all()
+                .header(AUTHORIZATION, BEARER_TYPE + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/customers/carts/{productId}", productId)
                 .then().log().all()
                 .extract();
     }

@@ -26,18 +26,11 @@ public class CartService {
         this.customerDao = customerDao;
         this.productDao = productDao;
     }
-//
-//    public List<Cart> findCartsByCustomerName(final String customerName) {
-//        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-//
-//        final List<Cart> carts = new ArrayList<>();
-//        for (final Long cartId : cartIds) {
-//            final Long productId = cartItemDao.findProductIdById(cartId);
-//            final Product product = productDao.findProductById(productId);
-//            carts.add(new Cart(cartId, product));
-//        }
-//        return carts;
-//    }
+
+
+    public boolean existsCartItems(final Long customerId, final Long productId) {
+        return cartItemDao.hasCartItem(productId, customerId);
+    }
 
     public List<Cart> findCartsByCustomerId(final Long customerId) {
         final List<Long> cartIds = findCartIdsByCustomerId(customerId);
