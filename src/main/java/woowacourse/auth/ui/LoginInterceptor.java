@@ -3,6 +3,7 @@ package woowacourse.auth.ui;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.exception.AuthorizationFailureException;
@@ -33,6 +34,6 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     private boolean isExclude(final String method) {
-        return HttpMethod.POST.name().equals(method);
+        return HttpMethod.POST.name().equals(method) || HttpMethod.OPTIONS.name().equals(method);
     }
 }
