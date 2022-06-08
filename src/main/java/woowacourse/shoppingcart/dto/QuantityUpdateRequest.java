@@ -3,8 +3,7 @@ package woowacourse.shoppingcart.dto;
 public class QuantityUpdateRequest {
     private int quantity;
 
-    private QuantityUpdateRequest(){
-
+    private QuantityUpdateRequest() {
     }
 
     public QuantityUpdateRequest(int quantity) {

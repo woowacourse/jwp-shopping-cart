@@ -6,20 +6,20 @@ import javax.validation.constraints.Size;
 public class CustomerRequest {
 
     @NotNull
-    @Size(min = 3, max = 10)
-    private final String name;
+    @Size(min = 5, max = 20)
+    private final String userName;
 
     @NotNull
-    @Size(min = 4, max = 20)
+    @Size(min = 8, max = 16)
     private final String password;
 
-    public CustomerRequest(String name, String password) {
-        this.name = name;
+    public CustomerRequest(String userName, String password) {
+        this.userName = userName;
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
     public String getPassword() {

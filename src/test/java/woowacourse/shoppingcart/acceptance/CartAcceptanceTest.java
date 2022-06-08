@@ -22,8 +22,8 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "test";
-    private static final String PASSWORD = "1234";
+    private static final String USER = "testname";
+    private static final String PASSWORD = "Test1234*";
     private Long productId1;
     private Long productId2;
 
