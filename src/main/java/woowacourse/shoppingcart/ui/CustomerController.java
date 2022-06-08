@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.ui;
 
-import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +30,7 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<Void> saveCustomer(@RequestBody @Valid CustomerSignUpRequest customerSignUpRequest) {
         customerService.save(customerSignUpRequest.toServiceRequest());
-        return ResponseEntity.created(URI.create("/api/customers")).build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")

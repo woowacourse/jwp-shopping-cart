@@ -20,7 +20,6 @@ import static woowacourse.fixture.RestAssuredFixture.postCustomers;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.로그인_되어_있음;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
-@Disabled
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
 
