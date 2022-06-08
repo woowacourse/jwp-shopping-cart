@@ -18,7 +18,7 @@ public class PageRequest {
     }
 
     public int calculateOffset() {
-        return (limit - 1) * page;
+        return (page - 1) * limit;
     }
 
     public int getPage() {
