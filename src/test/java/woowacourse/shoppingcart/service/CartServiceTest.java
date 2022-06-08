@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemIdsRequest;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequests;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -46,7 +47,7 @@ public class CartServiceTest {
 
     @Test
     void 장바구니_선택_상품_제거() {
-        cartService.deleteCart(1L, new DeleteCartItemIdsRequest(List.of(1L)));
+        cartService.deleteCart(1L, new DeleteCartItemIdsRequest(new DeleteCartItemRequest(1L)));
 
         var findAllCartItemResponse = cartService.getAllCartItem(1L);
         assertThat(findAllCartItemResponse.getCartItems().size()).isEqualTo(0);
@@ -56,7 +57,7 @@ public class CartServiceTest {
     void 유저가_장바구니_아이템_아이디를_가지고_있지_않는_경우() {
         var invalidCartItemId = 2L;
 
-        assertThatThrownBy(() -> cartService.deleteCart(1L, new DeleteCartItemIdsRequest(List.of(invalidCartItemId))))
+        assertThatThrownBy(() -> cartService.deleteCart(1L, new DeleteCartItemIdsRequest(new DeleteCartItemRequest(invalidCartItemId))))
                 .isInstanceOf(NotInCustomerCartItemException.class);
 
     }

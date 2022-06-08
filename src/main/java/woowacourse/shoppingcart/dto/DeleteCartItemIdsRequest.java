@@ -1,20 +1,19 @@
 package woowacourse.shoppingcart.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteCartItemIdsRequest {
-    private final List<Long> cartItemIds;
+    private final List<DeleteCartItemRequest> cartItemIds;
 
-    public DeleteCartItemIdsRequest(List<Long> cartItemIds) {
+    public DeleteCartItemIdsRequest(List<DeleteCartItemRequest> cartItemIds) {
         this.cartItemIds = cartItemIds;
     }
 
     public DeleteCartItemIdsRequest(DeleteCartItemRequest deleteCartItemRequest) {
-        this.cartItemIds = new ArrayList<>(deleteCartItemRequest.getCartItems().values());
+        this.cartItemIds = List.of(deleteCartItemRequest);
     }
 
-    public List<Long> getCartItemIds() {
+    public List<DeleteCartItemRequest> getCartItemIds() {
         return cartItemIds;
     }
 }

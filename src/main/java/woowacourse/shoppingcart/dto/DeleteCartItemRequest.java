@@ -1,19 +1,17 @@
 package woowacourse.shoppingcart.dto;
 
-import java.util.Map;
-
 public class DeleteCartItemRequest {
 
-    private Map<String, Long> cartItems;
+    private Long id;
 
     public DeleteCartItemRequest() {
     }
 
-    public DeleteCartItemRequest(Map<String, Long> cartItems) {
-        this.cartItems = cartItems;
+    public DeleteCartItemRequest(Long id) {
+        this.id = id;
     }
 
-    public Map<String, Long> getCartItems() {
-        return cartItems;
+    public Long getId() {
+        return id;
     }
 }

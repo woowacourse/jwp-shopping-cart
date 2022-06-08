@@ -32,7 +32,10 @@ public class CartService {
     }
 
     public void deleteCart(final Long customerId, final DeleteCartItemIdsRequest deleteCartItemIdsRequest) {
-        var cartItemIds = deleteCartItemIdsRequest.getCartItemIds();
+        var cartItemIds = deleteCartItemIdsRequest.getCartItemIds().stream()
+                .map(it -> it.getId())
+                .collect(Collectors.toList());
+
         validateCustomerCart(customerId, cartItemIds);
 
         for (Long cartItemId : cartItemIds) {

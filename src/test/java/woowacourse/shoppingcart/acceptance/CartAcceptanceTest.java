@@ -7,7 +7,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,7 +53,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .body(new DeleteCartItemRequest(Map.of("id", cartItemId)))
+                .body(new DeleteCartItemRequest(cartItemId))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .delete("/cart")
                 .then().log().all()
