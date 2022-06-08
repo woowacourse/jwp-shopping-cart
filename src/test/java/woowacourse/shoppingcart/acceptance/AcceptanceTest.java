@@ -66,6 +66,16 @@ public class AcceptanceTest {
                 .extract();
     }
 
+    protected ExtractableResponse<Response> patch(final String uri, final Header header, final Object body) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(header)
+                .body(body)
+                .when().patch(uri)
+                .then().log().all()
+                .extract();
+    }
+
     protected ExtractableResponse<Response> delete(final String uri, final Header header) {
             return RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)

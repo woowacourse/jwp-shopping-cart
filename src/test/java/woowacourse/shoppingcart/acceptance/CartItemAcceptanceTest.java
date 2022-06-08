@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.ProductRequestDto;
@@ -87,13 +88,34 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    @DisplayName("장바구니에 물건을 담을때 이미 담겨있는 품목이면 예외가 발생한다.")
+    void addCartItem_DuplicateProductException() {
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
+
+        post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
+        final ExtractableResponse<Response> response = post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("장바구니에 물건을 담을때 재고가 수량보다 적을경우 예외가 발생한다.")
+    void addCartItem_DupalicateProductException() {
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 11);
+
+        final ExtractableResponse<Response> response = post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     @DisplayName("장바구니에 담긴 물건의 수량을 변경한다.")
     void updateCartItems() {
         final AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto1);
 
         final UpdateCartItemCountItemRequest updateCartItemCountItemRequest = new UpdateCartItemCountItemRequest(2);
-        put("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader, updateCartItemCountItemRequest);
+        patch("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader, updateCartItemCountItemRequest);
 
         final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
         final List<CartItemResponseDto> cartItemResponseDtos
