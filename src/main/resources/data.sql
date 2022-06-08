@@ -3,9 +3,6 @@ values ('puterism','crew01@naver.com','$2a$10$UEP983NuSw6roQy5MEeAKes04OvAiLtnO7
 
 insert into product (name, price, image_url)
 values
-       ('맛있는 치킨', 100, 'https://www.naver.com'),
-       ('맛있는 족발', 200, 'https://www.naver.com'),
-       ('맛있는 치킨', 100, 'https://www.naver.com'),
        ('이상해씨', 16000, 'https://data1.pokemonkorea.co.kr/newdata/pokedex/full/000101.png'),
        ('이상해풀', 2000, 'https://data1.pokemonkorea.co.kr/newdata/pokedex/full/000201.png'),
        ('이상해꽃', 3000, 'https://data1.pokemonkorea.co.kr/newdata/pokedex/full/000301.png'),
