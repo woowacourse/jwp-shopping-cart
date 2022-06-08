@@ -13,7 +13,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.NoCustomerTokenException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.PasswordEncoder;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @SpringBootTest
 class AuthServiceTest {
