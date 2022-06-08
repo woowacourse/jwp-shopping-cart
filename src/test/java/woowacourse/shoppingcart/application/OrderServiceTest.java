@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -115,5 +116,26 @@ class OrderServiceTest {
         //when, then
         assertThatThrownBy(() -> orderService.findOrderById(CUSTOMER_ID, ORDER_ID))
                 .isInstanceOf(InvalidOrderException.class);
+    }
+
+    @Test
+    @DisplayName("주문 목록을 조회한다.")
+    void findOrdersByCustomerId() {
+        //given
+        final String name = "치킨";
+        final int price = 10_000;
+        final String imageUrl = "http://example.com/chicken.jpg";
+        when(orderDao.findOrderIdsByCustomerId(CUSTOMER_ID))
+                .thenReturn(List.of(1L));
+        when(ordersDetailDao.findOrdersDetailsByOrderId(ORDER_ID))
+                .thenReturn(List.of(new OrderDetail(PRODUCT_ID, QUANTITY)));
+        when(productDao.findProductById(PRODUCT_ID))
+                .thenReturn(Optional.of(new Product(PRODUCT_ID, name, price, imageUrl)));
+
+        //when
+        final List<Orders> actual = orderService.findOrdersByCustomerId(CUSTOMER_ID);
+
+        //then
+        assertThat(actual.size()).isOne();
     }
 }
