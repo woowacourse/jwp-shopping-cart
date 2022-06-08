@@ -13,6 +13,7 @@ public class LogInRequest {
     private String email;
     @NotBlank
     @Size(min = 6)
+    @Pattern(regexp = "^[a-zA-Z\\\\d`~!@#$%^&*()-_=+]{6,}$")
     private String password;
 
     private LogInRequest() {
