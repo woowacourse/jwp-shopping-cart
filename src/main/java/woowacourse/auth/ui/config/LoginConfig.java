@@ -53,5 +53,13 @@ public class LoginConfig implements WebMvcConfigurer {
         registry.addMapping("/auth/**")
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
                 .exposedHeaders(HttpHeaders.LOCATION);
+
+        registry.addMapping("/cart/**")
+                .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
+                .exposedHeaders(HttpHeaders.LOCATION);
+
+        registry.addMapping("/products/**")
+                .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
+                .exposedHeaders(HttpHeaders.LOCATION);
     }
 }
