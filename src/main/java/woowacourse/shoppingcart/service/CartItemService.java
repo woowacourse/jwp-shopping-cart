@@ -55,6 +55,10 @@ public class CartItemService {
         }
     }
 
+    public void deleteById(Long cartItemId) {
+        cartItemDao.deleteCartItem(cartItemId);
+    }
+
     private void validateAlreadyExistCartItem(Customer customer, Long productId) {
         boolean result = cartItemDao.hasCustomerProductItem(customer.getId(), productId);
         if (result) {

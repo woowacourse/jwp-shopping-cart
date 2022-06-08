@@ -17,7 +17,6 @@ import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CartItemIds;
 import woowacourse.shoppingcart.dto.ImageDto;
 import woowacourse.shoppingcart.dto.OrderedProducts;
 import woowacourse.shoppingcart.dto.OrdersDto;
@@ -58,7 +57,7 @@ public class OrderServiceTest {
     @Test
     void addOrder() {
         // when
-        Long orderId = orderService.addOrder(customer, new CartItemIds(List.of(cartItemId)));
+        Long orderId = orderService.addOrder(customer, List.of(cartItemId));
 
         // then
         OrdersDto ordersDto = orderService.findOrderByCustomerAndOrderId(customer, orderId);
@@ -82,7 +81,7 @@ public class OrderServiceTest {
         Long cartItemId2 = cartItemService.addCart(customer, productId2);
 
         // when
-        Long orderId = orderService.addOrder(customer, new CartItemIds(List.of(cartItemId, cartItemId1, cartItemId2)));
+        Long orderId = orderService.addOrder(customer, List.of(cartItemId, cartItemId1, cartItemId2));
 
         // then
         OrdersDto ordersDto = orderService.findOrderByCustomerAndOrderId(customer, orderId);

@@ -11,7 +11,6 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CartItemIds;
 import woowacourse.shoppingcart.dto.OrdersDto;
 import woowacourse.shoppingcart.entity.OrderDetailEntity;
 import woowacourse.shoppingcart.exception.NotExistOrderException;
@@ -37,14 +36,17 @@ public class OrderService {
         this.cartItemService = cartItemService;
     }
 
-    public Long addOrder(final Customer customer, final CartItemIds cartItemIds) {
+    public Long addOrder(final Customer customer, final List<Long> cartItemIds) {
         final Long customerId = customer.getId();
         Long ordersId = orderDao.addOrders(customerId);
-        for (final Long cartItemId : cartItemIds.getCartItemIds()) {
+
+        for (final Long cartItemId : cartItemIds) {
             CartItem cartItem = cartItemService.findById(customer, cartItemId);
             cartItem.validateOutOfStock();
+
             ordersDetailDao.addOrdersDetail(ordersId, cartItem);
-            cartItemService.deleteCartItems(customer, new CartItemIds(List.of(cartItem.getId())));
+            cartItemService.deleteById(cartItemId);
+
             Product product = cartItem.getProduct();
             productService.reduceQuantity(product.getId(), product.getStockQuantity() - cartItem.getQuantity());
         }

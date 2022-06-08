@@ -30,7 +30,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal Customer customer,
             @RequestBody final CartItemIds cartItemIds) {
-        final Long orderId = orderService.addOrder(customer, cartItemIds);
+        final Long orderId = orderService.addOrder(customer, cartItemIds.getCartItemIds());
         return ResponseEntity.created(URI.create("/api/myorders/" + orderId)).build();
     }
 
