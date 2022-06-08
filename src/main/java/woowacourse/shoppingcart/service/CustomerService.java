@@ -31,8 +31,12 @@ public class CustomerService {
                 passwordEncoder.encrypt(signUpDto.getPassword()),
                 signUpDto.getUsername()
         );
+        try{
+            return customerDao.save(newCustomer);
+        }catch (DataIntegrityViolationException e){
+            throw new DuplicateNameException("이미 가입된 닉네임 입니다.");
+        }
 
-        return customerDao.save(newCustomer);
     }
 
     public CustomerDto findCustomerById(final Long id) {
