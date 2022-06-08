@@ -58,9 +58,9 @@ public class ControllerAdvice {
         return ResponseEntity.status(InvalidInputException.STATUS_CODE).body(exceptionRequest);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity unhandledException() {
-        ExceptionRequest exceptionRequest = new ExceptionRequest("예상치못한 에러가 발생했습니다.");
-        return ResponseEntity.badRequest().body(exceptionRequest);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity unhandledException() {
+//        ExceptionRequest exceptionRequest = new ExceptionRequest("예상치못한 에러가 발생했습니다.");
+//        return ResponseEntity.badRequest().body(exceptionRequest);
+//    }
 }
